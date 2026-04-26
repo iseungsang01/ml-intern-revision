@@ -2,7 +2,7 @@
   <img src="frontend/public/smolagents.webp" alt="smolagents logo" width="160" />
 </p>
 
-# KSTAR ML Intern
+# ML Intern (Revision)
 
 An ML intern that autonomously researches, writes, and ships good quality ML related code. This specific revision is highly customized for **KSTAR CES (Charge Exchange Spectroscopy) Multimodal Prediction**, predicting low-resolution CES data from high-resolution BES/ECEI/MC sensors using an Autonomous Multi-Agent R&D loop.
 
