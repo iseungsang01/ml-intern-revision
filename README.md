@@ -2,16 +2,16 @@
   <img src="frontend/public/smolagents.webp" alt="smolagents logo" width="160" />
 </p>
 
-# 🚀 ML Intern (KSTAR CES Prediction Revision)
+# ML Intern (KSTAR CES Prediction Revision)
 
 An ML intern that autonomously researches, writes, and ships good quality ML related code. This specific revision is highly customized for **KSTAR CES (Charge Exchange Spectroscopy) Multimodal Prediction**, predicting low-resolution CES data from high-resolution BES/ECEI/MC sensors using an Autonomous Multi-Agent R&D loop.
 
-## ⚡ Quick Start
+## Quick Start
 
-### 🌟 What's New: Autonomous ML R&D Workflow for KSTAR
+### What's New: Autonomous ML R&D Workflow for KSTAR
 The system has been upgraded from a generic coding assistant to a **Multi-Agent AI Scientist**. It introduces specialized agents (Evaluation, Briefing, Researcher) that autonomously run training loops, track validation loss histories, detect plateaus, and modify model architectures (e.g., from CNNs to Transformers) to continuously improve performance on the KSTAR dataset.
 
-### 🛠️ Installation
+### Installation
 
 ```bash
 git clone https://github.com/iseungsang01/ml-intern-revision.git
@@ -59,9 +59,9 @@ ml-intern --max-iterations 100 "your prompt"
 ml-intern --no-stream "your prompt"
 ```
 
-## 🏗️ Architecture
+## Architecture
 
-### 🧠 The Multi-Agent R&D Paradigm (New)
+### The Multi-Agent R&D Paradigm (New)
 
 The original `ml-intern` operated as a single, general-purpose agent loop. While excellent for general coding, ML research requires iterative experimentation, long-term metric tracking, and the ability to escape local minima (plateaus). To address this, we introduced the **Autonomous Multi-Agent R&D Loop**, inspired by the "AI Scientist" concept.
 
@@ -70,7 +70,7 @@ The original `ml-intern` operated as a single, general-purpose agent loop. While
 - **Plateau Recovery**: The Briefing Agent tracks history across *multiple runs*. If loss plateaus, it forces the Researcher Agent to abandon minor tweaks and explore radically different architectures (e.g., CNN -> Transformer).
 - **True Autonomy**: Instead of asking the user what to do after an experiment finishes, the agents brief each other and immediately start the next experiment.
 
-### 🧩 Component Overview
+### Component Overview
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -110,7 +110,7 @@ The original `ml-intern` operated as a single, general-purpose agent loop. While
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 🌊 Agentic Execution Flow
+### Agentic Execution Flow
 
 ```
 User Message
@@ -146,7 +146,7 @@ User Message
      ╚═══════════════════════════════════════════╝
 ```
 
-## 📡 Events
+## Events
 
 The agent emits the following events via `event_queue`:
 
@@ -167,9 +167,9 @@ The agent emits the following events via `event_queue`:
 - `undo_complete` - Undo operation completed
 - `shutdown` - Agent shutting down
 
-## 💻 Development
+## Development
 
-### 🔧 Adding Built-in Tools
+### Adding Built-in Tools
 
 Edit `agent/core/tools.py`:
 
@@ -192,7 +192,7 @@ def create_builtin_tools() -> list[ToolSpec]:
     ]
 ```
 
-### 🔌 Adding MCP Servers
+### Adding MCP Servers
 
 Edit `configs/cli_agent_config.json` for CLI defaults, or
 `configs/frontend_agent_config.json` for web-session defaults:
