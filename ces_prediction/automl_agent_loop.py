@@ -95,9 +95,9 @@ class ResearcherAgent:
         )
         
         try:
-            print("[Researcher Agent] Requesting new architecture from LLM (Gemini)...")
+            print("[Researcher Agent] Requesting new architecture from LLM (Gemini 3.1 Pro)...")
             response = litellm.completion(
-                model="gemini/gemini-1.5-pro", 
+                model="gemini/gemini-3.1-pro-preview", 
                 messages=[{"role": "user", "content": prompt}]
             )
             new_code = response.choices[0].message.content.strip()
