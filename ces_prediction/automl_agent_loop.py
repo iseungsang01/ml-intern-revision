@@ -1,7 +1,7 @@
 import os
 import json
 import subprocess
-# import litellm # 실제 구동 시 litellm 등을 사용하여 LLM 호출
+import litellm
 
 class EvaluationAgent:
     """
@@ -79,17 +79,40 @@ class ResearcherAgent:
     def research_and_update(self, briefing):
         print(f"\n[Researcher Agent] Analyzing briefing and researching new architecture...")
         
-        # LLM 연동 부분 (의사 코드)
-        # prompt = f"You are an AI ML Researcher. Read this briefing: {briefing}. Rewrite 'model.py' to implement the requested direction."
-        # new_code = litellm.completion(model="gpt-4o", messages=[{"role": "user", "content": prompt}])
-        # with open("model.py", "w") as f: f.write(new_code)
+        try:
+            with open("model.py", "r", encoding="utf-8") as f:
+                current_code = f.read()
+        except FileNotFoundError:
+            current_code = "# model.py not found"
+
+        prompt = (
+            f"You are an expert AI ML Researcher for KSTAR nuclear fusion data.\n"
+            f"Here is the briefing from the latest experiment:\n{briefing}\n\n"
+            f"Here is the current 'model.py' code:\n```python\n{current_code}\n```\n\n"
+            f"Based on the briefing, rewrite the architecture or hyperparameters in 'model.py'. "
+            f"Keep the class name 'MultimodalCESPredictor' and the forward pass signature the same. "
+            f"Return ONLY the complete, raw Python code. Do not include markdown blocks."
+        )
         
-        if "PLATEAU DETECTED" in briefing:
-            print("[Researcher Agent] -> Proposing a radical change: Switching to Multi-Head Self Attention (Transformer) for spatial channels.")
-            # 실제로 model.py를 덮어쓰는 로직이 들어갈 자리
-        else:
-            print("[Researcher Agent] -> Proposing minor changes: Adding Dropout and increasing hidden layers in Late Fusion.")
-            # 실제로 hyperparameter를 수정하는 로직이 들어갈 자리
+        try:
+            print("[Researcher Agent] Requesting new architecture from LLM (gpt-4o)...")
+            response = litellm.completion(
+                model="gpt-4o", 
+                messages=[{"role": "user", "content": prompt}]
+            )
+            new_code = response.choices[0].message.content.strip()
+            
+            # Clean up potential markdown formatting
+            if new_code.startswith("```python"): new_code = new_code[9:]
+            elif new_code.startswith("```"): new_code = new_code[3:]
+            if new_code.endswith("```"): new_code = new_code[:-3]
+                
+            with open("model.py", "w", encoding="utf-8") as f:
+                f.write(new_code.strip() + "\n")
+                
+            print("[Researcher Agent] Successfully updated model.py")
+        except Exception as e:
+            print(f"[Researcher Agent] LLM Error: {e}")
 
 def run_auto_ml_loop(max_iterations=5):
     eval_agent = EvaluationAgent()
@@ -112,5 +135,4 @@ def run_auto_ml_loop(max_iterations=5):
     print("\n=== Autonomous ML R&D Loop Completed ===")
 
 if __name__ == "__main__":
-    # run_auto_ml_loop(max_iterations=5)
-    pass
+    run_auto_ml_loop(max_iterations=300)
