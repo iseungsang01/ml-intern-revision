@@ -68,6 +68,17 @@ class BriefingAgent:
             briefing += "DIRECTION: Tweak hyperparameters, add skip connections, or adjust channel dimensions. Keep the current base architecture but optimize it.\n"
             
         print(f"\n[Briefing Agent] {briefing}")
+        
+        # --- Save to HANDOFF.md ---
+        handoff_content = f"# AutoML Session Handoff\n\n## Latest Briefing (Iteration {iteration})\n\n```text\n{briefing}\n```\n\n"
+        handoff_content += "## History\n\n"
+        for entry in self.history:
+            handoff_content += f"- Iteration {entry['iteration']}: Val Loss = {entry['val_loss']:.4f}\n"
+            
+        with open("HANDOFF.md", "w", encoding="utf-8") as f:
+            f.write(handoff_content)
+        # ---------------------------
+
         return briefing
 
 class ResearcherAgent:
