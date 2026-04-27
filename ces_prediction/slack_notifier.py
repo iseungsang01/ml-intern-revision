@@ -1,5 +1,6 @@
 import os
 import litellm
+import difflib
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
@@ -7,8 +8,25 @@ from dotenv import load_dotenv
 # .env 파일 로드 (루트 디렉토리 기준)
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
+def _generate_diff(old_code, new_code):
+    """이전 이터레이션과 현재 이터레이션 간의 코드 차이(Diff)를 생성합니다."""
+    if old_code == new_code:
+        return "No architectural changes."
+    
+    diff = difflib.unified_diff(
+        old_code.splitlines(), 
+        new_code.splitlines(),
+        fromfile='previous_model.py',
+        tofile='current_model.py',
+        lineterm=''
+    )
+    diff_text = '\n'.join(list(diff)[:50]) # 너무 길면 50줄까지만
+    if not diff_text:
+        return "No architectural changes."
+    return diff_text + ("\n...[truncated]" if len(list(diff)) > 50 else "")
+
 def send_insight_report(recent_log, current_iteration):
-    """10번의 이터레이션 기록(코드 + 성능)을 LLM으로 분석하여 인사이트를 Slack으로 전송합니다."""
+    """10번의 이터레이션 기록(Diff + 성능)을 LLM으로 분석하여 인사이트를 Slack으로 전송합니다."""
     token = os.environ.get("SLACK_BOT_TOKEN")
     channel_id = os.environ.get("SLACK_CHANNEL_ID")
     
@@ -17,32 +35,39 @@ def send_insight_report(recent_log, current_iteration):
 
     print(f"\n[Slack Notifier] Generating insight report for iterations {current_iteration-9} to {current_iteration}...")
 
-    # LLM에게 넘길 컨텍스트 구성
+    # LLM에게 넘길 컨텍스트 구성 (전체 코드가 아닌 Diff 전달)
     log_texts = []
+    previous_code = ""
+    
     for entry in recent_log:
-        code_snippet = entry['code']
-        # 너무 길면 자르기 (보통 1000자 내외면 아키텍처 파악 충분)
-        if len(code_snippet) > 1500:
-            code_snippet = code_snippet[:1500] + "\n...[truncated]"
+        current_code = entry['code']
+        # 이전 턴이 있으면 Diff 생성, 없으면 "Initial Model" 처리
+        if previous_code:
+            code_diff = _generate_diff(previous_code, current_code)
+        else:
+            code_diff = "Initial Model Architecture (Base)"
+            
+        previous_code = current_code
             
         log_texts.append(
             f"--- Iteration {entry['iteration']} ---\n"
             f"Validation Loss: {entry['val_loss']:.4f}\n"
-            f"Model Code Snippet:\n{code_snippet}\n"
+            f"Code Changes (Diff):\n{code_diff}\n"
         )
     
     context_data = "\n".join(log_texts)
 
     prompt = f"""
     You are a Senior AI ML Scientist monitoring an autonomous AutoML loop.
-    Below is the log of the last 10 iterations. It includes the Validation Loss and the 'model.py' architecture used for each iteration.
+    Below is the log of the last 10 iterations. Instead of full code, it includes the 'Code Changes (Diff)' 
+    showing exactly what was modified from the previous iteration, along with the resulting Validation Loss.
 
     {context_data}
 
     Analyze this 10-iteration window and write a concise, engaging Slack message to the team.
     Your message MUST include:
-    1. 🛠️ **Approaches Tried**: What specific model architectures or techniques were explored in these 10 iterations? (e.g., CNN, Transformers, specific hyperparameter tweaks).
-    2. 📈 **Performance Analysis**: What worked well (which iteration/architecture had the lowest loss) and what failed or caused plateaus?
+    1. 🛠️ **Approaches Tried**: What specific architectural changes or techniques were explored? (Look at the diffs).
+    2. 📈 **Performance Analysis**: What changes improved the loss? Which changes failed or caused plateaus?
     3. 💡 **Key Insight**: One brief concluding thought on what the agent seems to be learning or what direction it should take next.
 
     Format the output nicely using Slack markdown (*bold*, _italic_, bullet points, emojis).
