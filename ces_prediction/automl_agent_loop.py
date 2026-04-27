@@ -130,11 +130,27 @@ def run_auto_ml_loop(max_iterations=5):
     briefing_agent = BriefingAgent()
     researcher_agent = ResearcherAgent()
     
+    experiment_log = [] # 10회마다의 인사이트 생성을 위해 코드와 성능을 기록
+    
     print("=== Starting Autonomous ML R&D Loop ===")
     
     for i in range(1, max_iterations + 1):
         # 1. Evaluation (현재 모델 평가)
         metrics = eval_agent.run_evaluation(i)
+        
+        # 현재 평가된 모델 코드 읽기
+        try:
+            with open("model.py", "r", encoding="utf-8") as f:
+                current_code = f.read()
+        except FileNotFoundError:
+            current_code = "No model.py found"
+            
+        # 로그 저장
+        experiment_log.append({
+            "iteration": i,
+            "val_loss": metrics.get("final_val_loss", float('inf')),
+            "code": current_code
+        })
         
         # 2. Briefing (결과 요약 및 방향성 설정)
         briefing = briefing_agent.generate_briefing(i, metrics)
@@ -143,7 +159,23 @@ def run_auto_ml_loop(max_iterations=5):
         if i < max_iterations: # 마지막 턴이 아니면 다음 모델 준비
             researcher_agent.research_and_update(briefing)
             
+        # 4. Insight Report 발송 (10 이터레이션 마다)
+        if i % 10 == 0:
+            try:
+                from slack_notifier import send_insight_report
+                # 최근 10개의 로그만 전송
+                send_insight_report(experiment_log[-10:], i)
+            except Exception as e:
+                print(f"[AutoML Loop] Failed to send insight report: {e}")
+            
     print("\n=== Autonomous ML R&D Loop Completed ===")
+    
+    # Slack 알림 전송 (종료 요약)
+    try:
+        from slack_notifier import send_slack_summary
+        send_slack_summary(briefing_agent.history, max_iterations)
+    except Exception as e:
+        print(f"[Slack Notifier] Failed to trigger notification: {e}")
 
 if __name__ == "__main__":
     run_auto_ml_loop(max_iterations=300)
