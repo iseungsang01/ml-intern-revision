@@ -1,32 +1,46 @@
-import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../ces_prediction')))
+import sys
+from pathlib import Path
 
 import torch
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../ces_prediction")))
+
+from dataset import KSTAR_CES_Dataset
 from model import MultimodalCESPredictor
 
-def test_dry_run():
-    print("[Dry-Run] Initializing model and dummy tensors...")
-    try:
-        model = MultimodalCESPredictor(window_size=10)
-        
-        # Batch=2, window=10
-        bes = torch.randn(2, 10, 9)
-        ecei = torch.randn(2, 10, 4)
-        mc = torch.randn(2, 10, 2)
-        dt = torch.randn(2, 10, 1) # Time-Encoding
-        
-        print("[Dry-Run] Running forward pass...")
-        out = model(bes, ecei, mc, dt)
-        
-        print("[Dry-Run] Running backward pass...")
-        loss = out.sum()
-        loss.backward()
-        
-        print("[Dry-Run] Success! Model graph is physically and computationally valid.")
-    except Exception as e:
-        print(f"[Dry-Run] FAILED: {e}")
-        exit(1) # 오류 발생 시 시스템에서 이를 캐치하도록 1 반환
 
-if __name__ == "__main__":
-    test_dry_run()
+def test_dry_run():
+    model = MultimodalCESPredictor(window_size=10)
+
+    bes = torch.randn(2, 10, 9)
+    ecei = torch.randn(2, 10, 4)
+    mc = torch.randn(2, 10, 2)
+    time_features = torch.rand(2, 10, 4)
+
+    out = model(bes, ecei, mc, time_features)
+    assert out.shape == (2, 2)
+
+    loss = out.sum()
+    loss.backward()
+
+
+def test_real_csv_sample_forward():
+    data_dir = Path(__file__).resolve().parents[1] / "data"
+    dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=10)
+    sample = dataset[0]
+
+    assert dataset.feature_dims == {"bes": 9, "ecei": 4, "mc": 2, "time": 4}
+    assert sample["time_features"].shape == (10, 4)
+    assert sample["time_features"][-1, 0].item() == 0.0
+    assert torch.all(sample["time_features"][:, 1] >= 0.0)
+
+    model = MultimodalCESPredictor.from_dataset(dataset, window_size=10)
+    out = model(
+        sample["bes"].unsqueeze(0),
+        sample["ecei"].unsqueeze(0),
+        sample["mc"].unsqueeze(0),
+        sample["time_features"].unsqueeze(0),
+    )
+
+    assert out.shape == (1, 2)

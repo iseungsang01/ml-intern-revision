@@ -1,128 +1,183 @@
-import os
 import json
+import os
+from pathlib import Path
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Subset
+
 from dataset import KSTAR_CES_Dataset
 from model import MultimodalCESPredictor
 
-# [Phase 1] Import wandb for experiment tracking
 try:
     import wandb
 except ImportError:
-    pass # wandb가 없는 환경일 경우 무시
+    wandb = None
+
+
+def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
+    """Split by CSV shot file to avoid train/validation leakage across rows."""
+
+    files = sorted({file_path for file_path, _ in dataset.sample_indices})
+    if len(files) < 2:
+        raise ValueError("Need at least two CSV files with valid samples for validation split")
+
+    generator = torch.Generator().manual_seed(seed)
+    order = torch.randperm(len(files), generator=generator).tolist()
+    val_count = max(1, int(round(len(files) * val_fraction)))
+    val_files = {files[i] for i in order[:val_count]}
+
+    train_indices = []
+    val_indices = []
+    for sample_idx, (file_path, _) in enumerate(dataset.sample_indices):
+        if file_path in val_files:
+            val_indices.append(sample_idx)
+        else:
+            train_indices.append(sample_idx)
+
+    if not train_indices or not val_indices:
+        raise ValueError("File-level split produced an empty train or validation set")
+
+    return train_indices, val_indices
+
 
 def train():
-    # 1. Hyperparameters
-    DATA_DIR = "../data"
-    WINDOW_SIZE = 10
-    BATCH_SIZE = 64
-    EPOCHS = 10
-    LR = 0.001
-    
-    # Init W&B (Offline mode 기본 설정으로 안전하게 실행)
-    if 'wandb' in globals():
-        wandb.init(project="kstar-ces-prediction", mode="disabled", config={
-            "window_size": WINDOW_SIZE, "batch_size": BATCH_SIZE, "epochs": EPOCHS, "lr": LR
-        })
-    
-    # 2. Prepare Data
-    print("Initializing dataset...")
-    full_dataset = KSTAR_CES_Dataset(data_dir=DATA_DIR, window_size=WINDOW_SIZE)
-    
+    root_dir = Path(__file__).resolve().parents[1]
+    output_dir = Path(__file__).resolve().parent
+
+    data_dir = root_dir / "data"
+    window_size = int(os.getenv("CES_WINDOW_SIZE", "10"))
+    batch_size = int(os.getenv("CES_BATCH_SIZE", "64"))
+    epochs = int(os.getenv("CES_EPOCHS", "10"))
+    lr = float(os.getenv("CES_LR", "1e-3"))
+    seed = int(os.getenv("CES_SEED", "42"))
+    val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
+    max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", "0"))
+    max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "0"))
+
+    torch.manual_seed(seed)
+
+    if wandb is not None:
+        wandb.init(
+            project="kstar-ces-prediction",
+            mode="disabled",
+            config={
+                "window_size": window_size,
+                "batch_size": batch_size,
+                "epochs": epochs,
+                "lr": lr,
+                "time_features": "lookback/delta seconds + log1p variants",
+                "split": "by_csv_file",
+                "val_fraction": val_fraction,
+            },
+        )
+
+    print("Initializing dataset from CSV files...")
+    full_dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=window_size)
     if len(full_dataset) == 0:
         print("Error: No valid data found.")
         return
-        
-    # 계통 추출(Systematic Sampling): 매 5번째 샘플을 검증(Validation) 셋으로 할당 (20%)
-    total_samples = len(full_dataset)
-    val_indices = list(range(0, total_samples, 5))
-    train_indices = [i for i in range(total_samples) if i % 5 != 0]
-    
+
+    train_indices, val_indices = split_indices_by_file(
+        full_dataset, val_fraction=val_fraction, seed=seed
+    )
+    if max_train_samples > 0:
+        train_indices = train_indices[:max_train_samples]
+    if max_val_samples > 0:
+        val_indices = val_indices[:max_val_samples]
     train_dataset = Subset(full_dataset, train_indices)
     val_dataset = Subset(full_dataset, val_indices)
-    
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    
-    # 3. Model, Loss, Optimizer
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
-    
-    model = MultimodalCESPredictor(window_size=WINDOW_SIZE).to(device)
-    criterion = nn.MSELoss()  
-    optimizer = optim.Adam(model.parameters(), lr=LR)
-    
-    # 4. Training Loop
-    for epoch in range(EPOCHS):
+    print(f"Feature dims: {full_dataset.feature_dims}")
+    print(f"Samples: train={len(train_dataset)}, val={len(val_dataset)}")
+
+    model = MultimodalCESPredictor.from_dataset(full_dataset, window_size=window_size).to(device)
+    criterion = nn.MSELoss()
+    optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=2, factor=0.5)
+
+    train_loss = float("inf")
+    val_loss = float("inf")
+
+    for epoch in range(epochs):
         model.train()
-        train_loss = 0.0
-        
+        train_loss_sum = 0.0
+
         for batch in train_loader:
-            bes = batch['bes'].to(device)
-            ecei = batch['ecei'].to(device)
-            mc = batch['mc'].to(device)
-            dt = batch['dt'].to(device)
-            targets = batch['target'].to(device)
-            
-            optimizer.zero_grad()
-            outputs = model(bes, ecei, mc, dt)
-            
+            bes = batch["bes"].to(device)
+            ecei = batch["ecei"].to(device)
+            mc = batch["mc"].to(device)
+            time_features = batch["time_features"].to(device)
+            targets = batch["target"].to(device)
+
+            optimizer.zero_grad(set_to_none=True)
+            outputs = model(bes, ecei, mc, time_features)
+
             loss_mse = criterion(outputs, targets)
-            
-            # [Phase 3] PINN (Physics-Informed) Loss
-            # 물리적 제약: 플라즈마 이온 온도(T_i)는 음수일 수 없습니다. (outputs[:, 0]은 T_i 예측값)
-            # 만약 모델이 음수를 예측하면 강한 페널티를 부여합니다.
             penalty_neg_ti = torch.relu(-outputs[:, 0]).mean()
             loss = loss_mse + 0.1 * penalty_neg_ti
-            
+
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
             optimizer.step()
-            
-            train_loss += loss.item() * bes.size(0)
-            
-        train_loss /= len(train_loader.dataset)
-        
-        # Validation
+
+            train_loss_sum += loss.item() * bes.size(0)
+
+        train_loss = train_loss_sum / len(train_loader.dataset)
+
         model.eval()
-        val_loss = 0.0
+        val_loss_sum = 0.0
         with torch.no_grad():
             for batch in val_loader:
-                bes = batch['bes'].to(device)
-                ecei = batch['ecei'].to(device)
-                mc = batch['mc'].to(device)
-                dt = batch['dt'].to(device)
-                targets = batch['target'].to(device)
-                
-                outputs = model(bes, ecei, mc, dt)
+                bes = batch["bes"].to(device)
+                ecei = batch["ecei"].to(device)
+                mc = batch["mc"].to(device)
+                time_features = batch["time_features"].to(device)
+                targets = batch["target"].to(device)
+
+                outputs = model(bes, ecei, mc, time_features)
                 loss = criterion(outputs, targets)
-                val_loss += loss.item() * bes.size(0)
-                
-        val_loss /= len(val_loader.dataset)
-        
-        print(f"Epoch {epoch+1}/{EPOCHS} | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}")
-        
-        if 'wandb' in globals():
+                val_loss_sum += loss.item() * bes.size(0)
+
+        val_loss = val_loss_sum / len(val_loader.dataset)
+        scheduler.step(val_loss)
+
+        print(
+            f"Epoch {epoch + 1}/{epochs} | "
+            f"Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}"
+        )
+
+        if wandb is not None:
             wandb.log({"train_loss": train_loss, "val_loss": val_loss, "epoch": epoch})
-        
-    # 5. Save model and metrics
-    os.makedirs("weights", exist_ok=True)
-    torch.save(model.state_dict(), "weights/multimodal_ces.pth")
-    print("Training complete! Model saved to weights/multimodal_ces.pth")
-    
-    # Save metrics for Evaluation Agent
+
+    weights_dir = output_dir / "weights"
+    weights_dir.mkdir(exist_ok=True)
+    weight_path = weights_dir / "multimodal_ces.pth"
+    torch.save(model.state_dict(), weight_path)
+    print(f"Training complete. Model saved to {weight_path}")
+
     metrics = {
         "final_train_loss": train_loss,
         "final_val_loss": val_loss,
-        "epochs": EPOCHS
+        "epochs": epochs,
+        "train_samples": len(train_dataset),
+        "val_samples": len(val_dataset),
+        "feature_dims": full_dataset.feature_dims,
     }
-    with open("metrics.json", "w") as f:
-        json.dump(metrics, f)
-    print("Metrics saved to metrics.json")
-    
-    if 'wandb' in globals():
+    metrics_path = output_dir / "metrics.json"
+    with metrics_path.open("w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2)
+    print(f"Metrics saved to {metrics_path}")
+
+    if wandb is not None:
         wandb.finish()
+
 
 if __name__ == "__main__":
     train()

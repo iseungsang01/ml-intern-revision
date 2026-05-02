@@ -1,90 +1,156 @@
+from pathlib import Path
+
 import torch
 import torch.nn as nn
 
+
+class TimeAwareSensorEncoder(nn.Module):
+    """Encode one diagnostic stream together with true irregular-time features."""
+
+    def __init__(self, sensor_channels, time_channels=4, hidden_channels=64, output_dim=96):
+        super().__init__()
+        in_channels = sensor_channels + time_channels
+        self.net = nn.Sequential(
+            nn.Conv1d(in_channels, hidden_channels, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_channels),
+            nn.GELU(),
+            nn.Conv1d(hidden_channels, hidden_channels, kernel_size=3, padding=1),
+            nn.BatchNorm1d(hidden_channels),
+            nn.GELU(),
+            nn.AdaptiveAvgPool1d(1),
+            nn.Flatten(),
+            nn.Linear(hidden_channels, output_dim),
+            nn.GELU(),
+        )
+
+    def forward(self, sensor_values, time_features):
+        x = torch.cat((sensor_values, time_features), dim=-1)
+        return self.net(x.permute(0, 2, 1))
+
+
+class TimeFeatureEncoder(nn.Module):
+    def __init__(self, time_channels=4, hidden_channels=32, output_dim=32):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv1d(time_channels, hidden_channels, kernel_size=3, padding=1),
+            nn.GELU(),
+            nn.Conv1d(hidden_channels, hidden_channels, kernel_size=3, padding=1),
+            nn.GELU(),
+            nn.AdaptiveAvgPool1d(1),
+            nn.Flatten(),
+            nn.Linear(hidden_channels, output_dim),
+            nn.GELU(),
+        )
+
+    def forward(self, time_features):
+        return self.net(time_features.permute(0, 2, 1))
+
+
 class MultimodalCESPredictor(nn.Module):
-    def __init__(self, window_size=10):
-        super(MultimodalCESPredictor, self).__init__()
-        
-        # 1. BES Feature Extractor (1D CNN over time for 9 spatial channels)
-        # Input shape: (Batch, window_size, 9) -> (Batch, 9, window_size) for Conv1d
-        self.bes_extractor = nn.Sequential(
-            nn.Conv1d(in_channels=9, out_channels=16, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(32 * window_size, 64)
+    """Predict [CES_TI, CES_VT] from BES, ECEI, MC, and irregular time metadata."""
+
+    def __init__(
+        self,
+        window_size=10,
+        bes_channels=9,
+        ecei_channels=4,
+        mc_channels=2,
+        time_channels=4,
+        sensor_feature_dim=96,
+    ):
+        super().__init__()
+        self.window_size = window_size
+        self.time_channels = time_channels
+
+        self.bes_extractor = TimeAwareSensorEncoder(
+            bes_channels, time_channels=time_channels, output_dim=sensor_feature_dim
         )
-        
-        # 2. ECEI Feature Extractor (1D CNN over time for 4 spatial channels)
-        # Note: If ECEI is mapped to a 2D grid later, this can easily be replaced with Conv3d or Conv2d
-        self.ecei_extractor = nn.Sequential(
-            nn.Conv1d(in_channels=4, out_channels=16, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(32 * window_size, 64)
+        self.ecei_extractor = TimeAwareSensorEncoder(
+            ecei_channels, time_channels=time_channels, output_dim=sensor_feature_dim
         )
-        
-        # 3. Mirnov Coil (MC) Extractor (1D CNN instead of LSTM)
-        # Input shape: (Batch, window_size, 2) -> (Batch, 2, window_size) for Conv1d
-        self.mc_extractor = nn.Sequential(
-            nn.Conv1d(in_channels=2, out_channels=16, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(32 * window_size, 64)
+        self.mc_extractor = TimeAwareSensorEncoder(
+            mc_channels, time_channels=time_channels, output_dim=sensor_feature_dim
         )
-        
-        # 4. [Phase 3] Time-Encoding Extractor
-        # Input shape: (Batch, window_size, 1) -> (Batch, 1, window_size)
-        self.time_extractor = nn.Sequential(
-            nn.Conv1d(in_channels=1, out_channels=8, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(8 * window_size, 16)
-        )
-        
-        # 5. Late Fusion Module
-        # Concatenate features: 64(BES) + 64(ECEI) + 64(MC) + 16(dt) = 208
+        self.time_extractor = TimeFeatureEncoder(time_channels=time_channels)
+
+        fusion_dim = sensor_feature_dim * 3 + 32
         self.fusion_fc = nn.Sequential(
-            nn.Linear(208, 128),
-            nn.ReLU(),
+            nn.Linear(fusion_dim, 160),
+            nn.GELU(),
             nn.Dropout(0.2),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, 2)  # Output: [CES_TI, CES_VT]
+            nn.Linear(160, 64),
+            nn.GELU(),
+            nn.Linear(64, 2),
         )
-        
-    def forward(self, bes, ecei, mc, dt):
-        # bes/ecei/mc/dt shape: (B, window_size, channels) 
-        # -> permute to (B, channels, window_size) for Conv1d
-        bes = bes.permute(0, 2, 1)
-        ecei = ecei.permute(0, 2, 1)
-        mc = mc.permute(0, 2, 1)
-        dt = dt.permute(0, 2, 1)
-        
-        # Extract features
-        bes_feat = self.bes_extractor(bes)      # (B, 64)
-        ecei_feat = self.ecei_extractor(ecei)   # (B, 64)
-        mc_feat = self.mc_extractor(mc)         # (B, 64)
-        dt_feat = self.time_extractor(dt)       # (B, 16)
-        
-        # Late Fusion
-        fused = torch.cat((bes_feat, ecei_feat, mc_feat, dt_feat), dim=1) # (B, 208)
-        output = self.fusion_fc(fused)                           # (B, 2)
-        
-        return output
+
+    @classmethod
+    def from_dataset(cls, dataset, **kwargs):
+        dims = dataset.feature_dims
+        return cls(
+            bes_channels=dims["bes"],
+            ecei_channels=dims["ecei"],
+            mc_channels=dims["mc"],
+            time_channels=dims["time"],
+            **kwargs,
+        )
+
+    def _prepare_time_features(self, time_features, reference):
+        if time_features is None:
+            batch, steps = reference.shape[:2]
+            return reference.new_zeros(batch, steps, self.time_channels)
+
+        if time_features.ndim != 3:
+            raise ValueError("time_features must have shape (batch, window, channels)")
+        if time_features.shape[:2] != reference.shape[:2]:
+            raise ValueError("time_features and sensor windows must share batch/window dimensions")
+
+        if time_features.shape[-1] == self.time_channels:
+            return time_features
+        if time_features.shape[-1] == 1 and self.time_channels == 4:
+            lookback = time_features[..., 0]
+            delta = torch.diff(lookback, dim=1, prepend=lookback[:, :1]).abs()
+            return torch.stack(
+                (
+                    lookback,
+                    delta,
+                    torch.log1p(torch.clamp(lookback, min=0.0)),
+                    torch.log1p(torch.clamp(delta, min=0.0)),
+                ),
+                dim=-1,
+            )
+
+        raise ValueError(
+            f"Expected {self.time_channels} time channels, got {time_features.shape[-1]}"
+        )
+
+    def forward(self, bes, ecei, mc, time_features=None):
+        time_features = self._prepare_time_features(time_features, bes)
+
+        bes_feat = self.bes_extractor(bes, time_features)
+        ecei_feat = self.ecei_extractor(ecei, time_features)
+        mc_feat = self.mc_extractor(mc, time_features)
+        time_feat = self.time_extractor(time_features)
+
+        fused = torch.cat((bes_feat, ecei_feat, mc_feat, time_feat), dim=1)
+        return self.fusion_fc(fused)
+
 
 if __name__ == "__main__":
-    # Test Forward Pass
-    model = MultimodalCESPredictor(window_size=10)
-    
-    dummy_bes = torch.randn(8, 10, 9)   # Batch=8, window=10, channels=9
-    dummy_ecei = torch.randn(8, 10, 4)  # Batch=8, window=10, channels=4
-    dummy_mc = torch.randn(8, 10, 2)    # Batch=8, window=10, channels=2
-    
-    preds = model(dummy_bes, dummy_ecei, dummy_mc)
-    print(f"Output shape: {preds.shape}") # Expected: (8, 2)
+    from dataset import KSTAR_CES_Dataset
+
+    data_dir = Path(__file__).resolve().parents[1] / "data"
+    dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=10)
+    sample = dataset[0]
+
+    model = MultimodalCESPredictor.from_dataset(dataset, window_size=10)
+    with torch.no_grad():
+        preds = model(
+            sample["bes"].unsqueeze(0),
+            sample["ecei"].unsqueeze(0),
+            sample["mc"].unsqueeze(0),
+            sample["time_features"].unsqueeze(0),
+        )
+
+    print(f"Loaded real CSV sample from {Path(sample['file']).name}:{sample['row_index']}")
+    print(f"Feature dims: {dataset.feature_dims}")
+    print(f"Output shape: {tuple(preds.shape)}")

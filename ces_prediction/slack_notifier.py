@@ -76,7 +76,7 @@ def send_insight_report(recent_log, current_iteration):
 
     try:
         response = litellm.completion(
-            model="gemini/gemini-3.1-pro-preview", 
+            model="gemini/gemma-4-31b-it", 
             messages=[{"role": "user", "content": prompt}]
         )
         insight_message = response.choices[0].message.content.strip()

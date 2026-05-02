@@ -1,82 +1,174 @@
-import os
-import glob
-import pandas as pd
+from functools import lru_cache
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from functools import lru_cache
+
+
+TIME_COLUMN = "time"
+TARGET_COLUMNS = ("CES_TI", "CES_VT")
+
 
 class KSTAR_CES_Dataset(Dataset):
-    def __init__(self, data_dir, window_size=10, is_train=True):
-        """
-        KSTAR Multimodal Dataset (Lazy-Loading & Time-Encoding version)
-        - 메모리 효율성을 위해 파일의 메타(인덱스)만 미리 읽고, __getitem__에서 필요 시점에 Load합니다.
-        """
-        self.window_size = window_size
-        self.data_dir = data_dir
-        self.files = glob.glob(os.path.join(data_dir, "*.csv"))
-        
-        self.sample_indices = [] # (file_path, valid_target_index)
-        
-        print(f"Indexing {len(self.files)} files for Lazy Loading...")
-        for file in self.files:
-            try:
-                # 인덱싱 과정에서는 메모리 최소화를 위해 타겟 컬럼만 가볍게 스캔합니다.
-                df_targets = pd.read_csv(file, usecols=['CES_TI', 'CES_VT'])
-                valid_mask = df_targets.notnull().all(axis=1)
-                valid_indices = df_targets[valid_mask].index
-                
-                for idx in valid_indices:
-                    if idx >= self.window_size - 1:
-                        self.sample_indices.append((file, idx))
-            except Exception as e:
-                pass
+    """KSTAR multimodal CES dataset backed by the real per-shot CSV files.
 
-    @lru_cache(maxsize=20)
+    Each sample is a fixed row-count history window ending at a valid CES target
+    row. Because row spacing is not physically uniform, every sample also
+    returns explicit time features for the true elapsed seconds in that window.
+    """
+
+    def __init__(self, data_dir, window_size=10, max_window_span=None):
+        self.data_dir = Path(data_dir)
+        self.window_size = int(window_size)
+        self.max_window_span = max_window_span
+
+        if self.window_size < 2:
+            raise ValueError("window_size must be at least 2")
+
+        self.files = sorted(self.data_dir.glob("*.csv"))
+        if not self.files:
+            raise FileNotFoundError(f"No CSV files found in {self.data_dir}")
+
+        self.bes_cols, self.ecei_cols, self.mc_cols = self._infer_feature_columns()
+        self.time_feature_cols = (
+            "lookback_seconds",
+            "delta_seconds",
+            "log1p_lookback_seconds",
+            "log1p_delta_seconds",
+        )
+        self.sample_indices = self._build_index()
+
+    def _infer_feature_columns(self):
+        for file_path in self.files:
+            columns = pd.read_csv(file_path, nrows=0).columns.tolist()
+            missing = [c for c in (TIME_COLUMN, *TARGET_COLUMNS) if c not in columns]
+            if missing:
+                continue
+
+            bes_cols = [c for c in columns if c.startswith("BES_")]
+            ecei_cols = [c for c in columns if c.startswith("ECEI_")]
+            mc_cols = [c for c in columns if c.startswith("MC")]
+            if bes_cols and ecei_cols and mc_cols:
+                return bes_cols, ecei_cols, mc_cols
+
+        raise ValueError("Could not infer BES/ECEI/MC columns from the CSV files")
+
+    def _build_index(self):
+        sample_indices = []
+        usecols = [TIME_COLUMN, *TARGET_COLUMNS]
+
+        for file_path in self.files:
+            try:
+                df = pd.read_csv(file_path, usecols=usecols)
+            except ValueError:
+                continue
+
+            time = pd.to_numeric(df[TIME_COLUMN], errors="coerce").to_numpy()
+            targets = df.loc[:, TARGET_COLUMNS].notna().all(axis=1).to_numpy()
+
+            for idx in np.flatnonzero(targets):
+                start = idx - self.window_size + 1
+                if start < 0:
+                    continue
+
+                window_time = time[start : idx + 1]
+                if not np.isfinite(window_time).all():
+                    continue
+                if np.any(np.diff(window_time) <= 0):
+                    continue
+                if self.max_window_span is not None:
+                    span = window_time[-1] - window_time[0]
+                    if span > self.max_window_span:
+                        continue
+
+                sample_indices.append((str(file_path), int(idx)))
+
+        return sample_indices
+
+    @lru_cache(maxsize=32)
     def _get_file_data(self, file_path):
-        # LRU Cache를 사용해 최근 접근한 20개 파일의 DataFrame만 메모리에 상주시킵니다.
         return pd.read_csv(file_path)
 
     def __len__(self):
         return len(self.sample_indices)
 
+    @property
+    def feature_dims(self):
+        return {
+            "bes": len(self.bes_cols),
+            "ecei": len(self.ecei_cols),
+            "mc": len(self.mc_cols),
+            "time": len(self.time_feature_cols),
+        }
+
+    def _window_tensor(self, window_df, columns):
+        values = window_df.loc[:, columns].apply(pd.to_numeric, errors="coerce")
+        values = values.ffill().bfill().fillna(0.0).to_numpy(dtype=np.float32)
+        return torch.from_numpy(values)
+
+    def _time_features(self, time_values):
+        time_values = time_values.astype(np.float32, copy=False)
+        lookback = time_values[-1] - time_values
+        delta = np.diff(time_values, prepend=time_values[0])
+        delta[0] = 0.0
+
+        features = np.stack(
+            [
+                lookback,
+                delta,
+                np.log1p(np.maximum(lookback, 0.0)),
+                np.log1p(np.maximum(delta, 0.0)),
+            ],
+            axis=1,
+        ).astype(np.float32)
+        return torch.from_numpy(features)
+
     def __getitem__(self, i):
         file_path, idx = self.sample_indices[i]
         df = self._get_file_data(file_path)
-        
-        bes_cols = [c for c in df.columns if c.startswith('BES_')]
-        ecei_cols = [c for c in df.columns if c.startswith('ECEI_')]
-        mc_cols = [c for c in df.columns if c.startswith('MC1')]
-        
-        # 윈도우 슬라이싱
-        window_df = df.iloc[idx - self.window_size + 1 : idx + 1]
-        
-        # 만약 윈도우 안에 NaN이 있다면 방어 로직 (0으로 패딩하거나 안전한 값 처리)
-        # 이미 인덱싱에서 걸렀지만 센서 피처 자체에 NaN이 낄 수 있으므로 0 채우기
-        window_df = window_df.fillna(0.0)
-        
-        bes = torch.tensor(window_df[bes_cols].values, dtype=torch.float32)
-        ecei = torch.tensor(window_df[ecei_cols].values, dtype=torch.float32)
-        mc = torch.tensor(window_df[mc_cols].values, dtype=torch.float32)
-        
-        # [Phase 3] Time-Encoding: dt 추출
-        # 측정 시간 불규칙성 패턴을 모델이 인식하도록, 윈도우 시작점 대비 현재 시간의 상대적 변화량(dt)을 입력
-        time_vals = window_df['time'].values
-        dt = time_vals - time_vals[0]
-        dt = torch.tensor(dt, dtype=torch.float32).unsqueeze(1) # (window_size, 1) 차원으로 확장
-        
-        target_val = df.iloc[idx][['CES_TI', 'CES_VT']].values
-        target = torch.tensor(target_val, dtype=torch.float32)
-        
-        return {'bes': bes, 'ecei': ecei, 'mc': mc, 'dt': dt, 'target': target}
+
+        start = idx - self.window_size + 1
+        window_df = df.iloc[start : idx + 1]
+
+        bes = self._window_tensor(window_df, self.bes_cols)
+        ecei = self._window_tensor(window_df, self.ecei_cols)
+        mc = self._window_tensor(window_df, self.mc_cols)
+
+        time_values = pd.to_numeric(window_df[TIME_COLUMN], errors="coerce").to_numpy()
+        time_features = self._time_features(time_values)
+
+        target_values = (
+            df.loc[df.index[idx], list(TARGET_COLUMNS)]
+            .astype(np.float32)
+            .to_numpy(dtype=np.float32)
+        )
+        target = torch.from_numpy(target_values)
+
+        return {
+            "bes": bes,
+            "ecei": ecei,
+            "mc": mc,
+            "time_features": time_features,
+            "dt": time_features,
+            "target": target,
+            "file": file_path,
+            "row_index": idx,
+        }
+
 
 if __name__ == "__main__":
-    # Test DataLoader
-    dataset = KSTAR_CES_Dataset(data_dir="../data", window_size=10)
-    print(f"Total samples generated: {len(dataset)}")
+    data_dir = Path(__file__).resolve().parents[1] / "data"
+    dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=10)
+    print(f"CSV files: {len(dataset.files)}")
+    print(f"Total samples: {len(dataset)}")
+    print(f"Feature dims: {dataset.feature_dims}")
+
     if len(dataset) > 0:
         sample = dataset[0]
-        print("BES shape:", sample['bes'].shape)     # (window_size, 9)
-        print("ECEI shape:", sample['ecei'].shape)   # (window_size, 4)
-        print("MC shape:", sample['mc'].shape)       # (window_size, 2)
-        print("Target shape:", sample['target'].shape) # (2,)
+        print("BES shape:", tuple(sample["bes"].shape))
+        print("ECEI shape:", tuple(sample["ecei"].shape))
+        print("MC shape:", tuple(sample["mc"].shape))
+        print("Time feature shape:", tuple(sample["time_features"].shape))
+        print("Target shape:", tuple(sample["target"].shape))

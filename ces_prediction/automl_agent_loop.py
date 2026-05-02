@@ -10,20 +10,26 @@ class EvaluationAgent:
     """
     def run_evaluation(self, iteration):
         print(f"\n[Evaluation Agent] Starting iteration {iteration}...")
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(script_dir)
         
         # 1. Dry Run (에러 사전 차단)
         try:
             print("[Evaluation Agent] Running Architecture Dry-Run validation...")
             # tests 디렉토리의 테스트 코드를 실행
-            subprocess.run(["python", "../tests/test_architecture.py"], check=True)
+            subprocess.run(
+                ["python", os.path.join(root_dir, "tests", "test_architecture.py")],
+                cwd=script_dir,
+                check=True,
+            )
         except subprocess.CalledProcessError:
             print("[Evaluation Agent] Dry-run failed. Researcher must fix the Shape/Architecture mismatch.")
             return {"error": "Dry-run failed", "final_val_loss": float('inf')}
 
         # 2. Actual Training
         try:
-            subprocess.run(["python", "train.py"], check=True)
-            with open("metrics.json", "r") as f:
+            subprocess.run(["python", os.path.join(script_dir, "train.py")], cwd=script_dir, check=True)
+            with open(os.path.join(script_dir, "metrics.json"), "r", encoding="utf-8") as f:
                 metrics = json.load(f)
             
             val_loss = metrics.get("final_val_loss", float('inf'))
@@ -106,9 +112,9 @@ class ResearcherAgent:
         )
         
         try:
-            print("[Researcher Agent] Requesting new architecture from LLM (Gemini 3.1 Pro)...")
+            print("[Researcher Agent] Requesting new architecture from LLM (Gemma 4 31B)...")
             response = litellm.completion(
-                model="gemini/gemini-3.1-pro-preview", 
+                model="gemini/gemma-4-31b-it",
                 messages=[{"role": "user", "content": prompt}]
             )
             new_code = response.choices[0].message.content.strip()
