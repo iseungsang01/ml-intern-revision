@@ -16,6 +16,30 @@ except ImportError:
     wandb = None
 
 
+def resolve_cpu_config():
+    available = os.cpu_count() or 1
+    requested = int(os.getenv("CES_CPU_WORKERS", str(available)))
+    cpu_workers = max(1, min(requested, available))
+
+    default_loader_workers = 0 if cpu_workers <= 2 else max(1, min(cpu_workers // 2, cpu_workers - 1))
+    loader_workers = int(os.getenv("CES_DATALOADER_WORKERS", str(default_loader_workers)))
+    loader_workers = max(0, min(loader_workers, max(cpu_workers - 1, 0)))
+
+    torch_threads = int(os.getenv("CES_TORCH_THREADS", str(max(1, cpu_workers - loader_workers))))
+    torch_threads = max(1, min(torch_threads, cpu_workers))
+
+    interop_threads = int(os.getenv("CES_TORCH_INTEROP_THREADS", str(min(4, torch_threads))))
+    interop_threads = max(1, min(interop_threads, torch_threads))
+
+    return {
+        "available": available,
+        "cpu_workers": cpu_workers,
+        "dataloader_workers": loader_workers,
+        "torch_threads": torch_threads,
+        "torch_interop_threads": interop_threads,
+    }
+
+
 def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     """Split by CSV shot file to avoid train/validation leakage across rows."""
 
@@ -55,8 +79,11 @@ def train():
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
     max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", "0"))
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "0"))
+    cpu_config = resolve_cpu_config()
 
     torch.manual_seed(seed)
+    torch.set_num_threads(cpu_config["torch_threads"])
+    torch.set_num_interop_threads(cpu_config["torch_interop_threads"])
 
     if wandb is not None:
         wandb.init(
@@ -70,6 +97,7 @@ def train():
                 "time_features": "lookback/delta seconds + log1p variants",
                 "split": "by_csv_file",
                 "val_fraction": val_fraction,
+                "cpu_config": cpu_config,
             },
         )
 
@@ -89,11 +117,27 @@ def train():
     train_dataset = Subset(full_dataset, train_indices)
     val_dataset = Subset(full_dataset, val_indices)
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    loader_kwargs = {
+        "batch_size": batch_size,
+        "num_workers": cpu_config["dataloader_workers"],
+        "persistent_workers": cpu_config["dataloader_workers"] > 0,
+    }
+    if cpu_config["dataloader_workers"] > 0:
+        loader_kwargs["prefetch_factor"] = 2
+
+    train_loader = DataLoader(train_dataset, shuffle=True, **loader_kwargs)
+    val_loader = DataLoader(val_dataset, shuffle=False, **loader_kwargs)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
+    print(
+        "CPU config: "
+        f"available={cpu_config['available']}, "
+        f"budget={cpu_config['cpu_workers']}, "
+        f"torch_threads={cpu_config['torch_threads']}, "
+        f"interop_threads={cpu_config['torch_interop_threads']}, "
+        f"dataloader_workers={cpu_config['dataloader_workers']}"
+    )
     print(f"Feature dims: {full_dataset.feature_dims}")
     print(f"Samples: train={len(train_dataset)}, val={len(val_dataset)}")
 
@@ -169,6 +213,7 @@ def train():
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "feature_dims": full_dataset.feature_dims,
+        "cpu_config": cpu_config,
     }
     metrics_path = output_dir / "metrics.json"
     with metrics_path.open("w", encoding="utf-8") as f:

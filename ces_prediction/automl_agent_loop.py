@@ -1,3 +1,4 @@
+import argparse
 import os
 import json
 import subprocess
@@ -8,10 +9,27 @@ class EvaluationAgent:
     Evaluation Agent:
     테스트 코드로 자가 치유(Self-Healing)를 검증한 후, 실제 학습(train.py)을 수행합니다.
     """
+    def __init__(self, cpu_workers=None, dataloader_workers=None):
+        self.cpu_workers = cpu_workers
+        self.dataloader_workers = dataloader_workers
+
+    def _subprocess_env(self):
+        env = os.environ.copy()
+        if self.cpu_workers is not None:
+            workers = str(self.cpu_workers)
+            env["CES_CPU_WORKERS"] = workers
+            env.setdefault("OMP_NUM_THREADS", workers)
+            env.setdefault("MKL_NUM_THREADS", workers)
+            env.setdefault("NUMEXPR_NUM_THREADS", workers)
+        if self.dataloader_workers is not None:
+            env["CES_DATALOADER_WORKERS"] = str(self.dataloader_workers)
+        return env
+
     def run_evaluation(self, iteration):
         print(f"\n[Evaluation Agent] Starting iteration {iteration}...")
         script_dir = os.path.dirname(os.path.abspath(__file__))
         root_dir = os.path.dirname(script_dir)
+        env = self._subprocess_env()
         
         # 1. Dry Run (에러 사전 차단)
         try:
@@ -20,6 +38,7 @@ class EvaluationAgent:
             subprocess.run(
                 ["python", os.path.join(root_dir, "tests", "test_architecture.py")],
                 cwd=script_dir,
+                env=env,
                 check=True,
             )
         except subprocess.CalledProcessError:
@@ -28,7 +47,12 @@ class EvaluationAgent:
 
         # 2. Actual Training
         try:
-            subprocess.run(["python", os.path.join(script_dir, "train.py")], cwd=script_dir, check=True)
+            subprocess.run(
+                ["python", os.path.join(script_dir, "train.py")],
+                cwd=script_dir,
+                env=env,
+                check=True,
+            )
             with open(os.path.join(script_dir, "metrics.json"), "r", encoding="utf-8") as f:
                 metrics = json.load(f)
             
@@ -131,14 +155,21 @@ class ResearcherAgent:
         except Exception as e:
             print(f"[Researcher Agent] LLM Error: {e}")
 
-def run_auto_ml_loop(max_iterations=5):
-    eval_agent = EvaluationAgent()
+def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None):
+    eval_agent = EvaluationAgent(
+        cpu_workers=cpu_workers,
+        dataloader_workers=dataloader_workers,
+    )
     briefing_agent = BriefingAgent()
     researcher_agent = ResearcherAgent()
     
     experiment_log = [] # 10회마다의 인사이트 생성을 위해 코드와 성능을 기록
     
     print("=== Starting Autonomous ML R&D Loop ===")
+    if cpu_workers is not None:
+        print(f"[AutoML Loop] CPU worker budget: {cpu_workers}")
+    if dataloader_workers is not None:
+        print(f"[AutoML Loop] DataLoader workers override: {dataloader_workers}")
     
     for i in range(1, max_iterations + 1):
         # 1. Evaluation (현재 모델 평가)
@@ -183,5 +214,28 @@ def run_auto_ml_loop(max_iterations=5):
     except Exception as e:
         print(f"[Slack Notifier] Failed to trigger notification: {e}")
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run the KSTAR CES AutoML loop.")
+    parser.add_argument("--max-iterations", type=int, default=300)
+    parser.add_argument(
+        "--cpu-workers",
+        type=int,
+        default=None,
+        help="CPU core budget passed to training. Example: --cpu-workers 16",
+    )
+    parser.add_argument(
+        "--dataloader-workers",
+        type=int,
+        default=None,
+        help="Override DataLoader worker processes. Defaults to about half of --cpu-workers.",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    run_auto_ml_loop(max_iterations=300)
+    args = parse_args()
+    run_auto_ml_loop(
+        max_iterations=args.max_iterations,
+        cpu_workers=args.cpu_workers,
+        dataloader_workers=args.dataloader_workers,
+    )
