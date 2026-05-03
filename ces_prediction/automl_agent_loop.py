@@ -234,6 +234,14 @@ def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None
     if dataloader_workers is not None:
         print(f"[AutoML Loop] DataLoader workers override: {dataloader_workers}")
     
+    # --- Slack 알림 발송 (실험 시작) ---
+    try:
+        from slack_notifier import send_experiment_start
+        send_experiment_start(max_iterations, cpu_workers)
+    except Exception as e:
+        print(f"[AutoML Loop] Failed to send experiment start notification: {e}")
+    # --------------------------------
+    
     for i in range(1, max_iterations + 1):
         # 1. Evaluation (현재 모델 평가)
         metrics = eval_agent.run_evaluation(i)

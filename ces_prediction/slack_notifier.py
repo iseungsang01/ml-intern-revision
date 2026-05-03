@@ -30,6 +30,32 @@ def _generate_diff(old_code, new_code):
         return "No architectural changes."
     return diff_text + ("\n...[truncated]" if len(list(diff)) > 50 else "")
 
+def send_experiment_start(max_iterations, cpu_workers):
+    """실험이 시작되었음을 Slack으로 전송합니다."""
+    token = os.environ.get("SLACK_BOT_TOKEN")
+    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    
+    if not token or not channel_id:
+        return
+
+    client = _get_slack_client(token)
+    if client is None:
+        return
+    
+    text = "🚀 *New AutoML Experiment Started*\n━━━━━━━━━━━━━━━━━━━━━━━━\n"
+    text += f"• Max Iterations: `{max_iterations}`\n"
+    if cpu_workers:
+        text += f"• CPU Budget: `{cpu_workers}` cores\n"
+    else:
+        text += "• CPU Budget: `Default` (Auto)\n"
+    text += "Waiting for the first iteration results..."
+
+    try:
+        client.chat_postMessage(channel=channel_id, text=text)
+        print(f"[Slack Notifier] Experiment start notification sent.")
+    except Exception as e:
+        print(f"[Slack Notifier] Failed to send experiment start notification: {e}")
+
 def send_insight_report(recent_log, current_iteration):
     """10번의 이터레이션 기록(Diff + 성능)을 LLM으로 분석하여 인사이트를 Slack으로 전송합니다."""
     token = os.environ.get("SLACK_BOT_TOKEN")

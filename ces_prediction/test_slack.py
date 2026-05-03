@@ -1,9 +1,13 @@
 import os
-from slack_notifier import send_iteration_update, send_insight_report, send_slack_summary
+from slack_notifier import send_iteration_update, send_insight_report, send_slack_summary, send_experiment_start
 
 def test_slack():
     print("--- Testing Slack Notifications ---")
     
+    # 0. Test Experiment Start
+    print("Sending test experiment start notification...")
+    send_experiment_start(300, 32)
+
     # 1. Test Iteration Update
     print("Sending test iteration update...")
     dummy_metrics = {
