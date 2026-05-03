@@ -8,7 +8,12 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Subset
 
-from dataset import KSTAR_CES_Dataset
+from dataset import (
+    DEFAULT_TRAIN_SAMPLE_COUNT,
+    DEFAULT_VAL_SAMPLE_COUNT,
+    KSTAR_CES_Dataset,
+    select_seeded_random_indices,
+)
 from model import MultimodalCESPredictor
 
 try:
@@ -91,12 +96,7 @@ def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
 
 
 def select_seeded_subset(indices, max_samples, seed):
-    if max_samples <= 0 or len(indices) <= max_samples:
-        return indices
-
-    generator = torch.Generator().manual_seed(seed)
-    order = torch.randperm(len(indices), generator=generator)[:max_samples].tolist()
-    return [indices[i] for i in order]
+    return select_seeded_random_indices(indices, max_samples, seed)
 
 
 def split_manifest(train_files, val_files, train_indices, val_indices, seed, val_fraction):
@@ -135,8 +135,8 @@ def train():
     lr = float(os.getenv("CES_LR", "1e-3"))
     seed = int(os.getenv("CES_SEED", "42"))
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
-    max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", "0"))
-    max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "0"))
+    max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", str(DEFAULT_TRAIN_SAMPLE_COUNT)))
+    max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
     cpu_config = resolve_cpu_config()

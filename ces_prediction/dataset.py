@@ -394,12 +394,40 @@ class KSTAR_CES_Dataset(Dataset):
         }
 
 
+DEFAULT_TRAIN_SAMPLE_COUNT = 50000
+DEFAULT_VAL_SAMPLE_COUNT = 10000
+DEFAULT_SAMPLE_SEED = 42
+
+
+def select_seeded_random_indices(indices, max_samples, seed):
+    if max_samples <= 0 or len(indices) <= max_samples:
+        return list(indices)
+
+    generator = torch.Generator().manual_seed(seed)
+    order = torch.randperm(len(indices), generator=generator)[:max_samples].tolist()
+    return [indices[i] for i in order]
+
+
 if __name__ == "__main__":
     data_dir = Path(__file__).resolve().parents[1] / "data"
     dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=10)
     print(f"CSV files: {len(dataset.files)}")
     print(f"Total samples: {len(dataset)}")
     print(f"Feature dims: {dataset.feature_dims}")
+    train_preview = select_seeded_random_indices(
+        range(len(dataset)),
+        DEFAULT_TRAIN_SAMPLE_COUNT,
+        DEFAULT_SAMPLE_SEED + 101,
+    )
+    train_preview_set = set(train_preview)
+    remaining = [i for i in range(len(dataset)) if i not in train_preview_set]
+    test_preview = select_seeded_random_indices(
+        remaining,
+        DEFAULT_VAL_SAMPLE_COUNT,
+        DEFAULT_SAMPLE_SEED + 202,
+    )
+    print(f"Random train samples: {len(train_preview)}")
+    print(f"Random test samples: {len(test_preview)}")
 
     if len(dataset) > 0:
         sample = dataset[0]
