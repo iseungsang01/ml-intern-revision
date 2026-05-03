@@ -268,8 +268,7 @@ Stage 1: node:20-alpine
   -> npm run build
 
 Stage 2: python:3.12-slim
-  -> uv 설치
-  -> pyproject.toml / uv.lock 기반 uv sync --no-dev --frozen
+  -> Python dependencies 설치
   -> agent/, backend/, configs/ 복사
   -> frontend dist를 /app/static 으로 복사
   -> WORKDIR /app/backend
@@ -436,13 +435,13 @@ python automl_agent_loop.py
 개발 의존성 설치:
 
 ```bash
-uv sync --extra dev
+python -m pip install -e ".[dev]"
 ```
 
 테스트 실행:
 
 ```bash
-uv run pytest
+pytest
 ```
 
 테스트는 다음 범주를 포함합니다.

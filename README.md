@@ -16,8 +16,7 @@ The system has been upgraded from a generic coding assistant to a **Multi-Agent 
 ```bash
 git clone https://github.com/iseungsang01/ml-intern-revision.git
 cd ml-intern-revision
-uv sync
-uv tool install -e .
+python -m pip install -e .
 ```
 
 #### That's it. Now `ml-intern` works from any directory:
