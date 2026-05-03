@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 
-from dataset import KSTAR_CES_Dataset
+from dataset import DEFAULT_TRAIN_SAMPLE_COUNT, DEFAULT_VAL_SAMPLE_COUNT, KSTAR_CES_Dataset
 from train import load_or_create_fixed_splits, split_manifest
 
 
@@ -14,8 +14,8 @@ def main():
     seed = int(os.getenv("CES_SEED", "42"))
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
     window_size = int(os.getenv("CES_WINDOW_SIZE", "4"))
-    max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", "50000"))
-    max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "10000"))
+    max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", str(DEFAULT_TRAIN_SAMPLE_COUNT)))
+    max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
 

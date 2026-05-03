@@ -164,10 +164,21 @@ def load_or_create_fixed_splits(dataset, output_dir, val_fraction, seed, max_tra
     if train_split_path.exists() and val_split_path.exists():
         train_indices = load_fixed_split_csv(train_split_path, dataset)
         val_indices = load_fixed_split_csv(val_split_path, dataset)
-        train_files = split_files_from_indices(dataset, train_indices)
-        val_files = split_files_from_indices(dataset, val_indices)
-        print(f"Loaded fixed splits: {train_split_path.name}, {val_split_path.name}")
-        return train_indices, val_indices, train_files, val_files
+        requested_train_count = max_train_samples if max_train_samples > 0 else len(train_indices)
+        requested_val_count = max_val_samples if max_val_samples > 0 else len(val_indices)
+        if len(train_indices) == requested_train_count and len(val_indices) == requested_val_count:
+            train_files = split_files_from_indices(dataset, train_indices)
+            val_files = split_files_from_indices(dataset, val_indices)
+            print(f"Loaded fixed splits: {train_split_path.name}, {val_split_path.name}")
+            return train_indices, val_indices, train_files, val_files
+
+        print(
+            "Fixed split size changed "
+            f"from train={len(train_indices)}, val={len(val_indices)} "
+            f"to train={max_train_samples}, val={max_val_samples}; regenerating CSV files."
+        )
+        train_split_path.unlink()
+        val_split_path.unlink()
 
     if train_split_path.exists() != val_split_path.exists():
         raise ValueError(
@@ -229,6 +240,9 @@ def train():
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
     cpu_config = resolve_cpu_config()
+
+    if epochs < 1:
+        raise ValueError("CES_EPOCHS must be at least 1")
 
     torch.manual_seed(seed)
     torch.set_num_threads(cpu_config["torch_threads"])
@@ -354,6 +368,11 @@ def train():
             loss_mse = criterion(outputs, targets)
             penalty_neg_ti = torch.relu(zero_ti_normalized - outputs[:, 0]).mean()
             loss = loss_mse + 0.1 * penalty_neg_ti
+            if not torch.isfinite(loss):
+                raise FloatingPointError(
+                    f"Non-finite train loss at epoch={epoch + 1}: "
+                    f"loss={loss.item()}, mse={loss_mse.item()}, penalty_neg_ti={penalty_neg_ti.item()}"
+                )
 
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
@@ -376,9 +395,15 @@ def train():
 
                 outputs = model(bes, ecei, mc, time_features, ces_history)
                 loss = criterion(outputs, targets)
+                if not torch.isfinite(loss):
+                    raise FloatingPointError(
+                        f"Non-finite validation loss at epoch={epoch + 1}: loss={loss.item()}"
+                    )
                 val_loss_sum += loss.item() * bes.size(0)
 
         val_loss = val_loss_sum / len(val_loader.dataset)
+        if not np.isfinite(val_loss):
+            raise FloatingPointError(f"Non-finite validation loss after epoch={epoch + 1}: {val_loss}")
         scheduler.step(val_loss)
 
         print(

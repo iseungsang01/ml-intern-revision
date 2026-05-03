@@ -9,6 +9,10 @@ import torch
 from torch.utils.data import Dataset
 
 
+DEFAULT_TRAIN_SAMPLE_COUNT = 200000
+DEFAULT_VAL_SAMPLE_COUNT = 40000
+DEFAULT_SAMPLE_SEED = 42
+
 TIME_COLUMN = "time"
 TARGET_COLUMNS = ("CES_TI", "CES_VT")
 
@@ -392,11 +396,6 @@ class KSTAR_CES_Dataset(Dataset):
             "row_index": idx,
             "row_indices": padded_row_indices,
         }
-
-
-DEFAULT_TRAIN_SAMPLE_COUNT = 50000
-DEFAULT_VAL_SAMPLE_COUNT = 10000
-DEFAULT_SAMPLE_SEED = 42
 
 
 def select_seeded_random_indices(indices, max_samples, seed):

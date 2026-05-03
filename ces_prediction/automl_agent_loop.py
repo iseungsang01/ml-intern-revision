@@ -51,9 +51,11 @@ class EvaluationAgent:
     Evaluation Agent:
     테스트 코드로 자가 치유(Self-Healing)를 검증한 후, 실제 학습(train.py)을 수행합니다.
     """
-    def __init__(self, cpu_workers=None, dataloader_workers=None):
+    def __init__(self, cpu_workers=None, dataloader_workers=None, train_samples=None, val_samples=None):
         self.cpu_workers = cpu_workers
         self.dataloader_workers = dataloader_workers
+        self.train_samples = train_samples
+        self.val_samples = val_samples
 
     def _subprocess_env(self):
         env = os.environ.copy()
@@ -65,6 +67,10 @@ class EvaluationAgent:
             env.setdefault("NUMEXPR_NUM_THREADS", workers)
         if self.dataloader_workers is not None:
             env["CES_DATALOADER_WORKERS"] = str(self.dataloader_workers)
+        if self.train_samples is not None:
+            env["CES_MAX_TRAIN_SAMPLES"] = str(self.train_samples)
+        if self.val_samples is not None:
+            env["CES_MAX_VAL_SAMPLES"] = str(self.val_samples)
         return env
 
     def run_evaluation(self, iteration):
@@ -85,7 +91,7 @@ class EvaluationAgent:
             )
         except subprocess.CalledProcessError:
             print("[Evaluation Agent] Dry-run failed. Researcher must fix the Shape/Architecture mismatch.")
-            return {"error": "Dry-run failed", "final_val_loss": float('inf')}
+            return {"error": "Dry-run failed", "error_stage": "dry_run", "final_val_loss": float('inf')}
 
         # 2. Actual Training
         try:
@@ -103,7 +109,7 @@ class EvaluationAgent:
             return metrics
         except Exception as e:
             print(f"[Evaluation Agent] Training failed: {e}")
-            return {"error": str(e), "final_val_loss": float('inf')}
+            return {"error": str(e), "error_stage": "training", "final_val_loss": float('inf')}
 
 
 def reset_session_artifacts():
@@ -132,6 +138,8 @@ class BriefingAgent:
         normalization = metrics.get("normalization", {})
         cpu_config = metrics.get("cpu_config", {})
         return {
+            "error": metrics.get("error"),
+            "error_stage": metrics.get("error_stage"),
             "train_loss": metrics.get("final_train_loss"),
             "val_loss": metrics.get("final_val_loss", float("inf")),
             "epochs": metrics.get("epochs"),
@@ -195,6 +203,9 @@ class BriefingAgent:
         handoff_content += "## Latest Metrics\n\n"
         handoff_content += f"- Train Loss: {self._fmt(metric_summary['train_loss'])}\n"
         handoff_content += f"- Val Loss: {self._fmt(metric_summary['val_loss'])}\n"
+        if metric_summary.get("error"):
+            handoff_content += f"- Error Stage: {self._fmt(metric_summary['error_stage'])}\n"
+            handoff_content += f"- Error: {self._fmt(metric_summary['error'])}\n"
         handoff_content += f"- Epochs: {self._fmt(metric_summary['epochs'])}\n"
         handoff_content += f"- Samples: train={self._fmt(metric_summary['train_samples'])}, val={self._fmt(metric_summary['val_samples'])}\n"
         handoff_content += f"- Temporal Subsets: {self._fmt(metric_summary['temporal_subset_augmentation'])}\n"
@@ -265,12 +276,14 @@ class ResearcherAgent:
         except Exception as e:
             print(f"[Researcher Agent] LLM Error: {e}")
 
-def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None):
+def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None, train_samples=None, val_samples=None):
     reset_session_artifacts()
 
     eval_agent = EvaluationAgent(
         cpu_workers=cpu_workers,
         dataloader_workers=dataloader_workers,
+        train_samples=train_samples,
+        val_samples=val_samples,
     )
     briefing_agent = BriefingAgent()
     researcher_agent = ResearcherAgent()
@@ -282,6 +295,8 @@ def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None
         print(f"[AutoML Loop] CPU worker budget: {cpu_workers}")
     if dataloader_workers is not None:
         print(f"[AutoML Loop] DataLoader workers override: {dataloader_workers}")
+    if train_samples is not None or val_samples is not None:
+        print(f"[AutoML Loop] Sample caps: train={train_samples}, val={val_samples}")
     
     # --- Slack 알림 발송 (실험 시작) ---
     try:
@@ -352,6 +367,18 @@ def parse_args():
         default=None,
         help="Override DataLoader worker processes. Defaults to about half of --cpu-workers.",
     )
+    parser.add_argument(
+        "--train-samples",
+        type=int,
+        default=None,
+        help="Override CES_MAX_TRAIN_SAMPLES for each training run.",
+    )
+    parser.add_argument(
+        "--val-samples",
+        type=int,
+        default=None,
+        help="Override CES_MAX_VAL_SAMPLES for each training run.",
+    )
     return parser.parse_args()
 
 
@@ -361,4 +388,6 @@ if __name__ == "__main__":
         max_iterations=args.max_iterations,
         cpu_workers=args.cpu_workers,
         dataloader_workers=args.dataloader_workers,
+        train_samples=args.train_samples,
+        val_samples=args.val_samples,
     )
