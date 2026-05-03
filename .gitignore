@@ -1,3 +1,6 @@
 data
 ces_prediction/__pycache__
+tests/__pycache__
+ces_prediction/metrics.json
+ces_prediction/weights/
 .env

@@ -5,6 +5,14 @@ from dotenv import load_dotenv
 # .env 파일 로드 (루트 디렉토리 기준)
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
+def _get_slack_client(token):
+    try:
+        from slack_sdk import WebClient
+    except ImportError:
+        print("[Slack Notifier] slack_sdk is not installed. Skipping Slack notification.")
+        return None
+    return WebClient(token=token)
+
 def _generate_diff(old_code, new_code):
     """이전 이터레이션과 현재 이터레이션 간의 코드 차이(Diff)를 생성합니다."""
     if old_code == new_code:
@@ -30,8 +38,14 @@ def send_insight_report(recent_log, current_iteration):
     if not token or not channel_id:
         return
 
-    import litellm
-    from slack_sdk import WebClient
+    client = _get_slack_client(token)
+    if client is None:
+        return
+    try:
+        import litellm
+    except ImportError:
+        print("[Slack Notifier] litellm is not installed. Skipping insight report.")
+        return
     
     print(f"\n[Slack Notifier] Generating insight report for iterations {current_iteration-9} to {current_iteration}...")
 
@@ -86,7 +100,6 @@ def send_insight_report(recent_log, current_iteration):
         header = f"🧠 *AutoML Insight Report (Iter {start_iter} ~ {current_iteration})*\n━━━━━━━━━━━━━━━━━━━━━━━━\n"
         final_text = header + insight_message
         
-        client = WebClient(token=token)
         response = client.chat_postMessage(channel=channel_id, text=final_text)
         print(f"[Slack Notifier] Insight report sent successfully! (ts: {response['ts']})")
         
@@ -101,7 +114,9 @@ def send_iteration_update(iteration, metrics):
     if not token or not channel_id:
         return
 
-    from slack_sdk import WebClient
+    client = _get_slack_client(token)
+    if client is None:
+        return
     
     val_loss = metrics.get("final_val_loss", float('inf'))
     train_loss = metrics.get("final_train_loss", "n/a")
@@ -116,7 +131,6 @@ def send_iteration_update(iteration, metrics):
     text += f"• Train Loss: `{train_loss_str}`"
 
     try:
-        client = WebClient(token=token)
         client.chat_postMessage(channel=channel_id, text=text)
         print(f"[Slack Notifier] Iteration update sent successfully.")
     except Exception as e:
@@ -131,12 +145,15 @@ def send_slack_summary(history, max_iterations):
         print("[Slack Notifier] Token or Channel ID not found in .env. Skipping Slack notification.")
         return
 
-    from slack_sdk import WebClient
-    from slack_sdk.errors import SlackApiError
+    client = _get_slack_client(token)
+    if client is None:
+        return
+    try:
+        from slack_sdk.errors import SlackApiError
+    except ImportError:
+        SlackApiError = Exception
     
     try:
-        client = WebClient(token=token)
-        
         if not history:
             text = "🏁 *ML R&D Loop Completed*, but no history was recorded."
         else:

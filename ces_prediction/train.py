@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -21,7 +22,13 @@ def resolve_cpu_config():
     requested = int(os.getenv("CES_CPU_WORKERS", str(available)))
     cpu_workers = max(1, min(requested, available))
 
-    default_loader_workers = 0 if cpu_workers <= 2 else max(1, min(cpu_workers // 2, cpu_workers - 1))
+    # Windows uses spawn-based multiprocessing, which has high startup and copy
+    # cost for large in-memory datasets. Keep the default single-process there
+    # unless the user explicitly opts into DataLoader workers.
+    if os.name == "nt":
+        default_loader_workers = 0
+    else:
+        default_loader_workers = 0 if cpu_workers <= 2 else max(1, min(cpu_workers // 2, cpu_workers - 1))
     loader_workers = int(os.getenv("CES_DATALOADER_WORKERS", str(default_loader_workers)))
     loader_workers = max(0, min(loader_workers, max(cpu_workers - 1, 0)))
 
@@ -44,7 +51,12 @@ def resolve_cpu_config():
 def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     """Split by CSV shot file to avoid train/validation leakage across rows."""
 
-    files = sorted({file_path for file_path, _ in dataset.sample_indices})
+    if hasattr(dataset, "sample_file_indices") and hasattr(dataset, "valid_files"):
+        sample_file_indices = dataset.sample_file_indices
+        files = sorted(np.unique(sample_file_indices).astype(int).tolist())
+    else:
+        files = sorted({file_path for file_path, _ in dataset.sample_indices})
+
     if len(files) < 2:
         raise ValueError("Need at least two CSV files with valid samples for validation split")
 
@@ -53,13 +65,19 @@ def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     val_count = max(1, int(round(len(files) * val_fraction)))
     val_files = {files[i] for i in order[:val_count]}
 
-    train_indices = []
-    val_indices = []
-    for sample_idx, (file_path, _) in enumerate(dataset.sample_indices):
-        if file_path in val_files:
-            val_indices.append(sample_idx)
-        else:
-            train_indices.append(sample_idx)
+    if hasattr(dataset, "sample_file_indices"):
+        val_mask = torch.from_numpy(np.isin(dataset.sample_file_indices, list(val_files)))
+        all_indices = torch.arange(len(dataset), dtype=torch.long)
+        val_indices = all_indices[val_mask].tolist()
+        train_indices = all_indices[~val_mask].tolist()
+    else:
+        train_indices = []
+        val_indices = []
+        for sample_idx, (file_path, _) in enumerate(dataset.sample_indices):
+            if file_path in val_files:
+                val_indices.append(sample_idx)
+            else:
+                train_indices.append(sample_idx)
 
     if not train_indices or not val_indices:
         raise ValueError("File-level split produced an empty train or validation set")
@@ -136,7 +154,15 @@ def train():
     if max_val_samples > 0:
         val_indices = val_indices[:max_val_samples]
 
-    train_files = {full_dataset.sample_indices[i][0] for i in train_indices}
+    if hasattr(full_dataset, "sample_file_indices") and hasattr(full_dataset, "valid_files"):
+        train_sample_indices = np.asarray(train_indices, dtype=np.int64)
+        train_file_indices = np.unique(full_dataset.sample_file_indices[train_sample_indices])
+        train_files = {
+            full_dataset.valid_files[int(file_idx)]
+            for file_idx in train_file_indices
+        }
+    else:
+        train_files = {full_dataset.sample_indices[i][0] for i in train_indices}
     normalization_stats = full_dataset.fit_normalization_stats(train_files)
     full_dataset.set_normalization_stats(normalization_stats)
 

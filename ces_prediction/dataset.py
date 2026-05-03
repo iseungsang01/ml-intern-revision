@@ -1,4 +1,5 @@
-from functools import lru_cache
+import hashlib
+import json
 from itertools import combinations
 from pathlib import Path
 
@@ -28,6 +29,7 @@ class KSTAR_CES_Dataset(Dataset):
         temporal_subset_augmentation=False,
         min_subset_size=2,
         normalization_stats=None,
+        use_disk_cache=True,
     ):
         self.data_dir = Path(data_dir)
         self.window_size = int(window_size)
@@ -35,6 +37,7 @@ class KSTAR_CES_Dataset(Dataset):
         self.temporal_subset_augmentation = bool(temporal_subset_augmentation)
         self.min_subset_size = int(min_subset_size)
         self.normalization_stats = normalization_stats
+        self.use_disk_cache = bool(use_disk_cache)
 
         if self.window_size < 2:
             raise ValueError("window_size must be at least 2")
@@ -55,13 +58,18 @@ class KSTAR_CES_Dataset(Dataset):
             "log1p_delta_seconds",
         )
         self.ces_history_cols = ("CES_TI_history", "CES_VT_history", "CES_observed")
-        self._preload_data()
-        self.sample_indices = self._build_index()
+        if not self._load_disk_cache():
+            self._preload_data()
+            self._build_index()
+            self._save_disk_cache()
 
     def _preload_data(self):
-        """Pre-load all CSV files into memory for massive speedup on high-core CPUs."""
+        """Pre-load all CSV files as compact numpy arrays."""
         self.data_cache = {}
+        self.file_arrays = []
+        self.valid_files = []
         usecols = self._required_columns()
+        self._column_slices = self._build_column_slices(usecols)
         
         print(f"Pre-loading {len(self.files)} CSV files into memory...")
         for file_path in self.files:
@@ -69,9 +77,101 @@ class KSTAR_CES_Dataset(Dataset):
                 df = pd.read_csv(file_path, usecols=usecols)
                 clean_df = df.dropna(subset=usecols).reset_index(drop=True)
                 if not clean_df.empty:
-                    self.data_cache[str(file_path)] = clean_df
+                    values = clean_df.loc[:, usecols].to_numpy(dtype=np.float32, copy=True)
+                    self.data_cache[str(file_path)] = values
+                    self.file_arrays.append(values)
+                    self.valid_files.append(str(file_path))
             except Exception as e:
                 print(f"Warning: Could not load {file_path}: {e}")
+
+    def _build_column_slices(self, usecols):
+        positions = {name: i for i, name in enumerate(usecols)}
+        return {
+            "time": positions[TIME_COLUMN],
+            "target": np.asarray([positions[c] for c in TARGET_COLUMNS], dtype=np.int64),
+            "bes": np.asarray([positions[c] for c in self.bes_cols], dtype=np.int64),
+            "ecei": np.asarray([positions[c] for c in self.ecei_cols], dtype=np.int64),
+            "mc": np.asarray([positions[c] for c in self.mc_cols], dtype=np.int64),
+        }
+
+    def _cache_path(self):
+        cache_dir = self.data_dir / ".ces_cache"
+        signature = {
+            "version": 2,
+            "window_size": self.window_size,
+            "temporal_subset_augmentation": self.temporal_subset_augmentation,
+            "min_subset_size": self.min_subset_size,
+            "columns": self._required_columns(),
+            "files": [
+                {
+                    "name": file_path.name,
+                    "size": file_path.stat().st_size,
+                    "mtime_ns": file_path.stat().st_mtime_ns,
+                }
+                for file_path in self.files
+            ],
+        }
+        payload = json.dumps(signature, sort_keys=True).encode("utf-8")
+        digest = hashlib.sha256(payload).hexdigest()[:20]
+        return cache_dir / f"kstar_ces_dataset_{digest}.npz"
+
+    def _load_disk_cache(self):
+        if not self.use_disk_cache:
+            return False
+
+        cache_path = self._cache_path()
+        if not cache_path.exists():
+            return False
+
+        try:
+            payload = np.load(cache_path, allow_pickle=False)
+            self.valid_files = payload["valid_files"].astype(str).tolist()
+            self.file_arrays = [payload[f"file_{i}"] for i in range(len(self.valid_files))]
+            self.data_cache = {
+                file_path: self.file_arrays[i]
+                for i, file_path in enumerate(self.valid_files)
+            }
+            self.sample_file_indices = payload["sample_file_indices"].astype(np.int32, copy=False)
+            self.sample_row_indices = payload["sample_row_indices"].astype(np.int32, copy=False)
+            self.sample_lengths = payload["sample_lengths"].astype(np.int16, copy=False)
+            self._column_slices = json.loads(payload["column_slices"].item())
+            self._column_slices["target"] = np.asarray(self._column_slices["target"], dtype=np.int64)
+            self._column_slices["bes"] = np.asarray(self._column_slices["bes"], dtype=np.int64)
+            self._column_slices["ecei"] = np.asarray(self._column_slices["ecei"], dtype=np.int64)
+            self._column_slices["mc"] = np.asarray(self._column_slices["mc"], dtype=np.int64)
+            print(f"Loaded dataset cache: {cache_path}")
+            return True
+        except Exception as e:
+            print(f"Warning: Could not load dataset cache {cache_path}: {e}")
+            return False
+
+    def _save_disk_cache(self):
+        if not self.use_disk_cache:
+            return
+
+        cache_path = self._cache_path()
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        arrays = {
+            "valid_files": np.asarray(self.valid_files, dtype=str),
+            "sample_file_indices": self.sample_file_indices,
+            "sample_row_indices": self.sample_row_indices,
+            "sample_lengths": self.sample_lengths,
+            "column_slices": np.asarray(
+                json.dumps(
+                    {
+                        "time": int(self._column_slices["time"]),
+                        "target": self._column_slices["target"].tolist(),
+                        "bes": self._column_slices["bes"].tolist(),
+                        "ecei": self._column_slices["ecei"].tolist(),
+                        "mc": self._column_slices["mc"].tolist(),
+                    }
+                )
+            ),
+        }
+        for i, values in enumerate(self.file_arrays):
+            arrays[f"file_{i}"] = values
+        np.savez(cache_path, **arrays)
+        print(f"Saved dataset cache: {cache_path}")
 
     def set_normalization_stats(self, normalization_stats):
         self.normalization_stats = normalization_stats
@@ -81,33 +181,32 @@ class KSTAR_CES_Dataset(Dataset):
         return [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
 
     @staticmethod
-    def _channel_stats(frames, columns):
-        values = pd.concat((df.loc[:, columns] for df in frames), ignore_index=True)
-        mean = values.mean(axis=0).to_numpy(dtype=np.float32)
-        std = values.std(axis=0, ddof=0).replace(0.0, 1.0).to_numpy(dtype=np.float32)
+    def _channel_stats(arrays):
+        values = np.concatenate(arrays, axis=0)
+        mean = values.mean(axis=0, dtype=np.float64).astype(np.float32)
+        std = values.std(axis=0, dtype=np.float64).astype(np.float32)
+        std = np.where(std == 0.0, 1.0, std)
         std = np.maximum(std, 1e-6).astype(np.float32)
         return {"mean": mean, "std": std}
 
     def fit_normalization_stats(self, file_paths=None):
         selected_files = {str(Path(p)) for p in file_paths} if file_paths is not None else None
-        frames = []
-        usecols = self._required_columns()
+        groups = {"bes": [], "ecei": [], "mc": [], "target": []}
 
-        for file_path in self.files:
-            if selected_files is not None and str(file_path) not in selected_files:
+        for file_path, values in self.data_cache.items():
+            if selected_files is not None and file_path not in selected_files:
                 continue
-            df = self.data_cache.get(str(file_path))
-            if df is not None and not df.empty:
-                frames.append(df)
+            groups["bes"].append(values[:, self._column_slices["bes"]])
+            groups["ecei"].append(values[:, self._column_slices["ecei"]])
+            groups["mc"].append(values[:, self._column_slices["mc"]])
+            groups["target"].append(values[:, self._column_slices["target"]])
 
-        if not frames:
+        if not groups["target"]:
             raise ValueError("No rows available to fit normalization statistics")
 
         return {
-            "bes": self._channel_stats(frames, self.bes_cols),
-            "ecei": self._channel_stats(frames, self.ecei_cols),
-            "mc": self._channel_stats(frames, self.mc_cols),
-            "target": self._channel_stats(frames, TARGET_COLUMNS),
+            group: self._channel_stats(arrays)
+            for group, arrays in groups.items()
         }
 
     def _normalize_array(self, values, group):
@@ -135,18 +234,15 @@ class KSTAR_CES_Dataset(Dataset):
         raise ValueError("Could not infer BES/ECEI/MC columns from the CSV files")
 
     def _build_index(self):
-        sample_indices = []
-        # All columns we need for a sample to be valid
-        usecols = self._required_columns()
+        sample_file_indices = []
+        sample_rows = []
+        sample_lengths = []
 
-        for file_path in self.files:
-            df = self.data_cache.get(str(file_path))
-            if df is None:
-                continue
-            if len(df) < self.min_subset_size:
+        for file_idx, values in enumerate(self.file_arrays):
+            if len(values) < self.min_subset_size:
                 continue
 
-            time = df[TIME_COLUMN].to_numpy()
+            time = values[:, self._column_slices["time"]]
             deltas = np.diff(time)
             is_contiguous = deltas < 0.5
 
@@ -154,13 +250,22 @@ class KSTAR_CES_Dataset(Dataset):
             for i, contiguous in enumerate(is_contiguous):
                 if contiguous:
                     continue
-                self._add_block_samples(sample_indices, file_path, block_start, i)
+                self._add_block_samples(sample_file_indices, sample_rows, sample_lengths, file_idx, block_start, i)
                 block_start = i + 1
-            self._add_block_samples(sample_indices, file_path, block_start, len(df) - 1)
+            self._add_block_samples(sample_file_indices, sample_rows, sample_lengths, file_idx, block_start, len(values) - 1)
 
-        return sample_indices
+        self.sample_file_indices = np.asarray(sample_file_indices, dtype=np.int32)
+        self.sample_row_indices = np.asarray(sample_rows, dtype=np.int32).reshape(-1, self.window_size)
+        self.sample_lengths = np.asarray(sample_lengths, dtype=np.int16)
 
-    def _add_block_samples(self, sample_indices, file_path, block_start, block_end):
+    def _add_sample(self, sample_file_indices, sample_rows, sample_lengths, file_idx, rows):
+        padded_rows = np.full((self.window_size,), -1, dtype=np.int32)
+        padded_rows[: len(rows)] = rows
+        sample_file_indices.append(file_idx)
+        sample_rows.append(padded_rows)
+        sample_lengths.append(len(rows))
+
+    def _add_block_samples(self, sample_file_indices, sample_rows, sample_lengths, file_idx, block_start, block_end):
         block_len = block_end - block_start + 1
         if block_len < self.min_subset_size:
             return
@@ -170,7 +275,7 @@ class KSTAR_CES_Dataset(Dataset):
                 return
             for idx in range(block_start + self.window_size - 1, block_end + 1):
                 rows = tuple(range(idx - self.window_size + 1, idx + 1))
-                sample_indices.append((str(file_path), rows))
+                self._add_sample(sample_file_indices, sample_rows, sample_lengths, file_idx, rows)
             return
 
         for target_idx in range(block_start + self.min_subset_size - 1, block_end + 1):
@@ -182,14 +287,21 @@ class KSTAR_CES_Dataset(Dataset):
             for history_count in range(min_history, max_history + 1):
                 for history_combo in combinations(history_rows, history_count):
                     rows = (*history_combo, target_idx)
-                    sample_indices.append((str(file_path), rows))
+                    self._add_sample(sample_file_indices, sample_rows, sample_lengths, file_idx, rows)
 
     def _get_file_data(self, file_path):
         """Retrieve data from memory cache."""
         return self.data_cache[str(file_path)]
 
     def __len__(self):
-        return len(self.sample_indices)
+        return len(self.sample_file_indices)
+
+    @property
+    def sample_indices(self):
+        return [
+            (self.valid_files[int(file_idx)], tuple(row for row in rows if row >= 0))
+            for file_idx, rows in zip(self.sample_file_indices, self.sample_row_indices)
+        ]
 
     @property
     def feature_dims(self):
@@ -211,9 +323,8 @@ class KSTAR_CES_Dataset(Dataset):
         padding = torch.zeros(pad_shape, dtype=tensor.dtype)
         return torch.cat((tensor, padding), dim=0)
 
-    def _window_tensor(self, window_df, columns, group):
-        # Data is already cleaned via dropna in _get_file_data, so no need for ffill/bfill
-        values = window_df.loc[:, columns].to_numpy(dtype=np.float32)
+    def _window_tensor(self, file_values, row_indices, columns, group):
+        values = file_values[np.ix_(row_indices, columns)].astype(np.float32, copy=False)
         values = self._normalize_array(values, group)
         return self._pad_tensor(torch.from_numpy(values))
 
@@ -234,10 +345,10 @@ class KSTAR_CES_Dataset(Dataset):
         ).astype(np.float32)
         return self._pad_tensor(torch.from_numpy(features))
 
-    def _ces_history(self, window_df):
-        values = window_df.loc[:, TARGET_COLUMNS].to_numpy(dtype=np.float32)
+    def _ces_history(self, file_values, row_indices):
+        values = file_values[np.ix_(row_indices, self._column_slices["target"])].astype(np.float32, copy=True)
         values = self._normalize_array(values, "target")
-        observed = np.ones((len(window_df), 1), dtype=np.float32)
+        observed = np.ones((len(row_indices), 1), dtype=np.float32)
 
         values[-1, :] = 0.0
         observed[-1, 0] = 0.0
@@ -246,28 +357,25 @@ class KSTAR_CES_Dataset(Dataset):
         return self._pad_tensor(torch.from_numpy(history))
 
     def __getitem__(self, i):
-        file_path, row_indices = self.sample_indices[i]
-        df = self._get_file_data(file_path)
+        file_idx = int(self.sample_file_indices[i])
+        file_path = self.valid_files[file_idx]
+        file_values = self.file_arrays[file_idx]
+        valid_len = int(self.sample_lengths[i])
+        row_indices = self.sample_row_indices[i, :valid_len]
 
-        window_df = df.iloc[list(row_indices)]
+        bes = self._window_tensor(file_values, row_indices, self._column_slices["bes"], "bes")
+        ecei = self._window_tensor(file_values, row_indices, self._column_slices["ecei"], "ecei")
+        mc = self._window_tensor(file_values, row_indices, self._column_slices["mc"], "mc")
 
-        bes = self._window_tensor(window_df, self.bes_cols, "bes")
-        ecei = self._window_tensor(window_df, self.ecei_cols, "ecei")
-        mc = self._window_tensor(window_df, self.mc_cols, "mc")
-
-        time_values = window_df[TIME_COLUMN].to_numpy()
+        time_values = file_values[row_indices, self._column_slices["time"]]
         time_features = self._time_features(time_values)
-        ces_history = self._ces_history(window_df)
+        ces_history = self._ces_history(file_values, row_indices)
         input_mask = torch.zeros(self.window_size, dtype=torch.bool)
-        input_mask[: len(row_indices)] = True
-        padded_row_indices = torch.full((self.window_size,), -1, dtype=torch.long)
-        padded_row_indices[: len(row_indices)] = torch.tensor(row_indices, dtype=torch.long)
+        input_mask[:valid_len] = True
+        padded_row_indices = torch.from_numpy(self.sample_row_indices[i].astype(np.int64, copy=True))
 
         idx = row_indices[-1]
-        target_values = (
-            df.loc[df.index[idx], list(TARGET_COLUMNS)]
-            .to_numpy(dtype=np.float32)
-        )
+        target_values = file_values[idx, self._column_slices["target"]].astype(np.float32, copy=False)
         target_values = self._normalize_array(target_values, "target")
         target = torch.from_numpy(target_values)
 
