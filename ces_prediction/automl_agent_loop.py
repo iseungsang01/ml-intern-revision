@@ -259,14 +259,17 @@ def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None
         if i < max_iterations: # 마지막 턴이 아니면 다음 모델 준비
             researcher_agent.research_and_update(briefing)
             
-        # 4. Insight Report 발송 (10 이터레이션 마다)
-        if i % 10 == 0:
-            try:
-                from slack_notifier import send_insight_report
-                # 최근 10개의 로그만 전송
+        # 4. Slack 알림 발송 (매 이터레이션)
+        try:
+            from slack_notifier import send_iteration_update, send_insight_report
+            # 매번 간단한 업데이트 전송
+            send_iteration_update(i, metrics)
+            
+            # 10회마다 상세 LLM 인사이트 분석 전송
+            if i % 10 == 0:
                 send_insight_report(experiment_log[-10:], i)
-            except Exception as e:
-                print(f"[AutoML Loop] Failed to send insight report: {e}")
+        except Exception as e:
+            print(f"[AutoML Loop] Failed to send slack notification: {e}")
             
     print("\n=== Autonomous ML R&D Loop Completed ===")
     

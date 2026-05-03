@@ -1,8 +1,5 @@
 import os
-import litellm
 import difflib
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 
 # .env 파일 로드 (루트 디렉토리 기준)
@@ -33,6 +30,9 @@ def send_insight_report(recent_log, current_iteration):
     if not token or not channel_id:
         return
 
+    import litellm
+    from slack_sdk import WebClient
+    
     print(f"\n[Slack Notifier] Generating insight report for iterations {current_iteration-9} to {current_iteration}...")
 
     # LLM에게 넘길 컨텍스트 구성 (전체 코드가 아닌 Diff 전달)
@@ -81,8 +81,9 @@ def send_insight_report(recent_log, current_iteration):
         )
         insight_message = response.choices[0].message.content.strip()
         
-        # 슬랙 메시지 헤더 조립
-        header = f"🧠 *AutoML Insight Report (Iter {current_iteration-9} ~ {current_iteration})*\n━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        # 슬랙 메시지 헤더 조립 (10회 미만일 경우 처리)
+        start_iter = max(1, current_iteration - 9)
+        header = f"🧠 *AutoML Insight Report (Iter {start_iter} ~ {current_iteration})*\n━━━━━━━━━━━━━━━━━━━━━━━━\n"
         final_text = header + insight_message
         
         client = WebClient(token=token)
@@ -91,6 +92,35 @@ def send_insight_report(recent_log, current_iteration):
         
     except Exception as e:
         print(f"[Slack Notifier] Failed to generate/send insight: {e}")
+
+def send_iteration_update(iteration, metrics):
+    """매 이터레이션의 결과를 간단하게 Slack으로 전송합니다."""
+    token = os.environ.get("SLACK_BOT_TOKEN")
+    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    
+    if not token or not channel_id:
+        return
+
+    from slack_sdk import WebClient
+    
+    val_loss = metrics.get("final_val_loss", float('inf'))
+    train_loss = metrics.get("final_train_loss", "n/a")
+    
+    # Loss 값 포맷팅 (inf일 경우 처리)
+    val_loss_str = f"{val_loss:.4f}" if val_loss != float('inf') else "inf"
+    train_loss_str = f"{train_loss:.4f}" if isinstance(train_loss, (int, float)) and train_loss != float('inf') else str(train_loss)
+    
+    status_emoji = "✅" if val_loss != float('inf') else "❌"
+    text = f"{status_emoji} *Iteration #{iteration} Result*\n"
+    text += f"• Val Loss: `{val_loss_str}`\n"
+    text += f"• Train Loss: `{train_loss_str}`"
+
+    try:
+        client = WebClient(token=token)
+        client.chat_postMessage(channel=channel_id, text=text)
+        print(f"[Slack Notifier] Iteration update sent successfully.")
+    except Exception as e:
+        print(f"[Slack Notifier] Failed to send iteration update: {e}")
 
 def send_slack_summary(history, max_iterations):
     """전체 R&D 루프가 종료되었을 때 결과를 Slack으로 전송합니다."""
@@ -101,6 +131,9 @@ def send_slack_summary(history, max_iterations):
         print("[Slack Notifier] Token or Channel ID not found in .env. Skipping Slack notification.")
         return
 
+    from slack_sdk import WebClient
+    from slack_sdk.errors import SlackApiError
+    
     try:
         client = WebClient(token=token)
         

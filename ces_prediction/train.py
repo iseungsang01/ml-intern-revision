@@ -26,7 +26,8 @@ def resolve_cpu_config():
     loader_workers = max(0, min(loader_workers, max(cpu_workers - 1, 0)))
 
     torch_threads = int(os.getenv("CES_TORCH_THREADS", str(max(1, cpu_workers - loader_workers))))
-    torch_threads = max(1, min(torch_threads, cpu_workers))
+    # Cap torch threads at 16 to avoid synchronization overhead on small architectures
+    torch_threads = max(1, min(torch_threads, 16, cpu_workers))
 
     interop_threads = int(os.getenv("CES_TORCH_INTEROP_THREADS", str(min(4, torch_threads))))
     interop_threads = max(1, min(interop_threads, torch_threads))
@@ -82,7 +83,7 @@ def train():
 
     data_dir = root_dir / "data"
     window_size = int(os.getenv("CES_WINDOW_SIZE", "4"))
-    batch_size = int(os.getenv("CES_BATCH_SIZE", "64"))
+    batch_size = int(os.getenv("CES_BATCH_SIZE", "512"))
     epochs = int(os.getenv("CES_EPOCHS", "10"))
     lr = float(os.getenv("CES_LR", "1e-3"))
     seed = int(os.getenv("CES_SEED", "42"))

@@ -55,11 +55,26 @@ class KSTAR_CES_Dataset(Dataset):
             "log1p_delta_seconds",
         )
         self.ces_history_cols = ("CES_TI_history", "CES_VT_history", "CES_observed")
+        self._preload_data()
         self.sample_indices = self._build_index()
+
+    def _preload_data(self):
+        """Pre-load all CSV files into memory for massive speedup on high-core CPUs."""
+        self.data_cache = {}
+        usecols = self._required_columns()
+        
+        print(f"Pre-loading {len(self.files)} CSV files into memory...")
+        for file_path in self.files:
+            try:
+                df = pd.read_csv(file_path, usecols=usecols)
+                clean_df = df.dropna(subset=usecols).reset_index(drop=True)
+                if not clean_df.empty:
+                    self.data_cache[str(file_path)] = clean_df
+            except Exception as e:
+                print(f"Warning: Could not load {file_path}: {e}")
 
     def set_normalization_stats(self, normalization_stats):
         self.normalization_stats = normalization_stats
-        self._get_file_data.cache_clear()
 
     def _required_columns(self):
         all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
@@ -81,12 +96,8 @@ class KSTAR_CES_Dataset(Dataset):
         for file_path in self.files:
             if selected_files is not None and str(file_path) not in selected_files:
                 continue
-            try:
-                df = pd.read_csv(file_path, usecols=usecols)
-            except ValueError:
-                continue
-            df = df.dropna(subset=usecols).reset_index(drop=True)
-            if not df.empty:
+            df = self.data_cache.get(str(file_path))
+            if df is not None and not df.empty:
                 frames.append(df)
 
         if not frames:
@@ -129,13 +140,9 @@ class KSTAR_CES_Dataset(Dataset):
         usecols = self._required_columns()
 
         for file_path in self.files:
-            try:
-                # Load all necessary columns
-                df = pd.read_csv(file_path, usecols=usecols)
-            except ValueError:
+            df = self.data_cache.get(str(file_path))
+            if df is None:
                 continue
-
-            df = df.dropna(subset=usecols).reset_index(drop=True)
             if len(df) < self.min_subset_size:
                 continue
 
@@ -177,13 +184,9 @@ class KSTAR_CES_Dataset(Dataset):
                     rows = (*history_combo, target_idx)
                     sample_indices.append((str(file_path), rows))
 
-    @lru_cache(maxsize=32)
     def _get_file_data(self, file_path):
-        # We need to apply the same dropna logic when retrieving data in __getitem__
-        # to ensure the indices match the sample_indices we built.
-        usecols = self._required_columns()
-        df = pd.read_csv(file_path, usecols=usecols)
-        return df.dropna(subset=usecols).reset_index(drop=True)
+        """Retrieve data from memory cache."""
+        return self.data_cache[str(file_path)]
 
     def __len__(self):
         return len(self.sample_indices)
