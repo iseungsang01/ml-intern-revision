@@ -57,39 +57,60 @@ class KSTAR_CES_Dataset(Dataset):
 
     def _build_index(self):
         sample_indices = []
-        usecols = [TIME_COLUMN, *TARGET_COLUMNS]
+        # All columns we need for a sample to be valid
+        all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
+        usecols = [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
 
         for file_path in self.files:
             try:
+                # Load all necessary columns
                 df = pd.read_csv(file_path, usecols=usecols)
             except ValueError:
                 continue
 
-            time = pd.to_numeric(df[TIME_COLUMN], errors="coerce").to_numpy()
-            targets = df.loc[:, TARGET_COLUMNS].notna().all(axis=1).to_numpy()
+            # 1. Drop any rows with NaNs in any of the required columns
+            df = df.dropna(subset=usecols).reset_index(drop=True)
+            if len(df) < self.window_size:
+                continue
 
-            for idx in np.flatnonzero(targets):
-                start = idx - self.window_size + 1
-                if start < 0:
-                    continue
-
-                window_time = time[start : idx + 1]
-                if not np.isfinite(window_time).all():
-                    continue
-                if np.any(np.diff(window_time) <= 0):
-                    continue
-                if self.max_window_span is not None:
-                    span = window_time[-1] - window_time[0]
-                    if span > self.max_window_span:
-                        continue
-
-                sample_indices.append((str(file_path), int(idx)))
+            time = df[TIME_COLUMN].to_numpy()
+            
+            # 2. Identify contiguous blocks
+            # We check the time difference between consecutive rows in the FILTERED dataframe.
+            # If the difference is larger than a threshold, it means there was a gap (either original or due to dropna).
+            # Threshold: 0.5s (assuming ~10Hz data, this allows for some jitter but not major gaps)
+            deltas = np.diff(time)
+            is_contiguous = deltas < 0.5
+            
+            # Use a rolling sum or similar to find where we have `window_size - 1` consecutive True deltas
+            # is_contiguous has length len(df) - 1.
+            # We need a window of window_size rows, which means window_size - 1 deltas.
+            if len(is_contiguous) < self.window_size - 1:
+                continue
+                
+            # contiguous_count[i] will store how many consecutive contiguous steps end at index i+1
+            contiguous_run = 0
+            for i in range(len(is_contiguous)):
+                if is_contiguous[i]:
+                    contiguous_run += 1
+                else:
+                    contiguous_run = 0
+                
+                # If we have at least (window_size - 1) consecutive contiguous deltas,
+                # then the row at index i+1 is a valid end of a window.
+                if contiguous_run >= self.window_size - 1:
+                    sample_indices.append((str(file_path), int(i + 1)))
 
         return sample_indices
 
     @lru_cache(maxsize=32)
     def _get_file_data(self, file_path):
-        return pd.read_csv(file_path)
+        # We need to apply the same dropna logic when retrieving data in __getitem__
+        # to ensure the indices match the sample_indices we built.
+        all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
+        usecols = [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
+        df = pd.read_csv(file_path, usecols=usecols)
+        return df.dropna(subset=usecols).reset_index(drop=True)
 
     def __len__(self):
         return len(self.sample_indices)
@@ -104,8 +125,8 @@ class KSTAR_CES_Dataset(Dataset):
         }
 
     def _window_tensor(self, window_df, columns):
-        values = window_df.loc[:, columns].apply(pd.to_numeric, errors="coerce")
-        values = values.ffill().bfill().fillna(0.0).to_numpy(dtype=np.float32)
+        # Data is already cleaned via dropna in _get_file_data, so no need for ffill/bfill
+        values = window_df.loc[:, columns].to_numpy(dtype=np.float32)
         return torch.from_numpy(values)
 
     def _time_features(self, time_values):
@@ -136,12 +157,11 @@ class KSTAR_CES_Dataset(Dataset):
         ecei = self._window_tensor(window_df, self.ecei_cols)
         mc = self._window_tensor(window_df, self.mc_cols)
 
-        time_values = pd.to_numeric(window_df[TIME_COLUMN], errors="coerce").to_numpy()
+        time_values = window_df[TIME_COLUMN].to_numpy()
         time_features = self._time_features(time_values)
 
         target_values = (
             df.loc[df.index[idx], list(TARGET_COLUMNS)]
-            .astype(np.float32)
             .to_numpy(dtype=np.float32)
         )
         target = torch.from_numpy(target_values)
