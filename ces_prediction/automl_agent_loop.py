@@ -2,6 +2,7 @@ import argparse
 import os
 import json
 import subprocess
+from pathlib import Path
 import litellm
 
 
@@ -16,6 +17,30 @@ Dataset/training contract that every generated model.py must preserve:
 - Model outputs must remain normalized CES_TI/CES_VT with shape (batch, 2); train.py compares them to normalized targets.
 - Do not denormalize inside model.py. Any inverse transform belongs outside training/evaluation.
 """
+
+
+MODEL_ARCHITECTURE_NOTE = """
+Current model/data design snapshot:
+- Dataset samples are row-window histories ending at a CES target row. With temporal subset augmentation enabled, each target can be paired with multiple irregular subsets of previous rows instead of only one fixed contiguous window.
+- Inputs are separated by diagnostic modality: BES has 9 channels, ECEI has 4 channels, MC has 2 channels, time metadata has 4 channels, and CES history has 3 channels.
+- The model keeps a late-fusion multimodal design. BES, ECEI, and MC are encoded by separate time-aware 1D CNN branches. Each branch receives its sensor channels concatenated with the same time features and CES-history features.
+- Time features encode true irregular sampling: lookback seconds, delta seconds, log1p lookback, and log1p delta. CES history contains previous normalized CES_TI/CES_VT plus an observed mask; the target row is masked as [0, 0, 0] to prevent leakage.
+- Each sensor branch uses Conv1d -> BatchNorm -> GELU -> Conv1d -> BatchNorm -> GELU -> AdaptiveAvgPool1d -> Linear -> GELU, producing a 96-dimensional feature vector.
+- A separate time-only Conv1d encoder produces a 32-dimensional time feature vector.
+- The fusion head concatenates BES/ECEI/MC/time features into 320 dimensions, then predicts normalized [CES_TI, CES_VT] through Linear(320, 160) -> GELU -> Dropout(0.2) -> Linear(160, 64) -> GELU -> Linear(64, 2).
+- Training uses MSE on normalized targets plus a small penalty against physically invalid negative TI in normalized space. AdamW, gradient clipping, and ReduceLROnPlateau are used.
+- The AutoML loop changes the model because the Researcher Agent rewrites model.py after every evaluated iteration except the last. The dry-run test only checks interface/shape compatibility, not whether the new architecture is scientifically better.
+""".strip()
+
+
+CONVERGENCE_ASSESSMENT_NOTE = """
+Convergence assessment from the latest 8-iteration history:
+- Validation loss has stayed in a narrow band around 0.49-0.53 for most runs, with one unstable failure at 0.8764. The best observed validation loss is 0.4901 at iteration 5; the latest value is 0.5023.
+- Train loss is usually lower than validation loss, but improving train loss has not reliably improved validation loss. Iterations 1-4 had train loss near 0.33 while validation stayed around 0.51-0.53.
+- This pattern is more consistent with an approach/validation-generalization plateau than with a run that merely needs many more epochs. Longer training may reduce train loss, but the current evidence does not show a stable path to lower validation loss.
+- The main risk is architecture churn without controlled ablations. Because model.py is rewritten between iterations, loss changes mix architecture changes, initialization noise, and training dynamics. A better next step is to freeze one strong baseline, run repeated seeds/longer epochs for that baseline, then test one change at a time.
+- Recommended next experiments: keep the current late-fusion CNN as a baseline; run 30-50 epochs with early stopping and best-checkpoint saving; compare against no temporal subset augmentation, no CES-history input, larger/smaller window sizes, and a sequence model that uses input_mask explicitly. Track per-target TI/VT validation error after denormalization, not only aggregate normalized MSE.
+""".strip()
 
 
 class EvaluationAgent:
@@ -146,6 +171,12 @@ class BriefingAgent:
         handoff_content += "## Data Contract\n\n```text\n"
         handoff_content += DATA_CONTRACT.strip()
         handoff_content += "\n```\n\n"
+        handoff_content += "## Model Design And Architecture\n\n"
+        handoff_content += MODEL_ARCHITECTURE_NOTE
+        handoff_content += "\n\n"
+        handoff_content += "## Convergence Assessment\n\n"
+        handoff_content += CONVERGENCE_ASSESSMENT_NOTE
+        handoff_content += "\n\n"
         handoff_content += "## Latest Metrics\n\n"
         handoff_content += f"- Train Loss: {self._fmt(metric_summary['train_loss'])}\n"
         handoff_content += f"- Val Loss: {self._fmt(metric_summary['val_loss'])}\n"
@@ -165,8 +196,9 @@ class BriefingAgent:
                 f"samples={self._fmt(entry.get('train_samples'))}/{self._fmt(entry.get('val_samples'))}, "
                 f"norm={self._fmt(entry.get('normalization_method'))}:{self._fmt(entry.get('normalization_scope'))}\n"
             )
-            
-        with open("HANDOFF.md", "w", encoding="utf-8") as f:
+
+        handoff_path = Path(__file__).resolve().parents[1] / "HANDOFF.md"
+        with handoff_path.open("w", encoding="utf-8") as f:
             f.write(handoff_content)
         # ---------------------------
 

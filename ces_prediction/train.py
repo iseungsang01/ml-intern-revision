@@ -54,8 +54,10 @@ def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     if hasattr(dataset, "sample_file_indices") and hasattr(dataset, "valid_files"):
         sample_file_indices = dataset.sample_file_indices
         files = sorted(np.unique(sample_file_indices).astype(int).tolist())
+        file_name = lambda file_id: dataset.valid_files[int(file_id)]
     else:
         files = sorted({file_path for file_path, _ in dataset.sample_indices})
+        file_name = str
 
     if len(files) < 2:
         raise ValueError("Need at least two CSV files with valid samples for validation split")
@@ -82,7 +84,34 @@ def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     if not train_indices or not val_indices:
         raise ValueError("File-level split produced an empty train or validation set")
 
-    return train_indices, val_indices
+    train_files = sorted(file_name(file_id) for file_id in files if file_id not in val_files)
+    val_files_resolved = sorted(file_name(file_id) for file_id in val_files)
+
+    return train_indices, val_indices, train_files, val_files_resolved
+
+
+def select_seeded_subset(indices, max_samples, seed):
+    if max_samples <= 0 or len(indices) <= max_samples:
+        return indices
+
+    generator = torch.Generator().manual_seed(seed)
+    order = torch.randperm(len(indices), generator=generator)[:max_samples].tolist()
+    return [indices[i] for i in order]
+
+
+def split_manifest(train_files, val_files, train_indices, val_indices, seed, val_fraction):
+    return {
+        "seed": seed,
+        "val_fraction": val_fraction,
+        "split_unit": "csv_shot_file",
+        "sample_cap_method": "seeded_random_without_replacement_after_file_split",
+        "train_file_count": len(train_files),
+        "val_file_count": len(val_files),
+        "train_sample_count": len(train_indices),
+        "val_sample_count": len(val_indices),
+        "train_files": [Path(path).name for path in train_files],
+        "val_files": [Path(path).name for path in val_files],
+    }
 
 
 def normalization_stats_to_jsonable(stats):
@@ -146,21 +175,32 @@ def train():
         print("Error: No valid data found.")
         return
 
-    train_indices, val_indices = split_indices_by_file(
+    train_indices, val_indices, train_split_files, val_split_files = split_indices_by_file(
         full_dataset, val_fraction=val_fraction, seed=seed
     )
-    if max_train_samples > 0:
-        train_indices = train_indices[:max_train_samples]
-    if max_val_samples > 0:
-        val_indices = val_indices[:max_val_samples]
+    train_indices = select_seeded_subset(train_indices, max_train_samples, seed + 101)
+    val_indices = select_seeded_subset(val_indices, max_val_samples, seed + 202)
+
+    manifest = split_manifest(
+        train_split_files,
+        val_split_files,
+        train_indices,
+        val_indices,
+        seed,
+        val_fraction,
+    )
+    split_path = output_dir / "split_manifest.json"
+    with split_path.open("w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
+
+    print(
+        f"File split: train_shots={manifest['train_file_count']}, "
+        f"val_shots={manifest['val_file_count']}, seed={seed}"
+    )
+    print(f"Validation shots preview: {', '.join(manifest['val_files'][:10])}")
 
     if hasattr(full_dataset, "sample_file_indices") and hasattr(full_dataset, "valid_files"):
-        train_sample_indices = np.asarray(train_indices, dtype=np.int64)
-        train_file_indices = np.unique(full_dataset.sample_file_indices[train_sample_indices])
-        train_files = {
-            full_dataset.valid_files[int(file_idx)]
-            for file_idx in train_file_indices
-        }
+        train_files = set(train_split_files)
     else:
         train_files = {full_dataset.sample_indices[i][0] for i in train_indices}
     normalization_stats = full_dataset.fit_normalization_stats(train_files)
@@ -272,6 +312,7 @@ def train():
         "feature_dims": full_dataset.feature_dims,
         "temporal_subset_augmentation": temporal_subset_augmentation,
         "min_subset_size": min_subset_size,
+        "split": manifest,
         "normalization": {
             "scope": "train_files_only",
             "method": "per_channel_zscore",

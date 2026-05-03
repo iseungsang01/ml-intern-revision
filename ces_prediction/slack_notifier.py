@@ -5,6 +5,25 @@ from dotenv import load_dotenv
 # .env 파일 로드 (루트 디렉토리 기준)
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
+
+MODEL_ARCHITECTURE_NOTE = (
+    "*Model architecture:* late-fusion multimodal CES predictor. BES(9), ECEI(4), "
+    "and MC(2) are encoded by separate time-aware 1D CNN branches. Each branch "
+    "receives sensor values plus 4 irregular-time features and 3 CES-history "
+    "features. The target CES row is masked in history to avoid leakage. Branch "
+    "features are fused with a time-only CNN feature and mapped to normalized "
+    "CES_TI/CES_VT by an MLP head."
+)
+
+
+CONVERGENCE_ASSESSMENT_NOTE = (
+    "*Convergence read:* current history looks more like a validation plateau than "
+    "a problem that will automatically disappear by waiting. Val loss has stayed "
+    "near 0.49-0.53 except one failed run, and lower train loss has not consistently "
+    "lowered val loss. Freeze a baseline, run longer with early stopping/best "
+    "checkpointing, then ablate one change at a time."
+)
+
 def _get_slack_client(token):
     try:
         from slack_sdk import WebClient
@@ -154,7 +173,9 @@ def send_iteration_update(iteration, metrics):
     status_emoji = "✅" if val_loss != float('inf') else "❌"
     text = f"{status_emoji} *Iteration #{iteration} Result*\n"
     text += f"• Val Loss: `{val_loss_str}`\n"
-    text += f"• Train Loss: `{train_loss_str}`"
+    text += f"• Train Loss: `{train_loss_str}`\n\n"
+    text += MODEL_ARCHITECTURE_NOTE + "\n\n"
+    text += CONVERGENCE_ASSESSMENT_NOTE
 
     try:
         client.chat_postMessage(channel=channel_id, text=text)
