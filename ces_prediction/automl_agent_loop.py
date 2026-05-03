@@ -4,6 +4,20 @@ import json
 import subprocess
 import litellm
 
+
+DATA_CONTRACT = """
+Dataset/training contract that every generated model.py must preserve:
+- train.py builds KSTAR_CES_Dataset with temporal subset augmentation.
+- BES, ECEI, and MC inputs are per-channel z-score normalized using train-file-only statistics.
+- CES_TI and CES_VT are per-channel z-score normalized with train-file-only target statistics.
+- ces_history has shape (batch, window, 3): normalized previous CES_TI, normalized previous CES_VT, observed mask.
+- The target timestep CES values are masked in ces_history as [0, 0, 0] to avoid leakage.
+- model.forward must accept forward(self, bes, ecei, mc, time_features=None, ces_history=None).
+- Model outputs must remain normalized CES_TI/CES_VT with shape (batch, 2); train.py compares them to normalized targets.
+- Do not denormalize inside model.py. Any inverse transform belongs outside training/evaluation.
+"""
+
+
 class EvaluationAgent:
     """
     Evaluation Agent:
@@ -36,8 +50,8 @@ class EvaluationAgent:
             print("[Evaluation Agent] Running Architecture Dry-Run validation...")
             # tests 디렉토리의 테스트 코드를 실행
             subprocess.run(
-                ["python", os.path.join(root_dir, "tests", "test_architecture.py")],
-                cwd=script_dir,
+                ["python", "-m", "pytest", "-q", os.path.join(root_dir, "tests", "test_architecture.py")],
+                cwd=root_dir,
                 env=env,
                 check=True,
             )
@@ -73,12 +87,40 @@ class BriefingAgent:
         self.history = []
         self.best_loss = float('inf')
         self.plateau_count = 0
+
+    def _summarize_metrics(self, metrics):
+        normalization = metrics.get("normalization", {})
+        cpu_config = metrics.get("cpu_config", {})
+        return {
+            "train_loss": metrics.get("final_train_loss"),
+            "val_loss": metrics.get("final_val_loss", float("inf")),
+            "epochs": metrics.get("epochs"),
+            "train_samples": metrics.get("train_samples"),
+            "val_samples": metrics.get("val_samples"),
+            "feature_dims": metrics.get("feature_dims"),
+            "temporal_subset_augmentation": metrics.get("temporal_subset_augmentation"),
+            "min_subset_size": metrics.get("min_subset_size"),
+            "normalization_scope": normalization.get("scope"),
+            "normalization_method": normalization.get("method"),
+            "normalization_groups": sorted(normalization.get("stats", {}).keys()),
+            "cpu_workers": cpu_config.get("cpu_workers"),
+            "dataloader_workers": cpu_config.get("dataloader_workers"),
+        }
+
+    @staticmethod
+    def _fmt(value, digits=4):
+        if isinstance(value, float):
+            return f"{value:.{digits}f}"
+        if value is None:
+            return "n/a"
+        return str(value)
         
     def generate_briefing(self, iteration, current_metrics):
         val_loss = current_metrics.get("final_val_loss", float('inf'))
+        metric_summary = self._summarize_metrics(current_metrics)
         
         # 기록 업데이트
-        self.history.append({"iteration": iteration, "val_loss": val_loss})
+        self.history.append({"iteration": iteration, **metric_summary})
         
         # Plateau(정체기) 체크
         if val_loss >= self.best_loss * 0.99: # 성능 향상이 1% 미만일 경우
@@ -101,9 +143,28 @@ class BriefingAgent:
         
         # --- Save to HANDOFF.md ---
         handoff_content = f"# AutoML Session Handoff\n\n## Latest Briefing (Iteration {iteration})\n\n```text\n{briefing}\n```\n\n"
+        handoff_content += "## Data Contract\n\n```text\n"
+        handoff_content += DATA_CONTRACT.strip()
+        handoff_content += "\n```\n\n"
+        handoff_content += "## Latest Metrics\n\n"
+        handoff_content += f"- Train Loss: {self._fmt(metric_summary['train_loss'])}\n"
+        handoff_content += f"- Val Loss: {self._fmt(metric_summary['val_loss'])}\n"
+        handoff_content += f"- Epochs: {self._fmt(metric_summary['epochs'])}\n"
+        handoff_content += f"- Samples: train={self._fmt(metric_summary['train_samples'])}, val={self._fmt(metric_summary['val_samples'])}\n"
+        handoff_content += f"- Temporal Subsets: {self._fmt(metric_summary['temporal_subset_augmentation'])}\n"
+        handoff_content += f"- Min Subset Size: {self._fmt(metric_summary['min_subset_size'])}\n"
+        handoff_content += f"- Normalization: {self._fmt(metric_summary['normalization_method'])}, scope={self._fmt(metric_summary['normalization_scope'])}\n"
+        handoff_content += f"- Normalization Groups: {', '.join(metric_summary['normalization_groups']) or 'n/a'}\n"
+        handoff_content += f"- Feature Dims: `{json.dumps(metric_summary['feature_dims'], ensure_ascii=False)}`\n\n"
         handoff_content += "## History\n\n"
         for entry in self.history:
-            handoff_content += f"- Iteration {entry['iteration']}: Val Loss = {entry['val_loss']:.4f}\n"
+            handoff_content += (
+                f"- Iteration {entry['iteration']}: "
+                f"train={self._fmt(entry.get('train_loss'))}, "
+                f"val={self._fmt(entry.get('val_loss'))}, "
+                f"samples={self._fmt(entry.get('train_samples'))}/{self._fmt(entry.get('val_samples'))}, "
+                f"norm={self._fmt(entry.get('normalization_method'))}:{self._fmt(entry.get('normalization_scope'))}\n"
+            )
             
         with open("HANDOFF.md", "w", encoding="utf-8") as f:
             f.write(handoff_content)
@@ -128,10 +189,12 @@ class ResearcherAgent:
 
         prompt = (
             f"You are an expert AI ML Researcher for KSTAR nuclear fusion data.\n"
+            f"{DATA_CONTRACT}\n"
             f"Here is the briefing from the latest experiment:\n{briefing}\n\n"
             f"Here is the current 'model.py' code:\n```python\n{current_code}\n```\n\n"
             f"Based on the briefing, rewrite the architecture or hyperparameters in 'model.py'. "
-            f"Keep the class name 'MultimodalCESPredictor' and the forward pass signature the same. "
+            f"Keep the class name 'MultimodalCESPredictor' and preserve the dataset/training contract exactly. "
+            f"Keep the forward pass signature compatible with train.py, including ces_history. "
             f"Return ONLY the complete, raw Python code. Do not include markdown blocks."
         )
         
