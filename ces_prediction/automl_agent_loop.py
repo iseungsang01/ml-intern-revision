@@ -6,6 +6,9 @@ from pathlib import Path
 import litellm
 
 
+FIXED_SPLIT_FILES = ("fixed_train_split.csv", "fixed_val_split.csv")
+
+
 DATA_CONTRACT = """
 Dataset/training contract that every generated model.py must preserve:
 - train.py builds KSTAR_CES_Dataset with temporal subset augmentation.
@@ -101,6 +104,18 @@ class EvaluationAgent:
         except Exception as e:
             print(f"[Evaluation Agent] Training failed: {e}")
             return {"error": str(e), "final_val_loss": float('inf')}
+
+
+def reset_session_artifacts():
+    root_dir = Path(__file__).resolve().parents[1]
+    script_dir = Path(__file__).resolve().parent
+    paths = [root_dir / "HANDOFF.md"]
+    paths.extend(script_dir / name for name in FIXED_SPLIT_FILES)
+
+    for path in paths:
+        if path.exists():
+            path.unlink()
+            print(f"[AutoML Loop] Removed previous session artifact: {path}")
 
 class BriefingAgent:
     """
@@ -251,6 +266,8 @@ class ResearcherAgent:
             print(f"[Researcher Agent] LLM Error: {e}")
 
 def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None):
+    reset_session_artifacts()
+
     eval_agent = EvaluationAgent(
         cpu_workers=cpu_workers,
         dataloader_workers=dataloader_workers,

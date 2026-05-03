@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 from dataset import KSTAR_CES_Dataset
-from train import select_seeded_subset, split_indices_by_file, split_manifest
+from train import load_or_create_fixed_splits, split_manifest
 
 
 def main():
@@ -25,11 +25,14 @@ def main():
         temporal_subset_augmentation=temporal_subset_augmentation,
         min_subset_size=min_subset_size,
     )
-    train_indices, val_indices, train_files, val_files = split_indices_by_file(
-        dataset, val_fraction=val_fraction, seed=seed
+    train_indices, val_indices, train_files, val_files = load_or_create_fixed_splits(
+        dataset,
+        output_dir,
+        val_fraction,
+        seed,
+        max_train_samples,
+        max_val_samples,
     )
-    train_indices = select_seeded_subset(train_indices, max_train_samples, seed + 101)
-    val_indices = select_seeded_subset(val_indices, max_val_samples, seed + 202)
 
     manifest = split_manifest(
         train_files,

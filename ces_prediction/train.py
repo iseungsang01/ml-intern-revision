@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 from pathlib import Path
@@ -20,6 +21,10 @@ try:
     import wandb
 except ImportError:
     wandb = None
+
+
+FIXED_TRAIN_SPLIT_NAME = "fixed_train_split.csv"
+FIXED_VAL_SPLIT_NAME = "fixed_val_split.csv"
 
 
 def resolve_cpu_config():
@@ -99,6 +104,90 @@ def select_seeded_subset(indices, max_samples, seed):
     return select_seeded_random_indices(indices, max_samples, seed)
 
 
+def _sample_split_row(dataset, sample_idx):
+    file_idx = int(dataset.sample_file_indices[sample_idx])
+    file_name = Path(dataset.valid_files[file_idx]).name
+    valid_len = int(dataset.sample_lengths[sample_idx])
+    row_indices = dataset.sample_row_indices[sample_idx, :valid_len].astype(int).tolist()
+    return {
+        "sample_index": int(sample_idx),
+        "file": file_name,
+        "row_index": int(row_indices[-1]),
+        "row_indices": json.dumps(row_indices, separators=(",", ":")),
+    }
+
+
+def write_fixed_split_csv(path, dataset, indices):
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["sample_index", "file", "row_index", "row_indices"])
+        writer.writeheader()
+        for sample_idx in indices:
+            writer.writerow(_sample_split_row(dataset, sample_idx))
+
+
+def load_fixed_split_csv(path, dataset):
+    indices = []
+    with path.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            sample_idx = int(row["sample_index"])
+            if sample_idx < 0 or sample_idx >= len(dataset):
+                raise ValueError(f"{path} has out-of-range sample_index={sample_idx}")
+
+            expected = _sample_split_row(dataset, sample_idx)
+            row_indices = json.loads(row["row_indices"])
+            if (
+                row["file"] != expected["file"]
+                or int(row["row_index"]) != expected["row_index"]
+                or row_indices != json.loads(expected["row_indices"])
+            ):
+                raise ValueError(
+                    f"{path} no longer matches the current dataset at sample_index={sample_idx}. "
+                    "Delete fixed split CSV files to regenerate them."
+                )
+            indices.append(sample_idx)
+
+    if not indices:
+        raise ValueError(f"{path} is empty")
+    return indices
+
+
+def split_files_from_indices(dataset, indices):
+    file_ids = sorted({int(dataset.sample_file_indices[i]) for i in indices})
+    return [dataset.valid_files[file_id] for file_id in file_ids]
+
+
+def load_or_create_fixed_splits(dataset, output_dir, val_fraction, seed, max_train_samples, max_val_samples):
+    train_split_path = output_dir / FIXED_TRAIN_SPLIT_NAME
+    val_split_path = output_dir / FIXED_VAL_SPLIT_NAME
+
+    if train_split_path.exists() and val_split_path.exists():
+        train_indices = load_fixed_split_csv(train_split_path, dataset)
+        val_indices = load_fixed_split_csv(val_split_path, dataset)
+        train_files = split_files_from_indices(dataset, train_indices)
+        val_files = split_files_from_indices(dataset, val_indices)
+        print(f"Loaded fixed splits: {train_split_path.name}, {val_split_path.name}")
+        return train_indices, val_indices, train_files, val_files
+
+    if train_split_path.exists() != val_split_path.exists():
+        raise ValueError(
+            f"Expected both {FIXED_TRAIN_SPLIT_NAME} and {FIXED_VAL_SPLIT_NAME}, "
+            "but only one exists. Delete the existing fixed split CSV or restore the missing one."
+        )
+
+    train_indices, val_indices, train_files, val_files = split_indices_by_file(
+        dataset, val_fraction=val_fraction, seed=seed
+    )
+    train_indices = select_seeded_subset(train_indices, max_train_samples, seed + 101)
+    val_indices = select_seeded_subset(val_indices, max_val_samples, seed + 202)
+    write_fixed_split_csv(train_split_path, dataset, train_indices)
+    write_fixed_split_csv(val_split_path, dataset, val_indices)
+    train_files = split_files_from_indices(dataset, train_indices)
+    val_files = split_files_from_indices(dataset, val_indices)
+    print(f"Created fixed splits: {train_split_path.name}, {val_split_path.name}")
+    return train_indices, val_indices, train_files, val_files
+
+
 def split_manifest(train_files, val_files, train_indices, val_indices, seed, val_fraction):
     return {
         "seed": seed,
@@ -175,11 +264,14 @@ def train():
         print("Error: No valid data found.")
         return
 
-    train_indices, val_indices, train_split_files, val_split_files = split_indices_by_file(
-        full_dataset, val_fraction=val_fraction, seed=seed
+    train_indices, val_indices, train_split_files, val_split_files = load_or_create_fixed_splits(
+        full_dataset,
+        output_dir,
+        val_fraction,
+        seed,
+        max_train_samples,
+        max_val_samples,
     )
-    train_indices = select_seeded_subset(train_indices, max_train_samples, seed + 101)
-    val_indices = select_seeded_subset(val_indices, max_val_samples, seed + 202)
 
     manifest = split_manifest(
         train_split_files,
