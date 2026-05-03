@@ -71,7 +71,7 @@ def train():
     output_dir = Path(__file__).resolve().parent
 
     data_dir = root_dir / "data"
-    window_size = int(os.getenv("CES_WINDOW_SIZE", "10"))
+    window_size = int(os.getenv("CES_WINDOW_SIZE", "4"))
     batch_size = int(os.getenv("CES_BATCH_SIZE", "64"))
     epochs = int(os.getenv("CES_EPOCHS", "10"))
     lr = float(os.getenv("CES_LR", "1e-3"))
@@ -79,6 +79,8 @@ def train():
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
     max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", "0"))
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "0"))
+    temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
+    min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
     cpu_config = resolve_cpu_config()
 
     torch.manual_seed(seed)
@@ -95,6 +97,9 @@ def train():
                 "epochs": epochs,
                 "lr": lr,
                 "time_features": "lookback/delta seconds + log1p variants",
+                "ces_history": "previous selected CES_TI/CES_VT plus observed mask",
+                "temporal_subset_augmentation": temporal_subset_augmentation,
+                "min_subset_size": min_subset_size,
                 "split": "by_csv_file",
                 "val_fraction": val_fraction,
                 "cpu_config": cpu_config,
@@ -102,7 +107,12 @@ def train():
         )
 
     print("Initializing dataset from CSV files...")
-    full_dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=window_size)
+    full_dataset = KSTAR_CES_Dataset(
+        data_dir=data_dir,
+        window_size=window_size,
+        temporal_subset_augmentation=temporal_subset_augmentation,
+        min_subset_size=min_subset_size,
+    )
     if len(full_dataset) == 0:
         print("Error: No valid data found.")
         return
@@ -158,10 +168,11 @@ def train():
             ecei = batch["ecei"].to(device)
             mc = batch["mc"].to(device)
             time_features = batch["time_features"].to(device)
+            ces_history = batch["ces_history"].to(device)
             targets = batch["target"].to(device)
 
             optimizer.zero_grad(set_to_none=True)
-            outputs = model(bes, ecei, mc, time_features)
+            outputs = model(bes, ecei, mc, time_features, ces_history)
 
             loss_mse = criterion(outputs, targets)
             penalty_neg_ti = torch.relu(-outputs[:, 0]).mean()
@@ -183,9 +194,10 @@ def train():
                 ecei = batch["ecei"].to(device)
                 mc = batch["mc"].to(device)
                 time_features = batch["time_features"].to(device)
+                ces_history = batch["ces_history"].to(device)
                 targets = batch["target"].to(device)
 
-                outputs = model(bes, ecei, mc, time_features)
+                outputs = model(bes, ecei, mc, time_features, ces_history)
                 loss = criterion(outputs, targets)
                 val_loss_sum += loss.item() * bes.size(0)
 
@@ -213,6 +225,8 @@ def train():
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "feature_dims": full_dataset.feature_dims,
+        "temporal_subset_augmentation": temporal_subset_augmentation,
+        "min_subset_size": min_subset_size,
         "cpu_config": cpu_config,
     }
     metrics_path = output_dir / "metrics.json"

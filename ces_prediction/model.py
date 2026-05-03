@@ -7,9 +7,16 @@ import torch.nn as nn
 class TimeAwareSensorEncoder(nn.Module):
     """Encode one diagnostic stream together with true irregular-time features."""
 
-    def __init__(self, sensor_channels, time_channels=4, hidden_channels=64, output_dim=96):
+    def __init__(
+        self,
+        sensor_channels,
+        time_channels=4,
+        ces_history_channels=3,
+        hidden_channels=64,
+        output_dim=96,
+    ):
         super().__init__()
-        in_channels = sensor_channels + time_channels
+        in_channels = sensor_channels + time_channels + ces_history_channels
         self.net = nn.Sequential(
             nn.Conv1d(in_channels, hidden_channels, kernel_size=3, padding=1),
             nn.BatchNorm1d(hidden_channels),
@@ -23,8 +30,8 @@ class TimeAwareSensorEncoder(nn.Module):
             nn.GELU(),
         )
 
-    def forward(self, sensor_values, time_features):
-        x = torch.cat((sensor_values, time_features), dim=-1)
+    def forward(self, sensor_values, time_features, ces_history):
+        x = torch.cat((sensor_values, time_features, ces_history), dim=-1)
         return self.net(x.permute(0, 2, 1))
 
 
@@ -56,20 +63,31 @@ class MultimodalCESPredictor(nn.Module):
         ecei_channels=4,
         mc_channels=2,
         time_channels=4,
+        ces_history_channels=3,
         sensor_feature_dim=96,
     ):
         super().__init__()
         self.window_size = window_size
         self.time_channels = time_channels
+        self.ces_history_channels = ces_history_channels
 
         self.bes_extractor = TimeAwareSensorEncoder(
-            bes_channels, time_channels=time_channels, output_dim=sensor_feature_dim
+            bes_channels,
+            time_channels=time_channels,
+            ces_history_channels=ces_history_channels,
+            output_dim=sensor_feature_dim,
         )
         self.ecei_extractor = TimeAwareSensorEncoder(
-            ecei_channels, time_channels=time_channels, output_dim=sensor_feature_dim
+            ecei_channels,
+            time_channels=time_channels,
+            ces_history_channels=ces_history_channels,
+            output_dim=sensor_feature_dim,
         )
         self.mc_extractor = TimeAwareSensorEncoder(
-            mc_channels, time_channels=time_channels, output_dim=sensor_feature_dim
+            mc_channels,
+            time_channels=time_channels,
+            ces_history_channels=ces_history_channels,
+            output_dim=sensor_feature_dim,
         )
         self.time_extractor = TimeFeatureEncoder(time_channels=time_channels)
 
@@ -91,6 +109,7 @@ class MultimodalCESPredictor(nn.Module):
             ecei_channels=dims["ecei"],
             mc_channels=dims["mc"],
             time_channels=dims["time"],
+            ces_history_channels=dims.get("ces_history", 3),
             **kwargs,
         )
 
@@ -123,12 +142,29 @@ class MultimodalCESPredictor(nn.Module):
             f"Expected {self.time_channels} time channels, got {time_features.shape[-1]}"
         )
 
-    def forward(self, bes, ecei, mc, time_features=None):
-        time_features = self._prepare_time_features(time_features, bes)
+    def _prepare_ces_history(self, ces_history, reference):
+        batch, steps = reference.shape[:2]
+        if ces_history is None:
+            return reference.new_zeros(batch, steps, self.ces_history_channels)
 
-        bes_feat = self.bes_extractor(bes, time_features)
-        ecei_feat = self.ecei_extractor(ecei, time_features)
-        mc_feat = self.mc_extractor(mc, time_features)
+        if ces_history.ndim != 3:
+            raise ValueError("ces_history must have shape (batch, window, channels)")
+        if ces_history.shape[:2] != reference.shape[:2]:
+            raise ValueError("ces_history and sensor windows must share batch/window dimensions")
+        if ces_history.shape[-1] != self.ces_history_channels:
+            raise ValueError(
+                f"Expected {self.ces_history_channels} CES history channels, "
+                f"got {ces_history.shape[-1]}"
+            )
+        return ces_history
+
+    def forward(self, bes, ecei, mc, time_features=None, ces_history=None):
+        time_features = self._prepare_time_features(time_features, bes)
+        ces_history = self._prepare_ces_history(ces_history, bes)
+
+        bes_feat = self.bes_extractor(bes, time_features, ces_history)
+        ecei_feat = self.ecei_extractor(ecei, time_features, ces_history)
+        mc_feat = self.mc_extractor(mc, time_features, ces_history)
         time_feat = self.time_extractor(time_features)
 
         fused = torch.cat((bes_feat, ecei_feat, mc_feat, time_feat), dim=1)
@@ -149,6 +185,7 @@ if __name__ == "__main__":
             sample["ecei"].unsqueeze(0),
             sample["mc"].unsqueeze(0),
             sample["time_features"].unsqueeze(0),
+            sample["ces_history"].unsqueeze(0),
         )
 
     print(f"Loaded real CSV sample from {Path(sample['file']).name}:{sample['row_index']}")
