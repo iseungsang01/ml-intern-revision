@@ -27,12 +27,14 @@ class KSTAR_CES_Dataset(Dataset):
         max_window_span=None,
         temporal_subset_augmentation=False,
         min_subset_size=2,
+        normalization_stats=None,
     ):
         self.data_dir = Path(data_dir)
         self.window_size = int(window_size)
         self.max_window_span = max_window_span
         self.temporal_subset_augmentation = bool(temporal_subset_augmentation)
         self.min_subset_size = int(min_subset_size)
+        self.normalization_stats = normalization_stats
 
         if self.window_size < 2:
             raise ValueError("window_size must be at least 2")
@@ -55,6 +57,57 @@ class KSTAR_CES_Dataset(Dataset):
         self.ces_history_cols = ("CES_TI_history", "CES_VT_history", "CES_observed")
         self.sample_indices = self._build_index()
 
+    def set_normalization_stats(self, normalization_stats):
+        self.normalization_stats = normalization_stats
+        self._get_file_data.cache_clear()
+
+    def _required_columns(self):
+        all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
+        return [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
+
+    @staticmethod
+    def _channel_stats(frames, columns):
+        values = pd.concat((df.loc[:, columns] for df in frames), ignore_index=True)
+        mean = values.mean(axis=0).to_numpy(dtype=np.float32)
+        std = values.std(axis=0, ddof=0).replace(0.0, 1.0).to_numpy(dtype=np.float32)
+        std = np.maximum(std, 1e-6).astype(np.float32)
+        return {"mean": mean, "std": std}
+
+    def fit_normalization_stats(self, file_paths=None):
+        selected_files = {str(Path(p)) for p in file_paths} if file_paths is not None else None
+        frames = []
+        usecols = self._required_columns()
+
+        for file_path in self.files:
+            if selected_files is not None and str(file_path) not in selected_files:
+                continue
+            try:
+                df = pd.read_csv(file_path, usecols=usecols)
+            except ValueError:
+                continue
+            df = df.dropna(subset=usecols).reset_index(drop=True)
+            if not df.empty:
+                frames.append(df)
+
+        if not frames:
+            raise ValueError("No rows available to fit normalization statistics")
+
+        return {
+            "bes": self._channel_stats(frames, self.bes_cols),
+            "ecei": self._channel_stats(frames, self.ecei_cols),
+            "mc": self._channel_stats(frames, self.mc_cols),
+            "target": self._channel_stats(frames, TARGET_COLUMNS),
+        }
+
+    def _normalize_array(self, values, group):
+        if self.normalization_stats is None:
+            return values
+
+        stats = self.normalization_stats[group]
+        mean = np.asarray(stats["mean"], dtype=np.float32)
+        std = np.asarray(stats["std"], dtype=np.float32)
+        return (values - mean) / std
+
     def _infer_feature_columns(self):
         for file_path in self.files:
             columns = pd.read_csv(file_path, nrows=0).columns.tolist()
@@ -73,8 +126,7 @@ class KSTAR_CES_Dataset(Dataset):
     def _build_index(self):
         sample_indices = []
         # All columns we need for a sample to be valid
-        all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
-        usecols = [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
+        usecols = self._required_columns()
 
         for file_path in self.files:
             try:
@@ -129,8 +181,7 @@ class KSTAR_CES_Dataset(Dataset):
     def _get_file_data(self, file_path):
         # We need to apply the same dropna logic when retrieving data in __getitem__
         # to ensure the indices match the sample_indices we built.
-        all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
-        usecols = [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
+        usecols = self._required_columns()
         df = pd.read_csv(file_path, usecols=usecols)
         return df.dropna(subset=usecols).reset_index(drop=True)
 
@@ -157,9 +208,10 @@ class KSTAR_CES_Dataset(Dataset):
         padding = torch.zeros(pad_shape, dtype=tensor.dtype)
         return torch.cat((tensor, padding), dim=0)
 
-    def _window_tensor(self, window_df, columns):
+    def _window_tensor(self, window_df, columns, group):
         # Data is already cleaned via dropna in _get_file_data, so no need for ffill/bfill
         values = window_df.loc[:, columns].to_numpy(dtype=np.float32)
+        values = self._normalize_array(values, group)
         return self._pad_tensor(torch.from_numpy(values))
 
     def _time_features(self, time_values):
@@ -181,6 +233,7 @@ class KSTAR_CES_Dataset(Dataset):
 
     def _ces_history(self, window_df):
         values = window_df.loc[:, TARGET_COLUMNS].to_numpy(dtype=np.float32)
+        values = self._normalize_array(values, "target")
         observed = np.ones((len(window_df), 1), dtype=np.float32)
 
         values[-1, :] = 0.0
@@ -195,9 +248,9 @@ class KSTAR_CES_Dataset(Dataset):
 
         window_df = df.iloc[list(row_indices)]
 
-        bes = self._window_tensor(window_df, self.bes_cols)
-        ecei = self._window_tensor(window_df, self.ecei_cols)
-        mc = self._window_tensor(window_df, self.mc_cols)
+        bes = self._window_tensor(window_df, self.bes_cols, "bes")
+        ecei = self._window_tensor(window_df, self.ecei_cols, "ecei")
+        mc = self._window_tensor(window_df, self.mc_cols, "mc")
 
         time_values = window_df[TIME_COLUMN].to_numpy()
         time_features = self._time_features(time_values)
@@ -212,6 +265,7 @@ class KSTAR_CES_Dataset(Dataset):
             df.loc[df.index[idx], list(TARGET_COLUMNS)]
             .to_numpy(dtype=np.float32)
         )
+        target_values = self._normalize_array(target_values, "target")
         target = torch.from_numpy(target_values)
 
         return {

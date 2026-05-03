@@ -66,6 +66,16 @@ def split_indices_by_file(dataset, val_fraction=0.2, seed=42):
     return train_indices, val_indices
 
 
+def normalization_stats_to_jsonable(stats):
+    return {
+        group: {
+            key: value.tolist()
+            for key, value in group_stats.items()
+        }
+        for group, group_stats in stats.items()
+    }
+
+
 def train():
     root_dir = Path(__file__).resolve().parents[1]
     output_dir = Path(__file__).resolve().parent
@@ -124,6 +134,11 @@ def train():
         train_indices = train_indices[:max_train_samples]
     if max_val_samples > 0:
         val_indices = val_indices[:max_val_samples]
+
+    train_files = {full_dataset.sample_indices[i][0] for i in train_indices}
+    normalization_stats = full_dataset.fit_normalization_stats(train_files)
+    full_dataset.set_normalization_stats(normalization_stats)
+
     train_dataset = Subset(full_dataset, train_indices)
     val_dataset = Subset(full_dataset, val_indices)
 
@@ -155,6 +170,9 @@ def train():
     criterion = nn.MSELoss()
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=2, factor=0.5)
+    target_mean = torch.as_tensor(normalization_stats["target"]["mean"], device=device)
+    target_std = torch.as_tensor(normalization_stats["target"]["std"], device=device)
+    zero_ti_normalized = (0.0 - target_mean[0]) / target_std[0]
 
     train_loss = float("inf")
     val_loss = float("inf")
@@ -175,7 +193,7 @@ def train():
             outputs = model(bes, ecei, mc, time_features, ces_history)
 
             loss_mse = criterion(outputs, targets)
-            penalty_neg_ti = torch.relu(-outputs[:, 0]).mean()
+            penalty_neg_ti = torch.relu(zero_ti_normalized - outputs[:, 0]).mean()
             loss = loss_mse + 0.1 * penalty_neg_ti
 
             loss.backward()
@@ -227,6 +245,11 @@ def train():
         "feature_dims": full_dataset.feature_dims,
         "temporal_subset_augmentation": temporal_subset_augmentation,
         "min_subset_size": min_subset_size,
+        "normalization": {
+            "scope": "train_files_only",
+            "method": "per_channel_zscore",
+            "stats": normalization_stats_to_jsonable(normalization_stats),
+        },
         "cpu_config": cpu_config,
     }
     metrics_path = output_dir / "metrics.json"
