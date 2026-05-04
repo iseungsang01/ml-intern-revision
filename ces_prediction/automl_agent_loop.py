@@ -7,6 +7,7 @@ import litellm
 
 
 FIXED_SPLIT_FILES = ("fixed_train_split.csv", "fixed_val_split.csv")
+PROJECT_KNOWLEDGE_FILE = "PROJECT_KNOWLEDGE.md"
 
 
 DATA_CONTRACT = """
@@ -123,6 +124,19 @@ def reset_session_artifacts():
             path.unlink()
             print(f"[AutoML Loop] Removed previous session artifact: {path}")
 
+
+def load_project_knowledge():
+    knowledge_path = Path(__file__).resolve().parents[1] / PROJECT_KNOWLEDGE_FILE
+    try:
+        knowledge = knowledge_path.read_text(encoding="utf-8").strip()
+    except FileNotFoundError:
+        print(f"[AutoML Loop] Project knowledge file not found: {knowledge_path}")
+        return ""
+
+    print(f"[AutoML Loop] Loaded project knowledge: {knowledge_path}")
+    return knowledge
+
+
 class BriefingAgent:
     """
     Briefing Agent:
@@ -182,10 +196,10 @@ class BriefingAgent:
         
         if self.plateau_count >= 3:
             briefing += "STATUS: PLATEAU DETECTED (3+ iterations without improvement).\n"
-            briefing += "DIRECTION: Completely discard the current 1D CNN approach. Explore a completely new architecture (e.g., Transformer, Mamba, or Graph Neural Networks for spatial channel interactions).\n"
+            briefing += "DIRECTION: Explore a genuinely new architecture or mechanism, but first check PROJECT_KNOWLEDGE and avoid repeating failed/degraded paths. Compare the idea against the best-known baseline.\n"
         else:
             briefing += "STATUS: LEARNING OR STABLE.\n"
-            briefing += "DIRECTION: Tweak hyperparameters, add skip connections, or adjust channel dimensions. Keep the current base architecture but optimize it.\n"
+            briefing += "DIRECTION: Improve the current direction or try a clearly different idea, but avoid overlapping with previous attempts unless the changed variable is explicit.\n"
             
         print(f"\n[Briefing Agent] {briefing}")
         
@@ -236,6 +250,9 @@ class ResearcherAgent:
     Briefing Agent의 리포트를 받아 새로운 접근법을 고민하고, 
     model.py나 hyperparameter를 실제로 수정(작성)하는 역할을 합니다.
     """
+    def __init__(self, project_knowledge=""):
+        self.project_knowledge = project_knowledge.strip()
+
     def research_and_update(self, briefing):
         print(f"\n[Researcher Agent] Analyzing briefing and researching new architecture...")
         
@@ -247,6 +264,11 @@ class ResearcherAgent:
 
         prompt = (
             f"You are an expert AI ML Researcher for KSTAR nuclear fusion data.\n"
+            f"Before proposing changes, follow this project knowledge and avoid repeating known failed paths:\n"
+            f"{self.project_knowledge or '(No PROJECT_KNOWLEDGE.md content was available.)'}\n\n"
+            f"Non-duplication rule: if the next idea overlaps with a previously tried architecture/search path, do not repeat it. "
+            f"New architectures are allowed and encouraged when they are genuinely different from failed/degraded prior attempts. "
+            f"Do not add layers, wider dimensions, skip paths, or local convolutions just because validation has plateaued unless that is part of a clearly different mechanism and comparison plan.\n\n"
             f"{DATA_CONTRACT}\n"
             f"Here is the briefing from the latest experiment:\n{briefing}\n\n"
             f"Here is the current 'model.py' code:\n```python\n{current_code}\n```\n\n"
@@ -278,6 +300,7 @@ class ResearcherAgent:
 
 def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None, train_samples=None, val_samples=None):
     reset_session_artifacts()
+    project_knowledge = load_project_knowledge()
 
     eval_agent = EvaluationAgent(
         cpu_workers=cpu_workers,
@@ -286,7 +309,7 @@ def run_auto_ml_loop(max_iterations=5, cpu_workers=None, dataloader_workers=None
         val_samples=val_samples,
     )
     briefing_agent = BriefingAgent()
-    researcher_agent = ResearcherAgent()
+    researcher_agent = ResearcherAgent(project_knowledge=project_knowledge)
     
     experiment_log = [] # 10회마다의 인사이트 생성을 위해 코드와 성능을 기록
     
