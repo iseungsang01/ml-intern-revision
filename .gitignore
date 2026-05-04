@@ -1,6 +1,10 @@
-data
-ces_prediction/__pycache__
-tests/__pycache__
+data/*
+!data/splits/
+!data/splits/*.csv
+!data/splits/*.json
+data/.ces_cache/
+__pycache__/
+**/__pycache__/
 ces_prediction/metrics.json
 ces_prediction/weights/
 .env

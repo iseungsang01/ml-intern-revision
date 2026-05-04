@@ -3,13 +3,13 @@ import os
 from pathlib import Path
 
 from dataset import DEFAULT_TRAIN_SAMPLE_COUNT, DEFAULT_VAL_SAMPLE_COUNT, KSTAR_CES_Dataset
-from train import load_or_create_fixed_splits, split_manifest
+from train import default_split_dir, load_or_create_fixed_splits, split_manifest
 
 
 def main():
     root_dir = Path(__file__).resolve().parents[1]
     data_dir = root_dir / "data"
-    output_dir = Path(__file__).resolve().parent
+    split_dir = default_split_dir(root_dir)
 
     seed = int(os.getenv("CES_SEED", "42"))
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
@@ -27,7 +27,7 @@ def main():
     )
     train_indices, val_indices, train_files, val_files = load_or_create_fixed_splits(
         dataset,
-        output_dir,
+        split_dir,
         val_fraction,
         seed,
         max_train_samples,
@@ -42,7 +42,7 @@ def main():
         seed,
         val_fraction,
     )
-    split_path = output_dir / "split_manifest.json"
+    split_path = split_dir / "split_manifest.json"
     with split_path.open("w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 

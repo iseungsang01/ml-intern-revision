@@ -17,14 +17,16 @@ from dataset import (
 )
 from model import MultimodalCESPredictor
 
-try:
-    import wandb
-except ImportError:
-    wandb = None
-
 
 FIXED_TRAIN_SPLIT_NAME = "fixed_train_split.csv"
 FIXED_VAL_SPLIT_NAME = "fixed_val_split.csv"
+
+
+def default_split_dir(root_dir):
+    override = os.getenv("CES_SPLIT_DIR")
+    if override:
+        return Path(override)
+    return root_dir / "data" / "splits"
 
 
 def resolve_cpu_config():
@@ -157,9 +159,10 @@ def split_files_from_indices(dataset, indices):
     return [dataset.valid_files[file_id] for file_id in file_ids]
 
 
-def load_or_create_fixed_splits(dataset, output_dir, val_fraction, seed, max_train_samples, max_val_samples):
-    train_split_path = output_dir / FIXED_TRAIN_SPLIT_NAME
-    val_split_path = output_dir / FIXED_VAL_SPLIT_NAME
+def load_or_create_fixed_splits(dataset, split_dir, val_fraction, seed, max_train_samples, max_val_samples):
+    split_dir.mkdir(parents=True, exist_ok=True)
+    train_split_path = split_dir / FIXED_TRAIN_SPLIT_NAME
+    val_split_path = split_dir / FIXED_VAL_SPLIT_NAME
 
     if train_split_path.exists() and val_split_path.exists():
         train_indices = load_fixed_split_csv(train_split_path, dataset)
@@ -226,9 +229,11 @@ def normalization_stats_to_jsonable(stats):
 
 def train():
     root_dir = Path(__file__).resolve().parents[1]
-    output_dir = Path(__file__).resolve().parent
+    output_dir = Path(os.getenv("CES_OUTPUT_DIR", Path(__file__).resolve().parent))
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     data_dir = root_dir / "data"
+    split_dir = default_split_dir(root_dir)
     window_size = int(os.getenv("CES_WINDOW_SIZE", "4"))
     batch_size = int(os.getenv("CES_BATCH_SIZE", "512"))
     epochs = int(os.getenv("CES_EPOCHS", "10"))
@@ -248,25 +253,6 @@ def train():
     torch.set_num_threads(cpu_config["torch_threads"])
     torch.set_num_interop_threads(cpu_config["torch_interop_threads"])
 
-    if wandb is not None:
-        wandb.init(
-            project="kstar-ces-prediction",
-            mode="disabled",
-            config={
-                "window_size": window_size,
-                "batch_size": batch_size,
-                "epochs": epochs,
-                "lr": lr,
-                "time_features": "lookback/delta seconds + log1p variants",
-                "ces_history": "previous selected CES_TI/CES_VT plus observed mask",
-                "temporal_subset_augmentation": temporal_subset_augmentation,
-                "min_subset_size": min_subset_size,
-                "split": "by_csv_file",
-                "val_fraction": val_fraction,
-                "cpu_config": cpu_config,
-            },
-        )
-
     print("Initializing dataset from CSV files...")
     full_dataset = KSTAR_CES_Dataset(
         data_dir=data_dir,
@@ -280,7 +266,7 @@ def train():
 
     train_indices, val_indices, train_split_files, val_split_files = load_or_create_fixed_splits(
         full_dataset,
-        output_dir,
+        split_dir,
         val_fraction,
         seed,
         max_train_samples,
@@ -295,7 +281,7 @@ def train():
         seed,
         val_fraction,
     )
-    split_path = output_dir / "split_manifest.json"
+    split_path = split_dir / "split_manifest.json"
     with split_path.open("w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
@@ -411,9 +397,6 @@ def train():
             f"Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}"
         )
 
-        if wandb is not None:
-            wandb.log({"train_loss": train_loss, "val_loss": val_loss, "epoch": epoch})
-
     weights_dir = output_dir / "weights"
     weights_dir.mkdir(exist_ok=True)
     weight_path = weights_dir / "multimodal_ces.pth"
@@ -441,9 +424,6 @@ def train():
     with metrics_path.open("w", encoding="utf-8") as f:
         json.dump(metrics, f, indent=2)
     print(f"Metrics saved to {metrics_path}")
-
-    if wandb is not None:
-        wandb.finish()
 
 
 if __name__ == "__main__":
