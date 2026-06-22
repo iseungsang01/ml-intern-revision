@@ -9,6 +9,45 @@ This file records prior attempts, known constraints, and directions to avoid so 
 - Use the iteration 7 design as the baseline to preserve, reproduce, and tune.
 - Later runs are mainly evidence about what moved away from the best result, not better starting points.
 - The project should preserve the best baseline while still allowing genuinely new architecture exploration that does not duplicate failed paths.
+- Note: the architecture-search numbers above are a separate track from the **input-modality
+  ablation finding (2026-06-22)** below, which is about *which inputs carry signal*, not architecture.
+
+## Input-Modality Ablation Finding (2026-06-22, GPU)
+
+Controlled ablation on the **model input modalities**, on real data (40k train / 8k val,
+12 epochs, batch 1024, window 4, temporal subsets on; shared file-level split; RTX 5060,
+torch 2.11.0+cu128). The three variants share identical settings — only the model inputs
+differ via `CES_ABLATE` (which zeroes a modality group). The **persistence baseline is
+always computed from the real history**, independent of the ablation.
+
+| Variant (model inputs)             | CES_TI skill | CES_TI R² | CES_VT skill | CES_VT R² |
+|------------------------------------|-------------:|----------:|-------------:|----------:|
+| Full (history + fast + time)       |       +0.359 |     0.347 |       +0.180 |     0.788 |
+| no_fast (history only)             |       +0.393 |     0.382 |       +0.234 |     0.802 |
+| no_history (fast diagnostics only) |       +0.162 |     0.146 |       −3.31  |    −0.116 |
+
+(skill = 1 − MSE_model/MSE_persistence; denormalized physical units; observed val points only.)
+
+1. The full model **beats persistence on both targets** (TI +0.36, VT +0.18) — genuinely
+   useful. (An earlier 1-epoch smoke that showed negative skill was just undertraining.)
+2. **V_rot skill is entirely from CES history.** Fast-diagnostics-only scores −3.31 / R² −0.12
+   (worse than predicting the mean); history-only matches/beats the full model. BES/ECEI/MC
+   carry ~no toroidal-rotation information at the 10 ms grid.
+3. **T_i is different: fast diagnostics DO carry T_i info** — fast-only still beats persistence
+   (+0.162). This is the physics-predicted T_i↔V_rot asymmetry, confirmed empirically.
+4. **Fast diagnostics are redundant given history for both targets** (Full ≈ no_fast, and in
+   fact consistently slightly lower). With history present, the fast inputs add ~0 (or marginally hurt).
+
+Physics backing (web-grounded review, same day): T_i is constrained by collisional electron–ion
+coupling (t_ei ∝ T_e^{3/2}/n_e), so ECEI(T_e)+BES(n_e) carry T_i info; V_rot is set mainly by the
+**unobserved** NBI torque, and the Mirnov coils are **raw signals sampled to 10 ms (100 Hz)**, which
+aliases away the kHz mode-rotation frequency that would otherwise proxy rotation. So the fast inputs
+physically *should* carry T_i but not V_rot — exactly what the ablation shows.
+
+Caveats: single seed, 40k samples, 12 epochs. The small Full-vs-no_fast gaps (~0.03) may be seed
+noise (the −3.31 V_rot fast-only effect is far beyond noise). Evaluated on **observed** points only;
+CES missingness is MNAR (drop-out at low S/N, ELMs, transitions), so observed-point skill is an
+**optimistic bound** for the genuinely-missing points the model is meant to fill.
 
 ## Data And Model Contract
 

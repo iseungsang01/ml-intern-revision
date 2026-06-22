@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1782106172602,
+  "projectRoot": "C:\\Users\\lss\\Documents\\GitHub\\ml-intern-revision",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "pyproject.toml"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "pytest",
+        "version": null,
+        "category": "testing"
+      }
+    ],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": "pytest",
+    "lintCommand": "ruff check",
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "tests"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "ces_prediction": {
+      "path": "ces_prediction",
+      "purpose": null,
+      "fileCount": 9,
+      "lastAccessed": 1782106172584,
+      "keyFiles": [
+        "automl_agent_loop.py",
+        "dataset.py",
+        "evaluate.py",
+        "inspect_split.py",
+        "model.py"
+      ]
+    },
+    "data": {
+      "path": "data",
+      "purpose": "Data files",
+      "fileCount": 641,
+      "lastAccessed": 1782106172586,
+      "keyFiles": [
+        "s30801.csv",
+        "s30805.csv",
+        "s30809.csv",
+        "s30810.csv",
+        "s30811.csv"
+      ]
+    },
+    "kstar_ces_prediction.egg-info": {
+      "path": "kstar_ces_prediction.egg-info",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1782106172586,
+      "keyFiles": [
+        "dependency_links.txt",
+        "PKG-INFO",
+        "requires.txt",
+        "SOURCES.txt",
+        "top_level.txt"
+      ]
+    },
+    "requirements": {
+      "path": "requirements",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1782106172587,
+      "keyFiles": [
+        "INSTRUCTIONS.md"
+      ]
+    },
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
+      "fileCount": 1,
+      "lastAccessed": 1782106172588,
+      "keyFiles": [
+        "test_architecture.py"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "ces_prediction\\automl_agent_loop.py",
+      "accessCount": 5,
+      "lastAccessed": 1782107631408,
+      "type": "directory"
+    },
+    {
+      "path": "ces_prediction\\slack_notifier.py",
+      "accessCount": 2,
+      "lastAccessed": 1782107650171,
+      "type": "file"
+    },
+    {
+      "path": "pyproject.toml",
+      "accessCount": 2,
+      "lastAccessed": 1782107663975,
+      "type": "file"
+    },
+    {
+      "path": "program.md",
+      "accessCount": 1,
+      "lastAccessed": 1782107559184,
+      "type": "file"
+    },
+    {
+      "path": "_autoresearch_selftest.py",
+      "accessCount": 1,
+      "lastAccessed": 1782107724783,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 1,
+      "lastAccessed": 1782107763871,
+      "type": "directory"
+    }
+  ],
+  "userDirectives": []
+}

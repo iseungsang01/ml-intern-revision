@@ -29,6 +29,15 @@ import sibling modules by bare name (`from dataset import ...`, `from slack_noti
 relying on the script's own directory being on `sys.path`. There is no `ces_prediction.*`
 package import path in the runtime code (`tests/` patches `sys.path` manually).
 
+**You need real data to do almost anything.** The shot CSVs are **not** committed (`data/*`
+is gitignored). Point `CES_DATA_DIR` at the real folder (the thesis `data/`, e.g.
+`C:\Users\lss\Desktop\원핵 졸논\data`) or copy the CSVs into `data/`. Of the three tests,
+only `test_dry_run` runs without data — `test_real_csv_sample_forward` and
+`test_temporal_subset_sample_uses_previous_ces_only` load real CSVs and fail without
+`CES_DATA_DIR` pointing at them. `train.py`, `evaluate.py`, and the smoke script all need it too.
+The local interpreter is invoked as `py` (Python 3.14); the commands above also work as `python`
+where a 3.11+ `python` is on PATH.
+
 ## The data/model contract (do not break)
 
 This is the project's central invariant. `model.py`, `train.py`, and `dataset.py` all depend

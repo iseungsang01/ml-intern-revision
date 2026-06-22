@@ -77,6 +77,21 @@ def _persistence_from_history(ces_history):
     return out, has_obs
 
 
+VALID_ABLATIONS = ("none", "no_history", "no_fast")
+
+
+def apply_ablation(ablate, bes, ecei, mc, ces_history):
+    """Zero a modality group for ablation (mirrors train.py). The persistence
+    baseline is computed from the real history *before* this is applied."""
+    if ablate == "no_history":
+        ces_history = torch.zeros_like(ces_history)
+    elif ablate == "no_fast":
+        bes = torch.zeros_like(bes)
+        ecei = torch.zeros_like(ecei)
+        mc = torch.zeros_like(mc)
+    return bes, ecei, mc, ces_history
+
+
 def evaluate():
     root_dir = Path(__file__).resolve().parents[1]
     data_dir = Path(os.getenv("CES_DATA_DIR", root_dir / "data"))
@@ -86,6 +101,9 @@ def evaluate():
     seed = int(os.getenv("CES_SEED", "42"))
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "40000"))
     batch_size = int(os.getenv("CES_BATCH_SIZE", "512"))
+    ablate = os.getenv("CES_ABLATE", "none")
+    if ablate not in VALID_ABLATIONS:
+        raise ValueError(f"CES_ABLATE must be one of {VALID_ABLATIONS}, got {ablate!r}")
 
     metrics_path = output_dir / "metrics.json"
     weights_path = output_dir / "weights" / "multimodal_ces.pth"
@@ -121,12 +139,20 @@ def evaluate():
             "Try a smaller CES_WINDOW_SIZE."
         )
     val_indices = select_seeded_random_indices(val_indices, max_val_samples, seed + 202)
-    loader = DataLoader(Subset(dataset, val_indices), batch_size=batch_size, shuffle=False)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    loader = DataLoader(
+        Subset(dataset, val_indices),
+        batch_size=batch_size,
+        shuffle=False,
+        pin_memory=device.type == "cuda",
+    )
 
     model = MultimodalCESPredictor.from_dataset(dataset, window_size=window_size)
     state = torch.load(weights_path, map_location="cpu")
     model.load_state_dict(state)
+    model.to(device)
     model.eval()
+    print(f"Using device: {device}")
 
     target_mean = torch.as_tensor(stats["target"]["mean"], dtype=torch.float32)
     target_std = torch.as_tensor(stats["target"]["std"], dtype=torch.float32)
@@ -134,16 +160,20 @@ def evaluate():
     pred_chunks, target_chunks, mask_chunks, persist_chunks, persist_obs_chunks = [], [], [], [], []
     with torch.no_grad():
         for batch in loader:
-            outputs = model(
-                batch["bes"], batch["ecei"], batch["mc"],
-                batch["time_features"], batch["ces_history"],
-            )
-            persistence, has_obs = _persistence_from_history(batch["ces_history"])
-            pred_chunks.append(outputs)
+            bes = batch["bes"].to(device, non_blocking=True)
+            ecei = batch["ecei"].to(device, non_blocking=True)
+            mc = batch["mc"].to(device, non_blocking=True)
+            time_features = batch["time_features"].to(device, non_blocking=True)
+            ces_history = batch["ces_history"].to(device, non_blocking=True)
+            # Persistence baseline always uses the REAL history, independent of ablation.
+            persistence, has_obs = _persistence_from_history(ces_history)
+            a_bes, a_ecei, a_mc, a_hist = apply_ablation(ablate, bes, ecei, mc, ces_history)
+            outputs = model(a_bes, a_ecei, a_mc, time_features, a_hist)
+            pred_chunks.append(outputs.cpu())
             target_chunks.append(batch["target"])
             mask_chunks.append(batch["target_mask"])
-            persist_chunks.append(persistence)
-            persist_obs_chunks.append(has_obs)
+            persist_chunks.append(persistence.cpu())
+            persist_obs_chunks.append(has_obs.cpu())
 
     pred = torch.cat(pred_chunks)
     target = torch.cat(target_chunks)
@@ -162,6 +192,7 @@ def evaluate():
         "window_size": window_size,
         "history": "real_most_recent_window (non-augmented)",
         "units": "raw CES units as stored in CSV (CES_TI, CES_VT)",
+        "ablation": ablate,
         "per_target": {},
     }
     for t, name in enumerate(TARGET_NAMES):
@@ -192,7 +223,7 @@ def evaluate():
 
     print(
         f"\nClean validation -- {report['val_samples']} samples over "
-        f"{report['val_shots']} val shots (window={window_size}, real history)\n"
+        f"{report['val_shots']} val shots (window={window_size}, real history, ablation={ablate})\n"
     )
     header = f"{'target':<8} {'n':>7}  {'RMSE_model':>11} {'RMSE_persist':>12} {'RMSE_mean':>10}  {'skill_vs_persist':>16} {'R2_vs_mean':>11}"
     print(header)

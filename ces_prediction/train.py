@@ -226,6 +226,26 @@ def normalization_stats_to_jsonable(stats):
     }
 
 
+VALID_ABLATIONS = ("none", "no_history", "no_fast")
+
+
+def apply_ablation(ablate, bes, ecei, mc, ces_history):
+    """Zero a modality group for controlled ablation (CES_ABLATE).
+
+    ``no_history`` zeroes the previous-CES history -> tests whether the fast
+    diagnostics carry information beyond reusing past CES. ``no_fast`` zeroes the
+    BES/ECEI/MC sensor values -> history-only. The persistence baseline in
+    evaluate.py is always computed from the *real* history, independent of this.
+    """
+    if ablate == "no_history":
+        ces_history = torch.zeros_like(ces_history)
+    elif ablate == "no_fast":
+        bes = torch.zeros_like(bes)
+        ecei = torch.zeros_like(ecei)
+        mc = torch.zeros_like(mc)
+    return bes, ecei, mc, ces_history
+
+
 def train():
     root_dir = Path(__file__).resolve().parents[1]
     output_dir = Path(os.getenv("CES_OUTPUT_DIR", Path(__file__).resolve().parent))
@@ -243,6 +263,9 @@ def train():
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
+    ablate = os.getenv("CES_ABLATE", "none")
+    if ablate not in VALID_ABLATIONS:
+        raise ValueError(f"CES_ABLATE must be one of {VALID_ABLATIONS}, got {ablate!r}")
     cpu_config = resolve_cpu_config()
 
     if epochs < 1:
@@ -300,10 +323,16 @@ def train():
     train_dataset = Subset(full_dataset, train_indices)
     val_dataset = Subset(full_dataset, val_indices)
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cuda":
+        # Fixed input shapes -> let cuDNN pick the fastest kernels.
+        torch.backends.cudnn.benchmark = True
+
     loader_kwargs = {
         "batch_size": batch_size,
         "num_workers": cpu_config["dataloader_workers"],
         "persistent_workers": cpu_config["dataloader_workers"] > 0,
+        "pin_memory": device.type == "cuda",
     }
     if cpu_config["dataloader_workers"] > 0:
         loader_kwargs["prefetch_factor"] = 2
@@ -311,7 +340,6 @@ def train():
     train_loader = DataLoader(train_dataset, shuffle=True, **loader_kwargs)
     val_loader = DataLoader(val_dataset, shuffle=False, **loader_kwargs)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     print(
         "CPU config: "
@@ -323,6 +351,8 @@ def train():
     )
     print(f"Feature dims: {full_dataset.feature_dims}")
     print(f"Samples: train={len(train_dataset)}, val={len(val_dataset)}")
+    if ablate != "none":
+        print(f"Ablation: {ablate} (model inputs zeroed; persistence baseline unaffected)")
 
     model = MultimodalCESPredictor.from_dataset(full_dataset, window_size=window_size).to(device)
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
@@ -330,6 +360,11 @@ def train():
     target_mean = torch.as_tensor(normalization_stats["target"]["mean"], device=device)
     target_std = torch.as_tensor(normalization_stats["target"]["std"], device=device)
     zero_ti_normalized = (0.0 - target_mean[0]) / target_std[0]
+
+    use_amp = device.type == "cuda" and os.getenv("CES_AMP", "0") == "1"
+    scaler = torch.amp.GradScaler("cuda", enabled=use_amp) if use_amp else None
+    if use_amp:
+        print("Mixed-precision (AMP) enabled on CUDA")
 
     train_loss = float("inf")
     val_loss = float("inf")
@@ -340,33 +375,42 @@ def train():
         train_label_count = 0.0
 
         for batch in train_loader:
-            bes = batch["bes"].to(device)
-            ecei = batch["ecei"].to(device)
-            mc = batch["mc"].to(device)
-            time_features = batch["time_features"].to(device)
-            ces_history = batch["ces_history"].to(device)
-            targets = batch["target"].to(device)
-            target_mask = batch["target_mask"].to(device)
+            bes = batch["bes"].to(device, non_blocking=True)
+            ecei = batch["ecei"].to(device, non_blocking=True)
+            mc = batch["mc"].to(device, non_blocking=True)
+            time_features = batch["time_features"].to(device, non_blocking=True)
+            ces_history = batch["ces_history"].to(device, non_blocking=True)
+            targets = batch["target"].to(device, non_blocking=True)
+            target_mask = batch["target_mask"].to(device, non_blocking=True)
+            bes, ecei, mc, ces_history = apply_ablation(ablate, bes, ecei, mc, ces_history)
 
             optimizer.zero_grad(set_to_none=True)
-            outputs = model(bes, ecei, mc, time_features, ces_history)
+            with torch.autocast(device_type=device.type, enabled=use_amp):
+                outputs = model(bes, ecei, mc, time_features, ces_history)
 
-            # Per-target masked MSE: CES_TI and CES_VT are missing independently,
-            # so only observed targets contribute to the loss.
-            squared_error = (outputs - targets) ** 2 * target_mask
-            observed_count = target_mask.sum().clamp(min=1.0)
-            loss_mse = squared_error.sum() / observed_count
-            penalty_neg_ti = torch.relu(zero_ti_normalized - outputs[:, 0]).mean()
-            loss = loss_mse + 0.1 * penalty_neg_ti
+                # Per-target masked MSE: CES_TI and CES_VT are missing independently,
+                # so only observed targets contribute to the loss.
+                squared_error = (outputs - targets) ** 2 * target_mask
+                observed_count = target_mask.sum().clamp(min=1.0)
+                loss_mse = squared_error.sum() / observed_count
+                penalty_neg_ti = torch.relu(zero_ti_normalized - outputs[:, 0]).mean()
+                loss = loss_mse + 0.1 * penalty_neg_ti
             if not torch.isfinite(loss):
                 raise FloatingPointError(
                     f"Non-finite train loss at epoch={epoch + 1}: "
                     f"loss={loss.item()}, mse={loss_mse.item()}, penalty_neg_ti={penalty_neg_ti.item()}"
                 )
 
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
-            optimizer.step()
+            if use_amp:
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
+                scaler.step(optimizer)
+                scaler.update()
+            else:
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
+                optimizer.step()
 
             train_se_sum += squared_error.sum().item()
             train_label_count += target_mask.sum().item()
@@ -378,13 +422,14 @@ def train():
         val_label_count = 0.0
         with torch.no_grad():
             for batch in val_loader:
-                bes = batch["bes"].to(device)
-                ecei = batch["ecei"].to(device)
-                mc = batch["mc"].to(device)
-                time_features = batch["time_features"].to(device)
-                ces_history = batch["ces_history"].to(device)
-                targets = batch["target"].to(device)
-                target_mask = batch["target_mask"].to(device)
+                bes = batch["bes"].to(device, non_blocking=True)
+                ecei = batch["ecei"].to(device, non_blocking=True)
+                mc = batch["mc"].to(device, non_blocking=True)
+                time_features = batch["time_features"].to(device, non_blocking=True)
+                ces_history = batch["ces_history"].to(device, non_blocking=True)
+                targets = batch["target"].to(device, non_blocking=True)
+                target_mask = batch["target_mask"].to(device, non_blocking=True)
+                bes, ecei, mc, ces_history = apply_ablation(ablate, bes, ecei, mc, ces_history)
 
                 outputs = model(bes, ecei, mc, time_features, ces_history)
                 squared_error = (outputs - targets) ** 2 * target_mask
@@ -422,6 +467,7 @@ def train():
         "min_subset_size": min_subset_size,
         "label_handling": "per_target_masked_multitask",
         "loss": "masked_mse_per_target",
+        "ablation": ablate,
         "split": manifest,
         "normalization": {
             "scope": "train_files_only",
