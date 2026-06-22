@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Subset
 
@@ -232,7 +231,7 @@ def train():
     output_dir = Path(os.getenv("CES_OUTPUT_DIR", Path(__file__).resolve().parent))
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    data_dir = root_dir / "data"
+    data_dir = Path(os.getenv("CES_DATA_DIR", root_dir / "data"))
     split_dir = default_split_dir(root_dir)
     window_size = int(os.getenv("CES_WINDOW_SIZE", "4"))
     batch_size = int(os.getenv("CES_BATCH_SIZE", "512"))
@@ -326,7 +325,6 @@ def train():
     print(f"Samples: train={len(train_dataset)}, val={len(val_dataset)}")
 
     model = MultimodalCESPredictor.from_dataset(full_dataset, window_size=window_size).to(device)
-    criterion = nn.MSELoss()
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=2, factor=0.5)
     target_mean = torch.as_tensor(normalization_stats["target"]["mean"], device=device)
@@ -338,7 +336,8 @@ def train():
 
     for epoch in range(epochs):
         model.train()
-        train_loss_sum = 0.0
+        train_se_sum = 0.0
+        train_label_count = 0.0
 
         for batch in train_loader:
             bes = batch["bes"].to(device)
@@ -347,11 +346,16 @@ def train():
             time_features = batch["time_features"].to(device)
             ces_history = batch["ces_history"].to(device)
             targets = batch["target"].to(device)
+            target_mask = batch["target_mask"].to(device)
 
             optimizer.zero_grad(set_to_none=True)
             outputs = model(bes, ecei, mc, time_features, ces_history)
 
-            loss_mse = criterion(outputs, targets)
+            # Per-target masked MSE: CES_TI and CES_VT are missing independently,
+            # so only observed targets contribute to the loss.
+            squared_error = (outputs - targets) ** 2 * target_mask
+            observed_count = target_mask.sum().clamp(min=1.0)
+            loss_mse = squared_error.sum() / observed_count
             penalty_neg_ti = torch.relu(zero_ti_normalized - outputs[:, 0]).mean()
             loss = loss_mse + 0.1 * penalty_neg_ti
             if not torch.isfinite(loss):
@@ -364,12 +368,14 @@ def train():
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
             optimizer.step()
 
-            train_loss_sum += loss.item() * bes.size(0)
+            train_se_sum += squared_error.sum().item()
+            train_label_count += target_mask.sum().item()
 
-        train_loss = train_loss_sum / len(train_loader.dataset)
+        train_loss = train_se_sum / max(train_label_count, 1.0)
 
         model.eval()
-        val_loss_sum = 0.0
+        val_se_sum = 0.0
+        val_label_count = 0.0
         with torch.no_grad():
             for batch in val_loader:
                 bes = batch["bes"].to(device)
@@ -378,16 +384,18 @@ def train():
                 time_features = batch["time_features"].to(device)
                 ces_history = batch["ces_history"].to(device)
                 targets = batch["target"].to(device)
+                target_mask = batch["target_mask"].to(device)
 
                 outputs = model(bes, ecei, mc, time_features, ces_history)
-                loss = criterion(outputs, targets)
-                if not torch.isfinite(loss):
+                squared_error = (outputs - targets) ** 2 * target_mask
+                if not torch.isfinite(squared_error.sum()):
                     raise FloatingPointError(
-                        f"Non-finite validation loss at epoch={epoch + 1}: loss={loss.item()}"
+                        f"Non-finite validation loss at epoch={epoch + 1}"
                     )
-                val_loss_sum += loss.item() * bes.size(0)
+                val_se_sum += squared_error.sum().item()
+                val_label_count += target_mask.sum().item()
 
-        val_loss = val_loss_sum / len(val_loader.dataset)
+        val_loss = val_se_sum / max(val_label_count, 1.0)
         if not np.isfinite(val_loss):
             raise FloatingPointError(f"Non-finite validation loss after epoch={epoch + 1}: {val_loss}")
         scheduler.step(val_loss)
@@ -412,6 +420,8 @@ def train():
         "feature_dims": full_dataset.feature_dims,
         "temporal_subset_augmentation": temporal_subset_augmentation,
         "min_subset_size": min_subset_size,
+        "label_handling": "per_target_masked_multitask",
+        "loss": "masked_mse_per_target",
         "split": manifest,
         "normalization": {
             "scope": "train_files_only",

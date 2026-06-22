@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.0
+slack_sdk>=3.33.0
+torch>=2.0
+
+[dev]
+pytest>=8.0

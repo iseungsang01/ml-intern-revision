@@ -17,9 +17,10 @@ Every generated or edited `model.py` must preserve this interface and data contr
 - `model.forward` must accept `forward(self, bes, ecei, mc, time_features=None, ces_history=None)`.
 - Outputs must be normalized `[CES_TI, CES_VT]` with shape `(batch, 2)`.
 - Do not denormalize inside `model.py`; inverse transforms belong in evaluation/reporting code.
-- BES, ECEI, MC, and targets use train-file-only per-channel z-score normalization.
-- `ces_history` has shape `(batch, window, 3)` containing normalized previous `CES_TI`, normalized previous `CES_VT`, and an observed mask.
-- The target timestep CES values must remain masked as `[0, 0, 0]` in `ces_history` to avoid leakage.
+- BES, ECEI, MC, and targets use train-file-only per-channel z-score normalization (target stats NaN-aware).
+- CES_TI and CES_VT are missing independently; rows are kept when inputs are complete and at least one CES target is observed, with a per-target `target_mask` and per-target masked MSE.
+- `ces_history` has shape `(batch, window, 4)` containing normalized previous `CES_TI`, normalized previous `CES_VT`, `CES_TI` observed flag, and `CES_VT` observed flag.
+- The target timestep is fully masked (both values and both observed flags `0`) in `ces_history` to avoid leakage.
 - Time features encode irregular sampling and currently have 4 channels: lookback seconds, delta seconds, `log1p` lookback, and `log1p` delta.
 
 ## What Has Already Been Tried

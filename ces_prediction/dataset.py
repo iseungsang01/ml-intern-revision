@@ -61,7 +61,12 @@ class KSTAR_CES_Dataset(Dataset):
             "log1p_lookback_seconds",
             "log1p_delta_seconds",
         )
-        self.ces_history_cols = ("CES_TI_history", "CES_VT_history", "CES_observed")
+        self.ces_history_cols = (
+            "CES_TI_history",
+            "CES_VT_history",
+            "CES_TI_observed",
+            "CES_VT_observed",
+        )
         if not self._load_disk_cache():
             self._preload_data()
             self._build_index()
@@ -79,7 +84,13 @@ class KSTAR_CES_Dataset(Dataset):
         for file_path in self.files:
             try:
                 df = pd.read_csv(file_path, usecols=usecols)
-                clean_df = df.dropna(subset=usecols).reset_index(drop=True)
+                # Inputs (time + fast diagnostics) must be present; they feed the
+                # model and have no missing values. CES_TI/CES_VT are targets and
+                # are missing independently -- keep any row with >=1 observed target
+                # so no observed CES label is discarded.
+                df = df.dropna(subset=self._input_columns()).reset_index(drop=True)
+                has_target = df[list(TARGET_COLUMNS)].notna().any(axis=1)
+                clean_df = df[has_target].reset_index(drop=True)
                 if not clean_df.empty:
                     values = clean_df.loc[:, usecols].to_numpy(dtype=np.float32, copy=True)
                     self.data_cache[str(file_path)] = values
@@ -101,7 +112,7 @@ class KSTAR_CES_Dataset(Dataset):
     def _cache_path(self):
         cache_dir = self.data_dir / ".ces_cache"
         signature = {
-            "version": 2,
+            "version": 3,
             "window_size": self.window_size,
             "temporal_subset_augmentation": self.temporal_subset_augmentation,
             "min_subset_size": self.min_subset_size,
@@ -184,11 +195,20 @@ class KSTAR_CES_Dataset(Dataset):
         all_feature_cols = [*self.bes_cols, *self.ecei_cols, *self.mc_cols]
         return [TIME_COLUMN, *TARGET_COLUMNS, *all_feature_cols]
 
+    def _input_columns(self):
+        """Model-input columns that must be fully observed (no missing values)."""
+        return [TIME_COLUMN, *self.bes_cols, *self.ecei_cols, *self.mc_cols]
+
     @staticmethod
     def _channel_stats(arrays):
         values = np.concatenate(arrays, axis=0)
-        mean = values.mean(axis=0, dtype=np.float64).astype(np.float32)
-        std = values.std(axis=0, dtype=np.float64).astype(np.float32)
+        # CES targets are missing independently, so per-channel statistics use
+        # observed values only (NaN-aware). Fast-diagnostic inputs have no missing
+        # values, so this is identical to the dense computation for them.
+        mean = np.nanmean(values, axis=0, dtype=np.float64).astype(np.float32)
+        std = np.nanstd(values, axis=0, dtype=np.float64).astype(np.float32)
+        mean = np.where(np.isnan(mean), 0.0, mean).astype(np.float32)
+        std = np.where(np.isnan(std), 1.0, std)
         std = np.where(std == 0.0, 1.0, std)
         std = np.maximum(std, 1e-6).astype(np.float32)
         return {"mean": mean, "std": std}
@@ -350,12 +370,16 @@ class KSTAR_CES_Dataset(Dataset):
         return self._pad_tensor(torch.from_numpy(features))
 
     def _ces_history(self, file_values, row_indices):
-        values = file_values[np.ix_(row_indices, self._column_slices["target"])].astype(np.float32, copy=True)
-        values = self._normalize_array(values, "target")
-        observed = np.ones((len(row_indices), 1), dtype=np.float32)
+        raw = file_values[np.ix_(row_indices, self._column_slices["target"])].astype(np.float32, copy=True)
+        observed = (~np.isnan(raw)).astype(np.float32)
+        values = self._normalize_array(raw, "target")
+        values = np.nan_to_num(values, nan=0.0)
 
+        # Mask the target timestep so the model never sees the CES values it must
+        # predict. Observation flags are per-target because CES_TI and CES_VT are
+        # missing independently; a filled-in 0.0 is only valid where observed == 1.
         values[-1, :] = 0.0
-        observed[-1, 0] = 0.0
+        observed[-1, :] = 0.0
 
         history = np.concatenate((values, observed), axis=1)
         return self._pad_tensor(torch.from_numpy(history))
@@ -379,9 +403,12 @@ class KSTAR_CES_Dataset(Dataset):
         padded_row_indices = torch.from_numpy(self.sample_row_indices[i].astype(np.int64, copy=True))
 
         idx = row_indices[-1]
-        target_values = file_values[idx, self._column_slices["target"]].astype(np.float32, copy=False)
-        target_values = self._normalize_array(target_values, "target")
+        raw_target = file_values[idx, self._column_slices["target"]].astype(np.float32, copy=True)
+        target_mask = (~np.isnan(raw_target)).astype(np.float32)
+        target_values = self._normalize_array(raw_target, "target")
+        target_values = np.nan_to_num(target_values, nan=0.0)
         target = torch.from_numpy(target_values)
+        target_mask = torch.from_numpy(target_mask)
 
         return {
             "bes": bes,
@@ -392,6 +419,7 @@ class KSTAR_CES_Dataset(Dataset):
             "ces_history": ces_history,
             "input_mask": input_mask,
             "target": target,
+            "target_mask": target_mask,
             "file": file_path,
             "row_index": idx,
             "row_indices": padded_row_indices,

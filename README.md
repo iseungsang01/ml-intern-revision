@@ -117,9 +117,11 @@ Every training/data/model change must preserve this contract unless the change i
 - `model.forward` accepts `forward(self, bes, ecei, mc, time_features=None, ces_history=None)`.
 - Output is normalized `[CES_TI, CES_VT]` with shape `(batch, 2)`.
 - `model.py` must not denormalize predictions.
-- BES, ECEI, MC, and target values use train-file-only per-channel z-score normalization.
-- `ces_history` shape is `(batch, window, 3)`: previous normalized `CES_TI`, previous normalized `CES_VT`, observed mask.
-- The target timestep in `ces_history` stays masked as `[0, 0, 0]` to avoid leakage.
+- BES, ECEI, MC, and target values use train-file-only per-channel z-score normalization (target stats NaN-aware, over observed values).
+- CES_TI and CES_VT are missing independently; a row is kept when inputs are complete and at least one CES target is observed.
+- `ces_history` shape is `(batch, window, 4)`: previous normalized `CES_TI`, previous normalized `CES_VT`, `CES_TI` observed flag, `CES_VT` observed flag.
+- The target timestep in `ces_history` stays fully masked (both values and both observed flags `0`) to avoid leakage.
+- Each sample provides `target_mask` `(batch, 2)`; training/validation use per-target masked MSE.
 - Time features have 4 channels: lookback seconds, delta seconds, `log1p` lookback, `log1p` delta.
 
 ## Dataset Flow
@@ -252,6 +254,19 @@ Use this after code changes that touch data loading, model inputs, training, met
 ```bash
 python ces_prediction/train.py
 ```
+
+### Evaluate (clean, baseline-relative)
+
+```bash
+python ces_prediction/evaluate.py
+```
+
+Scores the trained model on a **non-augmented** validation set (real most-recent history)
+restricted to the manifest's validation shots, in **denormalized physical units per target**,
+against **persistence** (reuse the last observed CES) and a **mean** baseline. The headline
+`skill_vs_persistence > 0` means the multimodal model beats carrying the last CES forward.
+Reads `CES_OUTPUT_DIR/metrics.json`, `CES_OUTPUT_DIR/weights/`, and
+`CES_SPLIT_DIR/split_manifest.json`; writes `CES_OUTPUT_DIR/eval_metrics.json`.
 
 ### Inspect Split
 

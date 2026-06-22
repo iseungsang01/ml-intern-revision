@@ -43,9 +43,11 @@ Every generated or edited model/training/data change must preserve this contract
 - `model.forward` accepts `forward(self, bes, ecei, mc, time_features=None, ces_history=None)`.
 - Outputs are normalized `[CES_TI, CES_VT]` with shape `(batch, 2)`.
 - Do not denormalize inside `model.py`.
-- BES, ECEI, MC, and targets use train-file-only per-channel z-score normalization.
-- `ces_history` has shape `(batch, window, 3)` with previous normalized `CES_TI`, previous normalized `CES_VT`, and observed mask.
-- The target timestep in `ces_history` remains masked as `[0, 0, 0]`.
+- BES, ECEI, MC, and targets use train-file-only per-channel z-score normalization. Target stats are NaN-aware (observed CES values only).
+- CES_TI and CES_VT are missing independently; a row is kept when inputs are complete and at least one CES target is observed (not both).
+- `ces_history` has shape `(batch, window, 4)`: previous normalized `CES_TI`, previous normalized `CES_VT`, `CES_TI` observed flag, `CES_VT` observed flag.
+- The target timestep in `ces_history` is fully masked (both values and both observed flags set to `0`).
+- Each sample carries `target_mask` `(batch, 2)`; training/validation use per-target masked MSE so a row with one observed target still supervises it.
 - Time features use 4 channels: lookback seconds, delta seconds, `log1p` lookback, and `log1p` delta.
 
 ## Model Architecture Changes
