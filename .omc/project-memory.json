@@ -110,8 +110,26 @@
   "hotPaths": [
     {
       "path": "ces_prediction\\automl_agent_loop.py",
+      "accessCount": 20,
+      "lastAccessed": 1782112527225,
+      "type": "directory"
+    },
+    {
+      "path": "pyproject.toml",
       "accessCount": 5,
-      "lastAccessed": 1782107631408,
+      "lastAccessed": 1782109723615,
+      "type": "file"
+    },
+    {
+      "path": ".env",
+      "accessCount": 4,
+      "lastAccessed": 1782112172288,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 3,
+      "lastAccessed": 1782107795572,
       "type": "directory"
     },
     {
@@ -121,9 +139,27 @@
       "type": "file"
     },
     {
-      "path": "pyproject.toml",
+      "path": "README.md",
       "accessCount": 2,
-      "lastAccessed": 1782107663975,
+      "lastAccessed": 1782108516086,
+      "type": "directory"
+    },
+    {
+      "path": "_oauth_check.py",
+      "accessCount": 2,
+      "lastAccessed": 1782111501973,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 2,
+      "lastAccessed": 1782112137226,
+      "type": "file"
+    },
+    {
+      "path": "data\\.validate_out\\loop.log",
+      "accessCount": 2,
+      "lastAccessed": 1782112464579,
       "type": "file"
     },
     {
@@ -139,10 +175,22 @@
       "type": "file"
     },
     {
-      "path": "CLAUDE.md",
+      "path": "_auth_check.py",
       "accessCount": 1,
-      "lastAccessed": 1782107763871,
-      "type": "directory"
+      "lastAccessed": 1782111128790,
+      "type": "file"
+    },
+    {
+      "path": "_researcher_test.py",
+      "accessCount": 1,
+      "lastAccessed": 1782112204254,
+      "type": "file"
+    },
+    {
+      "path": "data\\realrun.log",
+      "accessCount": 1,
+      "lastAccessed": 1782113221041,
+      "type": "file"
     }
   ],
   "userDirectives": []

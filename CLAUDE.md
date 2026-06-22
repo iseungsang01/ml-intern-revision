@@ -95,16 +95,26 @@ location (e.g. the thesis `data/` folder) or copy them into `data/`.
 
 ## AutoML loop and experiment discipline
 
-`automl_agent_loop.py` runs Evaluation → Briefing → Researcher roles. It is **not** an
-uncontrolled rewriter: it runs smoke validation, then full training, then only allows a model
-rewrite when a plateau is detected.
+`automl_agent_loop.py` is a **keep/discard autoresearch loop** (inspired by Karpathy's
+`autoresearch`). Each iteration: smoke-validate → full `train.py` → clean `evaluate.py` → score the
+model on the **clean mean `skill_vs_persistence`** (not the augmented val loss) → **keep** the change
+if it beats the best so far, else **discard and roll back `model.py`** to the best snapshot. So the
+loop never builds on a regression and never loses the best architecture.
 
-- **Slack is mandatory.** Missing `slack_sdk`, `SLACK_BOT_TOKEN`, or `SLACK_CHANNEL_ID` makes
-  the loop fail before training starts (`validate_slack_config`).
-- **Plateau rule:** an architecture change is allowed only after ≥3 consecutive evaluated runs
-  with relative val-loss improvement `< 3%` vs. the best known val loss. The Researcher role
-  (LLM-driven, via optional `litellm`) only fires when `allow_research` is true.
-- Smoke/training failure is a **repair** signal, not architecture-quality evidence.
+- **Researcher = Claude.** The model rewrite uses the official `anthropic` SDK (`claude-opus-4-8`,
+  adaptive thinking, streaming). Needs `ANTHROPIC_API_KEY`; a missing key or SDK skips the rewrite
+  and the loop keeps running. Override the model with `AUTOML_RESEARCH_MODEL`.
+- **`program.md`** (repo root) is the editable agent "skill" — objective, keep/discard rules,
+  discipline, and physics priors. Humans tune `program.md`; the loop injects it plus
+  `PROJECT_KNOWLEDGE.md` and the hard `DATA_CONTRACT` into the prompt. Output must be raw `model.py`
+  preserving the contract (validated: must contain `class MultimodalCESPredictor` and `def forward`).
+- **Slack is mandatory.** Missing `slack_sdk`, `SLACK_BOT_TOKEN`, or `SLACK_CHANNEL_ID` makes the
+  loop fail before training starts (`validate_slack_config`).
+- **State** (best snapshot `best_model.py` + per-iteration archive) lives under
+  `<output_dir>/.automl_state/` (default `ces_prediction/.automl_state/`). The loop stops early after
+  `--max-consecutive-failures` (default 5).
+- Smoke/training failure is a **repair** signal, not architecture-quality evidence: the failed
+  proposal is discarded (rolled back) and the agent is asked for a different controlled change.
 
 ## Working agreements (from AGENTS.md)
 

@@ -1,0 +1,7 @@
+{
+  "tool_name": "PowerShell",
+  "tool_input_preview": "{\"command\":\"py -c @'\\nimport sys, os\\nsys.path.insert(0, \\\"ces_prediction\\\")\\nfrom dotenv import load_dotenv\\nfrom pathlib import Path\\nload_dotenv(Path(\\\".env\\\"))\\nimport anthropic\\nk = os.environ.ge...",
+  "error": "Exit code 1\n  File \"<string>\", line 7\r\n    k = os.environ.get(ANTHROPIC_API_KEY, \")\r\n                                          ^\r\nSyntaxError: unterminated string literal (detected at line 7)",
+  "timestamp": "2026-06-22T06:51:59.064Z",
+  "retry_count": 1
+}

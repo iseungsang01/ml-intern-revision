@@ -7,4 +7,6 @@ __pycache__/
 **/__pycache__/
 ces_prediction/metrics.json
 ces_prediction/weights/
+ces_prediction/eval_metrics.json
+**/.automl_state/
 .env

@@ -1,15 +1,28 @@
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
+
+# Load environment variables from a repo-root .env so ANTHROPIC_API_KEY,
+# SLACK_BOT_TOKEN, and SLACK_CHANNEL_ID can live in one place. Subprocesses
+# (train.py / evaluate.py) inherit them because the loop spawns them with
+# os.environ.copy(). Does not override variables already set in the shell.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    pass
 
 
 PROJECT_KNOWLEDGE_FILE = "PROJECT_KNOWLEDGE.md"
 PROGRAM_FILE = "program.md"
 RESEARCH_MODEL_DEFAULT = "claude-opus-4-8"
 MAX_RESEARCH_TOKENS = 32000
+CLI_RESEARCH_TIMEOUT = 1200  # seconds to wait for the `claude` CLI rewrite
 TARGET_NAMES = ("CES_TI", "CES_VT")
 
 
@@ -107,6 +120,24 @@ def strip_code_fences(text):
     if code.endswith("```"):
         code = code[: code.rfind("```")]
     return code.strip()
+
+
+def extract_model_code(text):
+    """Pull model.py source out of a possibly chatty model/CLI response.
+
+    Prefers a fenced code block that defines MultimodalCESPredictor, falls back
+    to the largest fenced block, then to fence-stripping the whole response. The
+    `claude` CLI runs in agent mode and can wrap output in prose, so plain
+    fence-stripping is not enough.
+    """
+    text = text.strip()
+    blocks = re.findall(r"```(?:python)?[ \t]*\r?\n(.*?)```", text, re.DOTALL)
+    for block in blocks:
+        if "class MultimodalCESPredictor" in block:
+            return block.strip()
+    if blocks:
+        return max(blocks, key=len).strip()
+    return strip_code_fences(text)
 
 
 def run_subprocess(command, cwd, env):
@@ -352,7 +383,11 @@ class ExperimentTracker:
 
 
 class ResearcherAgent:
-    """Claude-driven controlled rewrite of model.py (official Anthropic SDK)."""
+    """Claude-driven controlled rewrite of model.py.
+
+    Uses the logged-in `claude` CLI (Claude Code subscription billing) by default,
+    or the Anthropic SDK when a real sk-ant-api03 key is set in ANTHROPIC_API_KEY.
+    """
 
     def __init__(self, program="", project_knowledge=""):
         self.program = program.strip()
@@ -368,31 +403,101 @@ class ResearcherAgent:
             f"## Current briefing\n{briefing}\n\n"
             "## Current model.py (build on this)\n"
             f"```python\n{current_code}\n```\n\n"
-            "Return ONLY the complete raw Python source for model.py (no prose, no markdown "
-            "fences). Keep class MultimodalCESPredictor and the signature "
+            "Return the complete updated model.py as a SINGLE Python code block fenced "
+            "with ```python ... ``` and output nothing outside that code block. Keep "
+            "class MultimodalCESPredictor and the signature "
             "forward(self, bes, ecei, mc, time_features=None, ces_history=None)."
         )
 
     def research_and_update(self, briefing, model_path):
-        try:
-            import anthropic
-        except ImportError:
-            print(
-                "[Researcher Agent] `anthropic` SDK not installed. "
-                "Install it (`python -m pip install anthropic`) to enable Claude-driven research. Skipping."
-            )
-            return False
-        if not os.environ.get("ANTHROPIC_API_KEY"):
-            print("[Researcher Agent] ANTHROPIC_API_KEY not set; skipping model update.")
-            return False
-
         current_code = model_path.read_text(encoding="utf-8")
         prompt = self._build_prompt(briefing, current_code)
         model_id = os.getenv("AUTOML_RESEARCH_MODEL", RESEARCH_MODEL_DEFAULT)
 
-        print(f"[Researcher Agent] Requesting controlled model update from {model_id}...")
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if api_key.startswith("sk-ant-api"):
+            # Real API key -> Anthropic SDK, billed via API credits.
+            raw = self._request_via_sdk(prompt, model_id, api_key)
+        else:
+            # Default: drive the logged-in `claude` CLI -> billed via the Claude
+            # subscription (no separate API credits). Works whenever `claude` is
+            # logged in, or CLAUDE_CODE_OAUTH_TOKEN is set from `claude setup-token`.
+            raw = self._request_via_cli(prompt, model_id)
+        if raw is None:
+            return False
+
+        code = extract_model_code(raw)
+        if "class MultimodalCESPredictor" not in code or "def forward" not in code:
+            print("[Researcher Agent] Response missing required class/forward; keeping current model.py.")
+            return False
+
+        model_path.write_text(code.strip() + "\n", encoding="utf-8")
+        print("[Researcher Agent] Updated model.py")
+        return True
+
+    def _request_via_cli(self, prompt, model_id):
+        claude = shutil.which("claude")
+        if not claude:
+            print("[Researcher Agent] `claude` CLI not found on PATH; skipping model update.")
+            return None
+
+        env = os.environ.copy()
+        # The CLI authenticates via the Claude Code login (subscription). A token
+        # left in ANTHROPIC_API_KEY would force API-credit billing, and an
+        # sk-ant-oat token is not a valid API key, so move it to the OAuth slot.
+        leftover = env.pop("ANTHROPIC_API_KEY", "")
+        if leftover.startswith("sk-ant-oat") and not env.get("CLAUDE_CODE_OAUTH_TOKEN"):
+            env["CLAUDE_CODE_OAUTH_TOKEN"] = leftover
+
+        cmd = [
+            claude,
+            "-p",
+            "--model",
+            model_id,
+            "--output-format",
+            "text",
+            "--max-turns",
+            "1",
+            "--append-system-prompt",
+            "Respond with exactly one ```python fenced code block containing the "
+            "complete file and no text outside the block.",
+        ]
+        print(
+            f"[Researcher Agent] Requesting controlled model update via Claude CLI "
+            f"({model_id}, subscription login)..."
+        )
         try:
-            client = anthropic.Anthropic()
+            result = subprocess.run(
+                cmd,
+                input=prompt,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                env=env,
+                timeout=CLI_RESEARCH_TIMEOUT,
+            )
+        except Exception as exc:
+            print(f"[Researcher Agent] Claude CLI failed: {exc}. Keeping current model.py.")
+            return None
+        if result.returncode != 0:
+            err = (result.stderr or "").strip()[:300]
+            print(f"[Researcher Agent] Claude CLI exited {result.returncode}: {err}. Keeping current model.py.")
+            return None
+        return result.stdout
+
+    def _request_via_sdk(self, prompt, model_id, api_key):
+        try:
+            import anthropic
+        except ImportError:
+            print(
+                "[Researcher Agent] `anthropic` SDK not installed; cannot use ANTHROPIC_API_KEY. "
+                "Install it or use the Claude CLI login. Skipping."
+            )
+            return None
+
+        print(f"[Researcher Agent] Requesting controlled model update from {model_id} (API key)...")
+        try:
+            client = anthropic.Anthropic(api_key=api_key)
             with client.messages.stream(
                 model=model_id,
                 max_tokens=MAX_RESEARCH_TOKENS,
@@ -402,19 +507,11 @@ class ResearcherAgent:
                 message = stream.get_final_message()
         except Exception as exc:
             print(f"[Researcher Agent] Claude request failed: {exc}. Keeping current model.py.")
-            return False
+            return None
 
-        text = "".join(
+        return "".join(
             block.text for block in message.content if getattr(block, "type", None) == "text"
         )
-        code = strip_code_fences(text)
-        if "class MultimodalCESPredictor" not in code or "def forward" not in code:
-            print("[Researcher Agent] Response missing required class/forward; keeping current model.py.")
-            return False
-
-        model_path.write_text(code.strip() + "\n", encoding="utf-8")
-        print("[Researcher Agent] Updated model.py")
-        return True
 
 
 def run_auto_ml_loop(

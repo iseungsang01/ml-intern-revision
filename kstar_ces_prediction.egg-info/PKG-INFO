@@ -4,6 +4,7 @@ Version: 0.1.0
 Summary: KSTAR CES multimodal prediction training pipeline
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
+Requires-Dist: anthropic>=0.40
 Requires-Dist: numpy>=1.26
 Requires-Dist: pandas>=2.0
 Requires-Dist: slack_sdk>=3.33.0
