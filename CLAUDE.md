@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git / commit policy (do not auto-commit)
+
+Never create git commits or pushes automatically. Do **not** run `git commit` / `git push`, and do
+**not** invoke any OMC commit step (the `team` / `autopilot` / `ralph` commit protocol, or
+`git-master` auto-commit) unless the user explicitly asks to commit in that same message. Making and
+verifying file changes is fine; turning them into commits requires an explicit per-request go-ahead.
+
 ## What this repo is
 
 A single PyTorch pipeline that predicts normalized low-resolution KSTAR CES (Charge

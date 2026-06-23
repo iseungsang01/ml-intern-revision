@@ -10,3 +10,10 @@ ces_prediction/weights/
 ces_prediction/eval_metrics.json
 **/.automl_state/
 .env
+
+# OMC runtime/state churn (keep .omc/plans, .omc/research, .omc/specs tracked)
+.omc/state/
+.omc/sessions/
+.omc/logs/
+.omc/notepad.md
+.omc/project-memory.json

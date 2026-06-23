@@ -1,7 +1,0 @@
-{
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"py -c \\\"import anthropic; print('anthropic', anthropic.__version__)\\\" 2>$null; if (-not $?) { \\\"anthropic: NOT installed\\\" }\\n\\\"ANTHROPIC_API_KEY set: \\\" + [bool]$env:ANTHROPIC_API_KEY\",\"d...",
-  "error": "Exit code 1\nanthropic: NOT installed\r\nANTHROPIC_API_KEY set: False",
-  "timestamp": "2026-06-22T05:41:05.850Z",
-  "retry_count": 1
-}
