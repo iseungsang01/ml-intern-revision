@@ -10,9 +10,12 @@ You are an autonomous ML researcher improving `ces_prediction/model.py`, the mul
 that predicts normalized `[CES_TI, CES_VT]` for the KSTAR CES **gap-filling / nowcasting** task
 (predict CES on the 10 ms grid where it is missing, from dense BES/ECEI/MC + previous-CES history).
 
-**Maximize the clean validation skill**, defined as the mean of `CES_TI` and `CES_VT`
-`skill_vs_persistence` reported by `ces_prediction/evaluate.py` (higher is better). Do **not**
-optimize the augmented training val loss — it is not a clean generalization estimate.
+**Maximize the validation `skill_vs_interpolation`**, defined as the mean of `CES_TI` and `CES_VT`
+`skill_vs_pchip` reported by `ces_prediction/compare_baselines.py` on the **val** split (higher is
+better) — i.e. beat conventional past+future PCHIP/linear interpolation, the thesis bar. The loop
+keeps/discards on this; a held-out **test** split is reserved and never used for selection. Do **not**
+optimize the augmented training val loss, and note that merely beating persistence is not the goal
+(the model already does) — you must close the gap to *interpolation*.
 
 ## How the loop works (keep / discard — this is the key rule)
 
@@ -24,13 +27,25 @@ optimize the augmented training val loss — it is not a clean generalization es
 
 ## What is fair game
 
-- The architecture of `MultimodalCESPredictor`: encoders, fusion, normalization layers, attention,
-  pooling, residual structure, capacity — as long as the hard contract (injected separately) holds.
+- **Architecture family — you are NOT limited to the current CNN.** You may rewrite
+  `MultimodalCESPredictor` as a Transformer (self-attention over the window), an RNN/GRU/LSTM,
+  a state-space (SSM / Mamba-style) model, or a hybrid, in addition to tuning encoders, fusion,
+  normalization, attention, pooling, residual structure, and capacity. The current Conv1d design
+  is just the present baseline, not a constraint. The only hard limits are the injected
+  data/model contract (forward signature, normalized `(batch, 2)` output, normalization scheme).
+- **History window is searchable.** Declare a module-level `WINDOW_SIZE = N` (integer 2-32) in
+  `model.py` and the loop trains/evaluates at that window — it sets how many timesteps
+  `bes/ecei/mc/ces_history/time_features` span. Omit it to keep the default (4). A larger window
+  gives more context for longer gaps but slows training and shifts the eval sample population, so
+  treat a window change as its own controlled experiment. `from_dataset` already wires the model
+  to the dataset's window, so you only need the constant plus any architecture that exploits it.
 
 ## Discipline (controlled experiments)
 
 - Change **ONE controlled variable per iteration** and state it in a top-of-file comment
-  (`# EXPERIMENT: <what changed and the hypothesis>`).
+  (`# EXPERIMENT: <what changed and the hypothesis>`). A full architecture-family swap
+  (e.g. CNN -> Transformer) or a `WINDOW_SIZE` change each counts as one deliberate variable —
+  do it cleanly in isolation, not bundled with other changes in the same step.
 - Read the injected `PROJECT_KNOWLEDGE.md` and **do not repeat known failed paths**: aggressive
   `d_model`/feed-forward/depth scaling (caused instability), complex/global skip variants, and
   added local 1D-conv extractors all failed to beat the iteration-7 baseline.
@@ -51,6 +66,7 @@ optimize the augmented training val loss — it is not a clean generalization es
 
 ## Output format
 
-Return **ONLY** the complete raw Python source for `model.py` — no prose, no explanation, no
-markdown code fences. Keep the class name `MultimodalCESPredictor` and the exact signature
-`forward(self, bes, ecei, mc, time_features=None, ces_history=None)`.
+Return the complete `model.py` as a **single ```python fenced code block and nothing else**
+(no prose before or after). Keep the class name `MultimodalCESPredictor` and the exact signature
+`forward(self, bes, ecei, mc, time_features=None, ces_history=None)`. If you change the history
+window, include the module-level `WINDOW_SIZE = N` constant in that file.

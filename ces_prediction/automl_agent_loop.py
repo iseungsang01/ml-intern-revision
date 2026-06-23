@@ -23,6 +23,8 @@ PROGRAM_FILE = "program.md"
 RESEARCH_MODEL_DEFAULT = "claude-opus-4-8"
 MAX_RESEARCH_TOKENS = 32000
 CLI_RESEARCH_TIMEOUT = 1200  # seconds to wait for the `claude` CLI rewrite
+DEFAULT_WINDOW_SIZE = 4   # history window used when model.py declares no WINDOW_SIZE
+MAX_WINDOW_SIZE = 32      # clamp so a runaway WINDOW_SIZE can't explode augmentation
 TARGET_NAMES = ("CES_TI", "CES_VT")
 
 
@@ -112,6 +114,25 @@ def combined_skill(eval_report):
     return sum(skills) / len(skills)
 
 
+def comparison_skill(comparison_report):
+    """Mean per-target skill_vs_pchip from compare_baselines (higher is better).
+
+    This is the metric the loop optimizes when the goal is to BEAT conventional
+    past+future interpolation (the thesis claim), as opposed to merely beating
+    persistence. Selection is on the val split; the test split stays held out.
+    """
+    if not comparison_report:
+        return None
+    skills = []
+    for stats in comparison_report.get("per_target", {}).values():
+        skill = stats.get("skill_vs_pchip")
+        if isinstance(skill, (int, float)) and skill == skill:  # exclude None / NaN
+            skills.append(float(skill))
+    if not skills:
+        return None
+    return sum(skills) / len(skills)
+
+
 def strip_code_fences(text):
     code = text.strip()
     if code.startswith("```"):
@@ -140,6 +161,28 @@ def extract_model_code(text):
     return strip_code_fences(text)
 
 
+def read_model_window(model_path, default=DEFAULT_WINDOW_SIZE):
+    """History window the model.py requests via a module-level ``WINDOW_SIZE = N``.
+
+    This makes the window length part of the loop's search space (it is a
+    data-pipeline knob that lives outside the model class): the loop reads it and
+    trains/evaluates at that window via CES_WINDOW_SIZE. Falls back to ``default``
+    when not declared, and is clamped to [2, MAX_WINDOW_SIZE] so a runaway value
+    cannot explode the temporal-subset augmentation.
+    """
+    try:
+        text = Path(model_path).read_text(encoding="utf-8")
+    except OSError:
+        return default
+    match = re.search(r"^[ \t]*WINDOW_SIZE[ \t]*=[ \t]*(\d+)", text, re.MULTILINE)
+    if not match:
+        return default
+    window = int(match.group(1))
+    if window < 2:
+        return default
+    return min(window, MAX_WINDOW_SIZE)
+
+
 def run_subprocess(command, cwd, env):
     return subprocess.run(command, cwd=cwd, env=env, check=True)
 
@@ -165,6 +208,13 @@ class EvaluationAgent:
 
     def _subprocess_env(self):
         env = os.environ.copy()
+        # Window is searchable: model.py may declare WINDOW_SIZE. The fixed split is
+        # validated against the dataset (and so against the window), so each window
+        # gets its own split dir to avoid load_fixed_split_csv mismatches.
+        window = read_model_window(script_dir() / "model.py")
+        env["CES_WINDOW_SIZE"] = str(window)
+        # Reserve a held-out test split so selection (on val) never touches it.
+        env.setdefault("CES_TEST_FRACTION", "0.15")
         if self.cpu_workers is not None:
             workers = str(self.cpu_workers)
             env["CES_CPU_WORKERS"] = workers
@@ -177,8 +227,8 @@ class EvaluationAgent:
             env["CES_MAX_TRAIN_SAMPLES"] = str(self.train_samples)
         if self.val_samples is not None:
             env["CES_MAX_VAL_SAMPLES"] = str(self.val_samples)
-        if self.split_dir is not None:
-            env["CES_SPLIT_DIR"] = str(self.split_dir)
+        split_base = Path(self.split_dir) if self.split_dir is not None else root_dir() / "data" / "splits"
+        env["CES_SPLIT_DIR"] = str(split_base / f"w{window}")
         if self.output_dir is not None:
             env["CES_OUTPUT_DIR"] = str(self.output_dir)
         return env
@@ -188,11 +238,15 @@ class EvaluationAgent:
 
     def _smoke_env(self):
         env = os.environ.copy()
+        # Smoke must train at the same window the model declares, with its own
+        # per-window split dir (the model expects that many timesteps).
+        window = read_model_window(script_dir() / "model.py")
+        env["CES_WINDOW_SIZE"] = str(window)
         env["CES_EPOCHS"] = "1"
         env["CES_MAX_TRAIN_SAMPLES"] = "2000"
         env["CES_MAX_VAL_SAMPLES"] = "500"
         env["CES_BATCH_SIZE"] = "128"
-        env["CES_SPLIT_DIR"] = str(root_dir() / "data" / ".smoke_splits")
+        env["CES_SPLIT_DIR"] = str(root_dir() / "data" / ".smoke_splits" / f"w{window}")
         env["CES_OUTPUT_DIR"] = str(root_dir() / "data" / ".smoke_outputs")
         return env
 
@@ -227,6 +281,15 @@ class EvaluationAgent:
         eval_path = self._output_dir(env) / "eval_metrics.json"
         return json.loads(eval_path.read_text(encoding="utf-8"))
 
+    def run_comparison(self, env):
+        """Model-vs-interpolation comparison on the VAL split (selection metric).
+        The held-out test split is never read here."""
+        compare_env = dict(env)
+        compare_env["CES_SPLIT_TAG"] = "val"
+        run_subprocess(["python", str(script_dir() / "compare_baselines.py")], cwd=root_dir(), env=compare_env)
+        path = self._output_dir(env) / "comparison_metrics.json"
+        return json.loads(path.read_text(encoding="utf-8"))
+
     def run_evaluation(self, iteration):
         print(f"\n[Evaluation Agent] Starting iteration {iteration}...")
 
@@ -246,13 +309,27 @@ class EvaluationAgent:
         try:
             print("[Evaluation Agent] Running clean (baseline-relative) evaluation...")
             eval_report = self.run_clean_eval(env)
+            print("[Evaluation Agent] Running interpolation comparison (val skill_vs_pchip)...")
+            comparison_report = self.run_comparison(env)
         except Exception as exc:
-            print(f"[Evaluation Agent] Clean evaluation failed: {exc}")
+            print(f"[Evaluation Agent] Clean evaluation/comparison failed: {exc}")
             return {**metrics, "eval": None, "score": None, "error": str(exc), "error_stage": "evaluation"}
 
-        score = combined_skill(eval_report)
-        print(f"[Evaluation Agent] Iteration {iteration} clean skill (mean): {_fmt(score)}")
-        return {**metrics, "eval": eval_report, "score": score, "error": None, "error_stage": None}
+        score = comparison_skill(comparison_report)
+        persistence_skill = combined_skill(eval_report)
+        print(
+            f"[Evaluation Agent] Iteration {iteration} val skill_vs_pchip (mean): {_fmt(score)} "
+            f"(skill_vs_persistence: {_fmt(persistence_skill)})"
+        )
+        return {
+            **metrics,
+            "eval": eval_report,
+            "comparison": comparison_report,
+            "skill_vs_persistence": persistence_skill,
+            "score": score,
+            "error": None,
+            "error_stage": None,
+        }
 
 
 class ExperimentTracker:

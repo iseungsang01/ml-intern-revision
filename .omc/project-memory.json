@@ -25,7 +25,7 @@
   },
   "build": {
     "buildCommand": null,
-    "testCommand": "pytest",
+    "testCommand": "cd \"C:/Users/lss/Documents/GitHub/ml-intern-revision\" && py -m pytest tests/test_bootstrap_compare.py -q 2>&1 | tail -40",
     "lintCommand": "ruff check",
     "devCommand": null,
     "scripts": {}
@@ -110,14 +110,62 @@
   "hotPaths": [
     {
       "path": "ces_prediction\\automl_agent_loop.py",
-      "accessCount": 20,
-      "lastAccessed": 1782112527225,
+      "accessCount": 36,
+      "lastAccessed": 1782177785480,
       "type": "directory"
     },
     {
+      "path": "ces_prediction\\compare_baselines.py",
+      "accessCount": 16,
+      "lastAccessed": 1782178645409,
+      "type": "file"
+    },
+    {
+      "path": "ces_prediction\\train.py",
+      "accessCount": 15,
+      "lastAccessed": 1782128141478,
+      "type": "directory"
+    },
+    {
+      "path": "ces_prediction\\evaluate.py",
+      "accessCount": 12,
+      "lastAccessed": 1782178597091,
+      "type": "file"
+    },
+    {
+      "path": "ces_prediction\\dataset.py",
+      "accessCount": 11,
+      "lastAccessed": 1782178617802,
+      "type": "file"
+    },
+    {
+      "path": "PROGRESS.md",
+      "accessCount": 8,
+      "lastAccessed": 1782186507585,
+      "type": "file"
+    },
+    {
       "path": "pyproject.toml",
+      "accessCount": 7,
+      "lastAccessed": 1782127206525,
+      "type": "file"
+    },
+    {
+      "path": "program.md",
+      "accessCount": 7,
+      "lastAccessed": 1782178167411,
+      "type": "file"
+    },
+    {
+      "path": "ces_prediction\\analyze_gap.py",
+      "accessCount": 6,
+      "lastAccessed": 1782178602351,
+      "type": "file"
+    },
+    {
+      "path": "HANDOFF.md",
       "accessCount": 5,
-      "lastAccessed": 1782109723615,
+      "lastAccessed": 1782184367910,
       "type": "file"
     },
     {
@@ -127,10 +175,34 @@
       "type": "file"
     },
     {
+      "path": "ces_prediction\\bootstrap_compare.py",
+      "accessCount": 4,
+      "lastAccessed": 1782178968741,
+      "type": "file"
+    },
+    {
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1782107795572,
       "type": "directory"
+    },
+    {
+      "path": "RESEARCH_PLAN.md",
+      "accessCount": 3,
+      "lastAccessed": 1782125924695,
+      "type": "file"
+    },
+    {
+      "path": "data\\.final_out\\comparison_metrics.json",
+      "accessCount": 3,
+      "lastAccessed": 1782178564721,
+      "type": "file"
+    },
+    {
+      "path": "THESIS_RESULTS.md",
+      "accessCount": 3,
+      "lastAccessed": 1782186565330,
+      "type": "file"
     },
     {
       "path": "ces_prediction\\slack_notifier.py",
@@ -163,9 +235,33 @@
       "type": "file"
     },
     {
-      "path": "program.md",
-      "accessCount": 1,
-      "lastAccessed": 1782107559184,
+      "path": "data\\realrun.log",
+      "accessCount": 2,
+      "lastAccessed": 1782114053193,
+      "type": "file"
+    },
+    {
+      "path": "ces_prediction\\baselines_interpolation.py",
+      "accessCount": 2,
+      "lastAccessed": 1782178592507,
+      "type": "file"
+    },
+    {
+      "path": "tests\\test_baselines_interpolation.py",
+      "accessCount": 2,
+      "lastAccessed": 1782178631532,
+      "type": "file"
+    },
+    {
+      "path": "docs\\interpolation_baselines_references.md",
+      "accessCount": 2,
+      "lastAccessed": 1782178842337,
+      "type": "file"
+    },
+    {
+      "path": "PROJECT_KNOWLEDGE.md",
+      "accessCount": 2,
+      "lastAccessed": 1782186608580,
       "type": "file"
     },
     {
@@ -187,9 +283,69 @@
       "type": "file"
     },
     {
-      "path": "data\\realrun.log",
+      "path": "data\\.baseline_out\\train.log",
       "accessCount": 1,
-      "lastAccessed": 1782113221041,
+      "lastAccessed": 1782120372522,
+      "type": "file"
+    },
+    {
+      "path": "_verify_window.py",
+      "accessCount": 1,
+      "lastAccessed": 1782122513628,
+      "type": "file"
+    },
+    {
+      "path": "data\\.wtest_out\\train.log",
+      "accessCount": 1,
+      "lastAccessed": 1782122623052,
+      "type": "file"
+    },
+    {
+      "path": "data\\loop10.log",
+      "accessCount": 1,
+      "lastAccessed": 1782123159803,
+      "type": "file"
+    },
+    {
+      "path": "tests\\test_architecture.py",
+      "accessCount": 1,
+      "lastAccessed": 1782125283039,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1782125924619,
+      "type": "directory"
+    },
+    {
+      "path": "ces_prediction",
+      "accessCount": 1,
+      "lastAccessed": 1782126090530,
+      "type": "directory"
+    },
+    {
+      "path": "data\\.final_out\\train.log",
+      "accessCount": 1,
+      "lastAccessed": 1782128213128,
+      "type": "file"
+    },
+    {
+      "path": "data\\.improve_out\\loop.log",
+      "accessCount": 1,
+      "lastAccessed": 1782178241849,
+      "type": "file"
+    },
+    {
+      "path": "data\\.final_out\\bootstrap_summary.json",
+      "accessCount": 1,
+      "lastAccessed": 1782178565122,
+      "type": "file"
+    },
+    {
+      "path": "tests\\test_bootstrap_compare.py",
+      "accessCount": 1,
+      "lastAccessed": 1782178772508,
       "type": "file"
     }
   ],

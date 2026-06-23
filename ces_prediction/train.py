@@ -19,6 +19,7 @@ from model import MultimodalCESPredictor
 
 FIXED_TRAIN_SPLIT_NAME = "fixed_train_split.csv"
 FIXED_VAL_SPLIT_NAME = "fixed_val_split.csv"
+FIXED_TEST_SPLIT_NAME = "fixed_test_split.csv"
 
 
 def default_split_dir(root_dir):
@@ -201,8 +202,76 @@ def load_or_create_fixed_splits(dataset, split_dir, val_fraction, seed, max_trai
     return train_indices, val_indices, train_files, val_files
 
 
-def split_manifest(train_files, val_files, train_indices, val_indices, seed, val_fraction):
-    return {
+def split_indices_3way(dataset, val_fraction, test_fraction, seed):
+    """File-level train/val/test split. Test files are carved FIRST, then val,
+    then train, from one seeded file ordering -- so a fixed held-out test set is
+    reserved before any model selection (e.g. AutoML) ever sees it."""
+    sample_file_indices = dataset.sample_file_indices
+    files = sorted(np.unique(sample_file_indices).astype(int).tolist())
+    if len(files) < 3:
+        raise ValueError("Need at least three CSV files for a train/val/test split")
+    generator = torch.Generator().manual_seed(seed)
+    order = torch.randperm(len(files), generator=generator).tolist()
+    n = len(files)
+    test_count = max(1, int(round(n * test_fraction)))
+    val_count = max(1, int(round(n * val_fraction)))
+    if test_count + val_count >= n:
+        raise ValueError("test_fraction + val_fraction too large; no training files left")
+    test_fids = [files[i] for i in order[:test_count]]
+    val_fids = [files[i] for i in order[test_count:test_count + val_count]]
+    train_fids = [files[i] for i in order[test_count + val_count:]]
+
+    all_indices = np.arange(len(dataset))
+
+    def idx_for(fids):
+        return all_indices[np.isin(sample_file_indices, fids)].tolist()
+
+    return idx_for(train_fids), idx_for(val_fids), idx_for(test_fids)
+
+
+def load_or_create_3way_splits(
+    dataset, split_dir, val_fraction, test_fraction, seed,
+    max_train_samples, max_val_samples, max_test_samples,
+):
+    split_dir.mkdir(parents=True, exist_ok=True)
+    paths = {
+        "train": split_dir / FIXED_TRAIN_SPLIT_NAME,
+        "val": split_dir / FIXED_VAL_SPLIT_NAME,
+        "test": split_dir / FIXED_TEST_SPLIT_NAME,
+    }
+    caps = {"train": max_train_samples, "val": max_val_samples, "test": max_test_samples}
+    if all(p.exists() for p in paths.values()):
+        loaded = {k: load_fixed_split_csv(p, dataset) for k, p in paths.items()}
+        if all(len(loaded[k]) == (caps[k] if caps[k] > 0 else len(loaded[k])) for k in paths):
+            print(f"Loaded fixed 3-way splits from {split_dir}")
+            return (
+                loaded["train"], loaded["val"], loaded["test"],
+                split_files_from_indices(dataset, loaded["train"]),
+                split_files_from_indices(dataset, loaded["val"]),
+                split_files_from_indices(dataset, loaded["test"]),
+            )
+        for p in paths.values():
+            p.unlink()
+
+    tr, va, te = split_indices_3way(dataset, val_fraction, test_fraction, seed)
+    tr = select_seeded_subset(tr, max_train_samples, seed + 101)
+    va = select_seeded_subset(va, max_val_samples, seed + 202)
+    te = select_seeded_subset(te, max_test_samples, seed + 303)
+    write_fixed_split_csv(paths["train"], dataset, tr)
+    write_fixed_split_csv(paths["val"], dataset, va)
+    write_fixed_split_csv(paths["test"], dataset, te)
+    print(f"Created fixed 3-way splits in {split_dir}")
+    return (
+        tr, va, te,
+        split_files_from_indices(dataset, tr),
+        split_files_from_indices(dataset, va),
+        split_files_from_indices(dataset, te),
+    )
+
+
+def split_manifest(train_files, val_files, train_indices, val_indices, seed, val_fraction,
+                   test_files=None, test_indices=None):
+    manifest = {
         "seed": seed,
         "val_fraction": val_fraction,
         "split_unit": "csv_shot_file",
@@ -214,6 +283,11 @@ def split_manifest(train_files, val_files, train_indices, val_indices, seed, val
         "train_files": [Path(path).name for path in train_files],
         "val_files": [Path(path).name for path in val_files],
     }
+    if test_files is not None:
+        manifest["test_file_count"] = len(test_files)
+        manifest["test_sample_count"] = len(test_indices or [])
+        manifest["test_files"] = [Path(path).name for path in test_files]
+    return manifest
 
 
 def normalization_stats_to_jsonable(stats):
@@ -263,6 +337,9 @@ def train():
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
+    test_fraction = float(os.getenv("CES_TEST_FRACTION", "0.0"))
+    max_test_samples = int(os.getenv("CES_MAX_TEST_SAMPLES", str(max_val_samples)))
+    init_seed = int(os.getenv("CES_INIT_SEED", str(seed)))
     ablate = os.getenv("CES_ABLATE", "none")
     if ablate not in VALID_ABLATIONS:
         raise ValueError(f"CES_ABLATE must be one of {VALID_ABLATIONS}, got {ablate!r}")
@@ -271,7 +348,7 @@ def train():
     if epochs < 1:
         raise ValueError("CES_EPOCHS must be at least 1")
 
-    torch.manual_seed(seed)
+    torch.manual_seed(init_seed)  # decoupled from split seed (CES_INIT_SEED) for init-stability seeds
     torch.set_num_threads(cpu_config["torch_threads"])
     torch.set_num_interop_threads(cpu_config["torch_interop_threads"])
 
@@ -286,14 +363,24 @@ def train():
         print("Error: No valid data found.")
         return
 
-    train_indices, val_indices, train_split_files, val_split_files = load_or_create_fixed_splits(
-        full_dataset,
-        split_dir,
-        val_fraction,
-        seed,
-        max_train_samples,
-        max_val_samples,
-    )
+    if test_fraction > 0.0:
+        (
+            train_indices, val_indices, test_indices,
+            train_split_files, val_split_files, test_split_files,
+        ) = load_or_create_3way_splits(
+            full_dataset, split_dir, val_fraction, test_fraction, seed,
+            max_train_samples, max_val_samples, max_test_samples,
+        )
+    else:
+        train_indices, val_indices, train_split_files, val_split_files = load_or_create_fixed_splits(
+            full_dataset,
+            split_dir,
+            val_fraction,
+            seed,
+            max_train_samples,
+            max_val_samples,
+        )
+        test_indices, test_split_files = [], []
 
     manifest = split_manifest(
         train_split_files,
@@ -302,6 +389,8 @@ def train():
         val_indices,
         seed,
         val_fraction,
+        test_files=test_split_files if test_fraction > 0.0 else None,
+        test_indices=test_indices,
     )
     split_path = split_dir / "split_manifest.json"
     with split_path.open("w", encoding="utf-8") as f:
@@ -311,6 +400,8 @@ def train():
         f"File split: train_shots={manifest['train_file_count']}, "
         f"val_shots={manifest['val_file_count']}, seed={seed}"
     )
+    if test_fraction > 0.0:
+        print(f"Held-out test shots: {manifest['test_file_count']} (never used in training/selection)")
     print(f"Validation shots preview: {', '.join(manifest['val_files'][:10])}")
 
     if hasattr(full_dataset, "sample_file_indices") and hasattr(full_dataset, "valid_files"):

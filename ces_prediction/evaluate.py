@@ -92,6 +92,37 @@ def apply_ablation(ablate, bes, ecei, mc, ces_history):
     return bes, ecei, mc, ces_history
 
 
+def build_clean_val_subset(data_dir, window_size, stats, val_files, max_val_samples, seed):
+    """Build the clean (non-augmented) dataset and its val sample indices.
+
+    Single source of truth shared by evaluate.py and compare_baselines.py so the
+    model is scored on byte-identical samples in both (prevents harness drift).
+    `val_files` is the set of validation shot filenames from split_manifest.json.
+    """
+    dataset = KSTAR_CES_Dataset(
+        data_dir=data_dir,
+        window_size=window_size,
+        temporal_subset_augmentation=False,
+    )
+    dataset.set_normalization_stats(stats)
+
+    file_names = [Path(p).name for p in dataset.valid_files]
+    val_file_ids = {i for i, name in enumerate(file_names) if name in val_files}
+    if not val_file_ids:
+        raise ValueError("None of the manifest val files are present in the dataset.")
+    val_indices = [
+        i for i in range(len(dataset))
+        if int(dataset.sample_file_indices[i]) in val_file_ids
+    ]
+    if not val_indices:
+        raise ValueError(
+            "No clean (full-window) validation samples for the manifest val files. "
+            "Try a smaller CES_WINDOW_SIZE."
+        )
+    val_indices = select_seeded_random_indices(val_indices, max_val_samples, seed + 202)
+    return dataset, val_indices, val_file_ids
+
+
 def evaluate():
     root_dir = Path(__file__).resolve().parents[1]
     data_dir = Path(os.getenv("CES_DATA_DIR", root_dir / "data"))
@@ -118,27 +149,9 @@ def evaluate():
     val_files = set(manifest["val_files"])
 
     print("Building clean (non-augmented) evaluation dataset...")
-    dataset = KSTAR_CES_Dataset(
-        data_dir=data_dir,
-        window_size=window_size,
-        temporal_subset_augmentation=False,
+    dataset, val_indices, val_file_ids = build_clean_val_subset(
+        data_dir, window_size, stats, val_files, max_val_samples, seed
     )
-    dataset.set_normalization_stats(stats)
-
-    file_names = [Path(p).name for p in dataset.valid_files]
-    val_file_ids = {i for i, name in enumerate(file_names) if name in val_files}
-    if not val_file_ids:
-        raise ValueError("None of the manifest val files are present in the dataset.")
-    val_indices = [
-        i for i in range(len(dataset))
-        if int(dataset.sample_file_indices[i]) in val_file_ids
-    ]
-    if not val_indices:
-        raise ValueError(
-            "No clean (full-window) validation samples for the manifest val files. "
-            "Try a smaller CES_WINDOW_SIZE."
-        )
-    val_indices = select_seeded_random_indices(val_indices, max_val_samples, seed + 202)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     loader = DataLoader(
         Subset(dataset, val_indices),

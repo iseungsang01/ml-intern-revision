@@ -1,20 +1,20 @@
 # AutoML Session Handoff (autoresearch)
 
-## Latest Briefing (Iteration 1)
+## Latest Briefing (Iteration 10)
 
 ```text
---- Briefing (Iteration 1) ---
-Decision on last proposal: BASELINE
-Clean skill (mean CES_TI/VT skill_vs_persistence): -2.6869 (best: -2.6869)
-  CES_TI: skill=0.3366, R2_vs_mean=0.0022, RMSE=530.6318 (n=917)
-  CES_VT: skill=-5.7105, R2_vs_mean=0.0176, RMSE=49.6692 (n=795)
-Stale rounds (no new best): 0
+--- Briefing (Iteration 10) ---
+Decision on last proposal: ROLLED_BACK
+Clean skill (mean CES_TI/VT skill_vs_persistence): 0.1140 (best: 0.2075)
+  CES_TI: skill=0.2710, R2_vs_mean=0.0949, RMSE=527.9168 (n=37636)
+  CES_VT: skill=0.3171, R2_vs_mean=0.7784, RMSE=30.1258 (n=31721)
+Stale rounds (no new best): 5
 Propose ONE controlled architecture change that builds on the current best model.py and raises the clean skill. Preserve the data/model contract; avoid known failed paths.
 ```
 
-- Best clean skill (mean skill_vs_persistence): -2.6869
-- Stale rounds: 0
-- Best model snapshot: `C:\Users\lss\Documents\GitHub\ml-intern-revision\ces_prediction\.automl_state\best_model.py`
+- Best clean skill (mean skill_vs_persistence): 0.2075
+- Stale rounds: 5
+- Best model snapshot: `data\.improve_out\.automl_state\best_model.py`
 
 ## Data Contract
 
@@ -34,4 +34,13 @@ Dataset/training contract that every generated model.py must preserve:
 
 ## History
 
-- Iter 1: baseline, skill=-2.6869, best=-2.6869, val_loss=0.9316, stage=ok
+- Iter 1: baseline, skill=0.1792, best=0.1792, val_loss=0.3884, stage=ok
+- Iter 2: kept, skill=0.1835, best=0.1835, val_loss=0.4022, stage=ok
+- Iter 3: kept, skill=0.1867, best=0.1867, val_loss=0.3903, stage=ok
+- Iter 4: kept, skill=0.1927, best=0.1927, val_loss=0.3769, stage=ok
+- Iter 5: kept, skill=0.2075, best=0.2075, val_loss=0.3792, stage=ok
+- Iter 6: rolled_back, skill=0.1843, best=0.2075, val_loss=0.3856, stage=ok
+- Iter 7: rolled_back, skill=0.1849, best=0.2075, val_loss=0.3943, stage=ok
+- Iter 8: rolled_back, skill=0.2001, best=0.2075, val_loss=0.3780, stage=ok
+- Iter 9: rolled_back, skill=0.2008, best=0.2075, val_loss=0.3773, stage=ok
+- Iter 10: rolled_back, skill=0.1140, best=0.2075, val_loss=0.4305, stage=ok

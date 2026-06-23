@@ -2,6 +2,29 @@
 
 This file records prior attempts, known constraints, and directions to avoid so future work does not repeat the same failed paths.
 
+## Confirmed Thesis Result (interpolation comparison)
+
+**The model beats conventional past+future CES interpolation for CES_TI, robustly; not for CES_VT.**
+Final model = AutoML-improved "iter5": GRU history-encoder + multi-head attention per-target heads
+(window=4), in `ces_prediction/model.py`. Evaluated on a held-out **test** split (3-way
+train/val/test; selection on val only) with per-target physical-unit RMSE + `skill_vs_pchip` and a
+**shot-clustered paired bootstrap** (the shot is the resampling unit — rows within a shot are
+autocorrelated).
+
+- Across 4 independent held-out splits (seeds 42/1/7/123): **CES_TI skill_vs_pchip = +0.20…+0.30,
+  95% CI excludes 0 every time (PASS)** vs both PCHIP and linear; **CES_VT n.s. on all four.**
+- Physics reading: fast diagnostics (BES/ECEI/MC) carry ion-temperature info beyond temporal CES
+  interpolation (collisional e–i coupling); they carry ~no toroidal-rotation info (NBI torque
+  unobserved; Mirnov aliased at 100 Hz) → V_rot stays history-autocorrelation-limited. This is the
+  T_i↔V_rot asymmetry, now confirmed against a strong (future-using) interpolation bar.
+- The earlier baseline (iter2) was n.s. (+0.088) on its split; optimizing the loop on val
+  `skill_vs_pchip` (not skill_vs_persistence) produced the significant iter5.
+- Limitations: skill on observed CES points only (MNAR optimistic bound); window=4; offline
+  comparison (baselines use future CES, the model does not — beating them is the strong claim).
+- Tooling: `compare_baselines.py`, `bootstrap_compare.py`, `baselines_interpolation.py`,
+  `analyze_gap.py`; 3-way split + `CES_INIT_SEED` in `train.py`; running log `PROGRESS.md`; write-up
+  `THESIS_RESULTS.md`; baseline citations `docs/interpolation_baselines_references.md`.
+
 ## Current Status
 
 - Primary reference point: best validation loss `0.4834` at iteration 7 of the newer architecture-search round.
