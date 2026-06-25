@@ -18,6 +18,11 @@ dependencies = [
 dev = [
     "pytest>=8.0",
 ]
+# Plotting for peak_analysis figures only. NEVER a core dependency: the figure
+# code lazily imports matplotlib (Agg backend) and is skippable with --no-figures.
+viz = [
+    "matplotlib>=3.7",
+]
 
 [build-system]
 requires = ["setuptools>=64"]

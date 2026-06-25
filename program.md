@@ -17,6 +17,30 @@ keeps/discards on this; a held-out **test** split is reserved and never used for
 optimize the augmented training val loss, and note that merely beating persistence is not the goal
 (the model already does) — you must close the gap to *interpolation*.
 
+## Hard parameter budget — keep it UNDER 1,000,000 params
+
+- The total trainable parameter count of `MultimodalCESPredictor` (built via `from_dataset` on
+  feature_dims `bes=9, ecei=4, mc=2, time=4, ces_history=4`) **MUST be strictly under 1,000,000**.
+  The loop **counts params before training and discards any over-budget model WITHOUT training it**
+  (a wasted iteration), restoring the best model. So never propose a model ≥ 1M params.
+- **The goal is the best model UNDER this budget**, not the biggest model. Capacity is not the lever.
+
+## Sweep findings (2026-06-24) — start from these, don't re-discover them
+
+A controlled param-budget sweep (same regime, single seed, val split) found:
+
+- **Sweet spot is ~0.45–0.8M params.** The best config was a **Transformer history-encoder**
+  (replace the GRU sequence mixer with a 2-layer Pre-LN `TransformerEncoder`, d_model≈192 i.e.
+  hidden≈96, nhead 4, ff≈2×; ~0.79M params). It **beat the GRU baseline on BOTH targets**, most
+  strongly on **CES_VT** (val skill_vs_pchip ~0.13 vs ~0.04 for GRU) and modestly on CES_TI (~0.349
+  vs ~0.333). Try this region FIRST.
+- **Bigger is worse: every model >1M overfit and scored LOWER** (e.g. 1.1–2.7M params dropped CES_TI
+  skill to ~0.22–0.28, below the 0.2M baseline). Do not chase capacity.
+- **Transformers beat GRU on CES_VT at all sizes tried**; on CES_TI they are comparable. Self-
+  attention over the short history window helps the rotation (history-dominated) target.
+- **`val_loss` is an unreliable guide** (nearly flat across configs and does not track skill) —
+  optimize the clean `skill_vs_pchip`, never the val loss.
+
 ## How the loop works (keep / discard — this is the key rule)
 
 - Each iteration your `model.py` is trained at a **fixed budget** (same samples/epochs/split every
@@ -63,6 +87,20 @@ optimize the augmented training val loss, and note that merely beating persisten
 - Promising directions: let the model use **history more effectively for V_rot** and **fast
   diagnostics more effectively for T_i** (e.g. per-target heads/weighting, target-aware fusion),
   rather than uniformly scaling capacity.
+
+## Peak (high-variability) steering
+
+- The briefing may carry a **peak metric** per target: skill on **high-local-activity
+  (high-variability) neighborhoods** flagged from a target-independent input proxy (CES-neighbor
+  activity, excluding the target row) — a conservative regional proxy, **not** pointwise extrema.
+  It reuses the same val-split errors as the headline `skill_vs_pchip`, so it costs nothing extra
+  and is informational only: the keep/discard gate is still the global mean `skill_vs_pchip`.
+- Read it as a diagnostic of where the model earns (or loses) its edge over interpolation. If the
+  **input-defined peak skill is weak or its 95% CI straddles 0** (this is most likely for **CES_VT**,
+  given the known T_i/V_rot asymmetry), consider proposing a **peak-weighted loss** — upweighting
+  high-local-activity samples in the masked MSE — as a controlled experiment. This is the deferred
+  non-goal: it is a legitimate model.py-side change you may propose, but only as ONE controlled
+  variable, and never at the cost of the global skill the gate optimizes.
 
 ## Output format
 

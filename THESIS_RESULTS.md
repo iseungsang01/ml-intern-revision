@@ -12,6 +12,45 @@
 > **The analysis below documents the earlier pre-improvement *baseline* (iter2), which was n.s.
 > (+0.088) — kept to show the honest n.s.→significant progression.**
 
+---
+
+## 0. Data-quality correction — held ("stuck") CES_VT values (2026-06-24)
+
+A late audit found that **~54% of all observed `CES_VT` values are held/forward-filled**: a
+reading bit-identical to the previous observed value within the same contiguous time block (runs up
+to 1214 rows long; 499/641 shot files affected). These are not real measurements — `CES_VT`'s native
+cadence is slower than the row cadence and the value is carried forward — yet the original pipeline
+trusted every non-NaN value as ground truth. `CES_TI` is essentially unaffected (**0.0%** held).
+
+The model/data code now detects these and can mask them (`CES_DROP_STUCK_TARGETS`,
+`dataset.py:_nan_out_stuck_targets`). A controlled A/B retrain (4 seeds, current `model.py`) settled
+the impact, and the **frozen headline weights (iter5) were re-evaluated on genuine measurements only**
+(stuck targets and the stuck-contaminated neighbors removed). Findings:
+
+- **Training is *not* contaminated.** Masking held values at train time does **not** improve genuine
+  test performance (it slightly *hurts* `CES_TI`, mean skill −0.06), so the held labels were not
+  harming the trained model — they act as a harmless persistence-prior. Therefore training keeps them
+  (`CES_DROP_STUCK_TARGETS=0`, the default) and only **evaluation** drops them (`=1`, the default in
+  `evaluate.py`/`compare_baselines.py`).
+- **`CES_TI` is fully robust.** On genuine-only eval the headline weights still **PASS on all four
+  seeds** (skill_vs_pchip +0.225/+0.204/+0.285/+0.288). The §3 conclusion is unchanged.
+- **`CES_VT` physical RMSE was deflated ~35–55% by the held values.** Held targets have ≈0 baseline
+  error and drag the reported RMSE down. Corrected genuine `CES_VT` RMSE (frozen headline weights):
+
+  | seed | reported (stuck-incl) RMSE | **genuine RMSE** | n (stuck-incl → genuine) | skill_vs_pchip (genuine) | PR4 gate |
+  |---|---:|---:|---:|---:|---|
+  | 42  | 22.4 | **35.0** | 27,437 → 10,729 | +0.201 | n.s. |
+  | 1   | 24.6 | **34.6** | 29,793 → 13,660 | +0.173 | **PASS** |
+  | 7   | 29.7 | **43.2** | 32,016 → 14,698 | +0.114 | n.s. |
+  | 123 | 32.6 | **46.2** | 30,475 → 14,126 | +0.194 | n.s. |
+
+  The skill point estimates stay positive and the `T_i`↔`V_rot` asymmetry conclusion holds; on genuine
+  data `CES_VT` is n.s. on 3/4 seeds (PASS on seed 1), versus n.s. on all four before. **Any `CES_VT`
+  physical-RMSE figure elsewhere in this document is the stuck-deflated value; the genuine RMSE is
+  ~35–46.**
+
+---
+
 Held-out-test evaluation of the AutoML-selected nowcasting model against pre-registered
 conventional CES interpolation baselines. All numbers below are read directly from the frozen
 artifacts and are reported honestly, including the negative significance result.

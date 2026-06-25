@@ -133,6 +133,42 @@ def comparison_skill(comparison_report):
     return sum(skills) / len(skills)
 
 
+def _format_peak_line(name, peak):
+    """Format the per-target headline peak line for the briefing (AC8).
+
+    The headline lives at peak["input_only"]["ces_activity"] (Family i sub-signal
+    i-a: high-local-activity CES neighborhoods, a target-independent proxy, NOT
+    pointwise extrema). Returns None when no peak block is present so the briefing
+    is unchanged on iterations without peak data. Surfaces peak skill_vs_pchip and
+    its shot-clustered 95% CI, plus an insufficient/n.s. tag so the researcher can
+    see when the peak CI straddles 0 (esp. for CES_VT)."""
+    if not isinstance(peak, dict):
+        return None
+    head = peak.get("input_only")
+    if isinstance(head, dict):
+        head = head.get("ces_activity")
+    if not isinstance(head, dict):
+        return None
+    skill = head.get("peak_skill_vs_pchip")
+    ci = head.get("peak_skill_ci95")
+    if isinstance(ci, (list, tuple)) and len(ci) == 2:
+        ci_str = f"CI95=[{_fmt(ci[0])}, {_fmt(ci[1])}]"
+    else:
+        ci_str = "CI95=n/a"
+    if head.get("insufficient_shots") or head.get("insufficient_rows"):
+        tag = "insufficient"
+    elif head.get("pass"):
+        tag = "PASS"
+    else:
+        tag = "n.s."
+    n_rows = head.get("n_peak_rows")
+    n_shots = head.get("n_peak_shots")
+    return (
+        f"  {name} PEAK (input-only CES-activity): skill_vs_pchip={_fmt(skill)} "
+        f"{ci_str} {tag} (n_rows={_fmt(n_rows)}, n_shots={_fmt(n_shots)})"
+    )
+
+
 def strip_code_fences(text):
     code = text.strip()
     if code.startswith("```"):
@@ -197,6 +233,7 @@ class EvaluationAgent:
         run_smoke_test=True,
         split_dir=None,
         output_dir=None,
+        param_budget=None,
     ):
         self.cpu_workers = cpu_workers
         self.dataloader_workers = dataloader_workers
@@ -205,6 +242,7 @@ class EvaluationAgent:
         self.run_smoke_test = run_smoke_test
         self.split_dir = split_dir
         self.output_dir = output_dir
+        self.param_budget = param_budget
 
     def _subprocess_env(self):
         env = os.environ.copy()
@@ -235,6 +273,41 @@ class EvaluationAgent:
 
     def _output_dir(self, env):
         return Path(env.get("CES_OUTPUT_DIR", str(script_dir())))
+
+    def _count_params(self):
+        """Count trainable params of the current model.py by building it via
+        from_dataset on the fixed contract feature_dims, in a clean subprocess.
+
+        Returns an int, or None if the model could not be built (in which case the
+        smoke stage will surface the real error -- we do not block on a None count).
+        """
+        window = read_model_window(script_dir() / "model.py")
+        code = (
+            "import sys; sys.path.insert(0, r'{d}'); "
+            "from types import SimpleNamespace; "
+            "from model import MultimodalCESPredictor as M; "
+            "ds = SimpleNamespace(feature_dims={{'bes':9,'ecei':4,'mc':2,'time':4,'ces_history':4}}); "
+            "m = M.from_dataset(ds, window_size={w}); "
+            "print(sum(p.numel() for p in m.parameters()))"
+        ).format(d=str(script_dir()), w=window)
+        try:
+            proc = subprocess.run(
+                ["python", "-c", code], cwd=str(root_dir()),
+                capture_output=True, text=True, timeout=120,
+            )
+        except Exception as exc:
+            print(f"[Evaluation Agent] Param count failed to run ({exc}); skipping budget gate.")
+            return None
+        if proc.returncode != 0:
+            print(
+                "[Evaluation Agent] Param count errored (model may be invalid; smoke will catch): "
+                f"{(proc.stderr or '').strip()[:200]}"
+            )
+            return None
+        try:
+            return int(proc.stdout.strip().splitlines()[-1])
+        except (ValueError, IndexError):
+            return None
 
     def _smoke_env(self):
         env = os.environ.copy()
@@ -290,8 +363,48 @@ class EvaluationAgent:
         path = self._output_dir(env) / "comparison_metrics.json"
         return json.loads(path.read_text(encoding="utf-8"))
 
+    def _merge_peak_block(self, env, eval_report):
+        """Merge the cheap headline peak block into eval_report IN MEMORY (AC8).
+
+        Reuses the val-split comparison_errors npz that run_comparison just wrote
+        (no extra forward pass). For each target with a peak block, sets
+        eval_report["per_target"][name]["peak"]. Fully guarded: any failure logs,
+        leaves peak=None, and never fails the iteration or flips error_stage.
+        """
+        try:
+            from peak_analysis import run_peak_eval
+
+            peak_block = run_peak_eval(env) or {}
+            per_target = eval_report.get("per_target") if isinstance(eval_report, dict) else None
+            if not isinstance(per_target, dict):
+                return
+            for name in TARGET_NAMES:
+                stats = per_target.get(name)
+                if isinstance(stats, dict):
+                    stats["peak"] = peak_block.get(name)
+        except Exception as exc:
+            print(f"[Evaluation Agent] Peak evaluation skipped (non-fatal): {exc}")
+
     def run_evaluation(self, iteration):
         print(f"\n[Evaluation Agent] Starting iteration {iteration}...")
+
+        # Hard parameter-budget gate: reject over-budget proposals BEFORE spending any
+        # training/smoke compute. Treated as a normal failure -> tracker rolls back to
+        # the best model and the briefing tells the researcher to shrink.
+        if self.param_budget and self.param_budget > 0:
+            n_params = self._count_params()
+            if n_params is not None and n_params > self.param_budget:
+                print(
+                    f"[Evaluation Agent] Param budget exceeded: {n_params:,} > "
+                    f"{self.param_budget:,}; discarding WITHOUT training."
+                )
+                return self._failure(
+                    "param_budget",
+                    ValueError(f"{n_params} params exceeds budget {self.param_budget}"),
+                    params=n_params, param_budget=self.param_budget,
+                )
+            if n_params is not None:
+                print(f"[Evaluation Agent] Model params: {n_params:,} (budget {self.param_budget:,}).")
 
         smoke_error = self.run_smoke_validation()
         if smoke_error is not None:
@@ -314,6 +427,15 @@ class EvaluationAgent:
         except Exception as exc:
             print(f"[Evaluation Agent] Clean evaluation/comparison failed: {exc}")
             return {**metrics, "eval": None, "score": None, "error": str(exc), "error_stage": "evaluation"}
+
+        # AC8: merge the CHEAP headline peak block (high-local-activity neighborhood
+        # skill + bootstrap CI) into the IN-MEMORY eval_report so it reaches the
+        # researcher via build_briefing. This reuses the val-split comparison_errors
+        # npz that run_comparison just wrote (NO extra forward pass) and is purely
+        # additive: a peak failure logs + leaves peak=None and never fails the
+        # iteration or flips error_stage. The keep/discard gate (comparison_skill)
+        # is unaffected -- it reads only comparison_report.
+        self._merge_peak_block(env, eval_report)
 
         score = comparison_skill(comparison_report)
         persistence_skill = combined_skill(eval_report)
@@ -427,13 +549,25 @@ class ExperimentTracker:
                     f"R2_vs_mean={_fmt(stats.get('r2_vs_mean'))}, "
                     f"RMSE={_fmt(stats.get('rmse_model'))} (n={stats.get('n')})"
                 )
+            peak_line = _format_peak_line(name, stats.get("peak"))
+            if peak_line:
+                lines.append(peak_line)
         lines.append(f"Stale rounds (no new best): {self.stale_rounds}")
         if result.get("error_stage"):
             lines.append(f"FAILURE at {result['error_stage']}: {str(result.get('error'))[:300]}")
-            lines.append(
-                "Your previous change was discarded and model.py restored to the best version. "
-                "Propose a DIFFERENT controlled change that avoids this failure."
-            )
+            if result.get("error_stage") == "param_budget":
+                lines.append(
+                    f"HARD PARAMETER BUDGET EXCEEDED: your last model had {result.get('params')} "
+                    f"params, over the {result.get('param_budget')} limit, so it was discarded "
+                    "WITHOUT training (wasted iteration). model.py was restored to the best version. "
+                    "Propose a SMALLER architecture well under budget (target ~0.4-0.9M params): "
+                    "shrink hidden width / layers / d_model rather than adding capacity."
+                )
+            else:
+                lines.append(
+                    "Your previous change was discarded and model.py restored to the best version. "
+                    "Propose a DIFFERENT controlled change that avoids this failure."
+                )
         else:
             lines.append(
                 "Propose ONE controlled architecture change that builds on the current best "
@@ -466,9 +600,23 @@ class ResearcherAgent:
     or the Anthropic SDK when a real sk-ant-api03 key is set in ANTHROPIC_API_KEY.
     """
 
-    def __init__(self, program="", project_knowledge=""):
+    def __init__(self, program="", project_knowledge="", param_budget=None):
         self.program = program.strip()
         self.project_knowledge = project_knowledge.strip()
+        self.param_budget = param_budget
+
+    def _budget_section(self):
+        if not self.param_budget or self.param_budget <= 0:
+            return ""
+        return (
+            "## Hard parameter budget (enforced before training)\n"
+            f"The total trainable parameter count of MultimodalCESPredictor -- built via "
+            f"from_dataset on feature_dims bes=9, ecei=4, mc=2, time=4, ces_history=4 -- MUST be "
+            f"strictly under {self.param_budget} parameters. Any model over budget is discarded "
+            "WITHOUT training (a wasted iteration), so do not exceed it. Empirically the sweet spot "
+            "is ~0.45-0.8M params; bigger (>1M) overfits and scored WORSE here. Aim for a compact, "
+            "well-regularized model, not raw capacity.\n\n"
+        )
 
     def _build_prompt(self, briefing, current_code):
         return (
@@ -477,6 +625,7 @@ class ResearcherAgent:
             f"{self.project_knowledge or '(none)'}\n\n"
             "## Hard data/model contract (never violate)\n"
             f"{DATA_CONTRACT}\n\n"
+            f"{self._budget_section()}"
             f"## Current briefing\n{briefing}\n\n"
             "## Current model.py (build on this)\n"
             f"```python\n{current_code}\n```\n\n"
@@ -601,6 +750,7 @@ def run_auto_ml_loop(
     split_dir=None,
     output_dir=None,
     max_consecutive_failures=5,
+    param_budget=1_000_000,
 ):
     from slack_notifier import (
         send_iteration_result,
@@ -621,15 +771,19 @@ def run_auto_ml_loop(
         run_smoke_test=run_smoke_test,
         split_dir=split_dir,
         output_dir=output_dir,
+        param_budget=param_budget,
     )
     state_dir = (Path(output_dir) if output_dir else script_dir()) / ".automl_state"
     tracker = ExperimentTracker(state_dir)
-    researcher = ResearcherAgent(program=program, project_knowledge=project_knowledge)
+    researcher = ResearcherAgent(
+        program=program, project_knowledge=project_knowledge, param_budget=param_budget
+    )
     model_path = script_dir() / "model.py"
 
     print("=== Starting autoresearch loop (keep/discard on clean skill) ===")
     print(f"[AutoML Loop] Max iterations: {max_iterations}")
     print(f"[AutoML Loop] Smoke validation: {run_smoke_test}")
+    print(f"[AutoML Loop] Param budget: {param_budget:,}" if param_budget else "[AutoML Loop] Param budget: (none)")
     print(f"[AutoML Loop] State dir: {state_dir}")
     send_loop_start(max_iterations, run_smoke_test)
 
@@ -665,6 +819,9 @@ def parse_args():
     parser.add_argument("--split-dir", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--max-consecutive-failures", type=int, default=5)
+    parser.add_argument("--param-budget", type=int, default=1_000_000,
+                        help="Hard max trainable params; over-budget proposals are discarded "
+                             "without training. Set 0 to disable.")
     parser.add_argument("--no-smoke-test", action="store_true")
     return parser.parse_args()
 
@@ -681,4 +838,5 @@ if __name__ == "__main__":
         split_dir=args.split_dir,
         output_dir=args.output_dir,
         max_consecutive_failures=args.max_consecutive_failures,
+        param_budget=args.param_budget,
     )

@@ -1,33 +1,39 @@
-# EXPERIMENT: Multi-head additive attention pooling over the CES-history GRU output (the ONE
-# controlled change this iteration). The current best already runs TWO target-specific additive-
-# attention pools over the bidirectional GRU output (one routed to T_i, one to V_rot). Each of
-# those pools is still a *single-head* readout: one scalar score per timestep -> one softmax over
-# the window -> one weighted-average summary. This iteration upgrades each target's pool from a
-# single additive-attention head to a MULTI-HEAD additive-attention pool: the 2*hidden GRU output
-# is split into `num_heads` subspaces, each head learns its own per-timestep score and softmax over
-# the window, and each head pools only its own value subspace. The per-head summaries are then
-# concatenated back to exactly 2*hidden and fed to the SAME projection as before. Everything else
-# is byte-for-byte the current best baseline: the bidirectional GRU (1 layer, hidden 64), the
-# target-aware routing (TI = fast diagnostics + history + time, VT = history + time only), all
-# sensor/time encoders, every capacity, the per-target proj LayerNorm->Linear->GELU, and -- the
-# critical invariant -- the projection input width (2*hidden) and output width (output_dim=64), so
-# ti_head and vt_head input shapes are UNCHANGED. The change is isolated to *how each target's
-# attention pool summarizes* the window.
+# EXPERIMENT: Add a PRE-HEAD LayerNorm on the fused input of each prediction head (T_i and
+# V_rot). This is the ONE controlled change this iteration.
 #
-# Hypothesis: a single additive-attention head can express only ONE softmax weighting over the
-# window, forcing each target's history readout into a single compromise temporal emphasis. But the
-# interpolation bar the model must beat combines several distinct cues at once -- the nearest
-# observed sample BEFORE the masked gap, the nearest observed sample AFTER it, and the local trend
-# across them. V_rot in particular is essentially a distance-aware, two-sided interpolation of the
-# observed rotation samples flanking the gap, which a single weighting cannot represent jointly
-# (it cannot simultaneously place mass on the closest-past and closest-future rows AND track their
-# slope). Multiple attention heads let each target's readout form a richer summary -- e.g. one head
-# locking onto the nearest pre-gap sample, one onto the nearest post-gap sample, one onto the
-# trend -- while staying entirely within the known-good attention-pooling mechanism. This is NOT
-# capacity scaling of d_model/feed-forward/depth (the heads partition the existing 2*hidden width,
-# adding only two tiny score projections), NOT a skip-path variant, NOT a local-conv extractor (all
-# known failed paths), and NOT a window change. It builds directly on attention pooling (the best
-# change so far) and Pre-LayerNorm stability.
+# Baseline being built on: the CURRENT BEST kept model — three time-aware sensor CNN encoders,
+# the time encoder, the 2-layer Pre-LayerNorm Transformer history encoder with learned positional
+# encoding, the target-aware routing (T_i = fast diagnostics + history + time; V_rot = history +
+# time only), the two target-specific multi-head additive-attention pools that return weighted
+# MEAN (+) weighted DISPERSION (std) with the per-target init-0 observed-neighbor attention bias,
+# the per-target LayerNorm->Linear->GELU history projections, and both prediction heads. The most
+# recent proposal was discarded (training failure / clean skill below best), so model.py was
+# restored to this best and we build on it, never on the regression. Relative to that best model
+# the ONLY new variable is the head-input LayerNorm described below; the encoder, routing, history
+# readout (including the observed-neighbor bias), and head MLP widths are kept byte-identical.
+#
+# What changes: each prediction head's Sequential now begins with `nn.LayerNorm(in_dim)` applied to
+# the concatenated fused feature vector, before the first Linear. For T_i this normalizes the
+# heterogeneous concatenation [bes, ecei, mc, time, hist_ti] (five GELU-activated summaries living
+# at different scales: three sensor-CNN outputs, the time-CNN output, and the attention-pooled
+# history summary); for V_rot it normalizes [hist_vt, time]. Each LayerNorm has the standard
+# learnable affine (gamma init 1, beta init 0). Param cost is tiny: 2*(384) + 2*(96) = 960 scalars,
+# leaving the model far under the hard <1,000,000 budget.
+#
+# Hypothesis (grounded in THIS project's documented lessons): the single most reliable win in this
+# search was switching the history encoder to Pre-LayerNorm (`norm_first=True`) — normalization
+# BEFORE the nonlinear transform is what restored stability and generalization (val loss ~0.88 ->
+# ~0.49). The prediction heads, however, still receive a RAW concatenation of summaries produced by
+# separate sub-networks at uncalibrated relative scales, fed straight into a Linear+GELU stack with
+# no input normalization. That heterogeneity can let one high-variance modality dominate the head's
+# early gradients and couples the head's effective learning rate to upstream scale drift. A pre-head
+# LayerNorm puts every fused feature on a common, well-conditioned footing each step, which is a
+# generalization (clean-skill) lever rather than a capacity lever — and the chronic problem in this
+# loop is generalization, not fit (bigger models overfit and score WORSE). It extends the known-good
+# Pre-LayerNorm pathway to the fusion stage. This is NOT capacity scaling, NOT a residual/skip
+# variant, NOT a local-conv extractor, NOT the previously rolled-back multiplicative fast-diagnostic
+# trust gate, NOT an attention-logit change, and NOT a window change — it is a single, minimal,
+# clearly-runnable input-normalization change on the two heads.
 
 from pathlib import Path
 
@@ -88,95 +94,171 @@ class HistoryEncoder(nn.Module):
     """Dedicated sequential encoder for previous-CES history (+ irregular time).
 
     The previous-CES values carry the dominant V_rot signal (toroidal rotation is highly
-    persistent on the 10 ms grid), so they get their own GRU pathway rather than being
-    folded only into the per-sensor CNNs.
+    persistent on the 10 ms grid), so they get their own pathway rather than being folded only
+    into the per-sensor CNNs.
 
-    The GRU is **bidirectional**: the masked target timestep sits inside the window, with
-    observed CES values on both sides of it, so forward + backward passes both contribute.
+    The sequence mixer is a **2-layer Pre-LayerNorm Transformer encoder** (``norm_first=True``)
+    over the history window. Self-attention models every timestep-to-timestep relation directly,
+    so the masked target position (whose history channels are all zero) can attend straight to its
+    nearest observed neighbours on each side of the gap. A **learned positional embedding** is
+    added to the projected input so attention is order/distance aware (the window contains observed
+    CES on both sides of the masked target, the same two-sided structure past+future PCHIP
+    interpolation exploits). The rest of the readout follows.
 
-    Readout is **target-specific MULTI-HEAD attention pooling over the full GRU output
-    sequence**. For each target, a small linear maps each timestep's bidirectional
-    representation to ``num_heads`` scores; each head softmax-normalizes across the window and
-    pools only its own slice of the 2*hidden value vector. The per-head summaries are
-    concatenated back to width 2*hidden (identical to the previous single-head output) and then
-    projected by that target's head. One projected summary is consumed by the T_i pathway, the
-    other by the V_rot pathway.
-
-    Motivation: attention pooling (single best architecture change so far) lets the encoder
-    up-weight the observed rows temporally nearest the masked target -- the same distance-aware,
-    two-sided emphasis past+future PCHIP interpolation (the bar) applies. A *single* attention
-    head can express only one weighting over the window, but interpolation combines several cues
-    at once (nearest pre-gap sample, nearest post-gap sample, local trend). Multiple heads let
-    each target's readout represent these jointly, while staying within the known-good attention
-    mechanism. The two targets still get independent pools because they use history differently:
-    V_rot relies on history almost entirely and wants a clean rotation-trajectory weighting, while
-    T_i uses history only to complement the fast diagnostics. Each projected summary keeps width
-    ``output_dim``, identical to the previous output, so downstream head shapes are unchanged.
+    Readout is **target-specific MULTI-HEAD additive attention pooling over the full encoder
+    output sequence, returning both a weighted MEAN and a weighted DISPERSION (std)**. For each
+    target, a small linear maps each timestep's representation to ``num_heads`` scores; each head
+    softmax-normalizes across the window. The attention logits also receive a **per-target,
+    learned OBSERVED-NEIGHBOR bias** (a single scalar, initialized to 0, times that target's
+    per-timestep observed flag), so the pooling can lean toward window rows where the target was
+    actually observed — mirroring how interpolation uses only observed neighbours and naturally
+    down-weighting the all-zero masked target row — without changing the baseline at init. With
+    the resulting weights we pool, per head, both the first moment (mean of its ``d_model`` value
+    slice) and the weighted standard deviation of that slice. The per-head mean and std summaries
+    are each concatenated back to width ``d_model`` and then concatenated together to width
+    ``2 * d_model`` before that target's projection. The mean captures the (two-sided)
+    interpolation-like center of the recent history; the std exposes how volatile the recent
+    history is around the gap — the quantity that distinguishes smooth bulk from high-local-
+    activity (peak) regions, where the model must beat interpolation. One projected summary is
+    consumed by the T_i pathway, the other by the V_rot pathway, because the two targets use
+    history differently: V_rot relies on history almost entirely and wants a clean
+    rotation-trajectory weighting, while T_i uses history only to complement the fast diagnostics.
+    Each projected summary keeps width ``output_dim``, identical to the previous output, so
+    downstream head shapes are unchanged.
     """
 
     def __init__(
         self,
         history_channels,
         time_channels=4,
-        hidden_dim=64,
+        d_model=192,
+        nhead=4,
+        num_layers=2,
+        dim_feedforward=384,
         output_dim=64,
         num_heads=4,
+        max_window=64,
+        dropout=0.1,
     ):
         super().__init__()
-        self.gru = nn.GRU(
-            input_size=history_channels + time_channels,
-            hidden_size=hidden_dim,
-            num_layers=1,
+        self.history_channels = history_channels
+        self.input_proj = nn.Linear(history_channels + time_channels, d_model)
+        # Learned positional embedding; sliced to the actual window at forward time. Sized to the
+        # max searchable window so a WINDOW_SIZE change (if ever introduced) stays in range.
+        self.max_window = max_window
+        self.pos_emb = nn.Parameter(torch.zeros(max_window, d_model))
+        nn.init.normal_(self.pos_emb, std=0.02)
+
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model,
+            nhead=nhead,
+            dim_feedforward=dim_feedforward,
+            dropout=dropout,
+            activation="gelu",
             batch_first=True,
-            bidirectional=True,
+            norm_first=True,  # Pre-LayerNorm: the known-good stability setting.
         )
-        self.attn_dim = hidden_dim * 2
-        if self.attn_dim % num_heads != 0:
+        self.encoder = nn.TransformerEncoder(
+            encoder_layer,
+            num_layers=num_layers,
+            norm=nn.LayerNorm(d_model),
+        )
+
+        self.attn_dim = d_model
+        if d_model % num_heads != 0:
             raise ValueError(
-                f"attention width {self.attn_dim} must be divisible by num_heads {num_heads}"
+                f"attention width {d_model} must be divisible by num_heads {num_heads}"
             )
         self.num_heads = num_heads
-        self.head_dim = self.attn_dim // num_heads
-        # Two independent multi-head additive-attention scorers over the per-timestep bidirectional
-        # GRU outputs: one specialized for the T_i readout, one for the V_rot readout. Each emits
-        # `num_heads` per-timestep scores.
-        self.attn_ti = nn.Linear(self.attn_dim, num_heads)
-        self.attn_vt = nn.Linear(self.attn_dim, num_heads)
+        self.head_dim = d_model // num_heads
+        # Two independent multi-head additive-attention scorers over the per-timestep encoder
+        # outputs: one specialized for the T_i readout, one for the V_rot readout.
+        self.attn_ti = nn.Linear(d_model, num_heads)
+        self.attn_vt = nn.Linear(d_model, num_heads)
+        # Per-target observed-neighbor attention bias scalars. Initialized to 0 so the pooling
+        # starts byte-identical to the dispersion-pooling baseline; the gradient may grow them to
+        # lean each target's pool toward its own observed history rows.
+        self.attn_flag_bias_ti = nn.Parameter(torch.zeros(1))
+        self.attn_flag_bias_vt = nn.Parameter(torch.zeros(1))
+        # Projection inputs are 2 * d_model because each readout is the weighted mean (+) weighted
+        # std of the per-timestep representations. Projected output width is unchanged.
         self.proj_ti = nn.Sequential(
-            nn.LayerNorm(self.attn_dim),
-            nn.Linear(self.attn_dim, output_dim),
+            nn.LayerNorm(2 * d_model),
+            nn.Linear(2 * d_model, output_dim),
             nn.GELU(),
         )
         self.proj_vt = nn.Sequential(
-            nn.LayerNorm(self.attn_dim),
-            nn.Linear(self.attn_dim, output_dim),
+            nn.LayerNorm(2 * d_model),
+            nn.Linear(2 * d_model, output_dim),
             nn.GELU(),
         )
 
-    def _attention_pool(self, out, attn):
-        # Multi-head additive attention pool. Each head scores every timestep, softmaxes over the
-        # window, and pools only its own value subspace; per-head summaries are concatenated back
-        # to the full attention width so the downstream projection input is unchanged.
+    def _attention_pool(self, out, attn, flag_gamma=None, obs_flag=None):
+        # Multi-head additive attention pool returning a weighted MEAN and a weighted DISPERSION.
+        # Each head scores every timestep and softmaxes over the window; with those weights we pool
+        # both the first moment (mean) and the weighted standard deviation of that head's value
+        # subspace. Per-head mean and std summaries are each reshaped to the full attention width
+        # and concatenated, so the readout exposes both the interpolation-like center and the local
+        # variability of the recent history. Output width is 2 * d_model.
         batch, window, _ = out.shape
         scores = attn(out)  # (batch, window, num_heads)
+        if obs_flag is not None and flag_gamma is not None:
+            # Per-target observed-neighbor bias: a single learned scalar (init 0) times that
+            # target's per-timestep observed flag, broadcast across heads. Lets the pool lean
+            # toward rows where THIS target was actually observed and away from the all-zero
+            # masked target row, mirroring interpolation's use of observed neighbours.
+            scores = scores + flag_gamma * obs_flag.unsqueeze(-1)
         weights = torch.softmax(scores, dim=1)  # softmax across the window, per head
         values = out.view(batch, window, self.num_heads, self.head_dim)
-        pooled = (weights.unsqueeze(-1) * values).sum(dim=1)  # (batch, num_heads, head_dim)
-        return pooled.reshape(batch, self.attn_dim)  # (batch, hidden_dim * 2)
+        w = weights.unsqueeze(-1)  # (batch, window, num_heads, 1)
+        mean = (w * values).sum(dim=1)  # (batch, num_heads, head_dim)
+        mean_sq = (w * values * values).sum(dim=1)  # weighted E[v^2]
+        var = (mean_sq - mean * mean).clamp_min(0.0)
+        std = torch.sqrt(var + 1e-6)  # (batch, num_heads, head_dim)
+        mean = mean.reshape(batch, self.attn_dim)  # (batch, d_model)
+        std = std.reshape(batch, self.attn_dim)  # (batch, d_model)
+        return torch.cat((mean, std), dim=1)  # (batch, 2 * d_model)
 
     def forward(self, ces_history, time_features):
         seq = torch.cat((ces_history, time_features), dim=-1)
-        out, _ = self.gru(seq)  # (batch, window, hidden_dim * 2)
+        x = self.input_proj(seq)  # (batch, window, d_model)
+        window = x.shape[1]
+        if window > self.max_window:
+            raise ValueError(
+                f"history window {window} exceeds max_window {self.max_window}"
+            )
+        x = x + self.pos_emb[:window].unsqueeze(0)  # add learned positional encoding
+        out = self.encoder(x)  # (batch, window, d_model)
+        # Per-target observed flags from the fixed 4-channel ces_history contract layout
+        # (channel 2 = CES_TI observed, channel 3 = CES_VT observed). Skipped if absent, which
+        # preserves baseline behavior for reduced-channel dry runs.
+        if ces_history.shape[-1] >= 4:
+            ti_flag = ces_history[..., 2]  # (batch, window)
+            vt_flag = ces_history[..., 3]  # (batch, window)
+        else:
+            ti_flag = None
+            vt_flag = None
         # Target-specific multi-head attention pools: emphasize the observed history rows nearest
         # the masked target across several complementary temporal patterns, with a separate set of
-        # heads for each target's needs.
-        pooled_ti = self._attention_pool(out, self.attn_ti)
-        pooled_vt = self._attention_pool(out, self.attn_vt)
+        # heads (and observed-neighbor bias) for each target's needs, returning both center (mean)
+        # and spread (std).
+        pooled_ti = self._attention_pool(out, self.attn_ti, self.attn_flag_bias_ti, ti_flag)
+        pooled_vt = self._attention_pool(out, self.attn_vt, self.attn_flag_bias_vt, vt_flag)
         return self.proj_ti(pooled_ti), self.proj_vt(pooled_vt)
 
 
 class MultimodalCESPredictor(nn.Module):
-    """Predict [CES_TI, CES_VT] from BES, ECEI, MC, and irregular time metadata."""
+    """Predict [CES_TI, CES_VT] from BES, ECEI, MC, and irregular time metadata.
+
+    Each prediction head now begins with a **pre-head LayerNorm** over its concatenated fused
+    feature vector (the ONE controlled change this iteration). The head inputs are raw GELU-
+    activated summaries from separate sub-networks (sensor CNNs, time CNN, attention-pooled
+    history) living at uncalibrated relative scales; normalizing them before the head MLP puts
+    every modality on a common, well-conditioned footing each step, extending the known-good
+    Pre-LayerNorm pathway from the history encoder to the fusion stage. This is a generalization
+    (clean-skill) lever, not a capacity lever; head MLP widths and the rest of the network are
+    unchanged.
+    """
 
     def __init__(
         self,
@@ -219,13 +301,14 @@ class MultimodalCESPredictor(nn.Module):
         self.history_extractor = HistoryEncoder(
             ces_history_channels,
             time_channels=time_channels,
-            hidden_dim=64,
             output_dim=history_feature_dim,
         )
 
         # T_i uses fast diagnostics + history + time (physics: collisional T_e/n_e coupling).
+        # A pre-head LayerNorm calibrates the heterogeneous fused summaries before the MLP.
         ti_in = sensor_feature_dim * 3 + time_feature_dim + history_feature_dim
         self.ti_head = nn.Sequential(
+            nn.LayerNorm(ti_in),
             nn.Linear(ti_in, 160),
             nn.GELU(),
             nn.Dropout(0.2),
@@ -235,9 +318,10 @@ class MultimodalCESPredictor(nn.Module):
         )
 
         # V_rot uses the dedicated history pathway + time only (physics/ablation: fast
-        # diagnostics carry ~no toroidal-rotation info at the 10 ms grid).
+        # diagnostics carry ~no toroidal-rotation info at the 10 ms grid). Same pre-head LayerNorm.
         vt_in = history_feature_dim + time_feature_dim
         self.vt_head = nn.Sequential(
+            nn.LayerNorm(vt_in),
             nn.Linear(vt_in, 96),
             nn.GELU(),
             nn.Dropout(0.2),
@@ -311,7 +395,8 @@ class MultimodalCESPredictor(nn.Module):
         ecei_feat = self.ecei_extractor(ecei, time_features, ces_history)
         mc_feat = self.mc_extractor(mc, time_features, ces_history)
         time_feat = self.time_extractor(time_features)
-        # Target-specific history summaries: one for the T_i head, one for the V_rot head.
+        # Target-specific history summaries (each = flag-aware attention-weighted mean (+) std):
+        # one for the T_i head, one for the V_rot head.
         hist_ti, hist_vt = self.history_extractor(ces_history, time_features)
 
         ti_in = torch.cat((bes_feat, ecei_feat, mc_feat, time_feat, hist_ti), dim=1)

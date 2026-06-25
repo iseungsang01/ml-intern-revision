@@ -92,17 +92,25 @@ def apply_ablation(ablate, bes, ecei, mc, ces_history):
     return bes, ecei, mc, ces_history
 
 
-def build_clean_val_subset(data_dir, window_size, stats, val_files, max_val_samples, seed):
+def build_clean_val_subset(data_dir, window_size, stats, val_files, max_val_samples, seed,
+                           drop_stuck_targets=None):
     """Build the clean (non-augmented) dataset and its val sample indices.
 
     Single source of truth shared by evaluate.py and compare_baselines.py so the
     model is scored on byte-identical samples in both (prevents harness drift).
     `val_files` is the set of validation shot filenames from split_manifest.json.
+
+    `drop_stuck_targets` (held/forward-filled CES values -> NaN) defaults to the
+    CES_DROP_STUCK_TARGETS env var (default on) so evaluation scores the model on
+    genuine measurements only, matching the training-time data treatment.
     """
+    if drop_stuck_targets is None:
+        drop_stuck_targets = os.getenv("CES_DROP_STUCK_TARGETS", "1") == "1"
     dataset = KSTAR_CES_Dataset(
         data_dir=data_dir,
         window_size=window_size,
         temporal_subset_augmentation=False,
+        drop_stuck_targets=drop_stuck_targets,
     )
     dataset.set_normalization_stats(stats)
 

@@ -16,6 +16,12 @@ DEFAULT_SAMPLE_SEED = 42
 TIME_COLUMN = "time"
 TARGET_COLUMNS = ("CES_TI", "CES_VT")
 
+# Contiguous-block boundary (seconds) for stuck-value detection. Mirrors the
+# `< 0.5` block rule in `_build_index` and `baselines_interpolation.GAP_SECONDS`,
+# so a repeat is only treated as "held" when it follows the previous observation
+# at the native (sub-0.5 s) cadence, not across a real time discontinuity.
+STUCK_GAP_SECONDS = 0.5
+
 
 class KSTAR_CES_Dataset(Dataset):
     """KSTAR multimodal CES dataset backed by the real per-shot CSV files.
@@ -34,6 +40,7 @@ class KSTAR_CES_Dataset(Dataset):
         min_subset_size=2,
         normalization_stats=None,
         use_disk_cache=True,
+        drop_stuck_targets=True,
     ):
         self.data_dir = Path(data_dir)
         self.window_size = int(window_size)
@@ -42,6 +49,14 @@ class KSTAR_CES_Dataset(Dataset):
         self.min_subset_size = int(min_subset_size)
         self.normalization_stats = normalization_stats
         self.use_disk_cache = bool(use_disk_cache)
+        # A CES target reading bit-identical to the immediately-preceding observed
+        # reading within a contiguous block is a held/forward-filled value, not a
+        # real measurement (the diagnostic's native cadence is slower than the row
+        # cadence). When True these repeats are turned into NaN at load time so the
+        # whole pipeline -- observed flags, target_mask, row keeping, NaN-aware
+        # normalization, persistence/interpolation baselines -- treats them as
+        # missing instead of trusting them as ground truth.
+        self.drop_stuck_targets = bool(drop_stuck_targets)
 
         if self.window_size < 2:
             raise ValueError("window_size must be at least 2")
@@ -89,6 +104,8 @@ class KSTAR_CES_Dataset(Dataset):
                 # are missing independently -- keep any row with >=1 observed target
                 # so no observed CES label is discarded.
                 df = df.dropna(subset=self._input_columns()).reset_index(drop=True)
+                if self.drop_stuck_targets and len(df):
+                    self._nan_out_stuck_targets(df)
                 has_target = df[list(TARGET_COLUMNS)].notna().any(axis=1)
                 clean_df = df[has_target].reset_index(drop=True)
                 if not clean_df.empty:
@@ -98,6 +115,42 @@ class KSTAR_CES_Dataset(Dataset):
                     self.valid_files.append(str(file_path))
             except Exception as e:
                 print(f"Warning: Could not load {file_path}: {e}")
+
+    def _nan_out_stuck_targets(self, df):
+        """In-place: NaN out forward-filled (held) CES target values.
+
+        A target value is treated as held -- and set to NaN -- when it is
+        bit-identical to the immediately-preceding *observed* value of the same
+        target within the same contiguous time block (time delta < STUCK_GAP).
+        CES_TI and CES_VT are handled independently. The first value of every
+        constant run is kept (a genuine new measurement); only the repeats drop.
+        """
+        time = df[TIME_COLUMN].to_numpy(dtype=np.float64)
+        if time.shape[0] < 2:
+            return
+        block = np.concatenate(([0], np.cumsum(np.diff(time) >= STUCK_GAP_SECONDS)))
+        for col in TARGET_COLUMNS:
+            values = df[col].to_numpy(dtype=np.float64, copy=True)
+            stuck = self._stuck_repeat_mask(values, block)
+            if stuck.any():
+                values[stuck] = np.nan
+                df[col] = values
+
+    @staticmethod
+    def _stuck_repeat_mask(values, block):
+        """Boolean mask of held repeats: an observed value equal to the previous
+        observed value within the same block. Vectorized over the observed subset
+        (equal to the sequential carry-forward rule because only exact repeats are
+        dropped, so the previous observed value never changes under removal)."""
+        mask = np.zeros(values.shape[0], dtype=bool)
+        obs_idx = np.flatnonzero(~np.isnan(values))
+        if obs_idx.size <= 1:
+            return mask
+        ov = values[obs_idx]
+        ob = block[obs_idx]
+        dup = (ov[1:] == ov[:-1]) & (ob[1:] == ob[:-1])
+        mask[obs_idx[1:][dup]] = True
+        return mask
 
     def _build_column_slices(self, usecols):
         positions = {name: i for i, name in enumerate(usecols)}
@@ -112,10 +165,11 @@ class KSTAR_CES_Dataset(Dataset):
     def _cache_path(self):
         cache_dir = self.data_dir / ".ces_cache"
         signature = {
-            "version": 3,
+            "version": 4,
             "window_size": self.window_size,
             "temporal_subset_augmentation": self.temporal_subset_augmentation,
             "min_subset_size": self.min_subset_size,
+            "drop_stuck_targets": self.drop_stuck_targets,
             "columns": self._required_columns(),
             "files": [
                 {

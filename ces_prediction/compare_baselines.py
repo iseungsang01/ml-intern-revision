@@ -36,6 +36,7 @@ from evaluate import _load_stats, _persistence_from_history, build_clean_val_sub
 from model import MultimodalCESPredictor
 import baselines_interpolation as B
 from analyze_gap import BIN_EDGES_MS
+import peak_analysis as PK
 
 TARGET_NAMES = ("CES_TI", "CES_VT")
 HEADLINE_BASELINE = "pchip"  # PR1
@@ -92,8 +93,27 @@ def compare():
     base_chunks = {m: [] for m in methods}
     dt_chunks = []
     shot_chunks = []
+    row_chunks = []  # per-sample target row_index (for input-only peak lookup)
     n_future = np.zeros(2, dtype=np.int64)  # how often a future neighbor was usable
     n_total = np.zeros(2, dtype=np.int64)
+
+    # Input-only (Family i-a) CES-activity peak masks, precomputed once per
+    # (file, target_col). Headline peak definition: never reads CES[idx]. Cached
+    # so the per-sample lookup below is O(1). See peak_analysis.PEAK_PARAMS.
+    bes_cols = [int(c) for c in dataset._column_slices["bes"]]
+    ecei_cols = [int(c) for c in dataset._column_slices["ecei"]]
+    peak_cache = {}  # (file_idx, target_col) -> bool mask over file rows
+
+    def _ces_activity_mask(file_idx, target_col):
+        key = (file_idx, target_col)
+        cached = peak_cache.get(key)
+        if cached is None:
+            fa = dataset.file_arrays[file_idx]
+            cached = PK.detect_peak_rows_input_only(
+                fa, time_col, target_col, bes_cols=bes_cols, ecei_cols=ecei_cols
+            )["ces_activity"]
+            peak_cache[key] = cached
+        return cached
 
     print(f"[compare] split={split_tag}  samples={len(eval_indices)}  methods={methods}")
     with torch.no_grad():
@@ -139,6 +159,7 @@ def compare():
                 base_chunks[m].append(arr[m])
             dt_chunks.append(dt_arr)
             shot_chunks.append(np.array([path_to_idx[f] for f in files], dtype=np.int64))
+            row_chunks.append(np.array(rows, dtype=np.int64))
 
     model_phys = np.concatenate(model_chunks)
     target_phys = np.concatenate(target_chunks)
@@ -146,6 +167,7 @@ def compare():
     base_phys = {m: np.concatenate(base_chunks[m]) for m in methods}
     dt_ms = np.concatenate(dt_chunks) * 1000.0
     shot_ids = np.concatenate(shot_chunks)
+    row_ids = np.concatenate(row_chunks)  # per-sample target row_index
 
     report = {
         "split": split_tag,
@@ -170,6 +192,15 @@ def compare():
         for m in methods:
             valid &= ~np.isnan(base_phys[m][:, t])
         n = int(valid.sum())
+
+        # Input-only (Family i-a) CES-activity peak flag per sample, aligned to
+        # the full sample order (same as model_phys/target_phys/keep/valid). The
+        # mask is the headline peak definition and is NEVER derived from CES[idx].
+        tc = target_cols[t]
+        is_peak = np.zeros(len(shot_ids), dtype=bool)
+        for s in range(len(shot_ids)):
+            mask_f = _ces_activity_mask(int(shot_ids[s]), tc)
+            is_peak[s] = bool(mask_f[int(row_ids[s])])
         y = target_phys[valid, t]
         err_model = model_phys[valid, t] - y
         rmse_model = _rmse(err_model)
@@ -188,6 +219,9 @@ def compare():
             f"skill_vs_{HEADLINE_BASELINE}": skill_head,
             f"beats_{HEADLINE_BASELINE}": beats_head,
             "future_neighbor_fraction": float(n_future[t] / max(int(n_total[t]), 1)),
+            # additive diagnostic only (NOT an AC1-protected key): how many of the
+            # `valid` samples fall in the input-only headline peak subset.
+            "peak_input_only_ces_activity_n": int(is_peak[valid].sum()),
         }
         row = f"{name:<8} {n:>7} {rmse_model:>11.4f} " + " ".join(f"{per_method[m]['rmse']:>13.4f}" for m in methods) + f" {skill_head:>16.4f}"
         print(row)
@@ -220,6 +254,14 @@ def compare():
         boot[f"{name}_se_model"] = err_model ** 2
         boot[f"{name}_se_pchip"] = (base_phys["pchip"][valid, t] - y) ** 2
         boot[f"{name}_se_linear"] = (base_phys["linear"][valid, t] - y) ** 2
+        # ONE additive key: input-only (Family i-a) CES-activity peak flag,
+        # sliced by the SAME `valid` mask as the SE arrays so the byte-identical
+        # headline SEs can be masked to the peak subset downstream (peak_analysis).
+        boot[f"{name}_is_peak"] = is_peak[valid]
+        assert len(boot[f"{name}_is_peak"]) == len(boot[f"{name}_se_model"]), (
+            f"is_peak/se_model length mismatch for {name}: "
+            f"{len(boot[f'{name}_is_peak'])} != {len(boot[f'{name}_se_model'])}"
+        )
 
     print("\nskill_vs_%s > 0  => model beats %s interpolation (lower MSE)." % (HEADLINE_BASELINE, HEADLINE_BASELINE))
     print("future_neighbor_fraction = share of kept samples where interpolation used a real future neighbor (else persistence fallback, PR2).")

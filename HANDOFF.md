@@ -1,20 +1,19 @@
 # AutoML Session Handoff (autoresearch)
 
-## Latest Briefing (Iteration 10)
+## Latest Briefing (Iteration 20)
 
 ```text
---- Briefing (Iteration 10) ---
-Decision on last proposal: ROLLED_BACK
-Clean skill (mean CES_TI/VT skill_vs_persistence): 0.1140 (best: 0.2075)
-  CES_TI: skill=0.2710, R2_vs_mean=0.0949, RMSE=527.9168 (n=37636)
-  CES_VT: skill=0.3171, R2_vs_mean=0.7784, RMSE=30.1258 (n=31721)
-Stale rounds (no new best): 5
-Propose ONE controlled architecture change that builds on the current best model.py and raises the clean skill. Preserve the data/model contract; avoid known failed paths.
+--- Briefing (Iteration 20) ---
+Decision on last proposal: FAILED
+Clean skill (mean CES_TI/VT skill_vs_persistence): n/a (best: 0.2541)
+Stale rounds (no new best): 16
+FAILURE at training: Command '['python', 'C:\\Users\\lss\\Documents\\GitHub\\ml-intern-revision\\ces_prediction\\train.py']' returned non-zero exit status 1.
+Your previous change was discarded and model.py restored to the best version. Propose a DIFFERENT controlled change that avoids this failure.
 ```
 
-- Best clean skill (mean skill_vs_persistence): 0.2075
-- Stale rounds: 5
-- Best model snapshot: `data\.improve_out\.automl_state\best_model.py`
+- Best clean skill (mean skill_vs_persistence): 0.2541
+- Stale rounds: 16
+- Best model snapshot: `data\.automl_sub1m_run\.automl_state\best_model.py`
 
 ## Data Contract
 
@@ -34,13 +33,23 @@ Dataset/training contract that every generated model.py must preserve:
 
 ## History
 
-- Iter 1: baseline, skill=0.1792, best=0.1792, val_loss=0.3884, stage=ok
-- Iter 2: kept, skill=0.1835, best=0.1835, val_loss=0.4022, stage=ok
-- Iter 3: kept, skill=0.1867, best=0.1867, val_loss=0.3903, stage=ok
-- Iter 4: kept, skill=0.1927, best=0.1927, val_loss=0.3769, stage=ok
-- Iter 5: kept, skill=0.2075, best=0.2075, val_loss=0.3792, stage=ok
-- Iter 6: rolled_back, skill=0.1843, best=0.2075, val_loss=0.3856, stage=ok
-- Iter 7: rolled_back, skill=0.1849, best=0.2075, val_loss=0.3943, stage=ok
-- Iter 8: rolled_back, skill=0.2001, best=0.2075, val_loss=0.3780, stage=ok
-- Iter 9: rolled_back, skill=0.2008, best=0.2075, val_loss=0.3773, stage=ok
-- Iter 10: rolled_back, skill=0.1140, best=0.2075, val_loss=0.4305, stage=ok
+- Iter 1: baseline, skill=0.2526, best=0.2526, val_loss=0.3893, stage=ok
+- Iter 2: rolled_back, skill=0.2216, best=0.2526, val_loss=0.4019, stage=ok
+- Iter 3: rolled_back, skill=0.2418, best=0.2526, val_loss=0.3914, stage=ok
+- Iter 4: kept, skill=0.2541, best=0.2541, val_loss=0.3892, stage=ok
+- Iter 5: rolled_back, skill=0.2432, best=0.2541, val_loss=0.3895, stage=ok
+- Iter 6: rolled_back, skill=0.2467, best=0.2541, val_loss=0.3901, stage=ok
+- Iter 7: rolled_back, skill=0.2499, best=0.2541, val_loss=0.3898, stage=ok
+- Iter 8: rolled_back, skill=0.2289, best=0.2541, val_loss=0.3906, stage=ok
+- Iter 9: rolled_back, skill=0.2496, best=0.2541, val_loss=0.3883, stage=ok
+- Iter 10: rolled_back, skill=0.2410, best=0.2541, val_loss=0.3874, stage=ok
+- Iter 11: rolled_back, skill=0.1107, best=0.2541, val_loss=0.3951, stage=ok
+- Iter 12: rolled_back, skill=0.1005, best=0.2541, val_loss=0.3945, stage=ok
+- Iter 13: rolled_back, skill=0.2121, best=0.2541, val_loss=0.4042, stage=ok
+- Iter 14: rolled_back, skill=0.1241, best=0.2541, val_loss=0.3979, stage=ok
+- Iter 15: rolled_back, skill=0.2301, best=0.2541, val_loss=0.3975, stage=ok
+- Iter 16: rolled_back, skill=0.1275, best=0.2541, val_loss=0.3975, stage=ok
+- Iter 17: rolled_back, skill=0.2040, best=0.2541, val_loss=0.4032, stage=ok
+- Iter 18: rolled_back, skill=0.1446, best=0.2541, val_loss=0.3864, stage=ok
+- Iter 19: rolled_back, skill=0.1925, best=0.2541, val_loss=0.3838, stage=ok
+- Iter 20: failed, skill=n/a, best=0.2541, val_loss=inf, stage=training

@@ -337,6 +337,13 @@ def train():
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
+    # Held/forward-filled CES values (a reading bit-identical to the previous
+    # observed value within a block) are kept during TRAINING by default: the
+    # controlled A/B experiment showed masking them at train time does not help
+    # and slightly hurts CES_TI (they act as a harmless persistence-prior). Set
+    # CES_DROP_STUCK_TARGETS=1 to mask them here too. Evaluation defaults the
+    # other way (drop=1) so reported metrics are on genuine measurements only.
+    drop_stuck_targets = os.getenv("CES_DROP_STUCK_TARGETS", "0") == "1"
     test_fraction = float(os.getenv("CES_TEST_FRACTION", "0.0"))
     max_test_samples = int(os.getenv("CES_MAX_TEST_SAMPLES", str(max_val_samples)))
     init_seed = int(os.getenv("CES_INIT_SEED", str(seed)))
@@ -358,6 +365,7 @@ def train():
         window_size=window_size,
         temporal_subset_augmentation=temporal_subset_augmentation,
         min_subset_size=min_subset_size,
+        drop_stuck_targets=drop_stuck_targets,
     )
     if len(full_dataset) == 0:
         print("Error: No valid data found.")
@@ -556,6 +564,7 @@ def train():
         "feature_dims": full_dataset.feature_dims,
         "temporal_subset_augmentation": temporal_subset_augmentation,
         "min_subset_size": min_subset_size,
+        "drop_stuck_targets": drop_stuck_targets,
         "label_handling": "per_target_masked_multitask",
         "loss": "masked_mse_per_target",
         "ablation": ablate,

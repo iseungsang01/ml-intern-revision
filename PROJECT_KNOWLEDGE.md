@@ -25,6 +25,53 @@ autocorrelated).
   `analyze_gap.py`; 3-way split + `CES_INIT_SEED` in `train.py`; running log `PROGRESS.md`; write-up
   `THESIS_RESULTS.md`; baseline citations `docs/interpolation_baselines_references.md`.
 
+## High-Variability (Peak) Reconstruction Finding (2026-06-23, GPU)
+
+A layered analysis (no retraining, no model/contract change) of *where* the uniformly-trained
+model earns its edge over interpolation, via `ces_prediction/peak_analysis.py`. "Peak" = high
+**local-activity NEIGHBORHOOD** flagged from a **target-independent input proxy** (Family i-a
+`ces_activity`: large neighbor-bracket slope and/or high local CES-neighbor variance, computed
+from `build_neighbor_set` which **excludes the target row** — so it never reads `CES[idx]`, a
+non-circular headline). NOT pointwise extrema. Headline peak SEs are byte-identical to the global
+`compare_baselines.py` SEs (one additive npz key `{name}_is_peak`, sliced by `valid`). Shot-
+clustered paired bootstrap (B=10000, seed 12345); dual-sufficiency guard (`N_MIN_PEAK_SHOTS=15`
+binding, `N_MIN_PEAK_ROWS=200`). Val split, observed-CES-only (MNAR optimistic bound), physical units.
+
+**Headline result (default params, val, 8000-sample eval, run dir `data/.improve_final_out`):**
+
+| Target | Global skill_vs_pchip | Peak (i-a) skill | Peak 95% CI | Peak verdict | rows / shots |
+|--------|----------------------:|-----------------:|-------------|:------------:|-------------:|
+| CES_TI |                +0.515 |          **+0.855** | [+0.658, +0.933] | **PASS** | 965 / 119 |
+| CES_VT |                +0.241 |          **+0.691** | [+0.107, +0.871] | **PASS** | 1760 / 82 |
+
+1. **The model's edge over interpolation is concentrated in high-variability neighborhoods.**
+   For CES_TI, peak skill (+0.86) far exceeds global (+0.51): interpolation is near-optimal on the
+   smooth bulk, and the model's real value is in the active stretches.
+2. **MAJOR / surprising: CES_VT PASSES at peaks (+0.69, CI lower bound +0.11 > 0) even though the
+   GLOBAL CES_VT result is weak/borderline (n.s. on held-out test in the thesis).** So the
+   T_i↔V_rot asymmetry is *regional*: averaged globally the model barely beats interpolation on
+   V_rot, but in high-local-activity neighborhoods it does — where smooth past+future interpolation
+   is worst and the (history-driven) model has the most to add. Report this honestly as a regional
+   strength, not a reversal of the global n.s. test (it is on the optimism-caveated val split).
+3. **AC7 ablation (flag-gated `CES_PEAK_ABLATION=1`, `no_fast` zeros BES/ECEI/MC), pinned sign
+   convention `paired_diff = SE_no_fast − SE_full`, significance iff `paired_diff_ci95[0] > 0`:**
+   - **CES_TI: significant** (diff CI ≈ [+2066, +36997] ≫ 0) — removing fast diagnostics hurts a lot
+     at peaks ⇒ the model genuinely uses the multimodal (BES/ECEI/MC) signal for T_i in active regions.
+   - **CES_VT: NOT significant** (diff CI = [0, 0]) — the `no_fast` arm is identical at V_rot peaks ⇒
+     V_rot peak skill is **history-driven, not fast-diagnostic-driven**. Consistent with the
+     2026-06-22 input-modality ablation. (OOD caveat: zeroing inputs is off-manifold; disclosed.)
+4. **Sensitivity sweep (3 settings) — robust.** slope_z/neigh_var_pct = (2.5,0.10 default),
+   (3.0,0.05 stricter), (2.0,0.20 looser): CES_TI peak skill +0.83…+0.85, **PASS all three**;
+   CES_VT +0.54…+0.71, **PASS all three** but with a thin CI lower bound (+0.01…+0.11), so the
+   CES_VT-at-peaks result is real but fragile. Default (2.5, 0.10) gives the strongest CES_VT CI
+   lower bound and is the pinned choice.
+
+Implications for the AutoML loop: `program.md` now carries a standing peak-steering rule — if
+input-defined peak skill is weak or its CI straddles 0 (watch CES_VT), the researcher may propose
+a **peak-weighted loss** (upweight high-local-activity samples) as one controlled experiment. This
+is the deferred non-goal; the keep/discard gate stays the global mean `skill_vs_pchip` (peak metrics
+inform the researcher only, never the gate). See [[ces-thesis-result-confirmed]].
+
 ## Current Status
 
 - Primary reference point: best validation loss `0.4834` at iteration 7 of the newer architecture-search round.
