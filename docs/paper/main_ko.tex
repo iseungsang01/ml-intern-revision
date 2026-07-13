@@ -1,0 +1,627 @@
+% =========================================================================
+% KSTAR CES 멀티모달 나우캐스팅 — 국문 논문 초안
+% 빌드: tectonic main_ko.tex  (XeTeX + xeCJK, Windows 맑은고딕 사용)
+% 영문판 main.tex 과 동일한 구조·그림·참고문헌(refs.bib)을 공유한다.
+% =========================================================================
+\documentclass[10pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xeCJK}
+\xeCJKsetup{CJKspace=true}% 한국어: 단어 간 공백 보존 (기본값은 중일어용 공백 무시)
+\setCJKmainfont{Malgun Gothic}
+\setCJKsansfont{Malgun Gothic}
+\setCJKmonofont{Malgun Gothic}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newcommand{\Ti}{\ensuremath{T_i}}
+\newcommand{\Vrot}{\ensuremath{V_\mathrm{rot}}}
+\newcommand{\skillp}{\ensuremath{\mathrm{skill}_{\mathrm{PCHIP}}}}
+
+\graphicspath{{figures/}}
+
+\title{\textbf{KSTAR 희소 전하교환분광(CES) 신호의 멀티모달 나우캐스팅:\\
+고속 진단은 미래를 보는 보간을 넘어 이온온도를 복원하지만\\
+토로이달 회전은 복원하지 못한다}}
+
+\author{%
+  이승상 (Seungsang Lee)\\
+  서울대학교 원자핵공학과\\
+  \texttt{lss010330@snu.ac.kr}
+}
+
+\date{국문 초안 --- \today}
+
+\begin{document}
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+전하교환분광(CES)은 토카막에서 이온온도(\Ti)와 토로이달 회전(\Vrot)을 측정하는
+핵심 진단이지만, 광자 수집 제약 때문에 느리고 간헐적으로 결측된다. 본 연구가
+다루는 KSTAR 10\,ms 격자에서는 \Ti{}의 약 8\%, \Vrot{}의 약 24\%가 결측되며,
+두 타겟은 서로 독립적으로 빠진다. 본 논문은 항상 측정되는 고속 진단---빔방출분광
+(BES), 전자사이클로트론방출영상(ECEI), Mirnov 코일---과 불규칙한 과거 CES
+이력을 결합하면, CES가 결측된 시점에서 \emph{CES 자체의 시간 보간으로는 복원할
+수 없는} 정보를 회복할 수 있는지를 묻는다. 진단별 인코더, 명시적 불규칙 시간
+특징, 타겟별 마스킹 손실, 물리 기반 타겟별 입력 라우팅을 갖춘 소형(100만
+파라미터 미만) 멀티모달 신경망을 학습하고, 의도적으로 불리한 기준선과
+비교한다: 오프라인 보간(선형, 단조 3차 PCHIP, 국소 AR)은 타겟 시점 \emph{양쪽의
+과거와 미래} CES 이웃을 모두 사용하는 반면, 모델은 엄격하게 인과적(causal)이다.
+사전등록된 프로토콜---파일 단위 train/val/test 분할, 모델 선택이 전혀 접근하지
+않는 test 셋, shot 군집 paired bootstrap(10{,}000회 재표본)---하에서 모델은
+\Ti{}에 대해 skill $+0.20$$\sim$$+0.30$으로 PCHIP을 이기며, \emph{독립적인 4개
+held-out 분할 모두}에서 95\% 신뢰구간이 0을 제외한다. 반면 \Vrot{}은 4개 분할
+모두에서 보간과 통계적으로 구별되지 않는다. 입력 절제(ablation) 실험은 이
+비대칭이 아키텍처가 아니라 물리에서 비롯됨을 보인다: 고속 진단만으로도
+persistence를 이기는 \Ti{}와 달리(충돌성 전자--이온 결합으로 $T_e$, $n_e$가
+정보를 운반), \Vrot{}에 대해서는 평균 예측보다도 나쁘다(지배적인 NBI 토크가
+미관측이고, 100\,Hz로 샘플된 Mirnov 신호는 kHz 모드 회전을 앨리어싱으로
+소실한다). 모델의 우위는 매끄러운 보간이 가장 취약한 고변동 국소 구간에
+집중된다. 아울러 데이터 품질 감사(관측된 \Vrot{} 값의 54\%가 계기 유지값으로
+판명)와, 통계적으로 유의하지 않던 초기 결과를 유의한 헤드라인으로 끌어올린
+LLM 기반 keep/discard 아키텍처 탐색 루프를 문서화한다. 전체 파이프라인,
+사전등록 문서, 평가 산출물을 공개한다.
+\end{abstract}
+
+% =========================================================================
+\section{서론}
+\label{sec:intro}
+
+플라즈마 경계부의 이온온도 \Ti{}와 토로이달 회전 \Vrot{}은 페데스탈 구조, ELM
+거동, 고성능 운전 영역 접근 등 토카막 성능과 안정성의 핵심 요소를 지배한다. 두
+물리량의 표준 측정법은 전하교환분광(CES)~\citep{Ko2010ChargeExchange}으로,
+전하교환 선방출의 도플러 확장에서 \Ti{}를, 도플러 이동에서 \Vrot{}을 추정한다.
+CES는 충분한 신호대잡음비를 위해 광자를 적분해야 하므로 본질적으로 느리고,
+개별 시점 측정은 노출·신호품질 문제로 자주 소실된다. 본 연구의 KSTAR
+데이터에서는 균일한 10\,ms 격자 위에서도 \Ti{}의 약 8\%, \Vrot{}의 약 24\%가
+---서로 \emph{독립적으로}---결측되며, 우리 데이터셋에서 경험적으로 결측은
+물리적으로 흥미로운 순간(저신호 구간, ELM, 천이)에 집중된다. 즉
+\citet{Little2002StatisticalAnalysis}의 의미에서 무작위적이지 않은
+결측(MNAR)이다.
+
+한편 여러 고속 진단은 같은 플라즈마를 결측 없이 관측한다: BES는 밀도요동
+구조를, ECEI는 전자온도를, Mirnov 코일은 자기요동을 측정한다. 이들 중 어느
+것도 \Ti{}나 \Vrot{}을 직접 측정하지 않는다. 본 논문의 질문은 다음과 같다.
+
+\begin{quote}
+\emph{CES가 결측된 10\,ms 시점에서, 동시각 고속 진단과 불규칙한 과거 CES
+이력만으로, CES 단독의 시간 보간이 복원할 수 없는 \Ti{}, \Vrot{} 정보를 회복할
+수 있는가?}
+\end{quote}
+
+긍정적 답은 데이터 기반 \emph{가상 센서(virtual sensor)}를 정당화한다: 강한
+역산 가정 없이 CES 결측을 온라인으로 채워, 끊김 없는 페데스탈 분석과 궁극적으로
+실시간 활용을 가능하게 하는 모델이다.
+
+\paragraph{의도적으로 어려운 기준선.}
+결측 채움의 자명한 기준선은 CES 채널 자체의 보간이다. 우리는 비교를 모델에
+의도적으로 불리하게 설계했다: 보간 기준선(선형, 단조 3차
+PCHIP~\citep{fritsch1980}, 국소 AR 참조)은 \emph{오프라인}으로, 타겟 시점
+\emph{양쪽}의---미래를 포함한---CES 이웃을 사용할 수 있다. 반면 모델은 엄격히
+인과적이며, 타겟 시점의 고속 진단과 짧은 과거 CES 윈도만 본다. 인과 모델이
+미래를 쓰는 보간을 이긴다면, 고속 진단이 CES의 시간 구조만으로는 담을 수 없는
+CES 관련 정보를 운반한다는 뜻이다. 그리고 미래를 쓰는 보간을 이기는 모델은
+당연히(persistence, AR 등) 모든 인과 기준선을 이긴다.
+
+\paragraph{기여.}
+\begin{enumerate}
+  \item \textbf{누수 방지 멀티모달 나우캐스팅 파이프라인}: 타겟별 마스킹
+        멀티태스크 손실(두 타겟 동시 관측을 요구하던 필터가 버리던 라벨 행
+        $\approx$28\%를 복원), 명시적 불규칙 시간 특징, CES 이력 입력에서 타겟
+        시점의 완전 마스킹, 파일(shot) 단위 분할, 학습 파일 전용 정규화 통계
+        (\S\ref{sec:data}).
+  \item \textbf{사전등록된 shot 군집 평가 프로토콜} (\S\ref{sec:eval}): 모델
+        선택이 전혀 읽지 않는 test 셋을 갖춘 3분할, 그리고 shot 군집 paired
+        bootstrap---한 방전 내 인접 샘플은 강하게 상관되므로 재현(replication)의
+        단위는 샘플이 아니라 방전이다.
+  \item \textbf{\Ti{}에 대한 강건한 긍정 결과} (\S\ref{sec:results}): 인과
+        모델이 미래를 쓰는 PCHIP 보간을 $\skillp = +0.20 \sim +0.30$으로 이기며,
+        4개 독립 held-out 분할 모두에서 shot 군집 95\% CI가 0을 제외하고,
+        진짜 측정값만의 재평가에서도 생존한다.
+  \item \textbf{\Vrot{}에 대한 물리 기반 부정 결과}: 실패가 아니라 발견으로
+        보고한다. 고속 진단은 10\,ms에서 회전 정보를 사실상 운반하지 않으며
+        (미관측 NBI 토크, Mirnov 앨리어싱), 입력 절제로 확인된다. 따라서
+        \Vrot{}은 이력 자기상관의 한계에 머물러 보간과 통계적으로 동률이다.
+        이를 \Ti$\leftrightarrow$\Vrot{} \emph{정보 비대칭}이라 부른다.
+  \item \textbf{모델이 우위를 버는 위치의 진단}: skill은 매끄러운 보간이 가장
+        약한 고변동 국소 구간에 집중된다. 그곳에서는 \Vrot{}조차 (연약하지만)
+        유의한 우위를 보이며, 절제 실험은 \Ti{} 우위가 실제로 멀티모달 신호를
+        사용함을 보인다.
+  \item \textbf{두 가지 방법론적 산출물}: 관측된 \Vrot{} 값의 54\%가
+        forward-fill된 계기 유지값임을 밝힌 데이터 품질 감사(및 보정된 평가),
+        그리고 선택 게이트를 검증 손실이 아닌 깨끗한 보간 대비 skill로 삼는
+        LLM 기반 keep/discard 아키텍처 탐색 루프.
+\end{enumerate}
+
+% =========================================================================
+\section{관련 연구}
+\label{sec:related}
+
+\paragraph{핵융합 진단의 프로파일 피팅과 결측 보간.}
+가우시안 과정 회귀~\citep{rasmussen2006}는 핵융합 프로파일 데이터의 피팅과
+불확실성 정량화의 커뮤니티 표준 도구이며~\citep{chilenski2015,michoski2024},
+PCHIP 같은 단조 보간~\citep{fritsch1980,dougherty1989}은 자연 3차
+스플라인~\citep{reinsch1967}이 ELM·톱니파형 계단에서 Gibbs형 진동을
+보이기 때문에~\citep{kvernadze1998} 과도 현상 근방에서 선호된다. 불규칙 표본
+시계열에는 정확한 AR형 영모형(IAR/CIAR)이
+존재한다~\citep{eyheramendy2018,elorrieta2019}. 우리는 이
+사다리---persistence, 선형 보간~\citep{press2007}, PCHIP, 국소 AR---를
+사전등록된 기준선으로 사용하며, PCHIP을 헤드라인 비교 대상으로, Murphy의 MSE
+skill 점수~\citep{murphy1988}를 지표로 삼는다. 본 연구의 기여는 이 문헌과
+직교한다: 더 나은 CES 단독 보간이 아니라, \emph{다른 진단들}이 어떤 CES 단독
+방법도 넘어서는 정보를 더하는지를, 인과 멀티모달 모델을 미래를 쓰는 보간과
+맞세워 검정한다.
+
+\paragraph{핵융합에서의 신경망 진단 추론.}
+신경망 진단 추론에는 세 갈래가 있으며, 각각에 대해 \emph{타겟 측정이 없을 때
+어떻게 되는가?}를 묻는 것이 유익하다. 가장 오래된 갈래는 스펙트럼 피팅
+가속이다---JET 전하교환 스펙트럼의 신경망
+분석~\citep{Bishop1993AutomaticAnalysis,Svensson1999AnalysisJet}과 EAST CXRS
+스펙트럼의 고속 \Ti{} 추정~\citep{Chai2019FastEstimation}. 이들은 최소자승
+피팅 대비 수십 배의 속도를 얻지만, 구조상 해당 시점에 측정된 스펙트럼을
+요구한다: CES 노출이 결측되면 입력 자체가 없다. 두 번째 갈래는 한 진단의 추론
+파이프라인을 다른 진단으로 대체한다: W7-X의 베이지안 모형
+에뮬레이션~\citep{Pavone2019NeuralNetwork}, NSTX-U의 스칼라 파라미터 기반
+프로파일 형상 예측~\citep{Boyer2021PredictionElectron}, 그리고---우리 타겟에
+가장 가까운---EAST의 X선 결정 분광기로부터의 \Ti{}·회전 프로파일
+추론~\citep{Lin2024PredictionPlasma}. Lin 등은 정확히 우리의 두 물리량을
+예측하지만 입력이 또 다른 도플러 분광기, 즉 동일한 물리 정보 채널이고 같은
+광자 통계 한계를 가지며, 매핑은 순간적이고 소스 진단의 가용성을 그대로
+상속한다. 세 번째 갈래는 느린 재구성 코드의 종단간 대리모형이다: 볼로미터
+단층촬영~\citep{Matos2016DeepLearning}, 선적분
+진단~\citep{Wang2025PhysicsinformedDeep}, 안전인자
+프로파일~\citep{Wei2023ReconstructionTokamak}, 실시간
+평형~\citep{Zheng2024RealtimeEquilibrium}, 그리고 KSTAR 자체의 신경망
+Grad--Shafranov 솔버~\citep{Joung2020DeepNeural,Joung2023GsdeepnetMastering}와
+고속 EPED 파라미터화 프로파일
+재구성~\citep{Jung2026MachineLearningbased}. 이들은 분석 \emph{지연시간}을
+다루지, 측정 \emph{가용성}을 다루지 않는다: 존재하는 데이터의 역산을 가속할
+뿐이다. 가용성 문제에 더 가까운 두 연구가 있다. DIII-D의 액추에이터 조건부
+프로파일 예보~\citep{Abbate2021DatadrivenProfile}는 우리 모델처럼 인과적이고
+이력 기반이지만, 제어를 위해 \emph{조밀하게} 측정된 프로파일로부터 미래를
+예보하며, 희소 채널의 복원이 아니다.
+RTCAKENN~\citep{Shousha2023MachineLearningbased}은 실시간으로 운동학
+프로파일(불순물 온도·회전 포함)을 재구성하고 dropout 학습으로 Thomson/CER
+입력 소실을 견디지만, 거기서 결측은 입력을 0으로 만드는 강건성 조건인 반면,
+우리 설정에서는 타겟 자신의 희소성이 문제 그 자체이며 타겟별 관측 플래그와
+불규칙 시간 특징으로 명시적으로 추적된다. 세 갈래 모두의 공통 가정은 모델이
+실행될 때 정보 소스가 존재한다는 것이다. \emph{자기 자신의} 측정이 없는
+시점에서, 다른 채널들과 자신의 과거로부터 진단값을 복원하는 일은 이들의 범위
+밖이다.
+
+\paragraph{교차 진단 재구성과 시간 조밀화 (가장 가까운 선행 연구).}
+최근 한 계열은 다른 진단들로부터 특정 진단을 재구성한다. GP 기반 대체는
+KSTAR에서 고장난 자기 센서를 밀리초 이하로
+복원하고~\citep{Joung2018ImputationFaulty}, ML은 손상 센서를 탐지·보상하며
+~\citep{Mohapatra2019RealtimeSensor}, 오토인코더는 중복 밀도 진단을 융합해
+복원력을 얻고~\citep{Kaldas2026DevelopingAutoencoder}, 시계열 외생 회귀는
+EAST의 결측 전자온도를 채우며~\citep{Wang2025TimeSeries}, FusionMAE는 HL-3의
+88개 채널에서 마스킹 채널 ``가상 백업 진단''을
+수행한다~\citep{Yang2026FusionmaeSelfsupervised}. 우리 프레이밍에 가장 가까운
+것으로, Diag2Diag는 DIII-D에서 다른 동시각 진단들로부터 Thomson 산란
+$T_e$/$n_e$를 요동 진단 속도로 합성하고
+~\citep{Jalalvand2025MultimodalSuperresolution}, COMPASS에서는 고속 복사
+진단으로부터 Thomson 프로파일의 시간 초해상이
+시연되었으며~\citep{Imrek2026TemporalSuperresolution}, PanoMHD는 제어를 위해
+인과 트랜스포머로 멀티모달 신호 동역학을
+모델링한다~\citep{Noh2026PanomhdMultimodal}. 본 연구는 이 계열과 네 가지
+축에서 다르며, 각 축은 인용 논문들의 명시된 범위에서 확인 가능하다:
+(i) \emph{타겟 채널}---이 계열의 모든 구성원은 전자 물리량 또는 일반 조밀
+채널을 재구성하고(\citealp{Jalalvand2025MultimodalSuperresolution}과
+\citealp{Imrek2026TemporalSuperresolution}의 Thomson $T_e$/$n_e$,
+\citealp{Wang2025TimeSeries}의 ECE형 $T_e$,
+\citealp{Yang2026FusionmaeSelfsupervised}의 임의 마스킹 채널), CER/CES가
+등장하는 경우에도 어디까지나
+\emph{입력}이며~\citep{Jalalvand2025MultimodalSuperresolution} 희소 타겟이
+아니다; (ii) \emph{인과성}---Diag2Diag와 COMPASS 연구는 기억 없는 동시각
+매핑이고 FusionMAE는 윈도 내 재구성인 반면, 우리 모델은 타겟 자신의 불규칙한
+과거에 조건화되며 미래를 절대 읽지 않는다; (iii) \emph{평가 기준}---어느
+것도, 결측 채움에서 현직 방법인 타겟 채널의 \emph{미래 사용} 보간을,
+사전등록된 shot 군집 프로토콜로 이겨야 할 기준선으로 세우지 않는다;
+(iv) \emph{정보 분석}---재구성 가능성이 타겟별로 검정되지 않고 가정되는 반면,
+\Ti$\leftrightarrow$\Vrot{} 비대칭은 우리의 중심 발견이다. 조사한 문헌
+내에서 어느 장치에서도 희소 CXRS 이온 측정의 인과적 시간 결측 채움은 찾지
+못했다; 이는 우리의 문헌 조사 결과로서 진술하는 것이지, 그러한 시도가
+존재하지 않는다는 주장이 아니다.
+
+\paragraph{불규칙 시간·마스킹 멀티태스크 학습.}
+본 설계는 불규칙 시계열 문헌의 표준 재료---관측 마스크와 감쇠 인지 순환
+(GRU-D~\citep{Che2018RecurrentNeural}), 연속시간 임베딩 위 어텐션
+(mTAN~\citep{Shukla2021MultitimeAttention}), 잠재 ODE
+동역학~\citep{Rubanova2019LatentOrdinary}---과 부분 라벨 멀티태스크
+학습~\citep{Caruana1997MultitaskLearning}, 후기 융합 멀티모달
+구조~\citep{Ngiam2011MultimodalDeep,Baltruaitis2018MultimodalMachine},
+pre-LayerNorm 트랜스포머~\citep{Xiong2020LayerNormalization}, 어텐션
+풀링~\citep{Ilse2018AttentionbasedDeep}을 차용한다. ``나우캐스팅'' 프레이밍은
+기계학습 기상 예보에서의 용법을
+따른다~\citep{Shi2015ConvolutionalLstm,Ravuri2021SkilfulPrecipitation}.
+새로움은 개별 재료가 아니라, 물리적으로 불리한 평가 프로토콜 아래에서의 누수
+방지 조합에 있다.
+
+% =========================================================================
+\section{데이터와 문제 설정}
+\label{sec:data}
+
+\subsection{데이터셋}
+하드웨어 일관성을 위해 캠페인 \#24000--\#33000에서 우선 선정한 641개 KSTAR
+방전(shot) 파일을 사용하며, H-mode ELM 억제(RMP) 구간을 타겟으로
+D$_\alpha$ 활동 구간 주변 $\sim$100\,ms 세그먼트를 절단한다. 모든 신호는 공통
+10\,ms 격자에 정렬된다. 각 행은 BES~\citep{Nam2012AnalysisEdge} 9채널,
+ECEI~\citep{Yun2010DevelopmentKstar} 4채널, Mirnov 코일 2채널, 시간, 그리고 두
+CES 타겟 \Ti{}, \Vrot{}~\citep{Ko2010ChargeExchange}을 제공한다. 이 격자에서
+\Ti{}는 약 8\%, \Vrot{}은 약 24\%의 행에서 독립적으로
+결측된다(그림~\ref{fig:missing}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.72\linewidth]{fig_missing}
+  \caption{10\,ms 격자에서의 CES 결측 구조. \Ti{}와 \Vrot{}은 독립적으로
+  결측되며($\approx$8\% / $\approx$24\%), 행 필터링이 아닌 타겟별 마스킹을
+  요구한다.}
+  \label{fig:missing}
+\end{figure}
+
+\subsection{샘플 구성}
+이력 윈도 $W{=}4$의 타겟 인덱스 $t$ 학습 샘플은 \texttt{bes} $(W,9)$,
+\texttt{ecei} $(W,4)$, \texttt{mc} $(W,2)$, \texttt{time\_features} $(W,4)$,
+\texttt{ces\_history} $(W,4)$, 정규화 타겟 $[\Ti,\Vrot]\in\mathbb{R}^2$,
+타겟별 관측 마스크 $m\in\{0,1\}^2$로 구성된다. 네 개의 시간 특징---lookback
+초, 행간 delta 초, 그리고 각각의 $\log(1{+}x)$ 변환---은 불규칙 관측 패턴을
+모델에 명시적으로 노출한다: 과거 CES 값의 신뢰도는 그것이 10\,ms 전 값인지
+200\,ms 전 값인지에 강하게 의존한다. CES 이력의 네 채널은 직전 정규화 \Ti{},
+직전 정규화 \Vrot{}, 그리고 타겟별 관측 플래그이다(두 타겟이 독립적으로
+결측되므로 관측 여부는 타겟별로 추적해야 한다).
+
+\subsection{설계 원칙}
+\begin{description}
+  \item[가짜 라벨 금지.] 학습 행을 만들기 위해 타겟을 대체(impute)하지 않는다.
+  행은 진단 입력이 완전하고 CES 타겟 중 \emph{적어도 하나}가 실제로 관측된
+  경우에만 유지된다.
+  \item[타겟별 마스킹 손실.] 손실은 타겟별로 마스킹된다:
+  $\mathcal{L} = \sum_{k\in\{\Ti,\Vrot\}} m_k\,(\hat{y}_k-y_k)^2 / \sum_k m_k$.
+  한 타겟만 관측된 행도 그 타겟은 학습에 기여한다. 이전의 두-타겟-필수 필터는
+  라벨 행의 $\approx$28\%를 조용히 버렸다; 이를 제거한 것은 순수한 데이터
+  이득이다.
+  \item[누수 방지.] (i) \emph{파일 단위 분할}: 한 shot 내 인접 행은 강하게
+  자기상관되므로 분할은 shot 파일 단위로 이루어지고 디스크에 고정된다;
+  (ii) \emph{학습 파일 전용 정규화}: 모든 $z$-score 통계(희소 타겟은
+  NaN-인지)는 학습 파일에서만 추정된다; (iii) \emph{타겟 시점 마스킹}:
+  \texttt{ces\_history}에서 타겟 시점의 값과 관측 플래그를 \emph{모두} 0으로
+  만들어, 모델이 자신의 정답을 읽을 수 없게 한다.
+\end{description}
+
+\subsection{데이터 품질 감사: 유지(forward-fill)된 \Vrot{} 값}
+\label{sec:stuck}
+후반 감사에서 \textbf{관측된 \Vrot{} 값의 54\%가 계기 유지값}임이 밝혀졌다:
+같은 연속 시간 블록 안에서 직전 관측과 비트 단위로 동일한 반복(최대 1{,}214행
+연속, 641개 중 499개 파일 영향)이다. \Vrot{}의 고유 측정 주기가 행 주기보다
+느려 값이 이월된 것으로, 독립적인 측정이 아니다. \Ti{}는 영향이 없다(0.0\%).
+통제된 A/B 재학습 결과 학습은 오염되지 \emph{않았다}---학습 시 유지값을
+마스킹해도 진짜 측정 성능이 개선되지 않고(오히려 약간 저하), 유지값은 무해한
+persistence 사전 역할을 한다---따라서 유지값은 학습에는 남기되 \emph{평가에서
+제외}한다. 이 보정으로 보고되는 물리 단위 \Vrot{} RMSE는 35--55\% 커진다
+(원시 단위 22--33 $\rightarrow$ 35--46). 유지 타겟의 기준선 오차가 0에
+가까웠기 때문이다. 이하 모든 결론은 보정된(진짜 측정만의) 평가를 사용하며,
+\Ti{} 헤드라인은 이 보정에 영향받지 않는다.
+
+% =========================================================================
+\section{모델}
+\label{sec:model}
+
+예측기는 소형(100만 파라미터 미만) 후기 융합 네트워크다. 이 문제의 병목은
+용량이 아니라 일반화다.
+
+\paragraph{진단별 인코더.}
+각 모달리티(BES, ECEI, MC)는 시간 특징·이력과 함께 처리되는 전용 시간 인지
+1-D CNN으로 인코딩되며, 융합 전까지 각 진단의 채널 구조를 보존한다. 결측
+제거로 유효 샘플링이 불규칙해져 균일 시간 간격을 가정하는 순환 구조가
+부적합하므로 CNN을 택했다.
+
+\paragraph{이력 인코더.}
+CES 이력은 학습된 위치 임베딩을 갖춘 2층 pre-LayerNorm
+트랜스포머~\citep{Xiong2020LayerNormalization}와 \emph{멀티헤드 어텐션
+풀링}~\citep{Ilse2018AttentionbasedDeep}으로 인코딩되어, 어텐션 가중 평균과
+가중 표준편차를 함께 출력한다. 후자는 ``최근 이력이 국소적으로 얼마나
+변동하는가''를 드러내며, \S\ref{sec:peak}는 바로 그곳에서 모델이 우위를
+얻음을 보인다. (마스킹된) 타겟 시점과 관측 이웃들 사이의 self-attention은
+학습된 보간과 유사한 연산을 수행하며, 타겟별 관측 이웃 바이어스를 갖는다.
+
+\paragraph{물리 기반 타겟별 라우팅.}
+\Ti{} 헤드는 고속 진단+시간+이력을 융합하지만, \Vrot{} 헤드는 \emph{이력과
+시간만} 융합하고 고속 진단을 의도적으로 배제한다. 절제
+실험(\S\ref{sec:asym})이 고속 진단에 10\,ms에서 쓸 만한 회전 정보가 없음을
+보이기 때문이다. 각 타겟은 자체 pre-LayerNorm MLP 헤드를 갖고, 출력은 정규화
+단위로 유지된다(역정규화는 평가에서만 수행).
+
+\paragraph{탐색에서 얻은 교훈.}
+$\sim$40회의 통제된 아키텍처 반복에서, pre-LayerNorm이 안정성의
+전환점이었고(검증 손실 $0.89\!\to\!0.49$), 어텐션 풀링이 가장 신뢰할 만한
+단일 개선이었으며, 공격적 용량 확장·복잡한 스킵 위상·추가 합성곱 추출기는
+일관되게 held-out 성능을 개선하지 못했다.
+
+% =========================================================================
+\section{평가 방법론}
+\label{sec:eval}
+
+\paragraph{지표.}
+모든 오차는 물리 CES 단위로 역정규화되어 타겟별로 계산된다. 1차 점수는
+사전등록된 헤드라인 기준선에 대한 Murphy skill~\citep{murphy1988},
+$\skillp = 1 - \mathrm{MSE}_{\mathrm{model}}/\mathrm{MSE}_{\mathrm{PCHIP}}$
+(양수 = 모델 우위; 0 = 동률)이다. 모든 팔(모델과 모든 기준선)은 동일한
+(파일, 행) 샘플 집합에서 동일한 타겟별 유지 마스크로 채점된다. 보간은 타겟
+자신의 값을 제외하며(누수 없음), $\geq 0.5$\,s 간극은 보간을 거부하고
+persistence로 후퇴한다.
+
+\paragraph{3분할; 선택은 TEST를 보지 않는다.}
+파일들은 train/val/test로 분할된다. test 셋은 아키텍처 탐색 \emph{이전에}
+예약되었고 탐색 루프가 절대 읽지 않으므로, 헤드라인 수치에는 선택 편향
+(winner's curse)이 없다. 표준 test 셋은 96개 shot의 34{,}644개 채점 샘플을
+담는다(관측 $n$: \Ti{} 32{,}716, \Vrot{} 27{,}437).
+
+\paragraph{사전등록.}
+test 수치를 보기 전에 네 규칙을 문서로 고정했다:
+\textbf{PR1} 헤드라인 비교 대상은 PCHIP(과도 현상에서의 단조성·무진동을
+근거로 사전 선택; 사다리 전체 \{persistence, 선형, PCHIP, AR\}도 보고);
+\textbf{PR2} 보간은 모델이 채점되는 모든 곳에서 예측하며, 미래 이웃이 없으면
+persistence로 후퇴(모집단 축소 없음);
+\textbf{PR3} test 셋 최소 규모($\geq$15 shot, $\geq$3{,}000 관측 \Ti{} 샘플;
+충족);
+\textbf{PR4} 유의성은 skill에 대한 shot 군집 bootstrap 95\% CI가 0을 제외하는
+것으로 정의.
+
+\paragraph{Shot 군집 paired bootstrap.}
+한 방전 내 인접 CES 행은 강하게 상관된다. 샘플을 독립으로 취급하면
+불확실성이 크게 과소평가된다. 샘플별 짝지은 오차
+$\mathrm{SE}_{\mathrm{model}}-\mathrm{SE}_{\mathrm{PCHIP}}$를 shot 단위로
+집계하고, shot 전체를 복원추출로 재표본한다(10{,}000회, 고정 시드). 얻어진
+CI는 진짜 shot 간 일반화를 반영한다. 대가는 유효 표본 크기가 shot
+수($\approx$96)가 된다는 것이며, 이것이 전체 유의성 판정의 검정력을 제한한다.
+
+\paragraph{정직한 주의(MNAR).}
+진짜 결측 시점에는 참값이 없으므로 skill은 \emph{관측된} 시점을 가려 측정한다.
+CES 결측은 MNAR이므로(저신호, ELM, 천이에서 탈락) 관측 시점 skill은 진짜 결측
+시점 성능의 \emph{낙관적 상한}이다. 우리는 이를 숨기지 않고 명시한다.
+
+% =========================================================================
+\section{결과}
+\label{sec:results}
+
+\subsection{모델은 모든 인과 기준선을 압도한다}
+표~\ref{tab:ladder}는 표준 test 분할에서의 물리 단위 RMSE 사다리를 보여준다.
+모델은 두 타겟 모두에서 최저 RMSE를 가지며, 인과 기준선---persistence와 과거
+전용 AR, 즉 실시간에서 실제로 사용 가능한 모든 것---을 큰 차이로 이긴다. 이는
+본 논문에서 가장 강건한 결과다: 미래 CES가 정의상 없는 온라인 환경에서 모델은
+명백한 승자다.
+
+\begin{table}[t]
+  \centering
+  \caption{표준 held-out test 분할의 물리 단위 RMSE 사다리(개선 전 기준
+  모델; 최종 모델은 더 개선됨, \S\ref{sec:headline} 참조). 낮을수록 좋다. 이
+  표의 \Vrot{} RMSE는 \S\ref{sec:stuck}의 유지값 보정 이전 수치이며, 보정된
+  진짜 측정만의 \Vrot{} RMSE는 35--46이다.}
+  \label{tab:ladder}
+  \small
+  \begin{tabular}{llrr}
+    \toprule
+    팔 & 정보 접근 & \Ti{} RMSE & \Vrot{} RMSE \\
+    \midrule
+    \textbf{모델 (나우캐스터)} & 고속 진단 + 과거 CES & \textbf{412.4} & \textbf{23.2} \\
+    선형 보간 & 과거 + 미래 CES & 422.7 & 24.0 \\
+    PCHIP 보간 & 과거 + 미래 CES & 431.8 & 24.5 \\
+    Persistence & 마지막 관측 CES & 487.3 & 27.8 \\
+    AR (국소, 인과) & 과거 CES만 & 1005.7 & 57.2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig_rmse_ladder}
+  \caption{\emph{최종} 모델(시드 42, test 분할)의 RMSE 사다리: 인과 모델이 두
+  타겟 모두 최저 RMSE를 달성하여 인과 기준선을 결정적으로 이기고, 미래를 쓰는
+  보간도 점추정에서 앞선다. 표~\ref{tab:ladder}는 초기 기준 모델의 동일
+  사다리로, 절대값이 다른 이유다.}
+  \label{fig:ladder}
+\end{figure}
+
+\subsection{헤드라인: \Ti{}는 4개 독립 분할에서 미래를 쓰는 보간을 이긴다}
+\label{sec:headline}
+최종 아키텍처(GRU 이력 인코더 + 타겟별 멀티헤드 어텐션 헤드, $W{=}4$;
+\S\ref{sec:automl}의 탐색 루프가 검증 skill만으로 선택)로 \emph{독립적인} 4개
+held-out test 분할(시드 42, 1, 7, 123; 뒤의 셋은 어떤 선택 단계에도 사용되지
+않음)을 평가했다:
+
+\begin{itemize}
+  \item \textbf{\Ti{}: 4개 분할 모두 PASS.}
+        $\skillp = +0.270$ (95\% CI $[+0.144, +0.364]$), $+0.200$, $+0.271$,
+        $+0.295$; 모든 shot 군집 CI가 PCHIP과 선형 모두에 대해 0을 제외한다.
+        진짜 측정만의 재평가에서도 생존한다
+        ($+0.225/+0.204/+0.285/+0.288$, 모두 PASS).
+  \item \textbf{\Vrot{}: 어느 분할에서도 유의하지 않음.} 점추정은 양수지만
+        모든 CI가 0을 포함한다. 우리는 승리가 아니라 동률을 주장한다.
+\end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.78\linewidth]{fig_forest}
+  \caption{4개 독립 held-out 분할에서 shot 군집 95\% CI와 함께 나타낸
+  $\skillp$의 포레스트 플롯. \Ti{}는 4개 모두에서 0을 제외; \Vrot{}은 하나도
+  제외하지 못한다.}
+  \label{fig:forest}
+\end{figure}
+
+정직한 진행 기록: 초기 기준 모델은 유의하지 \emph{않았다}(단일 분할,
+$+0.088$, n.s.). 아키텍처 탐색의 선택 게이트를 검증 손실에서 깨끗한 보간 대비
+skill로 바꾼 것이 최종 모델을 낳았고, 이것이 4개 분할 모두에서 유의하다
+(그림~\ref{fig:progression}). 두 단계를 모두 보고한다.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\linewidth]{fig_progression}
+  \caption{비유의(기준 모델, $+0.088$ n.s.)에서 유의(최종 모델,
+  $+0.20$--$+0.30$, PASS $\times$4)로: 결정적 변화는 검증 손실이 아닌 깨끗한
+  skill로 아키텍처를 선택한 것이었다.}
+  \label{fig:progression}
+\end{figure}
+
+\subsection{skill이 사는 곳: 작은 간극이 지배한다}
+마지막 관측 CES 이후 경과 시간으로 층화하면, 실제 타겟의 $\geq$97\%가 작은
+간극 영역($\Delta t \leq 15$\,ms)에 있으며 거기서 모델이 이긴다(표준 분할에서
+PCHIP 대비 \Ti{} $+0.08$, \Vrot{} $+0.23$). 매우 큰 간극($>$105\,ms)에서는
+미래 앵커를 가진 보간이 압도하지만, 해당 구간의 표본은 수십 개에 불과하고
+구간별 CI도 없어 결론을 지탱하지 않는다. 검정력이 확보된 유일한 비교---작은
+간극, 즉 나우캐스팅이 실제로 필요한 곳---는 모델의 손을 들어준다.
+
+\subsection{\Ti$\leftrightarrow$\Vrot{} 정보 비대칭}
+\label{sec:asym}
+통제된 입력 모달리티 절제(동일한 학습 예산; 한 번에 한 모달리티 그룹을 0으로;
+persistence는 항상 실제 이력에서 계산)는 두 타겟이 다르게 행동하는
+\emph{이유}를 설명한다(표~\ref{tab:ablation}, 그림~\ref{fig:ablation}).
+
+\begin{table}[t]
+  \centering
+  \caption{입력 모달리티 절제(검증 분할, persistence 대비 skill, 물리 단위).
+  고속 진단 단독은 진짜 \Ti{} 정보를 운반하지만 \Vrot{}에는 파국적으로
+  무정보하다.}
+  \label{tab:ablation}
+  \small
+  \begin{tabular}{lrr}
+    \toprule
+    모델 입력 & \Ti{} skill & \Vrot{} skill \\
+    \midrule
+    전체 (이력 + 고속 + 시간) & $+0.36$ & $+0.18$ \\
+    이력만 (\emph{no fast}) & $+0.39$ & $+0.23$ \\
+    고속 진단만 (\emph{no history}) & $+0.16$ & $-3.31$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig_ablation}
+  \caption{모달리티 절제: 고속 진단 단독은 \Ti{}에서 persistence를 이기지만
+  \Vrot{}에서는 평균보다 훨씬 나쁘다 --- 정보 비대칭.}
+  \label{fig:ablation}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{\Ti{}: 고속 진단이 진짜 정보를 운반한다.} 고속 단독으로도
+        persistence를 이긴다($+0.16$). 물리적 채널은 충돌성 전자--이온 결합
+        ($t_{ei}\propto T_e^{3/2}/n_e$)이다: ECEI가 $T_e$를, BES가 $n_e$ 구조를
+        공급한다.
+  \item \textbf{\Vrot{}: 정보가 거의 전적으로 CES 이력에 있다.} 고속 단독은
+        $-3.31$(평균 예측보다 나쁨)이다. 토로이달 회전은 우리 입력이 관측하지
+        못하는 운동량 소스---외부 NBI 토크와 고유(intrinsic) 회전
+        구동~\citep{Rice2007IntermachineComparison}---이 지배하며, Mirnov
+        신호는 100\,Hz로 샘플되어 회전을 대리할 수 있었을 kHz 모드 회전
+        주파수가 앨리어싱으로 사라진다.
+\end{itemize}
+
+이 비대칭은 절제 이전에 물리로 예측되었고 절제로 확인되었다. \Vrot{}의
+비-승리는 모델 실패가 아니라 진단 정보 내용에 관한 발견이며,
+\S\ref{sec:model}의 타겟별 라우팅을 동기화한다.
+
+\subsection{우위는 고변동 국소 구간에 집중된다}
+\label{sec:peak}
+타겟과 무관한 입력 측 국소 활동 대리변수(타겟 행을 \emph{제외}하고 계산한 큰
+이웃 괄호 기울기 및/또는 높은 국소 CES 이웃 분산)로 평가를 ``피크''(고활동)와
+벌크 영역으로 나누면(검증 분할, shot 군집 CI; 그림~\ref{fig:peak}):
+
+\begin{itemize}
+  \item \Ti{}: 전역 $+0.52$ $\rightarrow$ 피크 $\mathbf{+0.86}$
+        (CI $[+0.66, +0.93]$, PASS). 보간은 매끄러운 벌크에서 거의 최적이고,
+        모델의 가치는 활동 구간에 있다.
+  \item \Vrot{}: 전역 $+0.24$ $\rightarrow$ 피크 $\mathbf{+0.69}$
+        (CI $[+0.11, +0.87]$, PASS, 세 가지 민감도 설정에서 강건하나 하한이
+        얇음). 따라서 비대칭은 \emph{지역적}이다: 전역적으로 \Vrot{}은 보간과
+        동률이지만, 매끄러운 과거+미래 보간이 가장 나쁜 고활동 구간에서는
+        이력 기반 \Vrot{} 예측기도 가치를 더한다. 이는 낙관 주의가 붙는 검증
+        분할에서의 지역적 강점으로 보고하며, 전역 영결과의 반전이 아니다.
+  \item 피크 한정 절제(BES/ECEI/MC를 0으로)는 \Ti{}를 유의하게 해치지만
+        (짝지은 차이 CI $\gg 0$) \Vrot{}은 불변이다: \Ti{} 피크 우위는 실제로
+        멀티모달 신호를 사용하고, \Vrot{} 피크 우위는 이력 기반이다.
+\end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.78\linewidth]{fig_peak}
+  \caption{전역 대 고변동(``피크'') skill과 shot 군집 95\% CI. 보간이 가장
+  약한 곳에 모델의 우위가 집중되며, \Vrot{}은 전역 동률에도 불구하고 피크에서
+  통과한다.}
+  \label{fig:peak}
+\end{figure}
+
+% =========================================================================
+\section{탐색 방법: LLM 기반 keep/discard 루프}
+\label{sec:automl}
+
+최종 아키텍처는 LLM이 연구자 역할을 맡는 자동 연구 루프
+(autoresearch식 keep/discard 프로토콜에서 영감)로 발견되었다. 각 반복은:
+(i) 현재 제안을 스모크 검증하고 완전 학습한다; (ii) \emph{깨끗한, 비증강}
+검증 $\skillp$로 채점한다---증강 검증 손실은 절대 쓰지 않고, 어떤 test 분할도
+쓰지 않는다; (iii) 최고 점수를 갱신하면 \textbf{유지(keep)}, 아니면
+\textbf{폐기(discard)}하고 \texttt{model.py}를 최고 스냅숏으로 되돌린다;
+(iv) 실행 이력, 제안이 보존해야 하는 하드 데이터 계약(인터페이스, 마스킹,
+누수 규칙), 누적 프로젝트 지식을 LLM에 브리핑하고 \emph{하나의 통제된 변경}을
+요청한다. 따라서 루프는 절대 회귀 위에 쌓지 않으며, 학습 실패는 증거가 아닌
+수리 신호로 취급된다. 이 루프의 구체적 기여는
+그림~\ref{fig:progression}의 비유의$\to$유의 진행이다. 우리는 이를 과학적
+기여가 아닌 재현성 인프라로 문서화한다.
+
+% =========================================================================
+\section{한계}
+\label{sec:limits}
+
+\textbf{통계적 검정력.} 재현 단위는 shot이며, test에 $\approx$96(\Ti) /
+91(\Vrot)개뿐이다. 검정력이 모든 유의성 판정을 제한하고, shot별 제곱오차
+차이는 두꺼운 꼬리를 가진다(소수의 방전이 bootstrap 산포를 지배).
+\textbf{MNAR 낙관성.} skill은 관측 시점에서만 측정되며, 진짜 결측 시점은 더
+어려울 수 있다.
+\textbf{지표 비대칭.} 보간은 shot 전체 이웃을 쓰는 반면 모델은 $W{=}4$ 이력만
+본다. 의도적으로 모델에 불리한 설계지만 해석을 복잡하게 한다.
+\textbf{단일 아키텍처와 윈도.} $W$와 아키텍처에 대한 민감도는 특성화되지
+않았다.
+\textbf{큰 간극 구간}은 수십 개의 표본과 CI 부재로 신뢰할 수 없다.
+\textbf{범위.} 페데스탈-상단 프레이밍은 데이터 선택(페데스탈-상단 CES 채널)
+에서 상속된 것이며, 반경 방향 의존성 실험은 수행하지 않았다. 이벤트 위상
+분석(ELM 주기, L--H 천이)은 향후 과제다---\S\ref{sec:peak}의 고변동 분석은
+이벤트 불특정 대리 분석이다.
+
+% =========================================================================
+\section{결론}
+\label{sec:conclusion}
+
+우리는 희소한 KSTAR CES 타겟을 위한 인과적·누수 방지 멀티모달 나우캐스터를
+구축하고, 의도적으로 불리한 기준선---미래를 보는 보간---에 대해 사전등록된
+shot 군집 프로토콜로 평가했다. 모델은 모든 인과 기준선을 결정적으로 이긴다.
+이온온도에 대해서는 미래를 쓰는 PCHIP 보간도 유의하고 재현된 skill
+($+0.20$--$+0.30$; 4개 독립 분할)로 이기는 반면, 토로이달 회전은 물리적으로
+규명된 이유---고속 진단이 10\,ms에서 회전 정보를 운반하지 않음---로 보간과
+동률이다. 우위는 결측 채움이 실제로 중요한 곳, 즉 작은 간극과 고변동 구간에
+정확히 집중된다. 헤드라인 너머로, 본 연구는 보정된 \Vrot{} 평가(54\% 계기
+유지값), 정보 비대칭 절제, LLM 기반 keep/discard 탐색 프로토콜을 기여한다.
+향후 과제는 검정력 한계 해소(더 많은 test shot, 다중 캠페인 데이터), 고속
+진단 정보의 한계 가치가 최대인 영역을 분리하는 bracket-distance 층화, 피크
+가중 학습, 그리고 이력을 더 잘 활용하는 회전 측 개선이다---센서를 늘리는
+것으로는, 입증된 바와 같이, 이 시간 규모에서 \Vrot{}을 도울 수 없기 때문이다.
+
+% =========================================================================
+\subsubsection*{재현성}
+분할은 디스크에 고정되고 재로드 시 검증된다; 정규화 통계는 학습 파일
+전용이다; 탐색 루프는 test 데이터를 읽지 않는다; bootstrap은 고정 시드와
+10{,}000회 재표본을 쓴다; 모든 헤드라인 수치는 동결된 평가 산출물에서 읽는다.
+코드와 평가 산출물은 투고와 함께 제공되며, 공개 저장소 링크는 camera-ready에
+삽입한다.
+% TODO(user): 투고 전 저장소/DOI 링크 삽입
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\end{document}

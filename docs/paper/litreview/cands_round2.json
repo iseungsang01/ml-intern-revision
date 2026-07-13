@@ -1,0 +1,14 @@
+[
+ {
+  "title": "Magnetic diagnostics for the KSTAR tokamak",
+  "year": 2008,
+  "reason": "KSTAR magnetic (Mirnov) diagnostics instrument paper",
+  "section": "Targeted: KSTAR MC instrument"
+ },
+ {
+  "title": "Inter-machine comparison of intrinsic toroidal rotation in tokamaks",
+  "year": 2007,
+  "reason": "Rice et al. \u2014 rotation physics reference (NBI torque / intrinsic rotation)",
+  "section": "Targeted: rotation physics"
+ }
+]

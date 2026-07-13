@@ -1,0 +1,63 @@
+[
+  {
+    "citation_key": "Noh2026PanomhdMultimodal",
+    "title": "PanoMHD: Multimodal Modelling of Plasma Dynamics towards Tokamak Control",
+    "authors": [
+      "HyeongJun NOh",
+      "Chweeho Heo",
+      "Xiaotian Gao",
+      "Yong-Su Na"
+    ],
+    "venue": "ArXiv.org",
+    "year": 2026,
+    "abstract": "Modelling the dynamics of complex physical systems is a fundamental challenge, particularly where nonlinear dynamics and multi-scale interactions render traditional simulations computationally prohibitive. Nuclear fusion plasma represents a complex system where accurately predicting the plasma state, encompassing both performance and stability, is a prerequisite for active control required for sustained energy production. However, existing approaches are limited in providing a comprehensive solution as they largely focus on predicting isolated indicators such as binary stability labels. To overcome this, we present Panoramic MagnetoHydroDynamics (PanoMHD), a self-supervised multimodal framework designed to model plasma dynamics. By utilising a causal Transformer operating on tokenised representations of multimodal physical signals, PanoMHD is able to model the dynamics of high-dimensional magnetic fluctuation signals, which serve as a direct signature of plasma stability. This shifts the prediction paradigm from isolated indicators to multimodal signals. We pioneer the direct prediction of magnetic fluctuation signals for the first time, and demonstrate that this comprehensive representation enables state-of-the-art performance on KSTAR nuclear fusion plant experimental data. Our model outperforms baselines in future plasma performance prediction ($R^2=0.987$ vs. $0.957$) and surpasses dedicated classifiers in the downstream classification of distinct plasma states (L/H mode)",
+    "has_abstract": true,
+    "citation_count": 0,
+    "found_in_section": "Keyword: Bak KSTAR magnetic sensor Mirnov integrator Review Scientific Instruments",
+    "reason": "",
+    "journal": "ArXiv.org",
+    "volume": null,
+    "pages": null,
+    "publication_date": "2026-03-03",
+    "doi": null,
+    "arxiv": null,
+    "match_ratio": 100.0,
+    "candidate_title": null
+  },
+  {
+    "citation_key": "Kim2021Optimization3d",
+    "title": "Optimization of 3D controlled ELM-free state with recovered global confinement for tokamak fusion plasmas",
+    "authors": [
+      "S.K. Kim",
+      "Ricardo Shousha",
+      "S.H. Hahn",
+      "Andrew Nelson",
+      "J. Wai",
+      "S.M. Yang",
+      "Jong-Kyu Park",
+      "R. Nazikian",
+      "Y.M. Jeon",
+      "Y. In",
+      "Jaehyun Lee",
+      "JaeWook Kim",
+      "ChanYoung Lee",
+      "Yong-Su Na",
+      "Egemen Kolemen"
+    ],
+    "venue": "Research Square",
+    "year": 2021,
+    "abstract": "Abstract Mitigation of deleterious heat flux from edge-localized modes (ELMs) on fusion reactors is often attempted with 3D perturbations of the confining magnetic fields. However, the established technique of resonant magnetic perturbations (RMPs) also degrades plasma performance, complicating implementation on future fusion reactors. In this paper, we introduce an adaptive real-time control scheme as a viable approach to simultaneously achieve both ELM-free states and recovered high-confinement (β N ~1.91$ and H N ~0.9), demonstrating successful handling of a volatile complex system through adaptive measures. We show that, by exploiting a salient hysteresis process to adaptively minimize the RMP strength, stable ELM suppression can be achieved while actively encouraging confinement recovery. This is made possible by a self-organized transport response in the plasma edge which reinforces the confinement improvement through a widening of the ion pedestal and promotes control stability, in contrast to the deteriorating effect on performance observed in standard RMP experiments. These results establish the real-time approach as an up-and-coming solution towards an optimized ELM-free state, which is an important step for the operation of ITER and reactor-grade tokamak plasmas. Notably, the real-time adaptive control scheme introduced here provides a path towards economic fusion reactors by maximizing the fusion gain while minimizing damage to machine components.",
+    "has_abstract": true,
+    "citation_count": 0,
+    "found_in_section": "Keyword: Bak KSTAR magnetic sensor Mirnov integrator Review Scientific Instruments",
+    "reason": "",
+    "journal": "Research Square",
+    "volume": null,
+    "pages": null,
+    "publication_date": "2021-07-26",
+    "doi": "10.21203/rs.3.rs-713840/v1",
+    "arxiv": null,
+    "match_ratio": 100.0,
+    "candidate_title": null
+  }
+]
