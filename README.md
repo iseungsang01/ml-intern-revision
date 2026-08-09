@@ -317,8 +317,11 @@ CLAUDE.md
   - how to work in this repo: commands, the data/model contract, agreements
 
 RESEARCH_CONTEXT.md
-  - single-file handoff digest of the whole research: claim, data, contract,
-    results, the experiment ledger, methodology traps, framing rules, open items
+  - what you need to UNDERSTAND the experiments: the claim, the data's real
+    artifacts, the sample contract, the evaluation protocol, the results, the
+    experiment ledger, how to read a number, limitations, open questions
+  - no operational content (commands, env vars, artifact inventory) -- that is
+    CLAUDE.md and this README
   - DERIVED, never the origin of a fact -- the three files above win on conflict
 ```
 
