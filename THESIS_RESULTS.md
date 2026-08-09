@@ -1534,7 +1534,17 @@ in `main.tex` / `main_ko.tex`; executed plan docs; literature-search intermediat
 kept, moved to `docs/paper/`); tracked `.omc/` scratch; LaTeX build artifacts. **§8e keeps the CT
 verdict** — the record, not the code, is what stops a re-run at `W = 4`.
 
-**Papers rebuilt**: `main.pdf` 23 pp, `main_ko.pdf` 22 pp, both 0 errors / 0 unresolved references /
+**Availability statements written.** The repository is public, so "the link will be inserted at
+camera-ready" was replaced with the actual URL, and the two papers now carry separate **Code
+availability** and **Data availability** sections. The data statement is deliberately narrow: the
+641 shot files (30801–32751) are KSTAR experimental data governed by the operating institution's
+policy and are *not* redistributed here, while the repo ships everything else needed to reproduce
+the analysis once they are in place (split manifests, per-run env, per-sample squared-error
+archives). Still open and **the user's calls, not ours**: target venue, co-authors/advisor, and an
+archival DOI (a Zenodo mint needs their account) — the DOI is the one remaining `TODO(user)` in
+either `.tex`.
+
+**Papers rebuilt**: `main.pdf` 24 pp, `main_ko.pdf` 22 pp, both 0 errors / 0 unresolved references /
 6 figures. The Korean build's three long-standing `Improper alphabetic constant` errors were
 root-caused and fixed: `article.cls` typesets `\@author` inside a `tabular`, and a Hangul character
 directly before `\\` breaks the row-break's optional-argument lookahead under xeCJK. Ending that

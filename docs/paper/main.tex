@@ -1463,9 +1463,26 @@ and an architecture-selection protocol gated on clean interpolation-relative ski
 Splits are pinned to disk and verified on reload; normalization statistics are
 train-file-only; model selection never reads test data; bootstrap uses a fixed
 seed and 10{,}000 resamples; all headline numbers are read from frozen evaluation
-artifacts. Code and evaluation artifacts accompany the submission; the public
-repository link will be inserted at camera-ready.
-% TODO(user): insert repository/DOI link here before submission
+artifacts.
+
+\subsubsection*{Code availability}
+The full pipeline, the controlled-experiment runners behind every result reported
+here, the pinned train/validation/test splits, and the collector that regenerates
+every quoted number from the frozen evaluation artifacts are openly available at
+\url{https://github.com/iseungsang01/ml-intern-revision}. The published
+architecture is committed as \texttt{ces\_prediction/model\_iter009.py} and guarded
+by a content hash in the test suite, so the code that produced these numbers cannot
+drift from the code that is released.
+% TODO(user): mint an archival DOI (e.g. Zenodo) for the submitted revision and cite it here.
+
+\subsubsection*{Data availability}
+The KSTAR diagnostic data underlying this study --- 641 discharges, shots
+30801--32751 --- are not redistributed with the code. They are experimental data of
+the KSTAR device and are governed by the operating institution's data policy;
+access requests should be directed there. The repository contains everything needed
+to reproduce the analysis once the shot files are in place: the exact file-level
+split manifests, the environment configuration for every reported run, and the
+per-sample squared-error archives from which the bootstrap statistics are computed.
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}

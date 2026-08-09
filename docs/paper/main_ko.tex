@@ -1342,9 +1342,22 @@ $1.22\,\sigma$이기 때문이다(\S\ref{sec:campaign}). 이와 함께 본 연�
 분할은 디스크에 고정되고 재로드 시 검증된다; 정규화 통계는 학습 파일
 전용이다; 모델 선택은 test 데이터를 읽지 않는다; bootstrap은 고정 시드와
 10{,}000회 재표본을 쓴다; 모든 헤드라인 수치는 동결된 평가 산출물에서 읽는다.
-코드와 평가 산출물은 투고와 함께 제공되며, 공개 저장소 링크는 camera-ready에
-삽입한다.
-% TODO(user): 투고 전 저장소/DOI 링크 삽입
+
+\subsubsection*{코드 공개}
+전체 파이프라인, 본 논문의 모든 결과를 만든 통제 실험 러너, 고정된
+학습/검증/test 분할, 그리고 인용된 모든 수치를 동결 산출물에서 재생성하는
+수집기를 \url{https://github.com/iseungsang01/ml-intern-revision}에 공개한다.
+출판 아키텍처는 \texttt{ces\_prediction/model\_iter009.py}로 커밋되어 있고
+테스트가 내용 해시로 고정하므로, 이 수치를 만든 코드와 공개된 코드가 어긋날 수
+없다.
+% TODO(user): 투고본에 대한 아카이브 DOI(예: Zenodo)를 발급해 여기에 인용
+
+\subsubsection*{데이터 공개}
+본 연구의 KSTAR 진단 데이터 --- 641개 방전, shot 30801--32751 --- 는 코드와 함께
+재배포하지 않는다. KSTAR 장치의 실험 데이터로서 운영 기관의 데이터 정책을 따르며,
+접근 요청은 해당 기관으로 해야 한다. 저장소에는 shot 파일이 확보된 뒤 분석을
+재현하는 데 필요한 것이 모두 들어 있다: 파일 단위 분할 manifest, 보고된 모든 run의
+환경 설정, 그리고 bootstrap 통계를 계산하는 샘플별 제곱오차 아카이브.
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
