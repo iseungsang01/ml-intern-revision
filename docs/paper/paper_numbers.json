@@ -1,0 +1,4112 @@
+{
+  "_source": "frozen evaluation artifacts under data/ (no retraining, no re-scoring)",
+  "_treatments": {
+    "genuine": "held/forward-filled V_rot excluded from scoring (headline)",
+    "stuck0": "held values kept (historical convention; deflates V_rot RMSE)"
+  },
+  "headline": {
+    "genuine": {
+      "per_seed": {
+        "42": {
+          "eval_samples": 33693,
+          "CES_TI": {
+            "n": 32787,
+            "rmse_model": 407.03411865234375,
+            "rmse": {
+              "persistence": 504.2927796191071,
+              "linear": 440.9625892865566,
+              "pchip": 449.26274889555793,
+              "ar_local": 2425.8531679585035
+            },
+            "skill_vs_pchip": 0.1791556213770179,
+            "future_neighbor_fraction": 0.9964384293473422,
+            "ci_vs_pchip": {
+              "skill": 0.17915562959038434,
+              "ci95": [
+                0.007015846886124538,
+                0.30171801849057595
+              ],
+              "pass": true,
+              "n_shots": 96
+            },
+            "ci_vs_linear": {
+              "skill": 0.14796359333090714,
+              "ci95": [
+                -0.02051267293696531,
+                0.26727051894528864
+              ],
+              "pass": false,
+              "n_shots": 96
+            }
+          },
+          "CES_VT": {
+            "n": 10729,
+            "rmse_model": 34.99040603637695,
+            "rmse": {
+              "persistence": 44.38984132112354,
+              "linear": 38.39276145200271,
+              "pchip": 39.18590718573837,
+              "ar_local": 91.49615566816118
+            },
+            "skill_vs_pchip": 0.20266992644574688,
+            "future_neighbor_fraction": 0.5647760662452141,
+            "ci_vs_pchip": {
+              "skill": 0.20266987643094603,
+              "ci95": [
+                -0.22544344592960336,
+                0.36177932744624164
+              ],
+              "pass": false,
+              "n_shots": 61
+            },
+            "ci_vs_linear": {
+              "skill": 0.16938593216584896,
+              "ci95": [
+                -0.23666159108455995,
+                0.3258785061663396
+              ],
+              "pass": false,
+              "n_shots": 61
+            }
+          }
+        },
+        "1": {
+          "eval_samples": 36734,
+          "CES_TI": {
+            "n": 35856,
+            "rmse_model": 447.7640075683594,
+            "rmse": {
+              "persistence": 574.0749402478654,
+              "linear": 490.5318087836427,
+              "pchip": 499.7105103957467,
+              "ar_local": 1339.3623161470714
+            },
+            "skill_vs_pchip": 0.19710016952889886,
+            "future_neighbor_fraction": 0.9969238307834704,
+            "ci_vs_pchip": {
+              "skill": 0.19710013230386159,
+              "ci95": [
+                0.09143003294270373,
+                0.27554670922580654
+              ],
+              "pass": true,
+              "n_shots": 94
+            },
+            "ci_vs_linear": {
+              "skill": 0.1667717133187293,
+              "ci95": [
+                0.06081358279139157,
+                0.24315782328947963
+              ],
+              "pass": true,
+              "n_shots": 94
+            }
+          },
+          "CES_VT": {
+            "n": 13660,
+            "rmse_model": 34.8272705078125,
+            "rmse": {
+              "persistence": 43.33655474210424,
+              "linear": 37.12763210608281,
+              "pchip": 38.04830614242683,
+              "ar_local": 82.22079279196942
+            },
+            "skill_vs_pchip": 0.16214627354867572,
+            "future_neighbor_fraction": 0.5628572984156367,
+            "ci_vs_pchip": {
+              "skill": 0.1621462796929607,
+              "ci95": [
+                0.020813549368314293,
+                0.2572650074266168
+              ],
+              "pass": true,
+              "n_shots": 61
+            },
+            "ci_vs_linear": {
+              "skill": 0.1200776417285363,
+              "ci95": [
+                -0.008352389016463027,
+                0.20028721936214805
+              ],
+              "pass": false,
+              "n_shots": 61
+            }
+          }
+        },
+        "7": {
+          "eval_samples": 37095,
+          "CES_TI": {
+            "n": 36083,
+            "rmse_model": 466.63055419921875,
+            "rmse": {
+              "persistence": 615.1437837411453,
+              "linear": 542.2019394114063,
+              "pchip": 549.998607193858,
+              "ar_local": 1276.687916858139
+            },
+            "skill_vs_pchip": 0.2801812200052122,
+            "future_neighbor_fraction": 0.9971155142202454,
+            "ci_vs_pchip": {
+              "skill": 0.28018120727940066,
+              "ci95": [
+                0.1924868031485504,
+                0.34748755559244954
+              ],
+              "pass": true,
+              "n_shots": 95
+            },
+            "ci_vs_linear": {
+              "skill": 0.25933089968635503,
+              "ci95": [
+                0.17568123817198406,
+                0.3243687078941156
+              ],
+              "pass": true,
+              "n_shots": 95
+            }
+          },
+          "CES_VT": {
+            "n": 14698,
+            "rmse_model": 43.51156234741211,
+            "rmse": {
+              "persistence": 52.023139999313166,
+              "linear": 45.28118925303065,
+              "pchip": 45.86251873054181,
+              "ar_local": 96.44339200003496
+            },
+            "skill_vs_pchip": 0.09989425564644983,
+            "future_neighbor_fraction": 0.5956328346138293,
+            "ci_vs_pchip": {
+              "skill": 0.0998942120988573,
+              "ci95": [
+                -0.5863840344192389,
+                0.2912509371574555
+              ],
+              "pass": false,
+              "n_shots": 65
+            },
+            "ci_vs_linear": {
+              "skill": 0.07663436028648685,
+              "ci95": [
+                -0.613762309242263,
+                0.27526274673973095
+              ],
+              "pass": false,
+              "n_shots": 65
+            }
+          }
+        },
+        "123": {
+          "eval_samples": 35356,
+          "CES_TI": {
+            "n": 34399,
+            "rmse_model": 538.0991821289062,
+            "rmse": {
+              "persistence": 702.2491297353162,
+              "linear": 614.847708921051,
+              "pchip": 626.7052702839683,
+              "ar_local": 2570.3128799304977
+            },
+            "skill_vs_pchip": 0.2627784863381387,
+            "future_neighbor_fraction": 0.996605950899423,
+            "ci_vs_pchip": {
+              "skill": 0.26277840955785847,
+              "ci95": [
+                0.10887535600568947,
+                0.3484215833663031
+              ],
+              "pass": true,
+              "n_shots": 96
+            },
+            "ci_vs_linear": {
+              "skill": 0.23406904602426093,
+              "ci95": [
+                0.08936547360011622,
+                0.3136916631860461
+              ],
+              "pass": true,
+              "n_shots": 96
+            }
+          },
+          "CES_VT": {
+            "n": 14126,
+            "rmse_model": 46.52486038208008,
+            "rmse": {
+              "persistence": 58.85327543544239,
+              "linear": 51.008642948553124,
+              "pchip": 51.483536556936684,
+              "ar_local": 109.50142893319416
+            },
+            "skill_vs_pchip": 0.1833547605200978,
+            "future_neighbor_fraction": 0.5742448240751217,
+            "ci_vs_pchip": {
+              "skill": 0.18335470587350777,
+              "ci95": [
+                -0.15080806908824299,
+                0.2654475350304943
+              ],
+              "pass": false,
+              "n_shots": 60
+            },
+            "ci_vs_linear": {
+              "skill": 0.16807788530737366,
+              "ci95": [
+                -0.15410819830450204,
+                0.25914658996588197
+              ],
+              "pass": false,
+              "n_shots": 60
+            }
+          }
+        }
+      },
+      "summary": {
+        "CES_TI_vs_pchip": {
+          "skills": [
+            0.17915562959038434,
+            0.19710013230386159,
+            0.28018120727940066,
+            0.26277840955785847
+          ],
+          "min": 0.17915562959038434,
+          "max": 0.28018120727940066,
+          "mean": 0.22980384468287626,
+          "pass": "4/4"
+        },
+        "CES_TI_vs_linear": {
+          "skills": [
+            0.14796359333090714,
+            0.1667717133187293,
+            0.25933089968635503,
+            0.23406904602426093
+          ],
+          "min": 0.14796359333090714,
+          "max": 0.25933089968635503,
+          "mean": 0.2020338130900631,
+          "pass": "3/4"
+        },
+        "CES_VT_vs_pchip": {
+          "skills": [
+            0.20266987643094603,
+            0.1621462796929607,
+            0.0998942120988573,
+            0.18335470587350777
+          ],
+          "min": 0.0998942120988573,
+          "max": 0.20266987643094603,
+          "mean": 0.16201626852406795,
+          "pass": "1/4"
+        },
+        "CES_VT_vs_linear": {
+          "skills": [
+            0.16938593216584896,
+            0.1200776417285363,
+            0.07663436028648685,
+            0.16807788530737366
+          ],
+          "min": 0.07663436028648685,
+          "max": 0.16938593216584896,
+          "mean": 0.13354395487206144,
+          "pass": "0/4"
+        }
+      }
+    },
+    "stuck0": {
+      "per_seed": {
+        "42": {
+          "eval_samples": 34644,
+          "CES_TI": {
+            "n": 32716,
+            "rmse_model": 372.31622314453125,
+            "rmse": {
+              "persistence": 487.3074085698898,
+              "linear": 422.65844474165056,
+              "pchip": 431.81186356610186,
+              "ar_local": 1005.6581565091491
+            },
+            "skill_vs_pchip": 0.2565790483966419,
+            "future_neighbor_fraction": 0.9962764114998268,
+            "ci_vs_pchip": {
+              "skill": 0.2565791111877992,
+              "ci95": [
+                0.11756830200922866,
+                0.3604963491026197
+              ],
+              "pass": true,
+              "n_shots": 96
+            },
+            "ci_vs_linear": {
+              "skill": 0.22403023718393045,
+              "ci95": [
+                0.08782957430102709,
+                0.3257579205022866
+              ],
+              "pass": true,
+              "n_shots": 96
+            }
+          },
+          "CES_VT": {
+            "n": 27437,
+            "rmse_model": 22.52765655517578,
+            "rmse": {
+              "persistence": 27.768224198729982,
+              "linear": 24.00867567741839,
+              "pchip": 24.48714638640225,
+              "ar_local": 57.22622937840348
+            },
+            "skill_vs_pchip": 0.15363899873388842,
+            "future_neighbor_fraction": 0.908468998960859,
+            "ci_vs_pchip": {
+              "skill": 0.15363893739151424,
+              "ci95": [
+                -0.41267023224032306,
+                0.33598149723856746
+              ],
+              "pass": false,
+              "n_shots": 91
+            },
+            "ci_vs_linear": {
+              "skill": 0.11956840287410131,
+              "ci95": [
+                -0.4332991177178286,
+                0.29834661824783115
+              ],
+              "pass": false,
+              "n_shots": 91
+            }
+          }
+        },
+        "1": {
+          "eval_samples": 38015,
+          "CES_TI": {
+            "n": 35739,
+            "rmse_model": 438.6531982421875,
+            "rmse": {
+              "persistence": 559.2664063497344,
+              "linear": 479.4659496360967,
+              "pchip": 488.52081735633976,
+              "ar_local": 1231.5451616484086
+            },
+            "skill_vs_pchip": 0.19373746817951165,
+            "future_neighbor_fraction": 0.996843351308694,
+            "ci_vs_pchip": {
+              "skill": 0.19373743872375493,
+              "ci95": [
+                0.08042748580246045,
+                0.2787858916994227
+              ],
+              "pass": true,
+              "n_shots": 94
+            },
+            "ci_vs_linear": {
+              "skill": 0.16299682852615405,
+              "ci95": [
+                0.05243695103075928,
+                0.2474292276343175
+              ],
+              "pass": true,
+              "n_shots": 94
+            }
+          },
+          "CES_VT": {
+            "n": 29793,
+            "rmse_model": 24.729700088500977,
+            "rmse": {
+              "persistence": 30.040800390663012,
+              "linear": 25.696372096290283,
+              "pchip": 26.20292879122047,
+              "ar_local": 56.591288119784956
+            },
+            "skill_vs_pchip": 0.10928655061806203,
+            "future_neighbor_fraction": 0.849164803367092,
+            "ci_vs_pchip": {
+              "skill": 0.10928662880470252,
+              "ci95": [
+                -0.055687988895953,
+                0.21777404232075082
+              ],
+              "pass": false,
+              "n_shots": 84
+            },
+            "ci_vs_linear": {
+              "skill": 0.0738229394321318,
+              "ci95": [
+                -0.08369903164102044,
+                0.17046428945987094
+              ],
+              "pass": false,
+              "n_shots": 84
+            }
+          }
+        },
+        "7": {
+          "eval_samples": 38280,
+          "CES_TI": {
+            "n": 35990,
+            "rmse_model": 462.40325927734375,
+            "rmse": {
+              "persistence": 604.255802460234,
+              "linear": 531.2063624945911,
+              "pchip": 538.771637028195,
+              "ar_local": 1173.2642099332
+            },
+            "skill_vs_pchip": 0.26339894255239227,
+            "future_neighbor_fraction": 0.9964994775339603,
+            "ci_vs_pchip": {
+              "skill": 0.263398931762455,
+              "ci95": [
+                0.16742482723321422,
+                0.3337961508326726
+              ],
+              "pass": true,
+              "n_shots": 95
+            },
+            "ci_vs_linear": {
+              "skill": 0.2422686470580182,
+              "ci95": [
+                0.15124775052253142,
+                0.31102568461460134
+              ],
+              "pass": true,
+              "n_shots": 95
+            }
+          },
+          "CES_VT": {
+            "n": 32016,
+            "rmse_model": 29.955732345581055,
+            "rmse": {
+              "persistence": 35.257108304536565,
+              "linear": 30.58984891019782,
+              "pchip": 30.981423688679772,
+              "ar_local": 64.80602001456808
+            },
+            "skill_vs_pchip": 0.06511727646408705,
+            "future_neighbor_fraction": 0.9250261233019854,
+            "ci_vs_pchip": {
+              "skill": 0.06511721531374648,
+              "ci95": [
+                -0.6931484887895748,
+                0.27810935856414587
+              ],
+              "pass": false,
+              "n_shots": 88
+            },
+            "ci_vs_linear": {
+              "skill": 0.04102951497921392,
+              "ci95": [
+                -0.7538132459408567,
+                0.2670467324788226
+              ],
+              "pass": false,
+              "n_shots": 88
+            }
+          }
+        },
+        "123": {
+          "eval_samples": 36878,
+          "CES_TI": {
+            "n": 34274,
+            "rmse_model": 517.307373046875,
+            "rmse": {
+              "persistence": 685.0852818193146,
+              "linear": 597.3799730892875,
+              "pchip": 609.4816219045097,
+              "ar_local": 1385.1817882143664
+            },
+            "skill_vs_pchip": 0.2795960455401426,
+            "future_neighbor_fraction": 0.9961494658061717,
+            "ci_vs_pchip": {
+              "skill": 0.2795960711625589,
+              "ci95": [
+                0.14031042695869955,
+                0.3593266688240992
+              ],
+              "pass": true,
+              "n_shots": 96
+            },
+            "ci_vs_linear": {
+              "skill": 0.25011272525572037,
+              "ci95": [
+                0.11644789345784456,
+                0.3237241820168998
+              ],
+              "pass": true,
+              "n_shots": 96
+            }
+          },
+          "CES_VT": {
+            "n": 30475,
+            "rmse_model": 32.871192932128906,
+            "rmse": {
+              "persistence": 40.477991804043064,
+              "linear": 34.870255699404815,
+              "pchip": 35.18112756568421,
+              "ar_local": 74.86651381484144
+            },
+            "skill_vs_pchip": 0.12700562761155032,
+            "future_neighbor_fraction": 0.9008623027279137,
+            "ci_vs_pchip": {
+              "skill": 0.12700558899768077,
+              "ci95": [
+                -0.46230856748123944,
+                0.24356580117363916
+              ],
+              "pass": false,
+              "n_shots": 89
+            },
+            "ci_vs_linear": {
+              "skill": 0.11137053681044973,
+              "ci95": [
+                -0.4700510262039729,
+                0.2337219297434619
+              ],
+              "pass": false,
+              "n_shots": 89
+            }
+          }
+        }
+      },
+      "summary": {
+        "CES_TI_vs_pchip": {
+          "skills": [
+            0.2565791111877992,
+            0.19373743872375493,
+            0.263398931762455,
+            0.2795960711625589
+          ],
+          "min": 0.19373743872375493,
+          "max": 0.2795960711625589,
+          "mean": 0.248327888209142,
+          "pass": "4/4"
+        },
+        "CES_TI_vs_linear": {
+          "skills": [
+            0.22403023718393045,
+            0.16299682852615405,
+            0.2422686470580182,
+            0.25011272525572037
+          ],
+          "min": 0.16299682852615405,
+          "max": 0.25011272525572037,
+          "mean": 0.21985210950595577,
+          "pass": "4/4"
+        },
+        "CES_VT_vs_pchip": {
+          "skills": [
+            0.15363893739151424,
+            0.10928662880470252,
+            0.06511721531374648,
+            0.12700558899768077
+          ],
+          "min": 0.06511721531374648,
+          "max": 0.15363893739151424,
+          "mean": 0.113762092626911,
+          "pass": "0/4"
+        },
+        "CES_VT_vs_linear": {
+          "skills": [
+            0.11956840287410131,
+            0.0738229394321318,
+            0.04102951497921392,
+            0.11137053681044973
+          ],
+          "min": 0.04102951497921392,
+          "max": 0.11956840287410131,
+          "mean": 0.08644784852397419,
+          "pass": "0/4"
+        }
+      }
+    }
+  },
+  "gap_bins_seed42": {
+    "genuine": {
+      "CES_TI": [
+        {
+          "bin_ms": "(0,15]",
+          "n": 31964,
+          "rmse_model": 333.6111836779457,
+          "rmse_pchip": 372.5623298176929,
+          "skill_vs_pchip": 0.1981681176612331,
+          "rmse_linear": 365.6194702899332,
+          "skill_vs_linear": 0.1674265222681075
+        },
+        {
+          "bin_ms": "(15,25]",
+          "n": 518,
+          "rmse_model": 1272.0610244795648,
+          "rmse_pchip": 1401.506551016639,
+          "skill_vs_pchip": 0.17619271497949252,
+          "rmse_linear": 1384.1178307042107,
+          "skill_vs_linear": 0.15536365461957935
+        },
+        {
+          "bin_ms": "(25,35]",
+          "n": 140,
+          "rmse_model": 1536.663186908569,
+          "rmse_pchip": 2050.6289463000885,
+          "skill_vs_pchip": 0.438456754877257,
+          "rmse_linear": 1933.2217996860907,
+          "skill_vs_linear": 0.36817907221637847
+        },
+        {
+          "bin_ms": "(35,55]",
+          "n": 67,
+          "rmse_model": 1824.5645370882335,
+          "rmse_pchip": 1773.6450932519108,
+          "skill_vs_pchip": -0.058242052232597485,
+          "rmse_linear": 1772.7262134570751,
+          "skill_vs_linear": -0.059339400768420036
+        },
+        {
+          "bin_ms": "(55,105]",
+          "n": 34,
+          "rmse_model": 2325.945721636685,
+          "rmse_pchip": 2665.182374143843,
+          "skill_vs_pchip": 0.23836781756193126,
+          "rmse_linear": 2698.951114281323,
+          "skill_vs_linear": 0.2573073688248203
+        },
+        {
+          "bin_ms": "(105,inf)",
+          "n": 64,
+          "rmse_model": 2160.7170106240196,
+          "rmse_pchip": 1383.4136992663325,
+          "skill_vs_pchip": -1.4394484104727168,
+          "rmse_linear": 1417.9292334341644,
+          "skill_vs_linear": -1.322130747946769
+        }
+      ],
+      "CES_VT": [
+        {
+          "bin_ms": "(0,15]",
+          "n": 10319,
+          "rmse_model": 23.94316492204769,
+          "rmse_pchip": 29.882088647302684,
+          "skill_vs_pchip": 0.35799085491133076,
+          "rmse_linear": 28.7359723781165,
+          "skill_vs_linear": 0.3057573046420229
+        },
+        {
+          "bin_ms": "(15,25]",
+          "n": 297,
+          "rmse_model": 130.54904340658723,
+          "rmse_pchip": 133.41081235976353,
+          "skill_vs_pchip": 0.04244146757161127,
+          "rmse_linear": 134.09238992167113,
+          "skill_vs_linear": 0.05215106754945398
+        },
+        {
+          "bin_ms": "(25,35]",
+          "n": 93,
+          "rmse_model": 151.76302456461522,
+          "rmse_pchip": 143.19007914217894,
+          "skill_vs_pchip": -0.12332671715894272,
+          "rmse_linear": 143.29923696848203,
+          "skill_vs_linear": -0.12161598648698502
+        },
+        {
+          "bin_ms": "(35,55]",
+          "n": 9,
+          "rmse_model": 39.97271255523495,
+          "rmse_pchip": 86.07740990372527,
+          "skill_vs_pchip": 0.7843502990667752,
+          "rmse_linear": 69.07297347163474,
+          "skill_vs_linear": 0.6651032468404692
+        },
+        {
+          "bin_ms": "(55,105]",
+          "n": 1,
+          "rmse_model": 6.05668628802119,
+          "rmse_pchip": 1.3446893906657493,
+          "skill_vs_pchip": -19.287391132199403,
+          "rmse_linear": 0.7958809407651728,
+          "skill_vs_linear": -56.912718240237936
+        },
+        {
+          "bin_ms": "(105,inf)",
+          "n": 10,
+          "rmse_model": 14.18920457993781,
+          "rmse_pchip": 9.374106920096779,
+          "skill_vs_pchip": -1.291164625398899,
+          "rmse_linear": 8.123406645120044,
+          "skill_vs_linear": -2.0509824750588077
+        }
+      ]
+    },
+    "stuck0": {
+      "CES_TI": [
+        {
+          "bin_ms": "(0,15]",
+          "n": 31966,
+          "rmse_model": 324.47347975219793,
+          "rmse_pchip": 372.57370861762263,
+          "skill_vs_pchip": 0.2415376924521292,
+          "rmse_linear": 365.63102864787396,
+          "skill_vs_linear": 0.21246053897673345
+        },
+        {
+          "bin_ms": "(15,25]",
+          "n": 520,
+          "rmse_model": 1188.4148055287767,
+          "rmse_pchip": 1399.0597780870328,
+          "skill_vs_pchip": 0.27845476145607195,
+          "rmse_linear": 1381.659548186302,
+          "skill_vs_linear": 0.2601664494822701
+        },
+        {
+          "bin_ms": "(25,35]",
+          "n": 140,
+          "rmse_model": 1490.8058223658775,
+          "rmse_pchip": 2050.6289463000885,
+          "skill_vs_pchip": 0.47147200798202005,
+          "rmse_linear": 1933.2217996860907,
+          "skill_vs_linear": 0.40532621632119803
+        },
+        {
+          "bin_ms": "(35,55]",
+          "n": 33,
+          "rmse_model": 527.7263436194937,
+          "rmse_pchip": 522.9939446429645,
+          "skill_vs_pchip": -0.01817921595707972,
+          "rmse_linear": 513.1065806691532,
+          "skill_vs_linear": -0.05779711801355991
+        },
+        {
+          "bin_ms": "(55,105]",
+          "n": 12,
+          "rmse_model": 1730.4861311203854,
+          "rmse_pchip": 1815.7213440963785,
+          "skill_vs_pchip": 0.09168215100912036,
+          "rmse_linear": 1795.4662308590605,
+          "skill_vs_linear": 0.07107262096716371
+        },
+        {
+          "bin_ms": "(105,inf)",
+          "n": 45,
+          "rmse_model": 1324.1885722962572,
+          "rmse_pchip": 419.13162783077746,
+          "skill_vs_pchip": -8.981568764587848,
+          "rmse_linear": 413.9499505262057,
+          "skill_vs_linear": -9.23302419984919
+        }
+      ],
+      "CES_VT": [
+        {
+          "bin_ms": "(0,15]",
+          "n": 26938,
+          "rmse_model": 15.371265485063509,
+          "rmse_pchip": 18.507364856578757,
+          "skill_vs_pchip": 0.31018906668122925,
+          "rmse_linear": 17.797812962735957,
+          "skill_vs_linear": 0.2540907889260384
+        },
+        {
+          "bin_ms": "(15,25]",
+          "n": 357,
+          "rmse_model": 118.95608761744815,
+          "rmse_pchip": 121.58714673762391,
+          "skill_vs_pchip": 0.04281031455661799,
+          "rmse_linear": 122.21337030529665,
+          "skill_vs_linear": 0.052594498270121526
+        },
+        {
+          "bin_ms": "(25,35]",
+          "n": 97,
+          "rmse_model": 148.35538518200138,
+          "rmse_pchip": 139.23200799929418,
+          "skill_vs_pchip": -0.13534658461167526,
+          "rmse_linear": 140.21317417676346,
+          "skill_vs_linear": -0.11951260756394078
+        },
+        {
+          "bin_ms": "(35,55]",
+          "n": 14,
+          "rmse_model": 31.44322877412858,
+          "rmse_pchip": 69.01546641442332,
+          "skill_vs_pchip": 0.7924315145684094,
+          "rmse_linear": 55.381586017839126,
+          "skill_vs_linear": 0.6776531034893212
+        },
+        {
+          "bin_ms": "(55,105]",
+          "n": 1,
+          "rmse_model": 6.05668628802119,
+          "rmse_pchip": 1.3446893906657493,
+          "skill_vs_pchip": -19.287391132199403,
+          "rmse_linear": 0.7958809407651728,
+          "skill_vs_linear": -56.912718240237936
+        },
+        {
+          "bin_ms": "(105,inf)",
+          "n": 30,
+          "rmse_model": 109.36524063602201,
+          "rmse_pchip": 2.1632565641910166,
+          "skill_vs_pchip": -2554.892392444288,
+          "rmse_linear": 1.5914511753229952,
+          "skill_vs_linear": -4721.50022357179
+        }
+      ]
+    }
+  },
+  "ablation_val_vs_persistence": {
+    "full": {
+      "split": "val",
+      "val_shots": 126,
+      "per_target": {
+        "CES_TI": {
+          "n": 39008,
+          "rmse_model": 478.021573780933,
+          "rmse_persistence": 631.9438760681205,
+          "rmse_mean_baseline": 548.7324313816343,
+          "r2_vs_mean": 0.24111889937899,
+          "skill_vs_persistence": 0.42781301445509756
+        },
+        "CES_VT": {
+          "n": 14429,
+          "rmse_model": 43.27850848718103,
+          "rmse_persistence": 51.5815826431174,
+          "rmse_mean_baseline": 64.31771191830637,
+          "r2_vs_mean": 0.5472240002804499,
+          "skill_vs_persistence": 0.29602822960632813
+        }
+      }
+    },
+    "no_fast": {
+      "split": "val",
+      "val_shots": 126,
+      "per_target": {
+        "CES_TI": {
+          "n": 39008,
+          "rmse_model": 465.25755635991555,
+          "rmse_persistence": 631.9438760681205,
+          "rmse_mean_baseline": 548.7324313816343,
+          "r2_vs_mean": 0.281104751597567,
+          "skill_vs_persistence": 0.4579618536166854
+        },
+        "CES_VT": {
+          "n": 14429,
+          "rmse_model": 43.31037067502208,
+          "rmse_persistence": 51.5815826431174,
+          "rmse_mean_baseline": 64.31771191830637,
+          "r2_vs_mean": 0.5465570759838676,
+          "skill_vs_persistence": 0.2949913021232582
+        }
+      }
+    },
+    "no_history": {
+      "split": "val",
+      "val_shots": 126,
+      "per_target": {
+        "CES_TI": {
+          "n": 39008,
+          "rmse_model": 500.7616854602596,
+          "rmse_persistence": 631.9438760681205,
+          "rmse_mean_baseline": 548.7324313816343,
+          "r2_vs_mean": 0.16719959549301,
+          "skill_vs_persistence": 0.37207877146303336
+        },
+        "CES_VT": {
+          "n": 14429,
+          "rmse_model": 66.10274392115845,
+          "rmse_persistence": 51.5815826431174,
+          "rmse_mean_baseline": 64.31771191830637,
+          "r2_vs_mean": -0.05627694948395923,
+          "skill_vs_persistence": -0.6422892437205807
+        }
+      }
+    }
+  },
+  "peak_seed42": {
+    "split": "val",
+    "params": {
+      "ces_activity": {
+        "slope_z": 2.5,
+        "neigh_var_pct": 0.1,
+        "min_neighbors": 2
+      },
+      "fast_activity": {
+        "bes_ecei_var_pct": 0.1
+      },
+      "observed_target": {
+        "diff_z": 2.5,
+        "roll_window": 5,
+        "top_pct": 0.1
+      },
+      "gap": 0.5
+    },
+    "per_target": {
+      "CES_TI": {
+        "n_peak_rows": 4764,
+        "n_peak_shots": 124,
+        "peak_skill_vs_pchip": 0.7023833530004118,
+        "peak_rmse_model": 501.2036045315552,
+        "peak_rmse_pchip": 918.7250878033609,
+        "peak_skill_ci95": [
+          0.502919951586639,
+          0.8512891354660261
+        ],
+        "pass": true,
+        "vs_linear": {
+          "peak_skill_vs_linear": 0.6734396669138085,
+          "peak_rmse_linear": 877.0663935133546,
+          "peak_skill_ci95": [
+            0.46575370522947573,
+            0.833600008975078
+          ],
+          "pass": true
+        },
+        "global_skill_vs_pchip": 0.2721885448409068,
+        "global_n": 37636
+      },
+      "CES_VT": {
+        "n_peak_rows": 9993,
+        "n_peak_shots": 89,
+        "peak_skill_vs_pchip": 0.4374927019179874,
+        "peak_rmse_model": 22.227933902415813,
+        "peak_rmse_pchip": 29.637052942828706,
+        "peak_skill_ci95": [
+          0.06831582676386608,
+          0.726083992108683
+        ],
+        "pass": true,
+        "vs_linear": {
+          "peak_skill_vs_linear": 0.4124795610146975,
+          "peak_rmse_linear": 28.999306145948992,
+          "peak_skill_ci95": [
+            0.02860735877858942,
+            0.7149532626063669
+          ],
+          "pass": true
+        },
+        "global_skill_vs_pchip": 0.13095766583291746,
+        "global_n": 31721
+      }
+    }
+  },
+  "before_baseline_iter2": {
+    "eval_samples": 34644,
+    "CES_TI": {
+      "n": 32716,
+      "rmse_model": 412.41552734375,
+      "skill_vs_pchip": 0.08781933154226074,
+      "ci_test": {
+        "skill": 0.08781925769638987,
+        "ci95": [
+          -0.22100770559422,
+          0.3228757205875782
+        ],
+        "pass": false
+      }
+    },
+    "CES_VT": {
+      "n": 27437,
+      "rmse_model": 23.150859832763672,
+      "skill_vs_pchip": 0.10616383866664447,
+      "ci_test": {
+        "skill": 0.10616389486748312,
+        "ci95": [
+          -0.5890890722592913,
+          0.31115452597423465
+        ],
+        "pass": false
+      }
+    }
+  },
+  "window_sweep_held_free": {
+    "protocol": {
+      "model": "iter009 (GRU + observation-masked multi-head attention)",
+      "env": {
+        "CES_TEST_FRACTION": "0.15",
+        "CES_EPOCHS": "10",
+        "CES_BATCH_SIZE": "512",
+        "CES_LR": "1e-3",
+        "CES_VAL_FRACTION": "0.2",
+        "CES_MAX_TRAIN_SAMPLES": "200000",
+        "CES_MAX_VAL_SAMPLES": "40000",
+        "CES_MAX_TEST_SAMPLES": "48000",
+        "CES_TEMPORAL_SUBSETS": "1",
+        "CES_MAX_SAMPLES_PER_FILE": "500",
+        "CES_DROP_STUCK_TARGETS": "1"
+      },
+      "metric": "per-run held-out test skill_vs_pchip (compare_baselines.py)",
+      "hist0_note": "history-0 point = CES_ABLATE=no_history at W=4 (dataset requires window_size >= 2)",
+      "data_treatment": "held-free: CES_DROP_STUCK_TARGETS=1 at train AND eval"
+    },
+    "per_point": [
+      {
+        "history_len": 0,
+        "window": 4,
+        "hist0": true,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          -0.014379070377684267,
+          -0.13775535357243696,
+          -0.0944826221037729,
+          0.14323902789037357
+        ],
+        "skill_TI_mean": -0.025844504540880137,
+        "skill_TI_min": -0.13775535357243696,
+        "skill_TI_max": 0.14323902789037357,
+        "pchip_pass_TI": 0,
+        "skill_VT_per_seed": [
+          -1.234789432984135,
+          -0.5437697171049323,
+          -1.0393286839078928,
+          -0.3122117226081269
+        ],
+        "skill_VT_mean": -0.7825248891512717,
+        "skill_VT_min": -1.234789432984135,
+        "skill_VT_max": -0.3122117226081269,
+        "pchip_pass_VT": 0
+      },
+      {
+        "history_len": 1,
+        "window": 2,
+        "hist0": false,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          0.2187299072687825,
+          0.2577319691242178,
+          0.18148383811269375,
+          0.29570875424521925
+        ],
+        "skill_TI_mean": 0.23841361718772833,
+        "skill_TI_min": 0.18148383811269375,
+        "skill_TI_max": 0.29570875424521925,
+        "pchip_pass_TI": 4,
+        "skill_VT_per_seed": [
+          0.16504303550228094,
+          0.11576103457642417,
+          0.26412410667228825,
+          0.2776281902385461
+        ],
+        "skill_VT_mean": 0.20563909174738487,
+        "skill_VT_min": 0.11576103457642417,
+        "skill_VT_max": 0.2776281902385461,
+        "pchip_pass_VT": 0
+      },
+      {
+        "history_len": 2,
+        "window": 3,
+        "hist0": false,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          0.1840620987082492,
+          0.288559553959143,
+          0.22564695283548564,
+          0.2855099681645772
+        ],
+        "skill_TI_mean": 0.24594464341686376,
+        "skill_TI_min": 0.1840620987082492,
+        "skill_TI_max": 0.288559553959143,
+        "pchip_pass_TI": 4,
+        "skill_VT_per_seed": [
+          0.22411442710143836,
+          0.12220728802900782,
+          0.23498387444019264,
+          0.230283437852283
+        ],
+        "skill_VT_mean": 0.20289725685573046,
+        "skill_VT_min": 0.12220728802900782,
+        "skill_VT_max": 0.23498387444019264,
+        "pchip_pass_VT": 1
+      },
+      {
+        "history_len": 3,
+        "window": 4,
+        "hist0": false,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          0.19308703247345482,
+          0.24057874379345778,
+          0.1594972831976228,
+          0.2915471099571685
+        ],
+        "skill_TI_mean": 0.22117754235542597,
+        "skill_TI_min": 0.1594972831976228,
+        "skill_TI_max": 0.2915471099571685,
+        "pchip_pass_TI": 3,
+        "skill_VT_per_seed": [
+          0.2135964149901154,
+          0.1328806286683587,
+          0.22038858376218629,
+          0.1923502174729036
+        ],
+        "skill_VT_mean": 0.189803961223391,
+        "skill_VT_min": 0.1328806286683587,
+        "skill_VT_max": 0.22038858376218629,
+        "pchip_pass_VT": 1
+      },
+      {
+        "history_len": 5,
+        "window": 6,
+        "hist0": false,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          0.1476898595037821,
+          0.2148471809753234,
+          0.23010025497353714,
+          0.16678404182980922
+        ],
+        "skill_TI_mean": 0.18985533432061297,
+        "skill_TI_min": 0.1476898595037821,
+        "skill_TI_max": 0.23010025497353714,
+        "pchip_pass_TI": 3,
+        "skill_VT_per_seed": [
+          0.21051153301262104,
+          0.14297284115877107,
+          0.22566801139250514,
+          0.2415584012120876
+        ],
+        "skill_VT_mean": 0.20517769669399621,
+        "skill_VT_min": 0.14297284115877107,
+        "skill_VT_max": 0.2415584012120876,
+        "pchip_pass_VT": 1
+      },
+      {
+        "history_len": 7,
+        "window": 8,
+        "hist0": false,
+        "seeds": [
+          1,
+          7,
+          42,
+          123
+        ],
+        "skill_TI_per_seed": [
+          0.13949707841539138,
+          0.2502378490119036,
+          0.2357517198345367,
+          0.2401027616044007
+        ],
+        "skill_TI_mean": 0.2163973522165581,
+        "skill_TI_min": 0.13949707841539138,
+        "skill_TI_max": 0.2502378490119036,
+        "pchip_pass_TI": 4,
+        "skill_VT_per_seed": [
+          0.20920913346998316,
+          0.16985619272465724,
+          0.18485864244565497,
+          0.2505036664695661
+        ],
+        "skill_VT_mean": 0.20360690877746537,
+        "skill_VT_min": 0.16985619272465724,
+        "skill_VT_max": 0.2505036664695661,
+        "pchip_pass_VT": 2
+      }
+    ],
+    "test_file_invariance": {
+      "1": {
+        "identical": true,
+        "n_test_files": {
+          "w2": 96,
+          "w3": 96,
+          "w4": 96,
+          "w6": 96,
+          "w8": 96,
+          "h0": 96
+        }
+      },
+      "7": {
+        "identical": true,
+        "n_test_files": {
+          "w2": 96,
+          "w3": 96,
+          "w4": 96,
+          "w6": 96,
+          "w8": 96,
+          "h0": 96
+        }
+      },
+      "42": {
+        "identical": true,
+        "n_test_files": {
+          "w2": 96,
+          "w3": 96,
+          "w4": 96,
+          "w6": 96,
+          "w8": 96,
+          "h0": 96
+        }
+      },
+      "123": {
+        "identical": true,
+        "n_test_files": {
+          "w2": 96,
+          "w3": 96,
+          "w4": 96,
+          "w6": 96,
+          "w8": 96,
+          "h0": 96
+        }
+      }
+    }
+  },
+  "stuckfree_4seed": {
+    "design": "iter009 trained with CES_DROP_STUCK_TARGETS=1 vs data/.vt_repro_* (held kept)",
+    "mean_paired_skill_VT": 0.0393165807552556,
+    "paired_VT_favor_seeds": 3,
+    "paired_VT_against_seeds": 0,
+    "paired_TI_against_seeds": 0,
+    "own_VT_pchip_pass_seeds": 1,
+    "verdict": "KEEP_CANDIDATE",
+    "per_seed": [
+      {
+        "seed": 1,
+        "skill_vs_pchip_TI": 0.18400945640301536,
+        "pchip_pass_TI": true,
+        "skill_vs_pchip_VT": 0.201849143605615,
+        "pchip_pass_VT": true,
+        "paired_TI": {
+          "skill_point": -0.016304188702140898,
+          "skill_ci95": [
+            -0.07130685767295072,
+            0.04637537876666577
+          ],
+          "a_better": false,
+          "b_better": false
+        },
+        "paired_VT": {
+          "skill_point": 0.04738654748052562,
+          "skill_ci95": [
+            0.01237809241464471,
+            0.08142016225797746
+          ],
+          "a_better": true,
+          "b_better": false
+        }
+      },
+      {
+        "seed": 7,
+        "skill_vs_pchip_TI": 0.291402401670242,
+        "pchip_pass_TI": true,
+        "skill_vs_pchip_VT": 0.14288353368863238,
+        "pchip_pass_VT": false,
+        "paired_TI": {
+          "skill_point": 0.015588900243415305,
+          "skill_ci95": [
+            -0.0252168048407706,
+            0.06687841129362673
+          ],
+          "a_better": false,
+          "b_better": false
+        },
+        "paired_VT": {
+          "skill_point": 0.04776034879725144,
+          "skill_ci95": [
+            -0.015159159381833681,
+            0.1522920856664814
+          ],
+          "a_better": false,
+          "b_better": false
+        }
+      },
+      {
+        "seed": 42,
+        "skill_vs_pchip_TI": 0.2384141384616929,
+        "pchip_pass_TI": true,
+        "skill_vs_pchip_VT": 0.22645283960349638,
+        "pchip_pass_VT": false,
+        "paired_TI": {
+          "skill_point": 0.0721920704550102,
+          "skill_ci95": [
+            0.011828477267836235,
+            0.13708333039268744
+          ],
+          "a_better": true,
+          "b_better": false
+        },
+        "paired_VT": {
+          "skill_point": 0.029828341207739584,
+          "skill_ci95": [
+            0.0010824223577420309,
+            0.05153103580963853
+          ],
+          "a_better": true,
+          "b_better": false
+        }
+      },
+      {
+        "seed": 123,
+        "skill_vs_pchip_TI": 0.22099200223740312,
+        "pchip_pass_TI": true,
+        "skill_vs_pchip_VT": 0.20972506940903013,
+        "pchip_pass_VT": false,
+        "paired_TI": {
+          "skill_point": -0.056680848845541476,
+          "skill_ci95": [
+            -0.16251875871774557,
+            0.012371673097780426
+          ],
+          "a_better": false,
+          "b_better": false
+        },
+        "paired_VT": {
+          "skill_point": 0.03229108553550575,
+          "skill_ci95": [
+            0.006024205951745024,
+            0.056475827209109986
+          ],
+          "a_better": true,
+          "b_better": false
+        }
+      }
+    ]
+  },
+  "gp_arm": {
+    "npz": "comparison_errors_test__test_genuine_gp.npz",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 12345,
+    "per_seed": {
+      "42": {
+        "CES_TI": {
+          "n": 32787,
+          "rmse": {
+            "model": 407.03411865234375,
+            "gp": 391.1485819443646,
+            "pchip": 449.26274889555793,
+            "linear": 440.9625892865566,
+            "persistence": 504.2927796191071
+          },
+          "model_vs_gp": {
+            "n_shots": 96,
+            "skill_point": -0.08287449276695469,
+            "skill_ci95": [
+              -0.24759432386027908,
+              0.03481692926636364
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 96,
+            "skill_point": 0.24197644704678678,
+            "skill_ci95": [
+              0.15231301638386444,
+              0.31194587018568737
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 96,
+            "skill_point": 0.17915562959038434,
+            "skill_ci95": [
+              0.007222617025367621,
+              0.3041061884391682
+            ],
+            "pass": true
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 95,
+            "skill_point": -0.07652118070210312,
+            "skill_ci95": [
+              -0.5564836396201029,
+              0.2598962868501518
+            ],
+            "pass": false,
+            "n": 4074
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 96,
+            "skill_point": -0.04854513023745377,
+            "skill_ci95": [
+              -0.20439882628729292,
+              0.0614378182602668
+            ],
+            "pass": false,
+            "n": 31964
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 83,
+            "skill_point": -0.15461377405757304,
+            "skill_ci95": [
+              -0.42969380343869074,
+              0.05238286106555277
+            ],
+            "pass": false,
+            "n": 823
+          }
+        },
+        "CES_VT": {
+          "n": 10729,
+          "rmse": {
+            "model": 34.99040603637695,
+            "gp": 34.338752179858325,
+            "pchip": 39.18590718573837,
+            "linear": 38.39276145200271,
+            "persistence": 44.38984132112354
+          },
+          "model_vs_gp": {
+            "n_shots": 61,
+            "skill_point": -0.038314608424304675,
+            "skill_ci95": [
+              -0.34424713597284806,
+              0.0998637010714891
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 61,
+            "skill_point": 0.23209197183593233,
+            "skill_ci95": [
+              0.010101833878922316,
+              0.31395192715906073
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 61,
+            "skill_point": 0.20266987643094603,
+            "skill_ci95": [
+              -0.23829327681406606,
+              0.3659716252232218
+            ],
+            "pass": false
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 61,
+            "skill_point": 0.016112915208956413,
+            "skill_ci95": [
+              -1.037707601586545,
+              0.5898099729703884
+            ],
+            "pass": false,
+            "n": 2499
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 60,
+            "skill_point": 0.03976885886572412,
+            "skill_ci95": [
+              -0.24375534724847808,
+              0.27557365718021254
+            ],
+            "pass": false,
+            "n": 10319
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 46,
+            "skill_point": -0.11242989908610634,
+            "skill_ci95": [
+              -0.5690806488290108,
+              0.043087464018504495
+            ],
+            "pass": false,
+            "n": 410
+          }
+        }
+      },
+      "1": {
+        "CES_TI": {
+          "n": 35856,
+          "rmse": {
+            "model": 447.7640075683594,
+            "gp": 442.4487682748317,
+            "pchip": 499.7105103957467,
+            "linear": 490.5318087836427,
+            "persistence": 574.0749402478654
+          },
+          "model_vs_gp": {
+            "n_shots": 94,
+            "skill_point": -0.024170762365098852,
+            "skill_ci95": [
+              -0.12996356456461122,
+              0.05039661141205132
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 94,
+            "skill_point": 0.21604882974591422,
+            "skill_ci95": [
+              0.13586701971793994,
+              0.28328859345637675
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 94,
+            "skill_point": 0.19710013230386159,
+            "skill_ci95": [
+              0.08913291684386256,
+              0.27529865753160004
+            ],
+            "pass": true
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 93,
+            "skill_point": 0.007566358239479265,
+            "skill_ci95": [
+              -0.2577159832871303,
+              0.30577659834357845
+            ],
+            "pass": false,
+            "n": 4507
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 94,
+            "skill_point": 0.003546998868419027,
+            "skill_ci95": [
+              -0.09594038695613322,
+              0.08041826914995769
+            ],
+            "pass": false,
+            "n": 34613
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 89,
+            "skill_point": -0.08279541756697917,
+            "skill_ci95": [
+              -0.30168607565284566,
+              0.03077899974701786
+            ],
+            "pass": false,
+            "n": 1243
+          }
+        },
+        "CES_VT": {
+          "n": 13660,
+          "rmse": {
+            "model": 34.8272705078125,
+            "gp": 34.008318818929055,
+            "pchip": 38.04830614242683,
+            "linear": 37.12763210608281,
+            "persistence": 43.33655474210424
+          },
+          "model_vs_gp": {
+            "n_shots": 61,
+            "skill_point": -0.048741684571230515,
+            "skill_ci95": [
+              -0.15499284046740944,
+              0.04967744312751097
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 61,
+            "skill_point": 0.2010866616314685,
+            "skill_ci95": [
+              0.07765751843211004,
+              0.2804320557306593
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 61,
+            "skill_point": 0.1621462796929607,
+            "skill_ci95": [
+              0.022469380552806877,
+              0.25623519752249796
+            ],
+            "pass": true
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 60,
+            "skill_point": 0.1079424048969031,
+            "skill_ci95": [
+              -0.43910387406589546,
+              0.4211192801506027
+            ],
+            "pass": false,
+            "n": 3041
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 61,
+            "skill_point": -0.18243828808596252,
+            "skill_ci95": [
+              -0.31529827257610926,
+              -0.09219365906514998
+            ],
+            "pass": false,
+            "n": 13060
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 51,
+            "skill_point": 0.13842100424580484,
+            "skill_ci95": [
+              -0.010311878630279648,
+              0.32951824552930253
+            ],
+            "pass": false,
+            "n": 600
+          }
+        }
+      },
+      "7": {
+        "CES_TI": {
+          "n": 36083,
+          "rmse": {
+            "model": 466.63055419921875,
+            "gp": 490.16347273033216,
+            "pchip": 549.998607193858,
+            "linear": 542.2019394114063,
+            "persistence": 615.1437837411453
+          },
+          "model_vs_gp": {
+            "n_shots": 95,
+            "skill_point": 0.0937156683176773,
+            "skill_ci95": [
+              0.014351875505239753,
+              0.15309688712841749
+            ],
+            "pass": true
+          },
+          "gp_vs_pchip": {
+            "n_shots": 95,
+            "skill_point": 0.2057472831021916,
+            "skill_ci95": [
+              0.13835568763219003,
+              0.2659549007614362
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 95,
+            "skill_point": 0.28018120727940066,
+            "skill_ci95": [
+              0.19140252778107586,
+              0.34744609491276307
+            ],
+            "pass": true
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 95,
+            "skill_point": 0.4459445595864392,
+            "skill_ci95": [
+              0.2946516507138546,
+              0.6473652090453125
+            ],
+            "pass": true,
+            "n": 4483
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 95,
+            "skill_point": 0.11284552266950953,
+            "skill_ci95": [
+              0.017527101358428526,
+              0.19235435009659965
+            ],
+            "pass": true,
+            "n": 34936
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 92,
+            "skill_point": 0.05442875011267001,
+            "skill_ci95": [
+              -0.08249288491022277,
+              0.21114814890456055
+            ],
+            "pass": false,
+            "n": 1147
+          }
+        },
+        "CES_VT": {
+          "n": 14698,
+          "rmse": {
+            "model": 43.51156234741211,
+            "gp": 41.50599286871761,
+            "pchip": 45.86251873054181,
+            "linear": 45.28118925303065,
+            "persistence": 52.023139999313166
+          },
+          "model_vs_gp": {
+            "n_shots": 65,
+            "skill_point": -0.0989748262962542,
+            "skill_ci95": [
+              -0.6621390387219104,
+              0.05780822003687969
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 65,
+            "skill_point": 0.1809586840722608,
+            "skill_ci95": [
+              -0.0672000937013989,
+              0.2683121572836774
+            ],
+            "pass": false
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 65,
+            "skill_point": 0.0998942120988573,
+            "skill_ci95": [
+              -0.6135778136019152,
+              0.28927609377773444
+            ],
+            "pass": false
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 64,
+            "skill_point": 0.13853359370001328,
+            "skill_ci95": [
+              -0.21460688177353707,
+              0.5144020865384583
+            ],
+            "pass": false,
+            "n": 3012
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 65,
+            "skill_point": -0.0899624163510182,
+            "skill_ci95": [
+              -0.5328246964668499,
+              0.01993591139662451
+            ],
+            "pass": false,
+            "n": 14278
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 56,
+            "skill_point": -0.13585764807429124,
+            "skill_ci95": [
+              -1.5041956223129171,
+              0.4801230391554903
+            ],
+            "pass": false,
+            "n": 420
+          }
+        }
+      },
+      "123": {
+        "CES_TI": {
+          "n": 34399,
+          "rmse": {
+            "model": 538.0991821289062,
+            "gp": 532.5525907124534,
+            "pchip": 626.7052702839683,
+            "linear": 614.847708921051,
+            "persistence": 702.2491297353162
+          },
+          "model_vs_gp": {
+            "n_shots": 96,
+            "skill_point": -0.020938862947558645,
+            "skill_ci95": [
+              -0.1410958668259788,
+              0.05327069400488235
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 96,
+            "skill_point": 0.27789839607662226,
+            "skill_ci95": [
+              0.1877254876397225,
+              0.34144554723502735
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 96,
+            "skill_point": 0.26277840955785847,
+            "skill_ci95": [
+              0.11303070708581316,
+              0.3489153954679011
+            ],
+            "pass": true
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 93,
+            "skill_point": 0.10660214658869605,
+            "skill_ci95": [
+              -0.4421865492725752,
+              0.4374880725493226
+            ],
+            "pass": false,
+            "n": 4347
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 96,
+            "skill_point": 0.013613238909031655,
+            "skill_ci95": [
+              -0.13406312849559085,
+              0.10271261550570003
+            ],
+            "pass": false,
+            "n": 33116
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 86,
+            "skill_point": -0.09045323362524904,
+            "skill_ci95": [
+              -0.258709291288079,
+              0.01393506998856218
+            ],
+            "pass": false,
+            "n": 1283
+          }
+        },
+        "CES_VT": {
+          "n": 14126,
+          "rmse": {
+            "model": 46.52486038208008,
+            "gp": 45.91829238682124,
+            "pchip": 51.483536556936684,
+            "linear": 51.008642948553124,
+            "persistence": 58.85327543544239
+          },
+          "model_vs_gp": {
+            "n_shots": 60,
+            "skill_point": -0.02659406710303336,
+            "skill_ci95": [
+              -0.23232900291513625,
+              0.03970044801501614
+            ],
+            "pass": false
+          },
+          "gp_vs_pchip": {
+            "n_shots": 60,
+            "skill_point": 0.20451001978708083,
+            "skill_ci95": [
+              0.026205399545796735,
+              0.25465797225808684
+            ],
+            "pass": true
+          },
+          "model_vs_pchip_crosscheck": {
+            "n_shots": 60,
+            "skill_point": 0.18335470587350777,
+            "skill_ci95": [
+              -0.14525032345315309,
+              0.26662694709601004
+            ],
+            "pass": false
+          },
+          "model_vs_gp_peak": {
+            "n_shots": 60,
+            "skill_point": -0.07793729372909897,
+            "skill_ci95": [
+              -0.8960777156643847,
+              0.41979699385974245
+            ],
+            "pass": false,
+            "n": 2833
+          },
+          "model_vs_gp_dt_le_15ms": {
+            "n_shots": 60,
+            "skill_point": 0.031019835086070535,
+            "skill_ci95": [
+              -0.1724613621131735,
+              0.11883173471187782
+            ],
+            "pass": false,
+            "n": 13800
+          },
+          "model_vs_gp_dt_gt_15ms": {
+            "n_shots": 48,
+            "skill_point": -0.1694008819944024,
+            "skill_ci95": [
+              -0.478665681275717,
+              0.20053212926969935
+            ],
+            "pass": false,
+            "n": 326
+          }
+        }
+      }
+    },
+    "summary": {
+      "CES_TI_gp_vs_pchip": {
+        "skills": [
+          0.24197644704678678,
+          0.21604882974591422,
+          0.2057472831021916,
+          0.27789839607662226
+        ],
+        "min": 0.2057472831021916,
+        "max": 0.27789839607662226,
+        "mean": 0.2354177389928787,
+        "pass": "4/4"
+      },
+      "CES_TI_model_vs_gp": {
+        "skills": [
+          -0.08287449276695469,
+          -0.024170762365098852,
+          0.0937156683176773,
+          -0.020938862947558645
+        ],
+        "min": -0.08287449276695469,
+        "max": 0.0937156683176773,
+        "mean": -0.00856711244048372,
+        "pass": "1/4"
+      },
+      "CES_TI_model_vs_gp_peak": {
+        "skills": [
+          -0.07652118070210312,
+          0.007566358239479265,
+          0.4459445595864392,
+          0.10660214658869605
+        ],
+        "min": -0.07652118070210312,
+        "max": 0.4459445595864392,
+        "mean": 0.12089797092812785,
+        "pass": "1/4"
+      },
+      "CES_TI_model_vs_gp_dt_le_15ms": {
+        "skills": [
+          -0.04854513023745377,
+          0.003546998868419027,
+          0.11284552266950953,
+          0.013613238909031655
+        ],
+        "min": -0.04854513023745377,
+        "max": 0.11284552266950953,
+        "mean": 0.02036515755237661,
+        "pass": "1/4"
+      },
+      "CES_TI_model_vs_gp_dt_gt_15ms": {
+        "skills": [
+          -0.15461377405757304,
+          -0.08279541756697917,
+          0.05442875011267001,
+          -0.09045323362524904
+        ],
+        "min": -0.15461377405757304,
+        "max": 0.05442875011267001,
+        "mean": -0.06835841878428281,
+        "pass": "0/4"
+      },
+      "CES_VT_gp_vs_pchip": {
+        "skills": [
+          0.23209197183593233,
+          0.2010866616314685,
+          0.1809586840722608,
+          0.20451001978708083
+        ],
+        "min": 0.1809586840722608,
+        "max": 0.23209197183593233,
+        "mean": 0.2046618343316856,
+        "pass": "3/4"
+      },
+      "CES_VT_model_vs_gp": {
+        "skills": [
+          -0.038314608424304675,
+          -0.048741684571230515,
+          -0.0989748262962542,
+          -0.02659406710303336
+        ],
+        "min": -0.0989748262962542,
+        "max": -0.02659406710303336,
+        "mean": -0.05315629659870569,
+        "pass": "0/4"
+      },
+      "CES_VT_model_vs_gp_peak": {
+        "skills": [
+          0.016112915208956413,
+          0.1079424048969031,
+          0.13853359370001328,
+          -0.07793729372909897
+        ],
+        "min": -0.07793729372909897,
+        "max": 0.13853359370001328,
+        "mean": 0.046162905019193456,
+        "pass": "0/4"
+      },
+      "CES_VT_model_vs_gp_dt_le_15ms": {
+        "skills": [
+          0.03976885886572412,
+          -0.18243828808596252,
+          -0.0899624163510182,
+          0.031019835086070535
+        ],
+        "min": -0.18243828808596252,
+        "max": 0.03976885886572412,
+        "mean": -0.05040300262129652,
+        "pass": "0/4"
+      },
+      "CES_VT_model_vs_gp_dt_gt_15ms": {
+        "skills": [
+          -0.11242989908610634,
+          0.13842100424580484,
+          -0.13585764807429124,
+          -0.1694008819944024
+        ],
+        "min": -0.1694008819944024,
+        "max": 0.13842100424580484,
+        "mean": -0.06981685622724879,
+        "pass": "0/4"
+      }
+    }
+  },
+  "fitfail_sensitivity": {
+    "npz": "comparison_errors_test__test_genuine_gp.npz",
+    "target": "CES_TI",
+    "thresholds_ev": [
+      3000.0,
+      2089.0
+    ],
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 12345,
+    "per_seed": {
+      "42": {
+        "n_total": 32787,
+        "y_true_max_ev": 13927.3095703125,
+        "full": {
+          "n_shots": 96,
+          "skill_point": 0.17915562959038434,
+          "skill_ci95": [
+            0.007015846886124538,
+            0.30171801849057595
+          ],
+          "pass": true
+        },
+        "le_3000ev": {
+          "n_shots": 96,
+          "skill_point": 0.3618256720744297,
+          "skill_ci95": [
+            0.033480844856974105,
+            0.5726160540938559
+          ],
+          "pass": true,
+          "n_dropped": 123,
+          "dropped_pct": 0.375,
+          "n_shots_with_drops": 35
+        },
+        "le_2089ev": {
+          "n_shots": 96,
+          "skill_point": 0.36447572649733695,
+          "skill_ci95": [
+            -0.0030829114641773227,
+            0.5997706308746196
+          ],
+          "pass": false,
+          "n_dropped": 234,
+          "dropped_pct": 0.714,
+          "n_shots_with_drops": 47
+        }
+      },
+      "1": {
+        "n_total": 35856,
+        "y_true_max_ev": 14812.943359375,
+        "full": {
+          "n_shots": 94,
+          "skill_point": 0.19710013230386159,
+          "skill_ci95": [
+            0.08804113182356249,
+            0.27427981282037134
+          ],
+          "pass": true
+        },
+        "le_3000ev": {
+          "n_shots": 94,
+          "skill_point": 0.46996745330583234,
+          "skill_ci95": [
+            0.2951660067807127,
+            0.5826036903315269
+          ],
+          "pass": true,
+          "n_dropped": 142,
+          "dropped_pct": 0.396,
+          "n_shots_with_drops": 39
+        },
+        "le_2089ev": {
+          "n_shots": 94,
+          "skill_point": 0.48237628798692833,
+          "skill_ci95": [
+            0.303770492094362,
+            0.5940552612473212
+          ],
+          "pass": true,
+          "n_dropped": 287,
+          "dropped_pct": 0.8,
+          "n_shots_with_drops": 52
+        }
+      },
+      "7": {
+        "n_total": 36083,
+        "y_true_max_ev": 14969.7119140625,
+        "full": {
+          "n_shots": 95,
+          "skill_point": 0.28018120727940066,
+          "skill_ci95": [
+            0.19389339439997869,
+            0.34818605439504224
+          ],
+          "pass": true
+        },
+        "le_3000ev": {
+          "n_shots": 95,
+          "skill_point": 0.5892366454001325,
+          "skill_ci95": [
+            0.4335246174886095,
+            0.6884297591047474
+          ],
+          "pass": true,
+          "n_dropped": 140,
+          "dropped_pct": 0.388,
+          "n_shots_with_drops": 40
+        },
+        "le_2089ev": {
+          "n_shots": 95,
+          "skill_point": 0.6148016487162384,
+          "skill_ci95": [
+            0.45404239835584087,
+            0.7155454360616601
+          ],
+          "pass": true,
+          "n_dropped": 257,
+          "dropped_pct": 0.712,
+          "n_shots_with_drops": 52
+        }
+      },
+      "123": {
+        "n_total": 34399,
+        "y_true_max_ev": 14929.833984375,
+        "full": {
+          "n_shots": 96,
+          "skill_point": 0.26277840955785847,
+          "skill_ci95": [
+            0.11358127336415069,
+            0.34753561642866093
+          ],
+          "pass": true
+        },
+        "le_3000ev": {
+          "n_shots": 96,
+          "skill_point": 0.5376968013628942,
+          "skill_ci95": [
+            0.38308221806001763,
+            0.6207245830540389
+          ],
+          "pass": true,
+          "n_dropped": 205,
+          "dropped_pct": 0.596,
+          "n_shots_with_drops": 44
+        },
+        "le_2089ev": {
+          "n_shots": 96,
+          "skill_point": 0.5746953199307392,
+          "skill_ci95": [
+            0.42293255243350275,
+            0.6510884851975771
+          ],
+          "pass": true,
+          "n_dropped": 425,
+          "dropped_pct": 1.236,
+          "n_shots_with_drops": 57
+        }
+      }
+    },
+    "summary": {
+      "full": {
+        "skills": [
+          0.17915562959038434,
+          0.19710013230386159,
+          0.28018120727940066,
+          0.26277840955785847
+        ],
+        "min": 0.17915562959038434,
+        "max": 0.28018120727940066,
+        "mean": 0.22980384468287626,
+        "pass": "4/4"
+      },
+      "le_3000ev": {
+        "skills": [
+          0.3618256720744297,
+          0.46996745330583234,
+          0.5892366454001325,
+          0.5376968013628942
+        ],
+        "min": 0.3618256720744297,
+        "max": 0.5892366454001325,
+        "mean": 0.4896816430358222,
+        "pass": "4/4"
+      },
+      "le_2089ev": {
+        "skills": [
+          0.36447572649733695,
+          0.48237628798692833,
+          0.6148016487162384,
+          0.5746953199307392
+        ],
+        "min": 0.36447572649733695,
+        "max": 0.6148016487162384,
+        "mean": 0.5090872457828107,
+        "pass": "3/4"
+      }
+    }
+  },
+  "peak_held_crosstab": {
+    "treatment": "stuck0 (held KEPT in scoring)",
+    "held_definition": "dataset._stuck_repeat_mask on the raw CSV (loader's own rule)",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 12345,
+    "per_seed": {
+      "42": {
+        "CES_TI": {
+          "n": 32716,
+          "held_fraction": 0.0,
+          "peak_fraction": 0.1267269837388434,
+          "held_fraction_in_peak": 0.0,
+          "held_fraction_in_bulk": 0.0,
+          "crosstab": {
+            "peak_held": 0,
+            "peak_genuine": 4146,
+            "bulk_held": 0,
+            "bulk_genuine": 28570
+          },
+          "cells": {
+            "peak_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 4146,
+              "n_shots": 95,
+              "skill_point": 0.6591218027396226,
+              "skill_ci95": [
+                0.40217858874221263,
+                0.8081827547626804
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 4146,
+                "n_shots": 95,
+                "skill_point": 0.7833834859864831,
+                "skill_ci95": [
+                  0.6461886089525526,
+                  0.8714140986041864
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 28570,
+              "n_shots": 96,
+              "skill_point": 0.09616244570539445,
+              "skill_ci95": [
+                -0.05872847383064091,
+                0.2244756128181761
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 28570,
+                "n_shots": 96,
+                "skill_point": 0.21675275786234394,
+                "skill_ci95": [
+                  0.09092858007831253,
+                  0.31782202411696425
+                ],
+                "pass": true
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 32716,
+              "n_shots": 96,
+              "skill_point": 0.2565791717517575,
+              "skill_ci95": [
+                0.11379242536946366,
+                0.3621715247602056
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 32716,
+                "n_shots": 96,
+                "skill_point": 0.41626217413823907,
+                "skill_ci95": [
+                  0.33491370526980563,
+                  0.4810226312183529
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 32716,
+              "n_shots": 96,
+              "skill_point": 0.2565791717517575,
+              "skill_ci95": [
+                0.11837133868188858,
+                0.3624229895121466
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 32716,
+                "n_shots": 96,
+                "skill_point": 0.41626217413823907,
+                "skill_ci95": [
+                  0.3345900384693458,
+                  0.481148332940183
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        },
+        "CES_VT": {
+          "n": 27437,
+          "held_fraction": 0.6075008200605022,
+          "peak_fraction": 0.25425520282829756,
+          "held_fraction_in_peak": 0.6834862385321101,
+          "held_fraction_in_bulk": 0.5815942524803285,
+          "crosstab": {
+            "peak_held": 4768,
+            "peak_genuine": 2208,
+            "bulk_held": 11900,
+            "bulk_genuine": 8561
+          },
+          "cells": {
+            "peak_held": {
+              "n": 4768,
+              "n_shots": 35,
+              "skill_point": -3.320733609355126,
+              "skill_ci95": [
+                -13.624929146418067,
+                -0.06975205721967524
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 4768,
+                "n_shots": 35,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 2208,
+              "n_shots": 63,
+              "skill_point": 0.6265237475353393,
+              "skill_ci95": [
+                -0.36185883215561726,
+                0.8581386926795594
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 2208,
+                "n_shots": 63,
+                "skill_point": 0.7807019496368224,
+                "skill_ci95": [
+                  0.5363280371216702,
+                  0.8945062522054075
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 11900,
+              "n_shots": 60,
+              "skill_point": -353.0658097869476,
+              "skill_ci95": [
+                -1326.190988487005,
+                -22.152604071740512
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 11900,
+                "n_shots": 60,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 8561,
+              "n_shots": 60,
+              "skill_point": -0.010476854569356098,
+              "skill_ci95": [
+                -0.21173728385647891,
+                0.06159118697187876
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 8561,
+                "n_shots": 60,
+                "skill_point": 0.06332897934237525,
+                "skill_ci95": [
+                  -0.08663660986981209,
+                  0.1352373029592117
+                ],
+                "pass": false
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 27437,
+              "n_shots": 91,
+              "skill_point": 0.15363892073792962,
+              "skill_ci95": [
+                -0.4136655294120812,
+                0.34217086400485114
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 27437,
+                "n_shots": 91,
+                "skill_point": 0.34183342266993055,
+                "skill_ci95": [
+                  0.09893835038324603,
+                  0.44262876105797355
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 10769,
+              "n_shots": 63,
+              "skill_point": 0.20148083830925823,
+              "skill_ci95": [
+                -0.2412575446336331,
+                0.3611531828168272
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 10769,
+                "n_shots": 63,
+                "skill_point": 0.37931528673160786,
+                "skill_ci95": [
+                  0.22117847131247723,
+                  0.4615153473206672
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 16668,
+              "n_shots": 76,
+              "skill_point": -106.68410807159407,
+              "skill_ci95": [
+                -384.57546420992054,
+                -8.598415735011601
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 16668,
+                "n_shots": 76,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        }
+      },
+      "1": {
+        "CES_TI": {
+          "n": 35739,
+          "held_fraction": 0.0,
+          "peak_fraction": 0.12803939673745768,
+          "held_fraction_in_peak": 0.0,
+          "held_fraction_in_bulk": 0.0,
+          "crosstab": {
+            "peak_held": 0,
+            "peak_genuine": 4576,
+            "bulk_held": 0,
+            "bulk_genuine": 31163
+          },
+          "cells": {
+            "peak_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 4576,
+              "n_shots": 93,
+              "skill_point": 0.5872309335476784,
+              "skill_ci95": [
+                0.2747204981227963,
+                0.7970357039181093
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 4576,
+                "n_shots": 93,
+                "skill_point": 0.7650098143857668,
+                "skill_ci95": [
+                  0.6391380554998319,
+                  0.8744064498561126
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 31163,
+              "n_shots": 94,
+              "skill_point": 0.028817893453869536,
+              "skill_ci95": [
+                -0.04600264156233039,
+                0.07874661829582856
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 31163,
+                "n_shots": 94,
+                "skill_point": 0.13573235933653605,
+                "skill_ci95": [
+                  0.04943974041659453,
+                  0.20024474808048354
+                ],
+                "pass": true
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 35739,
+              "n_shots": 94,
+              "skill_point": 0.19373744746209087,
+              "skill_ci95": [
+                0.07844458396153314,
+                0.27873365652302323
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 35739,
+                "n_shots": 94,
+                "skill_point": 0.38481579989908665,
+                "skill_ci95": [
+                  0.32584713980980523,
+                  0.43221708522706115
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 35739,
+              "n_shots": 94,
+              "skill_point": 0.19373744746209087,
+              "skill_ci95": [
+                0.07816844124509409,
+                0.2799162053061472
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 35739,
+                "n_shots": 94,
+                "skill_point": 0.38481579989908665,
+                "skill_ci95": [
+                  0.32594175210655424,
+                  0.43159780684213767
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        },
+        "CES_VT": {
+          "n": 29793,
+          "held_fraction": 0.5401268754405397,
+          "peak_fraction": 0.24868257644413116,
+          "held_fraction_in_peak": 0.6193818329059252,
+          "held_fraction_in_bulk": 0.5138938527519656,
+          "crosstab": {
+            "peak_held": 4589,
+            "peak_genuine": 2820,
+            "bulk_held": 11503,
+            "bulk_genuine": 10881
+          },
+          "cells": {
+            "peak_held": {
+              "n": 4589,
+              "n_shots": 35,
+              "skill_point": 0.7517052835643723,
+              "skill_ci95": [
+                -4.656434892148952,
+                0.9322816617639829
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 4589,
+                "n_shots": 35,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 2820,
+              "n_shots": 61,
+              "skill_point": 0.5512809568971238,
+              "skill_ci95": [
+                0.22452830721420372,
+                0.7149965957234828
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 2820,
+                "n_shots": 61,
+                "skill_point": 0.7499700945958999,
+                "skill_ci95": [
+                  0.6272510598411031,
+                  0.8219539972379203
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 11503,
+              "n_shots": 64,
+              "skill_point": -48.2552543111834,
+              "skill_ci95": [
+                -163.64723631552866,
+                -11.726718775882109
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 11503,
+                "n_shots": 64,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 10881,
+              "n_shots": 61,
+              "skill_point": -0.051017329328434835,
+              "skill_ci95": [
+                -0.16668130608017231,
+                0.031527747023171175
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 10881,
+                "n_shots": 61,
+                "skill_point": 0.06677887513651481,
+                "skill_ci95": [
+                  -0.007061805538293481,
+                  0.12260116872135952
+                ],
+                "pass": false
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 29793,
+              "n_shots": 84,
+              "skill_point": 0.10928668837002797,
+              "skill_ci95": [
+                -0.05393440124975732,
+                0.21409176884765987
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 29793,
+                "n_shots": 84,
+                "skill_point": 0.3223356848472586,
+                "skill_ci95": [
+                  0.2163853460113385,
+                  0.3937986309089481
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 13701,
+              "n_shots": 63,
+              "skill_point": 0.1262764121155523,
+              "skill_ci95": [
+                -0.028432611817543717,
+                0.22974940971557742
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 13701,
+                "n_shots": 63,
+                "skill_point": 0.3395828101388999,
+                "skill_ci95": [
+                  0.24665411198099182,
+                  0.40836426965710465
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 16092,
+              "n_shots": 74,
+              "skill_point": -2.4872957529290782,
+              "skill_ci95": [
+                -31.93155740262472,
+                -0.04253281475798169
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 16092,
+                "n_shots": 74,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        }
+      },
+      "7": {
+        "CES_TI": {
+          "n": 35990,
+          "held_fraction": 2.7785495971103084e-05,
+          "peak_fraction": 0.1270630730758544,
+          "held_fraction_in_peak": 0.0,
+          "held_fraction_in_bulk": 3.1829901009007864e-05,
+          "crosstab": {
+            "peak_held": 0,
+            "peak_genuine": 4573,
+            "bulk_held": 1,
+            "bulk_genuine": 31416
+          },
+          "cells": {
+            "peak_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 4573,
+              "n_shots": 95,
+              "skill_point": 0.6759843377225563,
+              "skill_ci95": [
+                0.512980027655539,
+                0.8307285951848555
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 4573,
+                "n_shots": 95,
+                "skill_point": 0.8180100467069549,
+                "skill_ci95": [
+                  0.6992156330778841,
+                  0.9115705504311076
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 1,
+              "n_shots": 1,
+              "skill_point": 0.793401521125029,
+              "skill_ci95": [
+                0.793401521125029,
+                0.793401521125029
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 1,
+                "n_shots": 1,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 31416,
+              "n_shots": 95,
+              "skill_point": 0.08248703275923064,
+              "skill_ci95": [
+                -0.03512374216839456,
+                0.15731331459873457
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 31416,
+                "n_shots": 95,
+                "skill_point": 0.10811525174796688,
+                "skill_ci95": [
+                  0.0072883368849130225,
+                  0.1746553187221635
+                ],
+                "pass": true
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 35990,
+              "n_shots": 95,
+              "skill_point": 0.2633990073736773,
+              "skill_ci95": [
+                0.16611780237032958,
+                0.3354149208956858
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 35990,
+                "n_shots": 95,
+                "skill_point": 0.41440131837806204,
+                "skill_ci95": [
+                  0.34250726409997434,
+                  0.462217042398919
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 35989,
+              "n_shots": 95,
+              "skill_point": 0.26339854592990575,
+              "skill_ci95": [
+                0.1677871259173254,
+                0.333042853751321
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 35989,
+                "n_shots": 95,
+                "skill_point": 0.41440143526546513,
+                "skill_ci95": [
+                  0.3461580982894944,
+                  0.4626187490177276
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 1,
+              "n_shots": 1,
+              "skill_point": 0.793401521125029,
+              "skill_ci95": [
+                0.793401521125029,
+                0.793401521125029
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 1,
+                "n_shots": 1,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        },
+        "CES_VT": {
+          "n": 32016,
+          "held_fraction": 0.5399487756121939,
+          "peak_fraction": 0.2718015992003998,
+          "held_fraction_in_peak": 0.7059296713399219,
+          "held_fraction_in_bulk": 0.4779960538732092,
+          "crosstab": {
+            "peak_held": 6143,
+            "peak_genuine": 2559,
+            "bulk_held": 11144,
+            "bulk_genuine": 12170
+          },
+          "cells": {
+            "peak_held": {
+              "n": 6143,
+              "n_shots": 37,
+              "skill_point": -1.9496903595785025,
+              "skill_ci95": [
+                -10.736293717099635,
+                -0.20072013681616627
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 6143,
+                "n_shots": 37,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 2559,
+              "n_shots": 66,
+              "skill_point": 0.5935928865917449,
+              "skill_ci95": [
+                -0.07010355071283855,
+                0.8925891466630107
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 2559,
+                "n_shots": 66,
+                "skill_point": 0.7689518733513954,
+                "skill_ci95": [
+                  0.18906249070635367,
+                  0.9438292481918269
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 11144,
+              "n_shots": 65,
+              "skill_point": -85.8851283549719,
+              "skill_ci95": [
+                -183.44311602020554,
+                -9.910874645394351
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 11144,
+                "n_shots": 65,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 12170,
+              "n_shots": 66,
+              "skill_point": -0.14177408564847038,
+              "skill_ci95": [
+                -0.9618532471612143,
+                0.08006904299093537
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 12170,
+                "n_shots": 66,
+                "skill_point": -0.06492229400444871,
+                "skill_ci95": [
+                  -0.7851550033658496,
+                  0.16110442803950226
+                ],
+                "pass": false
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 32016,
+              "n_shots": 88,
+              "skill_point": 0.06511733808214959,
+              "skill_ci95": [
+                -0.7021146382586396,
+                0.27937136739770035
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 32016,
+                "n_shots": 88,
+                "skill_point": 0.27811757579729524,
+                "skill_ci95": [
+                  -0.38460622903560315,
+                  0.4502134992634901
+                ],
+                "pass": false
+              }
+            },
+            "genuine_only": {
+              "n": 14729,
+              "n_shots": 68,
+              "skill_point": 0.09783366645976599,
+              "skill_ci95": [
+                -0.6097181633423296,
+                0.29166131866559164
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 14729,
+                "n_shots": 68,
+                "skill_point": 0.3038577607257432,
+                "skill_ci95": [
+                  -0.29896094922690053,
+                  0.4552605726635855
+                ],
+                "pass": false
+              }
+            },
+            "held_only": {
+              "n": 17287,
+              "n_shots": 80,
+              "skill_point": -47.59943198664449,
+              "skill_ci95": [
+                -90.32143641009982,
+                -4.120967717488548
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 17287,
+                "n_shots": 80,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        }
+      },
+      "123": {
+        "CES_TI": {
+          "n": 34274,
+          "held_fraction": 2.917663535041139e-05,
+          "peak_fraction": 0.13027367683958685,
+          "held_fraction_in_peak": 0.0,
+          "held_fraction_in_bulk": 3.354691536113254e-05,
+          "crosstab": {
+            "peak_held": 0,
+            "peak_genuine": 4465,
+            "bulk_held": 1,
+            "bulk_genuine": 29808
+          },
+          "cells": {
+            "peak_held": {
+              "n": 0,
+              "n_shots": 0,
+              "skill_point": NaN,
+              "skill_ci95": [
+                NaN,
+                NaN
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 0,
+                "n_shots": 0,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 4465,
+              "n_shots": 93,
+              "skill_point": 0.6373743312370226,
+              "skill_ci95": [
+                0.3638456635290274,
+                0.7890314243393827
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 4465,
+                "n_shots": 93,
+                "skill_point": 0.7763415771130036,
+                "skill_ci95": [
+                  0.6390943155469169,
+                  0.8634573546793249
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 1,
+              "n_shots": 1,
+              "skill_point": 0.9999301110824128,
+              "skill_ci95": [
+                0.9999301110824128,
+                0.9999301110824128
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 1,
+                "n_shots": 1,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 29808,
+              "n_shots": 96,
+              "skill_point": 0.13408191322338792,
+              "skill_ci95": [
+                -0.0039896739821771825,
+                0.21948010208214053
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 29808,
+                "n_shots": 96,
+                "skill_point": 0.2254302957753067,
+                "skill_ci95": [
+                  0.11207452527211251,
+                  0.2892473149879151
+                ],
+                "pass": true
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 34274,
+              "n_shots": 96,
+              "skill_point": 0.27959615116732994,
+              "skill_ci95": [
+                0.1441438717099969,
+                0.3583173681244325
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 34274,
+                "n_shots": 96,
+                "skill_point": 0.42982525254087345,
+                "skill_ci95": [
+                  0.35884410111018195,
+                  0.4712573618714116
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 34273,
+              "n_shots": 96,
+              "skill_point": 0.27959566286429327,
+              "skill_ci95": [
+                0.14535146211174862,
+                0.36044148617828914
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 34273,
+                "n_shots": 96,
+                "skill_point": 0.42982525254087345,
+                "skill_ci95": [
+                  0.35958971041873583,
+                  0.47106717907349427
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 1,
+              "n_shots": 1,
+              "skill_point": 0.9999301110824128,
+              "skill_ci95": [
+                0.9999301110824128,
+                0.9999301110824128
+              ],
+              "pass": true,
+              "vs_persistence": {
+                "n": 1,
+                "n_shots": 1,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        },
+        "CES_VT": {
+          "n": 30475,
+          "held_fraction": 0.5353568498769483,
+          "peak_fraction": 0.28692370795734207,
+          "held_fraction_in_peak": 0.7279277218664227,
+          "held_fraction_in_bulk": 0.4578712438451981,
+          "crosstab": {
+            "peak_held": 6365,
+            "peak_genuine": 2379,
+            "bulk_held": 9950,
+            "bulk_genuine": 11781
+          },
+          "cells": {
+            "peak_held": {
+              "n": 6365,
+              "n_shots": 41,
+              "skill_point": 0.6078411156479144,
+              "skill_ci95": [
+                -11.75038832205156,
+                0.8598757610191191
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 6365,
+                "n_shots": 41,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "peak_genuine": {
+              "n": 2379,
+              "n_shots": 63,
+              "skill_point": 0.6128992502387354,
+              "skill_ci95": [
+                -0.7003767723037263,
+                0.8498917082798004
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 2379,
+                "n_shots": 63,
+                "skill_point": 0.8221579059546409,
+                "skill_ci95": [
+                  0.45696854465289993,
+                  0.924179015248642
+                ],
+                "pass": true
+              }
+            },
+            "bulk_held": {
+              "n": 9950,
+              "n_shots": 62,
+              "skill_point": -411.4166284626657,
+              "skill_ci95": [
+                -911.8802873725518,
+                -25.06558796581923
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 9950,
+                "n_shots": 62,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            },
+            "bulk_genuine": {
+              "n": 11781,
+              "n_shots": 60,
+              "skill_point": 0.05256272631207748,
+              "skill_ci95": [
+                -0.10471555723359045,
+                0.11260660262225107
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 11781,
+                "n_shots": 60,
+                "skill_point": 0.14218822146412435,
+                "skill_ci95": [
+                  0.05561718408696089,
+                  0.21426006066199732
+                ],
+                "pass": true
+              }
+            }
+          },
+          "subsets": {
+            "all": {
+              "n": 30475,
+              "n_shots": 89,
+              "skill_point": 0.12700563375402052,
+              "skill_ci95": [
+                -0.48122802950889937,
+                0.24363613536010903
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 30475,
+                "n_shots": 89,
+                "skill_point": 0.3405330518271449,
+                "skill_ci95": [
+                  0.06085390969258154,
+                  0.4336343140444498
+                ],
+                "pass": true
+              }
+            },
+            "genuine_only": {
+              "n": 14160,
+              "n_shots": 63,
+              "skill_point": 0.16979067444462836,
+              "skill_ci95": [
+                -0.21020490048577758,
+                0.2590574868452526
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 14160,
+                "n_shots": 63,
+                "skill_point": 0.3752144056431709,
+                "skill_ci95": [
+                  0.24380110503386407,
+                  0.4505718504135259
+                ],
+                "pass": true
+              }
+            },
+            "held_only": {
+              "n": 16315,
+              "n_shots": 80,
+              "skill_point": -11.194190378646406,
+              "skill_ci95": [
+                -189.77986324681908,
+                -6.996084432472576
+              ],
+              "pass": false,
+              "vs_persistence": {
+                "n": 16315,
+                "n_shots": 80,
+                "skill_point": NaN,
+                "skill_ci95": [
+                  NaN,
+                  NaN
+                ],
+                "pass": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "CES_TI_held_richer_in_peak_seeds": 0,
+      "CES_TI_peak_genuine": {
+        "skills_vs_pchip": [
+          0.6591218027396226,
+          0.5872309335476784,
+          0.6759843377225563,
+          0.6373743312370226
+        ],
+        "min": 0.5872309335476784,
+        "max": 0.6759843377225563,
+        "pass_vs_pchip": "4/4",
+        "pass_vs_persistence": "4/4"
+      },
+      "CES_TI_bulk_genuine": {
+        "skills_vs_pchip": [
+          0.09616244570539445,
+          0.028817893453869536,
+          0.08248703275923064,
+          0.13408191322338792
+        ],
+        "min": 0.028817893453869536,
+        "max": 0.13408191322338792,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "4/4"
+      },
+      "CES_TI_bulk_held": {
+        "skills_vs_pchip": [
+          0.793401521125029,
+          0.9999301110824128
+        ],
+        "min": 0.793401521125029,
+        "max": 0.9999301110824128,
+        "pass_vs_pchip": "2/2",
+        "pass_vs_persistence": "0/2"
+      },
+      "CES_TI_all": {
+        "skills_vs_pchip": [
+          0.2565791717517575,
+          0.19373744746209087,
+          0.2633990073736773,
+          0.27959615116732994
+        ],
+        "min": 0.19373744746209087,
+        "max": 0.27959615116732994,
+        "pass_vs_pchip": "4/4",
+        "pass_vs_persistence": "4/4"
+      },
+      "CES_TI_genuine_only": {
+        "skills_vs_pchip": [
+          0.2565791717517575,
+          0.19373744746209087,
+          0.26339854592990575,
+          0.27959566286429327
+        ],
+        "min": 0.19373744746209087,
+        "max": 0.27959566286429327,
+        "pass_vs_pchip": "4/4",
+        "pass_vs_persistence": "4/4"
+      },
+      "CES_TI_held_only": {
+        "skills_vs_pchip": [
+          0.793401521125029,
+          0.9999301110824128
+        ],
+        "min": 0.793401521125029,
+        "max": 0.9999301110824128,
+        "pass_vs_pchip": "2/2",
+        "pass_vs_persistence": "0/2"
+      },
+      "CES_VT_held_richer_in_peak_seeds": 4,
+      "CES_VT_peak_genuine": {
+        "skills_vs_pchip": [
+          0.6265237475353393,
+          0.5512809568971238,
+          0.5935928865917449,
+          0.6128992502387354
+        ],
+        "min": 0.5512809568971238,
+        "max": 0.6265237475353393,
+        "pass_vs_pchip": "1/4",
+        "pass_vs_persistence": "4/4"
+      },
+      "CES_VT_peak_held": {
+        "skills_vs_pchip": [
+          -3.320733609355126,
+          0.7517052835643723,
+          -1.9496903595785025,
+          0.6078411156479144
+        ],
+        "min": -3.320733609355126,
+        "max": 0.7517052835643723,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "0/4"
+      },
+      "CES_VT_bulk_genuine": {
+        "skills_vs_pchip": [
+          -0.010476854569356098,
+          -0.051017329328434835,
+          -0.14177408564847038,
+          0.05256272631207748
+        ],
+        "min": -0.14177408564847038,
+        "max": 0.05256272631207748,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "1/4"
+      },
+      "CES_VT_bulk_held": {
+        "skills_vs_pchip": [
+          -353.0658097869476,
+          -48.2552543111834,
+          -85.8851283549719,
+          -411.4166284626657
+        ],
+        "min": -411.4166284626657,
+        "max": -48.2552543111834,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "0/4"
+      },
+      "CES_VT_all": {
+        "skills_vs_pchip": [
+          0.15363892073792962,
+          0.10928668837002797,
+          0.06511733808214959,
+          0.12700563375402052
+        ],
+        "min": 0.06511733808214959,
+        "max": 0.15363892073792962,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "3/4"
+      },
+      "CES_VT_genuine_only": {
+        "skills_vs_pchip": [
+          0.20148083830925823,
+          0.1262764121155523,
+          0.09783366645976599,
+          0.16979067444462836
+        ],
+        "min": 0.09783366645976599,
+        "max": 0.20148083830925823,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "3/4"
+      },
+      "CES_VT_held_only": {
+        "skills_vs_pchip": [
+          -106.68410807159407,
+          -2.4872957529290782,
+          -47.59943198664449,
+          -11.194190378646406
+        ],
+        "min": -106.68410807159407,
+        "max": -2.4872957529290782,
+        "pass_vs_pchip": "0/4",
+        "pass_vs_persistence": "0/4"
+      }
+    }
+  },
+  "per_shot_norm": {
+    "campaign_split": {
+      "design": "campaign (strictly temporal) split; single controlled variable CES_PER_SHOT_NORM (fast diagnostics z-scored within each shot, targets untouched); control = the \u00a78n runs",
+      "verdict_rule": "KEEP_CANDIDATE iff paired CES_TI skill > 0 on >=3/4 init seeds and >=1 paired CI excludes 0",
+      "verdict": {
+        "CES_TI": {
+          "paired_skill_points": [
+            0.13912467966240905,
+            0.0958939541238929,
+            0.2912814109027252,
+            0.0954315153678873
+          ],
+          "mean": 0.1554328900142286,
+          "favor_seeds": "4/4",
+          "significant_favor_seeds": "4/4"
+        },
+        "CES_VT": {
+          "paired_skill_points": [
+            0.00019740554176284064,
+            -0.02364300586608392,
+            -0.05066145002695488,
+            -0.0015804972331496803
+          ],
+          "mean": -0.01892188689610641,
+          "favor_seeds": "1/4",
+          "significant_favor_seeds": "0/4"
+        },
+        "overall": "KEEP_CANDIDATE"
+      },
+      "per_seed": {
+        "42": {
+          "CES_TI": {
+            "base": 0.050698277799047786,
+            "per_shot": 0.1827695519518594,
+            "base_pass": false,
+            "per_shot_pass": true,
+            "paired": {
+              "n_shots": 95,
+              "skill_point": 0.13912467966240905,
+              "skill_ci95": [
+                0.05684888035643724,
+                0.23719165309136925
+              ],
+              "paired_diff_point": -47712.851504787446,
+              "paired_diff_ci95": [
+                -72417.9383232264,
+                -21042.549327108416
+              ],
+              "pass": true,
+              "n_rows": 20155,
+              "a_better": true,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "base": -0.06092069002411682,
+            "per_shot": -0.0607112537557688,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 62,
+              "skill_point": 0.00019740554176284064,
+              "skill_ci95": [
+                -0.04455662760230283,
+                0.04671573322335463
+              ],
+              "paired_diff_point": -0.21752447465616595,
+              "paired_diff_ci95": [
+                -67.95560583214242,
+                52.660337403346844
+              ],
+              "pass": false,
+              "n_rows": 8068,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        },
+        "1": {
+          "CES_TI": {
+            "base": 0.04369578279177433,
+            "per_shot": 0.13539962946308015,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 95,
+              "skill_point": 0.0958939541238929,
+              "skill_ci95": [
+                0.0069437220813331705,
+                0.19947828934426767
+              ],
+              "paired_diff_point": -33129.448788384725,
+              "paired_diff_ci95": [
+                -57241.507087221784,
+                -2651.381696102885
+              ],
+              "pass": true,
+              "n_rows": 20155,
+              "a_better": true,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "base": -0.004557777053205481,
+            "per_shot": -0.02830857872130399,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 62,
+              "skill_point": -0.02364300586608392,
+              "skill_ci95": [
+                -0.06970776004862117,
+                -0.003068743421219464
+              ],
+              "paired_diff_point": 24.66854144085774,
+              "paired_diff_ci95": [
+                3.160793231978051,
+                53.76952831931464
+              ],
+              "pass": false,
+              "n_rows": 8068,
+              "a_better": false,
+              "b_better": true
+            }
+          }
+        },
+        "7": {
+          "CES_TI": {
+            "base": -0.14793499070056915,
+            "per_shot": 0.18643709635926875,
+            "base_pass": false,
+            "per_shot_pass": true,
+            "paired": {
+              "n_shots": 95,
+              "skill_point": 0.2912814109027252,
+              "skill_ci95": [
+                0.15959787035196168,
+                0.42037646288587494
+              ],
+              "paired_diff_point": -120797.23042161757,
+              "paired_diff_ci95": [
+                -182970.50151976745,
+                -61281.34653667799
+              ],
+              "pass": true,
+              "n_rows": 20155,
+              "a_better": true,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "base": -0.15625297130199112,
+            "per_shot": -0.21483048534661764,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 62,
+              "skill_point": -0.05066145002695488,
+              "skill_ci95": [
+                -0.12036353544736667,
+                0.012106340540510263
+              ],
+              "paired_diff_point": 60.84100012814148,
+              "paired_diff_ci95": [
+                -9.80696845220528,
+                221.73842092054662
+              ],
+              "pass": false,
+              "n_rows": 8068,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        },
+        "123": {
+          "CES_TI": {
+            "base": -0.01790861789738485,
+            "per_shot": 0.07923201543427782,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 95,
+              "skill_point": 0.0954315153678873,
+              "skill_ci95": [
+                0.029702491508945095,
+                0.16957189258609406
+              ],
+              "paired_diff_point": -35093.56742440789,
+              "paired_diff_ci95": [
+                -58139.192742468804,
+                -11588.156593108131
+              ],
+              "pass": true,
+              "n_rows": 20155,
+              "a_better": true,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "base": -0.05606205617577498,
+            "per_shot": -0.05773108224890788,
+            "base_pass": false,
+            "per_shot_pass": false,
+            "paired": {
+              "n_shots": 62,
+              "skill_point": -0.0015804972331496803,
+              "skill_ci95": [
+                -0.007701114927796248,
+                0.0025343816419405186
+              ],
+              "paired_diff_point": 1.7336005036191378,
+              "paired_diff_ci95": [
+                -2.7102464275052154,
+                6.952909333032036
+              ],
+              "pass": false,
+              "n_rows": 8068,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        }
+      }
+    },
+    "headline_split": {
+      "design": "random (headline) file split, control = .sf_iter009_s* (the \u00a78c held-free 4-seed family); both arms train and score with CES_DROP_STUCK_TARGETS=1; single controlled variable CES_PER_SHOT_NORM",
+      "verdict_rule": "ADOPT iff no seed shows a significant paired CES_TI loss vs the control; CAMPAIGN_ONLY otherwise",
+      "verdict": {
+        "CES_TI": {
+          "paired_skill_points": [
+            -0.027008552156927657,
+            -0.03162437731865442,
+            -0.12740632422709597,
+            0.04292107064204409
+          ],
+          "mean": -0.03577954576515849,
+          "significant_losses": "0/4",
+          "significant_wins": "0/4"
+        },
+        "CES_VT": {
+          "paired_skill_points": [
+            0.0010336528349003116,
+            -0.0017347281254016522,
+            0.003460341225781094,
+            0.003157392998039521
+          ],
+          "mean": 0.0014791647333298186,
+          "significant_losses": "0/4",
+          "significant_wins": "1/4"
+        },
+        "overall": "ADOPT"
+      },
+      "per_seed": {
+        "1": {
+          "CES_TI": {
+            "per_shot": 0.16197075648688042,
+            "per_shot_pass": true,
+            "paired_vs_control": {
+              "n_shots": 94,
+              "skill_point": -0.027008552156927657,
+              "skill_ci95": [
+                -0.08120969230609514,
+                0.011307012552216745
+              ],
+              "paired_diff_point": 5503.302351617669,
+              "paired_diff_ci95": [
+                -2565.413881449645,
+                14216.421980254676
+              ],
+              "pass": false,
+              "n_rows": 35856,
+              "a_better": false,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "per_shot": 0.20267431585991713,
+            "per_shot_pass": true,
+            "paired_vs_control": {
+              "n_shots": 61,
+              "skill_point": 0.0010336528349003116,
+              "skill_ci95": [
+                -0.0035749491839285772,
+                0.004884524654317473
+              ],
+              "paired_diff_point": -1.1943462969163927,
+              "paired_diff_ci95": [
+                -5.841948587516936,
+                4.309775546611797
+              ],
+              "pass": false,
+              "n_rows": 13660,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        },
+        "7": {
+          "CES_TI": {
+            "per_shot": 0.2689934554920933,
+            "per_shot_pass": true,
+            "paired_vs_control": {
+              "n_shots": 95,
+              "skill_point": -0.03162437731865442,
+              "skill_ci95": [
+                -0.0861948215385318,
+                0.008615376348706315
+              ],
+              "paired_diff_point": 6778.675512710478,
+              "paired_diff_ci95": [
+                -1786.6690233138975,
+                16260.452907965966
+              ],
+              "pass": false,
+              "n_rows": 36083,
+              "a_better": false,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "per_shot": 0.1413967784812934,
+            "per_shot_pass": false,
+            "paired_vs_control": {
+              "n_shots": 65,
+              "skill_point": -0.0017347281254016522,
+              "skill_ci95": [
+                -0.011055907923258524,
+                0.00281947183171255
+              ],
+              "paired_diff_point": 3.127425982430425,
+              "paired_diff_ci95": [
+                -4.733517591770973,
+                15.708366939708364
+              ],
+              "pass": false,
+              "n_rows": 14698,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        },
+        "42": {
+          "CES_TI": {
+            "per_shot": 0.14138318865386312,
+            "per_shot_pass": false,
+            "paired_vs_control": {
+              "n_shots": 96,
+              "skill_point": -0.12740632422709597,
+              "skill_ci95": [
+                -0.3300441659345765,
+                0.007634767035663385
+              ],
+              "paired_diff_point": 19584.419818873637,
+              "paired_diff_ci95": [
+                -1275.308883753539,
+                44364.81472740235
+              ],
+              "pass": false,
+              "n_rows": 32787,
+              "a_better": false,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "per_shot": 0.22912965960282328,
+            "per_shot_pass": false,
+            "paired_vs_control": {
+              "n_shots": 61,
+              "skill_point": 0.003460341225781094,
+              "skill_ci95": [
+                0.0004334558968271646,
+                0.008830291579395223
+              ],
+              "paired_diff_point": -4.11022402796978,
+              "paired_diff_ci95": [
+                -8.236206325644858,
+                -0.4652194412897042
+              ],
+              "pass": true,
+              "n_rows": 10729,
+              "a_better": true,
+              "b_better": false
+            }
+          }
+        },
+        "123": {
+          "CES_TI": {
+            "per_shot": 0.25442793872883795,
+            "per_shot_pass": true,
+            "paired_vs_control": {
+              "n_shots": 96,
+              "skill_point": 0.04292107064204409,
+              "skill_ci95": [
+                -0.021857688492548863,
+                0.12864320865886864
+              ],
+              "paired_diff_point": -13132.249414317494,
+              "paired_diff_ci95": [
+                -34363.09208883634,
+                7300.0894284587985
+              ],
+              "pass": false,
+              "n_rows": 34399,
+              "a_better": false,
+              "b_better": false
+            }
+          },
+          "CES_VT": {
+            "per_shot": 0.21222030940943915,
+            "per_shot_pass": false,
+            "paired_vs_control": {
+              "n_shots": 60,
+              "skill_point": 0.003157392998039521,
+              "skill_ci95": [
+                -0.010632476924527368,
+                0.011781645892010601
+              ],
+              "paired_diff_point": -6.613686298878457,
+              "paired_diff_ci95": [
+                -33.72128991471457,
+                9.485021175180655
+              ],
+              "pass": false,
+              "n_rows": 14126,
+              "a_better": false,
+              "b_better": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

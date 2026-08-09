@@ -117,7 +117,9 @@ when observations are equally spaced (t_j − t_{j−1} = 1 for all j).
 
 **Why it is a standard baseline.** CES ion temperature is measured at irregular intervals
 (10–100 ms depending on neutral-beam injection scheduling and discharge conditions) with
-approximately 8% missing CES_TI and 24% missing CES_VT. Standard AR(1) models assume
+8.2% NaN-missing CES_TI and 23.9% NaN-missing CES_VT — and, for CES_VT, a further 41.1%
+of rows that are held (bit-identical carry-forwards), so 65.0% of the grid carries no
+independent CES_VT information. Standard AR(1) models assume
 equal spacing and are therefore misspecified when applied to unevenly sampled plasma
 diagnostics. The IAR model is the natural minimal-parameter baseline for the unevenly
 sampled case: it introduces no user-chosen kernel and has only two free parameters (φ, σ),
@@ -206,7 +208,7 @@ correlation, conditional bias, and unconditional bias terms. In the CES nowcasti
 persistence is the cheapest physically meaningful baseline (CES_TI and CES_VT change
 slowly compared to BES/ECEI turbulence) and a model that fails to beat persistence
 provides no actionable signal for the plasma control system. Using `skill_vs_persistence`
-as the primary optimisation target in `automl_agent_loop.py` directly follows Murphy's
+as the primary optimisation target of the (now-retired) AutoML loop directly follows Murphy's
 recommendation that baselines should reflect the simplest defensible prediction strategy.
 
 **Primary citation.**

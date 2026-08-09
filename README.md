@@ -2,7 +2,7 @@
 
 This revision is focused on **KSTAR CES (Charge Exchange Spectroscopy) multimodal prediction**. The active code path trains a PyTorch model that predicts normalized low-resolution CES targets from higher-resolution BES, ECEI, MC, irregular-time, and previous-CES-history features.
 
-The old generic `ml-intern` CLI/web runtime is not present in this streamlined repository. The current executable paths are the KSTAR CES training pipeline and the controlled AutoML loop under `ces_prediction/`.
+The old generic `ml-intern` CLI/web runtime is not present in this streamlined repository. The current executable paths are the KSTAR CES training/evaluation pipeline and the controlled experiment batches under `ces_prediction/`.
 
 ## Quick Start
 
@@ -13,14 +13,7 @@ python -m pip install -e ".[dev]"
 python -m pytest -q
 .\ces_prediction\run_smoke_test.ps1
 python ces_prediction/train.py
-python ces_prediction/automl_agent_loop.py --max-iterations 300
-```
-
-Before running `automl_agent_loop.py`, set Slack notification variables. The loop intentionally fails at startup if Slack is not configured.
-
-```text
-SLACK_BOT_TOKEN=<your-slack-bot-token>
-SLACK_CHANNEL_ID=<target-channel-id>
+python ces_prediction/compare_baselines.py   # model vs interpolation, the thesis comparison
 ```
 
 Training writes:
@@ -38,21 +31,29 @@ ces_prediction/metrics.json
 ```text
 ml-intern-revision/
 |-- ces_prediction/
-|   |-- dataset.py        # CSV loading, window/subset indexing, normalization
-|   |-- model.py          # MultimodalCESPredictor baseline
-|   |-- train.py          # Training, fixed split, metrics, weights
-|   |-- automl_agent_loop.py  # Main controlled experiment loop
-|   |-- inspect_split.py  # Split validation/manifest helper
+|   |-- dataset.py            # CSV loading, window/subset indexing, normalization
+|   |-- model.py              # Import surface: re-exports model_iter009 (or CES_MODEL_FILE)
+|   |-- model_iter009.py      # THE published architecture -- SHA-256 pinned, do not edit
+|   |-- model_iter002.py      # iter2 "before" model of the progression figure -- pinned
+|   |-- train.py              # Training, fixed split, metrics, weights
+|   |-- evaluate.py           # Clean eval vs persistence/mean
+|   |-- compare_baselines.py  # Model vs interpolation (the thesis comparison)
+|   |-- bootstrap_compare.py  # Shot-clustered paired bootstrap
+|   |-- peak_analysis.py      # Where the model earns its skill
+|   |-- collect_paper_numbers.py  # Frozen artifacts -> docs/paper/paper_numbers.json
+|   |-- inspect_split.py      # Split validation/manifest helper
+|   |-- experiments/          # Controlled batches, one per THESIS_RESULTS.md section 8
+|   |                         #   entry, plus runner_common.py / paired_model_compare.py
 |   `-- __init__.py
-|-- data/
-|   |-- *.csv
-|   `-- splits/
+|-- data/                     # gitignored: shot CSVs, splits, run outputs
+|-- docs/                     # paper (tex + pdf), presentation decks, reference notes
 |-- tests/
-|   `-- test_architecture.py
-|-- PROJECT_KNOWLEDGE.md  # Long-term lessons and failed directions
-|-- HANDOFF.md            # Latest experiment/result handoff
-|-- AGENTS.md             # Rules for future coding agents
-|-- README2.md            # Streamline-focused workflow doc
+|   |-- test_architecture.py
+|   |-- test_baselines_interpolation.py
+|   |-- test_bootstrap_compare.py
+|   `-- test_peak_analysis.py
+|-- THESIS_RESULTS.md         # The written-up result + every controlled experiment
+|-- PROJECT_KNOWLEDGE.md      # Long-term lessons and failed directions
 `-- pyproject.toml
 ```
 
@@ -143,7 +144,7 @@ KSTAR_CES_Dataset
    | - ecei:          (window, 4)
    | - mc:            (window, 2)
    | - time_features: (window, 4)
-   | - ces_history:   (window, 3)
+   | - ces_history:   (window, 4)
    | - input_mask:    (window,)
    | - target:        (2,)
    v
@@ -155,76 +156,64 @@ Temporal subset augmentation is enabled by default. A target row can be paired w
 ## Model Flow
 
 ```text
-bes + time + ces_history  ---> BES encoder  ----+
-ecei + time + ces_history ---> ECEI encoder ----+--> concat --> fusion MLP --> [CES_TI, CES_VT]
-mc + time + ces_history   ---> MC encoder   ----+
-time only                 ---> time encoder ----+
+bes  --+
+ecei --+--> time-aware sensor CNN encoders --+
+mc   --+                                     |
+time ------> time encoder -------------------+--> CES_TI head --> CES_TI
+                                             |
+ces_history -> GRU -> observation-masked  ---+--> CES_VT head --> CES_VT
+               multi-head attention pool ----'
 ```
 
-The current baseline is a late-fusion multimodal CNN-style model. It keeps each diagnostic stream separate until fusion, then predicts the two normalized CES targets.
+A late-fusion multimodal model: each diagnostic stream stays separate until fusion. Two details are
+load-bearing rather than decorative:
 
-## Controlled AutoML Loop
+- **Observation-masked attention pooling.** Each target's history readout can only place weight on
+  timesteps where *that* target was actually measured — the inductive bias that makes interpolation
+  strong, added at zero parameter cost.
+- **Target-aware routing.** `CES_TI` sees the fast diagnostics, history, and time; `CES_VT` sees
+  history and time only. The fast channels carry ion-temperature information but not rotation, and
+  routing this explicitly is what closes the `V_rot` deficit (THESIS_RESULTS.md §8t).
 
-`ces_prediction/automl_agent_loop.py` is the main experiment orchestrator. It keeps the old Evaluation/Briefing/Research roles, but it no longer rewrites `model.py` after every successful evaluation. It first runs smoke validation, then full training, then decides whether a model update is allowed.
+## Controlled Experiments
+
+Each experiment lives under `ces_prediction/experiments/<name>/` with its own runner, and each is
+written up in `THESIS_RESULTS.md` section 8 with its design, result, and verdict.
 
 ```text
-Evaluation role
-   |
-   | run smoke validation
-   | run full train.py
-   | collect metrics
-   v
-Briefing role
-   |
-   | update HANDOFF.md every run
-   | detect plateau or regression
-   | summarize every 10 runs into PROJECT_KNOWLEDGE.md
-   v
-Research role
-   |
-   | propose one controlled change
-   | only change model architecture after plateau rules are met
-   | preserve data/model contract
-   v
-Implementation
-   |
-   | edit scoped files
-   | run tests
-   | compare against baseline
-   v
-Next run
+stuckfree/     held (forward-filled) CES removed from training     -> KEEP  (§8c)
+seq/           full-grid sequence reframing (seq / seq_v2)         -> KEEP  (§8d, §8t)
+window_sweep/  W in {2,3,4,6,8} x 4 seeds + history-0              -> W=4 not justified (§8f)
+largegap/      large gaps vs a CAUSAL baseline                     -> interpolation's territory (§8g)
+mnar/          reweighting onto the genuinely-missing points       -> causal claim survives (§8i)
+anchor/        1,258-parameter anchor + delta ladder rung          -> recovers ~31.5% of margin (§8k)
+latency/       batch-1 inference against the 10 ms CES grid        -> CPU p99 6.4 ms (§8l)
+uq/            split conformal intervals, no retraining            -> beats both baselines 8/8 (§8m)
+campaign/      strictly temporal (campaign) split                  -> offline claim dies (§8n)
+gp/            Gaussian-process arm, the strongest offline opponent-> model TIES it (§8p)
+fitfail/       CES spectral-fit failures (T_i > 3 keV)             -> headline is conservative (§8q)
+heldpeak/      peak x held crosstab for CES_VT                     -> three regimes (§8r)
+pershot/       per-shot input standardization                      -> ADOPT (§8s)
+quantum/       IonQ VQC vs a classical MLP                         -> side track, not a thesis claim
 ```
 
-Run the main loop:
+Plus two shared files at `experiments/` level: `runner_common.py` (frozen split dirs, control run
+dirs, pinned training env, `run_step`) and `paired_model_compare.py` (the shot-clustered paired
+bootstrap, which refuses to compare arms that did not score the same rows).
 
-```bash
-python ces_prediction/automl_agent_loop.py --max-iterations 300
-```
+The discipline these follow: one controlled variable per experiment, a pre-registered verdict rule,
+four independent split seeds, and a shot-clustered paired bootstrap. A single-seed result is not
+evidence. An earlier `automl_agent_loop.py` (a keep/discard autoresearch loop) produced the thesis
+architecture and was retired on 2026-06-24; recover it from git history if needed. Its archived
+output is still the published architecture and now lives in the repo as
+`ces_prediction/model_iter009.py` (with the iter2 "before" baseline as
+`ces_prediction/model_iter002.py`), pinned by SHA-256 in `tests/test_architecture.py`.
+`ces_prediction/model.py` re-exports it, so training and scoring use it by default; a batch that
+varies the architecture points `CES_MODEL_FILE` at its own file instead.
 
-Slack is required for this loop. Missing `slack_sdk`, `SLACK_BOT_TOKEN`, or `SLACK_CHANNEL_ID` stops the run before training starts.
-
-Useful development run:
-
-```bash
-python ces_prediction/automl_agent_loop.py --max-iterations 1 --train-samples 2000 --val-samples 500 --split-dir data/.automl_dev_splits --output-dir data/.automl_dev_outputs
-```
-
-### Plateau Rule
-
-A model-architecture change is allowed only after at least **3 consecutive evaluated runs** fail to improve the best validation loss by a meaningful margin.
-
-Recommended margin: **relative improvement below 3%** counts as no meaningful improvement.
-
-```text
-relative_improvement = (best_val_loss_before - current_val_loss) / best_val_loss_before
-
-if relative_improvement < 0.03:
-    plateau_like_run += 1
-else:
-    plateau_like_run = 0
-```
-
-Why 3%: the earlier experiment history stayed around `0.49-0.53`, so tiny changes around 1% can easily be run noise. A 3% threshold is strict enough to avoid architecture churn, but not so strict that real progress is ignored. If future repeated-seed runs show lower noise, this threshold can be tightened.
+A continuous-time batch (`ct/`, four alternative history encoders) was run and rejected; the code
+was removed on 2026-08-09 once the paper stopped citing it. The verdict survives in
+`THESIS_RESULTS.md` §8e — read it before re-opening the question.
 
 ## Commands
 
@@ -289,6 +278,9 @@ CES_MAX_TRAIN_SAMPLES=200000
 CES_MAX_VAL_SAMPLES=40000
 CES_TEMPORAL_SUBSETS=1
 CES_MIN_SUBSET_SIZE=2
+CES_DROP_STUCK_TARGETS=1   # NaN out held/forward-filled CES targets at load (pin it explicitly)
+CES_PER_SHOT_NORM=0        # 1 = z-score BES/ECEI/MC within each shot (targets untouched)
+CES_MAX_SAMPLES_PER_FILE=0 # 0 = off; per-shot cap applied before the global caps
 CES_CPU_WORKERS=<detected CPU count>
 CES_DATALOADER_WORKERS=0
 CES_TORCH_THREADS=<derived from CPU budget, capped at 16>
@@ -312,27 +304,27 @@ The separate `CES_SPLIT_DIR` and `CES_OUTPUT_DIR` keep smoke-test splits, metric
 ## Documentation Responsibilities
 
 ```text
-HANDOFF.md
-  - update after every meaningful training/evaluation run
-  - include latest metrics, settings, and next action
+THESIS_RESULTS.md
+  - the written-up result; section 8 records every controlled experiment
+  - add a section per experiment: design, result table, verdict
 
 PROJECT_KNOWLEDGE.md
-  - update with a compact summary every 10 runs or after a major finding
-  - record failed paths so they are not repeated
+  - long-term memory: lasting lessons, rejected paths, reproducibility traps
+  - summarize into it after a major finding -- not a per-run log
 
-AGENTS.md
-  - defines what future coding agents may change
-  - defines plateau and experiment discipline rules
+CLAUDE.md
+  - how to work in this repo: commands, the data/model contract, agreements
 ```
 
 ## What Was Removed From The Active Path
 
-The following old concepts are no longer part of the active streamline:
+The following are no longer part of the active streamline:
 
-- Generic `ml-intern` CLI entrypoint.
-- FastAPI/web frontend runtime.
-- Slack notification scripts.
-- Uncontrolled `model.py` rewriting after every iteration.
+- Generic `ml-intern` CLI entrypoint and the FastAPI/web frontend runtime.
 - Agent/web dependencies unrelated to KSTAR CES training.
-
-The project still uses `automl_agent_loop.py`, but the loop must follow `AGENTS.md`, preserve the data/model contract, run smoke validation before full training, and compare one experiment change at a time.
+- The AutoML autoresearch loop (`automl_agent_loop.py`), its Slack notifier, and `program.md`,
+  removed 2026-08-05 after 6 weeks unused -- experiments are now hand-written batches under
+  `ces_prediction/experiments/`. Recover from git history if needed.
+- Superseded docs: `README2.md`, `AGENTS.md`, `PROGRESS.md`, `HANDOFF.md`, `RESEARCH_PLAN.md`,
+  `RESEARCH_SUMMARY.md`, `ML_WORKFLOW_ARCHITECTURE.md` -- their live content now lives in
+  `THESIS_RESULTS.md`, `PROJECT_KNOWLEDGE.md`, and `CLAUDE.md`.

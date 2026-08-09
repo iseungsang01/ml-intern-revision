@@ -2,13 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Git / commit policy (do not auto-commit)
-
-Never create git commits or pushes automatically. Do **not** run `git commit` / `git push`, and do
-**not** invoke any OMC commit step (the `team` / `autopilot` / `ralph` commit protocol, or
-`git-master` auto-commit) unless the user explicitly asks to commit in that same message. Making and
-verifying file changes is fine; turning them into commits requires an explicit per-request go-ahead.
-
 ## What this repo is
 
 A single PyTorch pipeline that predicts normalized low-resolution KSTAR CES (Charge
@@ -26,15 +19,21 @@ python -m pytest -q                  # tests (tests/test_architecture.py)
 python ces_prediction/train.py       # full training run
 python ces_prediction/evaluate.py    # clean eval: model vs persistence/mean, physical units, per target
 python ces_prediction/inspect_split.py        # validate fixed split / manifest
-python ces_prediction/automl_agent_loop.py --max-iterations 300   # controlled experiment loop
+python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
 ```
+
+Controlled experiment batches live under `ces_prediction/experiments/` — 12 directories, each with
+its own runner and each behind a numbered section of `THESIS_RESULTS.md` §8, plus two shared files
+(`runner_common.py` for the frozen splits/controls/env, `paired_model_compare.py` for the paired
+bootstrap). The mapping (directory ↔ §8 section ↔ verdict) and the non-negotiables for a new batch
+are in `ces_prediction/experiments/README.md`; read that before adding one.
 
 Run a single test: `python -m pytest tests/test_architecture.py::test_dry_run -q`
 
-**Always run scripts from the repo root.** `train.py`, `model.py`, and `automl_agent_loop.py`
-import sibling modules by bare name (`from dataset import ...`, `from slack_notifier import ...`),
-relying on the script's own directory being on `sys.path`. There is no `ces_prediction.*`
-package import path in the runtime code (`tests/` patches `sys.path` manually).
+**Always run scripts from the repo root.** `train.py`, `evaluate.py`, `compare_baselines.py` and
+the experiment runners import sibling modules by bare name (`from dataset import ...`), relying on
+the script's own directory being on `sys.path`. There is no `ces_prediction.*` package import path
+in the runtime code (`tests/` and the runners patch `sys.path` manually).
 
 **You need real data to do almost anything.** The shot CSVs are **not** committed (`data/*`
 is gitignored). Point `CES_DATA_DIR` at the real folder (the thesis `data/`, e.g.
@@ -100,37 +99,47 @@ so canonical splits/metrics/weights are not overwritten (the smoke script uses `
 The shot CSVs are **not** committed (`data/*` is gitignored); point `CES_DATA_DIR` at their real
 location (e.g. the thesis `data/` folder) or copy them into `data/`.
 
-## AutoML loop and experiment discipline
+## The AutoML loop is gone (removed 2026-08-05) — but its output is load-bearing
 
-`automl_agent_loop.py` is a **keep/discard autoresearch loop** (inspired by Karpathy's
-`autoresearch`). Each iteration: smoke-validate → full `train.py` → clean `evaluate.py` → score the
-model on the **clean mean `skill_vs_persistence`** (not the augmented val loss) → **keep** the change
-if it beats the best so far, else **discard and roll back `model.py`** to the best snapshot. So the
-loop never builds on a regression and never loses the best architecture.
+An `automl_agent_loop.py` keep/discard autoresearch loop produced the thesis architecture and was
+then retired (last run 2026-06-24; every experiment since is a hand-written batch under
+`experiments/`). The runner, its Slack notifier, `program.md`, and `HANDOFF.md` were deleted —
+recover them from git history if ever needed.
 
-- **Researcher = Claude.** The model rewrite uses the official `anthropic` SDK (`claude-opus-4-8`,
-  adaptive thinking, streaming). Needs `ANTHROPIC_API_KEY`; a missing key or SDK skips the rewrite
-  and the loop keeps running. Override the model with `AUTOML_RESEARCH_MODEL`.
-- **`program.md`** (repo root) is the editable agent "skill" — objective, keep/discard rules,
-  discipline, and physics priors. Humans tune `program.md`; the loop injects it plus
-  `PROJECT_KNOWLEDGE.md` and the hard `DATA_CONTRACT` into the prompt. Output must be raw `model.py`
-  preserving the contract (validated: must contain `class MultimodalCESPredictor` and `def forward`).
-- **Slack is mandatory.** Missing `slack_sdk`, `SLACK_BOT_TOKEN`, or `SLACK_CHANNEL_ID` makes the
-  loop fail before training starts (`validate_slack_config`).
-- **State** (best snapshot `best_model.py` + per-iteration archive) lives under
-  `<output_dir>/.automl_state/` (default `ces_prediction/.automl_state/`). The loop stops early after
-  `--max-consecutive-failures` (default 5).
-- Smoke/training failure is a **repair** signal, not architecture-quality evidence: the failed
-  proposal is discarded (rolled back) and the agent is asked for a different controlled change.
+**The published architectures live in the repo (moved in 2026-08-09).**
+`ces_prediction/model_iter009.py` is the thesis architecture (GRU + observation-masked multi-head
+attention) and `ces_prediction/model_iter002.py` is the iter2 "before" baseline of the progression
+figure. Both are byte-identical copies of the AutoML archive that used to exist only under the
+gitignored `data/`, and both are pinned by SHA-256 in `tests/test_architecture.py` — **do not edit
+them**.
 
-## Working agreements (from AGENTS.md)
+## Choosing the architecture (`CES_MODEL_FILE`)
 
-- Read `PROJECT_KNOWLEDGE.md` (long-term lessons, failed paths) and `HANDOFF.md` (latest
-  run state) before changing training/model/data code.
+`ces_prediction/model.py` **re-exports `model_iter009.py`**, so `from model import
+MultimodalCESPredictor` — in `train.py`, `evaluate.py`, `compare_baselines.py`, and every
+experiment runner — already gives you the architecture behind the published numbers, and every
+saved checkpoint loads.
+
+A controlled experiment that varies the architecture sets **`CES_MODEL_FILE`** to its own `.py`
+file in the subprocess env, exactly like every other `CES_*` knob (`experiments/anchor/` is the
+worked example). The file must define `MultimodalCESPredictor` with the contract signature.
+
+Until 2026-08-09 the runners instead **copied a variant over `model.py` and restored it afterwards**
+(`swap_in_iter009` / `.wsweep_backup`). That is gone: no runner writes to tracked source, and an
+interrupted batch can no longer leave a corrupted `model.py` behind. Don't reintroduce it.
+See PROJECT_KNOWLEDGE.md "Checkpoint / Architecture Provenance".
+
+## Working agreements
+
+- Read `PROJECT_KNOWLEDGE.md` (long-term lessons, failed paths) and `THESIS_RESULTS.md` §8
+  (per-experiment records) before changing training/model/data code.
 - Change **one controlled variable at a time**; don't bundle architecture + data + loss +
   optimizer changes.
-- **Update `HANDOFF.md` after every meaningful run** (latest metrics, settings, next action).
-  Summarize into `PROJECT_KNOWLEDGE.md` every ~10 runs or after a major finding — it's long-term
-  memory, not a per-run log. `automl_agent_loop.py` writes `HANDOFF.md` automatically each run.
+- **Record every meaningful run in `THESIS_RESULTS.md` §8** (design, result, verdict), and
+  summarize lasting lessons into `PROJECT_KNOWLEDGE.md` — that file is long-term memory, not a
+  per-run log.
+- **Pin the data treatment explicitly in every run** — never let `CES_DROP_STUCK_TARGETS` and
+  friends fall back to a default. A silent default produced a wrong window-sweep conclusion once
+  (THESIS_RESULTS.md §8f).
 - After code changes run `python -m pytest -q`; if training/data/model behavior changed, also
   run a smoke training command and record whether it passed.

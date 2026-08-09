@@ -3,10 +3,24 @@
 
 Port of docs/presentation/make_figures.py (Korean talk figures) with all
 figure-internal text in English and typeset-friendly labels.
-Numbers identical — read from the frozen artifacts documented in
-THESIS_RESULTS.md / PROJECT_KNOWLEDGE.md.
+
+Every number is READ FROM `paper_numbers.json` (regenerate with
+`py ces_prediction/collect_paper_numbers.py`), which in turn reads only the frozen
+run directories under data/. Nothing here is hard-coded: an earlier version of this
+file carried literals from a superseded checkpoint family, which is exactly the
+failure mode this indirection removes.
+
+HEADLINE_TREATMENT selects which evaluation population the headline figures use:
+  genuine  held/forward-filled V_rot excluded -- these are not measurements, so this
+           is the defensible headline (and what the paper text claims).
+  stuck0   held kept; deflates V_rot RMSE 35-55%.
+The progression figure is pinned to stuck0 regardless, because the "before" (iter2)
+baseline exists only on that population and a before/after across two different
+populations would not be a comparison.
+
 Output: docs/paper/figures/*.png (overwrites the copied Korean versions).
 """
+import json
 import os
 import matplotlib
 matplotlib.use("Agg")
@@ -33,6 +47,17 @@ os.makedirs(OUT, exist_ok=True)
 
 SKILL_PCHIP = r"skill$_{\mathrm{PCHIP}}$ = 1 $-$ MSE$_{\mathrm{model}}$ / MSE$_{\mathrm{PCHIP}}$"
 
+HEADLINE_TREATMENT = "genuine"
+PROGRESSION_TREATMENT = "stuck0"
+SEEDS = ("42", "1", "7", "123")
+
+with open(os.path.join(os.path.dirname(__file__), "paper_numbers.json"), encoding="utf-8") as _fh:
+    N = json.load(_fh)
+
+
+def head(treatment=None):
+    return N["headline"][treatment or HEADLINE_TREATMENT]["per_seed"]
+
 
 def save(fig, name):
     fig.savefig(os.path.join(OUT, name), bbox_inches="tight", facecolor=BG)
@@ -41,13 +66,15 @@ def save(fig, name):
 
 
 def fig_forest():
-    seeds = ["seed 42", "seed 1", "seed 7", "seed 123"]
-    ti = [0.270, 0.200, 0.271, 0.295]
-    ti_lo = [0.144, 0.088, 0.171, 0.155]
-    ti_hi = [0.364, 0.283, 0.346, 0.373]
-    vt = [0.161, 0.117, 0.078, 0.144]
-    vt_lo = [-0.382, -0.055, -0.596, -0.420]
-    vt_hi = [0.334, 0.226, 0.279, 0.240]
+    rows = head()
+    seeds = [f"seed {s}" for s in SEEDS]
+    ti = [rows[s]["CES_TI"]["ci_vs_pchip"]["skill"] for s in SEEDS]
+    ti_lo = [rows[s]["CES_TI"]["ci_vs_pchip"]["ci95"][0] for s in SEEDS]
+    ti_hi = [rows[s]["CES_TI"]["ci_vs_pchip"]["ci95"][1] for s in SEEDS]
+    vt = [rows[s]["CES_VT"]["ci_vs_pchip"]["skill"] for s in SEEDS]
+    vt_lo = [rows[s]["CES_VT"]["ci_vs_pchip"]["ci95"][0] for s in SEEDS]
+    vt_hi = [rows[s]["CES_VT"]["ci_vs_pchip"]["ci95"][1] for s in SEEDS]
+    n_pass_vt = sum(rows[s]["CES_VT"]["ci_vs_pchip"]["pass"] for s in SEEDS)
 
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.2))
     for ax, vals, lo, hi, title in [
@@ -61,7 +88,7 @@ def fig_forest():
             ax.plot([l, h], [y[i], y[i]], color=c, lw=3, solid_capstyle="round", zorder=2)
             ax.scatter([v], [y[i]], color=c, s=90, zorder=3, edgecolor="white", linewidth=1.2)
             tag = "PASS" if passed else "n.s."
-            ax.text(h + 0.03, y[i], f"+{v:.2f}  {tag}", va="center", ha="left",
+            ax.text(h + 0.03, y[i], f"{v:+.2f}  {tag}", va="center", ha="left",
                     fontsize=10.5, color=c, fontweight="bold")
         ax.axvline(0, color=RED, lw=1.6, ls="--", zorder=1)
         ax.set_yticks(y)
@@ -74,9 +101,12 @@ def fig_forest():
             ax.spines[s].set_visible(False)
     axes[0].text(0.02, 1.0, "all four independent test splits: 95% CI > 0  (PASS)",
                  transform=axes[0].transAxes, fontsize=10, color=GREEN, fontweight="bold")
-    axes[1].text(0.02, 1.0, "all four splits: CI includes 0  (n.s.)",
+    axes[1].text(0.02, 1.0,
+                 ("all four splits: CI includes 0  (n.s.)" if n_pass_vt == 0
+                  else f"{4 - n_pass_vt}/4 splits: CI includes 0  (n.s.)"),
                  transform=axes[1].transAxes, fontsize=10, color=GRAY, fontweight="bold")
-    fig.suptitle("Skill vs. PCHIP interpolation with shot-clustered 95% CI (B = 10,000)",
+    fig.suptitle("Skill vs. PCHIP interpolation with shot-clustered 95% CI (B = 10,000)"
+                 f"  ·  {HEADLINE_TREATMENT}-measurement evaluation",
                  fontsize=14, fontweight="bold", color=NAVY, y=1.04)
     fig.tight_layout()
     save(fig, "fig_forest.png")
@@ -84,16 +114,16 @@ def fig_forest():
 
 def fig_rmse_ladder():
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.3))
-    data = {
-        "CES_TI": dict(
-            names=["AR (past only)", "Persistence", "PCHIP*", "Linear", "Model (nowcaster)"],
-            vals=[1005.66, 487.31, 431.81, 422.66, 368.86],
-            title=r"CES_TI  ($n$ = 32,716)"),
-        "CES_VT": dict(
-            names=["AR (past only)", "Persistence", "PCHIP*", "Linear", "Model (nowcaster)"],
-            vals=[57.23, 27.77, 24.49, 24.01, 22.44],
-            title=r"CES_VT  ($n$ = 27,437)"),
-    }
+    row = head()["42"]
+    names = ["AR (past only)", "Persistence", "PCHIP*", "Linear", "Model (nowcaster)"]
+    keys = ["ar_local", "persistence", "pchip", "linear"]
+    data = {}
+    for tgt, label in (("CES_TI", "CES_TI"), ("CES_VT", "CES_VT")):
+        e = row[tgt]
+        data[tgt] = dict(
+            names=names,
+            vals=[e["rmse"][k] for k in keys] + [e["rmse_model"]],
+            title=rf"{label}  ($n$ = {e['n']:,})")
     for ax, (tgt, d) in zip(axes, data.items()):
         colors = [GRAY, GRAY, BLUE, GRAY, ORANGE]
         y = np.arange(len(d["names"]))
@@ -121,10 +151,12 @@ def fig_rmse_ladder():
 
 def fig_progression():
     fig, ax = plt.subplots(figsize=(8.6, 3.7))
-    labels = ["Baseline\n(iter2, GRU)", "Final model\n(iter5, + multi-head attn)"]
-    vals = [0.088, 0.270]
-    lo = [-0.221, 0.144]
-    hi = [0.323, 0.364]
+    labels = ["Baseline\n(iter2, GRU)", "Final model\n(+ observation-masked attn)"]
+    before = N["before_baseline_iter2"]["CES_TI"]["ci_test"]
+    after = head(PROGRESSION_TREATMENT)["42"]["CES_TI"]["ci_vs_pchip"]
+    vals = [before["skill"], after["skill"]]
+    lo = [before["ci95"][0], after["ci95"][0]]
+    hi = [before["ci95"][1], after["ci95"][1]]
     x = [0, 1]
     colors = [GRAY, GREEN]
     for i in x:
@@ -132,10 +164,10 @@ def fig_progression():
         ax.scatter([x[i]], [vals[i]], color=colors[i], s=160, zorder=3,
                    edgecolor="white", linewidth=1.5)
         tag = "PASS" if lo[i] > 0 else "n.s."
-        ax.text(x[i], hi[i] + 0.03, f"+{vals[i]:.3f}\n{tag}", ha="center", va="bottom",
+        ax.text(x[i], hi[i] + 0.03, f"{vals[i]:+.3f}\n{tag}", ha="center", va="bottom",
                 fontsize=11, color=colors[i], fontweight="bold")
     ax.axhline(0, color=RED, lw=1.6, ls="--")
-    ax.annotate("", xy=(0.92, 0.27), xytext=(0.08, 0.088),
+    ax.annotate("", xy=(0.92, vals[1]), xytext=(0.08, vals[0]),
                 arrowprops=dict(arrowstyle="-|>", color=ORANGE, lw=2.2))
     ax.text(0.5, 0.05, "model selection on clean\nvalidation skill vs. PCHIP", ha="center",
             fontsize=9.5, color=ORANGE, style="italic")
@@ -156,9 +188,11 @@ def fig_progression():
 def fig_ablation():
     fig, ax = plt.subplots(figsize=(9.4, 4.6))
     groups = ["Full\n(history+fast+time)", "no_fast\n(history only)", "no_history\n(fast only)"]
-    ti = [0.359, 0.393, 0.162]
-    vt = [0.180, 0.234, -3.31]
-    ymin = -1.15
+    ab = N["ablation_val_vs_persistence"]
+    arms = ["full", "no_fast", "no_history"]
+    ti = [ab[a]["per_target"]["CES_TI"]["skill_vs_persistence"] for a in arms]
+    vt = [ab[a]["per_target"]["CES_VT"]["skill_vs_persistence"] for a in arms]
+    ymin = min(-1.15, min(vt) - 0.15)
     x = np.arange(len(groups))
     w = 0.36
     b1 = ax.bar(x - w / 2, ti, w, label="CES_TI", color=ORANGE, edgecolor="white")
@@ -179,15 +213,17 @@ def fig_ablation():
     ax.set_ylim(ymin, 0.62)
     ax.set_title("Input-modality ablation: where does each target's information come from?",
                  fontsize=12.5, fontweight="bold", color=NAVY, pad=24)
+    vt_fast = f"{vt[2]:+.2f}".replace("-", "−")
     ax.text(0.5, 1.03,
-            r"fast-only CES_VT = $-$3.31  $\rightarrow$  rotation information comes almost entirely from past CES history",
+            f"fast-only CES_VT = {vt_fast}"
+            + r"  $\rightarrow$  rotation information comes almost entirely from past CES history",
             transform=ax.transAxes, ha="center", fontsize=9.3, color=RED, fontweight="bold")
     ax.legend(fontsize=10, loc="lower left")
     ax.grid(axis="y", color=LGRAY, lw=0.7)
     for s in ["top", "right"]:
         ax.spines[s].set_visible(False)
-    ax.annotate("bar clipped below axis\n(worse than mean prediction)", xy=(2.18, ymin + 0.10),
-                xytext=(1.28, -0.55), fontsize=8.6, color=RED,
+    ax.annotate("worse than predicting the mean", xy=(2.18, vt[2] + 0.03),
+                xytext=(1.22, ymin + 0.22), fontsize=8.6, color=RED,
                 arrowprops=dict(arrowstyle="-|>", color=RED, lw=1.4))
     fig.tight_layout()
     save(fig, "fig_ablation.png")
@@ -196,10 +232,11 @@ def fig_ablation():
 def fig_peak():
     fig, ax = plt.subplots(figsize=(8.6, 4.0))
     groups = ["CES_TI", "CES_VT"]
-    glob = [0.515, 0.241]
-    peak = [0.855, 0.691]
-    peak_lo = [0.658, 0.107]
-    peak_hi = [0.933, 0.871]
+    pk = N["peak_seed42"]["per_target"]
+    glob = [pk[t]["global_skill_vs_pchip"] for t in groups]
+    peak = [pk[t]["peak_skill_vs_pchip"] for t in groups]
+    peak_lo = [pk[t]["peak_skill_ci95"][0] for t in groups]
+    peak_hi = [pk[t]["peak_skill_ci95"][1] for t in groups]
     x = np.arange(len(groups))
     w = 0.34
     ax.bar(x - w / 2, glob, w, label="global", color=LGRAY, edgecolor="white")
@@ -209,9 +246,9 @@ def fig_peak():
     ax.errorbar(x + w / 2, peak, yerr=[err_lo, err_hi], fmt="none",
                 ecolor=NAVY, elinewidth=1.6, capsize=5)
     for i in range(2):
-        ax.text(x[i] - w / 2, glob[i] + 0.02, f"+{glob[i]:.2f}", ha="center",
+        ax.text(x[i] - w / 2, glob[i] + 0.02, f"{glob[i]:+.2f}", ha="center",
                 fontsize=10, color=GRAY, fontweight="bold")
-        ax.text(x[i] + w / 2, peak_hi[i] + 0.02, f"+{peak[i]:.2f}", ha="center",
+        ax.text(x[i] + w / 2, peak_hi[i] + 0.02, f"{peak[i]:+.2f}", ha="center",
                 fontsize=10.5, color=TEAL, fontweight="bold")
     ax.set_xticks(x)
     ax.set_xticklabels(groups, fontsize=12)
@@ -241,10 +278,12 @@ def fig_missing():
         ax.text(0, -0.22, sub, ha="center", va="center", fontsize=9, color=GRAY)
         ax.set_title(title, fontsize=12, fontweight="bold", color=NAVY)
 
-    donut(axes[0], 0.08, ORANGE, "CES_TI missing", "~8% absent\non the 10 ms grid")
-    donut(axes[1], 0.24, BLUE, "CES_VT missing", "~24% absent\non the 10 ms grid")
+    donut(axes[0], 0.082, ORANGE, "CES_TI missing",
+          "8.2% NaN (held 0.0%)\non the 10 ms grid")
+    donut(axes[1], 0.65, BLUE, "CES_VT uninformative",
+          "23.9% NaN + 41.1% held\n= 65.0% of the 10 ms grid")
     donut(axes[2], 0.54, RED, "CES_VT held/stuck", "~54% of observed values\nare forward-filled holds")
-    fig.suptitle("CES is sparse (targets go missing independently); over half of observed $V_{\\mathrm{rot}}$ values are instrument holds",
+    fig.suptitle("CES is sparse and the targets go missing independently; counting instrument holds, 65.0% of the grid carries no independent $V_{\\mathrm{rot}}$ information",
                  fontsize=12, fontweight="bold", color=NAVY, y=1.06)
     fig.tight_layout()
     save(fig, "fig_missing.png")

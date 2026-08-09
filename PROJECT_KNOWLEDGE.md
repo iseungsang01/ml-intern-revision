@@ -22,7 +22,7 @@ autocorrelated).
 - Limitations: skill on observed CES points only (MNAR optimistic bound); window=4; offline
   comparison (baselines use future CES, the model does not — beating them is the strong claim).
 - Tooling: `compare_baselines.py`, `bootstrap_compare.py`, `baselines_interpolation.py`,
-  `analyze_gap.py`; 3-way split + `CES_INIT_SEED` in `train.py`; running log `PROGRESS.md`; write-up
+  `analyze_gap.py`; 3-way split + `CES_INIT_SEED` in `train.py`; write-up
   `THESIS_RESULTS.md`; baseline citations `docs/interpolation_baselines_references.md`.
 
 ## High-Variability (Peak) Reconstruction Finding (2026-06-23, GPU)
@@ -66,11 +66,10 @@ binding, `N_MIN_PEAK_ROWS=200`). Val split, observed-CES-only (MNAR optimistic b
    CES_VT-at-peaks result is real but fragile. Default (2.5, 0.10) gives the strongest CES_VT CI
    lower bound and is the pinned choice.
 
-Implications for the AutoML loop: `program.md` now carries a standing peak-steering rule — if
-input-defined peak skill is weak or its CI straddles 0 (watch CES_VT), the researcher may propose
-a **peak-weighted loss** (upweight high-local-activity samples) as one controlled experiment. This
-is the deferred non-goal; the keep/discard gate stays the global mean `skill_vs_pchip` (peak metrics
-inform the researcher only, never the gate). See [[ces-thesis-result-confirmed]].
+Deferred follow-up (was a standing rule in the retired AutoML loop's `program.md`): if input-defined
+peak skill is weak or its CI straddles 0 (watch CES_VT), a **peak-weighted loss** (upweight
+high-local-activity samples) is worth one controlled experiment. Never let peak metrics become the
+selection gate — that stays the global mean `skill_vs_pchip`.
 
 ## Current Status
 
@@ -190,6 +189,70 @@ The repeated AutoML pattern of rewriting `model.py` after each evaluation has no
 - Do not introduce CES target leakage through `ces_history`.
 - Do not judge performance only by aggregate normalized MSE when per-target `TI` and `VT` errors are needed.
 
+## Window Size — Settled Empirically (2026-08-04, two 24-run sweeps)
+
+Full result in THESIS_RESULTS.md §8f (+ §8f-R contrast); runner
+`ces_prediction/experiments/window_sweep/run_window_sweep.py`; data
+`data/.wsweep_hf_summary.json` (held-free = the result) and `data/.wsweep_summary.json`
+(held-kept = reference only). W ∈ {2,3,4,6,8} × 4 seeds + history-0, iter009 model,
+per-run held-out TEST `skill_vs_pchip`.
+
+- **One past observation is the whole story.** history-0 (`CES_ABLATE=no_history` at W = 4) puts
+  `CES_TI` *below* PCHIP (−0.026, 0/4) and `CES_VT` at −0.783 (~1.8× PCHIP MSE). A single previous
+  observation lifts both to their maximum at once (`CES_TI` +0.238 4/4, `CES_VT` +0.206). Fast
+  diagnostics alone do not even reach interpolation parity.
+- **Both targets are flat from history = 1 on.** `CES_TI` 0.190–0.246, `CES_VT` 0.190–0.206 across
+  W = 2…8, while the per-point seed spread is 0.07–0.16 — wider than the whole curve. **W = 4 has
+  no empirical justification and is below the W = 2/3 values on both targets.** The plateau rule
+  returns W = 2.
+- **The only real argument for W > 2 is coverage, not skill.** `compare_baselines.py` scores a
+  sample only if window-persistence exists (an observed value *inside* the window), so W = 2 drops
+  targets whose adjacent row lacks that reading. Totals barely move (`CES_VT` 52.1k → 53.2k) but
+  the hard subset grows 4–10×: dt > 15 ms goes 456 → 1,958 and dt > 45 ms goes 14 → 135 from
+  W = 2 to W = 8. Wider windows predict *more* long-gap samples, not better ones.
+
+**The held-kept trap (why the first pass was wrong).** The runner originally popped
+`CES_DROP_STUCK_TARGETS` to "inherit nothing", which silently selected train.py's default 0 —
+violating §8c. That pass reported `CES_VT` rising +0.118 → +0.202 with W and concluded "V_rot needs
+a long history". It was an artifact: the held-free gain decays monotonically with window
+(+0.088 / +0.048 / +0.035 / +0.003 / +0.006 at W = 2/3/4/6/8), i.e. **held penalised short
+windows** — a short window's one history slot is often a forward-filled copy, while a long window
+still reaches a genuine reading. Remove held and W = 2 catches up completely; the slope vanishes.
+`CES_TI` (~0.0 % held) shows no systematic shift. Lessons: **pin the data treatment explicitly in
+every new run — never let it default**, and **any conclusion that scales with window length must be
+re-checked held-free before it is believed**.
+
+Two reusable mechanisms came out of this:
+
+- **`CES_MAX_SAMPLES_PER_FILE`** (train.py, default 0 = off) caps each shot's samples with a seeded
+  subset *before* the global caps. Mandatory for any window comparison: temporal-subset
+  augmentation yields 240k samples at W = 2 but **30.1M at W = 8** (per-file max 187k), so an
+  uncapped global subset is dominated by long-block shots more the larger W is. `sample_caps.json`
+  in the split dir validates fixed-split reuse under capping.
+- **`compare_baselines.py` honours `CES_ABLATE`** for the model's inputs only — persistence/PCHIP
+  baselines keep reading the real history, so ablated points stay comparable on the same bar.
+
+Verified before trusting the curve: the file-level split is **window-invariant** (probed W = 2/4/8
+× 4 seeds), all 24 runs evaluate the **same 96 test shots per seed**, and the eval population
+shrinks only 1.8% from W = 2 to W = 8.
+
+**Windows trap for any long batch:** MKL's Intel Fortran runtime installs a console control handler
+that aborts training when the parent console closes (`forrtl: error (200): program aborting due to
+window-CLOSE event`, exit 3221225786 / 1073807364). Set `FOR_DISABLE_CONSOLE_CTRL_HANDLER=1` and
+`KMP_HANDLE_SIGNALS=0` and launch detached
+(`ces_prediction/experiments/window_sweep/run_detached.bat`); `--resume` absorbs the loss.
+
+## Next Up (2026-08-04) — large-gap regime vs a CAUSAL baseline
+
+Executed as §8g; the plan doc it referenced was removed once the batch landed. One-line version:
+the dt-stratified sweep analysis shows `CES_TI` skill at dt > 45 ms is negative-to-zero at every
+`W` (all CIs include 0, n = 429–505). That reads as "loses in the large-gap regime", but the
+baseline there is PCHIP, which gets a **future anchor** — the very thing real-time nowcasting does
+not have. `se_persistence` is not saved in `comparison_errors_test.npz`, so the causal-baseline
+comparison cannot be run yet. **Add that one key to `compare_baselines.py`, re-run compare only
+(no retraining, ~20 min for the 20 held-free runs), and re-judge.** If the model beats persistence
+at large gaps, the limitation is "that regime belongs to interpolation", not a model weakness.
+
 ## Recommended Next Experiments
 
 Use controlled exploration instead of repetitive architecture churn:
@@ -208,6 +271,278 @@ Use controlled exploration instead of repetitive architecture churn:
    - genuinely new sequence/spatial model alternative if it does not repeat prior scaling, skip-path, or local-conv attempts.
 6. Track denormalized per-target validation error for `CES_TI` and `CES_VT`, not only aggregate normalized MSE.
 
+## Checkpoint / Architecture Provenance (2026-07-14) — READ BEFORE SCORING ANYTHING
+
+The thesis result is **reproducible from source**, but the saved artifacts are booby-trapped.
+Three traps, all verified:
+
+1. **Fixed 2026-08-09 — `model.py` now IS the published architecture.** It used to be the
+   Transformer the AutoML loop left behind, against which all 45 saved
+   `weights/multimodal_ces.pth` files failed `load_state_dict`; every scoring script had to
+   inject `model_iter009.py` over it first, and the runners did that by **copying the file over
+   `model.py` on disk and restoring it afterwards**. `model.py` is now a thin re-export of
+   **`ces_prediction/model_iter009.py`** (GRU + observation-masked multi-head attention; the
+   iter2 "before" baseline is `ces_prediction/model_iter002.py`, both byte-identical copies of
+   the AutoML archive, both SHA-256 pinned in `tests/test_architecture.py`). So
+   `evaluate.py` / `compare_baselines.py` / `peak_analysis.py` load checkpoints out of the box,
+   and an architecture variant is selected with **`CES_MODEL_FILE`** in the subprocess env
+   instead of by rewriting tracked source. The lesson that outlives the fix: **a repo whose
+   default import path is not the published architecture will silently score the wrong model** —
+   it took a checkpoint-load failure to notice.
+
+2. **`data/.improve_final_out/weights/` is NOT the checkpoint that produced
+   `comparison_metrics.json`.** It reproduces CES_TI (RMSE 368.3 vs recorded 368.9) but gives
+   CES_VT skill **+0.056** instead of the recorded **+0.161**. Do not trust it.
+
+3. **Retraining the pinned architecture reproduces BOTH targets**, so the recorded thesis numbers
+   were legitimate — only the weights files drifted. Symptom to recognise: **CES_TI reproduces from
+   the stale weights on all 4 seeds, CES_VT does not (3 of 4)**. CES_VT has a wide CI
+   ([-0.41,+0.34]) so a slightly different checkpoint swings its point estimate; CES_TI is stable.
+
+**The whole presentation + THESIS_RESULTS.md are now unified on one reproducible checkpoint family**
+(regenerated 2026-07-14; every number cross-checked to agree across `make_figures.py`,
+`build_pptx.py`, and `THESIS_RESULTS.md`):
+
+| what | dir |
+|---|---|
+| final model, seed 42 | `data/.vt_repro_out` |
+| final model, seeds 1/7/123 | `data/.vt_repro_ms_{1,7,123}` |
+| ablations | `data/.vt_repro_ab_{no_fast,no_history}` |
+| iter2 "before" baseline | `data/.final_out` (**intact** — reproduces +0.0878 / RMSE 412.42 exactly) |
+
+Headline (test, `CES_TI` skill_vs_pchip): **+0.257 / +0.194 / +0.263 / +0.280, all four PASS**;
+`CES_VT` +0.154 / +0.109 / +0.065 / +0.127, all four n.s. Ablation (val, skill_vs_persistence):
+fast-only `CES_TI` **+0.372**, fast-only `CES_VT` **−0.642** — the asymmetry mechanism.
+Not every checkpoint is corrupt: `.final_out` is fine. Always verify a checkpoint against its own
+recorded metrics before trusting it.
+
+Two harness gotchas that cost hours:
+- **Never hand-roll the eval loop.** `compare_baselines` drops ~160 CES_TI samples where a
+  baseline is undefined; those few CES-fit-failure rows (CES_TI up to 15 keV) swing RMSE by 13%.
+- **`train.py` rewrites `CES_SPLIT_DIR/split_manifest.json`.** With `CES_TEST_FRACTION=0`
+  (the default) it writes a 2-way manifest and **destroys `test_files`** in a 3-way split dir.
+  Back the manifest up, or point `CES_SPLIT_DIR` at a copy, before any training run.
+
+## Framing Rules (2026-08-05, 승상님) — read before writing any results section
+
+**"정보가 부족하다"는 결론이 아니라 변명이다.** The draft had drifted to
+"information-limited, not capacity-limited" as a terminal claim. Negative results earn their place
+**only** as routing information: they say where *not* to spend, which is what licenses a specific
+claim about where the next gain is.
+
+- **Never report a negative result without naming the measurement that would overturn it.**
+- Worked example (paper §Headroom): the accumulated negatives (§8f window sweep,
+  MC derived features, §8d seq) point at three levers, each grounded in this repo's own numbers —
+  (1) history **reach**, not depth (§8i: only 54.1% `CES_TI` / 4.8% `CES_VT` of genuinely missing
+  rows are even in-domain at W=4; §8f: W buys coverage, not skill); (2) the **Mirnov information was
+  destroyed by preprocessing, not absent from the plasma** (§8b.2 lag-1 autocorr: BES +0.568 / ECEI
+  +0.572 / **MC −0.009**, 82% of blocks |r|<0.1 → 100 Hz decimation of a kHz dB/dt with no
+  anti-aliasing filter; fix is per-window RMS / band power / mode number from the **raw** stream);
+  (3) the **NBI torque channel is absent** (§8b.3: `T_e`~`CES_TI` r=+0.353 vs `T_e`~`CES_VT`
+  r=+0.024 — power is not torque).
+
+**Novelty is stated as extension, never as absence (승상님 2026-08-05).** Do not lead with
+"no prior work exists" — that clashes with how papers are written and collapses on a single
+counterexample. The canonical order: acknowledge the active lineage (NN-CES fitting since JET
+'93, cross-diagnostic inference, temporal densification) → state the three extensions (electron
+→ sparse ion target; simultaneous memory-less → causal history-conditioned; assumed
+reconstructability → pre-registered per-target tests) → close with ONE conventional hedge
+("to our knowledge this conjunction has not yet been addressed; the family's natural next
+step"). The extension frame gets stronger the more prior work you cite.
+
+**Separate the two claims; never blur them.** "Beats future-using interpolation" is a statement
+about the **observed** population. "Beats every causal method" is the statement that survives
+reweighting to the **genuinely missing** points (§8i: 4/4 at +0.29 vs persistence; 1/4 vs PCHIP).
+An online virtual sensor competes with persistence, not with an interpolant that reads the future.
+Conflating them is the main way this result could be oversold.
+
+## Numbers Must Come From Artifacts, Never From Prose (2026-08-05)
+
+A full audit found the paper describing a **different architecture** than the one that produced its
+numbers, and quoting a **superseded checkpoint family** throughout (§8h). Root cause: numbers were
+transcribed by hand into `main.tex` and hard-coded as literals into `make_figures_en.py`, so
+regenerating the checkpoints updated `THESIS_RESULTS.md` and nothing else.
+
+Now enforced by construction:
+`ces_prediction/collect_paper_numbers.py` → `docs/paper/paper_numbers.json` → read by
+`docs/paper/make_figures_en.py`. **Never hard-code a number in a figure script or a paper table
+without regenerating the JSON first.** `paper_numbers.json` reports BOTH evaluation treatments
+(`genuine` = held excluded, the headline; `stuck0` = held kept, sensitivity) because quoting one
+while claiming the other is exactly the error that was found.
+
+Static check for the LaTeX sources (labels/refs/cites/env/brace balance) is cheap and catches
+structural breakage without a TeX toolchain — there is none installed on this machine.
+
+## Deployment Facts (2026-08-05, measured)
+
+- **Run the model on CPU, not GPU, for online inference.** batch-1 p99 = 6.4 ms (W=4) / 8.7 ms
+  (W=2) on CPU vs **21 ms median / 43–72 ms p99 on CUDA** — an 8× penalty, because 201k parameters
+  give kernel-launch overhead nothing to amortize against. Verified per-call *and* amortized.
+  CPU also won bulk throughput here (48k vs 24k samples/s at batch 512).
+- **Uncertainty without retraining: split conformal.** A learned variance/quantile head would move
+  the point predictions and confound every skill number; conformal calibrates on val, changes
+  nothing, and is distribution-free. Model intervals beat both baselines' 8/8 by Winkler score.
+  Its real limitation is that coverage is **marginal, not conditional** — per-shot coverage runs
+  50–100%, because calibration and test are disjoint discharges and shot-level shift breaks
+  exchangeability. Report per-shot spread, never just the pooled number.
+
+## Repeat Offender: The Unpinned Data Treatment
+
+§8f cost a wrong conclusion; the **anchor runner had the same bug** (2026-08-05) and would have
+paired a held-free arm against a held-kept control. Checklist for every new batch:
+1. Pin `CES_DROP_STUCK_TARGETS` explicitly in the runner's env dict — never inherit, never pop.
+2. Pin the file split with `CES_FILE_SPLIT_FROM` + a test-isolation check (drop_stuck shrinks the
+   valid-file list and the seeded shuffle then repartitions).
+3. Pair against a control trained under the **same** treatment (`.sf_iter009_s*` is held-free;
+   `.vt_repro_*` is held-kept), and verify the scored populations match row-for-row.
+4. When re-scoring frozen runs, **verify every pre-existing npz key reproduces bit-identically**
+   before trusting an added key (the largegap/UQ re-runs do this and it caught nothing — which is
+   the point: it is what makes the added key trustworthy).
+
+## GP Arm + Fit-Failure Sensitivity (2026-08-05) — two audit follow-ups, both decisive
+
+Full records THESIS_RESULTS §8p / §8q; artifacts `data/.gp_analysis.json`,
+`data/.fitfail_analysis.json`, `comparison_errors_test__test_genuine_gp.npz` per run dir.
+
+- **GP is the strongest offline arm and the model TIES it.** The harness's dormant GP arm
+  (never ran — sklearn absent) is now an exact numpy Matern-3/2+white GP: nearest-16+16 local
+  fit, per-sample grid-ML hyperparameters, deterministic, 0.94 ms/fit (the sklearn draft was
+  38 ms/fit = infeasible). GP beats PCHIP +0.21…+0.28 (`CES_TI` 4/4 PASS). Model vs GP: 1/4
+  PASS, 0/4 against, mean ≈ −0.01 → **tie**. Subsets (peak, dt bins) do not break it.
+  **Never write "beats every offline interpolation"** — the honest form: "beats the
+  pre-registered interpolants (PR1); ties the strongest future-using ML-tuned smoother; the
+  causal/deployment claim is unaffected (GP needs future anchors)". Named tie-breakers: more
+  shots (seed 7 resolves it), and a *causal past-only GP* arm (not yet run).
+- **Fit-failure artifacts DEFLATE the headline.** Dropping `CES_TI` > 3 keV rows (0.4–0.6%)
+  keeps 4/4 PASS and roughly doubles skill (+0.18…+0.28 → +0.36…+0.59): the spikes are
+  unpredictable for every arm and drag the MSE ratio toward 1. The headline keeps them
+  (pre-registered population) and is therefore **conservative** w.r.t. this artifact — this
+  flips Q15 from a defended weakness into a strength.
+- **Additive-key pattern held for the third time** (after §8g, §8i): adding the `gp` method
+  cannot shrink `valid` because its NaN condition equals `ar_local`'s; all 4 re-runs reproduced
+  the §8g npz bit-for-bit (+`se_gp`, `y_true` keys). `y_true` in the npz now enables further
+  target-value-conditioned sensitivity analyses without re-scoring.
+
+## `CES_VT` Is Three Regimes, Not One Verdict (2026-08-09) — §8r
+
+The peak × held crosstab (evaluation only) decomposed the global `CES_VT` n.s. and the
+answer overturned the standing hypothesis (from the since-removed `docs/ces_vt_proposals.md`):
+
+- **Peaks are held-RICHER than the bulk on 4/4 seeds** (68/62/71/73% vs 58/51/48/46%), not
+  genuine-richer as predicted. A forward-filled staircase (flat, flat, jump) *is* large local
+  slope, so the input-only activity detector partly keys on the instrument's hold pattern.
+  Any future peak work should recompute the detector from genuine neighbours only.
+- **The three regimes behave completely differently** (skill vs PCHIP): genuine·peak
+  +0.55…+0.63 (positive 4/4, PR4 1/4) and **+0.75…+0.82 vs persistence, PASS 4/4**;
+  genuine·bulk ≈ 0 (interpolation is near-optimal on smooth stretches); held rows −48…−411,
+  which is **structural, not a model failure** — PCHIP passes exactly through a value that is
+  by construction the previous one, so no causal method can win there.
+- **Dropping held rows lifts every seed (+0.154→+0.201 etc., 4/4) but never reaches PR4.**
+  So held dilution is real but is not the whole reason `CES_VT` is n.s.; power over ~63 shots is.
+- `CES_TI` (≈0% held) is the clean control and reproduces the peak concentration **4/4 PASS**,
+  so the "edge lives in high-variability neighbourhoods" claim does not depend on the artifact.
+
+Never again write "`CES_VT` is n.s. globally but PASSes at peaks" without the decomposition —
+the global number is an average over regimes with opposite signs.
+
+## Derive The Design From The Structure First (2026-08-09) — §8t
+
+This problem is **latent state estimation under multi-rate sensor fusion**, not sparse-target
+regression: one plasma state, observed densely/fast (BES/ECEI/MC) and sparsely/noisily (CES).
+Four design decisions follow from that framing alone, and this repository found each one as a
+separate controlled experiment over eight months:
+
+| the isomorphism forces | we found it as |
+|---|---|
+| state exists at unobserved times → full grid + loss-side masking | §8d |
+| a hold is not an observation | §8c |
+| each discharge is an independent realisation → per-shot standardization | §8s |
+| a physically-zero observation function must be structurally blocked | iter009 V_rot routing |
+
+`seq_v2` assembles all four and **is the best `CES_TI` on 4/4 splits** (+0.255/+0.208/+0.305/
++0.308, all PASS; paired vs the held-free control 4/4 positive, mean +0.045, 1/4 significant),
+**removes §8d's 4/4-significant `V_rot` deficit**, and trains in **1.2–1.4 min/seed against
+12–22** — the window pipeline's cost is entirely inherited from the early decision to drop rows
+with no observed target.
+
+The `V_rot` repair was then attributed by a third arm (`seq_v2_nops`, routing on / per-shot off):
+**4/4 significantly worse (v1) → 1/4 (routing) → 0/4 (routing + per-shot)**. So the routing is
+the repair and per-shot standardization closes the last seed. **Block a channel at the encoder,
+not the head** — a shared recurrent state carries the blocked information regardless of how the
+head is wired, and that is why v1's `V_rot` head could not be fixed by reweighting.
+
+The two methodologies are an **ordering, not a competition**: the controlled experiments are
+what make each ingredient individually credible, but the framing was available on day one and
+would have pointed at roughly the same design for a tenth of the compute. For the next problem:
+**derive the candidate design from the structure, then spend controlled experiments proving its
+parts** — do not start from the nearest supervised-regression template and recover the structure
+through post-hoc diagnostics.
+
+## Per-Shot Input Standardization Is Adopted (2026-08-09) — §8s
+
+`CES_PER_SHOT_NORM=1` (z-score BES/ECEI/MC within each discharge; **targets untouched**) is the
+repair §8n named for the campaign-transfer failure, and it works:
+
+- **Campaign split: +0.155 mean paired `CES_TI` gain, 4/4 seeds, every CI excluding 0**, turning
+  §8n's 0/4 vs-PCHIP PASS into 2/4. The base arm was *below* interpolation on 2/4 seeds.
+- **Headline split: 0/4 significant losses** (mean −0.036; worst seed 42 −0.127 with CI upper
+  bound +0.008). So the honest phrase is "no measurable cost", not "free".
+- `CES_VT` is unmoved either way — the V_rot head never sees the fast diagnostics, which makes it
+  a clean negative control for the mechanism.
+- It also confirms §8n's diagnosis **causally**: if the campaign loss were physics changing between
+  campaigns, removing an input *level* shift could not have recovered it.
+
+Deployment caveat: an online estimator cannot see a shot's future to compute its σ, so per-shot is
+the **offline upper bound** of this family; the deployable version is an expanding-window/EWMA
+estimator and that gap is unmeasured.
+
+## Bit-Identical Re-scoring Has a Limit: `se_model` (2026-08-09)
+
+The §8g/§8i/§8p additive-key pattern ("re-run must reproduce the reference npz bit-for-bit")
+**failed for the first time**, and the cause is not a population change: on this machine a
+float32 CUDA forward pass is not bit-reproducible across sessions. Identical weights,
+identical population, per-sample relative drift median 3 × 10⁻⁴, RMSE 372.3162 → 372.3135.
+
+The fix, now implemented in `experiments/heldpeak/rerun_compare_stuck0.py` and the pattern to
+copy: **split the keys by what they prove.**
+1. Population keys (`shot`, `dt_ms`, `is_peak`, and the pchip/linear/persistence SEs) must be
+   **bit-identical** — they are what "the scored population did not move" actually means, and
+   they were bit-identical on all four seeds.
+2. `se_model` gets a **bounded-drift** check (RMSE < 0.01 physical units) instead.
+3. The merged artifact **keeps the reference `se_model`**, so no published number can shift
+   underneath a re-scoring pass that was only supposed to add metadata.
+
 ## Useful Reference
 
-`HANDOFF.md` contains the latest detailed session handoff and should be updated after major experiment rounds.
+`THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
+round, and summarize lasting lessons into this file.
+`docs/presentation/make_figure_transient.py` wires up the pinned architecture + trustworthy
+checkpoint correctly and is the working reference for scoring the thesis model.
+
+**Removed 2026-08-05** (recover from git history if ever needed): `automl_agent_loop.py` and its
+`slack_notifier.py` / `program.md` / `HANDOFF.md` — the autoresearch loop that produced the thesis
+architecture, unused since 2026-06-24; and the superseded docs `README2.md`, `AGENTS.md`,
+`PROGRESS.md`, `RESEARCH_PLAN.md`, `RESEARCH_SUMMARY.md`, `ML_WORKFLOW_ARCHITECTURE.md`. The loop's
+archived output was **kept** — and on 2026-08-09 it was copied into the repo as
+`ces_prediction/model_iter009.py` (with the iter2 baseline as `ces_prediction/model_iter002.py`),
+because `data/` is gitignored and the published architecture was therefore living outside version
+control. `tests/test_architecture.py` pins both by SHA-256.
+
+**Removed 2026-08-09** (recover from git history if ever needed), on the rule *the tree carries
+what the current paper needs; `THESIS_RESULTS.md` §8 carries what we learned*:
+
+- `ces_prediction/experiments/ct/` — the continuous-time encoder batch. Verified negative, and the
+  paper's claims about it were removed at the same time, so the code backed nothing. **§8e still
+  holds the verdict**, which is the part that stops anyone re-running it at `W = 4`. Its two
+  reusable pieces were promoted rather than deleted: `experiments/runner_common.py` (the split /
+  control / env constants that ten batches were importing *from the CT runner*) and
+  `experiments/paired_model_compare.py`.
+- Executed plan documents whose outcomes are now recorded as results: `docs/연속시간_모델_실험계획.md`,
+  `docs/설명성_피드백_실험계획.md`, `docs/ces_vt_proposals.md`, `docs/정비_실행계획_2026-08-09.md`.
+- Literature-search intermediates under `docs/paper/litreview/` (candidate/enriched JSON, the
+  harvest scripts, the raw bib pool). The judgement, `NOVELTY.md`, was kept and moved to
+  `docs/paper/NOVELTY.md`; `refs.bib` is the surviving bibliography.
+- The tracked `.omc/` plans, specs, drafts, and research notes — agent scratch describing work that
+  §8 now records as outcomes. `.omc/` is gitignored in full.
+- LaTeX build artifacts (`.aux/.bbl/.blg/.log/.out`), now gitignored. `main.pdf` / `main_ko.pdf`
+  stay tracked: they are the deliverable, not a build product.

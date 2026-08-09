@@ -186,6 +186,50 @@ def add_image_fit(s, path, x, y, w, h):
     return s.shapes.add_picture(path, nx, ny, width=nw, height=nh)
 
 
+def table(s, x, y, col_w, head, rows, row_h=Inches(0.44), head_h=Inches(0.44),
+          head_fill=NAVY, head_color=WHITE, size=13, head_size=12.5,
+          zebra=LGRAY, emphasis=None, emphasis_fill=None, label_align_left=True):
+    """Simple grid table.
+
+    col_w   : list of column widths (Emu)
+    head    : list of header cell strings
+    rows    : list of rows; each cell is str or (txt, color, bold, font)
+    emphasis: set of row indices drawn with emphasis_fill + bold
+    """
+    total_w = sum(col_w)
+    box(s, x, y, total_w, head_h, fill=head_fill)
+    cx = x
+    for j, h in enumerate(head):
+        text(s, cx + Inches(0.10), y + Inches(0.07), col_w[j] - Inches(0.16),
+             head_h - Inches(0.1),
+             [[(h, head_size, head_color, True, False, None)]],
+             align=PP_ALIGN.LEFT if (j == 0 and label_align_left) else PP_ALIGN.CENTER)
+        cx += col_w[j]
+    emphasis = emphasis or set()
+    yy = y + head_h
+    for i, row in enumerate(rows):
+        if i in emphasis and emphasis_fill is not None:
+            box(s, x, yy, total_w, row_h, fill=emphasis_fill)
+        elif zebra is not None and i % 2 == 1:
+            box(s, x, yy, total_w, row_h, fill=CARDBG)
+        cx = x
+        for j, cell in enumerate(row):
+            if isinstance(cell, str):
+                txt, col, bold, font = cell, DARK, (i in emphasis), None
+            else:
+                txt, col, bold, font = (tuple(cell) + (None,) * 4)[:4]
+                col = col if col is not None else DARK
+                bold = bold if bold is not None else (i in emphasis)
+            text(s, cx + Inches(0.10), yy + Inches(0.08), col_w[j] - Inches(0.16),
+                 row_h - Inches(0.1),
+                 [[(txt, size, col, bold, False, font)]],
+                 align=PP_ALIGN.LEFT if (j == 0 and label_align_left) else PP_ALIGN.CENTER)
+            cx += col_w[j]
+        box(s, x, yy + row_h - Pt(0.75), total_w, Pt(0.75), fill=LGRAY)
+        yy += row_h
+    return yy
+
+
 # ============================ SLIDES ======================================
 
 # --- 1. Title -------------------------------------------------------------
@@ -224,8 +268,7 @@ def s_agenda():
         ("4", "Multimodal 모델 아키텍처", "진단별 인코더 + 이력 인코더 + target별 head", NAVY),
         ("5", "평가 방법론 (통계적 엄밀성)", "3-way split · shot-clustered paired bootstrap", BLUE),
         ("6", "결과", "causal 압도 · Tᵢ 보간 유의 · Tᵢ↔V_rot 비대칭", ORANGE),
-        ("7", "AutoML 자율 연구 루프", "Claude 기반 keep/discard autoresearch", TEAL),
-        ("8", "결론 · 한계 · 향후 연구", "정직한 결론과 통계적 검정력 한계", GRAY),
+        ("7", "결론 · 한계 · 향후 연구", "정직한 결론과 통계적 검정력 한계", GRAY),
     ]
     y = 1.55
     for i, (num, t, sub, col) in enumerate(items):
@@ -310,7 +353,8 @@ def s_problem():
     bullets(s, Inches(0.55), Inches(1.5), Inches(6.3), Inches(4.6), [
         ("CES는 충분한 신호대잡음비(SNR)를 위해 광자를 오래 수집해야 함", 0),
         ("노출시간 · 신호품질 문제로 특정 시점 측정이 자주 누락됨", 1),
-        ("같은 10 ms 격자에서 Tᵢ ≈ 8%, V_rot ≈ 24% 결측", 0),
+        ("같은 10 ms 격자에서 Tᵢ 8.2%, V_rot 23.9%가 완전 결측(NaN)", 0),
+        ("V_rot는 여기에 held(직전값 복사) 41.1%가 더해져 실질 65.0% 무정보", 1, RED, True),
         ("두 타겟은 서로 독립적으로 결측 → target별 처리 필요", 1),
         ("빠른 진단(BES·ECEI·MC)은 같은 격자에서 100% 조밀", 0),
         ("\"항상 있는 빠른 진단\"으로 \"자주 비는 CES\"를 채운다", 1, ORANGE, True),
@@ -327,6 +371,52 @@ def s_problem():
     ], size=13, gap=8)
     add_image_fit(s, os.path.join(FIG, "fig_missing.png"),
                   Inches(7.0), Inches(4.2), Inches(6.0), Inches(2.6))
+    return s
+
+
+# --- 5b. Missingness ledger (measured, all 641 shots) --------------------
+def s_missing_table():
+    s = slide()
+    header(s, "1. 연구 배경", "결측 실측 집계: NaN 결측 + held(같은 값 padding)", accent=RED)
+    text(s, Inches(0.55), Inches(1.36), Inches(12.3), Inches(0.62),
+         [[("‘V_rot 결측 24%’는 NaN만 센 값이다. ", 14.5, RED, True, False, None),
+           ("직전 관측값을 그대로 복사한 held 행을 합치면 실질 무정보는 ", 14.5, DARK, False, False, None),
+           ("65.0%", 14.5, RED, True, False, None),
+           (" — 전체 641 shot · 247,207 행 전수 집계.", 14.5, DARK, False, False, None)]],
+         line_spacing=1.14)
+    cw = [Inches(5.4), Inches(3.4), Inches(3.4)]
+    rows = [
+        ["전체 10 ms 격자 행 (641 shot)",
+         ("247,207", GRAY, False, MONO), ("247,207", GRAY, False, MONO)],
+        ["① 완전 결측 — 값이 비어 있음 (NaN)",
+         ("20,216  (8.2%)", DARK, False, MONO), ("59,107  (23.9%)", BLUE, True, MONO)],
+        ["② held / padding — 직전 관측값과 bit-identical",
+         ("1  (0.0%)", DARK, False, MONO), ("101,604  (41.1%)", RED, True, MONO)],
+        [("실질 무정보  ① + ②", NAVY, True, None),
+         ("20,217  (8.2%)", NAVY, True, MONO), ("160,711  (65.0%)", RED, True, MONO)],
+        ["독립 관측 — 실제 정보가 있는 행",
+         ("226,990  (91.8%)", GREEN, True, MONO), ("86,496  (35.0%)", DARK, True, MONO)],
+        ["관측값(non-NaN) 중 held 비율",
+         ("0.0%", GREEN, True, MONO), ("54.0%", RED, True, MONO)],
+        ["held이 존재하는 shot 파일 수",
+         ("1 / 641", DARK, False, MONO), ("499 / 641", RED, True, MONO)],
+        ["연속 held 구간 길이 — 중앙값 / 최대 (행)",
+         ("2 / 2", DARK, False, MONO), ("10 / 1,214", RED, True, MONO)],
+    ]
+    table(s, Inches(0.55), Inches(2.04), cw, ["구분", "CES_TI", "CES_VT"], rows,
+          row_h=Inches(0.42), head_h=Inches(0.42), emphasis={3},
+          emphasis_fill=RGBColor(0xFD, 0xEC, 0xE8))
+    box(s, Inches(0.55), Inches(5.90), Inches(12.25), Inches(1.06),
+        fill=CARDBG, round_=True)
+    text(s, Inches(0.8), Inches(5.99), Inches(11.75), Inches(0.9),
+         [[("왜 중요한가: ", 12.5, NAVY, True, False, None),
+           ("held 행은 baseline(persistence·보간)이 오차 ≈0으로 맞히는 ‘공짜 정답’이라 V_rot RMSE를 "
+            "35~55% 낮춰 보이게 한다 → 평가는 genuine 관측만 사용, 학습은 유지.",
+            12.5, DARK, False, False, None)],
+          [("판정 기준: ", 12.5, NAVY, True, False, None),
+           ("연속 시간블록 안에서 직전 관측값과 부동소수점까지 동일한 행. CES_TI는 641 shot 전체에서 "
+            "단 1행 — V_rot 고유의 계측 특성이다.", 12.5, DARK, False, False, None)]],
+         line_spacing=1.12)
     return s
 
 
@@ -396,13 +486,13 @@ def s_bar():
         ("0.5 s 이상 gap은 보간 거부 → persistence fallback", 0),
     ], size=13.5, gap=9)
     box(s, Inches(0.7), Inches(5.0), Inches(11.9), Inches(1.55), fill=NAVY, round_=True)
-    text(s, Inches(1.0), Inches(5.18), Inches(11.4), Inches(1.3),
+    text(s, Inches(1.0), Inches(5.10), Inches(11.4), Inches(1.42),
          [[("왜 이 정보 비대칭이 핵심인가", 13.5, ORANGE, True, False, None)],
           [("미래까지 보는 보간을 causal(과거만 보는) 모델이 이긴다면, 그것은 빠른 진단이 "
             "시간 보간으로는 얻을 수 없는 CES 정보를 운반한다는 강력한 증거다.",
             15.5, WHITE, False, False, None)],
           [("미래 보간을 이기는 모델은 자명히 모든 causal baseline(persistence·AR)도 이긴다.",
-            13.5, LGRAY, False, True, None)]], line_spacing=1.16)
+            13.5, LGRAY, False, True, None)]], line_spacing=1.10, space_after=3)
     return s
 
 
@@ -443,9 +533,9 @@ def s_data():
     s = slide()
     header(s, "3. 데이터 & 파이프라인", "데이터 구성 기준")
     bullets(s, Inches(0.55), Inches(1.55), Inches(6.4), Inches(4.8), [
-        ("플라즈마 상태 타겟: H-mode ELM suppression (RMP 인가)", 0),
-        ("ELM suppression 유지 중 Dα가 크게 튀는 구간 중심 ~100 ms로 절단", 1),
-        ("샷 번호: #24000 ~ #33000 우선 선정", 0),
+        ("플라즈마 상태 타겟: H-mode ELM suppression (RMP 인가) — 수집 계획 기준", 0),
+        ("실제 파일: shot당 고정 30 s 구간 · 10 ms 격자 · 파일당 연속 블록 1–8개", 1),
+        ("샷 번호: 실제 #30801 ~ #32751 (계획: #24000 ~ #33000 우선)", 0),
         ("하드웨어 이력 고려 (’17 MicroTCA, ’20 UFCES, ’23 W-divertor)", 1),
         ("총 641개 shot CSV 파일 (저장소에는 미포함, gitignore)", 0, NAVY, True),
         ("진단 채널: BES 9 · ECEI 4 · Mirnov 2 · time 4 · ces_history 4", 1),
@@ -540,6 +630,40 @@ def s_split():
     return s
 
 
+# --- 11b. Sample construction + augmentation ------------------------------
+def s_samples():
+    s = slide()
+    header(s, "3. 데이터 & 파이프라인", "학습 샘플 구성: 연속 블록 → 윈도(W=4) → temporal subset 증강")
+    cards = [
+        ("① 연속 블록 분할", BLUE,
+         ["time delta ≥ 0.5 s = 세그먼트 경계",
+          "641/641 shot에 존재 (파일당 ~2개, 간극 중앙값 6.3 s)",
+          "모델 윈도·보간 모두 경계를 넘지 않음"]),
+        ("② 샘플 정의 (window W=4)", TEAL,
+         ["연속 4행 윈도, 마지막 행 = 예측 타겟 시점",
+          "입력(BES·ECEI·MC) 완전 + 타겟 ≥1개 관측 시 채택",
+          "타겟 시점 이력은 값·flag 모두 0 (누수 차단)"]),
+        ("③ Temporal subset 증강", ORANGE,
+         ["블록 내 이전 행들의 부분집합(combinations) 열거",
+          "같은 타겟을 이력 2·3개짜리 변형으로도 학습",
+          "다양한 이력 밀도·간격 노출 → 결측 패턴에 강건"]),
+        ("④ 샘플 캡 — 조합 폭발 제어", NAVY,
+         ["seeded 랜덤 캡: train 200,000 / val 40,000",
+          "고정 split CSV로 디스크에 pin → 완전 재현",
+          "데이터 불일치 시 로드 거부(예외) — 조용한 drift 차단"]),
+    ]
+    for i, (t, col, lines) in enumerate(cards):
+        r, c = divmod(i, 2)
+        card(s, Inches(0.55 + c * 6.2), Inches(1.55 + r * 2.5), Inches(6.0), Inches(2.3),
+             t, lines, accent=col, title_size=14.5, body_size=12.5)
+    text(s, Inches(0.55), Inches(6.65), Inches(12.3), Inches(0.5),
+         [[("한 샘플 = ", 12.5, NAVY, True, False, None),
+           ("진단 3종(BES 9ch · ECEI 4ch · MC 2ch) + time_features 4ch + ces_history 4ch "
+            "→ 정규화 [Tᵢ, V_rot] 예측. 캡 외에는 어떤 라벨 행도 조용히 버리지 않는다.",
+            12.5, GRAY, False, False, None)]])
+    return s
+
+
 # --- 12. Data quality: stuck values --------------------------------------
 def s_stuck():
     s = slide()
@@ -553,18 +677,19 @@ def s_stuck():
     bullets(s, Inches(0.55), Inches(2.55), Inches(6.3), Inches(4.0), [
         ("CES_TI는 사실상 영향 없음 (held 0.0%)", 0, GREEN, True),
         ("499 / 641 shot 파일이 영향받음", 0),
-        ("dataset이 이를 탐지·마스킹 가능 (CES_DROP_STUCK_TARGETS)", 0),
-        ("학습은 오염 아님 — held 값 마스킹해도 genuine 성능 향상 없음", 0),
-        ("→ 학습은 유지(=0), 평가만 genuine 측정값으로(=1)", 1, NAVY, True),
+        ("평가: held 전 구간 채점 제외 (genuine-only가 headline)", 0),
+        ("학습도 오염 — 초기 '무해' 판정(단일 seed)을 4-seed paired가 뒤집음", 0, RED, True),
+        ("held 제거 학습이 V_rot 4/4 개선 (평균 +0.039, 3/4 유의)", 1, RED, True),
+        ("→ 현행 규약: 학습·평가 모두 제거 (CES_DROP_STUCK_TARGETS=1)", 1, NAVY, True),
         ("CES_TI는 genuine-only 평가에서도 4 seed 모두 PASS (강건)", 0, GREEN, True),
-    ], size=13.5, gap=9)
+    ], size=13.5, gap=8)
     box(s, Inches(7.1), Inches(2.55), Inches(5.7), Inches(3.9), fill=CARDBG, round_=True)
     text(s, Inches(7.35), Inches(2.7), Inches(5.3), Inches(0.5),
          [[("V_rot 물리 RMSE는 held 값에 의해 deflated", 14, NAVY, True, False, None)]])
     # mini table
     hdr = ["seed", "보고(stuck포함)", "genuine RMSE"]
-    rows = [["42", "22.4", "35.0"], ["1", "24.6", "34.6"],
-            ["7", "29.7", "43.2"], ["123", "32.6", "46.2"]]
+    rows = [["42", "22.5", "35.0"], ["1", "24.7", "34.8"],
+            ["7", "30.0", "43.5"], ["123", "32.9", "46.5"]]
     yy = 3.25
     text(s, Inches(7.35), Inches(yy), Inches(1.3), Inches(0.4), [[(hdr[0], 12, GRAY, True, False, None)]])
     text(s, Inches(8.5), Inches(yy), Inches(2.2), Inches(0.4), [[(hdr[1], 12, GRAY, True, False, None)]])
@@ -585,78 +710,12 @@ def s_stuck():
 def s_arch():
     s = slide()
     header(s, "4. 모델 아키텍처", "Multimodal Late-Fusion + target별 routing")
-
-    def node(x, y, w, h, title, sub, col):
-        b = box(s, Inches(x), Inches(y), Inches(w), Inches(h), fill=col, round_=True)
-        text(s, Inches(x), Inches(y + 0.06), Inches(w), Inches(h - 0.1),
-             [[(title, 12.5, WHITE, True, False, None)],
-              [(sub, 9.5, RGBColor(0xEA, 0xF0, 0xF7), False, False, None)]],
-             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.0, space_after=1)
-        return b
-
-    def arrow(x1, y1, x2, y2, col=MGRAY):
-        cn = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x1), Inches(y1),
-                                    Inches(x2), Inches(y2))
-        cn.line.color.rgb = col
-        cn.line.width = Pt(2.0)
-        cn.shadow.inherit = False
-        le = cn.line._get_or_add_ln()
-        tail = le.makeelement(qn('a:tailEnd'),
-                              {'type': 'triangle', 'w': 'med', 'len': 'med'})
-        le.append(tail)
-        return cn
-
-    # inputs
-    inputs = [("BES (4×9)", "밀도요동", BLUE, 1.45),
-              ("ECEI (4×4)", "전자온도", TEAL, 2.45),
-              ("MC (4×2)", "자기요동", GRAY, 3.45),
-              ("time (4×4)", "불규칙시간", NAVY, 4.45),
-              ("ces_history (4×4)", "이전 CES + flag", ORANGE, 5.45)]
-    for t, sub, col, y in inputs:
-        node(0.55, y, 2.0, 0.78, t, sub, col)
-
-    # encoders
-    encs = [("BES Enc", "time-aware CNN", BLUE, 1.45),
-            ("ECEI Enc", "time-aware CNN", TEAL, 2.45),
-            ("MC Enc", "time-aware CNN", GRAY, 3.45),
-            ("Time Enc", "1D CNN", NAVY, 4.45),
-            ("History Enc", "Pre-LN Transformer\n+ multi-head attn pool", ORANGE, 5.45)]
-    for (t, sub, col, y) in encs:
-        node(3.15, y, 2.2, 0.78, t, sub, col)
-        arrow(2.55, y + 0.39, 3.15, y + 0.39)
-
-    # fusion / routing
-    node(6.05, 1.7, 2.5, 1.25, "Tᵢ 융합", "bes+ecei+mc\n+time+hist_ti", ORANGE)
-    node(6.05, 4.55, 2.5, 1.25, "V_rot 융합", "hist_vt + time\n(빠른진단 제외)", BLUE)
-    # arrows to fusion
-    for y in [1.45, 2.45, 3.45, 4.45]:
-        arrow(5.35, y + 0.39, 6.05, 2.32, col=RGBColor(0xCF, 0xB0, 0x90))
-    arrow(5.35, 5.84, 6.05, 5.17, col=ORANGE)  # hist_vt -> vt
-    arrow(5.35, 5.45, 6.05, 2.6, col=ORANGE)   # hist_ti -> ti
-
-    # heads
-    node(9.0, 1.85, 2.0, 0.95, "Tᵢ Head", "preLN→MLP", ORANGE)
-    node(9.0, 4.7, 2.0, 0.95, "V_rot Head", "preLN→MLP", BLUE)
-    arrow(8.55, 2.32, 9.0, 2.32, col=ORANGE)
-    arrow(8.55, 5.17, 9.0, 5.17, col=BLUE)
-
-    # output
-    node(11.4, 3.25, 1.6, 1.1, "[Tᵢ, V_rot]", "정규화 (B,2)", NAVY)
-    arrow(11.0, 2.32, 11.9, 3.25, col=NAVY)
-    arrow(11.0, 5.17, 11.9, 4.35, col=NAVY)
-
-    # labels
-    text(s, Inches(0.55), Inches(1.18), Inches(2.0), Inches(0.3),
-         [[("입력", 11, GRAY, True, False, None)]], align=PP_ALIGN.CENTER)
-    text(s, Inches(3.15), Inches(1.18), Inches(2.2), Inches(0.3),
-         [[("진단별 인코더", 11, GRAY, True, False, None)]], align=PP_ALIGN.CENTER)
-    text(s, Inches(6.05), Inches(1.18), Inches(2.5), Inches(0.3),
-         [[("target별 융합(routing)", 11, GRAY, True, False, None)]], align=PP_ALIGN.CENTER)
-    text(s, Inches(9.0), Inches(1.18), Inches(2.0), Inches(0.3),
-         [[("예측 head", 11, GRAY, True, False, None)]], align=PP_ALIGN.CENTER)
-    text(s, Inches(0.55), Inches(6.55), Inches(12.3), Inches(0.5),
+    add_image_fit(s, os.path.join(FIG, "fig_architecture.png"),
+                  Inches(0.45), Inches(1.38), Inches(12.45), Inches(5.15))
+    text(s, Inches(0.55), Inches(6.62), Inches(12.3), Inches(0.5),
          [[("물리 기반 routing: ", 12.5, NAVY, True, False, None),
-           ("Tᵢ = 빠른진단+이력+시간 / V_rot = 이력+시간만. 전체 파라미터 < 1,000,000 (capacity가 아니라 일반화가 관건).",
+           ("Tᵢ = 빠른진단+이력+시간 / V_rot = 이력+시간만. 총 파라미터 201,258개(≈0.20 M) — "
+            "capacity가 아니라 일반화가 관건. 출력은 정규화 단위, 역정규화는 평가에서만.",
             12.5, DARK, False, False, None)]])
     return s
 
@@ -670,19 +729,20 @@ def s_arch_detail():
          ["각 진단 + 시간 + 이력을 함께 1D Conv",
           "불규칙 시계열에 강건 (LSTM 회피)",
           "공간 채널 구조 보존 후 융합"]),
-        ("History Encoder", ORANGE,
-         ["2-layer Pre-LayerNorm Transformer",
-          "학습된 positional embedding",
-          "self-attention이 masked 타겟을 양쪽",
-          "관측 이웃에 직접 attend (보간과 유사)"]),
-        ("Multi-head attention pooling", TEAL,
-         ["가중 평균(center) + 가중 분산(std) 함께",
-          "std가 '고변동 구간'을 노출 → peak 구분",
-          "target별 관측-이웃 bias (init 0)"]),
-        ("target별 head + pre-head LN", NAVY,
-         ["Tᵢ/V_rot 분리 head, 이종 융합특징 정규화",
-          "Pre-LN 경로를 융합단까지 확장",
-          "capacity가 아닌 일반화 lever"]),
+        ("History Encoder — 양방향 GRU", ORANGE,
+         ["1층 bidirectional GRU (hidden 64)",
+          "마스킹된 타겟 시점이 window 안에 있어",
+          "양쪽 관측 이웃을 forward+backward로 취합",
+          "→ '학습된 보간'과 유사한 동작"]),
+        ("관측-마스크 attention pooling", TEAL,
+         ["타겟별 독립 multi-head(4) additive attention",
+          "관측 flag=1인 행에만 softmax 허용",
+          "→ '관측만 본다'는 보간의 귀납 편향 주입",
+          "관측 0개 행은 전체 window로 fallback"]),
+        ("target별 head + LayerNorm proj", NAVY,
+         ["이력 요약을 타겟별 LN→Linear→GELU projection",
+          "Tᵢ head 384→160→64→1 / V_rot head 96→96→48→1",
+          "capacity가 아닌 일반화 lever (총 0.20 M)"]),
     ]
     for i, (t, col, lines) in enumerate(cards):
         r, c = divmod(i, 2)
@@ -695,16 +755,49 @@ def s_arch_detail():
     return s
 
 
+# --- 14b. Training configuration ------------------------------------------
+def s_training():
+    s = slide()
+    header(s, "4. 모델 아키텍처", "어떻게 학습시켰나 — 손실 함수와 최적화 설정")
+    card(s, Inches(0.55), Inches(1.55), Inches(6.0), Inches(3.4),
+         "손실 함수 — per-target masked MSE + 물리 페널티",
+         ["L = Σ mask·(ŷ−y)² / Σ mask + 0.1·ReLU(z₀ − ŷ_Tᵢ)",
+          "target_mask로 관측된 타겟만 손실에 기여",
+          "Tᵢ·V_rot 독립 결측(≈8% / ≈24%) — 한쪽만 있어도 학습",
+          "ReLU 항 = '이온온도 < 0 keV 불가' soft 물리 제약",
+          "  (z₀ = 물리 0을 정규화 단위로 변환한 값)",
+          "출력은 정규화 단위 — 역정규화는 평가에서만"],
+         accent=BLUE, title_size=14.5, body_size=12.5)
+    card(s, Inches(6.75), Inches(1.55), Inches(6.0), Inches(3.4),
+         "최적화 설정 (train.py)",
+         ["AdamW — lr 1e-3, weight decay 1e-4",
+          "batch 512 · 10 epochs · 단일 GPU (선택적 AMP)",
+          "ReduceLROnPlateau(patience 2, ×0.5) — val masked MSE",
+          "gradient clipping max-norm 5.0",
+          "split seed와 init seed 분리 — 초기화 안정성 실험",
+          "loss가 비유한이면 즉시 실패(fail-loud) — 조용한 NaN 금지"],
+         accent=TEAL, title_size=14.5, body_size=12.5)
+    box(s, Inches(0.55), Inches(5.15), Inches(12.25), Inches(1.6), fill=CARDBG, round_=True)
+    text(s, Inches(0.8), Inches(5.3), Inches(11.8), Inches(0.5),
+         [[("모델 선택 절차 — keep/discard 통제 루프 (~40회 반복)", 14, NAVY, True, False, None)]])
+    bullets(s, Inches(0.8), Inches(5.78), Inches(11.8), Inches(0.9), [
+        ("반복마다 구조 변경은 딱 하나 → 처음부터 재학습 → 증강 없는 검증셋에서 보간 대비 skill로 채점", 0),
+        ("최고 기록을 넘으면 채택, 못 넘으면 직전 최고 모델로 복원 — 후퇴 위에 쌓지 않음 · TEST는 전 과정 봉인", 1, NAVY, True),
+    ], size=12.5, gap=6)
+    return s
+
+
 # --- 15. Evaluation methodology: split + prereg --------------------------
 def s_methodology():
     s = slide()
     header(s, "5. 평가 방법론", "선택 편향 없는 3-way split + 사전등록")
     cards = [
         ("3-way split (train/val/test)", BLUE,
-         ["TEST는 AutoML 시작 전 예약, 탐색루프는 절대 안 봄",
+         ["TEST는 아키텍처 탐색 시작 전 예약, 선택 과정에서 절대 안 봄",
           "모델 선택은 val에서만 → 헤드라인은 winner's-curse 없음",
-          "TEST: 34,644 샘플 / 96 shot",
-          "관측 후 n: Tᵢ 32,716 · V_rot 27,437"]),
+          "TEST(genuine, seed 42): 33,693 샘플 / 96 shot",
+          "관측 n: Tᵢ 32,787 (96 shot) · V_rot 10,729 (61 shot)",
+          "held 포함 시 V_rot 27,437 — 민감도 확인용으로만 보고"]),
         ("사전등록 (PR1–PR4)", ORANGE,
          ["PR1 best-interpolation 규칙: headline = PCHIP",
           "PR2 평가 모집단: future-neighbor 없으면 persistence",
@@ -714,13 +807,39 @@ def s_methodology():
     for i, (t, col, lines) in enumerate(cards):
         card(s, Inches(0.55 + i * 6.2), Inches(1.55), Inches(6.0), Inches(2.95),
              t, lines, accent=col, title_size=15, body_size=12)
-    box(s, Inches(0.7), Inches(4.8), Inches(11.9), Inches(1.75), fill=CARDBG, round_=True)
-    text(s, Inches(0.95), Inches(4.95), Inches(11.4), Inches(1.5),
+    box(s, Inches(0.55), Inches(4.70), Inches(6.55), Inches(2.05), fill=CARDBG, round_=True)
+    text(s, Inches(0.8), Inches(4.84), Inches(6.05), Inches(1.85),
          [[("공정성 보장", 14, NAVY, True, False, None)],
-          [("모든 arm(모델+모든 baseline)을 동일한 (file, row) 샘플 집합 · 동일 per-target keep mask로 채점. "
-            "어떤 arm도 상대적으로 thinning 되지 않음.", 13.5, DARK, False, False, None)],
-          [("보간은 타겟 자신의 값(row_index)을 제외하고 이웃만 읽음(누수 없음), 0.5 s 이상 gap은 보간 거부.",
-            13, GRAY, False, False, None)]], line_spacing=1.18)
+          [("모든 arm(모델+모든 baseline)을 동일한 (file, row) 샘플 집합 · 동일 per-target "
+            "keep mask로 채점 — 어떤 arm도 thinning 되지 않음.", 12.5, DARK, False, False, None)],
+          [("보간은 타겟 자신의 값을 제외하고 이웃만 읽음(누수 없음). 0.5 s+ 세그먼트 경계(641/641 shot, "
+            "간극 중앙값 6.3 s)는 넘지 않고 persistence 값으로 예측 — 커버리지 축소 없음.",
+            12, GRAY, False, False, None)]], line_spacing=1.16)
+    # baseline-choice robustness: swap the headline baseline for the stronger one
+    box(s, Inches(7.30), Inches(4.70), Inches(5.50), Inches(2.25), fill=CARDBG, round_=True)
+    text(s, Inches(7.52), Inches(4.80), Inches(5.1), Inches(0.4),
+         [[("‘왜 PCHIP를 골랐나?’ — baseline을 바꿔도 결론 불변", 12.5, NAVY, True, False, None)]])
+    mcols = [7.52, 8.45, 10.60]
+    mhead = ["seed", "vs PCHIP", "vs linear (더 강함)"]
+    mrows = [
+        [("42", GRAY, False), ("+0.179 PASS", DARK, False), ("+0.148 n.s.", GRAY, True)],
+        [("1", GRAY, False), ("+0.197 PASS", DARK, False), ("+0.167 PASS", GREEN, True)],
+        [("7", GRAY, False), ("+0.280 PASS", DARK, False), ("+0.259 PASS", GREEN, True)],
+        [("123", GRAY, False), ("+0.263 PASS", DARK, False), ("+0.234 PASS", GREEN, True)],
+    ]
+    yy = 5.16
+    for hcell, xh in zip(mhead, mcols):
+        text(s, Inches(xh), Inches(yy), Inches(2.0), Inches(0.35),
+             [[(hcell, 10.5, GRAY, True, False, None)]])
+    yy += 0.34
+    for r in mrows:
+        for (val, col, bold), xh in zip(r, mcols):
+            text(s, Inches(xh), Inches(yy), Inches(2.0), Inches(0.35),
+                 [[(val, 10.5, col, bold, False, MONO)]])
+        yy += 0.31
+    text(s, Inches(7.52), Inches(yy + 0.03), Inches(5.1), Inches(0.30),
+         [[("genuine 기준 3/4 PASS(시드 42 n.s.도 명시) · held 포함 4/4.",
+            10, GRAY, False, True, None)]], line_spacing=1.0)
     return s
 
 
@@ -777,17 +896,18 @@ def s_res_forest():
                   Inches(0.55), Inches(1.4), Inches(12.25), Inches(3.9))
     cards = [
         ("CES_TI — PASS (강건)", GREEN,
-         ["4개 독립 test split(seed 42/1/7/123) 모두 CI > 0",
-          "skill_vs_pchip = +0.20 ~ +0.30",
-          "(1/7/123은 아키텍처 선택에 한 번도 안 쓰임)"]),
-        ("CES_VT — n.s.", GRAY,
-         ["4 seed 모두 CI가 0을 포함 (유의하지 않음)",
-          "point estimate는 +지만 통계적 미지지",
+         ["4개 독립 split 모두 CI > 0 (1/7/123은 선택 밖 복제)",
+          "genuine +0.18 ~ +0.28 · held 포함 평가에서도 4/4",
+          "사후 GP 팔(최강 오프라인, PCHIP에 4/4 승)과는 동률",
+          "— 사전등록 headline 유지 · 인과(배치) 주장 무영향"]),
+        ("CES_VT — 동률 보고", GRAY,
+         ["PASS는 seed 1 하나뿐 (1/4 = 잡음이 낼 수 있는 수준)",
+          "point estimate는 4 seed 모두 +지만 승리 주장 안 함",
           "→ Tᵢ↔V_rot 비대칭 (다음 슬라이드)"]),
     ]
     for i, (t, col, lines) in enumerate(cards):
-        card(s, Inches(0.55 + i * 6.2), Inches(5.35), Inches(6.0), Inches(1.55),
-             t, lines, accent=col, title_size=13.5, body_size=11.5)
+        card(s, Inches(0.55 + i * 6.2), Inches(5.28), Inches(6.0), Inches(1.68),
+             t, lines, accent=col, title_size=13.5, body_size=10.5)
     return s
 
 
@@ -802,53 +922,60 @@ def s_res_prog():
          [[("무엇이 달라졌나", 15, NAVY, True, False, None)]])
     bullets(s, Inches(8.35), Inches(2.4), Inches(4.3), Inches(4.0), [
         ("기존 baseline(iter2)은 단일 split에서 +0.088, n.s.", 0, GRAY, True),
-        ("AutoML 루프가 val skill_vs_pchip로 모델을 선택", 0),
+        ("아키텍처 선택 게이트를 val loss → clean skill_vs_pchip으로 교체", 0),
         ("→ GRU 이력인코더 + target별 multi-head attention head", 1),
-        ("최종(iter5): +0.20~+0.30, 4 seed 모두 PASS", 0, GREEN, True),
-        ("핵심: val loss가 아니라 clean skill로 선택한 것이 결정적", 0, ORANGE, True),
-    ], size=13, gap=11)
+        ("최종(iter5): +0.19~+0.28, 4 seed 모두 PASS", 0, GREEN, True),
+        ("왜 clean skill인가: 증강 val loss는 쉬운 구간이 복제돼 평활화를 보상", 0, ORANGE, True),
+        ("→ 평활한 예측은 보간이 이미 잘하는 영역. 보고 지표로 직접 채점해야", 1),
+        ("   보간이 약한 곳(peak·gap)에서 이기는 모델이 선택됨", 1),
+    ], size=12.5, gap=9)
     return s
 
 
 # --- 20. Result 4: gap-stratified ----------------------------------------
 def s_res_gap():
+    """Gap-stratified, 4 splits POOLED, vs both bars — THESIS_RESULTS.md §8g
+    (data/.largegap_analysis.json; genuine eval, physical-shot-clustered CI)."""
     s = slide()
-    header(s, "6. 결과 ④", "Gap별 분석: 모델의 우위는 small-gap에 집중")
-    text(s, Inches(0.55), Inches(1.45), Inches(12.3), Inches(0.5),
-         [[("실데이터는 압도적으로 small-gap: Δt ≤ 15 ms가 Tᵢ 31,966/32,716 · V_rot 26,938/27,437 — "
-            "이 구간이 nowcasting이 실제로 필요한 곳.", 13.5, DARK, False, False, None)]])
-    # table
-    headers = ["Δt bin", "n (Tᵢ)", "skill Tᵢ", "n (V_rot)", "skill V_rot"]
+    header(s, "6. 결과 ④", "Gap별 분석 — 4분할 통합: 비인접 영역에서도 이긴다")
+    text(s, Inches(0.55), Inches(1.42), Inches(12.3), Inches(0.55),
+         [[("seed별로는 넓은 Δt 구간 표본이 수십 개뿐 → 4개 test 분할을 합치고 물리적 shot 단위로 "
+            "군집화해 처음으로 CI를 붙였다. PCHIP은 미래 앵커를 읽고 persistence는 읽지 않는다 (Tᵢ, genuine).",
+            13, DARK, False, False, None)]], line_spacing=1.12)
+    headers = ["Δt bin", "n", "vs PCHIP (미래 사용)", "vs persistence (인과)"]
     rows = [
-        ["(0, 15] ms", "31,966", "+0.080", "26,938", "+0.234", GREEN],
-        ["(15, 25] ms", "520", "+0.003", "357", "+0.029", GRAY],
-        ["(25, 35] ms", "140", "+0.401", "97", "−0.123", GRAY],
-        ["(35, 55] ms", "33", "−0.823", "14", "+0.870", GRAY],
-        ["(105, ∞) ms", "45", "−6.92", "30", "−2783", RED],
+        ["≤ 15 ms", "134,629", "+0.262 PASS", "+0.407 PASS", GREEN],
+        ["(15, 25] ms", "2,987", "+0.183 PASS", "+0.384 PASS", GREEN],
+        ["(25, 35] ms", "784", "+0.402 PASS", "+0.564 PASS", GREEN],
+        ["(55, 105] ms", "163", "+0.282 PASS", "+0.287 PASS", GREEN],
+        ["> 105 ms", "167", "−0.542 (PCHIP 승)", "+0.266 n.s.", RED],
+        ["전체 > 15 ms", "4,496", "+0.191 PASS", "+0.388 PASS", GREEN],
+        ["전체 > 45 ms", "435", "−0.057 n.s.", "+0.271 PASS", ORANGE],
     ]
-    x0 = [0.7, 3.0, 5.0, 7.3, 9.6]
-    w0 = [2.2, 1.9, 2.2, 1.9, 2.5]
-    yy = 2.15
-    box(s, Inches(0.55), Inches(yy - 0.05), Inches(12.25), Inches(0.5), fill=NAVY)
+    x0 = [0.7, 2.9, 4.9, 8.7]
+    w0 = [2.0, 1.8, 3.6, 3.6]
+    yy = 2.05
+    box(s, Inches(0.55), Inches(yy - 0.05), Inches(12.25), Inches(0.46), fill=NAVY)
     for h, x, w in zip(headers, x0, w0):
         text(s, Inches(x), Inches(yy), Inches(w), Inches(0.4),
-             [[(h, 13, WHITE, True, False, None)]])
-    yy += 0.55
-    for r in rows:
+             [[(h, 12.5, WHITE, True, False, None)]])
+    yy += 0.5
+    for i, r in enumerate(rows):
         col = r[-1]
-        bg = WHITE if (rows.index(r) % 2 == 0) else CARDBG
-        box(s, Inches(0.55), Inches(yy - 0.05), Inches(12.25), Inches(0.5), fill=bg)
+        bg = WHITE if (i % 2 == 0) else CARDBG
+        box(s, Inches(0.55), Inches(yy - 0.05), Inches(12.25), Inches(0.46), fill=bg)
         for j, (val, x, w) in enumerate(zip(r[:-1], x0, w0)):
-            c = DARK if j == 0 else (col if j in (2, 4) else GRAY)
-            b = (j == 0) or (j in (2, 4))
-            text(s, Inches(x), Inches(yy), Inches(w), Inches(0.4),
-                 [[(val, 13, c, b, False, MONO if j > 0 else None)]])
-        yy += 0.52
-    box(s, Inches(0.7), Inches(5.55), Inches(11.9), Inches(1.15), fill=CARDBG, round_=True)
-    text(s, Inches(0.95), Inches(5.66), Inches(11.5), Inches(1.0),
-         [[("읽는 법: ", 13, NAVY, True, False, None),
-           ("잘 통제된(표본 충분한) 유일한 비교인 small-gap이 모델 우세. Δt가 커지면 표본 수십 개 미만 "
-            "bin들이 부호를 뒤집고(미래 anchor를 가진 PCHIP이 압도), CI가 없으므로 과대해석 금물.",
+            c = DARK if j == 0 else (col if j in (2, 3) else GRAY)
+            b = (j == 0) or (j in (2, 3))
+            text(s, Inches(x), Inches(yy), Inches(w), Inches(0.38),
+                 [[(val, 12.5, c, b, False, MONO if j > 0 else None)]])
+        yy += 0.48
+    box(s, Inches(0.7), Inches(5.65), Inches(11.9), Inches(1.2), fill=CARDBG, round_=True)
+    text(s, Inches(0.95), Inches(5.74), Inches(11.5), Inches(1.05),
+         [[("세 가지 읽기: ", 13, NAVY, True, False, None),
+           ("① Tᵢ 우위는 인접 이력에 국한되지 않는다 — Δt>15 ms 전체에서 미래를 쓰는 PCHIP에도 유의 승. "
+            "② >105 ms는 양측 보간의 영역(실시간엔 없는 것) — 인과 대비로는 열세 없음. "
+            "③ V_rot도 인과 대비로는 전 구간 유의 승 (≤15 ms +0.368 · >15 ms +0.309).",
             12.5, DARK, False, False, None)]], line_spacing=1.15)
     return s
 
@@ -865,13 +992,16 @@ def s_res_asym():
     bullets(s, Inches(8.2), Inches(2.3), Inches(4.4), Inches(4.2), [
         ("Tᵢ: 빠른 진단이 진짜 정보 운반", 0, ORANGE, True),
         ("충돌 e–i 결합 (t_ei ∝ Tₑ^1.5/nₑ) → ECEI(Tₑ)+BES(nₑ)", 1),
-        ("fast-only도 persistence 능가 (+0.162)", 1),
+        ("fast-only도 persistence 능가 (+0.372)", 1),
         ("V_rot: 정보는 거의 전적으로 과거 CES 이력", 0, BLUE, True),
         ("토로이달 회전은 미관측 NBI 토크가 주도", 1),
-        ("Mirnov은 100 Hz로 aliasing → 회전 정보 소실", 1),
-        ("fast-only V_rot = −3.31 (평균보다 나쁨)", 1, RED, True),
+        ("Mirnov 100 Hz 순간샘플 → kHz 모드 소실 (lag-1 r=−0.01)", 1),
+        ("fast-only V_rot = −0.64 (persistence보다 나쁨)", 1, RED, True),
+        ("‘Tₑ가 NBI 가열을 대리한다’ 가설도 기각", 0, RED, True),
+        ("shot간 Tₑ~Tᵢ r=+0.35 (p~1e−17) — 경로는 실재", 1),
+        ("그러나 Tₑ~V_rot r=+0.02 (p=0.58) — 전달 안 됨", 1),
         ("V_rot의 비-승리는 실패가 아니라 발견", 0, NAVY, True),
-    ], size=12.5, gap=7)
+    ], size=12, gap=5)
     return s
 
 
@@ -887,84 +1017,108 @@ def s_res_peak():
     bullets(s, Inches(8.15), Inches(2.35), Inches(4.5), Inches(4.0), [
         ("peak = 입력 기반 고-국소활동 이웃 (타겟 행 제외)", 0),
         ("pointwise 극값이 아니라 보수적 영역 proxy", 1),
-        ("Tᵢ: global +0.515 → peak +0.855 (PASS)", 0, TEAL, True),
+        ("Tᵢ: global +0.272 → peak +0.702 (PASS)", 0, TEAL, True),
         ("보간은 매끄러운 bulk에서 거의 최적", 1),
-        ("V_rot: global +0.241 → peak +0.691 (PASS)", 0, TEAL, True),
+        ("V_rot: global +0.131 → peak +0.438 (PASS)", 0, TEAL, True),
         ("global은 약하지만 peak에서는 통과 — 비대칭은 regional", 1),
         ("Tᵢ ablation: peak에서 빠른진단 제거 시 큰 손해 (유의)", 0, NAVY, True),
     ], size=12.5, gap=8)
     return s
 
 
-# --- 23. AutoML loop ------------------------------------------------------
-def s_automl():
+# --- 22b. Result 7: transient case study ---------------------------------
+def s_res_transient():
     s = slide()
-    header(s, "7. AutoML 자율 연구 루프", "Claude 기반 keep/discard autoresearch")
-    text(s, Inches(0.55), Inches(1.4), Inches(12.3), Inches(0.5),
-         [[("단일 모델 구현에 그치지 않고, ", 14, DARK, False, False, None),
-           ("LLM이 연구자(Researcher) 역할", 14, ORANGE, True, False, None),
-           ("을 맡아 model.py를 통제된 실험으로 개선 (Karpathy의 autoresearch에서 영감).",
-            14, DARK, False, False, None)]])
-
-    def step(x, title, sub, col):
-        box(s, Inches(x), Inches(2.1), Inches(2.25), Inches(1.5), fill=col, round_=True)
-        text(s, Inches(x), Inches(2.25), Inches(2.25), Inches(1.3),
-             [[(title, 14, WHITE, True, False, None)],
-              [(sub, 10.5, RGBColor(0xEC, 0xF1, 0xF7), False, False, None)]],
-             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.05, space_after=2)
-
-    steps = [("① Evaluation", "smoke→train→\nclean evaluate", BLUE),
-             ("② Briefing", "HANDOFF 갱신\nplateau 감지", TEAL),
-             ("③ Research", "Claude가 1개\n통제변수 제안", ORANGE),
-             ("④ Keep/Discard", "best 갱신 or\nmodel.py 롤백", NAVY)]
-    xs = [0.7, 3.35, 6.0, 8.65]
-    for x, (t, sub, col) in zip(xs, steps):
-        step(x, t, sub, col)
-    for x in xs[:-1]:
-        cn = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x + 2.25), Inches(2.85),
-                                    Inches(x + 2.65), Inches(2.85))
-        cn.line.color.rgb = MGRAY
-        cn.line.width = Pt(2.5)
-        cn.shadow.inherit = False
-    box(s, Inches(11.1), Inches(2.1), Inches(1.7), Inches(1.5), fill=CARDBG, round_=True,
-        line=MGRAY, line_w=1)
-    text(s, Inches(11.1), Inches(2.25), Inches(1.7), Inches(1.3),
-         [[("⟳ 반복", 14, NAVY, True, False, None)],
-          [("best 위에만\n쌓임", 10.5, GRAY, False, False, None)]],
-         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.05, space_after=2)
-    cards = [
-        ("핵심 규칙: keep/discard", ORANGE,
-         ["고정 예산으로 학습 → clean non-aug val skill로 채점",
-          "best 갱신하면 KEEP, 아니면 DISCARD + 자동 롤백",
-          "→ 회귀(regression) 위에 절대 쌓지 않음"]),
-        ("Researcher = Claude (opus)", BLUE,
-         ["program.md = 편집가능한 agent 'skill'",
-          "DATA_CONTRACT + PROJECT_KNOWLEDGE 주입",
-          "출력은 contract 보존한 raw model.py"]),
-        ("선택 게이트 = clean skill", TEAL,
-         ["augmented val loss 아님 (신뢰 불가)",
-          "clean mean skill_vs_pchip이 게이트",
-          "test split은 선택에 절대 미사용"]),
-    ]
-    for i, (t, col, lines) in enumerate(cards):
-        card(s, Inches(0.55 + i * 4.13), Inches(3.95), Inches(3.95), Inches(2.6),
-             t, lines, accent=col, title_size=13.5, body_size=11.5)
+    header(s, "6. 결과 ⑦", "급변 구간을 눈으로 — held-out shot #31815")
+    add_image_fit(s, os.path.join(FIG, "fig_transient_31815.png"),
+                  Inches(0.45), Inches(1.42), Inches(6.95), Inches(5.5))
+    box(s, Inches(7.65), Inches(1.6), Inches(5.15), Inches(4.85), fill=CARDBG, round_=True)
+    text(s, Inches(7.9), Inches(1.77), Inches(4.7), Inches(0.5),
+         [[("한 shot에서 실제로 벌어지는 일", 15, NAVY, True, False, None)]])
+    bullets(s, Inches(7.9), Inches(2.35), Inches(4.7), Inches(4.0), [
+        ("빠른 진단이 급변을 먼저 본다", 0, NAVY, True),
+        ("BES 급락(빨간 점선)이 CES crash와 정렬", 1),
+        ("PCHIP는 스파이크마다 overshoot", 0, GRAY, True),
+        ("과거+미래를 다 보는 오프라인 보간인데도", 1),
+        ("모델은 과거 CES + 빠른 진단만 쓰는 causal", 0, GREEN, True),
+        ("Tᵢ: RMSE 210 vs PCHIP 263 → skill +0.36", 0, ORANGE, True),
+        ("V_rot: skill +0.20 — 이 shot은 두 타겟 모두 승리", 0, BLUE, True),
+        ("peak 구간 Tᵢ skill +0.63", 1),
+        ("단, 보간을 이기는 건 test 43/89 shot", 0, GRAY, True),
+        ("우위는 gap·peak에 집중 (결과 ④⑥와 일관)", 1),
+    ], size=12.5, gap=6)
     return s
 
 
-# --- 24. Conclusion -------------------------------------------------------
+# --- 22c. Result 8: two stress tests --------------------------------------
+def s_stress():
+    """MNAR reweighting (§8i) + campaign time split (§8n) — which claim survives.
+    Numbers: data/.mnar_analysis.json, data/.campaign_summary.json."""
+    s = slide()
+    header(s, "6. 결과 ⑨", "스트레스 테스트 2종 — 어느 주장이 살아남는가", accent=ORANGE)
+    yy = table(
+        s, Inches(0.55), Inches(1.5),
+        [Inches(4.6), Inches(3.9), Inches(3.75)],
+        ["평가", "vs PCHIP (오프라인·미래)", "vs persistence (인과)"],
+        [
+            ["무작위 분할 · 관측 지점 (headline)", ("+0.18~+0.28 · 4/4 PASS", GREEN, True), "+0.35~+0.42"],
+            ["진짜 결측 지점으로 재가중 (MNAR)", ("+0.06~+0.21 · 1/4", RED, False), ("+0.29 · 4/4 PASS", GREEN, True)],
+            ["캠페인 시간 분할 (미래 방전)", ("−0.15~+0.05 · 0/4", RED, False), ("+0.12~+0.28 (V_rot 4/4)", GREEN, True)],
+        ],
+        row_h=Inches(0.6), size=13)
+    bullets(s, Inches(0.55), yy + Inches(0.28), Inches(12.2), Inches(2.9), [
+        ("오프라인 보간 대비 우위는 무작위 분할·관측 모집단의 성질 — 배치 주장은 인과 우위로 좁힌다", 0, ORANGE, True),
+        ("MNAR 재가중 부산물: W=4에서 진짜 결측 Tᵢ의 54.1% · V_rot의 4.8%만 도메인 내 (커버리지 한계 → reach 확장 지목)", 0),
+        ("캠페인 손실의 원인을 측정: 드리프트 BES 1.22σ · ECEI 0.53σ vs CES 타겟 0.115σ — 보간 대비 우위를 사는 고속 진단 경로가 5~11배 더 이동", 0),
+        ("→ 지목된 수리: 고속 진단의 shot별(인과) 표준화 — 누수 없음 · 실행 시점 가용 · 절충은 다음 통제 실험", 1),
+        ("V_rot조차 캠페인 분할에서 persistence를 4/4 유의 승 — '실패한 타겟'이 아니라 '의미 있는 비교가 인과뿐인 타겟'", 0),
+    ], size=13, gap=7)
+    return s
+
+
+# --- 22d. Result 9: deployment measured ------------------------------------
+def s_deploy():
+    """Latency (§8l), conformal UQ (§8m), complexity ladder (§8k)."""
+    s = slide()
+    header(s, "6. 결과 ⑩", "배치 가능성 — 주장이 아니라 측정")
+    card(s, Inches(0.55), Inches(1.5), Inches(6.0), Inches(2.45),
+         "지연시간 — CPU에서 10 ms 예산 안에 든다", [
+             "batch-1 p99 = 6.4 ms (W=4) · 중앙값 2.8 ms — 주기의 64%",
+             "반직관: CUDA는 batch 1에서 ~8× 느림 (p99 43–72 ms)",
+             "0.2M 파라미터로는 커널 실행 오버헤드를 못 상쇄",
+             "→ 실무 지침: 제어 컴퓨터의 CPU에서 돌려라",
+             "(측정 2방식 — 호출별·amortized — 일치)"],
+         accent=TEAL, body_size=12)
+    card(s, Inches(6.8), Inches(1.5), Inches(6.0), Inches(2.45),
+         "불확실성 — split conformal (재학습 없음)", [
+             "val에서 캘리브레이션 · 예측기 불변 · 분포 무가정 (α=0.10)",
+             "동일 절차를 PCHIP·persistence에도 적용한 공정 비교에서",
+             "모델 구간이 8/8 시드·타겟 조합 Winkler 점수 승 (~0.80×)",
+             "정직한 실패: 커버리지는 주변적 — shot별 50~100% 산포",
+             "(shot-조건부 보정은 현 shot 수로 불가함을 명시)"],
+         accent=BLUE, body_size=12)
+    card(s, Inches(0.55), Inches(4.2), Inches(12.25), Inches(2.35),
+         "복잡도 사다리 — '너무 복잡하다'에 측정으로 답한다 (§8k)", [
+             "완전 해석 가능한 앵커+Δ 모델(1,258 파라미터 = 0.6%; 항별 분해 가능; persistence에서 정확히 출발)을 같은 4분할에 올리면:",
+             "persistence −0.272  →  앵커+Δ −0.113  →  전체 모델 +0.234 (Tᵢ 평균)  — 해석 가능한 형태가 Tᵢ 마진의 31.5%(V_rot 7%)를 회수",
+             "→ 남은 20만 파라미터가 사는 것은 비선형·비국소 구조라고 정량적으로 말할 수 있다 (28~36%로 4분할 일관).",
+         ], accent=ORANGE, body_size=12.5)
+    return s
+
+
+# --- 23. Conclusion -------------------------------------------------------
 def s_conclusion():
     s = slide()
-    header(s, "8. 결론", "정직한 결론 (4가지)")
+    header(s, "7. 결론", "정직한 결론 (4가지)")
     items = [
-        ("1", "causal baseline을 결정적으로 압도", GREEN,
-         "persistence·AR 대비 두 타겟 모두 큰 마진 (Tᵢ 369 vs 487/1006). 강건하고 방어 가능한 결과 — 온라인/실시간에서 명확한 승자."),
-        ("2", "CES_TI: 미래 보간도 유의하게 능가", BLUE,
-         "최종 모델·4 seed에서 skill_vs_pchip +0.20~+0.30, shot-clustered 95% CI가 매번 0을 제외 (PASS). genuine-only 평가에서도 강건."),
-        ("3", "CES_VT: 보간과 동률 (n.s.)", GRAY,
-         "point estimate는 +지만 통계적으로 미지지. 검정력 한계(≈91 shot)와 heavy-tailed 오차가 구속. 과대주장하지 않음."),
+        ("1", "CES_TI: 미래 보간도 유의하게 능가 (관측 모집단 headline)", BLUE,
+         "genuine skill_vs_pchip +0.18~+0.28, 4개 독립 분할 모두 shot-clustered 95% CI가 0 제외. held 포함/제외 두 평가 모집단 모두에서 생존, 비인접 영역(Δt>15 ms)까지 포함."),
+        ("2", "배치 주장은 인과 우위 — 스트레스 테스트 2종을 생존하는 유일한 주장", GREEN,
+         "진짜 결측 재가중(+0.29, 4/4)과 캠페인 시간 분할(+0.22; V_rot 4/4)을 통과. 오프라인 보간 대비 우위는 어느 쪽도 통과 못함(1/4, 0/4) — 온라인 가상 센서의 경쟁 상대는 persistence다."),
+        ("3", "CES_VT: 보간과 동률 (PASS 1/4 = 잡음 수준)", GRAY,
+         "point estimate는 4 seed 모두 +지만 승리 주장 안 함. 단 인과 대안은 캠페인 분할에서도 4/4 유의하게 이김 — 회전은 실패한 타겟이 아니라 의미 있는 비교가 인과뿐인 타겟."),
         ("4", "Tᵢ ↔ V_rot 비대칭 = 과학적 기여", ORANGE,
-         "빠른 진단은 10 ms에서 Tᵢ 정보는 운반하나 V_rot 정보는 거의 없음 (NBI 토크 미관측 + Mirnov aliasing). 물리적으로 예측되고 ablation으로 확인됨."),
+         "빠른 진단은 10 ms에서 Tᵢ 정보는 운반하나(fast-only +0.37) V_rot 정보는 거의 없음(fast-only −0.64; NBI 토크 미관측 + Mirnov aliasing 실측). 물리로 예측되고 ablation으로 확인됨."),
     ]
     yy = 1.55
     for num, t, col, body in items:
@@ -981,34 +1135,152 @@ def s_conclusion():
     return s
 
 
+# --- 24b. Follow-up: can Mirnov be salvaged for V_rot? --------------------
+def s_mirnov():
+    s = slide()
+    header(s, "7. 추가 검증", "\"Mirnov를 더 잘 쓰면 V_rot이 되지 않나?\" — 검증된 음성 결과")
+    add_image_fit(s, os.path.join(FIG, "fig_mirnov.png"),
+                  Inches(0.65), Inches(1.40), Inches(12.0), Inches(3.50))
+    card(s, Inches(0.55), Inches(5.08), Inches(3.90), Inches(1.74), "① 진단 (실측)", [
+        "MC = 100 Hz 격자의 순간 dB/dt 스냅샷",
+        "lag-1 r: MC −0.01 vs BES +0.57 · ECEI +0.57",
+        "→ kHz 모드가 무작위 위상으로 접혀 소실",
+    ], accent=RED, title_size=14, body_size=10.5)
+    card(s, Inches(4.67), Inches(5.08), Inches(3.90), Inches(1.74), "② 시도와 검정", [
+        "적분·PCHIP 적분·|MC|·이동 RMS 인과 파생",
+        "셔플 대조군: 적분 n.s. · |MC|↔Tᵢ 천이 유의",
+        "학습 개선 없음 (Tᵢ 평균 −0.074, 4/4 음수)",
+    ], accent=ORANGE, title_size=14, body_size=10.5)
+    card(s, Inches(8.79), Inches(5.08), Inches(3.90), Inches(1.74), "③ 함의", [
+        "부수: V_rot이 분할 시드 따라 −0.15~+0.86 요동",
+        "→ 소규모 학습에선 V_rot 단일 수치 측정 불가",
+        "레버는 NBI 토크 확보 · 원본 kHz Mirnov",
+    ], accent=TEAL, title_size=14, body_size=10.5)
+    return s
+
+
+# --- 24b. Expected rebuttal: does Te proxy the NBI torque? ---------------
+def s_te_nbi():
+    s = slide()
+    header(s, "7. 추가 검증",
+           "\"Tₑ가 NBI 가열을 대리하니 V_rot도 담기지 않나?\" — 가설과 기각", accent=RED)
+    text(s, Inches(0.55), Inches(1.36), Inches(12.3), Inches(0.60),
+         [[("이론적으로 충분히 가능한 경로다. ", 14, RED, True, False, None),
+           ("NBI가 들어가면 전자가 가열되므로 Tₑ가 NBI 주입량을 간접 반영하고, "
+            "그렇다면 ECEI가 회전 정보를 간접적으로 운반할 수 있다 — 데이터로 직접 검정했다.",
+            14, DARK, False, False, None)]], line_spacing=1.14)
+    box(s, Inches(0.55), Inches(2.00), Inches(5.05), Inches(3.62), fill=CARDBG, round_=True)
+    box(s, Inches(0.55), Inches(2.00), Inches(0.10), Inches(3.62), fill=ORANGE)
+    text(s, Inches(0.80), Inches(2.13), Inches(4.6), Inches(0.4),
+         [[("가설의 인과 사슬", 14.5, ORANGE, True, False, None)]])
+    bullets(s, Inches(0.80), Inches(2.62), Inches(4.6), Inches(2.9), [
+        ("NBI 주입 → 전자 가열 → Tₑ 상승", 0),
+        ("∴ Tₑ는 NBI power의 간접 대리 변수", 0),
+        ("power가 크면 토크도 크다면", 0),
+        ("→ ECEI가 V_rot 정보를 운반해야 함", 1, NAVY, True),
+        ("데이터에 NBI 컬럼이 없으므로", 0),
+        ("Tₑ 대리변수로 경로 존재 여부를 검정", 1),
+    ], size=12.5, gap=9)
+    text(s, Inches(5.85), Inches(2.03), Inches(7.0), Inches(0.4),
+         [[("shot 간 상관 (538 shot, ECEI 채널 평균 = Tₑ 대리)",
+            13, NAVY, True, False, None)]])
+    cwn = [Inches(3.30), Inches(1.85), Inches(1.80)]
+    nrows = [
+        [("Tₑ ~ CES_TI", DARK, True, None), ("+0.353", GREEN, True, MONO), ("2.9e−17", GREEN, True, MONO)],
+        [("Tₑ ~ CES_VT", DARK, True, None), ("+0.024", RED, True, MONO), ("0.58", RED, True, MONO)],
+        [("Tₑ ~ |CES_VT|", DARK, False, None), ("+0.001", RED, False, MONO), ("0.98", RED, False, MONO)],
+        [("Tₑ 변동성 ~ |CES_VT|", DARK, False, None), ("−0.026", GRAY, False, MONO), ("0.55", GRAY, False, MONO)],
+        [("BES 변동성 ~ |CES_VT|", DARK, False, None), ("−0.059", GRAY, False, MONO), ("0.17", GRAY, False, MONO)],
+    ]
+    table(s, Inches(5.85), Inches(2.48), cwn, ["관계", "Pearson r", "p"], nrows,
+          row_h=Inches(0.38), head_h=Inches(0.36), size=12, head_size=11.5,
+          emphasis_fill=None)
+    text(s, Inches(5.85), Inches(4.86), Inches(6.95), Inches(0.80),
+         [[("shot 내부에서도 같다: ", 12, NAVY, True, False, None),
+           ("Tₑ~CES_TI는 블록 평균 r = +0.246으로 부호가 일관되게 양수인데, "
+            "Tₑ~CES_VT는 +0.006으로 부호조차 무작위다 (|r|>0.3 블록: 42.7% vs 14.8%).",
+            12, DARK, False, False, None)]], line_spacing=1.14)
+    box(s, Inches(0.55), Inches(5.72), Inches(12.25), Inches(1.16), fill=CARDBG, round_=True)
+    box(s, Inches(0.55), Inches(5.72), Inches(0.12), Inches(1.16), fill=RED)
+    text(s, Inches(0.85), Inches(5.81), Inches(11.75), Inches(1.02),
+         [[("결론 — 경로의 전반부는 참이고, 후반부에서 끊긴다.", 12, RED, True, False, None)],
+          [("Tₑ가 가열 수준의 대리로 작동하는 건 사실이다 (Tᵢ와 r = +0.35). 그런데 바로 그 Tₑ가 "
+            "V_rot과는 무관하다 (r = +0.02, p = 0.58). 끊기는 지점은 ",
+            12, DARK, False, False, None),
+           ("power ≠ torque", 12, RED, True, False, None),
+           (" — 토크는 빔 에너지·접선 반경·주입 각도에 의존해 power와 분리되고, 회전은 "
+            "운동량 수송과 경계 제동(NTV·오차장·벽 마찰)에 지배된다.", 12, DARK, False, False, None)]],
+         line_spacing=1.12)
+    return s
+
+
 # --- 25. Limitations + future --------------------------------------------
+def s_window_sweep():
+    """Window sweep (2026-08-04, 24 runs) — answers "why window = 4?".
+    Numbers: THESIS_RESULTS.md §8f / data/.wsweep_summary.json."""
+    s = slide()
+    header(s, "6. 결과 ⑧", "window 민감도 sweep — 'W=4여야 하는가'에 답하다", accent=TEAL)
+    text(s, Inches(0.55), Inches(1.36), Inches(12.3), Inches(0.56),
+         [[("W ∈ {2,3,4,6,8} × seed 4개 + history-0 = ", 13, DARK, False, False, None),
+           ("독립 run 24회", 13, NAVY, True, False, None),
+           (". 발표 모델(iter009) 고정, W만 변화 — 매 run 자체의 held-out TEST "
+            "skill_vs_pchip. held 제거 학습·평가, seed별 test shot 96개는 모든 W에서 동일(검증됨).",
+            13, DARK, False, False, None)]], line_spacing=1.12)
+    add_image_fit(s, os.path.join(FIG, "fig_window_sweep.png"),
+                  Inches(0.45), Inches(1.98), Inches(7.75), Inches(4.15))
+    box(s, Inches(8.35), Inches(1.98), Inches(4.45), Inches(4.15), fill=CARDBG, round_=True)
+    text(s, Inches(8.6), Inches(2.12), Inches(4.0), Inches(0.5),
+         [[("곡선이 말하는 세 가지", 15, NAVY, True, False, None)]])
+    bullets(s, Inches(8.6), Inches(2.66), Inches(4.0), Inches(3.4), [
+        ("history가 없으면 무너진다", 0, RED, True),
+        ("Tᵢ −0.026 (보간에 짐) · V_rot −0.78", 1),
+        ("→ 빠른 진단만으론 보간에 못 미친다", 1),
+        ("과거 관측 1개가 전부를 만든다", 0, GREEN, True),
+        ("W=2에서 Tᵢ +0.238 · V_rot +0.206", 1),
+        ("두 타겟 모두 이후 평탄 (추세 없음)", 1),
+        ("구간 폭 < seed 산포 0.07~0.16", 1),
+        ("W>2의 근거는 skill 아닌 커버리지", 0, BLUE, True),
+        ("긴 gap 샘플 채점 수 4~10배 (V_rot)", 1),
+    ], size=12, gap=7)
+    text(s, Inches(0.55), Inches(6.22), Inches(12.3), Inches(0.62),
+         [[("결론  ", 12.5, TEAL, True, False, None),
+           ("W=4는 근거 없이 쓰던 기본값이었고 두 타겟 모두 W=2/3보다 낮다 → 이 곡선으로 W=2를 선택. ",
+            12.5, DARK, False, False, None),
+           ("1차 실험의 'V_rot은 긴 window가 필요하다'는 held 오염이 짧은 window를 "
+            "벌해서 생긴 착시였다.", 12.5, GRAY, False, True, None)]],
+         line_spacing=1.15)
+    return s
+
+
 def s_limits():
     s = slide()
-    header(s, "8. 한계 & 향후 연구", "한계와 다음 단계")
+    header(s, "7. 한계 & 향후 연구", "한계와 다음 단계")
     box(s, Inches(0.55), Inches(1.55), Inches(6.0), Inches(4.9), fill=CARDBG, round_=True)
     box(s, Inches(0.55), Inches(1.55), Inches(0.12), Inches(4.9), fill=RED)
     text(s, Inches(0.8), Inches(1.72), Inches(5.5), Inches(0.5),
          [[("한계", 16, RED, True, False, None)]])
     bullets(s, Inches(0.8), Inches(2.3), Inches(5.55), Inches(4.0), [
-        ("통계적 검정력: test shot ≈ 96(Tᵢ)/91(V_rot) — 모든 유의성의 구속조건", 0),
-        ("heavy-tailed 오차: 소수 방전이 부트스트랩 분산을 지배", 0),
-        ("MNAR 낙관적 상한: 관측 지점에서만 측정", 0),
-        ("metric 비대칭: 보간은 full-shot 이웃, 모델은 window=4", 0),
-        ("단일 아키텍처·단일 window(4): 민감도 미특성화", 0),
-        ("큰 Δt bin은 표본 수십 개·CI 없음 → 비신뢰", 0),
-    ], size=12.5, gap=9)
+        ("통계적 검정력: test shot ≈ 96(Tᵢ)/61(V_rot genuine) — 모든 유의성의 구속조건", 0),
+        ("MNAR: 관측 지점 채점은 낙관 상한 — 재가중으로 정량화(결과 ⑧): 인과 우위만 생존", 0),
+        ("커버리지: W=4에서 진짜 결측 Tᵢ 54.1% · V_rot 4.8%만 도메인 내", 0),
+        ("캠페인 전이: 시간 분할에서 오프라인 보간 우위 소멸(0/4) — 원인 측정, 수리 미실행", 0),
+        ("불확실성 구간은 주변적으로만 보정 (shot별 50~100%)", 0),
+        ("metric 비대칭: 보간은 full-shot 이웃, 모델은 W=4 · >105 ms는 양측 보간 우세", 0),
+        ("단일 장치·단일 모델 계열 (window·CT 인코더 민감도는 특성화 완료)", 0),
+    ], size=12, gap=8)
     box(s, Inches(6.8), Inches(1.55), Inches(6.0), Inches(4.9), fill=CARDBG, round_=True)
     box(s, Inches(6.8), Inches(1.55), Inches(0.12), Inches(4.9), fill=TEAL)
     text(s, Inches(7.05), Inches(1.72), Inches(5.5), Inches(0.5),
          [[("향후 연구", 16, TEAL, True, False, None)]])
     bullets(s, Inches(7.05), Inches(2.3), Inches(5.55), Inches(4.0), [
-        ("bracket-distance 층화: 가장 가까운 미래 anchor까지의 거리로 분석", 0, NAVY, True),
-        ("보간이 가장 어려운 sub-population에서 powered한 유의 win 발굴 기대", 1),
-        ("더 많은 test shot / 다중 캠페인 → 검정력 직접 보강", 0),
-        ("peak-weighted loss: 고변동 샘플 upweight (이연된 실험)", 0),
-        ("window 크기·아키텍처 민감도 체계적 sweep", 0),
-        ("V_rot 보강: 이력을 더 효과적으로 활용하는 구조", 0),
-    ], size=12.5, gap=9)
+        ("음성 결과는 뒤집을 측정을 지목할 때만 보고 — 세 레버 전부 자체 측정으로 지목", 0, NAVY, True),
+        ("① 이력 reach 확장: 슬롯 2~3개 유지 + 더 넓은 span — 커버리지(54.1%/4.8%) 직접 개선", 0),
+        ("② 원 kHz Mirnov window 특징(RMS·대역 파워·모드 번호) — V_rot 최대 레버", 0),
+        ("   (100 Hz 무필터 데시메이션이 파괴한 정보의 상류 복원)", 1),
+        ("③ NBI 토크 데이터 확보 — 회전의 원인 변수 (액추에이터 입력 시 회전 예측 가능: 양성 대조군 존재)", 0),
+        ("④ 고속 진단 shot별 표준화 — 캠페인 전이 수리 (통제 실험 설계 완료)", 0),
+        ("다중 캠페인 확장 → 검정력 직접 보강", 0),
+    ], size=12, gap=8)
     return s
 
 
@@ -1021,11 +1293,11 @@ def s_closing():
          [[("한 장 요약 — Key Takeaways", 26, WHITE, True, False, None)]])
     points = [
         ("항상 있는 빠른 진단으로 자주 비는 CES를 채우는 데이터 기반 가상 센서", ORANGE),
-        ("미래까지 보는 오프라인 보간을 causal 모델로 이기는 의도적으로 어려운 bar", BLUE),
-        ("CES_TI는 4 seed 모두 보간을 통계적으로 유의하게 능가 (shot-clustered CI)", GREEN),
-        ("CES_VT는 동률(n.s.) — 빠른 진단에 회전 정보가 없다는 Tᵢ↔V_rot 비대칭", TEAL),
-        ("모델의 가치는 고변동(peak) 구간에 집중 · causal baseline은 압도적으로 능가", ORANGE),
-        ("Claude 기반 keep/discard autoresearch로 n.s. → 유의로 개선", BLUE),
+        ("CES_TI는 미래까지 보는 보간을 4 seed 모두 유의하게 능가 (genuine +0.18~+0.28)", GREEN),
+        ("배치 주장은 인과 우위 — 결측 재가중·캠페인 분할을 생존하는 유일한 주장 (+0.29/+0.22)", BLUE),
+        ("CES_VT는 보간과 동률 — 빠른 진단에 회전 정보가 없다는 Tᵢ↔V_rot 비대칭 (발견)", TEAL),
+        ("가치는 고변동(peak) 구간에 집중 · CPU p99 6.4 ms로 실시간 · conformal 구간 8/8 승", ORANGE),
+        ("데이터 품질 감사(held 54% → 학습·평가 제거 규약) + 선택 게이트 교체가 유의를 만듦", BLUE),
     ]
     yy = 2.1
     for t, col in points:
@@ -1047,6 +1319,7 @@ def build():
     divider("1", "연구 배경 & 문제 정의", "CES는 왜 자주 비는가 — 가상 센서의 필요성")
     s_diagnostics()
     s_problem()
+    s_missing_table()
     s_idea()
     divider("2", "접근법", "의도적으로 어려운 평가 bar 설정")
     s_bar()
@@ -1055,10 +1328,12 @@ def build():
     s_data()
     s_contract()
     s_split()
+    s_samples()
     s_stuck()
     divider("4", "모델 아키텍처", "Multimodal Late-Fusion + target별 routing")
     s_arch()
     s_arch_detail()
+    s_training()
     divider("5", "평가 방법론", "통계적 엄밀성: split · 사전등록 · bootstrap")
     s_methodology()
     s_bootstrap()
@@ -1069,10 +1344,14 @@ def build():
     s_res_gap()
     s_res_asym()
     s_res_peak()
-    divider("7", "AutoML 자율 연구 루프", "Claude 기반 keep/discard autoresearch")
-    s_automl()
-    divider("8", "결론 · 한계 · 향후 연구", "정직한 결론과 다음 단계")
+    s_res_transient()
+    s_window_sweep()
+    s_stress()
+    s_deploy()
+    divider("7", "결론 · 한계 · 향후 연구", "정직한 결론과 다음 단계")
     s_conclusion()
+    s_mirnov()
+    s_te_nbi()
     s_limits()
     s_closing()
 

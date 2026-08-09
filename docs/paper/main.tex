@@ -17,6 +17,10 @@
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{
+  pdftitle={Multimodal Nowcasting of Sparse Charge-Exchange Spectroscopy on KSTAR},
+  pdfauthor={Seungsang Lee},
+}
 \usepackage{xcolor}
 
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
@@ -46,21 +50,33 @@ but Not Toroidal Rotation}}
 Charge-exchange spectroscopy (CES) is the primary measurement of ion temperature
 (\Ti) and toroidal rotation (\Vrot) in tokamaks, but photon-collection constraints
 make it slow and intermittently missing: on the KSTAR 10\,ms grid studied here,
-$\approx$8\% of \Ti{} and $\approx$24\% of \Vrot{} samples are absent, and the two
-targets go missing independently. We ask whether the always-available fast
+8.2\% of \Ti{} and 23.9\% of \Vrot{} samples are absent, the two targets go missing
+independently, and a further 41.1\% of \Vrot{} rows are instrument holds, leaving
+65.0\% of the grid without independent \Vrot{} information. We ask whether the always-available fast
 diagnostics---beam-emission spectroscopy (BES), electron-cyclotron-emission imaging
 (ECEI), and Mirnov coils---together with the irregular past CES history can recover
 information at missing CES timesteps that \emph{temporal interpolation of CES alone
-cannot}. We train a compact ($<$1M-parameter) multimodal network with per-diagnostic
-encoders, explicit irregular-time features, per-target masked losses, and
-physics-informed per-target input routing, and evaluate it against a deliberately
+cannot}. We train a compact (0.2M-parameter) multimodal network whose history
+encoder pools a GRU over the irregular CES history with attention \emph{hard-masked
+to genuinely observed timesteps}---writing interpolation's own inductive bias into
+the model at zero parameter cost---together with per-diagnostic encoders, explicit
+irregular-time features, per-target masked losses, and physics-informed per-target
+input routing, and evaluate it against a deliberately
 adverse bar: offline interpolation (linear, monotone-cubic PCHIP, local AR) that is
 allowed to see \emph{past and future} CES neighbors, while the model is strictly
 causal. Under a pre-registered protocol---file-level train/val/test splits, a test
 set never touched by model selection, and a shot-clustered paired bootstrap
-(10{,}000 resamples)---the model beats PCHIP on \Ti{} with skill $+0.20$ to $+0.30$
+(10{,}000 resamples)---the model beats PCHIP on \Ti{} with skill $+0.18$ to $+0.28$
 and a 95\% CI excluding zero on \emph{four independent held-out splits}, while
-\Vrot{} is statistically indistinguishable from interpolation on all four. Input
+\Vrot{} clears the same gate on only one of the four---what noise alone would
+produce---so we report it as a tie. We then stress the result two ways, and the two
+agree: reweighting the scored points onto the covariate distribution of the
+\emph{genuinely missing} ones, and re-splitting strictly in time across campaigns,
+each remove the advantage over offline interpolation while leaving the advantage over
+every \emph{causal} baseline intact ($+0.29$ and $+0.22$). We therefore separate the
+two claims rather than conflate them, and trace the campaign-shift loss to a measured
+cause: the fast diagnostics drift 5--11$\times$ more between campaigns than the
+quantity being predicted. Input
 ablations show this asymmetry is physical rather than architectural: fast
 diagnostics alone beat persistence for \Ti{} (collisional $e$--$i$ coupling makes
 $T_e$ and $n_e$ informative) but are far worse than the mean for \Vrot{} (the
@@ -68,7 +84,8 @@ dominant NBI torque is unobserved and 100\,Hz-sampled Mirnov signals alias away 
 mode rotation). The model's advantage concentrates in high-local-variability
 neighborhoods where smooth interpolation is weakest. We also document a
 data-quality audit (54\% of observed \Vrot{} values are forward-filled instrument
-holds) and an LLM-driven keep/discard architecture-search loop that turned an
+holds) and an architecture-selection protocol gated on the clean
+interpolation-relative skill rather than on validation loss, which turned an
 initially non-significant result into the significant headline. We release the
 full pipeline, pre-registration, and evaluation artifacts.
 \end{abstract}
@@ -85,9 +102,11 @@ which infers \Ti{} from Doppler broadening and \Vrot{} from the
 Doppler shift of charge-exchange line emission. Because CES must integrate photons
 to reach adequate signal-to-noise, it is intrinsically slow, and individual time
 points are frequently lost to exposure and signal-quality problems. In the KSTAR
-data studied here, even on a uniform 10\,ms grid, $\approx$8\% of \Ti{} and
-$\approx$24\% of \Vrot{} observations are missing---\emph{independently} of each
-other---and, empirically in our dataset, the missingness concentrates at
+data studied here, even on a uniform 10\,ms grid, 8.2\% of \Ti{} and
+23.9\% of \Vrot{} observations are missing---\emph{independently} of each
+other---while a further 41.1\% of \Vrot{} rows repeat the previous reading
+bit-for-bit (\S\ref{sec:stuck}), so only 35.0\% of the grid carries an independent
+\Vrot{} measurement. Empirically in our dataset, the missingness concentrates at
 physically interesting moments (low signal-to-noise phases, ELMs, transitions),
 i.e.\ it is missing-not-at-random in the sense of
 \citet{Little2002StatisticalAnalysis} (MNAR).
@@ -127,7 +146,24 @@ baseline (persistence, AR).
         recover the $\approx$28\% of labeled rows discarded by both-targets-required
         filtering; explicit irregular-time features; full masking of the target
         timestep in the CES-history input; file-level (shot-level) splits; and
-        train-file-only normalization statistics (\S\ref{sec:data}).
+        train-file-only normalization statistics (\S\ref{sec:data}). Its one
+        non-generic component is \textbf{observation-masked attention pooling}
+        (\S\ref{sec:model}): each target's attention readout over the history may
+        place mass only on timesteps where \emph{that} target was genuinely
+        measured, which is exactly the inductive bias that makes interpolation
+        strong, added at zero parameter cost.
+  \item \textbf{A map of where the remaining headroom is---and is not}
+        (\S\ref{sec:window}, \S\ref{sec:headroom}). A 24-run window sweep shows that
+        removing previous-CES entirely drops both targets \emph{below} the
+        interpolation bar, that a \emph{single} past observation recovers the model's
+        whole margin, and that the curve is flat from one observation onward.
+        We do not read this as a ceiling but as a routing instruction: the
+        next gain is not in the estimator, and we identify three specific places it
+        \emph{is}, each with the measurement that would deliver it
+        (\S\ref{sec:headroom}). One is already demonstrated in our own data---the
+        Mirnov channel is uninformative because 100\,Hz decimation without
+        anti-aliasing destroyed it \emph{before} the model, not because the plasma
+        lacks the signal (\S\ref{sec:asym}).
   \item \textbf{A pre-registered, shot-clustered evaluation protocol}
         (\S\ref{sec:eval}) with a three-way split whose test set is never read by
         model selection, and significance assessed by a shot-clustered paired
@@ -135,24 +171,50 @@ baseline (persistence, AR).
         the discharge, not the sample, is the unit of replication.
   \item \textbf{A robust positive result for \Ti{}} (\S\ref{sec:results}): the
         causal model beats future-using PCHIP interpolation with
-        $\skillp = +0.20$ to $+0.30$ and shot-clustered 95\% CIs excluding zero on
+        $\skillp = +0.18$ to $+0.28$ and shot-clustered 95\% CIs excluding zero on
         four independent held-out splits, and survives a genuine-measurement-only
         re-evaluation.
   \item \textbf{A physics-grounded negative result for \Vrot{}}, reported as a
         finding rather than a failure: fast diagnostics carry essentially no
         rotation information at 10\,ms (unobserved NBI torque; Mirnov aliasing),
         confirmed by input ablations, so \Vrot{} remains
-        history-autocorrelation-limited and statistically ties interpolation. We
+        history-autocorrelation-limited and ties interpolation (significant on
+        1/4 splits, which is what noise alone would give). We
         call this the \Ti$\leftrightarrow$\Vrot{} \emph{information asymmetry}.
   \item \textbf{Diagnosis of where the model earns its edge}: skill is concentrated
         in high-local-variability neighborhoods, where smooth interpolation is
         weakest; there, even \Vrot{} shows a (fragile) significant edge, and an
         ablation shows the \Ti{} edge genuinely uses the multimodal signal.
+  \item \textbf{Two stress tests that separate two claims usually conflated}
+        (\S\ref{sec:mnar}, \S\ref{sec:campaign}). Reweighting the scored points onto
+        the covariate distribution of the genuinely missing ones, and re-splitting
+        strictly in time across campaigns, both remove the advantage over
+        \emph{offline} interpolation (1/4 and 0/4) while leaving the advantage over
+        \emph{causal} baselines intact ($+0.29$, $+0.22$). An online virtual sensor
+        competes with persistence, not with an interpolant that reads the future;
+        keeping the two apart is what makes the deployment claim defensible. The
+        campaign loss is then traced to a measured cause---BES and ECEI drift
+        $1.22\,\sigma$ and $0.53\,\sigma$ between campaigns against
+        $0.115\,\sigma$ for the CES targets---which indicts train-file-only
+        normalization and names its repair. The MNAR analysis also yields a scope
+        fact we had not stated: at $W{=}4$ only 54\% of missing \Ti{} rows (and 4.8\%
+        of \Vrot{}) are in the model's domain at all.
+  \item \textbf{Deployability, measured} (\S\ref{sec:deploy}): p99 inference latency
+        of 6.4\,ms on CPU against the 10\,ms CES cadence---and the counterintuitive
+        finding that a GPU is $8\times$ \emph{slower} at batch 1 for a model this
+        small---plus distribution-free conformal prediction intervals that beat both
+        baselines' intervals on 8/8 seed-target combinations without retraining or
+        perturbing any reported number.
+  \item \textbf{A complexity ladder} (\S\ref{sec:ladder}) answering ``this model is
+        too complex to explain'' with a measurement rather than a rebuttal: a fully
+        interpretable 1{,}258-parameter anchor-plus-correction model recovers 31.5\%
+        of the \Ti{} margin and 7\% of the \Vrot{} margin, so we can state exactly
+        what the remaining 0.2M parameters buy.
   \item \textbf{Two methodological artifacts}: a data-quality audit revealing that
-        54\% of observed \Vrot{} values are forward-filled instrument holds (and a
-        corrected evaluation), and an LLM-driven keep/discard architecture-search
-        loop whose selection gate is the clean interpolation-relative skill rather
-        than validation loss.
+        54\% of observed \Vrot{} values are forward-filled instrument holds---which
+        we show also contaminate \emph{training}---and an architecture-selection
+        protocol whose gate is the clean interpolation-relative skill rather than
+        validation loss.
 \end{enumerate}
 
 % =========================================================================
@@ -162,7 +224,9 @@ baseline (persistence, AR).
 \paragraph{Profile fitting and gap-filling in fusion diagnostics.}
 Gaussian-process regression~\citep{rasmussen2006} is the community-standard tool
 for fitting and uncertainty-quantifying fusion profile
-data~\citep{chilenski2015,michoski2024}, and monotone interpolants such as
+data~\citep{chilenski2015,michoski2024} --- applied to KSTAR's own CES \Ti{}
+profiles with SVM-based outlier rejection~\citep{Kim2024KineticProfile} --- and
+monotone interpolants such as
 PCHIP~\citep{fritsch1980,dougherty1989} are preferred over natural cubic
 splines~\citep{reinsch1967} near transients because splines exhibit Gibbs-like
 ringing at ELM- and sawtooth-like steps~\citep{kvernadze1998}. Irregularly
@@ -200,7 +264,8 @@ profiles~\citep{Wei2023ReconstructionTokamak}, real-time
 equilibria~\citep{Zheng2024RealtimeEquilibrium}, and---on KSTAR itself---NN
 Grad--Shafranov solvers~\citep{Joung2020DeepNeural,Joung2023GsdeepnetMastering}
 and rapid EPED-parameterized profile
-reconstruction~\citep{Jung2026MachineLearningbased}. These address analysis
+reconstruction~\citep{Jung2026MachineLearningbased} --- the latter consuming CES
+as an \emph{input} and explicitly naming rotation as future work. These address analysis
 \emph{latency}, not measurement \emph{availability}: they accelerate inversions
 of data that exist. Two works sit closer to the availability question.
 Actuator-conditioned profile forecasting on
@@ -248,9 +313,15 @@ the future; (iii) \emph{evaluation bar}---none benchmarks against
 is the incumbent method to beat, under a pre-registered shot-clustered protocol;
 and (iv) \emph{information analysis}---reconstructability is assumed rather than
 tested per target, whereas the \Ti$\leftrightarrow$\Vrot{} asymmetry is our
-central finding. Within the surveyed literature we found no causal temporal
-gap-filling of sparse CXRS ion measurements on any device; we state this as the
-outcome of our literature search, not as a claim that no such attempt exists.
+central finding. In sum, this work continues the programme this active family has
+established---reconstructing an absent measurement from the diagnostics that are
+always on---and extends it in three directions: from electron channels to a
+\emph{sparse ion channel}, from simultaneous memory-less mappings to \emph{causal
+estimation conditioned on the target's own irregular past}, and from assumed
+reconstructability to \emph{per-target tests against pre-registered baselines}.
+To our knowledge the conjunction of these three---causal temporal gap-filling of
+sparse CXRS ion measurements---has not yet been addressed; we present it as the
+family's natural next step rather than as a departure from it.
 
 \paragraph{Irregular-time and masked multitask learning.}
 Our design borrows standard ingredients from the irregular time-series
@@ -328,53 +399,113 @@ A late audit found that \textbf{54\% of observed \Vrot{} values are instrument
 holds}: bit-identical repeats of the previous observation within a contiguous time
 block (runs up to 1{,}214 rows; 499/641 files affected). These arise because the
 native \Vrot{} cadence is slower than the row cadence; they are not independent
-measurements. \Ti{} is unaffected (0.0\%). A controlled A/B retrain showed
-training is \emph{not} contaminated---masking holds at train time does not improve
-(and slightly hurts) genuine-measurement performance, i.e.\ the holds act as a
-harmless persistence prior---so holds are kept in training but \emph{excluded from
-evaluation}. The correction inflates reported physical \Vrot{} RMSE by
-35--55\% (from 22--33 to 35--46 in raw units) because held targets have near-zero
-baseline error; all conclusions below use the corrected (genuine-only) evaluation,
-and the \Ti{} headline is unchanged by it.
+measurements. \Ti{} is unaffected (0.0\%). Holds are \emph{excluded from evaluation}: reproducing
+a forward-fill is not a measurement, and any arm that carries the last value
+forward---persistence above all---scores it for free. The correction inflates
+reported physical \Vrot{} RMSE by 35--55\% (from 22--33 to 35--46 in raw units) and
+cuts the scored \Vrot{} population by roughly 60\%. Every headline number in this
+paper is the corrected one; because the historical convention scored holds, we carry
+the hold-inclusive population alongside as a sensitivity column
+(Table~\ref{tab:headline}) and note where the two disagree. They agree on both
+conclusions.
+
+\paragraph{Holds also contaminate \emph{training}.}
+An initial single-seed A/B suggested they did not---that holds acted as a harmless
+persistence prior---and the headline family of \S\ref{sec:headline} was trained under
+that assumption. A four-seed paired retrain overturns it. Removing holds at train
+time (from the supervision targets, from the \texttt{ces\_history} values \emph{and}
+observation flags, from the normalization statistics, and from the interpolation
+anchors), with the file-level split pinned to the control manifest and the scored
+population matched row-for-row, improves genuine-measurement \Vrot{} on \emph{all
+four} splits: mean paired skill $+0.039$ ($\approx$4\% MSE reduction from the data
+fix alone), three of four shot-clustered CIs excluding zero, none against. \Ti{} is
+unaffected (mean $+0.004$; one split significantly better, none worse). The
+forward-fill padding was actively teaching the model that copying history is
+near-optimal, so \Vrot{}'s reliance on its own past is \emph{both} real physics and
+partly an instrument artifact; the honest statement quantifies both.
+
+The window sweep (\S\ref{sec:window}) reproduces the effect along an axis it was
+never tested on: the gain from removing holds decays monotonically with window
+length ($+0.088$, $+0.048$, $+0.035$, $+0.003$, $+0.006$ at $W = 2,3,4,6,8$).
+With holds present, a short window's single history slot is often a forward-filled
+copy carrying no information, while a long window still reaches a genuine reading---
+so holds were \emph{penalising short windows}, not rewarding long ones. Uncorrected,
+this artifact alone manufactures an apparent ``\Vrot{} needs a long history'' trend
+($+0.118 \to +0.202$) that vanishes under the correction.
+
+We therefore adopt hold-free training as the convention for all subsequent runs. Its
+effect on the headline is a strict improvement that changes no verdict: retrained
+hold-free, \Ti{} still PASSes on 4/4 splits ($+0.184$, $+0.291$, $+0.238$, $+0.221$)
+and every \Vrot{} point estimate rises ($+0.203\!\to\!+0.226$,
+$+0.162\!\to\!+0.202$, $+0.100\!\to\!+0.143$, $+0.183\!\to\!+0.210$) while remaining
+n.s.\ on 3/4. Both conclusions of this paper are thus invariant to the data
+treatment, which is the reason we report the pre-registered family as the headline
+and this one as its replication.
 
 % =========================================================================
 \section{Model}
 \label{sec:model}
 
-The predictor is a compact ($<$1M parameters) late-fusion network; the bottleneck
-in this problem is generalization, not capacity.
+The predictor is a compact \textbf{201{,}258-parameter} late-fusion network; the
+bottleneck in this problem is information, not capacity (\S\ref{sec:window}).
 
 \paragraph{Per-diagnostic encoders.}
 Each modality (BES, ECEI, MC) is encoded by its own time-aware 1-D CNN that
-consumes the modality jointly with the time features and history, preserving each
-diagnostic's channel structure until fusion. CNNs are preferred over recurrence
-because gap-removal makes the effective sampling irregular, violating the
-uniform-step assumption RNNs rely on.
+consumes the modality jointly with the time features and history (two
+Conv--BatchNorm--GELU blocks, global average pooling, linear projection to 96-d),
+preserving each diagnostic's channel structure until fusion; a fourth, smaller CNN
+encodes the time features alone. Convolution is preferred to recurrence \emph{on the
+sensor streams} because gap-removal makes their effective sampling irregular,
+violating the uniform-step assumption RNNs rely on.
 
-\paragraph{History encoder.}
-The CES history is encoded by a 2-layer pre-LayerNorm
-Transformer~\citep{Xiong2020LayerNormalization} with learned positional
-embeddings and \emph{multi-head attention
-pooling}~\citep{Ilse2018AttentionbasedDeep} that outputs both an
-attention-weighted mean and an attention-weighted standard deviation; the latter
-exposes ``how locally variable is the recent history,'' which
-\S\ref{sec:peak} shows is where the model earns its edge. Self-attention over the
-(masked) target step and its observed neighbors performs an operation analogous to
-learned interpolation, with per-target observed-neighbor biases.
+\paragraph{History encoder: observation-masked attention pooling.}
+The CES history, concatenated with the time features, is read by a single-layer
+\emph{bidirectional} GRU (hidden 64), and its per-timestep outputs are pooled by
+\emph{two independent multi-head additive-attention readouts}, one routed to the
+\Ti{} head and one to the \Vrot{} head. The window is strictly past-only---the
+target row is the \emph{last} row of the window (\S\ref{sec:data})---so
+bidirectionality runs over history only and grants no future access; it lets the
+readout weigh each history row in the context of the rows that follow it inside the
+window.
+
+The one non-generic ingredient is the pooling mask. Before each target's softmax,
+every timestep whose \emph{per-target} observation flag is zero---the fully masked
+target row, and any history row where that particular target was not observed---is
+driven to $-\infty$, so attention mass can land only on rows where that target was
+genuinely measured. The two targets are masked independently, because they go
+missing independently; a target with no observed row in its window falls back to
+attending over the whole window, which prevents an all-$(-\infty)$ softmax.
+
+This is the inductive bias of interpolation, written into attention. PCHIP and
+linear interpolation are strong precisely because they use \emph{only} the observed
+samples flanking a gap and never the gap itself. An unmasked attention pool can
+spend weight on the zeroed target row and on unobserved history rows whose GRU
+states carry no measurement, diluting the readout and forcing the network to learn
+that suppression implicitly through the flag channels. Hard-masking supplies the
+same bias directly and at \emph{zero parameter cost}---the change is purely
+\emph{which} timesteps each pool may weight---and it was the last change accepted by
+the selection protocol of \S\ref{sec:selection}.
 
 \paragraph{Physics-informed per-target routing.}
 The \Ti{} head fuses fast diagnostics + time + history; the \Vrot{} head fuses
 \emph{history and time only}, deliberately excluding the fast diagnostics, which
 ablations (\S\ref{sec:asym}) show carry no usable rotation information at 10\,ms.
-Each target has its own pre-LayerNorm MLP head; outputs remain in normalized units
-(denormalization happens only in evaluation).
+Each pooled history summary is normalized and projected by its own target-specific
+LayerNorm--Linear--GELU block before entering that target's MLP head, and the two
+heads are sized to their inputs (72k parameters for \Ti{}, 14k for \Vrot{}). Outputs
+remain in normalized units; denormalization happens only in evaluation.
 
-\paragraph{Search lessons.}
-Across $\sim$40 controlled architecture iterations, pre-LayerNorm was the
-stability turning point (validation loss $0.89\!\to\!0.49$), attention pooling was
-the most reliable single improvement, and aggressive capacity scaling, complex
-skip topologies, and extra convolutional extractors consistently failed to improve
-held-out performance.
+\paragraph{Search lessons: capacity is not where the remaining gain is.}
+Across $\sim$40 controlled architecture iterations spanning two search rounds,
+normalization placement was the stability turning point of the earlier round
+(validation loss $0.89\!\to\!0.49$); attention pooling was the most reliable single
+improvement and is the one mechanism that survives into the final model; and
+aggressive capacity scaling, complex skip topologies, and extra convolutional
+extractors consistently failed to improve held-out performance. Together with
+\S\ref{sec:window} this negative carries information of its own: it says that
+further capacity engineering is the wrong place to spend, and it is what lets us
+say with some confidence, in \S\ref{sec:headroom}, \emph{where} the next gain
+actually is.
 
 % =========================================================================
 \section{Evaluation methodology}
@@ -387,14 +518,23 @@ headline baseline,
 $\skillp = 1 - \mathrm{MSE}_{\mathrm{model}}/\mathrm{MSE}_{\mathrm{PCHIP}}$
 (positive = model better; 0 = tie). Every arm (model and all baselines) is scored
 on the \emph{identical} (file, row) sample set under the same per-target keep
-mask. Interpolants exclude the target's own value (no leakage) and refuse to
-interpolate across gaps $\geq 0.5$\,s, falling back to persistence.
+mask. Interpolants exclude the target's own value (no leakage). Each shot file
+contains multiple measurement segments separated by gaps $\geq 0.5$\,s (all 641
+shots; median 2 per file, median gap 6.3\,s); neither the interpolants nor the
+model's input window bridges a segment boundary, and where a neighbor beyond the
+boundary would be needed the interpolant predicts the persistence value instead
+(no population shrinkage; PR2).
 
 \paragraph{Three-way split; selection never sees TEST.}
 Files are split train/val/test; the test set was reserved \emph{before} any
-architecture search and is never read by the search loop, so headline numbers
-carry no winner's-curse bias. The canonical test set contains 34{,}644 scored
-samples across 96 shots (observed $n$: \Ti{} 32{,}716, \Vrot{} 27{,}437).
+architecture search and is never read during model selection, so headline numbers
+carry no winner's-curse bias. The canonical (seed-42) test set contains 33{,}693
+scored samples: $n = 32{,}787$ observed \Ti{} across 96 shots, and $n = 10{,}729$
+genuine \Vrot{} across 61 shots. The \Vrot{} count is small because holds are
+excluded (\S\ref{sec:stuck}); scoring holds as if they were measurements would
+inflate it to 27{,}437, and we report that population only as a sensitivity check.
+Every number in this paper is read from frozen run directories by a single
+collection script, so the text, the tables, and the figures cannot drift apart.
 
 \paragraph{Pre-registration.}
 Four rules were fixed in writing before viewing test numbers:
@@ -417,11 +557,15 @@ seed). The resulting CI reflects genuine shot-to-shot generalization; its cost i
 that the effective sample size is the number of shots ($\approx$96), which bounds
 statistical power throughout.
 
-\paragraph{Honest caveat (MNAR).}
+\paragraph{The MNAR problem, and what we do about it.}
 Truly missing points have no ground truth, so skill is measured by masking
-\emph{observed} points. Because CES missingness is MNAR (drop-out at low S/N,
-ELMs, transitions), observed-point skill is an \emph{optimistic bound} for
-performance at genuinely missing points. We state this rather than hide it.
+\emph{observed} points. Because CES missingness is MNAR (drop-out at low S/N, ELMs,
+transitions), observed-point skill is an optimistic estimate of performance at
+genuinely missing points. Stating that and stopping there leaves the paper's central
+number with an unbounded correction attached to it, so we do not stop there:
+\S\ref{sec:mnar} reweights the scored points onto the covariate distribution of the
+\emph{actually missing} ones and reports how much of the skill survives, together
+with what fraction of the missing population this model can be applied to at all.
 
 % =========================================================================
 \section{Results}
@@ -437,22 +581,22 @@ clear winner.
 
 \begin{table}[t]
   \centering
-  \caption{Physical-unit RMSE ladder on the canonical held-out test split
-  (pre-improvement baseline model; the final model improves further, see
-  \S\ref{sec:headline}). Lower is better. \Vrot{} RMSE values here predate the
-  hold correction of \S\ref{sec:stuck}; corrected genuine-only \Vrot{} RMSE is
-  35--46.}
+  \caption{Physical-unit RMSE ladder, final model, canonical held-out test split
+  (seed 42), genuine-measurement evaluation. Lower is better. The two interpolants
+  are the only arms that read the future. \Vrot{} RMSE is $\approx$35 rather than
+  the $\approx$23 that a hold-inclusive population reports, because held targets
+  carry near-zero baseline error (\S\ref{sec:stuck}).}
   \label{tab:ladder}
   \small
   \begin{tabular}{llrr}
     \toprule
     Arm & Information access & \Ti{} RMSE & \Vrot{} RMSE \\
     \midrule
-    \textbf{Model (nowcaster)} & fast diag.\ + past CES & \textbf{412.4} & \textbf{23.2} \\
-    Linear interpolation & past + future CES & 422.7 & 24.0 \\
-    PCHIP interpolation & past + future CES & 431.8 & 24.5 \\
-    Persistence & last observed CES & 487.3 & 27.8 \\
-    AR (local, causal) & past CES only & 1005.7 & 57.2 \\
+    \textbf{Model (nowcaster)} & fast diag.\ + past CES & \textbf{407.0} & \textbf{35.0} \\
+    Linear interpolation & past + future CES & 441.0 & 38.4 \\
+    PCHIP interpolation & past + future CES & 449.3 & 39.2 \\
+    Persistence & last observed CES & 504.3 & 44.4 \\
+    AR (local, causal) & past CES only & 2425.9 & 91.5 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -460,29 +604,80 @@ clear winner.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.8\linewidth]{fig_rmse_ladder}
-  \caption{RMSE ladder for the \emph{final} model (seed 42, test split): the
-  causal model attains the lowest RMSE for both targets, decisively beating the
-  causal baselines and edging the future-using interpolants on the point
-  estimate. Table~\ref{tab:ladder} reports the same ladder for the earlier
-  baseline model, hence the different absolute values.}
+  \caption{RMSE ladder for the final model (seed 42, held-out test, genuine
+  measurements): the causal model attains the lowest RMSE for both targets,
+  decisively beating the causal baselines and edging the future-using
+  interpolants. Same numbers as Table~\ref{tab:ladder}; both are generated from
+  the same frozen artifacts.}
   \label{fig:ladder}
 \end{figure}
 
 \subsection{Headline: \Ti{} beats future-using interpolation on four independent splits}
 \label{sec:headline}
-With the final architecture (GRU history encoder + per-target multi-head-attention
-heads, $W{=}4$; selected by the search loop of \S\ref{sec:automl} on validation
-skill only), we evaluated four \emph{independent} held-out test splits (seeds 42,
-1, 7, 123; the latter three were never used in any selection step):
+With the final architecture (bidirectional-GRU history encoder + per-target
+observation-masked multi-head attention, $W{=}4$; selected by the protocol of
+\S\ref{sec:selection} on validation skill only), we evaluated four \emph{independent}
+held-out test splits (seeds 42, 1, 7, 123; the latter three were never used in any
+selection step). Table~\ref{tab:headline} reports both evaluation populations.
+
+\begin{table}[t]
+  \centering
+  \caption{Held-out test $\skillp$ with shot-clustered 95\% CIs (10{,}000 resamples).
+  \emph{genuine} excludes instrument holds from scoring (headline; \S\ref{sec:stuck});
+  \emph{holds kept} is the sensitivity check on the historical population. Seeds 1, 7
+  and 123 were never touched by model selection.}
+  \label{tab:headline}
+  \small
+  \begin{tabular}{llcccc}
+    \toprule
+    & & \multicolumn{2}{c}{genuine measurements only} & \multicolumn{2}{c}{holds kept} \\
+    \cmidrule(lr){3-4}\cmidrule(lr){5-6}
+    Target & seed & $\skillp$ (95\% CI) & gate & $\skillp$ & gate \\
+    \midrule
+    \multirow{4}{*}{\Ti{}}
+      & 42  & $+0.179$ $[+0.007, +0.302]$ & PASS & $+0.257$ & PASS \\
+      & 1   & $+0.197$ $[+0.091, +0.276]$ & PASS & $+0.194$ & PASS \\
+      & 7   & $+0.280$ $[+0.192, +0.347]$ & PASS & $+0.263$ & PASS \\
+      & 123 & $+0.263$ $[+0.109, +0.348]$ & PASS & $+0.280$ & PASS \\
+    \midrule
+    \multirow{4}{*}{\Vrot{}}
+      & 42  & $+0.203$ $[-0.225, +0.362]$ & n.s. & $+0.154$ & n.s. \\
+      & 1   & $+0.162$ $[+0.021, +0.257]$ & PASS & $+0.109$ & n.s. \\
+      & 7   & $+0.100$ $[-0.586, +0.291]$ & n.s. & $+0.065$ & n.s. \\
+      & 123 & $+0.183$ $[-0.151, +0.265]$ & n.s. & $+0.127$ & n.s. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \begin{itemize}
-  \item \textbf{\Ti{}: PASS on all four splits.}
-        $\skillp = +0.270$ (95\% CI $[+0.144, +0.364]$), $+0.200$, $+0.271$,
-        $+0.295$; every shot-clustered CI excludes zero, against both PCHIP and
-        linear. The result survives genuine-measurement-only re-evaluation
-        ($+0.225/+0.204/+0.285/+0.288$, all PASS).
-  \item \textbf{\Vrot{}: not significant on any split.} Point estimates are
-        positive but every CI includes zero. We claim a tie, not a win.
+  \item \textbf{\Ti{}: PASS on all four splits, under both evaluation populations.}
+        $\skillp = +0.18$ to $+0.28$ genuine ($+0.19$ to $+0.28$ with holds kept);
+        every shot-clustered CI excludes zero. Against the \emph{stronger} linear
+        interpolant the margin narrows but survives on 3/4 splits genuine
+        ($+0.148$ n.s.\ on seed 42; $+0.167$, $+0.259$, $+0.234$ PASS) and 4/4 with
+        holds kept. We flag the seed-42 linear result rather than quoting only the
+        pre-registered PCHIP comparator.
+  \item \textbf{\Vrot{}: a tie, not a win.} Point estimates are positive on every
+        split under both populations, but only seed 1 clears PR4 (genuine
+        $+0.162$ $[+0.021, +0.257]$; 0/4 with holds kept). One significant split out
+        of four is what we would expect from noise, so we claim no rotation win.
+  \item \textbf{Post-hoc check: the strongest offline arm is a GP, and the model
+        ties it.} Outside the pre-registered ladder we added the fusion community's
+        standard profile-fitting tool, GP regression, as a post-hoc arm on the
+        byte-identical population (exact Matérn-3/2 + white noise, local
+        nearest-16+16 fit, per-sample marginal-likelihood grid selection ---
+        deterministic; it never reads the target's own value and inherits the PR2
+        fallback). The GP turns out to be the strongest offline smoother, beating
+        PCHIP significantly on all four \Ti{} splits ($+0.21$--$+0.28$) --- the
+        mechanism by which linear beat PCHIP taken one step further: instead of
+        passing exactly through noisy anchors it averages the noise out --- and the
+        model \emph{ties} it (significantly better on 1/4, worse on 0/4, point
+        estimates $-0.08$ to $+0.09$; \Vrot{} all n.s.). The observed-population
+        claim is therefore ``beats the pre-registered interpolants and matches a
+        future-using, per-sample-tuned smoother''; the deployment claim is untouched,
+        since a GP without future anchors does not exist online. Named measurements
+        that could resolve the tie: more test shots (seed 7 already resolves it),
+        and a \emph{causal} past-only GP arm, not yet run.
 \end{itemize}
 
 \begin{figure}[t]
@@ -494,28 +689,277 @@ skill only), we evaluated four \emph{independent} held-out test splits (seeds 42
 \end{figure}
 
 An honest progression note: the initial baseline model was \emph{not} significant
-(single split, $+0.088$, n.s.). Switching the architecture-search selection gate
-from validation loss to the clean interpolation-relative skill produced the final
-model, which is significant on all four splits (Fig.~\ref{fig:progression}). We
-report both stages.
+(single split, $+0.088$, 95\% CI $[-0.221, +0.323]$). Switching the
+architecture-search selection gate from validation loss to the clean
+interpolation-relative skill produced the final model, which is significant on all
+four splits (Fig.~\ref{fig:progression}). Both stages are scored on the same
+hold-inclusive population, because that is the only one on which the earlier
+checkpoint was ever evaluated; comparing the two across different populations would
+not be a comparison. We report both stages.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.7\linewidth]{fig_progression}
   \caption{From non-significant (baseline, $+0.088$ n.s.) to significant
-  (final model, $+0.20$--$+0.30$, PASS $\times$4): the decisive change was
+  (final model, $+0.18$--$+0.28$, PASS $\times$4): the decisive change was
   selecting architectures on clean skill rather than validation loss.}
   \label{fig:progression}
 \end{figure}
 
-\subsection{Where the skill lives: small gaps dominate}
-Stratifying by the time since the last observed CES value, $\geq$97\% of real
-targets lie in the small-gap regime ($\Delta t \leq 15$\,ms), where the model wins
-(\Ti{} $+0.08$, \Vrot{} $+0.23$ vs.\ PCHIP on the canonical split). At very large
-gaps ($>$105\,ms) the future-anchored interpolant dominates, but those bins hold
-only tens of samples and carry no per-bin CIs; they are not load-bearing. The one
-well-powered comparison---small gaps, which is precisely where nowcasting is
-needed---favors the model.
+\subsection{Where the skill lives, and who the right opponent is at large gaps}
+\label{sec:gap}
+
+Stratifying by $\Delta t$, the time since the last observed CES value, $\geq$96\% of
+real targets lie in the small-gap regime ($\Delta t \leq 15$\,ms). Per-seed the wide
+bins hold only tens of samples, which is why earlier readings of them were not
+load-bearing; we therefore \emph{pool the four test splits} and cluster the bootstrap
+on the physical discharge, so a shot appearing in more than one split counts once.
+That buys enough shots to put a CI on the wide bins for the first time
+(Table~\ref{tab:gap}).
+
+It also forces a question the PCHIP comparison cannot answer. As $\Delta t$ grows,
+PCHIP's problem gets \emph{easier}---it interpolates between two real observations
+that straddle the gap---while ours gets harder, since we extrapolate from the past
+alone. More to the point, at run time there is no future anchor, so PCHIP is not an
+option at all. The baseline a deployed nowcaster must actually beat at large gaps is
+the best causal one: persistence. We therefore report both.
+
+\begin{table}[t]
+  \centering
+  \caption{Gap-stratified skill, four test splits pooled, shot-clustered 95\% CIs
+  (genuine measurements). \textbf{PCHIP reads a future anchor; persistence does not.}
+  Bold = CI excludes zero.}
+  \label{tab:gap}
+  \small
+  \begin{tabular}{lrrcc}
+    \toprule
+    $\Delta t$ & $n$ & shots & vs.\ PCHIP (future-using) & vs.\ persistence (causal) \\
+    \midrule
+    \multicolumn{5}{l}{\emph{\Ti{}}}\\
+    $\leq 15$\,ms   & 134{,}629 & 298 & $\mathbf{+0.262}$ $[+0.20, +0.31]$ & $\mathbf{+0.407}$ $[+0.36, +0.45]$ \\
+    $(15, 25]$      &   2{,}987 & 259 & $\mathbf{+0.183}$ $[+0.05, +0.30]$ & $\mathbf{+0.384}$ $[+0.28, +0.48]$ \\
+    $(25, 35]$      &      784 & 122 & $\mathbf{+0.402}$ $[+0.21, +0.57]$ & $\mathbf{+0.564}$ $[+0.41, +0.68]$ \\
+    $(35, 55]$      &      395 &  98 & $+0.143$ $[-0.21, +0.41]$          & $+0.169$ $[-0.15, +0.45]$ \\
+    $(55, 105]$     &      163 &  57 & $\mathbf{+0.282}$ $[+0.03, +0.49]$ & $\mathbf{+0.287}$ $[+0.04, +0.51]$ \\
+    $>105$\,ms      &      167 &  62 & $\mathbf{-0.542}$ $[-2.07, -0.08]$ & $+0.266$ $[-0.00, +0.46]$ \\
+    \emph{all} $>15$\,ms &  4{,}496 & 272 & $\mathbf{+0.191}$ $[+0.10, +0.28]$ & $\mathbf{+0.388}$ $[+0.32, +0.46]$ \\
+    \emph{all} $>45$\,ms &      435 & 105 & $-0.057$ $[-0.45, +0.21]$      & $\mathbf{+0.271}$ $[+0.12, +0.41]$ \\
+    \midrule
+    \multicolumn{5}{l}{\emph{\Vrot{}}}\\
+    $\leq 15$\,ms   &  51{,}457 & 195 & $+0.209$ $[-0.02, +0.29]$ & $\mathbf{+0.368}$ $[+0.17, +0.45]$ \\
+    \emph{all} $>15$\,ms &  1{,}756 & 161 & $+0.027$ $[-0.20, +0.24]$ & $\mathbf{+0.309}$ $[+0.13, +0.47]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Three readings, in decreasing order of confidence.
+
+\paragraph{The \Ti{} win is not confined to adjacent history.} Pooling makes the
+non-adjacent regime measurable, and the model beats future-using PCHIP there too:
+$+0.191$ $[+0.10, +0.28]$ over all $\Delta t > 15$\,ms, with the individual
+$(15,25]$, $(25,35]$ and $(55,105]$ bins each significant on their own. This is a
+stronger claim than the paper could previously make, and it is the regime where
+gap-filling is least trivial.
+
+\paragraph{At the widest gaps, interpolation genuinely wins---but only because it
+can see the future.} Beyond 105\,ms the model is significantly \emph{worse} than
+PCHIP ($-0.542$, CI entirely below zero). We report this plainly. Against the causal
+reference in the same bin it is a tie ($+0.266$, lower bound at zero), and pooled
+over all $\Delta t > 45$\,ms it \emph{beats} persistence significantly ($+0.271$
+$[+0.12, +0.41]$) while merely tying PCHIP ($-0.057$, n.s.). So the correct
+statement is not ``the model fails at large gaps'' but ``the large-gap regime belongs
+to two-sided interpolation, and two-sided interpolation is exactly what a real-time
+system does not have.''
+
+\paragraph{\Vrot{} ties interpolation but beats every causal alternative.} The
+global \Vrot{} tie of \S\ref{sec:headline} is a tie \emph{with future-using
+methods}. Against persistence, \Vrot{} is significantly better at small gaps
+($+0.368$) and stays significantly better beyond 15\,ms ($+0.309$). For an online
+virtual sensor this is the operative comparison, and by it the rotation channel is
+useful even though the headline calls it a tie.
+
+\subsection{How much of this survives at the points that are actually missing?}
+\label{sec:mnar}
+
+Everything above is measured on CES points that happen to be \emph{observed}. The
+points a nowcaster exists to fill are missing, and CES missingness is not random, so
+the two populations differ. We can never measure error where there is no ground
+truth---but we can measure how skill varies over covariates that are computable at
+observed \emph{and} missing rows, and reweight. Two covariates carry the mechanism:
+$\Delta t$ since the last genuine observation (a missing point sits deeper into a
+drop-out), and the input-only local-activity flag of \S\ref{sec:peak} (the
+ELM/transition axis), which is defined at a missing row precisely because it is
+computed from a neighbour set that excludes the row itself. We post-stratify on
+$\Delta t \times$ activity, drop any stratum with fewer than 30 scored samples rather
+than trust it, and report the resulting coverage next to every estimate. The
+assumption---that within a stratum missing and observed rows are exchangeable---is
+stated, not assumed away. As a control, the activity rate computed on this grid
+agrees with the flag stored in the frozen artifacts to within 0.004 (\Ti) and 0.009
+(\Vrot), so the two sides of the reweighting use the same variable.
+
+\paragraph{First, a scope result we had not previously stated.} A sample is only
+predictable at all if an observed value of that target lies \emph{inside} the model's
+window. Of the genuinely missing \Ti{} rows, \textbf{54.1\% are in-domain} in this
+sense; of the genuinely missing \Vrot{} rows, \textbf{only 4.8\% are}. So at $W{=}4$
+this method addresses about half the real \Ti{} gap problem and a small corner of the
+\Vrot{} one---not because it predicts them badly, but because it cannot be applied.
+That is a coverage limit, it is fixable by construction (\S\ref{sec:headroom}), and
+it re-opens the window question of \S\ref{sec:window}: $W$ is irrelevant to skill but
+decisive for how much of the actual missingness is reachable.
+
+\paragraph{Second, the optimism itself is small---for the causal comparison.}
+Restricted to in-domain missing points (95--100\% stratum coverage):
+
+\begin{table}[t]
+  \centering
+  \caption{Skill reweighted from the observed population onto the genuinely-missing,
+  in-domain one. Shot-clustered 95\% CIs (2{,}000 resamples; the interval covers
+  error variability at fixed stratum weights).}
+  \label{tab:mnar}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Target & seed & observed-weighted & missing-matched (95\% CI) & optimism \\
+    \midrule
+    \multirow{4}{*}{\Ti{} vs.\ persistence}
+      & 42  & $+0.349$ & $\mathbf{+0.292}$ $[+0.162, +0.415]$ & $+0.056$ \\
+      & 1   & $+0.380$ & $\mathbf{+0.308}$ $[+0.143, +0.429]$ & $+0.072$ \\
+      & 7   & $+0.405$ & $\mathbf{+0.293}$ $[+0.192, +0.441]$ & $+0.112$ \\
+      & 123 & $+0.415$ & $\mathbf{+0.293}$ $[+0.155, +0.392]$ & $+0.121$ \\
+    \midrule
+    \multirow{4}{*}{\Ti{} vs.\ PCHIP}
+      & 42  & $+0.146$ & $+0.061$ $[-0.075, +0.267]$ & $+0.084$ \\
+      & 1   & $+0.188$ & $+0.132$ $[-0.064, +0.274]$ & $+0.056$ \\
+      & 7   & $+0.280$ & $\mathbf{+0.211}$ $[+0.050, +0.374]$ & $+0.069$ \\
+      & 123 & $+0.264$ & $+0.175$ $[-0.025, +0.290]$ & $+0.090$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The two comparisons come apart, and the split is the most useful thing in this
+section. Against \textbf{persistence---the baseline an online system actually
+runs---the \Ti{} advantage survives reweighting on all four splits} at $+0.29$, with
+a remarkably stable point estimate and every CI excluding zero; the MNAR correction
+costs only $0.06$--$0.12$. Against \textbf{future-using PCHIP the advantage does not
+survive}: 1/4 splits significant after reweighting. This is consistent with
+\S\ref{sec:gap}---missing points sit at larger $\Delta t$, which is exactly where a
+two-sided anchor helps most and a causal extrapolator least.
+
+We therefore state the claim the evidence supports at the points that matter:
+\emph{at genuinely missing, in-domain timesteps, the nowcaster is significantly
+better than any causal CES-only method, and is not shown to beat offline
+interpolation.} The offline comparison remains the harder, more informative bar for
+the observed population, and we keep it as the headline for that population; it is
+not the claim we make about deployment. \Vrot{} behaves the same way but on a much
+thinner base (2/4 significant vs.\ persistence, and only 4.8\% of its missing rows
+in-domain), so we draw no deployment conclusion for rotation.
+
+\subsection{Does it survive a campaign shift?}
+\label{sec:campaign}
+
+The second thing deployment does that a random split does not is move forward in
+time. We therefore order all 641 discharges by shot number (30801--32751, contiguous)
+and cut strictly in time: \textbf{train 416 shots [30801, 31991], val 128
+[32002, 32310], test 97 [32312, 32751]}, with no test shot preceding any train shot.
+Everything else is pinned to the headline protocol, so the only changed variable is
+the split rule. The split is fixed, so the four runs vary the \emph{initialisation}
+seed only---replication here is over initialisation, not over splits, and we say so
+rather than presenting it as ``four seeds''.
+
+\begin{table}[t]
+  \centering
+  \caption{Temporal (campaign) split, four initialisations. The test period is harder
+  for every arm (PCHIP RMSE 601 vs.\ 449 on the random split), but skill normalises
+  that away, so these are losses \emph{relative to} interpolation.}
+  \label{tab:campaign}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    & \multicolumn{2}{c}{\Ti{}} & \multicolumn{2}{c}{\Vrot{}} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    init seed & vs.\ PCHIP & vs.\ persistence (95\% CI) & vs.\ PCHIP & vs.\ persistence (95\% CI) \\
+    \midrule
+    42  & $+0.051$ & $\mathbf{+0.275}$ $[+0.175, +0.342]$ & $-0.061$ & $\mathbf{+0.223}$ $[+0.016, +0.316]$ \\
+    1   & $+0.044$ & $\mathbf{+0.270}$ $[+0.153, +0.343]$ & $-0.005$ & $\mathbf{+0.264}$ $[+0.099, +0.356]$ \\
+    7   & $-0.148$ & $+0.123$ $[-0.061, +0.241]$ & $-0.156$ & $\mathbf{+0.153}$ $[+0.019, +0.242]$ \\
+    123 & $-0.018$ & $\mathbf{+0.222}$ $[+0.099, +0.303]$ & $-0.056$ & $\mathbf{+0.226}$ $[+0.025, +0.355]$ \\
+    \midrule
+    verdict & 0/4 PASS & \textbf{3/4 PASS}, mean $+0.222$ & 0/4 PASS & \textbf{4/4 PASS}, mean $+0.216$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two things in that table are worth stating explicitly. First, the interpolation
+advantage does not merely shrink---it is gone, against PCHIP \emph{and} against the
+stronger linear interpolant, on 0/4 initialisations. Second, \Vrot{}---the target we
+report as a tie---beats persistence with a CI excluding zero on \textbf{4/4}
+initialisations \emph{across a campaign boundary}. Rotation is not a failed target; it
+is a target whose only informative comparison is the causal one.
+
+\paragraph{Two independent stress tests give the same answer.}
+Table~\ref{tab:stress} puts them side by side. The advantage over \emph{future-using
+interpolation} is a property of the observed population of a random split and survives
+neither stress test. The advantage over \emph{the baselines a real-time system can
+actually run} survives both.
+
+\begin{table}[t]
+  \centering
+  \caption{The two claims under stress. Only one of them is robust, and it is the one
+  that matters for deployment.}
+  \label{tab:stress}
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    Evaluation & vs.\ PCHIP (offline, future-using) & vs.\ persistence (causal) \\
+    \midrule
+    Random split, observed points & $\mathbf{+0.18}$ to $\mathbf{+0.28}$, \textbf{4/4} & $+0.35$ to $+0.42$ \\
+    Reweighted to missing points (\S\ref{sec:mnar}) & $+0.06$ to $+0.21$, 1/4 & $\mathbf{+0.29}$, \textbf{4/4} \\
+    Temporal campaign split (\S\ref{sec:campaign}) & $-0.15$ to $+0.05$, 0/4 & $+0.12$ to $+0.28$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Why it degrades---measured, not asserted.}
+The pattern implies a specific mechanism: what fails to transfer should be the
+\emph{fast-diagnostic} pathway, since that is exactly what buys the edge over CES-only
+interpolation, while the CES-history pathway sees the same physical quantity in the
+same units in both periods. Measuring the train$\rightarrow$test drift per channel, in
+the units the model was normalized in, confirms it: the median location shift is
+\textbf{1.22\,$\sigma$ for BES} and \textbf{0.53\,$\sigma$ for ECEI}, with scale ratios
+of $0.75$ and $0.62$---against \textbf{0.115\,$\sigma$ and a scale ratio of $1.06$ for
+the CES targets themselves}. The fast diagnostics drift 5--11$\times$ more than the
+quantity being predicted. The encoder is being fed inputs more than a standard
+deviation outside the range it was normalized on, while the history pathway is
+untouched, which is why the margin over persistence largely holds.
+
+This also indicts one of our own design choices, in a useful way. Normalizing with
+\emph{train-file-only} statistics (\S\ref{sec:data}) is the correct leakage-hardening
+choice under a random split and is precisely what breaks under campaign shift. The
+targeted repair is per-shot or causal-running standardization of the fast diagnostics:
+it uses only that shot's own data, so it remains leak-free and is available at run
+time. We flagged one honest caveat rather than presenting it as a certain win---per-shot
+standardization also discards absolute level, which may itself carry \Ti{} information
+(higher BES $\leftrightarrow$ higher density), so it may trade random-split skill for
+transfer. That trade-off is a controlled experiment, not an assumption, and we then ran it.
+
+\paragraph{The repair works, and the trade-off is small but real.}
+Standardizing each discharge's fast diagnostics by \emph{its own} mean and variance at load
+time---targets untouched, so the physical-unit inverse transform and every baseline are
+unchanged---is the single controlled variable against the runs above. On the campaign split
+it recovers most of what was lost: paired \Ti{} skill improves on \textbf{4/4
+initialisations by $+0.10$ to $+0.29$ (mean $+0.155$), every 95\% CI excluding zero}, and
+the vs-PCHIP gate goes from \textbf{0/4 to 2/4} ($+0.18$, $+0.14$, $+0.19$, $+0.08$), where
+the unrepaired arm had been \emph{below} interpolation on two of four. \Vrot{} is unmoved
+(mean $-0.019$), which is the expected negative control: the \Vrot{} head is blocked from
+the fast diagnostics by construction, so standardizing them cannot reach it. On the
+random (headline) split, paired against the matched control, the arm shows \textbf{no
+significant loss on any seed} (mean $-0.036$; the worst seed is $-0.127$ with a CI upper
+bound of $+0.008$), so the honest statement is ``no measurable cost'', not ``free''. This
+also settles the mechanism causally: if the campaign loss were the physics changing between
+periods, removing an input \emph{level} shift could not have recovered it. The remaining
+gap to deployment is that an online estimator cannot see a discharge's future to compute its
+variance, so per-shot standardization is the offline upper bound of this family and an
+expanding-window or EWMA estimator is the deployable version---which we have not measured.
 
 \subsection{The \Ti$\leftrightarrow$\Vrot{} information asymmetry}
 \label{sec:asym}
@@ -535,9 +979,9 @@ group zeroed at a time; persistence always computed from real history) explains
     \toprule
     Model inputs & \Ti{} skill & \Vrot{} skill \\
     \midrule
-    Full (history + fast + time) & $+0.36$ & $+0.18$ \\
-    History only (\emph{no fast}) & $+0.39$ & $+0.23$ \\
-    Fast diagnostics only (\emph{no history}) & $+0.16$ & $-3.31$ \\
+    Full (history + fast + time) & $+0.43$ & $+0.30$ \\
+    History only (\emph{no fast}) & $+0.46$ & $+0.29$ \\
+    Fast diagnostics only (\emph{no history}) & $+0.37$ & $-0.64$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -552,11 +996,14 @@ group zeroed at a time; persistence always computed from real history) explains
 
 \begin{itemize}
   \item \textbf{\Ti{}: fast diagnostics carry real information.} Fast-only still
-        beats persistence ($+0.16$). The physical channel is collisional
+        beats persistence by a wide margin ($+0.37$, i.e.\ most of the full model's
+        $+0.43$). The physical channel is collisional
         electron--ion coupling ($t_{ei}\propto T_e^{3/2}/n_e$): ECEI supplies
         $T_e$ and BES supplies $n_e$ structure.
   \item \textbf{\Vrot{}: information is almost entirely CES history.} Fast-only
-        scores $-3.31$ (worse than predicting the mean). Toroidal rotation is
+        scores $-0.64$, with $R^2 = -0.06$ against the mean predictor---that is,
+        strictly worse than ignoring the inputs and predicting the mean. Toroidal
+        rotation is
         governed by momentum sources that none of our inputs observe---the
         external NBI torque and intrinsic rotation
         drives~\citep{Rice2007IntermachineComparison}---and the Mirnov signals are
@@ -568,6 +1015,142 @@ This asymmetry was predicted from physics before the ablation and is confirmed b
 it; the \Vrot{} non-win is a finding about diagnostic information content, not a
 model failure. It also motivates the per-target routing of \S\ref{sec:model}.
 
+\subsection{How much history is needed? One observation}
+\label{sec:window}
+
+The history window was originally an unexamined default ($W = 4$). We replace the
+assertion with a curve and a stated selection rule: \textbf{24 independent runs},
+$W \in \{2,3,4,6,8\} \times$ seeds $\{42,1,7,123\}$, plus a \emph{history-0} point
+$\times 4$ seeds, each scored on its own held-out test split with the same protocol
+as the headline. Three controls make the points comparable, each verified on the
+data rather than assumed: the file-level split is window-invariant (all 24 runs
+evaluate the same 96 test shots per seed); a new per-shot sample cap prevents
+temporal-subset augmentation---which explodes from 240k samples at $W{=}2$ to 30.1M
+at $W{=}8$---from letting a few long-block discharges dominate the training subset
+more strongly the larger $W$ is; and the scored population shrinks only 1.8\% from
+$W{=}2$ to $W{=}8$. Training is hold-free throughout (\S\ref{sec:stuck}), which is
+essential here: a hold is a literal copy of the previous reading, so under
+contamination a longer window merely supplies more copies of the same number. All
+runs use the final architecture.
+
+\begin{table}[t]
+  \centering
+  \caption{Window sweep, mean held-out test $\skillp$ over 4 seeds (PASS = number of
+  seeds whose shot-clustered 95\% CI excludes zero). History-0 is the
+  \texttt{no\_history} ablation at $W{=}4$, which zeroes the CES-history tensor while
+  leaving the sensor window intact; $W{=}1$ is not constructible.}
+  \label{tab:window}
+  \small
+  \begin{tabular}{rrrcrc}
+    \toprule
+    History obs. & $W$ & \Ti{} skill & PASS & \Vrot{} skill & PASS \\
+    \midrule
+    0 & 4 & $-0.026$ & 0/4 & $-0.783$ & 0/4 \\
+    1 & 2 & $+0.238$ & \textbf{4/4} & $\mathbf{+0.206}$ & 0/4 \\
+    2 & 3 & $\mathbf{+0.246}$ & \textbf{4/4} & $+0.203$ & 1/4 \\
+    3 & 4 \emph{(old default)} & $+0.221$ & 3/4 & $+0.190$ & 1/4 \\
+    5 & 6 & $+0.190$ & 3/4 & $+0.205$ & 1/4 \\
+    7 & 8 & $+0.216$ & \textbf{4/4} & $+0.204$ & 2/4 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{History is essential, and its first observation carries essentially all
+of it.} Removing previous-CES entirely puts \Ti{} \emph{below} PCHIP ($-0.026$, 0/4)
+and \Vrot{} at $-0.78$, i.e.\ $\approx$1.8$\times$ PCHIP's MSE. So the fast
+diagnostics alone do not reach interpolation parity: the model's entire margin comes
+from combining them with past CES. Yet a \emph{single} past observation lifts both
+targets to their maximum at once (\Ti{} $+0.238$ 4/4, \Vrot{} $+0.206$), and the
+curve is flat from there on---\Ti{} spans $0.190$--$0.246$ and \Vrot{}
+$0.190$--$0.206$ (range $0.016$), while the seed spread \emph{within} a single point
+is $0.07$--$0.16$, wider than the whole curve. This is the sharpest statement of the
+information-limited reading: neither more history nor (\S\ref{sec:model}) a more
+expressive encoder moves the result, but deleting one observation destroys it.
+
+\paragraph{Selection rule and its answer.} Applying ``smallest $W$ that reaches
+plateau'' returns $\mathbf{W = 2}$; both targets are already at plateau there, and
+the incumbent $W = 4$ is \emph{below} the $W{=}2$/$W{=}3$ values on both targets.
+Nothing in the data supports paying for a longer window on accuracy grounds. The one
+defensible reason to go wider is \textbf{coverage, not skill}: a sample is scored
+only when an observed value exists inside the window, so $W{=}2$ silently drops
+targets whose adjacent row lacks that reading. Total scored counts barely move
+(\Vrot{} 52.1k $\to$ 53.2k), but the hard subset grows sharply---$\Delta t > 15$\,ms
+goes 456 $\to$ 1{,}958 and $\Delta t > 45$\,ms goes 14 $\to$ 135 from $W{=}2$ to
+$W{=}8$. A wider window does not predict long-gap samples \emph{better}; it predicts
+4--10$\times$ \emph{more of them at all}.
+
+\paragraph{Honest caveats.} These are \emph{unpaired} independent runs, so every
+difference along the curve sits inside seed noise: the claim is the \emph{absence} of
+a window effect, not a ranking among windows. And because of the per-shot cap the
+absolute skills are not directly comparable to the headline family of
+\S\ref{sec:headline}, which had no such cap; the sweep is designed for
+\emph{within-curve} comparison, where every point shares it.
+
+\subsection{What does the complexity buy? A ladder down to 1{,}258 parameters}
+\label{sec:ladder}
+
+A fair criticism of this model is that it is a sedimented search result rather than a
+structure derived from the task, and that its 0.2M parameters are unexplainable. The
+useful reply is not a small model that also happens to work---it is to \emph{measure
+what the complexity earns}. We therefore built the most interpretable predictor the
+task admits and put it on the same bar.
+
+The \textbf{anchor+$\Delta$} model predicts each target as a sum of three named terms:
+a persistence-style \emph{anchor} (the nearest observed CES value, blended toward the
+observed mean by a learned smoothing weight), a \emph{slope} term (the slope of the
+last two observations $\times$ the gap), and a \emph{rate} term per diagnostic
+(BES/ECEI/MC summary statistics $\to$ a rate of change $\times$ the gap). It has
+\textbf{1{,}258 parameters}, 0.6\% of the full model. Every learned term is
+zero-initialised, so training \emph{starts exactly at persistence} and the skill it
+reaches is literally what learning added; a \texttt{decompose()} call returns each
+term's contribution, so any prediction can be read as ``anchor plus this much slope
+plus this much BES-driven rate''. It was trained and scored under the identical
+protocol, hold-free, on the same four splits.
+
+\begin{table}[t]
+  \centering
+  \caption{Complexity ladder: held-out test $\skillp$, hold-free training,
+  genuine-measurement evaluation. The last column is the fraction of the
+  persistence$\rightarrow$full-model gap that the interpretable model recovers.}
+  \label{tab:ladder2}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Arm & params & seed 42 & 1 & 7 & 123 & gap recovered \\
+    \midrule
+    \multicolumn{7}{l}{\emph{\Ti{}}}\\
+    Persistence            & 0        & $-0.260$ & $-0.320$ & $-0.251$ & $-0.256$ & --- \\
+    \textbf{Anchor+$\Delta$} & 1{,}258 & $-0.107$ & $-0.138$ & $-0.097$ & $-0.109$ & \textbf{31.5\%} \\
+    Full model             & 201{,}258 & $+0.238$ & $+0.184$ & $+0.291$ & $+0.221$ & 100\% \\
+    \midrule
+    \multicolumn{7}{l}{\emph{\Vrot{}}}\\
+    Persistence            & 0        & $-0.283$ & $-0.297$ & $-0.287$ & $-0.307$ & --- \\
+    \textbf{Anchor+$\Delta$} & 1{,}258 & $-0.253$ & $-0.269$ & $-0.241$ & $-0.278$ & \textbf{7.0\%} \\
+    Full model             & 201{,}258 & $+0.227$ & $+0.202$ & $+0.143$ & $+0.210$ & 100\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Three things follow, and the consistency across four independent splits
+(28--36\% for \Ti{}) is what makes them sayable.
+
+\begin{itemize}
+  \item \textbf{The complexity earns its keep, quantifiably.} A fully interpretable
+        predictor with 0.6\% of the parameters recovers about \textbf{a third} of the
+        \Ti{} margin over persistence and \textbf{7\%} of the \Vrot{} margin. The
+        rest is what the learned multimodal encoder buys, and a paired
+        shot-clustered comparison rejects the anchor on 4/4 splits.
+  \item \textbf{The interpretable rung is not a strawman.} At $-0.113$ it sits far
+        above persistence ($-0.272$), so the named-terms form does learn something
+        real---it is simply not enough.
+  \item \textbf{The shortfall is informative about the problem, not just the model.}
+        The anchor is \emph{linear in the gap}. That this captures only a third of
+        the recoverable signal says the structure is substantially non-linear and
+        non-local, so a more explainable model needs a different functional form
+        rather than more linear terms; and the \Vrot{} figure of 7\% says its signal
+        is not a local slope at all.
+\end{itemize}
+
 \subsection{The edge concentrates in high-variability neighborhoods}
 \label{sec:peak}
 Using a target-independent, input-side proxy for local activity (large
@@ -577,11 +1160,12 @@ neighbor-bracket slope and/or high local CES-neighbor variance, computed
 Fig.~\ref{fig:peak}):
 
 \begin{itemize}
-  \item \Ti{}: global $+0.52$ $\rightarrow$ peak $\mathbf{+0.86}$
-        (CI $[+0.66, +0.93]$, PASS). Interpolation is near-optimal on the smooth
-        bulk; the model's value is in the active stretches.
-  \item \Vrot{}: global $+0.24$ $\rightarrow$ peak $\mathbf{+0.69}$
-        (CI $[+0.11, +0.87]$, PASS, robust across three sensitivity settings but
+  \item \Ti{}: global $+0.27$ $\rightarrow$ peak $\mathbf{+0.70}$
+        (CI $[+0.50, +0.85]$, PASS; 4{,}764 rows over 124 shots). Interpolation is
+        near-optimal on the smooth bulk; the model's value is in the active
+        stretches.
+  \item \Vrot{}: global $+0.13$ $\rightarrow$ peak $\mathbf{+0.44}$
+        (CI $[+0.07, +0.73]$, PASS, robust across three sensitivity settings but
         with a thin lower bound). The asymmetry is therefore \emph{regional}:
         globally \Vrot{} ties interpolation, but in high-activity neighborhoods
         --- where smooth past+future interpolation is worst --- even the
@@ -594,6 +1178,30 @@ Fig.~\ref{fig:peak}):
         \Vrot{} peak edge is history-driven.
 \end{itemize}
 
+\paragraph{Decomposing the \Vrot{} result: instrument holds are part of the peak.}
+Because more than half of the \emph{observed} \Vrot{} population is forward-filled holds
+(\S\ref{sec:stuck}), the peak split and the hold pattern could be entangled, so we crossed
+them directly on the held-out test splits under the hold-inclusive treatment (evaluation
+only; the hold flag is recomputed with the loader's own rule and aligned row by row). Two
+things came out, and the first was the opposite of what we expected. \textbf{Peaks are
+hold-\emph{richer} than the bulk on all four splits} (68/62/71/73\% versus 58/51/48/46\%): a
+forward-filled staircase---flat, flat, jump---is itself a large local slope, so an
+activity detector built from CES neighbors partly keys on the instrument's hold pattern.
+\textbf{And the global \Vrot{} number is an average over three regimes with different signs.}
+On genuinely measured, high-activity rows the model reaches $+0.55$--$+0.63$ against
+future-using PCHIP (positive on 4/4, significant on 1/4 at $\approx$2--3\,k rows over
+$\approx$63 shots) and \textbf{$+0.75$--$+0.82$ against the causal baseline, significant on
+4/4}. On the genuine quiet bulk it ties interpolation ($\approx 0$ on all four). On hold rows
+it loses by $-48$ to $-411$---which is structural rather than a model failure, since PCHIP
+passes exactly through a value that is by construction the previous one, and no causal method
+can win there. Restricting the scored population to genuine rows lifts every split
+($+0.154 \to +0.201$, $+0.109 \to +0.126$, $+0.065 \to +0.098$, $+0.127 \to +0.170$) without
+reaching the pre-registered gate, so hold dilution is real but is not by itself why \Vrot{} is
+a tie; power is. \Ti{}, which has essentially no holds, is the clean control and reproduces
+the peak concentration on 4/4 splits ($+0.59$--$+0.68$, all significant), so the
+concentration finding does not depend on the artifact. The measurement that would sharpen
+this is a hold-free activity detector, which we have not run.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.78\linewidth]{fig_peak}
@@ -604,23 +1212,150 @@ Fig.~\ref{fig:peak}):
 \end{figure}
 
 % =========================================================================
-\section{Search method: an LLM-driven keep/discard loop}
-\label{sec:automl}
+\section{Architecture-selection protocol}
+\label{sec:selection}
 
-The final architecture was found by an automated research loop in which an LLM
-plays the researcher role (inspired by autoresearch-style keep/discard
-protocols). Each iteration: (i) smoke-validate and fully train the current
-proposal; (ii) score it on the \emph{clean, non-augmented} validation
-$\skillp$---never the augmented validation loss, and never any test split;
-(iii) \textbf{keep} the change iff it improves the best score so far, else
-\textbf{discard and roll back} \texttt{model.py} to the best snapshot; (iv) brief
-the LLM with the run history, a hard data contract (interfaces, masking, and
-leakage rules the proposal must preserve), and accumulated project knowledge, and
-request \emph{one controlled change}. The loop therefore never builds on a
-regression, and training failures are treated as repair signals rather than
-evidence. Its concrete contribution here was the n.s.$\to$significant progression
-of Fig.~\ref{fig:progression}; we document it as reproducibility infrastructure,
-not as the scientific contribution.
+The final architecture was reached by a sequence of controlled experiments under
+a fixed protocol. Each candidate was \emph{one controlled change} to the model
+that had to preserve a hard data contract (interfaces, masking, and leakage
+rules); it was smoke-validated, trained to completion, and then scored on the
+\emph{clean, non-augmented} validation $\skillp$---never the augmented validation
+loss, and never any test split. A candidate was \textbf{kept} iff it improved the
+best score so far, and otherwise \textbf{discarded}, with \texttt{model.py}
+rolled back to the best snapshot; training failures were treated as repair
+signals rather than as evidence about architecture quality. Selection therefore
+never builds on a regression.
+
+The choice of gate matters more than it may appear. The augmented validation loss
+is not the quantity the paper reports: temporal-subset augmentation replicates
+easy, densely observed neighborhoods, and minimizing squared error on that
+distribution rewards smoothing---exactly what future-using interpolation already
+does well. Scoring candidates directly on the clean interpolation-relative skill
+aligns the selection gate with the reported metric and rewards models that win
+where interpolation is weak. That single change produced the
+n.s.$\to$significant progression of Fig.~\ref{fig:progression}; we document it as
+methodology, not as the scientific contribution.
+
+% =========================================================================
+\section{Is it deployable?}
+\label{sec:deploy}
+
+Two things stand between a skill score and a usable instrument: it has to run inside
+the measurement cadence, and it has to say how much to trust it. Neither was
+previously reported, and both turn out to have answers that a reader would not guess.
+
+\paragraph{Latency: it fits, on a CPU, and the GPU is the wrong device.}
+CES sits on a 10\,ms grid, so an online gap-filler has 10\,ms per step minus whatever
+acquisition and control already spend. Measuring the network forward pass (feature
+assembly is outside the model and excluded), at batch 1 over 1{,}000 iterations after
+warmup, the tail---which is what decides whether a real-time loop holds its
+deadline---is \textbf{6.4\,ms at p99 on CPU for $W{=}4$ (8.7\,ms for $W{=}2$), with a
+median of 2.8\,ms}: 64--87\% of one grid period. On the same machine, \textbf{CUDA at
+batch 1 is $\approx 8\times$ slower} (median 21\,ms, p99 43--72\,ms), overrunning the
+budget several-fold. At 0.2M parameters there is nothing to amortize kernel-launch
+overhead against. We verified this two ways---per-call timing, which forces the device
+idle between calls and is the realistic model for a 10\,ms loop, and amortized
+back-to-back timing---and they agree, so it is not an artifact of idling the GPU. The
+practical guidance is the opposite of the default: \emph{run this model on the control
+computer's CPU}. Bulk reprocessing also favours CPU here (48k vs.\ 24k samples/s at
+batch 512), though that comparison is specific to a laptop GPU and a very small
+network and we do not generalize it.
+
+\paragraph{Uncertainty: distribution-free intervals without touching the model.}
+The community standard for fusion profile data is Gaussian-process regression, which
+returns a posterior; our model returns a point. Fitting a variance or quantile head
+would require retraining and would move the point predictions, confounding every
+number above---so we use \emph{split conformal prediction} instead, which calibrates
+on the validation split, changes nothing about the predictor, and gives
+distribution-free finite-sample marginal coverage. Two variants: a single quantile
+(\emph{global}), and one quantile per $\Delta t \times$ activity stratum
+(\emph{Mondrian}), the same covariates as \S\ref{sec:mnar}. The identical procedure is
+applied to PCHIP and persistence, so what is compared is interval quality, not
+calibration technique. At $\alpha = 0.10$:
+
+\begin{itemize}
+  \item \textbf{The model's intervals beat both baselines' on every seed, target and
+        variant} (8/8 each) by the Winkler interval score, which penalises width and
+        misses jointly---roughly $0.80$ of persistence's score. This does not follow
+        from better point estimates; it is a separate property.
+  \item \textbf{Stratifying helps}: Mondrian improves the interval score everywhere
+        even though it \emph{widens} the mean interval, i.e.\ it puts width where
+        $\Delta t$ and activity say it belongs.
+  \item \textbf{The information asymmetry appears in the uncertainty too, weakly.} At
+        matched coverage the model shrinks the interval to $0.884$ of persistence's
+        width for \Ti{} but only $0.937$ for \Vrot{}---same direction as the point
+        estimates, much smaller in magnitude. The model partially knows what it does
+        not know.
+  \item \textbf{Honest failure: coverage is marginal, not conditional.} \Ti{}
+        under-covers on two of four splits ($87.0$--$88.9\%$ against a $90\%$ target),
+        and per-shot coverage runs from $\approx$50--68\% at the 10th percentile to
+        100\% at the 90th. Conformal guarantees coverage under exchangeability, and
+        calibration and test are disjoint \emph{discharges}; shot-level distribution
+        shift breaks it. For a deployed instrument this matters more than the pooled
+        number, and fixing it needs shot-conditional calibration that the present shot
+        count cannot support.
+\end{itemize}
+
+% =========================================================================
+\section{Where the remaining headroom is}
+\label{sec:headroom}
+
+The negative results in this paper are unusually specific, and specificity is what
+makes them useful: they do not say ``this problem is hard'', they say \emph{which
+change would move it}. Capacity is ruled out (\S\ref{sec:model}) and longer history
+is ruled out (\S\ref{sec:window}). What
+remains is three concrete levers, each identified by evidence already in this
+dataset, and each a change to \emph{measurement or coverage} rather than to the
+estimator.
+
+\paragraph{1. Reach, not depth (largest immediate gain, \Ti{}).}
+Only 54.1\% of genuinely missing \Ti{} rows---and 4.8\% of \Vrot{} rows---have an
+observed value inside the $W{=}4$ window, so the method is inapplicable to the rest
+(\S\ref{sec:mnar}). The window sweep shows the correct response is \emph{not} a
+longer contiguous window, which buys no skill (\S\ref{sec:window}), but a wider
+\emph{reach}: going from $W{=}2$ to $W{=}8$ leaves total scored counts almost
+unchanged while growing the $\Delta t > 15$\,ms subset $456 \to 1{,}958$ and
+$\Delta t > 45$\,ms $14 \to 135$. Decoupling the two---keeping two or three history
+\emph{slots} but drawing them from a wider span---should extend the domain without
+paying the capacity or distribution-shift cost of a long window. Since skill is flat
+in history length, this is close to a free extension of applicability, and it is the
+one change that directly enlarges the fraction of the real problem addressed.
+
+\paragraph{2. The Mirnov information was destroyed by preprocessing, not absent from
+the plasma.} It would be wrong to conclude from \S\ref{sec:asym} that magnetics carry
+no rotation information. On the identical 10\,ms grid, lag-1 autocorrelation within
+contiguous blocks is $+0.568$ for BES and $+0.572$ for ECEI but $-0.009$ for the
+Mirnov coils, with 82\% of blocks below $|r| = 0.1$: the magnetic channel is white
+noise \emph{on this grid}. That is the signature of $\mathrm{d}B/\mathrm{d}t$
+oscillating at the kHz mode frequency and being decimated to 100\,Hz without an
+anti-aliasing filter, so successive samples have random relative phase. The
+mode-rotation frequency---the one quantity in our diagnostic set that could proxy
+toroidal rotation---was therefore discarded upstream of the model, which is also why
+every derived MC feature we tried (integral, PCHIP integral, $|MC|$, rolling RMS)
+failed: information already lost cannot be recovered downstream. The fix is a
+preprocessing change, not a model change: per-window RMS, band power and mode number
+computed from the \emph{raw} kHz Mirnov timeseries. This is the highest-value
+experiment we can name for \Vrot{}, and it is testable on archived data.
+
+\paragraph{3. The actuator channel is simply absent.}
+Toroidal rotation is set by injected torque, and no torque signal exists in this
+dataset. The data show the break precisely: between shots, the ECE-derived $T_e$
+surrogate correlates with \Ti{} at $r = +0.353$ ($p = 3\times10^{-17}$) but with
+\Vrot{} at $r = +0.024$ ($p = 0.58$), and within shots the \Ti{} correlation keeps a
+consistent sign while the \Vrot{} one is sign-random. So $T_e$ does track the heating
+level, and heating level does not reach rotation---power is not torque, which depends
+on beam energy, tangency radius and injection geometry. Adding NBI torque (or the
+per-beam power and geometry from which it is computed) is a data-acquisition task,
+not a modelling one, and it is the only lever we can identify that addresses the
+\emph{cause} of rotation rather than its autocorrelation. A positive control
+already exists in the literature: recurrent full-discharge simulators on DIII-D
+that receive the beam actuators as inputs do predict rotation's
+evolution~\citep{Char2024FullShot}, so the missing channel is learnable once
+measured.
+
+None of these is a statement that the present result is at a ceiling. They are the
+places where the next measurable gain is, ordered by how cheaply they can be tried,
+and all three are actionable on archived KSTAR data.
 
 % =========================================================================
 \section{Limitations}
@@ -632,12 +1367,46 @@ and per-shot squared-error differences are heavy-tailed (a few discharges
 dominate the bootstrap spread).
 \textbf{MNAR optimism.} Skill is measured on observed points only; genuinely
 missing points may be harder.
+\textbf{The offline claim is bounded above by a GP tie.} A post-hoc GP arm
+(\S\ref{sec:headline}) beats the pre-registered PCHIP on every split and the model
+only ties it, so ``beats future-using interpolation'' must be read as ``beats the
+pre-registered interpolants''; it does not extend to every offline method.
+\textbf{CES fit-failure artifacts deflate rather than inflate the headline.}
+Spectral-fit failures (\Ti{} $>$ 3\,keV; global p99 = 2{,}089\,eV) remain in the
+pre-registered population. A paired sensitivity check that drops them (0.4--0.6\%
+of rows, removed from all arms alike) keeps 4/4 PASS and roughly \emph{doubles} the
+skill ($+0.18$--$+0.28 \to +0.36$--$+0.59$): the spikes are unpredictable for every
+arm and drag the MSE ratio toward one, so the headline is conservative with respect
+to this artifact.
 \textbf{Metric asymmetry.} Interpolants use full-shot neighbors while the model
 sees a $W{=}4$ history; this is deliberately adverse to the model but complicates
 direct interpretation.
-\textbf{Single architecture and window.} Sensitivity to $W$ and architecture is
-uncharacterized; results are for one selected model.
-\textbf{Large-gap bins} contain tens of samples without CIs and are unreliable.
+\textbf{Single device and model family.} Window sensitivity is now characterized
+(\S\ref{sec:window}) and architecture sensitivity partially so---a full-grid sequence
+reframing under the paired protocol---but
+all of it is on one device and one late-fusion family. Nothing here establishes
+transfer to another tokamak's diagnostic set. We also report against our own headline
+model: a full-grid sequence variant that combines the reframing with the same
+observation-blocked \Vrot{} routing, trained hold-free with per-shot standardization,
+reaches a \emph{higher} \Ti{} skill than the pre-registered model on all four splits
+(paired mean $+0.045$, significant on 1/4) at roughly a tenth of the training cost. We
+do not restate the headline around it---the pre-registered protocol names the model in
+advance, and one-of-four significance does not carry a claim---but it is the direction
+we would build on next.
+\textbf{Campaign transfer was a real limitation, and its named repair now works}
+(\S\ref{sec:campaign}): trained on earlier discharges the model did not beat offline
+interpolation on later ones (0/4), and the identified cause---fast-diagnostic drift
+against train-file-only normalization---is repaired by per-shot standardization
+($+0.155$ mean paired \Ti{} gain, 4/4 initialisations, no significant headline cost).
+What remains untested is the deployable form of that repair: an online estimator cannot
+see a discharge's future, so a causal running (expanding-window/EWMA) variant is the
+version that would actually ship.
+\textbf{Uncertainty is calibrated marginally, not conditionally}
+(\S\ref{sec:deploy}): per-shot coverage ranges from $\approx$50\% to 100\%, so a
+per-discharge trust statement is not yet supported.
+\textbf{Large-gap bins} are now pooled across the four splits and carry
+shot-clustered CIs (\S\ref{sec:gap}), but the widest bin still holds 167 samples
+over 62 shots, and the model is significantly worse than future-using PCHIP there.
 \textbf{Scope.} The pedestal-top framing is inherited from the data selection
 (pedestal-top CES channels); no radial-dependence experiment is performed, and
 event-phase analyses (ELM cycle, L--H transitions) are future work---the
@@ -648,26 +1417,51 @@ high-variability analysis of \S\ref{sec:peak} is an event-agnostic proxy.
 \label{sec:conclusion}
 
 We built a causal, leakage-hardened multimodal nowcaster for sparse KSTAR CES
-targets and evaluated it under a pre-registered, shot-clustered protocol against
-a deliberately adverse bar: interpolation that sees the future. The model
-decisively beats every causal baseline; for ion temperature it also beats
-future-using PCHIP interpolation with significant, replicated skill
-($+0.20$--$+0.30$; four independent splits), while toroidal rotation ties
-interpolation for a physically identified reason---fast diagnostics simply do not
-carry rotation information at 10\,ms. The advantage concentrates exactly where
-gap-filling matters: small gaps and high-variability neighborhoods. Beyond the
-headline, the work contributes a corrected \Vrot{} evaluation (54\% instrument
-holds), an information-asymmetry ablation, and an LLM-driven keep/discard search
-protocol. Future work targets the power limitation (more test shots,
-multi-campaign data), bracket-distance stratification to isolate the regime where
-fast-diagnostic information has maximal marginal value, peak-weighted training,
-and rotation-side improvements that better exploit history---since more sensors,
-demonstrably, will not help \Vrot{} at this timescale.
+targets and evaluated it under a pre-registered, shot-clustered protocol against a
+deliberately adverse bar: interpolation that sees the future. On the observed
+population the model beats future-using PCHIP for ion temperature with significant,
+replicated skill ($+0.18$--$+0.28$ across four independent splits) --- while tying
+the strongest offline smoother, a post-hoc GP arm (\S\ref{sec:headline}) --- and it
+beats every causal baseline for both targets by a wide margin, including in the
+non-adjacent regime ($\Delta t > 15$\,ms) where earlier readings had lacked the power
+to say anything.
+
+The claim we are willing to make about deployment is narrower and better supported.
+Two independent stress tests---reweighting onto the covariate distribution of the
+genuinely missing points, and re-splitting strictly in time across campaigns---agree:
+the advantage over \emph{causal} methods survives both ($+0.29$ and $+0.22$), while
+the advantage over \emph{offline} interpolation survives neither (1/4 and 0/4). Those
+are different claims about different opponents, and conflating them is the main way a
+result like this gets oversold. An online virtual sensor competes with persistence,
+not with an interpolant that reads the future; by that comparison the nowcaster works
+at the points where it matters, with the MNAR correction costing only $0.06$--$0.12$
+of skill. It also runs inside the measurement cadence (p99 6.4\,ms on CPU) and emits
+calibrated intervals that beat both baselines' by a proper scoring rule.
+
+We also report where it does not work and why. At $W{=}4$ only 54\% of missing \Ti{}
+rows and 4.8\% of missing \Vrot{} rows are even in the model's domain; beyond 105\,ms
+two-sided interpolation genuinely wins; rotation ties interpolation globally; the
+predictive intervals are calibrated marginally but not per discharge; and across a
+campaign boundary the offline-interpolation advantage disappears entirely. None of
+these is a ceiling argument, and none is left as a shrug. Each points at a specific,
+testable change: wider history \emph{reach} at constant depth; per-window features
+recomputed from the raw kHz Mirnov stream whose information 100\,Hz decimation
+destroyed before the model ever saw it; the NBI torque channel that is absent from the
+dataset but is the physical cause of rotation (\S\ref{sec:headroom}). The fourth,
+per-shot standardization of the fast diagnostics, we no longer list as a proposal: it
+was the repair the campaign analysis named, and running it recovers $+0.155$ mean paired
+\Ti{} skill across campaigns on 4/4 initialisations with no significant cost on the
+headline split (\S\ref{sec:campaign}) --- a named negative result converted into a
+measured gain. Alongside these, the work contributes a corrected \Vrot{}
+evaluation (54\% instrument holds, which we show also contaminate training),
+observation-masked attention pooling, a complexity ladder that prices the model's
+opacity at 31.5\% of the \Ti{} margin recoverable by 1{,}258 interpretable parameters,
+and an architecture-selection protocol gated on clean interpolation-relative skill.
 
 % =========================================================================
 \subsubsection*{Reproducibility}
 Splits are pinned to disk and verified on reload; normalization statistics are
-train-file-only; the search loop never reads test data; bootstrap uses a fixed
+train-file-only; model selection never reads test data; bootstrap uses a fixed
 seed and 10{,}000 resamples; all headline numbers are read from frozen evaluation
 artifacts. Code and evaluation artifacts accompany the submission; the public
 repository link will be inserted at camera-ready.
