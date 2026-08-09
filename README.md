@@ -54,6 +54,7 @@ ml-intern-revision/
 |   `-- test_peak_analysis.py
 |-- THESIS_RESULTS.md         # The written-up result + every controlled experiment
 |-- PROJECT_KNOWLEDGE.md      # Long-term lessons and failed directions
+|-- RESEARCH_CONTEXT.md       # Single-file handoff digest of the whole research
 `-- pyproject.toml
 ```
 
@@ -314,6 +315,11 @@ PROJECT_KNOWLEDGE.md
 
 CLAUDE.md
   - how to work in this repo: commands, the data/model contract, agreements
+
+RESEARCH_CONTEXT.md
+  - single-file handoff digest of the whole research: claim, data, contract,
+    results, the experiment ledger, methodology traps, framing rules, open items
+  - DERIVED, never the origin of a fact -- the three files above win on conflict
 ```
 
 ## What Was Removed From The Active Path
