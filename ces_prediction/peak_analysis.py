@@ -58,8 +58,8 @@ N_MIN_PEAK_SHOTS = 15   # binding
 N_MIN_PEAK_ROWS = 200   # secondary
 
 # ---------------------------------------------------------------------------
-# Pinned, conservative peak-detection defaults (logged into JSON; swept in
-# HANDOFF.md per Step 8). No RNG anywhere -- detection is fully deterministic.
+# Pinned, conservative peak-detection defaults (logged into JSON; the sensitivity
+# sweep is in THESIS_RESULTS.md). No RNG anywhere -- detection is fully deterministic.
 # ---------------------------------------------------------------------------
 PEAK_PARAMS = {
     # Family (i-a) CES-neighbor activity (headline, input-only).

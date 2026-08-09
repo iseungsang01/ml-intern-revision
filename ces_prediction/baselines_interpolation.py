@@ -28,13 +28,16 @@ try:  # scipy provides the canonical monotone-cubic (Fritsch-Carlson) interpolan
 except ImportError:  # pragma: no cover - exercised only in scipy-less envs
     _HAVE_SCIPY = False
 
-try:  # GP is an optional baseline; skipped+logged by the harness if unavailable
-    from sklearn.gaussian_process import GaussianProcessRegressor
-    from sklearn.gaussian_process.kernels import Matern, WhiteKernel
+try:  # GP posterior solve uses scipy's Cholesky helpers (exact, deterministic)
+    from scipy.linalg import cho_factor, cho_solve
 
-    _HAVE_SKLEARN = True
+    _HAVE_GP = True
 except ImportError:  # pragma: no cover
-    _HAVE_SKLEARN = False
+    _HAVE_GP = False
+# Backwards-compatible alias: the harness historically gated the GP arm on
+# sklearn availability. The arm is now an exact numpy/scipy implementation
+# (see predict_gp), so availability == scipy availability.
+_HAVE_SKLEARN = _HAVE_GP
 
 GAP_SECONDS = 0.5  # contiguous-block boundary, mirrors dataset.py:271
 
@@ -123,23 +126,80 @@ def predict_ar_local(times, values, target_time):
     return float(pv[-1] + slope * (target_time - pt[-1]))
 
 
+_GP_MAX_SIDE = 16  # nearest past / nearest future neighbors kept per GP fit
+_GP_LS_GRID = (0.005, 0.01, 0.02, 0.04, 0.08)  # Matern-3/2 length scales [s]
+_GP_NOISE_GRID = (1e-4, 1e-3, 1e-2, 1e-1)  # white-noise variance (unit signal)
+_GP_JITTER = 1e-8
+
+
+def _matern32(dist, length_scale):
+    a = (np.sqrt(3.0) / length_scale) * dist
+    return (1.0 + a) * np.exp(-a)
+
+
 def predict_gp(times, values, target_time):
-    """Optional Matern-3/2 GP regression (acausal). Returns NaN if sklearn is
-    unavailable; the harness logs and drops it. Falls back to persistence when
-    no future neighbor exists (PR2)."""
-    if not _HAVE_SKLEARN:
+    """Exact Matern-3/2 + white-noise GP regression posterior mean (acausal).
+    Falls back to persistence when no future neighbor exists (PR2); NaN when no
+    past observation exists (same condition as `ar_local`, so adding this arm
+    never shrinks the harness's `valid` population).
+
+    Definition of the arm (first actually-run version, 2026-08-05):
+    - Local fit: only the `_GP_MAX_SIDE` nearest past and nearest future
+      observed neighbors enter the GP. With <= 80 ms length scales the posterior
+      at the target is numerically insensitive to points further out, and a
+      full-block fit (up to ~1,200 obs, O(k^3) per sample) is infeasible across
+      the ~67k fits of one evaluation pass.
+    - Values are standardized within the neighbor set (mean/std); signal
+      variance is fixed at 1 in that space.
+    - Hyperparameters are selected PER SAMPLE by exact log marginal likelihood
+      over the fixed grid `_GP_LS_GRID x _GP_NOISE_GRID` -- fully deterministic
+      (no iterative optimizer state), unlike the never-run sklearn draft this
+      replaces.
+    """
+    if not _HAVE_GP:
         return np.nan
-    if not (np.any(times < target_time) and np.any(times > target_time)):
+    past = times < target_time
+    future = times > target_time
+    if not (np.any(past) and np.any(future)):
         return predict_persistence(times, values, target_time)
-    order = np.argsort(times)
-    t = times[order].reshape(-1, 1)
-    v = values[order]
+    p_idx = np.flatnonzero(past)
+    f_idx = np.flatnonzero(future)
+    p_keep = p_idx[np.argsort(target_time - times[p_idx])[:_GP_MAX_SIDE]]
+    f_keep = f_idx[np.argsort(times[f_idx] - target_time)[:_GP_MAX_SIDE]]
+    idx = np.concatenate([p_keep, f_keep])
+    t = times[idx]
+    v = values[idx]
     if len(t) < 2:
         return predict_persistence(times, values, target_time)
-    kernel = Matern(length_scale=1e-2, nu=1.5) + WhiteKernel(noise_level=1e-3)
-    gp = GaussianProcessRegressor(kernel=kernel, normalize_y=True, alpha=1e-6)
-    gp.fit(t, v)
-    return float(gp.predict(np.asarray([[target_time]]))[0])
+    mu = float(np.mean(v))
+    sd = float(np.std(v))
+    if sd <= 0.0:  # constant neighborhood: the GP posterior mean is that value
+        return mu
+    y = (v - mu) / sd
+    n = len(t)
+    dist = np.abs(t[:, None] - t[None, :])
+    dist_star = np.abs(t - target_time)
+    eye = np.eye(n)
+    best_lml = -np.inf
+    best_pred = np.nan
+    for ls in _GP_LS_GRID:
+        k0 = _matern32(dist, ls)
+        k_star = _matern32(dist_star, ls)
+        for noise in _GP_NOISE_GRID:
+            try:
+                c, low = cho_factor(k0 + (noise + _GP_JITTER) * eye, lower=True)
+            except np.linalg.LinAlgError:  # pragma: no cover - jitter guards this
+                continue
+            alpha = cho_solve((c, low), y)
+            lml = (-0.5 * float(y @ alpha)
+                   - float(np.sum(np.log(np.diag(c))))
+                   - 0.5 * n * np.log(2.0 * np.pi))
+            if lml > best_lml:
+                best_lml = lml
+                best_pred = float(k_star @ alpha)
+    if not np.isfinite(best_pred):
+        return predict_persistence(times, values, target_time)
+    return mu + sd * best_pred
 
 
 PREDICTORS = {

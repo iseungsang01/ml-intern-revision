@@ -106,6 +106,52 @@ def select_seeded_subset(indices, max_samples, seed):
     return select_seeded_random_indices(indices, max_samples, seed)
 
 
+def cap_samples_per_file(dataset, indices, max_per_file, seed):
+    """Cap each shot file's sample count with a seeded random subset (CES_MAX_SAMPLES_PER_FILE).
+
+    Applied BEFORE the global sample caps. Temporal-subset augmentation grows
+    combinatorially with the history window, so without this a long-block shot can
+    dominate the seeded global subset -- and the imbalance itself scales with
+    CES_WINDOW_SIZE, confounding window-size comparisons."""
+    if max_per_file <= 0:
+        return indices
+    idx = np.asarray(indices, dtype=np.int64)
+    fids = np.asarray(dataset.sample_file_indices)[idx]
+    order = np.argsort(fids, kind="stable")
+    idx, fids = idx[order], fids[order]
+    starts = np.flatnonzero(np.r_[True, np.diff(fids) != 0])
+    ends = np.r_[starts[1:], len(fids)]
+    capped = []
+    for s, e in zip(starts, ends):
+        group = idx[s:e].tolist()
+        capped.extend(select_seeded_random_indices(group, max_per_file, seed + int(fids[s])))
+    return sorted(capped)
+
+
+CAPS_MARKER_NAME = "sample_caps.json"
+
+
+def _load_caps_marker(split_dir):
+    path = split_dir / CAPS_MARKER_NAME
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _sync_caps_marker(split_dir, max_per_file, caps, counts):
+    """Persist (or clear) the cap configuration a split dir was generated under.
+
+    With a per-file cap the stored split can be smaller than the global caps, so
+    the plain ``len(loaded) == cap`` reuse check cannot validate it; the marker
+    records the exact cap settings and resulting counts instead."""
+    path = split_dir / CAPS_MARKER_NAME
+    if max_per_file > 0:
+        marker = {"max_samples_per_file": max_per_file, "caps": caps, "counts": counts}
+        path.write_text(json.dumps(marker, indent=2), encoding="utf-8")
+    elif path.exists():
+        path.unlink()
+
+
 def _sample_split_row(dataset, sample_idx):
     file_idx = int(dataset.sample_file_indices[sample_idx])
     file_name = Path(dataset.valid_files[file_idx]).name
@@ -159,26 +205,43 @@ def split_files_from_indices(dataset, indices):
     return [dataset.valid_files[file_id] for file_id in file_ids]
 
 
-def load_or_create_fixed_splits(dataset, split_dir, val_fraction, seed, max_train_samples, max_val_samples):
+def load_or_create_fixed_splits(dataset, split_dir, val_fraction, seed, max_train_samples, max_val_samples,
+                                max_samples_per_file=0):
     split_dir.mkdir(parents=True, exist_ok=True)
     train_split_path = split_dir / FIXED_TRAIN_SPLIT_NAME
     val_split_path = split_dir / FIXED_VAL_SPLIT_NAME
 
+    caps = {"train": max_train_samples, "val": max_val_samples}
+    marker = _load_caps_marker(split_dir)
     if train_split_path.exists() and val_split_path.exists():
         train_indices = load_fixed_split_csv(train_split_path, dataset)
         val_indices = load_fixed_split_csv(val_split_path, dataset)
-        requested_train_count = max_train_samples if max_train_samples > 0 else len(train_indices)
-        requested_val_count = max_val_samples if max_val_samples > 0 else len(val_indices)
-        if len(train_indices) == requested_train_count and len(val_indices) == requested_val_count:
+        if max_samples_per_file > 0:
+            expected = {
+                "max_samples_per_file": max_samples_per_file,
+                "caps": caps,
+                "counts": {"train": len(train_indices), "val": len(val_indices)},
+            }
+            reusable = marker == expected
+        else:
+            requested_train_count = max_train_samples if max_train_samples > 0 else len(train_indices)
+            requested_val_count = max_val_samples if max_val_samples > 0 else len(val_indices)
+            reusable = (
+                (marker is None or int(marker.get("max_samples_per_file", 0)) <= 0)
+                and len(train_indices) == requested_train_count
+                and len(val_indices) == requested_val_count
+            )
+        if reusable:
             train_files = split_files_from_indices(dataset, train_indices)
             val_files = split_files_from_indices(dataset, val_indices)
             print(f"Loaded fixed splits: {train_split_path.name}, {val_split_path.name}")
             return train_indices, val_indices, train_files, val_files
 
         print(
-            "Fixed split size changed "
+            "Fixed split caps changed "
             f"from train={len(train_indices)}, val={len(val_indices)} "
-            f"to train={max_train_samples}, val={max_val_samples}; regenerating CSV files."
+            f"to train={max_train_samples}, val={max_val_samples} "
+            f"(per-file cap={max_samples_per_file}); regenerating CSV files."
         )
         train_split_path.unlink()
         val_split_path.unlink()
@@ -192,14 +255,67 @@ def load_or_create_fixed_splits(dataset, split_dir, val_fraction, seed, max_trai
     train_indices, val_indices, train_files, val_files = split_indices_by_file(
         dataset, val_fraction=val_fraction, seed=seed
     )
+    train_indices = cap_samples_per_file(dataset, train_indices, max_samples_per_file, seed + 11)
+    val_indices = cap_samples_per_file(dataset, val_indices, max_samples_per_file, seed + 22)
     train_indices = select_seeded_subset(train_indices, max_train_samples, seed + 101)
     val_indices = select_seeded_subset(val_indices, max_val_samples, seed + 202)
     write_fixed_split_csv(train_split_path, dataset, train_indices)
     write_fixed_split_csv(val_split_path, dataset, val_indices)
+    _sync_caps_marker(split_dir, max_samples_per_file, caps,
+                      {"train": len(train_indices), "val": len(val_indices)})
     train_files = split_files_from_indices(dataset, train_indices)
     val_files = split_files_from_indices(dataset, val_indices)
     print(f"Created fixed splits: {train_split_path.name}, {val_split_path.name}")
     return train_indices, val_indices, train_files, val_files
+
+
+def split_indices_from_manifest(dataset, manifest_path):
+    """File-level split pinned to an existing split_manifest.json (CES_FILE_SPLIT_FROM).
+
+    For controlled experiments whose data treatment changes the valid-file list
+    (e.g. CES_DROP_STUCK_TARGETS=1 can drop an all-held shot): the seeded shuffle
+    would then repartition every file and can leak the control's test shots into
+    training. Pinning reuses the control's exact train/val/test file lists. Every
+    dataset file must appear in exactly one manifest list -- unknown or duplicated
+    files are a fatal error, never silently assigned.
+    """
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    lists = {k: set(manifest[f"{k}_files"]) for k in ("train", "val", "test")}
+    sample_file_indices = dataset.sample_file_indices
+    files = sorted(np.unique(sample_file_indices).astype(int).tolist())
+    fids = {"train": [], "val": [], "test": []}
+    unlisted = 0
+    for fid in files:
+        name = Path(dataset.valid_files[fid]).name
+        homes = [k for k in fids if name in lists[k]]
+        if len(homes) > 1:
+            raise ValueError(
+                f"CES_FILE_SPLIT_FROM: {name} appears in {len(homes)} manifest lists "
+                f"of {manifest_path} -- cannot pin the file split."
+            )
+        if not homes:
+            # The manifest lists only files that survived the sample caps, so it is
+            # not a complete partition. The control run never TRAINED on a
+            # capped-out file's rows, and scoring uses the manifest test list only
+            # -- so excluding it from training (test side) reproduces the control
+            # regime exactly.
+            fids["test"].append(fid)
+            unlisted += 1
+            continue
+        fids[homes[0]].append(fid)
+    if unlisted:
+        print(f"CES_FILE_SPLIT_FROM: {unlisted} file(s) unlisted in the manifest "
+              f"(capped out in the control run) -> excluded from training (test side)")
+    for k in ("train", "val", "test"):
+        if not fids[k]:
+            raise ValueError(f"CES_FILE_SPLIT_FROM: no dataset files matched the {k} list.")
+
+    all_indices = np.arange(len(dataset))
+
+    def idx_for(sel):
+        return all_indices[np.isin(sample_file_indices, sel)].tolist()
+
+    return idx_for(fids["train"]), idx_for(fids["val"]), idx_for(fids["test"])
 
 
 def split_indices_3way(dataset, val_fraction, test_fraction, seed):
@@ -232,6 +348,7 @@ def split_indices_3way(dataset, val_fraction, test_fraction, seed):
 def load_or_create_3way_splits(
     dataset, split_dir, val_fraction, test_fraction, seed,
     max_train_samples, max_val_samples, max_test_samples,
+    max_samples_per_file=0,
 ):
     split_dir.mkdir(parents=True, exist_ok=True)
     paths = {
@@ -240,9 +357,22 @@ def load_or_create_3way_splits(
         "test": split_dir / FIXED_TEST_SPLIT_NAME,
     }
     caps = {"train": max_train_samples, "val": max_val_samples, "test": max_test_samples}
+    marker = _load_caps_marker(split_dir)
     if all(p.exists() for p in paths.values()):
         loaded = {k: load_fixed_split_csv(p, dataset) for k, p in paths.items()}
-        if all(len(loaded[k]) == (caps[k] if caps[k] > 0 else len(loaded[k])) for k in paths):
+        if max_samples_per_file > 0:
+            expected = {
+                "max_samples_per_file": max_samples_per_file,
+                "caps": caps,
+                "counts": {k: len(loaded[k]) for k in paths},
+            }
+            reusable = marker == expected
+        else:
+            reusable = (
+                (marker is None or int(marker.get("max_samples_per_file", 0)) <= 0)
+                and all(len(loaded[k]) == (caps[k] if caps[k] > 0 else len(loaded[k])) for k in paths)
+            )
+        if reusable:
             print(f"Loaded fixed 3-way splits from {split_dir}")
             return (
                 loaded["train"], loaded["val"], loaded["test"],
@@ -253,13 +383,23 @@ def load_or_create_3way_splits(
         for p in paths.values():
             p.unlink()
 
-    tr, va, te = split_indices_3way(dataset, val_fraction, test_fraction, seed)
+    pin = os.getenv("CES_FILE_SPLIT_FROM", "")
+    if pin:
+        print(f"File-level split pinned to manifest: {pin}")
+        tr, va, te = split_indices_from_manifest(dataset, pin)
+    else:
+        tr, va, te = split_indices_3way(dataset, val_fraction, test_fraction, seed)
+    tr = cap_samples_per_file(dataset, tr, max_samples_per_file, seed + 11)
+    va = cap_samples_per_file(dataset, va, max_samples_per_file, seed + 22)
+    te = cap_samples_per_file(dataset, te, max_samples_per_file, seed + 33)
     tr = select_seeded_subset(tr, max_train_samples, seed + 101)
     va = select_seeded_subset(va, max_val_samples, seed + 202)
     te = select_seeded_subset(te, max_test_samples, seed + 303)
     write_fixed_split_csv(paths["train"], dataset, tr)
     write_fixed_split_csv(paths["val"], dataset, va)
     write_fixed_split_csv(paths["test"], dataset, te)
+    _sync_caps_marker(split_dir, max_samples_per_file, caps,
+                      {"train": len(tr), "val": len(va), "test": len(te)})
     print(f"Created fixed 3-way splits in {split_dir}")
     return (
         tr, va, te,
@@ -335,6 +475,8 @@ def train():
     val_fraction = float(os.getenv("CES_VAL_FRACTION", "0.2"))
     max_train_samples = int(os.getenv("CES_MAX_TRAIN_SAMPLES", str(DEFAULT_TRAIN_SAMPLE_COUNT)))
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", str(DEFAULT_VAL_SAMPLE_COUNT)))
+    # Per-shot-file sample cap (0 = off), applied before the global caps above.
+    max_samples_per_file = int(os.getenv("CES_MAX_SAMPLES_PER_FILE", "0"))
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
     # Held/forward-filled CES values (a reading bit-identical to the previous
@@ -378,6 +520,7 @@ def train():
         ) = load_or_create_3way_splits(
             full_dataset, split_dir, val_fraction, test_fraction, seed,
             max_train_samples, max_val_samples, max_test_samples,
+            max_samples_per_file=max_samples_per_file,
         )
     else:
         train_indices, val_indices, train_split_files, val_split_files = load_or_create_fixed_splits(
@@ -387,6 +530,7 @@ def train():
             seed,
             max_train_samples,
             max_val_samples,
+            max_samples_per_file=max_samples_per_file,
         )
         test_indices, test_split_files = [], []
 
@@ -400,6 +544,8 @@ def train():
         test_files=test_split_files if test_fraction > 0.0 else None,
         test_indices=test_indices,
     )
+    if max_samples_per_file > 0:
+        manifest["max_samples_per_file"] = max_samples_per_file
     split_path = split_dir / "split_manifest.json"
     with split_path.open("w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)

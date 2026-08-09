@@ -1,20 +1,19 @@
-"""Tests for the high-variability (peak) CES reconstruction evaluation (Step 8 / AC1, AC2, AC5, AC7, AC8, AC9).
+"""Tests for the high-variability (peak) CES reconstruction evaluation (AC2, AC4, AC5, AC7, AC8).
 
 CPU-only, synthetic numpy (mirrors tests/test_baselines_interpolation.py style). No
 real data, no GPU, no matplotlib. Run from repo root: ``python -m pytest -q``.
 
-This file is built in two waves (the work is split across teammates):
-  * READY NOW (depend only on existing code I own/read): the AC8 in-loop real-path
-    guards (automl_agent_loop.py + a stubbed peak_analysis) and the AC7 sign-convention
-    guard (bootstrap_compare._bootstrap only).
-  * AFTER peak_analysis.py LANDS: detection (two families), example selection +
-    small-pool guard, and the dual-sufficiency guard, which must import and run the
-    real peak_analysis functions. Those are written defensively with pytest.importorskip
-    so the suite stays green before the module exists and auto-activates once it does.
+Coverage: peak detection (two families, input-only is the non-circular headline),
+example selection + small-pool guard, the dual-sufficiency guard, the AC7 ablation
+sign convention (bootstrap_compare._bootstrap only), and one AC8 real-path
+integration test that drives peak_analysis.run_peak_eval over a synthetic npz.
+
+The five AC8 tests that drove the peak merge *through the AutoML loop* were removed
+with that loop on 2026-08-05 (git history has them); the real-path test below covers
+the npz contract they shared.
 """
 
 import sys
-import types
 from pathlib import Path
 
 import numpy as np
@@ -35,159 +34,9 @@ def _arr(times, vals):
     return np.array(list(zip(times, vals)), dtype=np.float32)
 
 
-def _peak_block(skill, ci, *, pass_, n_rows=512, n_shots=22,
-                insufficient_shots=False, insufficient_rows=False):
-    """Build a per-target peak block matching the documented interface:
-    headline at peak["input_only"]["ces_activity"]."""
-    return {
-        "input_only": {
-            "ces_activity": {
-                "peak_skill_vs_pchip": skill,
-                "peak_skill_ci95": ci,
-                "pass": pass_,
-                "insufficient_shots": insufficient_shots,
-                "insufficient_rows": insufficient_rows,
-                "n_peak_rows": n_rows,
-                "n_peak_shots": n_shots,
-            }
-        }
-    }
-
-
-def _install_peak_stub(run_peak_eval):
-    """Install a stub peak_analysis module exposing run_peak_eval, and drop any
-    already-imported real module so the lazy import inside automl picks up the stub.
-    Returns the previous module (or None) for restoration."""
-    prev = sys.modules.get("peak_analysis")
-    mod = types.ModuleType("peak_analysis")
-    mod.run_peak_eval = run_peak_eval
-    sys.modules["peak_analysis"] = mod
-    return prev
-
-
-def _restore_peak(prev):
-    if prev is not None:
-        sys.modules["peak_analysis"] = prev
-    else:
-        sys.modules.pop("peak_analysis", None)
-
-
 # ===========================================================================
-# AC8 — loop integration, REAL in-loop path (depends only on automl_agent_loop.py)
+# AC8 — REAL-path integration over a synthetic npz
 # ===========================================================================
-
-def test_ac8_merge_populates_eval_report_in_memory():
-    """run_evaluation's peak merge sets eval_report["per_target"][name]["peak"]
-    IN MEMORY by reusing the val-split npz (here stubbed via run_peak_eval)."""
-    import automl_agent_loop as L
-
-    peak = {
-        "CES_TI": _peak_block(0.1234, [0.05, 0.20], pass_=True),
-        "CES_VT": _peak_block(-0.02, [-0.12, 0.08], pass_=False),
-    }
-    prev = _install_peak_stub(lambda env: peak)
-    try:
-        agent = L.EvaluationAgent(run_smoke_test=False)
-        eval_report = {
-            "per_target": {
-                "CES_TI": {"n": 100, "skill_vs_persistence": 0.5},
-                "CES_VT": {"n": 80, "skill_vs_persistence": 0.2},
-            }
-        }
-        agent._merge_peak_block({"CES_SPLIT_TAG": "val"}, eval_report)
-        assert eval_report["per_target"]["CES_TI"]["peak"] is peak["CES_TI"]
-        assert eval_report["per_target"]["CES_VT"]["peak"] is peak["CES_VT"]
-    finally:
-        _restore_peak(prev)
-
-
-def test_ac8_build_briefing_contains_peak_fields():
-    """build_briefing(result) returns a STRING containing the per-target peak
-    skill + 95% CI + verdict tag for the headline (input-only CES-activity)."""
-    import automl_agent_loop as L
-
-    eval_report = {
-        "per_target": {
-            "CES_TI": {
-                "n": 100, "skill_vs_persistence": 0.5, "r2_vs_mean": 0.4,
-                "rmse_model": 1.2,
-                "peak": _peak_block(0.1234, [0.05, 0.20], pass_=True,
-                                    n_rows=512, n_shots=22),
-            },
-            "CES_VT": {
-                "n": 80, "skill_vs_persistence": 0.2, "r2_vs_mean": 0.1,
-                "rmse_model": 3.4,
-                "peak": _peak_block(-0.02, [-0.12, 0.08], pass_=False,
-                                    n_rows=300, n_shots=18),
-            },
-        }
-    }
-    result = {
-        "eval": eval_report, "score": 0.2, "error_stage": None, "error": None,
-        "final_train_loss": 0.5, "final_val_loss": 0.6,
-    }
-    tracker = L.ExperimentTracker(_tmp_state_dir())
-    briefing = tracker.build_briefing(1, result, "kept")
-
-    assert isinstance(briefing, str)
-    # Headline peak skill + CI for both targets reach the briefing string.
-    assert "CES_TI PEAK" in briefing
-    assert "CES_VT PEAK" in briefing
-    assert "skill_vs_pchip=0.1234" in briefing
-    assert "CI95=[0.0500, 0.2000]" in briefing
-    assert "PASS" in briefing            # CES_TI significant
-    assert "n.s." in briefing            # CES_VT not significant
-    assert "n_shots=22" in briefing
-
-
-def test_ac8_briefing_omits_peak_line_when_absent():
-    """No peak block (e.g. peak eval failed / None) => the briefing simply omits
-    the peak line; it must NOT crash and must NOT emit a PEAK line."""
-    import automl_agent_loop as L
-
-    eval_report = {"per_target": {"CES_TI": {"n": 100, "skill_vs_persistence": 0.5,
-                                             "peak": None}}}
-    result = {"eval": eval_report, "score": 0.5, "error_stage": None, "error": None,
-              "final_train_loss": None, "final_val_loss": None}
-    tracker = L.ExperimentTracker(_tmp_state_dir())
-    briefing = tracker.build_briefing(2, result, "kept")
-    assert "PEAK" not in briefing
-
-
-def test_ac8_merge_is_graceful_on_peak_failure():
-    """A peak failure (exception in run_peak_eval) is non-fatal: it logs, leaves
-    no peak key set (stays absent/None), and does NOT raise or flip error_stage."""
-    import automl_agent_loop as L
-
-    def boom(env):
-        raise RuntimeError("comparison_errors_val.npz missing")
-
-    prev = _install_peak_stub(boom)
-    try:
-        agent = L.EvaluationAgent(run_smoke_test=False)
-        eval_report = {"per_target": {"CES_TI": {"n": 100, "skill_vs_persistence": 0.5}}}
-        # Must not raise.
-        agent._merge_peak_block({}, eval_report)
-        assert eval_report["per_target"]["CES_TI"].get("peak") is None
-    finally:
-        _restore_peak(prev)
-
-
-def test_ac8_gate_unchanged_with_vs_without_peak_keys():
-    """comparison_skill (the keep/discard gate) reads ONLY comparison_report and
-    is byte-identical whether or not peak keys are present anywhere."""
-    import automl_agent_loop as L
-
-    comp = {"per_target": {"CES_TI": {"skill_vs_pchip": 0.3},
-                           "CES_VT": {"skill_vs_pchip": 0.1}}}
-    comp_with_peak = {"per_target": {
-        "CES_TI": {"skill_vs_pchip": 0.3, "peak": {"input_only": {"ces_activity": {"peak_skill_vs_pchip": 0.9}}}},
-        "CES_VT": {"skill_vs_pchip": 0.1, "peak": {"input_only": {"ces_activity": {"peak_skill_vs_pchip": -0.5}}}},
-    }}
-    s1 = L.comparison_skill(comp)
-    s2 = L.comparison_skill(comp_with_peak)
-    assert s1 == s2 == pytest.approx(0.2)
-
 
 def test_ac8_run_peak_eval_real_path_from_synthetic_npz(tmp_path):
     """AC8 REAL-path integration: drive the actual peak_analysis.run_peak_eval over a
@@ -247,11 +96,6 @@ def test_ac8_run_peak_eval_real_path_from_synthetic_npz(tmp_path):
         assert ca["peak_skill_vs_pchip"] > 0.0   # se_model < se_pchip on peak rows
         assert ca["peak_skill_ci95"][0] > 0.0    # CI lower bound strictly positive
         assert ca["pass"] is True                # sufficient shots+rows + significant
-
-
-def _tmp_state_dir():
-    import tempfile
-    return tempfile.mkdtemp(prefix="automl_state_")
 
 
 # ===========================================================================

@@ -1,0 +1,36 @@
+{
+  "backend": "ionq.simulator",
+  "hardware": false,
+  "target": "CES_TI",
+  "n_samples": 3,
+  "shots_per_sample": 200,
+  "budget": {
+    "gates_1q_per_shot": 128,
+    "gates_2q_per_shot": 32,
+    "seconds_per_shot": 0.03584,
+    "total_shots": 600,
+    "qpu_seconds": 21.503999999999998,
+    "qpu_minutes": 0.35839999999999994,
+    "braket_list_usd": 48.9,
+    "shot_noise_sigma": 0.07071067811865475
+  },
+  "elapsed_seconds": 18.22649908065796,
+  "expval_deviation_mean": -0.050145309418439865,
+  "expval_deviation_std": 0.0891522541642189,
+  "exact": {
+    "n": 3,
+    "rmse_model": 307.97829925580794,
+    "rmse_persistence": 75.65949626451395,
+    "rmse_mean_baseline": 152.12433879272902,
+    "skill_vs_persistence": -15.569650261082707,
+    "r2_vs_mean": -3.098668797324648
+  },
+  "ionq": {
+    "n": 3,
+    "rmse_model": 313.35627686389176,
+    "rmse_persistence": 75.65949626451395,
+    "rmse_mean_baseline": 152.12433879272902,
+    "skill_vs_persistence": -16.1533877972153,
+    "r2_vs_mean": -3.2430621180933557
+  }
+}

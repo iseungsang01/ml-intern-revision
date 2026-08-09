@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from itertools import combinations
 from pathlib import Path
 
@@ -41,6 +42,7 @@ class KSTAR_CES_Dataset(Dataset):
         normalization_stats=None,
         use_disk_cache=True,
         drop_stuck_targets=True,
+        per_shot_input_norm=None,
     ):
         self.data_dir = Path(data_dir)
         self.window_size = int(window_size)
@@ -57,6 +59,18 @@ class KSTAR_CES_Dataset(Dataset):
         # normalization, persistence/interpolation baselines -- treats them as
         # missing instead of trusting them as ground truth.
         self.drop_stuck_targets = bool(drop_stuck_targets)
+        # Per-shot standardization of the FAST DIAGNOSTICS ONLY (never the targets).
+        # §8n measured why the campaign-shift split kills the offline advantage: between
+        # campaigns BES moves 1.22 sigma while the quantity being predicted moves 0.115,
+        # so a globally z-scored input distribution slides out from under a model trained
+        # on earlier discharges. Standardizing each discharge by its own statistics removes
+        # that level shift -- at the cost of discarding absolute level, which may itself
+        # carry T_i information. Which of the two dominates is an empirical question (§8s).
+        # Reads CES_PER_SHOT_NORM when not passed explicitly, so every stage of the
+        # pipeline (train / evaluate / compare_baselines) inherits ONE setting.
+        if per_shot_input_norm is None:
+            per_shot_input_norm = os.getenv("CES_PER_SHOT_NORM", "0") == "1"
+        self.per_shot_input_norm = bool(per_shot_input_norm)
 
         if self.window_size < 2:
             raise ValueError("window_size must be at least 2")
@@ -110,11 +124,28 @@ class KSTAR_CES_Dataset(Dataset):
                 clean_df = df[has_target].reset_index(drop=True)
                 if not clean_df.empty:
                     values = clean_df.loc[:, usecols].to_numpy(dtype=np.float32, copy=True)
+                    if self.per_shot_input_norm:
+                        self._standardize_inputs_per_shot(values)
                     self.data_cache[str(file_path)] = values
                     self.file_arrays.append(values)
                     self.valid_files.append(str(file_path))
             except Exception as e:
                 print(f"Warning: Could not load {file_path}: {e}")
+
+    def _standardize_inputs_per_shot(self, values):
+        """In-place per-shot z-score of BES/ECEI/MC. Targets and time are untouched.
+
+        Applied at load time, so everything downstream -- the train-file-only global
+        stats, the disk cache, the model inputs -- sees one consistent treatment. The
+        targets must NOT be touched: per-shot target scaling would make the physical-unit
+        inverse transform shot-dependent and break every baseline comparison.
+        """
+        cols = np.concatenate([self._column_slices[g] for g in ("bes", "ecei", "mc")])
+        block = values[:, cols]
+        mean = block.mean(axis=0)
+        std = block.std(axis=0)
+        std[std < 1e-6] = 1.0   # constant channel within this shot -> leave it centered
+        values[:, cols] = (block - mean) / std
 
     def _nan_out_stuck_targets(self, df):
         """In-place: NaN out forward-filled (held) CES target values.
@@ -170,6 +201,7 @@ class KSTAR_CES_Dataset(Dataset):
             "temporal_subset_augmentation": self.temporal_subset_augmentation,
             "min_subset_size": self.min_subset_size,
             "drop_stuck_targets": self.drop_stuck_targets,
+            "per_shot_input_norm": self.per_shot_input_norm,
             "columns": self._required_columns(),
             "files": [
                 {

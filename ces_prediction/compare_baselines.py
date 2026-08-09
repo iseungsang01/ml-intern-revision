@@ -32,7 +32,13 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Subset
 
-from evaluate import _load_stats, _persistence_from_history, build_clean_val_subset
+from evaluate import (
+    VALID_ABLATIONS,
+    _load_stats,
+    _persistence_from_history,
+    apply_ablation,
+    build_clean_val_subset,
+)
 from model import MultimodalCESPredictor
 import baselines_interpolation as B
 from analyze_gap import BIN_EDGES_MS
@@ -56,6 +62,9 @@ def compare():
     max_val_samples = int(os.getenv("CES_MAX_VAL_SAMPLES", "40000"))
     batch_size = int(os.getenv("CES_BATCH_SIZE", "512"))
     split_tag = os.getenv("CES_SPLIT_TAG", "val")
+    ablate = os.getenv("CES_ABLATE", "none")
+    if ablate not in VALID_ABLATIONS:
+        raise ValueError(f"CES_ABLATE must be one of {VALID_ABLATIONS}, got {ablate!r}")
 
     metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
     stats = _load_stats(metrics)
@@ -115,7 +124,7 @@ def compare():
             peak_cache[key] = cached
         return cached
 
-    print(f"[compare] split={split_tag}  samples={len(eval_indices)}  methods={methods}")
+    print(f"[compare] split={split_tag}  samples={len(eval_indices)}  methods={methods}  ablate={ablate}")
     with torch.no_grad():
         for batch in loader:
             bes = batch["bes"].to(device, non_blocking=True)
@@ -124,8 +133,11 @@ def compare():
             tf = batch["time_features"].to(device, non_blocking=True)
             hist = batch["ces_history"].to(device, non_blocking=True)
 
-            out = model(bes, ecei, mc, tf, hist)
+            # Persistence baseline and keep mask always come from the REAL history;
+            # the ablation only deprives the model's inputs (mirrors train.py).
             persistence, has_obs = _persistence_from_history(hist)
+            m_bes, m_ecei, m_mc, m_hist = apply_ablation(ablate, bes, ecei, mc, hist)
+            out = model(m_bes, m_ecei, m_mc, tf, m_hist)
 
             model_chunks.append(to_phys(out.cpu()))
             target_chunks.append(to_phys(batch["target"]))
@@ -173,6 +185,7 @@ def compare():
         "split": split_tag,
         "eval_samples": len(eval_indices),
         "window_size": window_size,
+        "ablation": ablate,
         "headline_baseline": HEADLINE_BASELINE,
         "units": "physical CES (raw CSV units)",
         "note": ("SELECTION-VAL FALLBACK (optimism caveat): model was AutoML-selected on this val set"
@@ -254,6 +267,24 @@ def compare():
         boot[f"{name}_se_model"] = err_model ** 2
         boot[f"{name}_se_pchip"] = (base_phys["pchip"][valid, t] - y) ** 2
         boot[f"{name}_se_linear"] = (base_phys["linear"][valid, t] - y) ** 2
+        # Additive key: the CAUSAL reference arm. pchip/linear both read a future
+        # anchor, so at large dt they solve an easier problem than the model does by
+        # construction; persistence is the strongest baseline that is actually
+        # available online, and is the honest comparator for the large-gap regime.
+        boot[f"{name}_se_persistence"] = (base_phys["persistence"][valid, t] - y) ** 2
+        # Additive keys (2026-08-05 audit follow-up): the GP arm's squared errors
+        # (only when sklearn is present -- the arm was designed in from the start
+        # but never ran) and the physical target values, which enable downstream
+        # sensitivity analyses (e.g. CES fit-failure row exclusion) without
+        # another re-scoring pass. Both are sliced by the SAME `valid` mask.
+        if "gp" in methods:
+            boot[f"{name}_se_gp"] = (base_phys["gp"][valid, t] - y) ** 2
+        boot[f"{name}_y_true"] = y
+        # Additive key (2026-08-09): the target's row index inside its own shot file.
+        # `_shot` alone cannot address a row, so any downstream analysis that needs a
+        # per-row property computed from the raw CSV (e.g. the held/forward-filled flag
+        # of §8r) had no way to align to these SEs. Sliced by the SAME `valid` mask.
+        boot[f"{name}_row"] = row_ids[valid]
         # ONE additive key: input-only (Family i-a) CES-activity peak flag,
         # sliced by the SAME `valid` mask as the SE arrays so the byte-identical
         # headline SEs can be masked to the peak subset downstream (peak_analysis).

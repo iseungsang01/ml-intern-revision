@@ -2,15 +2,12 @@
 name = "kstar-ces-prediction"
 version = "0.1.0"
 description = "KSTAR CES multimodal prediction training pipeline"
-readme = "README2.md"
+readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "anthropic>=0.40",
     "numpy>=1.26",
-    "python-dotenv>=1.0",
     "scipy>=1.11",
     "pandas>=2.0",
-    "slack_sdk>=3.33.0",
     "torch>=2.0",
 ]
 

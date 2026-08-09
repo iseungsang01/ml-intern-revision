@@ -1,0 +1,31 @@
+{
+  "target": "CES_TI",
+  "n_qubits": 8,
+  "n_layers": 4,
+  "window_size": 4,
+  "pca_explained_variance": 0.8886427709849164,
+  "train_samples": 2000,
+  "val_samples": 4000,
+  "val_shots": 128,
+  "epochs": 3,
+  "vqc_params": 98,
+  "mlp_params": 101,
+  "mlp_hidden": 10,
+  "units": "raw CES units as stored in CSV",
+  "vqc": {
+    "n": 3880,
+    "rmse_model": 471.51686740773124,
+    "rmse_persistence": 449.56261730152784,
+    "rmse_mean_baseline": 480.6627260876383,
+    "skill_vs_persistence": -0.10005420253657982,
+    "r2_vs_mean": 0.03769315285872521
+  },
+  "matched_mlp": {
+    "n": 3880,
+    "rmse_model": 377.9677772310756,
+    "rmse_persistence": 449.56261730152784,
+    "rmse_mean_baseline": 480.6627260876383,
+    "skill_vs_persistence": 0.29314689289428786,
+    "r2_vs_mean": 0.38165811891592416
+  }
+}

@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 from pathlib import Path
@@ -8,6 +9,36 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../ces_
 
 from dataset import KSTAR_CES_Dataset
 from model import MultimodalCESPredictor
+
+# The two architectures behind published numbers, pinned by content hash. Neither is model.py
+# (which the AutoML search later rewrote into a Transformer), so they can neither drift silently
+# nor be "cleaned up" without this test failing. Provenance: PROJECT_KNOWLEDGE.md.
+CES_DIR = Path(__file__).resolve().parents[1] / "ces_prediction"
+PINNED_ARCHITECTURES = {
+    # final model: every headline number
+    "model_iter009.py": (
+        "c6e3dbb0d63625d200eba7a95847c3ec1c1d755ca5dab74c59164db030d287da",
+        "Mask the CES-history attention pool",
+    ),
+    # the "before" model of the honest-progression figure (§6)
+    "model_iter002.py": (
+        "20c41cce3c527d4310279cf6d75630583b6c58dff1e2670721f70654ae5c3226",
+        "Target-aware fusion",
+    ),
+}
+
+
+def test_published_architectures_are_present_and_unmodified():
+    for name, (expected, marker) in PINNED_ARCHITECTURES.items():
+        path = CES_DIR / name
+        assert path.exists(), f"a published architecture is missing: {path}"
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        assert digest == expected, (
+            f"{name} no longer matches its archived snapshot ({digest} != {expected})"
+        )
+        text = path.read_text(encoding="utf-8")
+        assert marker in text  # the marker the runners check
+        assert "class MultimodalCESPredictor" in text
 
 
 def test_dry_run():
