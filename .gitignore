@@ -11,9 +11,29 @@ ces_prediction/eval_metrics.json
 **/.automl_state/
 .env
 
-# OMC runtime/state churn (keep .omc/plans, .omc/research, .omc/specs tracked)
-.omc/state/
-.omc/sessions/
-.omc/logs/
-.omc/notepad.md
-.omc/project-memory.json
+# Agent scratch. Nothing under .omc is an input to a result: the plans and specs that
+# used to be tracked here described work that THESIS_RESULTS.md §8 now records as
+# outcomes. The **/ form matters -- agent sessions create .omc/ inside subdirectories too.
+.omc/
+**/.omc/
+
+# presentation layout-QC renders (preview_pptx.py) and stray preview builds
+docs/presentation/.preview/
+docs/presentation/.preview_*.pptx
+# Office lock files (present while a deck is open in PowerPoint)
+~$*
+
+# LaTeX build artifacts. main.pdf IS tracked (it is the deliverable); everything the
+# engine regenerates on the way there is not.
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# packaging / build artifacts
+*.egg-info/
