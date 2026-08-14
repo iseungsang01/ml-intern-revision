@@ -1653,6 +1653,44 @@ W = 2 · held-free · cut = 3000 smoke train runs end to end. **B.1 may start.**
 
 ---
 
+## 8x. B.1 backbone gate (2026-08-14) — seq_v2 wins all four pre-registered conditions; the causal GP restates claim 2
+
+The first batch of the confirmed protocol (`W = 2` · held-free · 3 keV cut; runner
+`experiments/b1_gate/run_b1_gate.py`, 2.2 h wall, artifacts `data/.b1_*`, verdict
+`data/.b1_gate_summary.json`). Split pinned per seed to the frozen W = 2 sweep manifests
+(recovered from the sweep runs' metrics.json); the test-isolation assert passed on all four seeds.
+
+**Stage A — the `w2cut` window control family** (4 seeds, per-shot OFF). `skill_vs_pchip`
+`CES_TI` +0.051 n.s. / **+0.203** / **+0.208** / **+0.231** → **3/4 PASS** (the cut population
+strengthens interpolation: clean anchors); vs persistence **4/4 PASS** (mean +0.35); vs the
+offline GP 0/4 (seed 42 significantly behind). `CES_VT` vs persistence **3/4 PASS**
+(+0.39/+0.30/+0.35/+0.39, seed 123's CI includes 0) — under the confirmed protocol the `V_rot`
+causal claim nearly resolves, a real upgrade from the held-kept era.
+
+**Claim-2 gate (§8v rule 2).** Model vs **`gp_causal`**: `CES_TI` +0.080 PASS / −0.060 / +0.081
+/ +0.064 → **1/4**, so per the pre-registered rule claim 2 is **restated** as "beats the standard
+deployable baselines (persistence, AR)" and **"beat the causal GP" becomes a B.2 objective**. The
+causal GP is decisively the strongest deployable baseline (e.g. seed 42 RMSE 164.3 vs persistence
+197.2) — the honest deployable ladder now has a serious top rung.
+
+**Stage B — `seq_v2` 16-run grid** (4 split × 4 init seeds, each paired against its split's
+stage-A control). `CES_TI` paired skill: **16/16 positive, 13/16 individually significant**;
+per-split init-means +0.129 / +0.059 / +0.078 / +0.058 (init spread ≪ split spread); pooled mean
+**+0.081**, run-cluster bootstrap CI **[+0.067, +0.096]**. `CES_VT`: 8/16 significant wins
+(splits 42 and 123 4/4 each), **0/16 significant deficits**.
+
+**Stage C — budget equalization** (`CES_SEQ_FIXED_EPOCHS=1`, 10 epochs, final weights, no val
+selection): `CES_TI` paired +0.063 / +0.033 / +0.045 / +0.030 — smaller than the early-stopped
+arm but **4/4 positive**, so the advantage is attributable to the architecture, not the budget.
+
+**Verdict (all four §4 conditions met): the backbone for B.3 is `seq_v2`.** §8t's cautious
+"+0.045, 1/4 significant at 1/10 the cost" is now, under the confirmed protocol and against the
+matching W = 2 control, "**+0.08 pooled, CI excludes zero, 13/16 significant, budget-equalized
+sign 4/4**". B.2 exploration proceeds on the seq_v2 backbone with the added objective of beating
+the causal GP; B.3's minimal interpretable model targets the seq_v2 structure.
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
