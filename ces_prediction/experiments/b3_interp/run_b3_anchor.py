@@ -58,13 +58,20 @@ def base_env(smoke):
 
 
 def check_isolation(split_dir, seed):
-    """All three file lists must reproduce the frozen B.1 manifest exactly."""
+    """All three file lists must reproduce the w2cut control family exactly.
+
+    The reference is the FAMILY's split dir, not the reconstructed B.1 sweep
+    manifest: the sweep ran without the spike cut, so a file can lose its last
+    valid sample under the cut and legitimately drop from a written list. Both
+    this run and the w2cut control pin CES_FILE_SPLIT_FROM to the same manifest
+    and share the treatment, so their derived lists must be identical.
+    """
     got = json.loads((split_dir / "split_manifest.json").read_text(encoding="utf-8"))
-    want = json.loads((DATA / f".b1_manifest_s{seed}" / "split_manifest.json")
+    want = json.loads((DATA / f".b1_w2cut_split_s{seed}" / "split_manifest.json")
                       .read_text(encoding="utf-8"))
     for k in ("train_files", "val_files", "test_files"):
         if sorted(got[k]) != sorted(want[k]):
-            print(f"[b3a]   FATAL: {k} moved vs the B.1 manifest for seed {seed}", flush=True)
+            print(f"[b3a]   FATAL: {k} moved vs the w2cut family for seed {seed}", flush=True)
             return False
     return True
 
@@ -94,15 +101,22 @@ def one_run(seed, smoke, resume):
     record = {"seed": seed, "out_dir": str(out_dir), "status": "ok"}
     start = time.time()
     try:
-        # Row-index pins cannot re-derive across treatment changes: always regenerate.
-        if split_dir.exists():
-            shutil.rmtree(split_dir)
-        split_dir.mkdir(parents=True)
-        if not run_step([CES_DIR / "train.py"], env, log, "train",
-                        artifacts=(out_dir / "metrics.json",
-                                   out_dir / "weights" / "multimodal_ces.pth")):
-            record["status"] = "train_failed"
-            return record
+        trained = (resume and not smoke
+                   and (out_dir / "weights" / "multimodal_ces.pth").exists()
+                   and (out_dir / "metrics.json").exists()
+                   and (split_dir / "split_manifest.json").exists())
+        if trained:
+            print(f"[b3a]   train: weights exist, skipping (--resume)", flush=True)
+        else:
+            # Row-index pins cannot re-derive across treatment changes: always regenerate.
+            if split_dir.exists():
+                shutil.rmtree(split_dir)
+            split_dir.mkdir(parents=True)
+            if not run_step([CES_DIR / "train.py"], env, log, "train",
+                            artifacts=(out_dir / "metrics.json",
+                                       out_dir / "weights" / "multimodal_ces.pth")):
+                record["status"] = "train_failed"
+                return record
         if not smoke and not check_isolation(split_dir, seed):
             record["status"] = "split_isolation_failed"
             return record
