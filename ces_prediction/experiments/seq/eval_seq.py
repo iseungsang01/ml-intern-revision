@@ -11,6 +11,7 @@ schema -- is byte-identical, so bootstrap_compare.py runs unchanged and
 paired_model_compare.py's bit-identical se_pchip guard verifies the pairing.
 """
 
+import functools
 import json
 import os
 import sys
@@ -34,8 +35,14 @@ from model_seq import SeqCESLSTM  # noqa: E402
 from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
 from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
+from model_seq_b3 import SeqCESB3  # noqa: E402
 
-SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3}
+SEQ_MODELS = {
+    "v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3,
+    "b3k4": functools.partial(SeqCESB3, latent_ti=4),
+    "b3k6": functools.partial(SeqCESB3, latent_ti=6),
+    "b3k8": functools.partial(SeqCESB3, latent_ti=8),
+}
 
 TARGET_NAMES = ("CES_TI", "CES_VT")
 HEADLINE_BASELINE = "pchip"  # PR1

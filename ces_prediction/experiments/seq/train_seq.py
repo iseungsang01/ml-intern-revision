@@ -12,6 +12,7 @@ Env: CES_DATA_DIR, CES_SPLIT_DIR, CES_OUTPUT_DIR, CES_SEED, CES_INIT_SEED,
      "normalization.stats" schema evaluate._load_stats expects).
 """
 
+import functools
 import json
 import os
 import random
@@ -33,8 +34,17 @@ from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
 # v1 = the §8d shared-encoder model; v2 = v1 + the iter009 V_rot routing (§8t).
 from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
+from model_seq_b3 import SeqCESB3  # noqa: E402
 
-SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3}
+# b3kN = the B.3 minimal interpretable model with an N-dim T_i latent (the ONE
+# explored variable; V_rot latent fixed at 4). Named variants, not env config,
+# so a checkpoint always reloads under the same architecture.
+SEQ_MODELS = {
+    "v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3,
+    "b3k4": functools.partial(SeqCESB3, latent_ti=4),
+    "b3k6": functools.partial(SeqCESB3, latent_ti=6),
+    "b3k8": functools.partial(SeqCESB3, latent_ti=8),
+}
 
 
 def batched(blocks, batch_size, device, shuffle, rng):
