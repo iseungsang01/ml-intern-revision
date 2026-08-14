@@ -43,6 +43,7 @@ class KSTAR_CES_Dataset(Dataset):
         use_disk_cache=True,
         drop_stuck_targets=True,
         per_shot_input_norm=None,
+        ti_spike_cut_ev=None,
     ):
         self.data_dir = Path(data_dir)
         self.window_size = int(window_size)
@@ -71,6 +72,16 @@ class KSTAR_CES_Dataset(Dataset):
         if per_shot_input_norm is None:
             per_shot_input_norm = os.getenv("CES_PER_SHOT_NORM", "0") == "1"
         self.per_shot_input_norm = bool(per_shot_input_norm)
+        # CES_TI values above this threshold (eV) are spectral-fit failures, not
+        # measurements (observed-value p99 = 2,089 eV; failures run to ~15 keV).
+        # When > 0 they become NaN at load time, through the same four application
+        # points as the held rule -- supervision targets, ces_history, NaN-aware
+        # normalization stats, interpolation anchors -- so every arm sees the same
+        # population by construction (experiments/PREREGISTRATION_W2.md §1).
+        # Reads CES_TI_SPIKE_CUT_EV when not passed explicitly; 0 disables.
+        if ti_spike_cut_ev is None:
+            ti_spike_cut_ev = float(os.getenv("CES_TI_SPIKE_CUT_EV", "0") or 0.0)
+        self.ti_spike_cut_ev = float(ti_spike_cut_ev)
 
         if self.window_size < 2:
             raise ValueError("window_size must be at least 2")
@@ -118,6 +129,10 @@ class KSTAR_CES_Dataset(Dataset):
                 # are missing independently -- keep any row with >=1 observed target
                 # so no observed CES label is discarded.
                 df = df.dropna(subset=self._input_columns()).reset_index(drop=True)
+                # Spikes drop before held detection, so a fit failure can never
+                # serve as the previous-observed anchor of the stuck rule.
+                if self.ti_spike_cut_ev > 0 and len(df):
+                    self._nan_out_ti_spikes(df, self.ti_spike_cut_ev)
                 if self.drop_stuck_targets and len(df):
                     self._nan_out_stuck_targets(df)
                 has_target = df[list(TARGET_COLUMNS)].notna().any(axis=1)
@@ -146,6 +161,22 @@ class KSTAR_CES_Dataset(Dataset):
         std = block.std(axis=0)
         std[std < 1e-6] = 1.0   # constant channel within this shot -> leave it centered
         values[:, cols] = (block - mean) / std
+
+    @staticmethod
+    def _nan_out_ti_spikes(df, cut_ev):
+        """In-place: NaN out CES_TI spectral-fit failures (values above cut_ev).
+
+        A fit failure is not a measurement, so it is removed at load time like a
+        held value. CES_VT is untouched -- failures manifest as upward CES_TI
+        excursions only. Shared with the full-grid loader (seq_data.py) so one
+        rule governs every pipeline.
+        """
+        col = TARGET_COLUMNS[0]
+        values = df[col].to_numpy(dtype=np.float64, copy=True)
+        spikes = values > float(cut_ev)
+        if spikes.any():
+            values[spikes] = np.nan
+            df[col] = values
 
     def _nan_out_stuck_targets(self, df):
         """In-place: NaN out forward-filled (held) CES target values.
@@ -196,12 +227,13 @@ class KSTAR_CES_Dataset(Dataset):
     def _cache_path(self):
         cache_dir = self.data_dir / ".ces_cache"
         signature = {
-            "version": 4,
+            "version": 5,
             "window_size": self.window_size,
             "temporal_subset_augmentation": self.temporal_subset_augmentation,
             "min_subset_size": self.min_subset_size,
             "drop_stuck_targets": self.drop_stuck_targets,
             "per_shot_input_norm": self.per_shot_input_norm,
+            "ti_spike_cut_ev": self.ti_spike_cut_ev,
             "columns": self._required_columns(),
             "files": [
                 {

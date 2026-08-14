@@ -480,12 +480,16 @@ def train():
     temporal_subset_augmentation = os.getenv("CES_TEMPORAL_SUBSETS", "1") == "1"
     min_subset_size = int(os.getenv("CES_MIN_SUBSET_SIZE", "2"))
     # Held/forward-filled CES values (a reading bit-identical to the previous
-    # observed value within a block) are kept during TRAINING by default: the
-    # controlled A/B experiment showed masking them at train time does not help
-    # and slightly hurts CES_TI (they act as a harmless persistence-prior). Set
-    # CES_DROP_STUCK_TARGETS=1 to mask them here too. Evaluation defaults the
-    # other way (drop=1) so reported metrics are on genuine measurements only.
+    # observed value within a block). THESIS_RESULTS.md §8c settled this with a
+    # 4-seed paired experiment: held-free training improves CES_VT (4/4 positive,
+    # 3/4 significant) and is the confirmed protocol for every new run
+    # (CES_DROP_STUCK_TARGETS=1, pinned explicitly per runner). The code default
+    # stays 0 only so historical held-kept runs reproduce as recorded.
     drop_stuck_targets = os.getenv("CES_DROP_STUCK_TARGETS", "0") == "1"
+    # CES_TI spectral-fit failures (> threshold eV) become NaN at load time —
+    # the pre-registered exclusion of the W = 2 re-experiment
+    # (experiments/PREREGISTRATION_W2.md §1). 0 disables; pin explicitly per run.
+    ti_spike_cut_ev = float(os.getenv("CES_TI_SPIKE_CUT_EV", "0") or 0.0)
     test_fraction = float(os.getenv("CES_TEST_FRACTION", "0.0"))
     max_test_samples = int(os.getenv("CES_MAX_TEST_SAMPLES", str(max_val_samples)))
     init_seed = int(os.getenv("CES_INIT_SEED", str(seed)))
@@ -508,6 +512,7 @@ def train():
         temporal_subset_augmentation=temporal_subset_augmentation,
         min_subset_size=min_subset_size,
         drop_stuck_targets=drop_stuck_targets,
+        ti_spike_cut_ev=ti_spike_cut_ev,
     )
     if len(full_dataset) == 0:
         print("Error: No valid data found.")
@@ -711,6 +716,7 @@ def train():
         "temporal_subset_augmentation": temporal_subset_augmentation,
         "min_subset_size": min_subset_size,
         "drop_stuck_targets": drop_stuck_targets,
+        "ti_spike_cut_ev": ti_spike_cut_ev,
         "label_handling": "per_target_masked_multitask",
         "loss": "masked_mse_per_target",
         "ablation": ablate,

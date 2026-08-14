@@ -84,6 +84,37 @@ def test_real_csv_sample_forward():
     assert out.shape == (1, 2)
 
 
+def test_ti_spike_cut_masks_fit_failures():
+    import numpy as np
+    import pandas as pd
+
+    # Unit: the shared rule NaNs only CES_TI values above the cut; CES_VT untouched.
+    df = pd.DataFrame(
+        {
+            "CES_TI": [500.0, 3500.0, float("nan"), 14984.0, 2999.0],
+            "CES_VT": [10.0, 3500.0, 20.0, 30.0, 40.0],
+        }
+    )
+    KSTAR_CES_Dataset._nan_out_ti_spikes(df, 3000.0)
+    ti = df["CES_TI"].to_numpy()
+    assert np.isnan(ti[[1, 2, 3]]).all()
+    assert np.count_nonzero(np.isnan(ti)) == 3
+    assert not df["CES_VT"].isna().any()
+
+    # Integration: with the cut on, no loaded CES_TI target exceeds the threshold
+    # (the current data holds 1,197 such rows without the cut — PROTOCOL_AUDIT.md §1).
+    data_dir = Path(os.environ.get("CES_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
+    dataset = KSTAR_CES_Dataset(data_dir=data_dir, window_size=4, ti_spike_cut_ev=3000.0)
+    assert dataset.ti_spike_cut_ev == 3000.0
+    ti_col = int(dataset._column_slices["target"][0])
+    max_ti = max(
+        float(np.nanmax(arr[:, ti_col]))
+        for arr in dataset.file_arrays
+        if np.isfinite(arr[:, ti_col]).any()
+    )
+    assert max_ti <= 3000.0
+
+
 def test_temporal_subset_sample_uses_previous_ces_only():
     data_dir = Path(os.environ.get("CES_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
     dataset = KSTAR_CES_Dataset(

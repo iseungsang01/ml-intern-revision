@@ -18,6 +18,7 @@ Normalization stats are fit train-files-only and NaN-aware, mirroring dataset.py
 """
 
 from pathlib import Path
+import os
 import sys
 
 import numpy as np
@@ -43,14 +44,18 @@ def infer_columns(csv_path):
     return bes, ecei, mc
 
 
-def load_grid_files(data_dir, drop_stuck_targets):
+def load_grid_files(data_dir, drop_stuck_targets, ti_spike_cut_ev=None):
     """name -> float32 array (rows, [time, TI, VT, bes..., ecei..., mc...]).
 
     Rows are kept whenever the INPUTS are complete (they always are -- the fast
     diagnostics have no missing values); target columns keep their NaNs so that
     unlabelled rows still provide sequence context. `drop_stuck_targets` NaNs
-    held (bit-identical forward-filled) target values exactly like dataset.py.
+    held (bit-identical forward-filled) target values exactly like dataset.py,
+    and `ti_spike_cut_ev` (env CES_TI_SPIKE_CUT_EV when None; 0 disables) NaNs
+    CES_TI fit-failure spikes with the same shared rule, before held detection.
     """
+    if ti_spike_cut_ev is None:
+        ti_spike_cut_ev = float(os.getenv("CES_TI_SPIKE_CUT_EV", "0") or 0.0)
     data_dir = Path(data_dir)
     files = sorted(data_dir.glob("s*.csv"))
     if not files:
@@ -65,6 +70,8 @@ def load_grid_files(data_dir, drop_stuck_targets):
         df = df.dropna(subset=[TIME_COLUMN, *bes, *ecei, *mc]).reset_index(drop=True)
         if df.empty:
             continue
+        if ti_spike_cut_ev > 0:
+            KSTAR_CES_Dataset._nan_out_ti_spikes(df, ti_spike_cut_ev)
         if drop_stuck_targets:
             time = df[TIME_COLUMN].to_numpy(dtype=np.float64)
             if time.shape[0] >= 2:
