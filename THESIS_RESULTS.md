@@ -1691,6 +1691,42 @@ the causal GP; B.3's minimal interpretable model targets the seq_v2 structure.
 
 ---
 
+## 8y. B.2 first candidate (2026-08-14) — v3 attention misses promotion; claim 2 is reinstated for the backbone
+
+**Candidate.** `seq v3` = v2 + observation-masked causal attention readout (iter009's mechanism in
+the sequence frame): each target path attends over the hidden states at its own past
+fresh-observation steps (shifted mask, strict lower-triangular; zero-initialized output
+projections so training starts at exactly the v2 function; routing preserved and structurally
+re-verified). 396,930 params. Exploration was **val-only** (splits 42/7): paired `CES_TI` vs the
+backbone +0.024*/+0.037* and vs `gp_causal` +0.170*/+0.132* — promoted to confirmation with the
+decision rule **committed before any TEST scoring** (PREREGISTRATION_W2.md §6).
+
+**Confirmation (TEST, 4 splits, init = split seed, vs the B.1 seq_v2 backbone):**
+
+| seed | paired `CES_TI` (v3 − v2) | `CES_VT` deficit | v3 vs `gp_causal` `T_i` |
+|---|---|---|---|
+| 42 | +0.009 [−0.013, +0.031] | none | **+0.086 PASS** |
+| 1 | +0.013 [−0.000, +0.026] | none | **+0.144 PASS** |
+| 7 | **+0.033 [+0.004, +0.064] PASS** | none | **+0.166 PASS** |
+| 123 | +0.020 [−0.011, +0.052] | none | **+0.123 PASS** |
+
+**Verdict 1 — promotion FAILS by the pre-fixed rule** (needs ≥3/4 significant; got 4/4 positive,
+1/4 significant). The val gains shrank on TEST — the exploration split pair was favorable. The
+backbone stays **seq_v2**; the attention readout is a real but small mechanism (consistent
+positive sign) and remains a B.4-adjacent scaling question, not the main model.
+
+**Verdict 2 — claim 2 is reinstated, and for the ADOPTED model.** v3 clears the causal GP 4/4;
+the direct cross-check (v2's `se_model` paired against `se_gp_causal` from the same scored rows,
+population keys verified bit-identical) shows the **backbone itself beats the causal GP on
+`CES_TI` 4/4**: +0.078* / +0.133* / +0.138* / +0.105* (`CES_VT` 4/4 positive, 2/4 PASS). Combined
+with §8x, the deployable ladder now reads: **the window model ties the causal GP (1/4), the
+sequence backbone beats it (4/4)** — the full-grid framing's history *reach* is what clears the
+strongest deployable baseline, which is the reach narrative of §7.4/§7.6 landing exactly where it
+was predicted to matter. Claim 2 for the seq_v2 backbone returns to "beats every deployable causal
+method measured, including the causal GP".
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
