@@ -512,6 +512,29 @@ copy: **split the keys by what they prove.**
 3. The merged artifact **keeps the reference `se_model`**, so no published number can shift
    underneath a re-scoring pass that was only supposed to add metadata.
 
+## Direction Reset (2026-08-12, 승상님) — One Confirmed Protocol, Full Re-experiment
+
+Decided 2026-08-12 on the Notion working page; recorded in THESIS_RESULTS.md §8v (2026-08-14).
+
+- **Confirmed protocol for every new run: `W = 2` · held-free (`genuine`) · pre-registered
+  `CES_TI` fit-failure exclusion** — the cut applies in three places (training targets, history
+  inputs → treated as missing, evaluation population), identically for every arm; the
+  spike-inclusive population is demoted to a sensitivity row. Threshold re-justified from the
+  current data's p99 (2,089 eV; > 3 keV = 1,197 rows = 0.53% of observed `CES_TI`), with
+  2.5 / 3 / 4 keV sensitivity reported.
+- **Every `W = 4` number is provisional and will be replaced.** Do not quote the draft's §5–§7
+  numbers, and do not use a `W = 4` artifact as the control arm of a new confirmatory claim
+  (historical reproduction excepted).
+- Execution order: B.7 audit → B.1 backbone gate (`seq_v2` × 16 seeds + budget equalization)
+  ∥ causal (past-only) GP → B.2 exploration (TEST frozen; selection on val only) → B.3 minimal
+  interpretable model → B.4 scaling ceiling → B.5 full re-score; B.6 kHz-Mirnov async.
+- **Why:** §8f, §8c and §8q each independently indicted the provisional protocol; replacing
+  numbers piecemeal would leave the paper quoting mixed populations.
+- **How to apply:** no experiment starts before the B.7 audit inventory is committed and its
+  (B)/(C) corrections are folded into the pre-registration
+  (`ces_prediction/experiments/PREREGISTRATION_W2.md`); TEST is scored once per confirmatory run
+  with a decision rule fixed beforehand.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

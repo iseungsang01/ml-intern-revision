@@ -1552,6 +1552,57 @@ line with `{}` fixes it.
 
 ---
 
+## 8v. Direction reset (2026-08-12) — full re-experiment under one confirmed protocol
+
+No experiment; a decision record (taken 2026-08-12 on the Notion working page "KSTAR CES 연구",
+transcribed into this ledger 2026-08-14). It governs every batch that follows.
+
+**The decision.** Every quantitative number in the draft's §5–§7 — headline, MNAR reweighting,
+campaign split, conformal intervals, interpretability ladder — was produced under the provisional
+`W = 4` protocol. Three of this ledger's own results indict that protocol independently: §8f
+(`W = 4` is not justified by skill; the plateau rule returns `W = 2`), §8c (held-free training wins
+and is already the training default), §8q (the `CES_TI` fit-failure spikes roughly halve measured
+skill). Rather than patching results one at a time onto mixed populations, **everything is re-run
+once under a single confirmed protocol**; until a number is replaced it is provisional and is not
+to be quoted:
+
+- **`W = 2`** — the plateau-minimal window (§8f).
+- **held-free (`genuine`)** in training *and* evaluation (§8c).
+- **`CES_TI` fit-failure spikes excluded by pre-registration**, consistently in all three places —
+  training targets, history inputs (treated as missing), evaluation population — and identically
+  for every arm; the spike-*inclusive* population is demoted to a sensitivity row. This inverts
+  §8q's conservative choice legitimately because it is fixed **before** the re-run, not after. The
+  cut threshold is re-justified from the current dataset's p99 with threshold sensitivity
+  (2.5 / 3 / 4 keV) reported; if CES fit-quality metadata (fit χ², signal level) ever arrives, a
+  quality cut replaces or accompanies the value cut.
+- **No `W = 4` artifact is carried over** — not as a result, and not as the control arm of a new
+  confirmatory claim (historical reproduction excepted).
+
+**Execution order** (the draft's Appendix B, re-prioritized 2026-08-12): ① **B.7 protocol audit**
+— completed *before* any run; the population/preprocessing definitions are the premise of every
+experiment after it → ② **B.1 backbone gate** — `seq_v2` × 16 seeds + training-budget
+equalization, in parallel with the **causal (past-only) GP baseline** → ③ **B.2 exploratory
+model search** (attention-pooling family first) → ④ **B.3 `W = 2` minimal interpretable model**
+(latent bottleneck) → ⑤ **B.4 size-scaling ceiling** → ⑥ **B.5 re-score and replace every
+`W = 4`-based analysis**. **B.6** (kHz Mirnov feature table, incl. mode rotation frequency) is
+asynchronous — it runs whenever the features arrive.
+
+**Standing rules attached to the decision.**
+
+1. **Test freeze.** All B.2 selection happens on val; TEST is scored once per candidate, in a
+   confirmatory run whose decision rule is fixed beforehand.
+2. **Claim-2 gate.** The causal GP may itself be the strongest deployable baseline (§8p showed the
+   *offline* GP ties the model). Whether "beats every deployable causal method" survives is
+   decided by B.1's causal-GP arm **before** any time is spent on B.2.
+3. **Real-time claim adjudication.** "Instantly-reacting real-time" is only meaningful with
+   microsecond-scale inference **and** kHz-stream inputs — the current fast-diagnostic inputs are
+   decimated to 100 Hz, so new information arrives only every 10 ms regardless of inference speed.
+   If either half is judged unattainable, the claim is removed and the contribution restated
+   (pre-processor for profile-fitting pipelines; offline imputation + conformal uncertainty;
+   baseline and protocol for multi-rate sensor-fusion work).
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
