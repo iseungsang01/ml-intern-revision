@@ -1639,7 +1639,10 @@ W = 2 held-free modality ablation in B.5 (the 2026-06-22 ablation was measured h
 §8f's history-0 and §8t's decomposition already re-ground it held-free).
 
 **Verdict: gate discharged.** With this section and the two committed documents, §8v's order ①
-is complete — B.1 may start once audit action #1 (the spike-cut knob) is implemented.
+is complete. Audit action #1 landed the same day (commit `3598760`): `CES_TI_SPIKE_CUT_EV` NaNs
+spikes at load time before held detection, shared between the window dataset and the full-grid seq
+loader, cache signature v5, recorded in `metrics.json`; 35/35 tests pass and a
+W = 2 · held-free · cut = 3000 smoke train runs end to end. **B.1 may start.**
 
 ---
 
