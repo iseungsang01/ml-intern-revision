@@ -67,6 +67,10 @@ def _bootstrap(shot, se_model, se_base, rng):
 def run():
     output_dir = Path(os.getenv("CES_OUTPUT_DIR", Path(__file__).resolve().parent))
     rng = np.random.default_rng(BOOTSTRAP_SEED)
+    # The extra causal-ladder arms (persistence / gp / gp_causal) draw from their
+    # own stream so the historical pchip/linear/dt<=15ms numbers of frozen runs
+    # reproduce bit-identically when this script is re-run on an old output dir.
+    rng_extra = np.random.default_rng(BOOTSTRAP_SEED + 1)
     summary = {"bootstrap_resamples": B, "seed": BOOTSTRAP_SEED, "splits": {}}
 
     for split in ("test", "val"):
@@ -102,6 +106,21 @@ def run():
                         f"CI95=[{r['skill_ci95'][0]:+.4f}, {r['skill_ci95'][1]:+.4f}] {v}  "
                         f"(n={int(small.sum())}, n_shots={r['n_shots']})"
                     )
+            # Causal-ladder gates (PR4 treatment on the second yardstick, and the
+            # B.1 claim-2 gate vs the past-only GP). Separate rng stream -- see
+            # rng_extra above. Keys are additive to the summary schema.
+            for base in ("persistence", "gp", "gp_causal"):
+                key = f"{name}_se_{base}"
+                if key not in data.files:
+                    continue
+                res = _bootstrap(shot, se_model, data[key], rng_extra)
+                per_base[base] = res
+                verdict = "PASS (beats)" if res["pass"] else "n.s."
+                print(
+                    f"  {name} vs {base:<9}: skill={res['skill_point']:+.4f} "
+                    f"CI95=[{res['skill_ci95'][0]:+.4f}, {res['skill_ci95'][1]:+.4f}] "
+                    f"{verdict}  (n_shots={res['n_shots']})"
+                )
             summary["splits"][split][name] = per_base
 
     out_path = output_dir / "bootstrap_summary.json"

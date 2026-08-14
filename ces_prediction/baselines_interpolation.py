@@ -43,7 +43,7 @@ GAP_SECONDS = 0.5  # contiguous-block boundary, mirrors dataset.py:271
 
 # Method classification (for reporting causal vs acausal).
 ACAUSAL_METHODS = ("linear", "pchip") + (("gp",) if _HAVE_SKLEARN else ())
-CAUSAL_METHODS = ("persistence", "ar_local")
+CAUSAL_METHODS = ("persistence", "ar_local") + (("gp_causal",) if _HAVE_SKLEARN else ())
 
 
 def contiguous_block_bounds(times, row_index, gap=GAP_SECONDS):
@@ -171,6 +171,20 @@ def predict_gp(times, values, target_time):
     v = values[idx]
     if len(t) < 2:
         return predict_persistence(times, values, target_time)
+    pred = _gp_fit_predict(t, v, target_time)
+    if not np.isfinite(pred):
+        return predict_persistence(times, values, target_time)
+    return pred
+
+
+def _gp_fit_predict(t, v, target_time):
+    """Exact Matern-3/2 + white-noise GP posterior mean at `target_time` for the
+    neighbor set `(t, v)`. Values are standardized within the set (signal
+    variance fixed at 1 in that space); hyperparameters are selected per sample
+    by exact log marginal likelihood over `_GP_LS_GRID x _GP_NOISE_GRID` --
+    fully deterministic. Returns NaN when every grid point fails (the jitter
+    guards this); callers fall back to persistence. Shared by the acausal `gp`
+    arm and the past-only `gp_causal` arm so the fit definition cannot drift."""
     mu = float(np.mean(v))
     sd = float(np.std(v))
     if sd <= 0.0:  # constant neighborhood: the GP posterior mean is that value
@@ -198,8 +212,34 @@ def predict_gp(times, values, target_time):
                 best_lml = lml
                 best_pred = float(k_star @ alpha)
     if not np.isfinite(best_pred):
-        return predict_persistence(times, values, target_time)
+        return np.nan
     return mu + sd * best_pred
+
+
+def predict_gp_causal(times, values, target_time):
+    """Past-only GP arm (PREREGISTRATION_W2.md §5): the candidate strongest
+    DEPLOYABLE causal baseline. Same kernel, grid, standardization and local-fit
+    size as `predict_gp`, but only the `_GP_MAX_SIDE` nearest PAST observed
+    neighbors enter the fit -- no future access, so the arm exists online.
+    NaN when no past observation exists (the same condition as `ar_local` and
+    `persistence`, so adding this arm never shrinks the harness's `valid`
+    population); a single past neighbor falls back to persistence (which is
+    exactly that value)."""
+    if not _HAVE_GP:
+        return np.nan
+    past = times < target_time
+    if not np.any(past):
+        return np.nan
+    p_idx = np.flatnonzero(past)
+    keep = p_idx[np.argsort(target_time - times[p_idx])[:_GP_MAX_SIDE]]
+    t = times[keep]
+    v = values[keep]
+    if len(t) < 2:
+        return predict_persistence(times, values, target_time)
+    pred = _gp_fit_predict(t, v, target_time)
+    if not np.isfinite(pred):
+        return predict_persistence(times, values, target_time)
+    return pred
 
 
 PREDICTORS = {
@@ -208,6 +248,7 @@ PREDICTORS = {
     "pchip": predict_pchip,
     "ar_local": predict_ar_local,
     "gp": predict_gp,
+    "gp_causal": predict_gp_causal,
 }
 
 

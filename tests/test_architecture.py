@@ -115,6 +115,30 @@ def test_ti_spike_cut_masks_fit_failures():
     assert max_ti <= 3000.0
 
 
+def test_gp_causal_arm_is_causal_and_population_preserving():
+    import numpy as np
+
+    import baselines_interpolation as B
+
+    rng = np.random.default_rng(7)
+    t0 = 10.0
+    times = np.sort(
+        np.concatenate([t0 - rng.uniform(0.005, 0.4, 12), t0 + rng.uniform(0.005, 0.4, 12)])
+    )
+    values = rng.normal(500.0, 200.0, len(times))
+    # future-blind: perturbing future values must not move the causal arm ...
+    v2 = values.copy()
+    fut = times > t0
+    v2[fut] += 1000.0
+    assert B.predict_gp_causal(times, values, t0) == B.predict_gp_causal(times, v2, t0)
+    # ... while the acausal arm does read the future
+    assert B.predict_gp(times, values, t0) != B.predict_gp(times, v2, t0)
+    # no past observation -> NaN, the same condition as persistence/ar_local,
+    # so adding the arm never shrinks the scored population
+    assert np.isnan(B.predict_gp_causal(times[fut], values[fut], t0))
+    assert np.isnan(B.predict_persistence(times[fut], values[fut], t0))
+
+
 def test_temporal_subset_sample_uses_previous_ces_only():
     data_dir = Path(os.environ.get("CES_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
     dataset = KSTAR_CES_Dataset(

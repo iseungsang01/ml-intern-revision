@@ -81,8 +81,12 @@ def compare():
     methods = ["persistence", "linear", "pchip", "ar_local"]
     if B._HAVE_SKLEARN:
         methods.append("gp")
+        # Past-only GP (PREREGISTRATION_W2.md §5): the candidate strongest
+        # deployable causal baseline. Same NaN condition as ar_local, so the
+        # `valid` population below is unchanged by its presence.
+        methods.append("gp_causal")
     else:
-        print("[compare] sklearn unavailable -> GP baseline skipped.")
+        print("[compare] sklearn unavailable -> GP baselines skipped.")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = MultimodalCESPredictor.from_dataset(dataset, window_size=window_size)
@@ -279,6 +283,10 @@ def compare():
         # another re-scoring pass. Both are sliced by the SAME `valid` mask.
         if "gp" in methods:
             boot[f"{name}_se_gp"] = (base_phys["gp"][valid, t] - y) ** 2
+        # Additive key (B.1, PREREGISTRATION_W2.md §5): the past-only GP arm --
+        # the claim-2 gate is decided by model-vs-gp_causal paired bootstrap.
+        if "gp_causal" in methods:
+            boot[f"{name}_se_gp_causal"] = (base_phys["gp_causal"][valid, t] - y) ** 2
         boot[f"{name}_y_true"] = y
         # Additive key (2026-08-09): the target's row index inside its own shot file.
         # `_shot` alone cannot address a row, so any downstream analysis that needs a
