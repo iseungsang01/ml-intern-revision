@@ -33,7 +33,9 @@ from seq_data import load_grid_files, build_blocks  # noqa: E402
 from model_seq import SeqCESLSTM  # noqa: E402
 from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
-SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2}
+from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
+
+SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3}
 
 TARGET_NAMES = ("CES_TI", "CES_VT")
 HEADLINE_BASELINE = "pchip"  # PR1
@@ -73,7 +75,11 @@ def build_pred_lookup(data_dir, eval_names, my_stats, device):
             for blk in build_blocks(grid[name], dims, my_stats,
                                     per_shot_norm=per_shot):
                 x = torch.from_numpy(blk["x"]).unsqueeze(0).to(device)
-                pred = (model(x)[0].cpu() * my_std + my_mean).numpy()  # (L, 2) physical
+                if getattr(model, "needs_obs", False):
+                    obs = torch.from_numpy(blk["mask"]).unsqueeze(0).to(device)
+                    pred = (model(x, None, obs)[0].cpu() * my_std + my_mean).numpy()
+                else:
+                    pred = (model(x)[0].cpu() * my_std + my_mean).numpy()  # (L, 2) physical
                 for i, t in enumerate(blk["time"]):
                     key = float(t)
                     if key in table:
@@ -114,8 +120,12 @@ def compare():
     methods = ["persistence", "linear", "pchip", "ar_local"]
     if B._HAVE_SKLEARN:
         methods.append("gp")
+        # Past-only GP (PREREGISTRATION_W2.md sec. 5): B.2's named objective is to
+        # beat this arm, so the seq harness scores it too. Same NaN condition as
+        # ar_local -> the valid population is unchanged.
+        methods.append("gp_causal")
     else:
-        print("[compare] sklearn unavailable -> GP baseline skipped.")
+        print("[compare] sklearn unavailable -> GP baselines skipped.")
 
     device = torch.device(os.getenv("CES_SEQ_DEVICE",
                                     "cuda" if torch.cuda.is_available() else "cpu"))
@@ -286,6 +296,12 @@ def compare():
         boot[f"{name}_se_model"] = err_model ** 2
         boot[f"{name}_se_pchip"] = (base_phys["pchip"][valid, t] - y) ** 2
         boot[f"{name}_se_linear"] = (base_phys["linear"][valid, t] - y) ** 2
+        boot[f"{name}_se_persistence"] = (base_phys["persistence"][valid, t] - y) ** 2
+        if "gp" in methods:
+            boot[f"{name}_se_gp"] = (base_phys["gp"][valid, t] - y) ** 2
+        if "gp_causal" in methods:
+            boot[f"{name}_se_gp_causal"] = (base_phys["gp_causal"][valid, t] - y) ** 2
+        boot[f"{name}_y_true"] = y
         boot[f"{name}_is_peak"] = is_peak[valid]
 
     err_path = output_dir / f"comparison_errors_{split_tag}.npz"

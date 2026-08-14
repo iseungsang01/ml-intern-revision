@@ -32,7 +32,9 @@ from model_seq import SeqCESLSTM  # noqa: E402
 from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
 # v1 = the §8d shared-encoder model; v2 = v1 + the iter009 V_rot routing (§8t).
-SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2}
+from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
+
+SEQ_MODELS = {"v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3}
 
 
 def batched(blocks, batch_size, device, shuffle, rng):
@@ -63,7 +65,10 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
     se_sum, n_obs, pen_sum, n_batches = 0.0, 0.0, 0.0, 0
     for x, y, m, lengths in batched(blocks, batch_size, device, training, rng or random.Random(0)):
         with torch.set_grad_enabled(training):
-            out = model(x, lengths)
+            # v3-family models attend over past fresh-observation steps; the loss
+            # mask m IS the per-step observation indicator, used strictly causally
+            # (shifted + lower-triangular inside the model).
+            out = model(x, lengths, m) if getattr(model, "needs_obs", False) else model(x, lengths)
             se = ((out - y) ** 2) * m
             mse = se.sum() / m.sum().clamp(min=1.0)
             pen = (torch.relu(zero_ti - out[..., 0]) * m[..., 0]).sum() / m[..., 0].sum().clamp(min=1.0)
