@@ -88,6 +88,10 @@ def main():
     seed = int(os.getenv("CES_SEED", "42"))
     init_seed = int(os.getenv("CES_INIT_SEED", str(seed)))
     epochs = int(os.getenv("CES_SEQ_EPOCHS", "30"))
+    # Budget-equalization arm (PREREGISTRATION_W2.md §4): train exactly `epochs`
+    # epochs with no early stop and keep the FINAL weights (no val-based
+    # checkpoint selection) -- the window pipeline's fixed-epoch regime.
+    fixed_epochs = os.getenv("CES_SEQ_FIXED_EPOCHS", "0") == "1"
     batch_size = int(os.getenv("CES_SEQ_BATCH", "16"))
     lr = float(os.getenv("CES_LR", "1e-3"))
     drop_stuck = os.getenv("CES_DROP_STUCK_TARGETS", "0") == "1"
@@ -141,11 +145,12 @@ def main():
             star = " *"
         print(f"[seq] epoch {epoch + 1:02d}/{epochs} train_mse={tr_mse:.4f} "
               f"pen={tr_pen:.4f} val_mse={val_mse:.4f}{star}", flush=True)
-        if epoch - best_epoch >= patience:
+        if not fixed_epochs and epoch - best_epoch >= patience:
             print(f"[seq] early stop (no val improvement for {patience} epochs)")
             break
 
-    model.load_state_dict(best_state)
+    if not fixed_epochs:
+        model.load_state_dict(best_state)
     (out_dir / "weights").mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), out_dir / "weights" / "seq_lstm.pth")
     metrics = {
@@ -162,6 +167,7 @@ def main():
         "train_blocks": len(train_blocks),
         "train_labels": n_obs,
         "drop_stuck_targets": drop_stuck,
+        "fixed_epochs": fixed_epochs,
         "seed": seed, "init_seed": init_seed,
         "loss": "per-target masked MSE + 0.1*relu(zero_ti - pred_TI) (train.py parity)",
     }
