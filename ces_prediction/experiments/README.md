@@ -55,3 +55,9 @@ Both were learned the hard way (§8f cost a wrong published conclusion, and the
    all did this).
 4. Change **one** variable at a time, and record the run in `THESIS_RESULTS.md` §8
    whichever way it turns out.
+5. **The confirmed protocol (2026-08-12, `THESIS_RESULTS.md` §8v) governs every new batch:**
+   `W = 2`, held-free (`genuine`), and the pre-registered `CES_TI` fit-failure exclusion applied
+   identically to every arm in training targets / history inputs / evaluation population.
+   `W = 4` artifacts are provisional — usable for historical reproduction, never as the control
+   arm of a new confirmatory claim. Before designing a batch, read `PROTOCOL_AUDIT.md` and
+   `PREREGISTRATION_W2.md` in this directory.

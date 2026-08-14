@@ -1603,6 +1603,46 @@ asynchronous — it runs whenever the features arrive.
 
 ---
 
+## 8w. B.7 protocol audit (2026-08-14) — the §8v gate is discharged
+
+No training; the pre-experiment audit that §8v's order ① demands. The full 21-constraint
+inventory is `ces_prediction/experiments/PROTOCOL_AUDIT.md`; the frozen protocol it feeds is
+`ces_prediction/experiments/PREREGISTRATION_W2.md`; the re-verification script is
+`ces_prediction/experiments/protocol_audit_stats.py`.
+
+**Re-verification on the current 641 files** (all numbers in the audit's §1): the published
+missingness ledger, MC lag-1 autocorrelation, and Te/NBI probe reproduce **exactly**; observed
+`CES_TI` p99 = 2,089 eV reproduces, with > 3 keV = 1,197 rows = 0.53% of observed; the 0.5 s
+segment threshold sits in the valley of a bimodal delta distribution (only 82 of ~247k inter-row
+deltas fall in (0.1, 0.5) s, so the threshold is insensitive); `CES_VT` is recorded at 5 decimal
+places with ≈ 4 × 10⁻⁵ minimum spacing between distinct values, so the held rule
+(consecutive-equal ⇒ forward-fill) has no measurable false-positive channel — `CES_TI`'s
+held = 1 / 226,991 is the empirical bound.
+
+**Four (B) corrections, all pre-registered before any run:**
+1. The fit-failure cut is inverted per §8v: implemented as a **load-time missing treatment**
+   (`CES_TI_SPIKE_CUT_EV`, same four application points as the held rule — supervision targets,
+   `ces_history`, normalization stats, interpolation anchors — so every arm is treated identically
+   by construction). To be implemented and smoke-tested before B.1 trains (audit action #1).
+2. Per-shot input standardization, adopted by §8s but never pinned in the common protocol, is now
+   pinned: window family **OFF** (pairing consistency with the W = 2 controls), `seq_v2` **ON**
+   (part of its definition), campaign analyses report the ON variant alongside.
+3. The per-file sample cap 500, previously a window-sweep-only control, is promoted to a common
+   frozen constant.
+4. The B.1 gate control is replaced: §8t paired against the W = 4 held-free family; the gate pairs
+   against the **W = 2** family instead, and both sides are retrained under the spike cut because
+   the cut changes the population.
+
+**Two (C) items stay scheduled:** the dataset-spec section is rewritten only when new data arrives
+(re-running the audit's verification scripts first), and the routing rationale is refreshed with a
+W = 2 held-free modality ablation in B.5 (the 2026-06-22 ablation was measured held-kept at W = 4;
+§8f's history-0 and §8t's decomposition already re-ground it held-free).
+
+**Verdict: gate discharged.** With this section and the two committed documents, §8v's order ①
+is complete — B.1 may start once audit action #1 (the spike-cut knob) is implemented.
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
