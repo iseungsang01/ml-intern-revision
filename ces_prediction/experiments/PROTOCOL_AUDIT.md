@@ -99,5 +99,25 @@
 | #4 | W = 2 held-free modality ablation 1건(라우팅 근거 갱신) | B.5 |
 | #5 | 새 데이터셋 도착 시 §1 재검증 절차 재실행 후에만 사양 교체 | 도착 시 |
 
+## 5. B.1 구현 참조 (코드 확인 완료, 2026-08-14)
+
+- **인과 GP (조치 #3).** `baselines_interpolation.py`의 `predict_gp`(140행)가 유일한 수정
+  대상: 161–164행이 과거·미래 동시 요구(미래 없으면 persistence 폴백), 167–168행이 양측
+  최근접 16 이웃 선택이다. 인과 변형은 과거 16 이웃만 쓰고, NaN 조건을 `ar_local`과 동일하게
+  (과거 무관측 → NaN) 유지하며, `PREDICTORS`(205행)·`CAUSAL_METHODS`(46행)에 등록 후
+  `compare_baselines.py` 275–281행의 가산 키 패턴으로 `se_gp_causal`을 추가한다(C5 검증 포함).
+  커널·격자·표준화(146–157행 정의)는 그대로 재사용.
+- **B.1 러너 env.** `runner_common.py`의 `FULL_ENV`는 **W = 4 계열 고정**(`CES_WINDOW_SIZE="4"`,
+  caps 200k/40k/40k, `CES_TEST_FRACTION=0.15`)이고 `CES_DROP_STUCK_TARGETS`를 의도적으로
+  누락한다(러너별 명시 원칙). `CES_MAX_SAMPLES_PER_FILE`·`CES_TI_SPIKE_CUT_EV`·
+  `CES_PER_SHOT_NORM`도 없다 — **B.1 러너는 FULL_ENV를 재사용하지 말고 사전등록 §1 값으로
+  W = 2 전용 env를 새로 선언**해야 한다. `SPLIT_SRC`/`BASELINE_OUT`도 W = 4·held-kept 계열이므로
+  관문 페어링에 그대로 쓰지 않는다(감사 (B)-4).
+- **페어링 도구.** `paired_model_compare.py`: `{target}_shot`·`{target}_dt_ms` bit-identical +
+  기준선 SE `allclose(rtol=1e-3, atol=1e-2)` 검증 후에만 비교, bootstrap B = 10,000 ·
+  seed 12345 · shot 클러스터.
+- **폴백률 보고 의무(§2 PR2)는 기존 키로 충족**: `compare_baselines.py`가
+  `future_neighbor_fraction`(234행)을 이미 타겟별로 산출한다 — B.5 보고에 그대로 인용.
+
 *재검증 산출물: `analyze_data_evidence.py` 출력과 `protocol_audit_stats.py` 출력(JSON)은
 `data/`(gitignored) 재산출 가능 — 수치는 본 문서 §1에 고정 기록.*
