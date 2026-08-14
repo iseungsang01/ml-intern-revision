@@ -1566,6 +1566,13 @@ skill). Rather than patching results one at a time onto mixed populations, **eve
 once under a single confirmed protocol**; until a number is replaced it is provisional and is not
 to be quoted:
 
+> **Amendment (2026-08-14, 승상님):** the spike-*inclusive* ("p100") population is co-primary,
+> not a sensitivity row — an unqualified claim must hold in BOTH the cut and the inclusive
+> regime, each internally consistent across training/history/anchors/evaluation
+> (`PREREGISTRATION_W2.md` §1.1; amended after partial unblinding of the w2cut window family,
+> recorded there). ELM/transient-capture claims ride on the peak-stratified analyses, not on
+> the population choice.
+
 - **`W = 2`** — the plateau-minimal window (§8f).
 - **held-free (`genuine`)** in training *and* evaluation (§8c).
 - **`CES_TI` fit-failure spikes excluded by pre-registration**, consistently in all three places —
