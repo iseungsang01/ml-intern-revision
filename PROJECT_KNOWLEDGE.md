@@ -535,6 +535,39 @@ Decided 2026-08-12 on the Notion working page; recorded in THESIS_RESULTS.md §8
   (`ces_prediction/experiments/PREREGISTRATION_W2.md`); TEST is scored once per confirmatory run
   with a decision rule fixed beforehand.
 
+## Interpretability Is Structural, Not Linear — B.3 (2026-08-15) — §8z
+
+Under the confirmed protocol the backbone is `seq_v2` (§8x, B.1) and its `T_i` skill compresses
+**without loss** into `persistence + 8 bounded latents × a linear readout`
+(`experiments/seq/model_seq_b3.py`, 21,498 params = 6% of the backbone): paired `T_i` vs seq_v2
+mean **+0.002** on 4 TEST splits, PR4 PASS 4/4, causal GP PASS 4/4. What this changes:
+
+- **The §8k "opacity price" (69% of the margin) was the price of the *window* form, not of the
+  task.** The named-terms anchor+Δ, retrained at W = 2, collapses onto persistence (recovers 1% of
+  the gap: its slope term needs two observed history rows and never fires; window statistics over
+  one row are noise). Do not quote §8k's 31% under the confirmed protocol.
+- **Recipe that worked**: exact decomposition (`ŷ = anchor + Σ w_k z_k + b`, zero-init readout so
+  training starts at persistence), a small nonlinear causal encoder behind a **tanh bottleneck**
+  (every number the readout sees is probeable), routing at the encoder. Linear probes on TEST
+  inputs say the `T_i` latent encodes last-observed `T_i` (R² 0.5–0.75) and the ECEI `T_e` proxy
+  (0.3–0.5), distributed across dimensions — local BES activity and staleness are barely linearly
+  decodable.
+- **Bounded corrections cannot recover a spiked anchor.** `V_rot` vs the backbone looks bad
+  (−0.14…−0.55) but 0–4 rows per split whose previous `V_rot` observation is a fit-failure spike
+  carry 28/0/64/72% of b3's `V_rot` squared error; excluding them the gap is −0.12/−0.14/0/0.
+  `T_i` is immune only because the 3 keV cut removes such anchors. **`V_rot` has fit-failure
+  spikes too** (§8q recurring) — a `V_rot` spike audit + cut/sensitivity rule is 승상님's call
+  (B.7 follow-up); until then any persistence-anchored `V_rot` MSE comparison must report the
+  spike-row share.
+- **Training-budget trap for small models**: b3 was cap-bound at the seq family's 30 epochs while
+  the backbone stopped by patience at 14–19; the like-for-like regime is "same stopping rule, cap
+  non-binding for both" (100 here; runs terminated 54–88). Check `best_epoch == epochs_run`
+  before reading any small-model comparison.
+- **How to apply:** the interpretable rung of the thesis is b3k8, and it doubles as the ablation
+  that says what the backbone's `T_i` skill *is* (persistence + a small correction from `T_e`-like
+  state). The main model stays seq_v2 (§8x). B.4 (scaling ceiling) can now be read against a
+  21k floor that already sits at the backbone's `T_i` skill.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

@@ -1727,6 +1727,116 @@ method measured, including the causal GP".
 
 ---
 
+## 8z. B.3 minimal interpretable model (2026-08-15) — an 8-number latent carries all of the backbone's `T_i` skill
+
+**Question.** §8k priced the opacity of the *window* model at W = 4: a 1,258-parameter named-terms
+anchor+Δ recovered ≈31% of its `T_i` margin, and the residual was read as "the recoverable
+structure is non-linear, so an explainable model needs a different functional form, not more
+linear terms". B.3 asks the same question of the *adopted* backbone (`seq_v2`, §8x) under the
+confirmed protocol, with that lesson built in: interpretability comes from **structure**, not from
+linearity of the encoder.
+
+**Design** (`ces_prediction/experiments/b3_interp/`, model `experiments/seq/model_seq_b3.py`;
+runners `run_b3_anchor.py` → `run_b3_explore.py` (val only) → `run_b3_confirm.py` (TEST once) →
+`probe_b3.py`). Per target: `ŷ = carried_value + Σ_k w_k·z_k + b`, where the anchor is the data
+layer's strictly-causal carry-forward (parameter-free persistence), `z ∈ [−1, 1]^K` is a tanh
+latent from a small causal GRU (64 / 32 units), and the readout is **zero-initialised** so
+training starts exactly at persistence and everything learned is, by construction, the
+correction. The routing is seq_v2's, at the encoder: the `V_rot` GRU sees only the non-fast tail.
+Consequences: (i) the decomposition into K + 1 named terms is *exact*, not an attribution
+approximation; (ii) every number the readout can see is one of K probeable latents; (iii) the
+correction is bounded by `Σ|w_k| + |b|` in target σ. `T_i` latent K ∈ {4, 8} was the one explored
+variable (`V_rot` latent 4). **21,498 parameters** = 6% of seq_v2's 357,570.
+
+Controls, all under W = 2 · held-free · 3 keV cut · cap 500: (a) the §8k anchor+Δ **retrained**
+under the protocol (`.b3_anchor_s*`, val-only until the rule commit, TEST scored additively;
+§8v forbids the W = 4 family as a control), (b) the B.1 backbone `.b1_seqv2_s{seed}_i{seed}`,
+(c) the w2cut window family (reported). Row-for-row pairing verified by
+`paired_model_compare.py`'s bit-identical `se_pchip` guard on every pair.
+
+**Exploration (val, splits 42/7; test frozen).** K = 4: paired `T_i` vs the backbone
+−0.083\* / −0.022 ns; K = 8: −0.035\* / +0.016 ns → **b3k8** by the pre-stated rule. Both hit the
+seq family's 30-epoch cap (`best_epoch` 29–30/30) while the backbone had been terminated by the
+patience rule at 14–19 epochs; raising the cap to 60 let the same rule fire at 56 on split 42 and
+moved the paired number from −0.035\* to −0.005 ns. The candidate was therefore defined with a
+**non-binding 100-epoch cap** so both arms stop by the identical rule (patience 6 on val masked
+MSE); the confirmatory runs terminated at 56 / 57 / 88 / 54. The decision rule was committed to
+`PREREGISTRATION_W2.md` §6 (commit `df79522`) before any TEST scoring.
+
+**Confirmation (TEST, 4 splits, init = split seed):**
+
+| seed | `T_i` vs PCHIP | vs anchor+Δ (retrained) | vs seq_v2 backbone | vs w2cut window | vs causal GP | epochs |
+|---|---|---|---|---|---|---|
+| 42 | +0.166 PASS | **+0.351\*** | −0.009 [−0.037, +0.017] | +0.122\* | +0.069 PASS | 56 |
+| 1 | +0.245 PASS | **+0.401\*** | −0.005 [−0.033, +0.025] | +0.053\* | +0.129 PASS | 57 |
+| 7 | +0.276 PASS | **+0.418\*** | +0.026 [−0.013, +0.065] | +0.087\* | +0.161 PASS | 88 |
+| 123 | +0.262 PASS | **+0.411\*** | −0.004 [−0.058, +0.045] | +0.040 ns | +0.101 PASS | 54 |
+
+**Verdict — both pre-registered branches met.** (1) *Interpretable rung*: `T_i` significant win
+over the anchor 4/4, `V_rot` significant deficit vs the anchor 0/4 (in fact `V_rot` wins 4/4).
+(2) *Backbone tolerance*: mean paired `T_i` = **+0.002** against a −0.05 tolerance — every CI
+contains 0, one split is positive. Reported, not gated: `T_i` vs PCHIP PR4 **PASS 4/4**, vs
+persistence PASS 4/4, vs the offline GP tie 4/4 (as for every model), vs the window family
+positive 4/4 (3/4 significant), vs the causal GP **PASS 4/4** — the 21k model inherits the
+backbone's claim 2. `V_rot` vs persistence PASS 4/4.
+
+**The complexity ladder, re-priced under the confirmed protocol** (TEST `T_i` skill vs PCHIP,
+4-seed mean; fraction of the persistence → backbone gap recovered):
+
+| rung | params | mean skill | recovered |
+|---|---:|---:|---:|
+| persistence | 0 | −0.264 | 0% |
+| anchor+Δ (§8k form, retrained at W = 2) | 1,258 | −0.261 | **1%** |
+| **b3k8 (this section)** | **21,498** | **+0.237** | **≈100%** (85 / 99 / 119 / 99) |
+| w2cut window model | 201,258 | +0.173 | 74% |
+| seq_v2 backbone | 357,570 | +0.239 | 100% |
+
+Two things this table says that §8k could not. First, **the §8k anchor was a W = 4 artefact**: at
+W = 2 its slope term needs two observed history rows and never fires, and window statistics over
+one or two rows are noise, so it collapses onto persistence — condition (1) above is therefore
+effectively "beats persistence-level", the weak condition; the informative comparisons are (2),
+the causal GP and the window family. Second, **the backbone's entire `T_i` skill survives
+compression to eight bounded numbers plus persistence** — the opacity that §8k priced at 69% of
+the margin was the price of the *window* model's form, not of the task. What the task needs is
+the full-grid causal state (§8t/§8x), and that state is small.
+
+**Pre-registered measurements (`probe_b3.py`, `data/.b3_probe_summary_b3k8.json`).**
+① *Linear probes* (OLS fit on ~155k train-file grid steps, R² on ~35–39k TEST-file steps —
+inputs only, no targets touched): the `T_i` latent linearly encodes the **last observed `T_i`**
+(R² 0.54 / 0.75 / 0.48 / 0.56) and the **ECEI `T_e` proxy** (0.48 / 0.31 / 0.40 / 0.40); local
+BES activity is barely decodable (0.09–0.13) and staleness hardly at all (0.01–0.07). No single
+latent dimension carries any quantity (best per-dim R² 0.14–0.37): the representation is
+distributed across the eight. The `V_rot` latent encodes carried `V_rot` (0.46–0.83) and staleness
+(0.05–0.63). ② *Exact decomposition* on TEST steps: the learned correction has σ ≈ 0.46–0.57
+against an anchor σ ≈ 1.0–1.1 and accounts for 25–39% of `T_i` prediction variance; readout
+weights |w_k| ≈ 0.4–0.65, so the correction is bounded at 4.2–5.2σ (`V_rot`: 3.0–4.7σ, 9–33% of
+variance). ③ *Structural routing*: perturbing the 15 fast channels leaves the `V_rot` output
+**bit-identical** and changes `T_i` on all four checkpoints.
+
+**`V_rot` — the bounded correction meets fit-failure spikes.** Against the backbone, `V_rot`
+paired skill is −0.55\* / −0.14\* / −0.38 ns / −0.51\* — but rows whose *persistence* error exceeds
+1,000 (i.e. whose previous `V_rot` observation is a spike of thousands) number 1 / 0 / 3 / 4 per
+split (≤ 0.03% of rows) and carry 28 / 0 / 64 / 72% of b3's `V_rot` squared error; excluding them
+the paired numbers are −0.12 / −0.14 / 0.00 / 0.00. Mechanism: `anchor + (≤ 4σ) correction` cannot
+recover from a spiked anchor, and persistence, anchor+Δ and b3 fail those rows identically while
+the backbone's unbounded head partly recovers (its s7 `V_rot` skill vs PCHIP of +0.876 is that
+recovery, not physics). `T_i` is immune because the pre-registered 3 keV cut removes such anchors
+before they are carried. This is §8q's lesson recurring on the other target: **`V_rot` has
+fit-failure spikes too, and any persistence-anchored method's MSE is hostage to them.** No
+protocol change is made here; a `V_rot` spike audit and cut/sensitivity rule are recorded for
+승상님's decision (B.7 follow-up), and the same rows would need the same treatment in every arm.
+
+**What this section does not show.** It does not make b3k8 the main model — the backbone stays
+seq_v2 by §8x; b3k8 is the interpretable rung *and* an ablation stating what the backbone's `T_i`
+skill consists of. It does not claim `V_rot` parity. And the probe R² are linear-decodability
+numbers, not causal attributions.
+
+Artifacts: `data/.b3_anchor_s*` (val + test), `data/.b3_b3k{4,8}_s{42,7}[_e60]` (val
+exploration), `data/.b3_explore_summary{,_e60}.json`, `data/.b3c_b3k8_s*` (TEST + probes),
+`data/.b3c_b3k8_summary.json`, `data/.b3_probe_summary_b3k8.json`.
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
