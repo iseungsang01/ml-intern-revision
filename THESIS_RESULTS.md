@@ -1844,6 +1844,56 @@ exploration), `data/.b3_explore_summary{,_e60}.json`, `data/.b3c_b3k8_s*` (TEST 
 
 ---
 
+## 8aa. B.4 size-scaling ceiling (2026-08-15) — the `T_i` curve is flat across a 26× parameter range
+
+**Question.** With the backbone fixed (§8x) and its `T_i` skill shown to survive compression to
+eight latents (§8z), does *more* capacity buy anything on this input set — or is the input set,
+not the model, the ceiling? Pre-registered reading (`PREREGISTRATION_W2.md` §6 B.4, committed
+before the run): one controlled variable, the seq_v2 `T_i`-encoder width `hidden_ti` ∈ {24, 40,
+80, 160, 260} (34k / 49k / 114k / 358k / 879k params; 260 is the last width under the 1 M cap);
+`V_rot` branch, heads, depth, data treatment and training constants fixed; the 160 point *is* the
+B.1 backbone run; new widths train with a non-binding 100-epoch cap so every point stops by the
+same patience rule (terminations 14–49 epochs). TEST scored once per point, paired against the 160
+point and the w2cut window family; no backbone re-selection.
+Runner `experiments/b4_scale/run_b4_scale.py`, 82 min wall, `data/.b4_w{24,40,80,260}_s*`,
+verdict `data/.b4_scale_summary.json`.
+
+**Curve (TEST `T_i` skill vs PCHIP; paired vs the 160-unit backbone, \* = significant):**
+
+| `hidden_ti` | params | s42 | s1 | s7 | s123 | mean | paired vs 160 (s42 / s1 / s7 / s123) | mean Δ | PR4 vs PCHIP | vs causal GP |
+|---:|---:|---:|---:|---:|---:|---:|---|---:|---|---|
+| 24 | 34,162 | +0.156 | +0.242 | +0.251 | +0.271 | +0.230 | −0.021\* / −0.008 / −0.008 / +0.009 | −0.007 | 4/4 | 4/4 |
+| 40 | 49,170 | +0.161 | +0.245 | +0.258 | +0.278 | +0.236 | −0.015 / −0.005 / +0.002 / +0.019 | +0.000 | 4/4 | 4/4 |
+| 80 | 113,570 | +0.143 | +0.248 | +0.279 | +0.268 | +0.235 | −0.037\* / −0.001 / +0.030\* / +0.005 | −0.001 | 4/4 | 3/4 |
+| **160** | 357,570 | +0.174 | +0.248 | +0.257 | +0.264 | +0.236 | (reference) | — | 4/4 | 4/4 |
+| 260 | 878,570 | +0.165 | +0.243 | +0.281 | +0.232 | +0.230 | −0.011 / −0.007 / +0.033\* / −0.044 | −0.008 | 4/4 | 3/4 |
+
+`V_rot` (branch fixed at 64 units) does not move with `T_i` width: mean skill +0.250…+0.254 at
+every width, paired vs 160 within ±0.02 and non-significant on 19/20 pairs — the internal
+consistency check the rule asked for.
+
+**Verdict (descriptive, as pre-registered).** ① **Ceiling reached at or below the backbone
+width**: 260 beats 160 significantly on 1/4 splits (< 3/4) and its mean Δ is −0.008. ② **No
+knee down to the smallest width measured**: no width < 160 loses significantly on ≥ 3/4 splits
+(the two significant losses are single splits: 24 on s42, 80 on s42); the mean curve is
++0.230 → +0.236 → +0.235 → +0.236 → +0.230 across a **26× parameter range**. ③ Every width passes
+PR4 vs PCHIP 4/4 and beats the causal GP on 3–4/4.
+
+**Reading.** This is the "flat curve = performance ceiling of this input set" outcome the
+pre-registration named. Together with §8z (21k latent model = backbone) it says the `T_i` skill
+available from {BES, ECEI, MC at 100 Hz + CES history + time} is exhausted by ~50k parameters of
+causal recurrent state; the remaining variance across splits (s42 +0.14…+0.17 vs s123 +0.23…+0.28)
+is split variance, not capacity. Two consequences for the thesis: the model-size axis is closed
+(B.4 does not motivate a larger model), and the levers that remain are *inputs* — NBI for `V_rot`
+(§9.4), kHz Mirnov features (B.6), CES fit-quality metadata (§8v) — not architecture.
+
+**What it does not show.** Depth was not varied (one variable per batch); the width ladder is
+capped at 879k by the project's 1 M rule, so "no gain up to 879k" is the measured statement, not
+"no gain ever"; and w80/w260's isolated significant wins on s7 (+0.030\*/+0.033\*) are single-split
+effects with the opposite sign on s42, exactly the split-variance pattern §8x recorded.
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test

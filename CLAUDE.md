@@ -22,7 +22,7 @@ python ces_prediction/inspect_split.py        # validate fixed split / manifest
 python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
 ```
 
-Controlled experiment batches live under `ces_prediction/experiments/` — 17 directories, each with
+Controlled experiment batches live under `ces_prediction/experiments/` — 19 directories, each with
 its own runner and each behind a numbered section of `THESIS_RESULTS.md` §8, plus two shared files
 (`runner_common.py` for the frozen splits/controls/env, `paired_model_compare.py` for the paired
 bootstrap). The mapping (directory ↔ §8 section ↔ verdict) and the non-negotiables for a new batch

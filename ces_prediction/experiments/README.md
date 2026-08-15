@@ -40,6 +40,8 @@ points **`CES_MODEL_FILE`** at its own file in the subprocess env (see
 | `b1_gate/` | §8x | does the seq_v2 backbone beat the W = 2 window control under the confirmed protocol, and does the causal GP restate claim 2? | **backbone = seq_v2** (16/16 positive, pooled +0.081, budget-equalised 4/4); causal GP beaten 1/4 by the window model → claim 2 restated, then reinstated by §8y for the backbone (4/4) |
 | `b2_explore/` | §8y | B.2 val-only candidate search + rule-guarded TEST confirmation (`v3` attention readout) | promotion **FAILS** (4/4 positive, 1/4 significant); the backbone itself beats the causal GP 4/4 → claim 2 reinstated |
 | `b3_interp/` | **§8z** | how much of the backbone's `T_i` skill survives compression to a K-dim probeable latent + persistence anchor + exact linear decomposition? | **all of it**: b3k8 (21,498 params, K = 8) paired `T_i` vs seq_v2 mean **+0.002**, vs retrained anchor +0.35–0.42 4/4\*, vs causal GP PASS 4/4; the §8k anchor collapses onto persistence at W = 2; `V_rot` gap vs backbone is mostly spike-anchor rows |
+| `b4_scale/` | **§8aa** | does more capacity buy `T_i` skill on this input set? (seq_v2 `hidden_ti` 24…260 = 34k…879k) | **flat**: mean skill +0.230/+0.236/+0.235/+0.236/+0.230, w260 vs w160 significant 1/4, no knee down to 24 — the input set, not the model, is the ceiling |
+| `b5_rescore/` | §8ab (pending) | re-score every W = 4-based analysis at W = 2 in both populations (cut / inclusive) | running |
 | `quantum/` | — (`docs/ionq_qpu_실험기록.md`) | side track: variational quantum classifier / IonQ QPU inference | exploratory; not part of the thesis claim chain |
 
 ## Non-negotiables for any new batch

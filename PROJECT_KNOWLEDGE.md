@@ -581,6 +581,20 @@ mean **+0.002** on 4 TEST splits, PR4 PASS 4/4, causal GP PASS 4/4. What this ch
   state). The main model stays seq_v2 (§8x). B.4 (scaling ceiling) can now be read against a
   21k floor that already sits at the backbone's `T_i` skill.
 
+## The Model-Size Axis Is Closed — B.4 (2026-08-15) — §8aa
+
+seq_v2 `T_i`-encoder width 24 → 260 (34k → 879k params, one variable, everything else fixed,
+same stopping rule, TEST once per point): mean `T_i` skill +0.230 / +0.236 / +0.235 / +0.236 /
++0.230, paired vs the 160-unit backbone within ±0.008 on average, w260 significantly better on
+1/4 splits, no width down to 24 significantly worse on ≥ 3/4. `V_rot` (branch fixed) does not
+move. **Why it matters:** with §8z (a 21k latent-bottleneck model equals the backbone) this
+closes the architecture-size lever — the `T_i` information in {100 Hz BES/ECEI/MC + CES history
++ time} is exhausted by ~50k parameters of causal recurrent state; split variance (s42 vs s123)
+dwarfs capacity effects. **How to apply:** do not propose a bigger/deeper model as a next step;
+the remaining levers are inputs (NBI, kHz Mirnov, CES fit-quality metadata) and data treatment
+(the `V_rot` spike issue in §8z). Read any future "model X is better" claim against the ±0.03
+single-split noise seen here.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
