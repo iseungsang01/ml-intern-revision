@@ -496,6 +496,19 @@ Deployment caveat: an online estimator cannot see a shot's future to compute its
 the **offline upper bound** of this family; the deployable version is an expanding-window/EWMA
 estimator and that gap is unmeasured.
 
+## One Report Filename Per Split (2026-08-15)
+
+`eval_seq.py` and `compare_baselines.py` wrote `comparison_metrics.json` for **whichever split
+was scored last**. A val re-score of two frozen B.1 backbone dirs (B.2's `ensure_baseline_val`)
+silently replaced their TEST reports, and two descriptive tables (§8z ladder, a session summary)
+quoted val numbers as TEST before it was caught. The npz files were never touched, so no paired
+verdict moved. Both scripts now write `comparison_metrics_{split}.json` always and the legacy
+unsuffixed file only for TEST (or when none exists); the two reports were regenerated
+(`experiments/b1_gate/regen_test_report.py`, population bit-identical, `se_model` drift bounded).
+**How to apply:** read descriptive skill from `comparison_metrics_test.json` or recompute from
+the npz; treat an unsuffixed report in a dir that also holds `comparison_errors_val.npz` with
+suspicion; and always score val *before* test when both are needed in one dir.
+
 ## Bit-Identical Re-scoring Has a Limit: `se_model` (2026-08-09)
 
 The §8g/§8i/§8p additive-key pattern ("re-run must reproduce the reference npz bit-for-bit")

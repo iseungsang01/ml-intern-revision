@@ -319,9 +319,15 @@ def compare():
 
     err_path = output_dir / f"comparison_errors_{split_tag}.npz"
     np.savez(err_path, **boot)
+    tagged = output_dir / f"comparison_metrics_{split_tag}.json"
+    tagged.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    # Legacy unsuffixed report: written for TEST, or when nothing exists yet
+    # (val-only exploration dirs). A val re-score must never overwrite a frozen
+    # TEST report -- that happened to two B.1 backbone dirs on 2026-08-14.
     out_path = output_dir / "comparison_metrics.json"
-    out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"saved {err_path} + {out_path}", flush=True)
+    if split_tag == "test" or not out_path.exists():
+        out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"saved {err_path} + {tagged}", flush=True)
     return report
 
 

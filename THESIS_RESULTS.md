@@ -1787,9 +1787,15 @@ backbone's claim 2. `V_rot` vs persistence PASS 4/4.
 |---|---:|---:|---:|
 | persistence | 0 | −0.264 | 0% |
 | anchor+Δ (§8k form, retrained at W = 2) | 1,258 | −0.261 | **1%** |
-| **b3k8 (this section)** | **21,498** | **+0.237** | **≈100%** (85 / 99 / 119 / 99) |
-| w2cut window model | 201,258 | +0.173 | 74% |
-| seq_v2 backbone | 357,570 | +0.239 | 100% |
+| **b3k8 (this section)** | **21,498** | **+0.237** | **≈100%** (98 / 99 / 104 / 99) |
+| w2cut window model | 201,258 | +0.173 | 87% |
+| seq_v2 backbone | 357,570 | +0.236 | 100% |
+
+*(All rungs computed from the frozen TEST npz files. Two backbone dirs' unsuffixed
+`comparison_metrics.json` had been overwritten by a later val re-score — caught 2026-08-15,
+reports regenerated with population verified bit-identical, and `eval_seq.py` /
+`compare_baselines.py` now write split-tagged reports and never overwrite a TEST report with
+val; every paired verdict is npz-based and unaffected.)*
 
 Two things this table says that §8k could not. First, **the §8k anchor was a W = 4 artefact**: at
 W = 2 its slope term needs two observed history rows and never fires, and window statistics over
@@ -1819,8 +1825,9 @@ paired skill is −0.55\* / −0.14\* / −0.38 ns / −0.51\* — but rows whos
 split (≤ 0.03% of rows) and carry 28 / 0 / 64 / 72% of b3's `V_rot` squared error; excluding them
 the paired numbers are −0.12 / −0.14 / 0.00 / 0.00. Mechanism: `anchor + (≤ 4σ) correction` cannot
 recover from a spiked anchor, and persistence, anchor+Δ and b3 fail those rows identically while
-the backbone's unbounded head partly recovers (its s7 `V_rot` skill vs PCHIP of +0.876 is that
-recovery, not physics). `T_i` is immune because the pre-registered 3 keV cut removes such anchors
+the backbone's unbounded head partly recovers (on the exploration split 7 **val** set the
+backbone's `V_rot` skill vs PCHIP is +0.876 for exactly this reason — one recovered spike-anchor
+row, not physics). `T_i` is immune because the pre-registered 3 keV cut removes such anchors
 before they are carried. This is §8q's lesson recurring on the other target: **`V_rot` has
 fit-failure spikes too, and any persistence-anchored method's MSE is hostage to them.** No
 protocol change is made here; a `V_rot` spike audit and cut/sensitivity rule are recorded for

@@ -310,9 +310,14 @@ def compare():
     np.savez(err_path, **boot)
     print(f"Per-sample errors (for bootstrap) saved to {err_path}")
 
+    tagged = output_dir / f"comparison_metrics_{split_tag}.json"
+    tagged.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    # Legacy unsuffixed report: written for TEST, or when nothing exists yet. A
+    # val re-score must never overwrite a frozen TEST report (see eval_seq.py).
     out_path = output_dir / "comparison_metrics.json"
-    out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"\nComparison metrics saved to {out_path}")
+    if split_tag == "test" or not out_path.exists():
+        out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"\nComparison metrics saved to {tagged}")
     return report
 
 
