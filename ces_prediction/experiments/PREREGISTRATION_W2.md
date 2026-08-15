@@ -186,6 +186,36 @@ B.2 탐색 전 과정에서 모델 선택은 **val에서만** 한다. TEST는 �
   수치로 교체. 각 결과에 사용 W 명기. W = 2의 coverage 축소(Δt > 15 ms 채점 표본 456행,
   MNAR in-domain 비율 추가 하락)와 PR2 폴백률을 결과 보고에 명시.
 
+  **B.5 실행 규칙 (2026-08-15 고정, 실행 전; 러너 `experiments/b5_rescore/run_b5.py`).** 모든
+  분석은 §1.1의 **두 모집단**(컷 = `CES_TI_SPIKE_CUT_EV=3000` / 포함 = `0`)에서 각각, 각 모집단
+  안에서 학습·이력·앵커·평가 일관. 모델 = 채택 백본 seq_v2(§8x) + 윈도우 W = 2 계열(대조) +
+  해석가능 단 b3k8·anchor(§8z). 판정 규칙은 기존 것을 그대로 쓰며 새 선택은 하지 않는다.
+  1. **헤드라인**: 컷 = B.1 산출물(`.b1_seqv2_s*_i*`, `.b1_w2cut_s*`) 재사용; **포함** = seq_v2 4 seed
+     신규 학습(`.b5i_seqv2_s*`, 컷 0, 그 외 B.1 env 동일, 상한 30·규칙 종료), 대조 = 얼린 컷 없는
+     W = 2 스윕 계열 `.wsweep_hf_w2_s*`(§1 "컷 없는 민감도 대조"가 포함 체제의 1차 대조로 승격), 분할
+     = 스윕 manifest 복원본 `.b1_manifest_s*`, TEST 1회. **무조건부 주장 = 두 모집단 모두 PR4 PASS.**
+  2. **MNAR 재가중**(§8i 방법 재사용, `analyze_mnar` 함수 import): 두 모집단 × {seq_v2, 윈도우} ×
+     {vs PCHIP, vs persistence}; `in_domain`은 W = 2(2행 이내 과거 관측), 컷 모집단은 가중치 격자에도
+     컷 적용. 커버리지(살아남은 층의 결측 질량 비율)를 모든 추정치 옆에 보고.
+  3. **시간(캠페인) 분할**(§8n manifest 재구축, 65/20/15 시간순): 컷 모집단 = 윈도우 OFF·윈도우 ON·
+     seq_v2 각 4 init seed; 포함 모집단 = 윈도우 OFF·seq_v2 각 4 init. 판정 = §8n 두 잣대(vs PCHIP,
+     vs persistence) 그대로; seq_v2 vs 윈도우 OFF paired, 윈도우 ON vs OFF paired(§8s의 W = 2 재확인).
+  4. **Conformal**(§8m 방법 재사용): 백본 seq_v2, val 교정 / TEST 평가, global·mondrian, 두 모집단;
+     비교 arm = PCHIP·persistence 동일 절차. val npz는 백본 run dir에 가산 채점.
+  5. **해석가능 사다리 포함 모집단**: anchor+Δ·b3k8을 컷 0으로 4 seed 재학습(`.b5i_anchor_s*`,
+     `.b5i_b3k8_s*`), 대조 = `.b5i_seqv2_s*`; §8z 두 갈래 규칙(anchor 대비 4/4 유의·백본 허용치
+     −0.05) 동일 적용.
+  6. **컷 문턱 민감도**(§1): 백본 seq_v2를 2.5 / 4 keV 컷으로 4 seed 재학습(`.b5c{2500,4000}_seqv2_s*`),
+     각 문턱은 자기 모집단(윈도우 대조 없이 자기 skill vs PCHIP + vs gp_causal)으로 보고.
+  7. **`V_rot` 라우팅 재근거(감사 C-2)**: 윈도우 계열에 평가 시 `CES_ABLATE ∈ {no_fast, no_history}`
+     (재학습 없음, 사본 dir에서 채점), 두 모집단. seq_v2는 §8t/§8z 구조 검증(bit-identical)이 대신한다.
+  8. **peak 층화**(§1.1): 두 모집단 × {seq_v2, 윈도우} × {peak, non-peak} shot-clustered paired
+     bootstrap(`is_peak` 키). **large-gap**: dt ≤ 15 / > 15 / > 45 ms 4-seed pooled(§8g 방법).
+  9. **커버리지·PR2**: TEST 채점 행 수, Δt > 15 ms 행 수, `future_neighbor_fraction`(1 − 폴백률),
+     MNAR in-domain 비율을 두 모집단 모두 표로.
+  - 산출: `data/.b5_summary.json` + THESIS_RESULTS.md 신규 절. GPU 순서: 1 → 4(val) → 5 → 3 → 6;
+    7·8·9·2는 CPU 재채점.
+
 ## 7. B.6 — kHz Mirnov 특징 (도착 시, 비동기)
 
 Notion 부록 B.6의 규칙을 그대로 상속한다: 특징 명세(윈도우 RMS · 대역 파워 · 모드수 +
