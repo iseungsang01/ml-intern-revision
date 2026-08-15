@@ -64,8 +64,11 @@ def seq_env(env, seed, out_dir, smoke):
     return env
 
 
-def one_candidate(variant, seed, smoke, resume):
-    out_dir = DATA / (f".b3_{variant}_s{seed}" + ("_smoke" if smoke else ""))
+def one_candidate(variant, seed, smoke, resume, epochs=None):
+    # `epochs` = val-only sensitivity on the early-stopping CAP (the backbone stops
+    # by the patience rule; b3 hit the 30-epoch cap on both exploration splits).
+    sfx = (f"_e{epochs}" if epochs else "") + ("_smoke" if smoke else "")
+    out_dir = DATA / f".b3_{variant}_s{seed}{sfx}"
     paired_backbone = out_dir / "paired_vs_seqv2_val.json"
     paired_anchor = out_dir / "paired_vs_anchor_val.json"
     if resume and not smoke and paired_backbone.exists() and paired_anchor.exists():
@@ -83,14 +86,22 @@ def one_candidate(variant, seed, smoke, resume):
 
     env = seq_env(base_env(smoke), seed, out_dir, smoke)
     env["CES_SEQ_MODEL"] = variant
+    if epochs:
+        env["CES_SEQ_EPOCHS"] = str(epochs)
 
-    record = {"seed": seed, "variant": variant, "out_dir": str(out_dir), "status": "ok"}
+    record = {"seed": seed, "variant": variant, "epochs": epochs,
+              "out_dir": str(out_dir), "status": "ok"}
     start = time.time()
     print(f"[b3x] === {out_dir.name}", flush=True)
     try:
-        if not run_step([SEQ_DIR / "train_seq.py"], env, log, "train",
-                        artifacts=(out_dir / "weights" / "seq_lstm.pth",
-                                   out_dir / "metrics.json")):
+        trained = (resume and not smoke
+                   and (out_dir / "weights" / "seq_lstm.pth").exists()
+                   and (out_dir / "metrics.json").exists())
+        if trained:
+            print("[b3x]   train: weights exist, skipping (--resume)", flush=True)
+        elif not run_step([SEQ_DIR / "train_seq.py"], env, log, "train",
+                          artifacts=(out_dir / "weights" / "seq_lstm.pth",
+                                     out_dir / "metrics.json")):
             record["status"] = "train_failed"
             return record
         if not run_step([SEQ_DIR / "eval_seq.py"], env, log, "eval(val)",
@@ -120,12 +131,12 @@ def one_candidate(variant, seed, smoke, resume):
     return record
 
 
-def summarize(records):
+def summarize(records, tag=""):
     rows = []
     deficits = {}
     for rec in records:
         out_dir = Path(rec["out_dir"])
-        row = {"variant": rec["variant"], "seed": rec["seed"],
+        row = {"variant": rec["variant"], "seed": rec["seed"], "epochs": rec.get("epochs"),
                "status": rec["status"], "minutes": rec.get("minutes")}
         try:
             cm = json.loads((out_dir / "comparison_metrics.json").read_text(encoding="utf-8"))
@@ -157,7 +168,7 @@ def summarize(records):
            "mean_vs_backbone_TI": means,
            "selection_rule": "max mean paired-vs-backbone TI; tie (<0.005) -> smaller K",
            "selected_variant": choice}
-    out_path = DATA / ".b3_explore_summary.json"
+    out_path = DATA / f".b3_explore_summary{tag}.json"
     out_path.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(json.dumps(out, indent=2))
     return out
@@ -169,6 +180,8 @@ def main():
     ap.add_argument("--seeds", nargs="+", type=int, default=list(EXPLORE_SEEDS))
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--epochs", type=int, default=None,
+                    help="val-only sensitivity: raise the early-stopping cap (dir suffix _eN)")
     args = ap.parse_args()
 
     seeds = (42,) if args.smoke else tuple(args.seeds)
@@ -176,12 +189,12 @@ def main():
     records = []
     for variant in variants:
         for seed in seeds:
-            records.append(one_candidate(variant, seed, args.smoke, args.resume))
+            records.append(one_candidate(variant, seed, args.smoke, args.resume, args.epochs))
     bad = [r for r in records if r["status"] != "ok"]
     for r in bad:
         print(f"[b3x] FAILED: {r['out_dir']} ({r['status']})", flush=True)
     if not args.smoke and not bad:
-        summarize(records)
+        summarize(records, tag=f"_e{args.epochs}" if args.epochs else "")
     sys.exit(1 if bad else 0)
 
 

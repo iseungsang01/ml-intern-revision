@@ -119,8 +119,8 @@ def probes_for(z_fit, z_eval, q_fit, q_eval, quantity_names):
     return out
 
 
-def one_run(variant, seed):
-    out_dir = DATA / f".b3c_{variant}_s{seed}"
+def one_run(variant, seed, prefix=".b3c_"):
+    out_dir = DATA / f"{prefix}{variant}_s{seed}"
     metrics = json.loads((out_dir / "metrics.json").read_text(encoding="utf-8"))
     stats = _load_stats(metrics)
     manifest = json.loads((DATA / f".b1_w2cut_split_s{seed}" / "split_manifest.json")
@@ -202,9 +202,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--variant", required=True)
     ap.add_argument("--seeds", nargs="+", type=int, default=list(SEEDS))
+    ap.add_argument("--prefix", default=".b3c_",
+                    help="run-dir prefix (.b3c_ = confirmatory; .b3_ = exploration dry run)")
     args = ap.parse_args()
 
-    reports = [one_run(args.variant, seed) for seed in args.seeds]
+    reports = [one_run(args.variant, seed, args.prefix) for seed in args.seeds]
     ok_routing = all(r["routing_structural_check"]["vt_bit_identical_under_fast_perturbation"]
                      and r["routing_structural_check"]["ti_responds_to_fast_channels"]
                      for r in reports)
@@ -213,7 +215,8 @@ def main():
         "routing_structural_check_all_pass": ok_routing,
         "per_seed": reports,
     }
-    out_path = DATA / f".b3_probe_summary_{args.variant}.json"
+    tag = "" if args.prefix == ".b3c_" else "_dryrun"
+    out_path = DATA / f".b3_probe_summary_{args.variant}{tag}.json"
     out_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"[b3p] summary saved {out_path} (routing all-pass: {ok_routing})", flush=True)
 

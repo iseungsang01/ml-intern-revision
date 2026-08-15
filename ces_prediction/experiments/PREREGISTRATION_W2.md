@@ -129,6 +129,36 @@ B.2 탐색 전 과정에서 모델 선택은 **val에서만** 한다. TEST는 �
   측정: ① latent 차원별 물리량 linear probe R²(T_e 평균·국소 활동·관측 간격·직전 관측값),
   ② 항별 분해 함수, ③ `V_rot` 경로 차단의 구조 검증(빠른 채널 섭동 시 bit-identical). 판정 초안:
   anchor 대비 paired 4/4 유의 우세 & 제안 모델 대비 손실 CI-허용치 이내 & probe R² 보고.
+
+  **B.3 확증 판정 규칙 (2026-08-15 고정 — b3의 TEST 수치는 이 시점까지 어떤 형태로도 채점된 적
+  없음. 탐색 근거는 val 전용, split 42/7: K ∈ {4, 8} 비교에서 b3k8 선정 — 상한 30에서 paired `T_i`
+  vs 백본 −0.035\*/+0.016 ns(K=4는 −0.083\*/−0.022), 상한 60에서 −0.005 ns/+0.026 ns; vs 재학습
+  anchor +0.39\*/+0.39\*; vs gp_causal +0.15/+0.12 PASS.)**
+  - **후보 정의**: `b3k8` = `experiments/seq/model_seq_b3.py`(anchor(carried) + K차원 tanh latent
+    + zero-init 선형 readout, per target; `T_i` latent 8·`V_rot` latent 4, GRU 64/32, 21,498 params,
+    seq_v2 인코더 라우팅). 학습 = seq 계열 규약(AdamW 1e-3·batch 16·patience 6·val 최소 체크포인트)
+    그대로, **epoch 상한만 100** — 백본은 patience 규칙으로 14–19 epoch에 종료됐고 b3는 30 상한에
+    구속됐으므로(val s42: 상한 30 → 60에서 −0.035\* → −0.005 ns, 56 epoch 규칙 종료), 상한을
+    비구속으로 올려 **두 arm의 종료 체제를 동일(patience 규칙)하게** 맞춘다. 실제 종료 epoch 보고.
+  - **설계**: split {42, 1, 7, 123} × init = seed, TEST 채점 1회. control = (a) 확정 프로토콜로
+    재학습한 anchor+Δ 계열 `.b3_anchor_s*`(W = 2·held-free·컷·cap 500·per-shot OFF; §8k의 W = 4
+    계열은 §8v 규칙상 control 불가), (b) B.1 백본 `.b1_seqv2_s{seed}_i{seed}`, (c) 보고용 w2cut
+    윈도우 계열. 모집단 = 컷 체제 단일(내부 모델 선택, §1.1 관례).
+  - **판정 (독립 두 갈래)**:
+    1. **해석가능 단(rung) 성립**: paired `T_i` (b3 − anchor) 유의 우세 **4/4** 및 `V_rot` 유의 열세
+       **0/4** → "21k-param 해석가능 모델이 named-terms anchor를 유의하게 능가"로 확정.
+    2. **백본 허용치**: 4 split 평균 paired `T_i` (b3 − seq_v2) **≥ −0.05**(백본의 윈도우 대비 이득
+       +0.081의 60% 이상 보존; 러너 작성 시점에 고정) → "백본 성능의 대부분을 latent 8차원으로
+       보존"으로 서술. 미충족 시 손실을 그대로 "해석가능성의 가격"으로 보고.
+  - **의무 보고(판정 아님)**: ①②③ 사전등록 측정(`probe_b3.py`; probe는 TEST 파일의 입력만 사용
+    — 타겟 미접촉), vs gp_causal, vs w2cut, `V_rot` vs 백본. `V_rot` 보고에는 아래 관찰을 병기.
+  - **탐색 중 관찰(프로토콜 변경 없음, 보고 의무)**: val s7의 `V_rot`에서 b3 vs 백본 paired skill이
+    −9까지 떨어지는데, 이는 **직전 `V_rot` 관측이 fit-failure 스파이크(수천 km/s)인 소수 행**이
+    MSE를 지배하기 때문이다(그 1행이 b3 VT MSE의 2/3). anchor + 유계 보정(tanh·|w| ⇒ ≈2σ)은
+    스파이크 anchor를 복구할 수 없고 persistence·anchor+Δ·b3가 동일하게 실패하며, 비유계 head의
+    seq_v2만 부분 복구한다. `T_i`는 사전등록 3 keV 컷이 이런 anchor를 제거하므로 무관하다.
+    → **`V_rot` fit-failure 스파이크 감사(B.7 후속)와 컷/민감도 규칙은 승상님 결정 사항**으로
+    남기며, B.3 안에서 모집단을 바꾸지 않는다.
 - **B.4 (스케일링 상한).** 통제 변수는 폭/깊이 하나. 평평한 곡선은 실패가 아니라 "이 입력
   집합의 성능 상한"이라는 결론이다.
 - **B.5 (전면 재채점).** 헤드라인·MNAR 재가중·시간 분할·conformal·해석가능 사다리를 전부 W = 2

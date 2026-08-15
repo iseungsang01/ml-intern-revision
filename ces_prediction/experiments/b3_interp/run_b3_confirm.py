@@ -36,6 +36,14 @@ from run_b3_anchor import one_test_score  # noqa: E402
 
 SEEDS = (42, 1, 7, 123)
 BACKBONE_TOLERANCE = -0.05   # pre-registered: mean paired TI (b3 - seq_v2) must be >= this
+# Early-stopping CAP for the b3 arm. The backbone was terminated by the patience
+# rule (14-19 epochs); b3 hit the 30-epoch cap on both exploration splits (val
+# split 42: -0.035* vs backbone at cap 30 -> -0.005 ns at cap 60, rule-terminated
+# at 56; split 7 still cap-bound at 60 with the curve flattening). 100 is
+# non-binding for the backbone, so the stopping REGIME is identical for both
+# arms: patience 6 on val masked MSE. Fixed in PREREGISTRATION_W2.md sec. 6; the
+# actual termination epoch is reported per run.
+B3_EPOCH_CAP = "100"
 
 
 def one_run(variant, seed, resume):
@@ -69,6 +77,7 @@ def one_run(variant, seed, resume):
         "CES_CONTROL_METRICS": str(control_metrics),
         "CES_SEQ_MODEL": variant,
         "CES_PER_SHOT_NORM": "1",
+        "CES_SEQ_EPOCHS": B3_EPOCH_CAP,
     })
 
     record = {"seed": seed, "out_dir": str(out_dir), "status": "ok"}
