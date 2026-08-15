@@ -44,6 +44,12 @@ SEQ_MODELS = {
     "b3k4": functools.partial(SeqCESB3, latent_ti=4),
     "b3k6": functools.partial(SeqCESB3, latent_ti=6),
     "b3k8": functools.partial(SeqCESB3, latent_ti=8),
+    # B.4 width ladder: seq_v2 with ONLY the T_i encoder width varied (V_rot
+    # branch and heads fixed). "v2" itself is the 160-unit point.
+    "v2w24": functools.partial(SeqCESLSTMv2, hidden_ti=24),
+    "v2w40": functools.partial(SeqCESLSTMv2, hidden_ti=40),
+    "v2w80": functools.partial(SeqCESLSTMv2, hidden_ti=80),
+    "v2w260": functools.partial(SeqCESLSTMv2, hidden_ti=260),
 }
 
 
