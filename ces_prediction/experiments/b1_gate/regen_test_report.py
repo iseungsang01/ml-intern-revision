@@ -36,7 +36,7 @@ TARGETS = ("CES_TI", "CES_VT")
 TOL = 0.01
 
 
-def regen(dir_name, device):
+def regen(dir_name, device, merge_keys=False):
     src = DATA / dir_name
     seed = int(json.loads((src / "metrics.json").read_text(encoding="utf-8"))["seed"])
     tmp = DATA / f".regen_{dir_name.lstrip('.')}"
@@ -82,6 +82,19 @@ def regen(dir_name, device):
         if drift > TOL:
             raise SystemExit(f"FATAL: {dir_name} {t} se_model RMSE drift {drift:.4f} > {TOL}")
         print(f"[regen] {dir_name} {t}: population bit-identical, se_model RMSE drift {drift:.4f}")
+    if merge_keys:
+        # sec. 5.8-C5 additive re-score: every reference key verbatim (se_model included)
+        # + the keys the older harness did not write. Original kept alongside.
+        added = sorted(set(new) - set(ref))
+        backup = src / "comparison_errors_test__pre_merge.npz"
+        if not backup.exists():
+            shutil.copy2(src / "comparison_errors_test.npz", backup)
+        merged = dict(ref)
+        for k in added:
+            merged[k] = new[k]
+        np.savez(src / "comparison_errors_test.npz", **merged)
+        print(f"[regen] {dir_name}: merged +{len(added)} keys {added} (reference keys verbatim; "
+              f"original at {backup.name})", flush=True)
     report = json.loads((tmp / "comparison_metrics.json").read_text(encoding="utf-8"))
     report["regenerated"] = ("2026-08-15: TEST report regenerated from the frozen weights in a "
                              "scratch dir after a val re-score overwrote it; frozen npz untouched, "
@@ -95,9 +108,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dirs", nargs="+", required=True)
     ap.add_argument("--device", default="cpu")
+    ap.add_argument("--merge-keys", action="store_true",
+                    help="also merge keys the older harness lacked into the frozen npz (backup kept)")
     args = ap.parse_args()
     for d in args.dirs:
-        regen(d, args.device)
+        regen(d, args.device, args.merge_keys)
 
 
 if __name__ == "__main__":
