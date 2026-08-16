@@ -375,8 +375,8 @@ only the B.1–B.5 batch verdicts (`.b5_summary.json`, `.b1_gate_summary.json`, 
 `.latency_benchmark.json`) plus the per-run TEST reports for the RMSE ladders, carries BOTH
 populations (`cut` / `incl`) in every block, and cross-checks B.5 ladder vs headline, B.3 vs B.5, B.4
 width-160 vs headline (1e-4, CUDA drift) and report-vs-npz row counts before writing. The paper
-(`main.tex`, 2026-08-16) and `make_figures_en.py` were rewritten against it; the presentation decks and
-`docs/presentation/make_figures.py` are still on the old schema and are marked stale until rebuilt.
+(`main.tex`, 2026-08-16) and `make_figures_en.py` were rewritten against it, and the four presentation decks,
+the 1-pager and `docs/presentation/make_figures.py` were rebuilt on it the same day (deck README records what changed).
 
 A MiKTeX toolchain is now installed (`pdflatex`/`xelatex`/`bibtex` under
 `%LOCALAPPDATA%/Programs/MiKTeX/miktex/bin/x64`); build `main.tex` with pdflatex+bibtex, `main_ko.tex`
