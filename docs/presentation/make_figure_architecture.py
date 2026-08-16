@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Generate the final-model architecture diagram for the KSTAR CES nowcasting talk.
 
-Draws the *thesis-final* model (ces_prediction/model_iter009.py):
+Draws the windowed CONTROL model (ces_prediction/model_iter009.py, W = 2 under the confirmed
+protocol; the adopted backbone seq_v2 is drawn by make_figure_architecture_seq.py):
 per-diagnostic time-aware CNN encoders, a bidirectional-GRU history encoder with
 observation-masked multi-head attention pooling, and physics-informed per-target
 routing (the V_rot head never sees the fast diagnostics).
@@ -55,7 +56,7 @@ def count_params():
     spec = importlib.util.spec_from_file_location("m_iter009", MODEL_PY)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    m = mod.MultimodalCESPredictor(window_size=4, bes_channels=9, ecei_channels=4,
+    m = mod.MultimodalCESPredictor(window_size=2, bes_channels=9, ecei_channels=4,
                                    mc_channels=2, time_channels=4,
                                    ces_history_channels=4)
     return sum(p.numel() for p in m.parameters())
@@ -132,11 +133,11 @@ def build():
 
     # ---- inputs (chips) ---------------------------------------------------
     CX, CW, CH = 0.40, 1.90, 0.62
-    chip(ax, CX, 5.90, CW, CH, BLUE, "BES  4×9", r"밀도요동 $\tilde{n}_e$")
-    chip(ax, CX, 5.13, CW, CH, TEAL, "ECEI  4×4", r"전자온도 $T_e$")
-    chip(ax, CX, 4.36, CW, CH, GRAY, "MC  4×2", "자기요동")
-    chip(ax, CX, 3.24, CW, CH, ORANGE, "ces_history  4×4", "과거 CES + 관측 flag")
-    chip(ax, CX, 2.10, CW, CH, NAVY, "time  4×4", "lookback · Δt · log1p")
+    chip(ax, CX, 5.90, CW, CH, BLUE, "BES  2×9", r"밀도요동 $\tilde{n}_e$")
+    chip(ax, CX, 5.13, CW, CH, TEAL, "ECEI  2×4", r"전자온도 $T_e$")
+    chip(ax, CX, 4.36, CW, CH, GRAY, "MC  2×2", "자기요동")
+    chip(ax, CX, 3.24, CW, CH, ORANGE, "ces_history  2×4", "과거 CES + 관측 flag")
+    chip(ax, CX, 2.10, CW, CH, NAVY, "time  2×4", "lookback · Δt · log1p")
     ax.text(CX + CW / 2, 3.02, "타겟 시점은 완전 마스킹", ha="center",
             fontsize=8.0, color=MGRAY, style="italic", zorder=4)
 
@@ -192,8 +193,8 @@ def build():
     ax.text(0.40, 0.55, f"총 파라미터  {total:,}개  (~0.2 M)", fontsize=11,
             color=NAVY, fontweight="bold")
     ax.text(0.40, 0.22,
-            "window = 4  ·  attention pool은 관측된 행에만 softmax 허용  ·  "
-            "구조는 ~40회 통제실험(keep/discard) 탐색의 결과",
+            "윈도 대조군 (W = 2, held-free)  ·  attention pool은 관측된 행에만 softmax 허용  ·  "
+            "구조는 ~40회 통제실험(keep/discard) 탐색의 결과 · 주 모델은 seq_v2 (fig_architecture_seq)",
             fontsize=9.0, color=MGRAY)
 
     path = os.path.join(OUT, "fig_architecture.png")
