@@ -54,6 +54,26 @@
       "decimal_places_max": 5,
       "min_nonzero_spacing": 3.9999999984274837e-05
     },
+    "dataset_spec": {
+      "shot_min": 30801,
+      "shot_max": 32751,
+      "per_file_rows_median": 339.0,
+      "per_file_rows_min": 3,
+      "per_file_rows_max": 1483,
+      "segments_total": 1972,
+      "segments_per_file_median": 3.0,
+      "isolated_1row_segments": 1279,
+      "main_segments_ge10rows": 649,
+      "main_segments_per_file_median": 1.0,
+      "main_segments_per_file_max": 2,
+      "main_segment_rows_median": 301.0,
+      "main_segment_rows_p10": 107.8,
+      "main_segment_rows_p90": 695.0,
+      "main_segment_duration_s_median": 3.0300000000000002,
+      "main_segment_duration_s_p10": 1.2839999999999998,
+      "main_segment_duration_s_p90": 6.98,
+      "gap_s_median": 6.312
+    },
     "time_deltas": {
       "<=0.011s_grid": 243733,
       "(0.011,0.1]": 1420,

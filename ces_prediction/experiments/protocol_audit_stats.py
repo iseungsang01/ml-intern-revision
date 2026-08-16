@@ -8,7 +8,10 @@ pre-registered constraints of the W = 2 re-experiment:
   - inter-row time-delta histogram (segment-separation threshold sensitivity);
   - ``CES_VT`` value precision: decimal places and minimum nonzero spacing
     between distinct observed values (held-rule false-positive bound);
-  - NaN / held ledger cross-check against ``analyze_data_evidence.py``.
+  - NaN / held ledger cross-check against ``analyze_data_evidence.py``;
+  - dataset spec for the paper: shot range, per-file rows, segment structure
+    (contiguous runs split at gaps >= 0.5 s: main-segment length, isolated rows,
+    gap sizes) -- the numbers the data section quotes.
 
 Run from the repo root:  py ces_prediction/experiments/protocol_audit_stats.py
 Writes ``data/.protocol_audit_stats.json`` and prints the same JSON.
@@ -34,6 +37,7 @@ def main() -> None:
     vt_strings = []
     ledger = {"CES_TI": {"nan": 0, "held": 0}, "CES_VT": {"nan": 0, "held": 0}}
     n_rows = 0
+    shots, per_file_rows, seg_lens, seg_dur, gaps, segs_per_file, main_segs_per_file = [], [], [], [], [], [], []
     for path in files:
         with open(path, newline="") as fh:
             time, cols = [], {"CES_TI": [], "CES_VT": []}
@@ -48,7 +52,18 @@ def main() -> None:
                         if col == "CES_VT":
                             vt_strings.append(raw)
         n_rows += len(time)
-        delta_parts.append(np.diff(np.asarray(time)))
+        t_arr = np.asarray(time)
+        delta_parts.append(np.diff(t_arr))
+        shots.append(int(os.path.basename(path)[1:-4]))
+        per_file_rows.append(int(t_arr.size))
+        cut = np.flatnonzero(np.diff(t_arr) >= 0.5)
+        idx = np.concatenate(([0], cut + 1, [t_arr.size]))
+        lens = [int(b - a) for a, b in zip(idx[:-1], idx[1:])]
+        seg_lens.extend(lens)
+        seg_dur.extend(float(t_arr[b - 1] - t_arr[a]) for a, b in zip(idx[:-1], idx[1:]))
+        gaps.extend(np.diff(t_arr)[cut].tolist())
+        segs_per_file.append(len(lens))
+        main_segs_per_file.append(sum(1 for L in lens if L >= 10))
         for col, vals in cols.items():
             arr = np.asarray(vals)
             ledger[col]["nan"] += int(np.isnan(arr).sum())
@@ -93,6 +108,22 @@ def main() -> None:
             "min_nonzero_spacing": float(spacing[spacing > 0].min()),
         },
         "ledger_crosscheck": ledger,
+        "dataset_spec": (lambda sl=np.asarray(seg_lens), sd=np.asarray(seg_dur), gp=np.asarray(gaps),
+                         pf=np.asarray(per_file_rows), sp=np.asarray(segs_per_file), ms=np.asarray(main_segs_per_file): {
+            "shot_min": int(min(shots)), "shot_max": int(max(shots)),
+            "per_file_rows_median": float(np.median(pf)), "per_file_rows_min": int(pf.min()), "per_file_rows_max": int(pf.max()),
+            "segments_total": int(sl.size), "segments_per_file_median": float(np.median(sp)),
+            "isolated_1row_segments": int((sl == 1).sum()),
+            "main_segments_ge10rows": int((sl >= 10).sum()),
+            "main_segments_per_file_median": float(np.median(ms)), "main_segments_per_file_max": int(ms.max()),
+            "main_segment_rows_median": float(np.median(sl[sl >= 10])),
+            "main_segment_rows_p10": float(np.percentile(sl[sl >= 10], 10)),
+            "main_segment_rows_p90": float(np.percentile(sl[sl >= 10], 90)),
+            "main_segment_duration_s_median": float(np.median(sd[sl >= 10])),
+            "main_segment_duration_s_p10": float(np.percentile(sd[sl >= 10], 10)),
+            "main_segment_duration_s_p90": float(np.percentile(sd[sl >= 10], 90)),
+            "gap_s_median": float(np.median(gp)) if gp.size else None,
+        })(),
     }
     with open(OUT, "w") as fh:
         json.dump(result, fh, indent=2)

@@ -98,6 +98,7 @@ def data_ledger(audit, spikes):
                           "n_gt_2500": ti["n_gt_2500"], "n_gt_3000": ti["n_gt_3000"], "n_gt_4000": ti["n_gt_4000"],
                           "pct_gt_3000": ti["pct_gt_3000"]}
     out["ces_vt_precision"] = audit["ces_vt_precision"]
+    out["dataset_spec"] = audit["dataset_spec"]
     out["time_deltas"] = audit["time_deltas"]
     out["spike_structure"] = {"CES_TI": spikes["CES_TI"], "CES_VT": spikes["CES_VT"], "definitions": spikes["definitions"]}
     return out

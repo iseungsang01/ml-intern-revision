@@ -1,0 +1,329 @@
+% =========================================================================
+% 논문 개요 초안 v2 — 확정 프로토콜(W=2 · held-free · 두 모집단 · 백본 seq_v2)
+% 빌드: xelatex outline_ko_v2.tex (맑은고딕). Notion "논문 개요 초안 v2"와 동일 내용.
+% 모든 수치는 docs/paper/paper_numbers.json (= main.tex / main_ko.tex)에서 왔다.
+% =========================================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xeCJK}
+\xeCJKsetup{CJKspace=true}
+\setCJKmainfont{Malgun Gothic}
+\setCJKsansfont{Malgun Gothic}
+\setCJKmonofont{Malgun Gothic}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+\renewcommand{\figurename}{그림}
+\renewcommand{\tablename}{표}
+\renewcommand{\today}{{\number\year}년 {\number\month}월 {\number\day}일}
+\newcommand{\Ti}{\ensuremath{T_i}}
+\newcommand{\Vrot}{\ensuremath{V_\mathrm{rot}}}
+\newcommand{\seqv}{\texttt{seq\_v2}}
+\newcommand{\bthree}{\texttt{b3k8}}
+\newcommand{\pass}[1]{\textbf{#1}}
+\definecolor{noteg}{RGB}{232,245,233}
+\newsavebox{\bannerbox}
+\newenvironment{banner}{\par\noindent\begin{lrbox}{\bannerbox}\begin{minipage}{0.96\linewidth}\small}{\end{minipage}\end{lrbox}\colorbox{noteg}{\usebox{\bannerbox}}\par\vspace{6pt}}
+\setlength{\parskip}{3pt}
+\sloppy
+\usepackage{url}\urlstyle{tt}
+
+\title{\textbf{논문 개요 초안 v2}\\[2pt]\large 확정 프로토콜(W=2 · held-free · 두 모집단 공동 1차 · 백본 \seqv)}
+\author{이승상 (Seungsang Lee) · 서울대학교 원자핵공학과}
+\date{2026년 8월 16일}
+
+\begin{document}
+\maketitle
+
+\begin{banner}
+\textbf{이 문서는 재실험(B.1–B.5) 완료 후 새로 쓴 논문 개요 초안이다.} 이전 W=4 초고의 수치는 전부 대체되었다.
+모든 수치는 저장소의 \texttt{docs/paper/paper\_numbers.json}(B.1–B.5 얼린 산출물에서 자동 수집)에서 왔고,
+영문 \texttt{main.tex}·국문 \texttt{main\_ko.tex}와 토큰 단위로 일치한다. 근거 장부는 \texttt{THESIS\_RESULTS.md} \S8v–\S8ab,
+프로토콜은 \texttt{experiments/PREREGISTRATION\_W2.md}.
+\end{banner}
+
+\section*{0. 한 눈에 보기}
+\begin{small}
+\begin{tabular}{p{2.3cm}p{4.9cm}p{8.0cm}}
+\toprule
+항목 & 이전 초고 (W=4, 폐기) & \textbf{개정 (확정 프로토콜)} \\
+\midrule
+주 모델 & 윈도 GRU+관측마스킹 attention, 0.2M, W=4 & \textbf{전체격자 인과 시퀀스 나우캐스터 \seqv} (2-분기 LSTM, 358k, \Vrot{} 분기는 빠른 진단 차단). 윈도 모델(W=2)은 paired 대조군 \\
+프로토콜 & held 포함/제외 이중 보고, 스파이크 유지 & \textbf{W=2 · held-free(학습·평가) · 파일당 500 · 두 모집단 공동 1차}(컷: \Ti{}>3 keV 결측 처리 / 포함: 컷 없음) — 무조건부 주장은 둘 다 성립해야 함. 인과 GP 기준선 추가 \\
+헤드라인 \Ti{} vs PCHIP & +0.18~+0.28, 4/4 & \textbf{컷 +0.17~+0.26 4/4, 포함 +0.23~+0.32 4/4}; vs 인과 GP 4/4+4/4; 오프라인 GP와는 동률 \\
+\Vrot{} & 동률(1/4) & 동률(1/4 · 2/4); vs persistence 3/4 양쪽; skill은 peak 구간에만 존재 \\
+스트레스 테스트 & MNAR 1/4, 캠페인 0/4 → 오프라인 우위 소멸 & \textbf{MNAR: vs persistence 4/4+4/4, vs PCHIP 2/4(컷)/4/4(포함). 캠페인: 백본 vs PCHIP·인과 GP 4/4+4/4}(윈도 대조군은 2/4·0/4로 붕괴 재현) \\
+해석가능성 & anchor+$\Delta$ 1,258 파라미터가 마진의 31.5\% 회수 & \textbf{\bthree{}(21k, persistence + 8 latent 선형 보정)이 컷 모집단에서 백본과 동급(+0.002)}; 포함 모집단에선 $-0.19$(스파이크 앵커). 폭 34k→879k 평평 → 크기 축 폐쇄 \\
+배치 & 윈도 모델 CPU p99 6.4 ms & \textbf{\seqv{} 상태 유지 1-step CPU 중앙값 1.05 ms / p99 1.61 ms}; conformal 32/32 셀 우위 \\
+\bottomrule
+\end{tabular}
+\end{small}
+
+\section*{제목·초록}
+\textbf{제목.} KSTAR 희소 전하교환분광(CES) 신호의 멀티모달 나우캐스팅: 고속 진단은 미래를 보는 보간을 넘어 이온온도를 복원하지만 토로이달 회전은 복원하지 못한다
+
+\textbf{초록(요지).} CES는 \Ti·\Vrot{}의 표준 측정이지만 10 ms 격자에서 \Ti{} 8.2\%, \Vrot{} 23.9\%가 결측이고 \Vrot{} 41.1\%는 계측 유지값이라 격자의 65.0\%에 독립 \Vrot{} 정보가 없다. 빠른 진단(BES·ECEI·Mirnov)+과거 CES 이력만으로, CES 자체의 시간 보간이 복원할 수 없는 정보를 회복할 수 있는가를 묻는다. 빠른 진단이 격자에서 조밀하므로 문제를 \textbf{인과 전체격자 시퀀스 추정}으로 세운다: 358k 파라미터 2-분기 순환 나우캐스터가 격자의 모든 행을 맥락으로 소비하고 희소 타겟은 loss 마스킹으로 처리하며 \Vrot{} 분기는 구조적으로 빠른 진단을 차단한다. 평가는 의도적으로 불리하다(오프라인 보간·GP는 미래를 보고, 모델은 인과; 인과 GP가 최강 배치 기준선). 사전등록 프로토콜(W=2, held-free, 파일 분할, test 동결, shot 군집 paired bootstrap $10^4$, \textbf{두 공동 1차 모집단}) 아래 \Ti{}는 PCHIP를 4/4+4/4 이기고 인과 GP를 8/8 이기며, \Vrot{}는 동률. MNAR 재가중과 캠페인 시간 분할 두 스트레스에서 백본의 우위가 살아남는다(윈도 대조군은 캠페인에서 붕괴). 우위는 고변동 구간에 집중(peak \Ti{} +0.45~+0.72, 8/8), conformal 구간은 전 셀 우위, 21k latent 병목 모델이 컷 하에서 백본과 동급이고 폭 스윕은 평평하다 — 상한은 추정기가 아니라 정보. 절제는 비대칭이 물리임을 보인다.
+
+\section*{1. 서론}
+\textbf{1.1 문제.} 이전과 동일한 문제 진술: CES의 물리적 중요성, 광자 적분에 의한 느림·결측, KSTAR 데이터의 결측 8.2\%/23.9\%, 유지값 41.1\%, 독립 \Vrot{} 35.0\%, MNAR.
+
+\textbf{1.2 접근과 잣대.} 질문: CES가 비어 있는 10 ms 시점에서, 같은 시각의 빠른 진단 + 과거 CES 이력만으로, CES 자체의 시간 보간이 복원 못 하는 \Ti·\Vrot{} 정보를 회복할 수 있는가. 의도적으로 어려운 bar: 보간(선형·PCHIP·국소 AR·GP)은 미래 이웃까지 사용, 모델은 엄격히 인과. 여기에 \textbf{인과(past-only) GP}를 추가해 ``배치 가능한 모든 인과 방법 대비''를 persistence가 아니라 인과 GP 기준으로 판정한다.
+
+\textbf{1.3 기여 (8항).}
+\begin{enumerate}
+\item \textbf{희소 타겟 나우캐스팅의 인과 전체격자 프레이밍} — 라벨 없는 행도 맥락으로 유지, 희소성은 loss로. 윈도 대조군 대비 pooled \Ti{} +0.081 (16 run, CI +0.067~+0.096, 16/16 양수), 학습비 1/10, 그리고 이 도달거리(reach)가 인과 GP를 이기게 한다.
+\item \textbf{사전등록·두 모집단·shot 군집 프로토콜} — 24-run 스윕의 plateau-최소 규칙으로 W=2, held 제거, \Ti{} 피팅 실패(>3 keV, 0.53\%)로 두 공동 1차 모집단 정의, 무조건부 주장은 둘 다 성립 요구, 모든 모델 결정 규칙은 TEST 채점 전에 문서화.
+\item \textbf{\Ti{} 강건 양성} — PCHIP 대비 컷 +0.17~+0.26 / 포함 +0.23~+0.32, 4/4+4/4; 인과 GP 8/8; 오프라인 GP와 동률.
+\item \textbf{\Vrot{} 물리 근거 음성} — 보간과 동률(1/4·2/4), persistence는 대부분 이김; 빠른 진단 0으로 만들어도 출력 bit-identical, 이력 제거 시 붕괴 → 정보 비대칭.
+\item \textbf{두 주장을 가르는 두 스트레스 테스트} — MNAR 재가중: 인과 대비 8/8, PCHIP 대비 2/4·4/4. 캠페인 시간 분할: 윈도 대조군의 오프라인 우위 소멸(2/4·0/4; BES 1.22$\sigma$ 드리프트 vs 타겟 0.115$\sigma$)이지만 \textbf{시퀀스 나우캐스터는 PCHIP·인과 GP 모두 4/4+4/4}.
+\item \textbf{우위의 위치} — peak 층 \Ti{} +0.45~+0.72 8/8 PASS, \Vrot{} +0.54~+0.79(본류 $\approx$0); $\Delta t>15$ ms 통합 PASS 양쪽.
+\item \textbf{복잡도 사다리와 크기 축} — 21,498 파라미터 ``persistence + 8 latent 선형 보정'' 모델이 컷 하에서 백본과 동급(paired +0.002), 컷 없이는 $-0.19$(유계 보정은 스파이크 앵커를 못 살림); 34k→879k 폭 스윕은 $\pm$0.01 이내.
+\item \textbf{배치 측정} — conformal 구간 32/32 셀 우위, 상태 유지 1-step 추론 CPU 1 ms대.
+\end{enumerate}
+
+\section*{2. 데이터와 문제 설정}
+\textbf{2.1 데이터셋 (현재 641파일로 실측·갱신).} 641 방전(shot 30801–32751; 제공 측 선정 기준: 하드웨어 일관성·H-mode RMP 구간), 10 ms 격자, 총 247,207행(파일당 중앙값 339행). 행당 BES 9 · ECEI 4 · Mirnov 2 · time · \Ti{} · \Vrot. 세그먼트는 0.5 s 간극에서 분리(쌍봉 분포의 골짜기: (0.1, 0.5) s 구간에 82개뿐; 세그먼트 안 스텝의 99.4\%가 10 ms). \textbf{전형적 파일 = 주 세그먼트 1개}(중앙값 301행 $\approx$ 3.0 s, 10–90분위 1.3–7.0 s; 2개인 파일 28, 10행 넘는 것 없는 파일 20) + 고립 단일행 몇 개(전체 1,279, 대개 $t=0$ 첫 행; 간극 중앙값 6.3 s). 옛 초고의 ``캠페인 \#24000–\#33000 · $\sim$100 ms 절편''은 현재 데이터와 맞지 않아 폐기.
+
+\textbf{2.2 결측 구조.}
+\begin{center}\small
+\begin{tabular}{lcc}\toprule
+ & \texttt{CES\_TI} & \texttt{CES\_VT} \\ \midrule
+NaN 결측 & 8.2\% & 23.9\% \\
+held / forward-fill 행 & 0.0\% & 41.1\% \\
+독립 관측 비율 & 91.8\% & \textbf{35.0\%} \\
+관측값 중 held 비율 & 0.0\% & \textbf{54.0\%} \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2.3 학습 예제의 두 프레이밍.} \emph{윈도(대조군)}: 타겟 $t$ 앞 W=2행의 \texttt{bes}(W,9)·\texttt{ecei}(W,4)·\texttt{mc}(W,2)·\texttt{time}(W,4)·\texttt{ces\_history}(W,4) + 타겟별 마스크; 시간 특징 4채널(lookback·간격·각 log1p). \emph{전체격자 시퀀스(주 모델)}: 세그먼트의 입력-완전 행 전부(라벨 유무 무관)를 맥락으로. 스텝당 22채널 = z-score 빠른 채널 15 + $\log(1+\Delta t_\text{prev})$ + 타겟별(이월 관측값, log1p 신선도, 과거관측 flag). 어느 프레이밍도 타겟 행 자체 값을 읽지 않는다.
+
+\textbf{2.4 설계 원칙.} 라벨 생성 없음 · 타겟별 masked loss · 누출 삼중 차단(파일 분할, train 전용 정규화 — 시퀀스 모델은 추가로 shot별 빠른 진단 표준화 —, 타겟 시점 마스킹).
+
+\textbf{2.5 데이터 품질 감사 1: 유지값.} 관측 \Vrot{}의 54\%가 계측 유지값(run 최대 1,214행, 499/641 파일). \Vrot{}는 소수점 5자리·최소 간격 $4\times10^{-5}$라 ``연속 동일값'' 규칙의 오탐 채널 없음; \Ti{}는 226,991행 중 1행. 확정 프로토콜에서 held는 \textbf{어디서나 제거}(지도 타겟·이력/이월 입력·정규화 통계·모든 기준선의 보간 앵커).
+
+\textbf{2.6 데이터 품질 감사 2: \Ti{} 피팅 실패와 두 모집단.} 관측 \Ti{} p99 = 2,089 eV, p99.9 = 9,601, 최대 14,984 → 꼬리는 피팅 실패. \textbf{>3 keV 1,197행(0.53\%)} = 951 run/274 방전, 85\% 단일행, $\geq$5행은 2\%, run 피크는 이웃 평균의 13$\times$(IQR 6–26$\times$). 두 대응 모두 비판 가능(제거 = ``어려운 행 제거''; 유지 = 오프라인 기준선의 앵커 오염) → \textbf{두 공동 1차 모집단}: 컷(로드 시 결측 처리, 전 arm 동일) / 포함. \textbf{주장은 둘 다 성립할 때만 무조건부}. 문턱 2.5–4 keV 불민감(\S11). 값 컷은 일방향 프록시: 하향 dip 4,965행은 건드리지 않고 상향 $\geq2\times$ 이상치의 19\%만 제거. \Vrot{} 스파이크(>1,000 km/s 119행/16 방전, 101행은 한 방전 한 블록)는 컷 없이 두되 anchored 비교마다 SSE 비중 병기.
+
+\section*{3. 모델}
+\textbf{3.1 전체격자 인과 시퀀스 백본 \seqv{} (357,570 파라미터).} 22채널 격자 시퀀스 위 \textbf{독립 인과 LSTM 2개}: \Ti{} 분기(2층 160)는 전체 상태(빠른 진단·두 타겟 이월값·신선도·$\Delta t$); \Vrot{} 분기(1층 64)는 \textbf{비-빠른 7채널만}($\Delta t$ + 타겟별 이월값·신선도·flag). LayerNorm + GELU head, 행별 정규화 출력, 세그먼트 전체 라벨 행에 대한 타겟별 masked MSE. 함의 ①: 과거 도달거리 = 세그먼트 전체(고정 윈도 아님) → 윈도 계열과의 차이(\S5.3). ②: 라우팅이 \textbf{인코더}에서 성립 — 공유 순환 상태면 head를 어떻게 배선해도 빠른 진단 정보가 \Vrot{}로 샌다; 여기선 빠른 채널 15개를 섭동해도 \Vrot{} 출력 bit-identical. 학습: AdamW $10^{-3}$, batch 16 세그먼트, val masked MSE 조기 종료(patience 6, 상한 30; 확증 run 14–25 epoch 종료).
+
+\textbf{3.2 윈도 대조군: 관측 마스킹 attention pooling.} BES/ECEI/MC별 시간 인지 1-D CNN(W=2) + 양방향 GRU(64) 이력 인코더 + 타겟별 multi-head additive attention 2개, 해당 타겟이 실제 관측된 행에만 attention 질량 허용(보간의 귀납 편향을 attention에 이식, 추가 파라미터 0). \Ti{} head는 빠른 진단+시간+이력, \Vrot{} head는 이력+시간. 데이터 계약·held 처리·분할·채점 모집단이 백본과 동일해 행 단위 paired 비교.
+
+\textbf{3.3 해석가능 단 \bthree{} (21,498 파라미터).} \seqv{}의 프레이밍·라우팅 유지, head를 \textbf{정확 분해} $\hat y = \text{이월값} + \sum_k w_k z_k + b$로 교체($z\in[-1,1]^K$는 소형 인과 GRU 64/32의 tanh latent, $K=8$ \Ti{} / 4 \Vrot{}, readout 0 초기화 → 학습은 정확히 persistence에서 출발).
+
+\textbf{3.4 탐색이 가르친 것.} 윈도 계열의 두 라운드 통제 반복에서 살아남은 메커니즘은 attention pooling뿐, 용량 확대·skip·추가 추출기는 무효. 확정 프로토콜에서 같은 교훈이 두 번 더 반복(\seqv{} 위 관측마스킹 인과 attention: 작고 일관되나 비유의; 폭 5점 스윕: 평평). 그래서 모델 절은 짧고 평가 절은 길다.
+
+\section*{4. 평가 방법론}
+\begin{itemize}
+\item \textbf{지표}: 물리 단위 역정규화 후 타겟별 Murphy skill vs PCHIP(PR1). 전 arm 동일 (file, row) 집합·동일 마스크, 모집단 키 bit-identical 검증. 보간은 타겟 자기 값 제외, 세그먼트 경계 불통과, 경계 밖 이웃 필요 시 persistence 폴백(PR2).
+\item \textbf{기준선 사다리}: persistence · 국소 AR(인과) · 선형 · PCHIP · GP(Matérn-3/2+백색잡음, 이웃 16+16, 표본별 주변우도 격자, 오프라인) · \textbf{인과 GP}(과거 16 이웃만, NaN 조건 동일 → 모집단 불변). 인과 GP가 최강 배치 기준선(seed 42 \Ti{} RMSE 164.3 vs persistence 197.2, 컷).
+\item \textbf{3-way 분할·test 동결}: 기준 seed 42 test = 관측 \Ti{} 32,589행/96 방전, genuine \Vrot{} 10,463행/60 방전(컷; 포함 32,721/10,461); 4 분할 \Ti{} 32.6–35.9k행/96 방전, \Vrot{} 10.5–14.5k행/60–66 방전. 모든 수치는 단일 collector가 얼린 run 디렉터리에서 읽음.
+\item \textbf{사전등록}: PR1 PCHIP; PR2 폴백률 보고 의무 — \Ti{} 0.3–0.4\%, \textbf{\Vrot{} 40–44\%}(→ \Vrot{}의 ``vs PCHIP''은 2/5가 ``vs persistence''); PR3 test 하한($\geq$15 방전·$\geq$3,000 \Ti) 충족; PR4 shot 군집 bootstrap 95\% CI 0 배제. 여기에 held-free, W=2, 파일당 500, 두 모집단, \textbf{TEST 채점 전 결정 규칙 커밋}(백본 관문·attention 후보·해석가능 단·폭 스윕), 문턱 민감도.
+\item \textbf{Shot 군집 paired bootstrap} $10^4$; 유효 표본 = 방전 수(\Ti{} $\approx$96, \Vrot{} 60–66)가 검정력 상한. 모델 간 비교(백본 vs 대조군, 단 vs 백본)도 같은 행에서 paired.
+\item \textbf{MNAR}: 관측점 skill은 낙관 추정 → \S6.1에서 재가중.
+\end{itemize}
+
+\section*{5. 결과 I — 관측점}
+\textbf{5.1 나우캐스터는 모든 인과 기준선을 압도한다 (RMSE 사다리, seed 42, 컷).}
+\begin{center}\small
+\begin{tabular}{llrr}\toprule
+Arm & 정보 접근 & \Ti{} RMSE (eV) & \Vrot{} RMSE (km/s) \\ \midrule
+\textbf{\seqv{} (나우캐스터)} & 빠른 진단 + 과거 CES, 세그먼트 전체 & \textbf{157.8} & \textbf{23.6} \\
+윈도 대조군 (W=2) & 빠른 진단 + 과거 CES 2행 & 169.2 & 26.1 \\
+인과 GP & 과거 CES 이웃 16 & 164.3 & 28.8 \\
+Persistence & 마지막 관측 CES & 197.2 & 33.4 \\
+AR (국소, 인과) & 과거 CES만 & 472.2 & 51.0 \\ \midrule
+GP (오프라인) & 과거 + 미래 CES & 153.8 & 24.7 \\
+선형 보간 & 과거 + 미래 CES & 169.8 & 29.0 \\
+PCHIP & 과거 + 미래 CES & 173.6 & 30.2 \\ \bottomrule
+\end{tabular}
+\end{center}
+포함 모집단: \seqv{} 363.0/23.7, PCHIP 412.4/30.2, 인과 GP 394.6/28.8, persistence 478.0/33.4 — 스파이크가 \Ti{} RMSE를 두 배 이상 키우지만 순서는 불변. 백본은 인과 GP보다 RMSE 4\%(\Ti)/18\%(\Vrot) 낮고, 오프라인 GP와는 동률(153.8 vs 157.8).
+
+\textbf{5.2 헤드라인: \Ti{}는 두 모집단 모두에서 4/4.}
+\begin{center}\small
+\begin{tabular}{llccc}\toprule
+타겟 & 분할 & 컷: skill vs PCHIP (95\% CI) & 포함: skill vs PCHIP (95\% CI) & vs 인과 GP (컷 / 포함) \\ \midrule
+\multirow{4}{*}{\Ti}
+ & 42 & \pass{+0.174} [+0.097, +0.236] & \pass{+0.225} [+0.109, +0.293] & \pass{+0.078} / \pass{+0.154} \\
+ & 1 & \pass{+0.248} [+0.188, +0.295] & \pass{+0.238} [+0.153, +0.302] & \pass{+0.133} / \pass{+0.169} \\
+ & 7 & \pass{+0.257} [+0.199, +0.302] & \pass{+0.292} [+0.232, +0.344] & \pass{+0.138} / \pass{+0.123} \\
+ & 123 & \pass{+0.264} [+0.188, +0.320] & \pass{+0.316} [+0.186, +0.392] & \pass{+0.105} / \pass{+0.149} \\ \midrule
+\multirow{4}{*}{\Vrot}
+ & 42 & \pass{+0.390} [+0.077, +0.591] & \pass{+0.384} [+0.066, +0.586] & \pass{+0.331} / \pass{+0.324} \\
+ & 1 & +0.183 [$-$0.028, +0.280] & \pass{+0.195} [+0.000, +0.286] & +0.130 / \pass{+0.143} \\
+ & 7 & +0.135 [$-$0.358, +0.269] & +0.132 [$-$0.362, +0.266] & +0.020 / +0.018 \\
+ & 123 & +0.305 [$-$0.049, +0.437] & +0.304 [$-$0.065, +0.433] & \pass{+0.134} / +0.132 \\ \bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item \textbf{\Ti{}: 두 모집단 모두 4/4 PASS}, 8개 셀 전부 인과 GP(+0.08~+0.17)와 persistence(+0.36~+0.46)도 이김 → 논문의 무조건부 주장. 오프라인 GP와는 동률($-0.05$~+0.11, 1/8 유의).
+\item \textbf{\Vrot{}: 동률.} 점추정은 8/8 양수지만 PR4는 1/4(컷)·2/4(포함); vs persistence 3/4 양쪽(+0.30~+0.50), vs 인과 GP 2/4. 잡음 수준이므로 회전 승리 주장 없음.
+\item \textbf{포함 수치가 더 높은 이유}: 컷 없이는 모든 arm이 PCHIP 대비 더 좋아 보인다(백본 +0.268 vs +0.236, 대조군 +0.238 vs +0.173) — 스파이크가 보간 앵커를 오염시키기 때문. \S7이 그 성분을 정량화하며, 어느 한 모집단만 인용하지 않는 이유.
+\end{itemize}
+
+\textbf{5.3 전체격자 프레이밍 vs 윈도 대조군: 백본 관문 (B.1).} 사전등록 4조건 관문(컷 모집단): 분할 seed $\times$ 초기화 seed 4$\times$4, 각 run은 자기 분할의 W=2 윈도 대조군과 paired. paired \Ti{} \textbf{16/16 양수·13/16 유의}; 분할별 초기화 평균 +0.129/+0.059/+0.078/+0.058; \textbf{pooled +0.081, run 군집 CI [+0.067, +0.096]}; 예산 균등화(고정 10 epoch)에서도 4/4 부호 유지(+0.063/+0.033/+0.045/+0.030); \Vrot{} 유의 열세 0/16(유의 우세 8/16). 4개 확증 분할에서 같은 비교는 컷 +0.130/+0.058/+0.062/+0.044, 포함 +0.053/+0.024/+0.047/+0.029(8/8 양수, 각 2/4 유의). \textbf{무엇을 사는가}: 윈도 대조군은 인과 GP와 동률(1/4), 시퀀스 백본은 4/4+4/4 — 세그먼트 과거 전체로의 \textbf{도달거리}가 최강 배치 기준선을 이기게 한다. 비용은 음수(윈도 조립·조합 증강이 없어 학습비 1/10).
+
+\textbf{5.4 간극 영역 (4 분할 통합, 방전 군집).}
+\begin{center}\small
+\begin{tabular}{lrrcc}\toprule
+$\Delta t$ & $n$ (컷 / 포함) & 방전 & 컷: vs PCHIP & 포함: vs PCHIP \\ \midrule
+\Ti{} $\leq$ 15 ms & 134,546 / 135,317 & 301 & \pass{+0.239} [+0.197, +0.274] & \pass{+0.299} [+0.244, +0.347] \\
+\Ti{} $>$ 15 ms & 3,422 / 3,334 & 265 / 263 & \pass{+0.268} [+0.187, +0.337] & \pass{+0.206} [+0.108, +0.290] \\
+\Ti{} $>$ 45 ms & 460 / 429 & 104 / 101 & \pass{+0.267} [+0.092, +0.414] & $-0.004$ [$-$0.304, +0.246] \\
+\Vrot{} $\leq$ 15 ms & 51,689 & 197 & \pass{+0.233} [+0.020, +0.318] & \pass{+0.233} [+0.020, +0.317] \\
+\Vrot{} $>$ 15 ms & 466 / 456 & 130 & \pass{+0.418} [+0.104, +0.680] & \pass{+0.432} [+0.128, +0.696] \\
+\Vrot{} $>$ 45 ms & 14 & 7 & 미채점 & 미채점 \\ \bottomrule
+\end{tabular}
+\end{center}
+\Ti{} 우위는 비인접 영역(>15 ms)에서 양쪽 성립(persistence 대비 +0.40/+0.43); >45 ms는 컷에서 승, 포함에서 동률(429행/101 방전은 스파이크 앵커 몇 행이 층을 지배할 수 있는 규모). \textbf{\Vrot{}는 보간이 가장 어려운 >15 ms에서 양쪽 PCHIP를 이긴다} — 논문의 유일한 \Vrot{} 무조건부 양성.
+
+\section*{6. 결과 II — 스트레스 테스트}
+\textbf{6.1 실제 결측점으로의 재가중 (MNAR, W=2 in-domain).} 층 = $\Delta t$(15/25/45 ms) $\times$ 입력만의 활동 flag; 결측 행의 층 분포로 재가중; 30 미만 층 기각·커버리지 병기; 가중 격자에도 컷 적용. \textbf{범위}: 결측 \Ti{} 중 in-domain(2행 이내 과거 관측) \textbf{54–68\%}, \Vrot{}는 \textbf{4–6\%}(긴 블록 결측; 커버리지 0.73–0.76) → 재가중 \Vrot{}는 결측 질량의 1/20에 대한 답이라 결론 없음.
+\begin{center}\small
+\begin{tabular}{llcccc}\toprule
+ & & \multicolumn{2}{c}{vs PCHIP} & \multicolumn{2}{c}{vs persistence} \\ \cmidrule(lr){3-4}\cmidrule(lr){5-6}
+모집단 & 분할 & 비가중 & 결측 정합 (CI) & 비가중 & 결측 정합 (CI) \\ \midrule
+\multirow{4}{*}{컷}
+ & 42 & +0.174 & +0.140 [$-$0.071, +0.290] & +0.360 & \pass{+0.398} [+0.278, +0.518] \\
+ & 1 & +0.248 & \pass{+0.164} [+0.062, +0.250] & +0.406 & \pass{+0.366} [+0.299, +0.448] \\
+ & 7 & +0.257 & +0.203 [$-$0.024, +0.346] & +0.403 & \pass{+0.310} [+0.227, +0.398] \\
+ & 123 & +0.264 & \pass{+0.283} [+0.069, +0.392] & +0.415 & \pass{+0.381} [+0.246, +0.464] \\ \midrule
+\multirow{4}{*}{포함}
+ & 42 & +0.225 & \pass{+0.140} [+0.033, +0.250] & +0.423 & \pass{+0.443} [+0.141, +0.623] \\
+ & 1 & +0.238 & \pass{+0.217} [+0.086, +0.319] & +0.436 & \pass{+0.383} [+0.273, +0.536] \\
+ & 7 & +0.292 & \pass{+0.167} [+0.067, +0.265] & +0.406 & \pass{+0.283} [+0.172, +0.380] \\
+ & 123 & +0.316 & \pass{+0.221} [+0.050, +0.320] & +0.459 & \pass{+0.337} [+0.164, +0.455] \\ \bottomrule
+\end{tabular}
+\end{center}
+\textbf{persistence(온라인 시스템의 실제 상대) 대비 \Ti{} 우위는 두 모집단 4/4 생존}(+0.28~+0.44, MNAR 보정 비용 최대 0.12). PCHIP 대비 점추정은 +0.14~+0.28로 유지되나 고정 가중 CI가 컷 2 분할에서 0을 지남(2/4; 포함 4/4). 진술: ``실제 결측·in-domain 시점에서 나우캐스터는 모든 인과 CES-only 방법보다 유의하게 낫고(양쪽), 오프라인 보간보다는 모집단 조건부 유의로 낫다.''
+
+\textbf{6.2 캠페인(시간) 분할.} 641 방전을 shot 번호로 시간 분할: \textbf{train 416 (30801–31991) / val 128 (32002–32310) / test 97 (32312–32751)}, 초기화 seed 4개(분할 4개가 아님을 명시). arm: 윈도 대조군(OFF), 대조군 + shot별 표준화(ON, 컷), \seqv.
+\begin{center}\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llcccc}\toprule
+모집단 & arm & \Ti{} vs PCHIP (init 42/1/7/123) & PASS & vs 인과 GP & \seqv{} $-$ 대조군 \\ \midrule
+컷 & 윈도 OFF & +0.027 / \pass{+0.091} / $-$0.001 / \pass{+0.061} & 2/4 & 0/4 & --- \\
+컷 & 윈도 ON (shot별 표준화) & \pass{+0.103} / \pass{+0.107} / \pass{+0.094} / \pass{+0.107} & 4/4 & --- & --- \\
+컷 & \textbf{\seqv} & \pass{+0.187} / \pass{+0.174} / \pass{+0.181} / \pass{+0.177} & 4/4 & 4/4 (+0.11~+0.12) & \pass{+0.164} / \pass{+0.091} / \pass{+0.182} / \pass{+0.124} \\ \midrule
+포함 & 윈도 OFF & +0.014 / +0.047 / +0.055 / +0.089 & 0/4 & 0/4 & --- \\
+포함 & \textbf{\seqv} & \pass{+0.173} / \pass{+0.202} / \pass{+0.198} / \pass{+0.184} & 4/4 & 4/4 (+0.13~+0.16) & \pass{+0.161} / \pass{+0.163} / \pass{+0.151} / \pass{+0.104} \\ \bottomrule
+\end{tabular}}
+\end{center}
+\begin{itemize}
+\item 윈도 모델의 오프라인 우위는 시간 이동을 못 견딤(2/4·0/4; 인과 GP 대비 0/4). 지목된 수리(shot별 빠른 진단 표준화)는 작동: 컷 2/4→4/4, paired +0.078/+0.018/+0.095/+0.049, \Vrot{} 불변($-0.003$~+0.008 = 예상된 음성 대조).
+\item \textbf{시퀀스 나우캐스터는 붕괴하지 않는다}: PCHIP 4/4+4/4, 인과 GP 4/4+4/4, 대조군 8/8; \Vrot{}는 persistence를 양쪽 4/4로 이김(대조군 0/4), 대조군 대비 \Vrot{} 마진 8/8 유의(+0.06~+0.18).
+\item \textbf{원인(측정)}: train→test 드리프트 BES 1.22$\sigma$·ECEI 0.53$\sigma$(스케일비 0.75/0.62) vs 타겟 0.115$\sigma$(1.06). train 전용 정규화가 무작위 분할에선 옳지만 캠페인 이동에서 깨지는 것; \seqv{}는 정의상 shot별 표준화 + 도달거리.
+\end{itemize}
+\begin{center}\small
+\begin{tabular}{lcc}\toprule
+평가 & vs PCHIP (오프라인) & vs 인과 기준선 \\ \midrule
+무작위 분할, 관측점 & \pass{4/4 / 4/4}, +0.17~+0.32 & \pass{4/4 / 4/4} vs 인과 GP, +0.08~+0.17 \\
+결측점 재가중 (6.1) & 2/4 / \pass{4/4}, +0.14~+0.28 & \pass{4/4 / 4/4} vs persistence, +0.28~+0.44 \\
+캠페인 시간 분할 (6.2) & \pass{4/4 / 4/4}, +0.17~+0.20 & \pass{4/4 / 4/4} vs 인과 GP, +0.11~+0.16 \\ \bottomrule
+\end{tabular}
+\end{center}
+남는 주의: 캠페인 4회는 한 시간 블록 위의 초기화 4개(분할 4개 아님); 컷 \seqv{} run 2/4가 30 epoch 상한 종료.
+
+\section*{7. \Ti{} $\leftrightarrow$ \Vrot{} 정보 비대칭 (평가 시 modality 절제, 윈도 대조군)}
+\begin{center}\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llcc}\toprule
+입력 & 타겟 & 컷 & 포함 \\ \midrule
+전체 & \Ti & +0.173 & +0.238 \\
+이력+시간만 (no fast) & \Ti & $-0.125$; paired $-0.25^*$/$-0.38^*$/$-0.42^*$/$-0.43^*$ & +0.201; paired $-0.03^*$/$-0.04$/$-0.03$/$-0.09^*$ \\
+빠른 진단+시간만 (no history) & \Ti & $-2.11$; paired $-4.6^*$/$-1.8^*$/$-2.3^*$/$-1.9^*$ & $-1.16$; paired $-1.5^*$/$-3.4^*$/$-1.2^*$/$-1.1^*$ \\ \midrule
+전체 & \Vrot & +0.213 & +0.206 \\
+이력+시간만 (no fast) & \Vrot & +0.213; paired +0.000 $\times$4 (\textbf{bit-identical}) & +0.206; paired +0.000 $\times$4 (\textbf{bit-identical}) \\
+빠른 진단+시간만 (no history) & \Vrot & $-2.89$; paired $-5.4^*$/$-6.3^*$/$-1.8^*$/$-2.3^*$ & $-3.51$; paired $-6.9^*$/$-7.8^*$/$-1.9^*$/$-2.2^*$ \\ \bottomrule
+\end{tabular}}
+\end{center}
+\begin{itemize}
+\item 이력은 두 타겟 모두 필수(제거 시 $-1$~$-4$).
+\item \textbf{\Ti{}: 컷 모집단에서 보간 대비 마진은 빠른 진단 정보} — 빠른 채널 0이면 보간 아래로($-0.10$~$-0.18$). 물리 채널은 전자–이온 충돌 결합(ECEI $T_e$, BES $n_e$).
+\item \textbf{포함 모집단에선 이력-전용 모델도 PCHIP를 +0.15~+0.23 이김}, 빠른 채널이 더하는 건 0.03–0.09 → 포함 마진엔 \textbf{스파이크-강건성 성분}이 섞여 있다. 두 모집단을 함께 보고하는 측정된 이유이며, 빠른 진단 기여를 분리하는 건 컷 모집단.
+\item \textbf{\Vrot{}: 정보는 전부 CES 이력} — 빠른 채널 0이면 출력 bit-identical(8/8; \seqv·\bthree{}도 같은 섭동 시험 통과). NBI 토크 미관측·Mirnov 100 Hz 앨리어싱.
+\end{itemize}
+
+\section*{8. 이력은 얼마나? 관측 하나 (윈도 스윕, W=2 선택 근거)}
+24 run(W $\in\{2,3,4,6,8\}\times$4 seed) + history-0 $\times$4, held-free, 파일당 500, 컷 없음(이 스윕의 얼린 W=2 run이 포함 모집단 대조군).
+\begin{center}\small
+\begin{tabular}{rrrcrc}\toprule
+가용 이력 & W & \Ti{} skill & PASS & \Vrot{} skill & PASS \\ \midrule
+0 & 4 (history-0) & $-0.026$ & 0/4 & $-0.783$ & 0/4 \\
+1 & 2 & +0.238 & \pass{4/4} & \pass{+0.206} & 0/4 \\
+2 & 3 & \pass{+0.246} & \pass{4/4} & +0.203 & 1/4 \\
+3 & 4 (구 기본값) & +0.221 & 3/4 & +0.190 & 1/4 \\
+5 & 6 & +0.190 & 3/4 & +0.205 & 1/4 \\
+7 & 8 & +0.216 & \pass{4/4} & +0.204 & 2/4 \\ \bottomrule
+\end{tabular}
+\end{center}
+관측 하나가 두 타겟을 plateau로 올리고 곡선은 평평(\Ti{} 0.190–0.246, \Vrot{} 0.190–0.206; 점 내부 seed 산포 0.07–0.16이 곡선 전체보다 큼) → ``plateau 최소 W'' = \textbf{W=2}. 넓은 W의 유일한 논거는 coverage(>15 ms 채점 456→1,958)인데, 그건 긴 윈도가 아니라 \textbf{시퀀스 프레이밍}(도달거리 = 세그먼트 전체, W는 하이퍼파라미터가 아님)의 논거다.
+
+\section*{9. 복잡도 사다리와 폭 스윕}
+\begin{center}\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrcc}\toprule
+Arm & 파라미터 & \Ti{} skill 컷 & \Ti{} skill 포함 & \bthree{} $-$ anchor & \bthree{} $-$ \seqv \\ \midrule
+Persistence & 0 & $-0.264$ & $-0.288$ & & \\
+Anchor+$\Delta$ (명명 항) & 1,258 & $-0.261$ & $-0.287$ & \multirow{2}{*}{컷 +0.35~+0.42 4/4$^*$ / 포함 +0.29~+0.34 4/4$^*$} & \multirow{2}{*}{컷 평균 \pass{+0.002}(CI 전부 0 포함) / 포함 평균 \pass{$-0.194$}(4/4$^*$)} \\
+\textbf{\bthree} & \textbf{21,498} & \pass{+0.237} & +0.126 & & \\
+윈도 대조군 & 201,258 & +0.173 & +0.238 & & \\
+\seqv{} 백본 & 357,570 & +0.236 & +0.268 & & \\ \bottomrule
+\end{tabular}}
+\end{center}
+\begin{itemize}
+\item \textbf{컷 하에서 백본의 \Ti{} skill 전부가 유계 수 8개 + persistence로 압축된다}: anchor 대비 4/4 승·\Vrot{} 결손 0, 백본 대비 $-0.009$/$-0.005$/+0.026/$-0.004$(평균 +0.002), PR4 4/4, 인과 GP 4/4. Linear probe: \Ti{} latent은 직전 관측 \Ti{}($R^2$ 0.47–0.75)와 ECEI $T_e$ 프록시(0.31–0.48)를 분산 부호화, 국소 활동(0.09–0.13)·신선도(0.01–0.07)는 거의 안 담음; 보정은 예측 분산의 25–39\%. anchor+$\Delta$는 W=2에서 persistence로 붕괴(기울기 항이 관측 2행을 요구).
+\item \textbf{컷 없이는 $-0.16$~$-0.21$(4/4 유의), 윈도 대조군보다도 3/4 아래} — latent이 적어서가 아니라 유계 보정이 스파이크 이월값을 못 살리기 때문: persistence 오차 >2 keV 행이 포함 test의 0.6–1.3\%인데 b3 \Ti{} SSE의 73–83\%(다른 모든 arm도 70–83\%). 단(rung) 조건은 양쪽 성립, 백본 허용치는 컷 조건부로 명시.
+\item \textbf{크기는 무효}: \Ti{} 인코더 폭 24→260(34k/\allowbreak 49k/\allowbreak 114k/\allowbreak 358k/\allowbreak 879k) 평균 skill +0.230/\allowbreak +0.236/\allowbreak +0.235/\allowbreak +0.236/\allowbreak +0.230(컷), 160 대비 $\pm$0.008, 최대 폭 유의 우세 1/4, 24까지 $\geq$3/4 유의 열세 없음, \Vrot{} 불변(+0.250~+0.254) → 크기 축 폐쇄, 남은 분산은 분할 분산.
+\end{itemize}
+
+\section*{10. 우위는 고변동 구간에 집중 (peak, TEST, \seqv)}
+\begin{itemize}
+\item \Ti{} peak: 컷 +0.45~+0.61, 포함 +0.62~+0.72, \textbf{8/8 PASS}; 본류는 +0.09~+0.20(컷 4/4)·+0.06~+0.19(포함 2/4). ``보간은 매끄러운 본류에서 최적, 모델 가치는 활동 구간'' — 무조건부.
+\item \Vrot{} peak: +0.54~+0.79(8/8 양수, PASS 각 2/4; persistence 대비 +0.75~+0.86 8/8 PASS), 본류 $\approx$0($-0.07$~+0.15, 0/8). 비대칭은 \textbf{지역적} — 전역은 동률이지만 고활동 이웃에선 이력 기반 \Vrot{} 예측기도 가치를 더한다.
+\end{itemize}
+
+\section*{11. 컷 문턱 민감도}
+2.5/3/4 keV 재학습: \Ti{} 평균 +0.230/+0.236/+0.232, PR4 4/4·인과 GP 4/4 전부, \Vrot{} +0.252/+0.253/+0.257 → 문턱은 무관, 중요한 건 두 모집단.
+
+\section*{12. 모델 선택 프로토콜}
+윈도 계열: 한 번에 하나 통제 변경, 깨끗한 val skill로 keep/discard(증강 val loss 아님), 스윕으로 W, 감사로 held 제거. \textbf{백본 관문}: 4조건 사전 고정 후 충족(\S5.3). 이후 유일한 후보(\seqv{} + 관측마스킹 인과 attention, 0-초기화)는 4/4 양수(+0.009/+0.013/+0.033/+0.020)지만 유의 1/4로 사전 기준($\geq$3/4) 미달 → \textbf{미승격}, 백본 \seqv{} 유지(val에선 2/2 유의였다는 것이 승격 bar를 TEST에 두는 이유). 단·폭 스윕: 두 갈래 판정과 서술적 읽기(상한/무릎)를 TEST 전에 문서화; 스윕에서 백본 재선정 금지.
+
+\section*{13. 배치 가능한가?}
+\textbf{지연}: 상태 유지 1-step(은닉 상태 이월, 배치 1). 유휴 노트북급 머신, 워밍업 후 1,000회: \textbf{\seqv{} 스텝 CPU 중앙값 1.05 ms / p99 1.61 ms}(예산의 16\%; p95 1.35), GPU 1.21/2.31 ms — 이 크기에선 GPU가 배치 1에서 아무것도 안 사줌. 세그먼트 재실행 100행 2.9/5.6 ms, 300행 6.4/8.9 ms(35–47k 행/s; GPU 47–63k). 윈도 대조군 배치 1은 더 느리고 꼬리가 무거움(W=2 CPU 3.8 중앙값 / p99 18.9 ms; W=4 4.0/8.1). 유휴 재실행 두 번은 절대값 최대 2$\times$ 차이(다른 실행 \seqv{} 스텝 0.51/0.99 ms; 전원 상태), 순서는 불변 → \textbf{제어 계산기의 CPU에서 상태 유지형으로 돌리라}, 예산의 80\% 이상이 남는다.
+
+\textbf{불확실성(split conformal, $\alpha$=0.10, val 교정, TEST, 두 모집단)}: 모델 구간이 \textbf{32/32 셀}에서 두 기준선을 Winkler 점수로 이김 — \Ti{} 1,272 vs 1,554(PCHIP) vs 1,727(persistence) 컷, 2,290/2,851/3,120 포함; \Vrot{} 150/164/179. 포함 모집단에선 모델 \Ti{} 구간이 PCHIP보다 넓으면서도(반폭 224–255 vs 211–241 eV) 점수는 더 좋음(스파이크가 miss 페널티를 키우고 모델은 덜 놓침). Mondrian은 \Ti{} arm을 4–5\% 조이고 \Vrot{}는 불변, 판정 불변. 한계: coverage는 marginal(\Ti{} 0.87–0.92, \Vrot{} 0.91–0.94), 방전 조건부는 아님.
+
+\section*{14. 남은 개선 여지 (전부 데이터 레버)}
+\begin{enumerate}
+\item \textbf{CES 피팅 품질 메타데이터} — 값 컷(일방향, 상향 이상치 19\%만)을 품질 컷으로 대체하면 두 모집단이 하나로 합쳐진다; \Vrot{} 스파이크도 같은 규칙으로.
+\item \textbf{Mirnov 정보는 전처리가 파괴했다} — lag-1 자기상관 BES +0.568/ECEI +0.572 vs Mirnov $-0.009$(블록 82\%가 $|r|<0.1$): kHz $dB/dt$를 anti-aliasing 없이 100 Hz로 데시메이트한 서명. 원본 kHz 스트림에서 윈도 RMS·대역 파워·모드수·\textbf{모드 회전 주파수}를 뽑아 \Vrot{} 분기에 투입(파일럿→확대 규칙 사전등록). \Vrot{} 최상위 실험, 아카이브 데이터로 검증 가능.
+\item \textbf{NBI 토크 채널 부재} — $T_e$~\Ti{} $r=+0.353$($p=3\times10^{-17}$) vs $T_e$~\Vrot{} $r=+0.024$($p=0.58$): 파워는 토크가 아니다. 데이터 획득 과제; DIII-D 전방전 시뮬레이터가 양성 대조.
+\end{enumerate}
+
+\section*{15. 한계}
+검정력(방전 96/60–66; 포함 모집단에선 $\approx$1\% 행이 SSE 70–83\%) · MNAR 낙관(재가중은 인과 비교엔 양쪽, 오프라인 비교엔 모집단 조건부; \Ti{} 54–68\%·\Vrot{} 4–6\%만 도달) · 오프라인 주장의 상한은 GP 동률(1/8 유의) · 값 컷은 프록시 · 캠페인은 한 시간 블록(초기화 4개), 컷 run 2/4 상한 종료, shot별 표준화는 오프라인 형태(EWMA 미측정) · 지표 비대칭 · 단일 장치·두 순환 계열 · conformal은 marginal · 지연은 네트워크만, 전원 상태 2$\times$ · 페데스탈 상단 프레이밍, 이벤트-위상 분석은 후속.
+
+\section*{16. 결론}
+전체격자 2-분기 순환 나우캐스터(\Vrot{} 분기는 빠른 진단 무접촉)를 사전등록·shot 군집·두 모집단 프로토콜로, 미래를 보는 보간과 최강 인과 방법(인과 GP) 모두에 대해 평가했다. 관측점에서 \Ti{}는 PCHIP를 4 분할·두 모집단에서 유의하게 이기고(+0.17~+0.32), 최강 오프라인 smoother와 동률이며, 인과 GP를 8/8 셀에서 이기고 비인접 영역(>15 ms)에서도 이긴다. \textbf{배치 주장은 이제 두 스트레스를 다 견딘다}: 실제 결측 in-domain 시점에서 인과 방법 대비 8/8 생존, 캠페인 경계 너머 PCHIP·인과 GP 대비 4/4+4/4 — 대체된 윈도 대조군은 오프라인 우위를 완전히 잃었고 그 차이는 측정됐다(빠른 진단 5–11$\times$ 드리프트, shot별 표준화가 수리, 시퀀스 프레이밍은 정의상 shot별 표준화 + 도달거리). 안 되는 것도 보고: 회전은 전역 동률(skill은 천이에), 값 컷은 일방향 프록시, 재가중 도달 54–68\%/1/20, conformal은 marginal, >45 ms 포함은 동률. 각각 구체 후속(피팅 메타·kHz Mirnov·NBI 토크)을 가리키고 크기 축은 닫혔다(21k = 백본 under cut, 26$\times$ 폭 스윕 평평). 기여: 유지값 54\% 제거 평가, 두 모집단 처리와 그 필요성의 측정, 최강 배치 기준선을 이기는 도달거리의 전체격자 인과 프레이밍, TEST 전 규칙을 쓴 test-동결 선택 프로토콜.
+
+\section*{부록 A. 표기·재현성}
+\begin{itemize}
+\item skill $= 1 - \mathrm{MSE}_\text{model}/\mathrm{MSE}_\text{baseline}$ (Murphy; 양수 = 모델 우세). 유의 = shot 군집 paired bootstrap 95\% CI 0 배제, ``n/4'' = 유의 분할 수. 컷/포함 = 두 공동 1차 모집단.
+\item 코드: 백본 \path{experiments/seq/model_seq_v2.py}, 단 \path{model_seq_b3.py}, 윈도 대조군 \path{model_iter009.py}(해시 고정). 수치는 \path{collect_paper_numbers.py} → \path{paper_numbers.json} → \path{main.tex}/\path{main_ko.tex}/\path{make_figures_en.py}. 빌드: pdflatex(영), xelatex(국).
+\end{itemize}
+
+\section*{부록 B. 남은 일 (2026-08-16)}
+\begin{itemize}
+\item[$\square$] 발표 덱 5종·\texttt{docs/presentation/make\_figures.py}를 새 스키마·\S8ab 수치로 재빌드(현재 stale 표시).
+\item[$\square$] B.6 kHz Mirnov 특징 도착 시 사전등록 \S7 규칙 개정 커밋 후 파일럿→확대.
+\item[$\square$] 논문 검토: 초록·기여 문구, 두 모집단 서술 톤, 제목 유지 여부.
+\item \textbf{결정 기록(2026-08-16)}: ① 두 모집단 공동 1차 유지(p100 단일 헤드라인 안 함) ② \Vrot{} 프로토콜 불변(컷/점프 규칙·재학습 없음, anchored 비교엔 스파이크-행 SSE 비중 병기) ③ B.6 미도착 — 대기.
+\end{itemize}
+
+\end{document}

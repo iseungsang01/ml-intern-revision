@@ -329,16 +329,20 @@ pre-LayerNorm 트랜스포머~\citep{Xiong2020LayerNormalization}, 어텐션
 \label{sec:data}
 
 \subsection{데이터셋}
-하드웨어 일관성을 위해 캠페인 \#24000--\#33000에서 우선 선정한 641개 KSTAR
-방전(shot) 파일을 사용하며, H-mode ELM 억제(RMP) 구간을 타겟으로
-D$_\alpha$ 활동 구간 주변 $\sim$100\,ms 세그먼트를 절단한다. 모든 신호는 공통
-10\,ms 격자에 정렬된다. 각 행은 BES~\citep{Nam2012AnalysisEdge} 9채널,
-ECEI~\citep{Yun2010DevelopmentKstar} 4채널, Mirnov 코일 2채널, 시간, 그리고 두
+데이터 제공 측이 하드웨어 일관성과 H-mode ELM 억제(RMP) 구간을 기준으로 선정한
+641개 KSTAR 방전(shot) 파일(shot 30801--32751)을 공통 10\,ms 격자에 정렬해
+사용한다: 총 247{,}207행(파일당 중앙값 339행). 각 행은 BES~\citep{Nam2012AnalysisEdge}
+9채널, ECEI~\citep{Yun2010DevelopmentKstar} 4채널, Mirnov 코일 2채널, 시간, 그리고 두
 CES 타겟 \Ti{}, \Vrot{}~\citep{Ko2010ChargeExchange}을 제공한다. 이 격자에서
 \Ti{}는 8.2\%, \Vrot{}은 23.9\%의 행에서 서로 독립적으로
-결측된다(그림~\ref{fig:missing}). 247{,}207개 행은 $\geq 0.5$\,s의 시간 간극에서
-연속 세그먼트로 나뉘며, 이 임계값은 이봉(bimodal) delta 분포의 골에 놓인다
-($\sim$247k개의 행간 delta 중 $(0.1, 0.5)$\,s 구간에 드는 것은 82개뿐이다).
+결측된다(그림~\ref{fig:missing}). 행은 $\geq 0.5$\,s의 시간 간극에서 연속
+세그먼트로 묶이며(이 임계값은 이봉(bimodal) delta 분포의 골에 놓인다:
+$\sim$247k개의 행간 delta 중 $(0.1, 0.5)$\,s 구간은 82개뿐이고, 세그먼트 안에서는
+스텝의 99.4\%가 10\,ms다), 전형적인 파일은 \textbf{주 세그먼트 하나}(중앙값 301행
+$\approx$ 3.0\,s; 10--90분위 1.3--7.0\,s; 두 개인 파일 28개, 10행보다 긴 것이 없는
+파일 20개)와 그로부터 중앙값 6.3\,s 간극으로 떨어진 고립 단일행 몇 개(전체
+1{,}279개, 대개 $t=0$의 첫 행)로 이루어진다. 어떤 arm도---보간이든 모델
+입력이든---간극을 넘지 않는다.
 
 \begin{figure}[t]
   \centering
