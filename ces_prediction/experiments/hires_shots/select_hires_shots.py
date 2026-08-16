@@ -54,20 +54,41 @@ GAP_S = 0.5            # contiguous-block boundary, matches dataset.py STUCK_GAP
 TI_SPIKE_EV = 3000.0   # confirmed protocol CES_TI_SPIKE_CUT_EV
 ENV_WIN = 5            # 50 ms rolling window for the MC amplitude envelope
 
-# The final list, with the role each shot plays. Fixed here so the choice is auditable;
-# `--reselect` prints the ranking that produced it.
+# The final list. Half of it is chosen by the literature cross-check
+# (`literature_crosscheck.py`) rather than by this script's score: a shot whose physics is
+# already published is a shot whose raw microsecond data can be checked against a known
+# answer. The rest is chosen by score, to cover the axes the published shots miss
+# (CES_VT sampling, very long discharges, the strongest Mirnov activity).
 FINAL = [
-    (31921, "test",  "MC-turbulence coupling 0.58, the highest of all 641 shots; late transition"),
-    (31902, "test",  "7.2 s, dense labels, best seq_v2 CES_TI skill among the candidates"),
+    # --- literature-confirmed -------------------------------------------------------
+    (31921, "test",  "PUBLISHED (FIRE mode, 2 papers): FIRE 5.40 s vs H-mode 8.05 s on CES "
+                     "edge profiles; also the best data shot we have (rank 2/121) and the "
+                     "highest MC-turbulence coupling of all 641"),
+    (31873, "test",  "PUBLISHED (Nat. Commun. 2024): fully automated ELM suppression with "
+                     "ML-integrated RMP; our window covers the whole suppressed phase"),
+    (31923, "val",   "PUBLISHED (I-mode edge of FIRE mode): WCM ~50 kHz measured on BES_0206 "
+                     "-- the very channel in our CSVs; highest sustained-mode fraction here"),
+    (31359, "val",   "PUBLISHED (Nat. Commun. 2024): no n=1 ERMP -> density ETB at 5.5 s, ELMs, "
+                     "core Ti drops; 246 CES_VT and strong BES/ECEI dynamics"),
+    (31357, "val",   "PUBLISHED (Nat. Commun. 2024): with n=1 ERMP the H-mode transition is "
+                     "avoided -- the paired control of #31359; two-coil coherence 0.87"),
+    # --- chosen by the data score ----------------------------------------------------
     (31114, "test",  "largest clean MC amplitude among test shots; model gains on both targets"),
-    (32097, "val",   "strongest Mirnov shot overall: RMS 17.3, two-coil coherence 0.93"),
-    (31368, "val",   "MC value and label richness together; 8.4 s"),
-    (31273, "val",   "richest CES_VT sampling (672) with lively BES/ECEI; quiet-MC contrast"),
+    (32097, "val",   "strongest Mirnov shot overall: RMS 17.3, two-coil coherence 0.93 (rank 1)"),
     (31604, "train", "largest spike-free MC (RMS 21.3, kurtosis ~0): steady-state mode"),
-    (31406, "train", "highest sustained-mode fraction: 27 % of the discharge"),
     (31074, "train", "balanced: two-coil coherence 0.74, 7.5 s, 446 CES_VT"),
     (31937, "train", "longest discharge (15.2 s), most labels (1479 TI / 722 VT), quiet MC"),
 ]
+# Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
+CONFIRMED_SHOTS = {31921, 31923, 31873, 31276, 31357, 31359, 32027, 31888}
+# Published shots that did NOT make the list, and why (see SELECTION.md).
+REJECTED_PUBLISHED = {
+    31276: "MC RMS 12.7 collapses to 32 % when the 5 largest samples are dropped "
+           "(kurtosis 363) -- an electrical spike, not mode activity",
+    31888: "disruption example shot; MC RMS carried by spikes (trim ratio 0.36, kurtosis 105)",
+    32027: "PanoMHD L/H transition shot -- kept as the first alternate; only 8 CES_VT values "
+           "and weak MC coupling",
+}
 
 
 # --------------------------------------------------------------------------- helpers
@@ -455,10 +476,16 @@ def main():
     sel.to_csv(HERE / "FINAL_10.csv", index=False, encoding="utf-8")
     print("\n=== the selected 10 ===")
     print(sel[show + ["t_start", "t_end", "role"]].round(3).to_string(index=False))
-    print("\nrank inside the artifact-free pool:")
+    print("\nrank inside the artifact-free pool (published shots often fall outside the\n"
+          "quality gate because CES_VT was never measured -- that is expected, not a defect):")
     for s in sel.shot:
-        pos = int(ok.index[ok.shot == s][0]) + 1
-        print(f"  #{s}: {pos}/{len(ok)}")
+        idx = ok.index[ok.shot == s]
+        pos = f"{int(idx[0]) + 1}/{len(ok)}" if len(idx) else "outside the gated pool"
+        note = " [published]" if int(s) in CONFIRMED_SHOTS else ""
+        print(f"  #{s}: {pos}{note}")
+    print("\npublished shots deliberately left out:")
+    for s, why in REJECTED_PUBLISHED.items():
+        print(f"  #{s}: {why}")
     plot_final(d)
     print(f"\nwrote {HERE / 'FINAL_10.csv'} and FINAL_10.png")
 
