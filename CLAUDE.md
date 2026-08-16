@@ -106,19 +106,29 @@ then retired (last run 2026-06-24; every experiment since is a hand-written batc
 `experiments/`). The runner, its Slack notifier, `program.md`, and `HANDOFF.md` were deleted —
 recover them from git history if ever needed.
 
-**The published architectures live in the repo (moved in 2026-08-09).**
-`ces_prediction/model_iter009.py` is the thesis architecture (GRU + observation-masked multi-head
-attention) and `ces_prediction/model_iter002.py` is the iter2 "before" baseline of the progression
-figure. Both are byte-identical copies of the AutoML archive that used to exist only under the
-gitignored `data/`, and both are pinned by SHA-256 in `tests/test_architecture.py` — **do not edit
-them**.
+**The window-family architectures live in the repo (moved in 2026-08-09).**
+`ces_prediction/model_iter009.py` is the windowed GRU + observation-masked multi-head-attention
+model that the AutoML loop produced — under the confirmed protocol (2026-08-16, `THESIS_RESULTS.md`
+§8ab) it is the **W = 2 paired control**, not the paper's main model — and
+`ces_prediction/model_iter002.py` is the iter2 "before" baseline. Both are byte-identical copies of
+the AutoML archive that used to exist only under the gitignored `data/`, and both are pinned by
+SHA-256 in `tests/test_architecture.py` — **do not edit them**.
+
+**The paper's main model is `seq_v2`** (`ces_prediction/experiments/seq/model_seq_v2.py`, a
+full-grid two-branch causal LSTM whose `V_rot` branch never sees the fast diagnostics), trained by
+`experiments/seq/train_seq.py` and scored by `experiments/seq/eval_seq.py` (`CES_SEQ_MODEL=v2`,
+`CES_PER_SHOT_NORM=1`); the interpretable rung is `experiments/seq/model_seq_b3.py`. The confirmed
+protocol (W = 2 · held-free · per-file cap 500 · two co-primary populations via
+`CES_TI_SPIKE_CUT_EV=3000` / `0`) is **not** the default of `train.py` (whose defaults are W = 4,
+held kept, no cut) — the batch runners' env (`experiments/b1_gate/run_b1_gate.py::GATE_ENV`) is the
+reference; always pin these variables explicitly.
 
 ## Choosing the architecture (`CES_MODEL_FILE`)
 
 `ces_prediction/model.py` **re-exports `model_iter009.py`**, so `from model import
 MultimodalCESPredictor` — in `train.py`, `evaluate.py`, `compare_baselines.py`, and every
-experiment runner — already gives you the architecture behind the published numbers, and every
-saved checkpoint loads.
+window-family experiment runner — gives you the windowed control architecture, and every saved
+window checkpoint loads. (The seq family has its own loader in `experiments/seq/`.)
 
 A controlled experiment that varies the architecture sets **`CES_MODEL_FILE`** to its own `.py`
 file in the subprocess env, exactly like every other `CES_*` knob (`experiments/anchor/` is the
