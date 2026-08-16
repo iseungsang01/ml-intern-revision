@@ -379,7 +379,7 @@ width-160 vs headline (1e-4, CUDA drift) and report-vs-npz row counts before wri
 `docs/presentation/make_figures.py` are still on the old schema and are marked stale until rebuilt.
 
 A MiKTeX toolchain is now installed (`pdflatex`/`xelatex`/`bibtex` under
-`%LOCALAPPDATA%\Programs\MiKTeX\miktexind`); build `main.tex` with pdflatex+bibtex, `main_ko.tex`
+`%LOCALAPPDATA%/Programs/MiKTeX/miktex/bin/x64`); build `main.tex` with pdflatex+bibtex, `main_ko.tex`
 with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a failed build.
 
 ## Deployment Facts (2026-08-05, measured)
