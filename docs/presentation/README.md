@@ -13,6 +13,11 @@
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
 
+> **⚠ 2026-08-16: 논문 본문이 확정 프로토콜(W = 2 · held-free · 두 모집단 공동 1차 · 백본 seq_v2, THESIS §8ab)로 전면 개정됐고**
+> `collect_paper_numbers.py` → `paper_numbers.json`의 **스키마가 바뀌었다**(B.1–B.5 산출물 기반, 두 모집단 블록). 아래 덱 5종과
+> `make_figures.py`는 아직 **구 스키마·W = 4 수치**에 묶여 있으므로 재빌드 전까지 덱의 수치를 인용하지 말 것; 재빌드 시
+> `docs/paper/main_ko.tex`(= 새 `paper_numbers.json`)를 기준으로 슬라이드를 맞춘다.
+
 > 1시간 덱은 7개 파트 구성: ① 배경·문제 ② 접근법(어려운 평가 bar) ③ 데이터·파이프라인
 > ④ 모델 아키텍처 ⑤ 평가 방법론(통계) ⑥ 결과 ⑦ 결론·한계·향후 연구.
 

@@ -366,12 +366,21 @@ regenerating the checkpoints updated `THESIS_RESULTS.md` and nothing else.
 Now enforced by construction:
 `ces_prediction/collect_paper_numbers.py` → `docs/paper/paper_numbers.json` → read by
 `docs/paper/make_figures_en.py`. **Never hard-code a number in a figure script or a paper table
-without regenerating the JSON first.** `paper_numbers.json` reports BOTH evaluation treatments
-(`genuine` = held excluded, the headline; `stuck0` = held kept, sensitivity) because quoting one
-while claiming the other is exactly the error that was found.
+without regenerating the JSON first.**
 
-Static check for the LaTeX sources (labels/refs/cites/env/brace balance) is cheap and catches
-structural breakage without a TeX toolchain — there is none installed on this machine.
+**Schema v2 (2026-08-16, after B.5).** The collector was rebuilt on the confirmed protocol: it reads
+only the B.1–B.5 batch verdicts (`.b5_summary.json`, `.b1_gate_summary.json`, `.b2c_v3_summary.json`,
+`.b3c_b3k8_summary.json`, `.b3_probe_summary_b3k8.json`, `.b4_scale_summary.json`,
+`.wsweep_hf_summary.json`, `.protocol_audit_stats.json`, `.b5_spike_structure.json`,
+`.latency_benchmark.json`) plus the per-run TEST reports for the RMSE ladders, carries BOTH
+populations (`cut` / `incl`) in every block, and cross-checks B.5 ladder vs headline, B.3 vs B.5, B.4
+width-160 vs headline (1e-4, CUDA drift) and report-vs-npz row counts before writing. The paper
+(`main.tex`, 2026-08-16) and `make_figures_en.py` were rewritten against it; the presentation decks and
+`docs/presentation/make_figures.py` are still on the old schema and are marked stale until rebuilt.
+
+A MiKTeX toolchain is now installed (`pdflatex`/`xelatex`/`bibtex` under
+`%LOCALAPPDATA%\Programs\MiKTeX\miktexind`); build `main.tex` with pdflatex+bibtex, `main_ko.tex`
+with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a failed build.
 
 ## Deployment Facts (2026-08-05, measured)
 
