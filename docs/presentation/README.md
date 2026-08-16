@@ -6,17 +6,24 @@
 
 | 파일 | 형식 | 용도 |
 |---|---|---|
-| **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 20 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-05 전면 감사; `docs/연구방어_종합문서.md`의 발표판) — novelty 검증·예상질문 방어표 포함 |
-| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 40 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 |
-| **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **20분 내부 발표용** 덱 (원자핵공학과 대학원 세미나) |
-| **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 18 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절 |
-| **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용) |
+| **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 22 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-16 §8ab 재빌드) — 판정표·재실험 이유·B.1/B.2 모델 선택 서사·novelty 검증·예상질문 방어표 3장(프로토콜/모델/물리)·재현성·결정 3건 |
+| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 45 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-08-16 §8ab 재빌드) |
+| **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **20분 내부 발표용** 덱 (원자핵공학과 대학원 세미나; 2026-08-16 §8ab 재빌드) |
+| **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 22 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = 개정 `main_ko.tex`의 한 절(§3.1–§11), 노트에 `\label` (2026-08-16 재빌드) |
+| **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-16 §8ab 재빌드) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
 
-> **⚠ 2026-08-16: 논문 본문이 확정 프로토콜(W = 2 · held-free · 두 모집단 공동 1차 · 백본 seq_v2, THESIS §8ab)로 전면 개정됐고**
-> `collect_paper_numbers.py` → `paper_numbers.json`의 **스키마가 바뀌었다**(B.1–B.5 산출물 기반, 두 모집단 블록). 아래 덱 5종과
-> `make_figures.py`는 아직 **구 스키마·W = 4 수치**에 묶여 있으므로 재빌드 전까지 덱의 수치를 인용하지 말 것; 재빌드 시
-> `docs/paper/main_ko.tex`(= 새 `paper_numbers.json`)를 기준으로 슬라이드를 맞춘다.
+> **✅ 2026-08-16 전면 재빌드 (§8ab 기준).** 논문이 확정 프로토콜(W = 2 · held-free · 파일당 500 · 두 모집단 공동 1차 ·
+> 백본 `seq_v2` · 인과 GP 기준선)로 개정된 뒤, 덱 4종 + 1-pager + 그림 스크립트를 전부 새 `paper_numbers.json`
+> (schema v2, `collect_paper_numbers.py`)과 `docs/paper/outline_ko_v2.tex`/`main_ko.tex` 기준으로 다시 썼다. 바뀐 것:
+> (1) 주 모델은 `seq_v2`(전체격자 인과 시퀀스, `fig_architecture_seq.png`), 옛 주 모델(iter009 윈도)은 W = 2 대조군
+> (`fig_architecture.png`); (2) 모든 결과 슬라이드가 두 모집단(컷/포함)을 함께 보이고 무조건부·조건부를 구분; (3) B.1 관문
+> (`fig_gate_b1.png`)·캠페인 분할(`fig_campaign.png`)·사다리+폭 스윕(`fig_ladder_scaling.png`) 슬라이드 신설, progression
+> (iter2→iter9)·held 포함/제외 이중 보고·anchor+Δ 31.5%·seq +0.045·6.4 ms 등 W = 4 시대 서사·수치 전부 제거;
+> (4) 트랜지언트 시연은 seq_v2 held-out TEST shot #31815(`fig_transient_seq_31815.png`); (5) 종합방어 덱의 예상질문 방어표를
+> §8ab 기준으로 새로 작성. 빌드 로그 FIT WARNING 0, `preview_pptx.py` 넘침·이탈 경고 0 (4종 모두).
+> **폐기된 그림(쓰지 말 것)**: `fig_progression.png`(삭제), `fig_seq_paired.png`, `fig_stuckfree_paired.png`,
+> `fig_transient_31815/30842/…png`(W = 4 윈도 모델), `fig_window_sweep_heldkept.png`(참고용).
 
 > 1시간 덱은 7개 파트 구성: ① 배경·문제 ② 접근법(어려운 평가 bar) ③ 데이터·파이프라인
 > ④ 모델 아키텍처 ⑤ 평가 방법론(통계) ⑥ 결과 ⑦ 결론·한계·향후 연구.
@@ -97,11 +104,15 @@ peak) → ⑯ 배치 가능성 §8 → ⑰ 남은 개선 여지 §9 → ⑱ 한�
 수치/그림을 바꾸려면 아래 순서로 실행합니다 (저장소 루트에서):
 
 ```bash
-python docs/presentation/make_figures.py       # 1) figures/*.png 생성 (matplotlib)
-python docs/presentation/build_pptx.py          # 2) 1시간 발표 .pptx 빌드 (python-pptx)
-python docs/presentation/build_pptx_20min.py    # 3) 20분 발표 .pptx 빌드
-python docs/presentation/build_pptx_flow.py     # 4) 연구 흐름 .pptx 빌드
-python docs/presentation/build_1pager.py        # 5) 1-pager .pdf/.png 빌드 (matplotlib)
+py ces_prediction/collect_paper_numbers.py            # 0) 얼린 산출물 -> docs/paper/paper_numbers.json (교차검증)
+py docs/presentation/make_figures.py                   # 1) figures/*.png 8종 (paper_numbers.json 판독)
+py docs/presentation/make_figure_architecture_seq.py   # 1b) seq_v2 도식 · make_figure_architecture.py = W=2 대조군 도식
+py docs/presentation/make_figure_transient_seq.py      # 1c) seq_v2 트랜지언트 시연 (held-out TEST shot, B.1 s42 체크포인트)
+py docs/presentation/build_pptx.py                     # 2) 1시간 덱 (헬퍼는 다른 덱이 import)
+py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 (1시간 덱 슬라이드 재사용)
+py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱
+py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱
+py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```
 
 레이아웃(겹침·넘침)을 PowerPoint 없이 확인하려면:
@@ -116,9 +127,13 @@ python docs/presentation/preview_pptx.py docs/presentation/KSTAR_CES_발표자�
 
 ## 생성 스크립트
 
-- `make_figures.py` — 6개 그림: forest(headline), RMSE ladder, n.s.→유의 진전, 입력 ablation,
-  peak, 결측/held 통계.
-- `make_figure_architecture.py` / `make_figure_mirnov.py` / `make_figure_transient.py` — 개별 그림.
+- `make_figures.py` — 8개 그림(모두 `paper_numbers.json` 판독, `docs/paper/make_figures_en.py`의 국문 쌍둥이):
+  forest(두 모집단), RMSE ladder(인과 GP 포함), ladder+scaling(b3k8·B.4), ablation(두 모집단), peak, campaign,
+  missing(데이터 장부), gate_b1(B.1 16 run).
+- `make_figure_architecture_seq.py` — 주 모델 seq_v2 도식(파라미터 수는 모듈에서 실측); `make_figure_architecture.py` — W=2
+  윈도 대조군 도식; `make_figure_transient_seq.py` — seq_v2 held-out TEST shot 시연(#31815, #30842; 학습 shot은 거부);
+  `make_figure_transient.py`(구 윈도 모델 시연)·`make_figure_seq.py`·`make_figure_stuckfree.py`는 W = 4 시대 — 덱에서 미사용;
+  `make_figure_mirnov.py` — 자기상관 사실(유효).
 - `make_figure_window_sweep.py` — window sweep 곡선 (`fig_window_sweep.png`). history 길이 vs
   held-out test `skill_vs_pchip`, CES_TI/VT 패널 분리, seed 4점 + 평균. 24-run 배치
   (`data/.wsweep_summary.json`)를 읽으며, 요약이 없으면 `data/.wsweep_*` run 산출물을 직접 훑습니다.
@@ -128,7 +143,7 @@ python docs/presentation/preview_pptx.py docs/presentation/KSTAR_CES_발표자�
 `fig_raw_csv_missing.png` (원본 shot CSV 스크린샷 — CES_TI 빈칸·CES_VT held 반복·빠른 진단은
 전부 채워진 상태가 한눈에 보임), `fig_ar_formula.png` (local AR/선형 외삽 수식).
 - `build_pptx.py` — 1시간 발표 덱 (네이티브 도형 아키텍처 다이어그램 + 그림 임베드).
-- `build_pptx_20min.py` — 20분 발표 덱(24장). `build_pptx.py`를 import해 팔레트·레이아웃 헬퍼와
+- `build_pptx_20min.py` — 20분 발표 덱(23장). `build_pptx.py`를 import해 팔레트·레이아웃 헬퍼와
   그대로 쓸 수 있는 슬라이드를 재사용하고, 나머지는 병합/압축 버전으로 대체합니다.
   **수치를 고칠 때는 `build_pptx.py`를 고치면 두 덱에 함께 반영됩니다** (재사용 슬라이드에 한해).
   2026-07-30 중간 보고에서 손으로 고친 내용(Overview 부제 → "결론", 발표 순서 스트립 삭제,

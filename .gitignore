@@ -19,6 +19,7 @@ ces_prediction/eval_metrics.json
 
 # presentation layout-QC renders (preview_pptx.py) and stray preview builds
 docs/presentation/.preview/
+docs/presentation/.preview*/
 docs/presentation/.preview_*.pptx
 # Office lock files (present while a deck is open in PowerPoint)
 ~$*

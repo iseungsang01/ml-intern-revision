@@ -5,23 +5,30 @@ Output: docs/presentation/KSTAR_CES_연구흐름.pptx
 
 This is a third, different-purpose deck. The other two are *presentation* decks:
 
-    build_pptx.py        -> 38 slides, ~60 min thesis defense   (결과를 설득하는 덱)
-    build_pptx_20min.py  -> 24 slides, 20 min seminar           (결과를 압축한 덱)
-    build_pptx_flow.py   -> this file, 18 slides                (논문을 쓰기 위한 덱)
+    build_pptx.py        -> 1-hour thesis defense                (결과를 설득하는 덱)
+    build_pptx_20min.py  -> 20 min seminar                       (결과를 압축한 덱)
+    build_pptx_flow.py   -> this file, 22 slides                 (논문을 쓰기 위한 덱)
 
 Where the result decks answer "이 결과를 믿어도 되는가", this one answers "논문의 이
-절에 무엇을 쓰고, 어느 수치를 인용하며, 근거는 어디에 있는가". Every slide maps to a
-section of `docs/paper/main_ko.tex`, and its notes carry that section's `\\label`.
+절에 무엇을 쓰고, 어느 수치를 인용하며, 근거는 어디에 있는가". **슬라이드 한 장 =
+`docs/paper/main_ko.tex`의 한 절**이고, 각 장의 노트에 그 절의 `\\label`과 인용 시
+주의가 적혀 있다.
 
-**Deliberately excluded** (2026-08-09 재편): 날짜 타임라인, 연구 질문이 바뀐 경위
-(초해상 → gap-filling), AutoML 탐색 경위, 재현성/체크포인트 함정, 운영용 다음-작업
-우선순위. 논문에 한 줄도 들어가지 않는 과정 서사이므로 이 덱에서 전부 잘라냈다.
-그 기록은 THESIS_RESULTS.md §8과 PROJECT_KNOWLEDGE.md에만 남긴다. 음성 결과는
-버리지 않되, 논문이 쓰는 형태 — §9 "남은 개선 여지"의 레버와 §10 한계 — 로만 싣는다.
+2026-08-16 전면 개정: 재실험 B.1–B.5가 끝나 확정 프로토콜(W=2 · held-free · 파일당
+500 · 두 모집단 공동 1차 · 백본 seq_v2)로 논문이 다시 쓰였다. 이 덱의 이전 판이 담고
+있던 W=4 시대 수치·서사(iter2→iter9 progression, seq +0.045, anchor+Δ 31.5%, MNAR
+1/4, 캠페인 0/4, held 포함/제외 이중 보고, CPU p99 6.4 ms)는 전부 폐기되었고 인용
+금지다.
 
-Palette, layout helpers and figures are reused from build_pptx.py so all three decks
-look like one family. 모든 수치는 `docs/paper/main_ko.tex`(= `paper_numbers.json`
-동결 산출물)에서 그대로 옮겼다.
+**Deliberately excluded**: 날짜 타임라인, 연구 질문이 바뀐 경위(초해상 → gap-filling),
+AutoML 탐색 경위, 재현성/체크포인트 함정, 운영용 다음-작업 우선순위. 논문에 한 줄도
+들어가지 않는 과정 서사이므로 이 덱에서 전부 잘라냈다. 그 기록은 THESIS_RESULTS.md
+§8과 PROJECT_KNOWLEDGE.md에만 남긴다. 음성 결과는 버리지 않되, 논문이 쓰는 형태 —
+§9 "남은 개선 여지"의 레버와 §10 한계 — 로만 싣는다.
+
+Palette, layout helpers and figures are reused from build_pptx.py so all decks look
+like one family. 모든 수치는 `docs/paper/main_ko.tex`(= `paper_numbers.json` 동결
+산출물) 및 `docs/paper/outline_ko_v2.tex`에서 그대로 옮겼다.
 
 Usage (from repo root):
     python docs/presentation/build_pptx_flow.py
@@ -101,7 +108,7 @@ def fcard(s, x, y, w, h, title, lines, accent=BLUE, body_size=11.5, tag=""):
 
     Layout QC is not optional here: this deck is dense by design, so every card is
     measured with the same font metrics `preview_pptx.py` uses to flag overflow.
-    A card that cannot fit even at 9 pt is reported at build time and must be cut.
+    A card that cannot fit even at 10 pt is reported at build time and must be cut.
     """
     x, y, w, h = _in(x), _in(y), _in(w), _in(h)
     body_avail = w - 0.42 - _MARGIN_IN
@@ -166,32 +173,40 @@ def f_title():
     s = slide()
     box(s, 0, 0, EMU_W, EMU_H, fill=NAVY)
     box(s, 0, Inches(5.5), EMU_W, Inches(2.0), fill=RGBColor(0x0E, 0x26, 0x47))
-    box(s, Inches(0.9), Inches(1.75), Inches(2.2), Pt(4), fill=TEAL)
-    text(s, Inches(0.9), Inches(1.95), Inches(11.6), Inches(0.5),
+    box(s, Inches(0.9), Inches(1.55), Inches(2.2), Pt(4), fill=TEAL)
+    text(s, Inches(0.9), Inches(1.75), Inches(11.6), Inches(0.5),
          [[("논문 집필용 정리 · Paper-Writing Digest", 16,
             RGBColor(0x8F, 0xD6, 0xCB), True, False, None)]])
-    text(s, Inches(0.88), Inches(2.5), Inches(11.7), Inches(2.0),
+    text(s, Inches(0.88), Inches(2.30), Inches(11.7), Inches(2.0),
          [[("논문에 들어가는 것만:", 30, WHITE, True, False, None)],
           [("확정된 주장 · 인용할 수치 · 근거의 위치", 34, WHITE, True, False, None)]],
          line_spacing=1.12)
-    text(s, Inches(0.9), Inches(4.35), Inches(11.5), Inches(1.0),
+    text(s, Inches(0.9), Inches(4.12), Inches(11.5), Inches(1.3),
          [[("슬라이드 한 장 = ", 16, LGRAY, False, False, None),
            ("main_ko.tex의 한 절", 16, ORANGE, True, False, None),
            (". 각 장의 노트에 그 절의 \\label과 인용 시 주의가 적혀 있습니다.",
             16, LGRAY, False, False, None)],
+          [("확정 프로토콜 = W=2 · held-free(학습·평가) · 파일당 500 · 두 모집단 공동 1차 · 백본 seq_v2",
+            16, RGBColor(0x8F, 0xD6, 0xCB), True, False, None)],
           [("연구가 걸어온 경로·기각된 곁가지·재현성 이슈는 논문에 쓰지 않으므로 이 덱에서 제외했습니다",
-            16, LGRAY, False, False, None)]],
+            15, LGRAY, False, False, None)]],
          line_spacing=1.2)
     text(s, Inches(0.9), Inches(5.9), Inches(11.5), Inches(1.1),
          [[("이승상  (Seungsang Lee)", 17, WHITE, True, False, None)],
-          [("서울대학교 · 원자핵공학  |  2026-08-09 기준", 13, MGRAY, False, False, None)],
-          [("출처: docs/paper/main_ko.tex · docs/paper/paper_numbers.json · THESIS_RESULTS.md §8",
+          [("서울대학교 · 원자핵공학  |  2026-08-16 기준 (재실험 B.1–B.5 반영)",
+            13, MGRAY, False, False, None)],
+          [("출처: docs/paper/main_ko.tex · outline_ko_v2.tex · paper_numbers.json · THESIS_RESULTS.md §8v–§8ab",
             11, MGRAY, False, False, None)]],
          line_spacing=1.25)
     return note(s, """
 용도: 논문을 쓰는 동안 옆에 두는 참조판.
 수치는 전부 main_ko.tex(= 동결 산출물 paper_numbers.json)에서 그대로 옮겼으므로
 여기서 인용하면 논문 본문과 어긋날 수 없다.
+
+**폐기된 이전 판(W=4 시대) 수치는 인용 금지** — iter2→iter9 progression, seq +0.045,
+anchor+Δ가 마진의 31.5% 회수, MNAR 1/4, 캠페인 0/4, held 포함/제외 이중 보고,
+CPU p99 6.4 ms. 대응 그림(fig_progression, fig_seq_paired, fig_stuckfree_paired,
+fig_window_sweep_heldkept, W=4 fig_transient_*)도 쓰지 않는다.
 
 이 덱에서 의도적으로 제외한 것 — 날짜 타임라인, 연구 질문이 바뀐 경위(초해상 → gap-filling),
 AutoML 탐색 경위, 체크포인트/재현성 함정, 운영용 다음-작업 우선순위.
@@ -204,987 +219,1314 @@ def f_map():
     s = slide()
     header(s, "Map", "논문 골격 — 절 ↔ 확정한 것 ↔ 이 덱의 슬라이드", accent=NAVY)
 
-    col_w = [Inches(2.30), Inches(5.05), Inches(2.60), Inches(2.28)]
+    col_w = [Inches(2.30), Inches(4.75), Inches(2.95), Inches(2.23)]
     table(s, Inches(0.55), Inches(1.45), col_w,
-          ["논문 절", "그 절이 확정한 것", "근거 (표·그림)", "이 덱"],
-          [["§1–2 서론·관련 연구", "계보 인정 후 3축 확장으로 novelty 진술", "NOVELTY.md", "3"],
-           ["§3 데이터·문제 설정", "641 shot · 10 ms 격자 · 유지값 54% 감사", "fig_missing", "4–5"],
-           ["§4 모델", "201,258 파라미터 · 관측 마스킹 어텐션", "fig_architecture", "6"],
-           ["§5 평가 방법론", "사전등록 PR1–PR4 · shot 군집 bootstrap", "—", "7"],
-           ["§6 결과 (9개 소절)", "인과 압도 · Tᵢ 4/4 · 간극 · MNAR · 캠페인 · 비대칭 · window · peak",
-            "표 1–8 · fig_forest", "8–15"],
-           ["§7 선택 프로토콜", "게이트를 val loss → clean skill로", "fig_progression", "9"],
-           ["§8 배치 가능한가", "CPU p99 6.4 ms · conformal 8/8 승", "—", "16"],
-           ["§9 남은 개선 여지", "레버 3종: reach · 원 kHz Mirnov · NBI 토크", "—", "17"],
-           ["§10–11 한계·결론", "두 주장(오프라인 vs 인과)의 분리", "표 stress", "18"]],
-          row_h=Inches(0.53), size=11.5, head_size=12)
+          ["논문 절", "그 절이 확정한 것", "근거 (label · 표 · 그림)", "이 덱"],
+          [["§1–2 서론·관련 연구", "인과 전체격자 프레이밍 · 기여 8항 · 계보 위의 확장",
+            "sec:intro · sec:related", "3"],
+           ["§3.1–3.3 데이터·프레이밍", "641 shot · 10 ms · 247,207행 · 두 프레이밍",
+            "sec:data · fig:missing", "4"],
+           ["§3.4–3.5 품질 감사 2종", "유지값 54% 제거 · Tᵢ>3 keV로 두 공동 1차 모집단",
+            "sec:stuck · sec:spikes", "5"],
+           ["§4 모델", "seq_v2 357,570 · 윈도 대조군 201,258 · b3k8 21,498",
+            "sec:model · fig:architecture", "6"],
+           ["§5 평가 방법론", "PR1–PR4 + 두 모집단 + 인과 GP · TEST 동결",
+            "sec:eval", "7"],
+           ["§6.1–6.3 결과 ①", "RMSE 사다리 · 헤드라인 4/4+4/4 · 백본 관문 +0.081",
+            "tab:ladder · headline · gate", "8–10"],
+           ["§6.4–6.6 결과 ②", "간극 >15 ms · MNAR 재가중 · 캠페인 시간 분할",
+            "sec:gap · mnar · campaign", "11–13"],
+           ["§6.7–6.9 결과 ③", "Tᵢ↔V_rot 비대칭 · 윈도 스윕(W=2) · 사다리+폭 스윕",
+            "sec:asym · window · ladder", "14–16"],
+           ["§6.10–6.11 · §7", "peak 집중 · 컷 문턱 무관 · TEST 전 결정 규칙",
+            "sec:peak · cutsens · selection", "17–19"],
+           ["§8–§11", "배치(지연·conformal) · 레버 3종 · 한계 · 결론",
+            "sec:deploy · headroom · limits", "20–22"]],
+          row_h=Inches(0.42), size=11, head_size=11.5)
 
     band(s, 6.16,
          [[("이 덱을 쓰는 법 — ", 13, TEAL, True, False, None),
            ("논문의 한 절을 쓸 차례가 되면 대응 슬라이드를 열고 카드의 수치를 그대로 인용한다. "
-            "수치를 고쳐야 하면 먼저 collect_paper_numbers.py를 돌려 paper_numbers.json을 갱신한다.",
+            "수치를 고쳐야 하면 먼저 collect_paper_numbers.py를 돌려 paper_numbers.json을 갱신한 뒤 "
+            "본문·그림·덱을 함께 재생성한다 — 손으로 박아 넣은 수치가 §8h의 오류였다.",
             13, WHITE, False, False, None)]])
     return note(s, """
-main_ko.tex label 목록: sec:data, sec:stuck, sec:model, sec:eval, sec:results, sec:headline,
-sec:gap, sec:mnar, sec:campaign, sec:asym, sec:window, sec:ladder, sec:peak, sec:selection,
+main_ko.tex label 목록(전수): sec:intro, sec:related, sec:data, sec:framing, sec:stuck,
+sec:spikes, sec:model, sec:eval, sec:results, sec:headline, sec:gate, sec:gap, sec:mnar,
+sec:campaign, sec:asym, sec:window, sec:ladder, sec:peak, sec:cutsens, sec:selection,
 sec:deploy, sec:headroom, sec:limits, sec:conclusion.
+표: tab:ladder, tab:headline, tab:gap, tab:mnar, tab:campaign, tab:stress, tab:ablation,
+tab:window, tab:ladder2. 그림: fig:missing, fig:ladder, fig:forest, fig:campaign,
+fig:ablation, fig:ladder_scaling, fig:peak.
+
+§6.1(RMSE 사다리)에는 소절 label이 없다 — 인용은 §sec:results 첫 소절 + tab:ladder / fig:ladder로.
 
 그림 파이프라인: collect_paper_numbers.py -> docs/paper/paper_numbers.json -> make_figures_en.py
 (논문) / make_figures.py (덱). 수치를 그림 스크립트에 손으로 박아 넣지 말 것 — 그 오류가 §8h다.
 """)
 
 
-# --- 3. The two claims ----------------------------------------------------
+# --- 3. The two claims + the two populations ------------------------------
 def f_two_claims():
     s = slide()
-    header(s, "논문의 중심 논리", "두 개의 주장을 절대 뭉개지 말 것", accent=RED)
+    header(s, "논문의 중심 논리", "두 개의 주장, 두 개의 모집단 — 둘 다 뭉개지 말 것",
+           accent=RED)
 
-    col_w = [Inches(4.55), Inches(3.95), Inches(3.73)]
+    col_w = [Inches(3.95), Inches(4.20), Inches(4.08)]
     table(s, Inches(0.55), Inches(1.45), col_w,
-          ["평가", "PCHIP 대비 (오프라인 · 미래 사용)", "persistence 대비 (인과)"],
-          [["무작위 분할 · 관측 지점 (헤드라인)",
-            ("+0.18~+0.28,  4/4", GREEN, True, None), "+0.35~+0.42"],
-           ["결측 지점으로 재가중 (§6.4)",
-            ("+0.06~+0.21,  1/4", RED, True, None),
-            ("+0.29,  4/4", GREEN, True, None)],
-           ["시간 캠페인 분할 (§6.5)",
-            ("−0.15~+0.05,  0/4", RED, True, None), "+0.12~+0.28"]],
-          row_h=Inches(0.56), size=12.5)
+          ["평가 (seq_v2, Tᵢ)", "PCHIP 대비 (오프라인 · 미래 사용)", "인과 기준선 대비"],
+          [["무작위 분할 · 관측 지점 (§6.2)",
+            ("4/4 / 4/4,  +0.17~+0.32", GREEN, True, None),
+            ("인과 GP 4/4 / 4/4,  +0.08~+0.17", GREEN, True, None)],
+           ["결측 지점으로 재가중 (§6.5)",
+            ("2/4 / 4/4,  +0.14~+0.28", ORANGE, True, None),
+            ("persistence 4/4 / 4/4,  +0.28~+0.44", GREEN, True, None)],
+           ["시간 캠페인 분할 (§6.6)",
+            ("4/4 / 4/4,  +0.17~+0.20", GREEN, True, None),
+            ("인과 GP 4/4 / 4/4,  +0.11~+0.16", GREEN, True, None)]],
+          row_h=Inches(0.54), size=12)
 
-    fcard(s, 0.55, 3.62, 6.03, 2.05,
+    fcard(s, 0.55, 3.60, 6.03, 2.25,
+          "두 모집단 규칙 (§3.5 sec:spikes)",
+          ["· 컷 = Tᵢ > 3 keV(1,197행, 0.53%)를 적재 시점에",
+           "  결측 처리, 전 arm 동일(지도·이력·정규화·앵커).",
+           "· 포함 = 컷 없음. 둘은 공동 1차이며 사전등록됐다.",
+           "· 무조건부 주장은 두 모집단에서 모두 성립할 때만.",
+           "  한쪽만 성립하면 모집단을 명시해 보고한다.",
+           "· 표기 규약: 이 덱의 모든 수치는 “컷 / 포함”.",
+           "· 문턱 2.5–4 keV는 무의미(§6.11) — 중요한 건 두 모집단."],
+          accent=ORANGE, body_size=11.5)
+
+    fcard(s, 6.75, 3.60, 6.03, 2.25,
           "본문에 쓸 문장 형태",
-          ["· 헤드라인(관측 모집단 한정):",
-           "  “사전등록된 보간들을 이긴다”",
-           "· 배치 주장: “진짜 결측·도메인 내 시점에서",
-           "  어떤 인과적 CES 전용 방법보다 유의하게 낫다”",
+          ["· 헤드라인(관측 모집단): “사전등록된 보간들과 배치",
+           "  가능한 모든 인과 방법을 이기고, 미래를 쓰며 표본별로",
+           "  튜닝된 평활기(오프라인 GP)와는 대등하다.”",
+           "· 배치 주장: “진짜 결측이면서 도메인 안인 시점에서",
+           "  CES 단독의 어떤 인과 방법보다 유의하게 낫다.”",
            "· 두 주장은 상대가 다르다. 뭉개는 것이 이 결과가",
-           "  과대 판매되는 주된 경로다(§11이 명시)."],
+           "  과대 판매되는 주된 경로다(§10이 명시)."],
           accent=RED, body_size=11.5)
 
-    fcard(s, 6.75, 3.62, 6.03, 2.05,
-          "novelty는 부재가 아니라 확장으로 (§1–2)",
-          ["① 계보 인정 — NN 기반 CES/CER 피팅(JET ’93~),",
-           "   교차진단 추론, 시간 밀도화(COMPASS 초해상)",
-           "② 3축 확장 — 전자→희소 이온 / 동시각·무기억→",
-           "   인과 이력 / 재구성 가정→사전등록 타겟별 검정",
-           "③ 한정은 한 문장만 — “우리가 아는 한 이 조합은",
-           "   아직 다뤄지지 않았다”"],
-          accent=BLUE, body_size=11.5)
-
-    band(s, 5.85,
+    band(s, 6.02,
          [[("한 문장 — ", 13.5, TEAL, True, False, None),
-           ("온라인 가상 센서는 미래를 읽는 보간이 아니라 persistence와 경쟁한다. "
-            "그 비교에서 이 나우캐스터는 중요한 지점에서 작동한다.", 13.5, WHITE, False, False, None)]])
+           ("온라인 가상 센서는 미래를 읽는 보간이 아니라 persistence와 인과 평활기와 경쟁한다. "
+            "그 비교로 보면 이 나우캐스터는 중요한 지점에서 작동한다.",
+            13.5, WHITE, False, False, None)]], h=0.72)
     return note(s, """
-main_ko.tex 표 tab:stress(§sec:campaign), §sec:conclusion 2문단, docs/paper/NOVELTY.md.
-PROJECT_KNOWLEDGE "Framing Rules"(승상님 2026-08-05):
-· 두 주장을 분리하라 — "미래를 쓰는 보간을 이긴다"는 관측 모집단에 대한 진술,
-  "모든 인과 방법을 이긴다"는 진짜 결측으로 재가중해도 살아남는 진술.
-· novelty는 부재로 진술하지 말 것 — 반례 하나로 무너진다. 인용을 많이 할수록 확장 프레임이 강해진다.
-· 헤드라인은 "사전등록된 보간들을 이긴다"로 읽어야 한다(§10: 사후 GP 팔과는 동률).
+main_ko.tex 표 \\label{tab:stress}(§sec:campaign 끝), \\label{sec:spikes}, \\label{sec:conclusion} 2문단.
+
+인용 시 주의
+· tab:stress는 seq_v2 · Tᵢ에 대한 표다. 윈도 대조군 판본(이전 초안이 보고했던 것)에서는
+  오프라인 우위가 두 스트레스 테스트를 모두 견디지 못했다 — 그 사실을 본문에서 그대로 밝힌다.
+· "2/4 / 4/4"는 컷 2/4, 포함 4/4를 뜻한다. 표기 순서를 덱·본문·그림에서 절대 뒤집지 말 것.
+· 무조건부 Tᵢ 주장 = 헤드라인(4/4+4/4) · 간극 >15 ms · peak(8/8) · 캠페인(4/4+4/4).
+  무조건부 V_rot 주장은 단 하나 — 간극 >15 ms(+0.418 / +0.432).
 """)
 
 
-# --- 4. Data & problem setup ---------------------------------------------
+# --- 4. Data & problem setup (sec:data / sec:framing) ---------------------
 def f_data_setup():
     s = slide()
-    header(s, "§3  sec:data", "데이터와 문제 설정 — 논문 §3.1–3.3", accent=TEAL)
+    header(s, "§3.1–3.3  sec:data · sec:framing", "데이터와 문제 설정 — 641파일 실측 사양",
+           accent=TEAL)
 
     fcard(s, 0.55, 1.45, 4.0, 2.55,
           "데이터셋 (§3.1)",
-          ["· 641개 KSTAR 방전",
-           "  shot 30801–32751",
-           "· H-mode ELM 억제(RMP) 구간,",
-           "  Dα 활동 부근 ~100 ms 절단",
-           "· 공통 10 ms 격자:",
-           "  BES 9ch + ECEI 4ch + MC 2ch",
+          ["· 641 KSTAR 방전, shot 30801–32751",
+           "  (제공 측 선정: 하드웨어 일관성 ·",
+           "  H-mode ELM 억제(RMP) 구간)",
+           "· 공통 10 ms 격자, 총 247,207행",
+           "  (파일당 중앙값 339행)",
+           "· 행당 BES 9 · ECEI 4 · Mirnov 2",
            "  + time + [CES_TI, CES_VT]",
-           "· 결측은 타겟별로 독립:",
-           "  Tᵢ ≈ 8% · V_rot ≈ 24%"],
+           "· 세그먼트는 0.5 s 간극에서 분리",
+           "  (안쪽 스텝의 99.4%가 10 ms)"],
           accent=TEAL, body_size=11.5)
 
     fcard(s, 4.72, 1.45, 4.0, 2.55,
-          "샘플 구성 (§3.2)",
-          ["W = 4, 타겟 행이 윈도의 마지막",
-           "· bes (W,9) · ecei (W,4)",
-           "· mc (W,2) · time_features (W,4)",
-           "· ces_history (W,4)",
-           "· 타겟 (2) + 관측 마스크 m (2)",
-           "시간 특징 = lookback·delta 초와",
-           "각 log1p. 과거 CES의 신뢰도는",
-           "10 ms 전인지 200 ms 전인지에",
-           "강하게 의존하기 때문."],
-          accent=BLUE, body_size=11.5)
-
-    fcard(s, 8.89, 1.45, 3.89, 2.55,
-          "설계 원칙 3종 (§3.3)",
-          ["· 가짜 라벨 금지 — impute 없음.",
-           "  입력이 완전하고 CES 중 최소",
-           "  하나가 관측된 행만 유지",
-           "· 타겟별 마스킹 손실 —",
-           "  ℒ = Σₖ mₖ(ŷₖ−yₖ)² / Σₖ mₖ",
-           "  (옛 필터는 라벨 28%를 폐기)",
-           "· 누수 방지 3중 — 파일 단위",
-           "  분할 · 학습 파일 전용 z-score",
-           "  · 타겟 시점 완전 마스킹"],
+          "세그먼트 구조 · 결측 (§3.1)",
+          ["· 전형적 파일 = 주 세그먼트 1개",
+           "  (중앙값 301행 ≈ 3.0 s, 10–90분위",
+           "  1.3–7.0 s; 2개인 파일 28)",
+           "  + 고립 단일행(전체 1,279, 대개 t=0)",
+           "· Tᵢ 결측 8.2% · V_rot 결측 23.9%",
+           "  (서로 독립)",
+           "· V_rot held 41.1% → 독립 관측 35.0%,",
+           "  관측 V_rot의 54.0%가 held",
+           "· 격자의 65.0%에 독립 V_rot 정보 없음"],
           accent=ORANGE, body_size=11.5)
 
-    add_image_fit(s, os.path.join(FIG, "fig_missing.png"),
-                  Inches(0.55), Inches(4.15), Inches(7.3), Inches(2.55))
+    fcard(s, 8.89, 1.45, 3.89, 2.55,
+          "두 프레이밍 (§3.2)",
+          ["· 윈도(대조군), W=2: bes (W,9) ·",
+           "  ecei (W,4) · mc (W,2) ·",
+           "  time_features (W,4) ·",
+           "  ces_history (W,4) + 타겟별 마스크",
+           "· 전체격자 시퀀스(주 모델): 세그먼트의",
+           "  입력-완전 행 전부를 맥락으로.",
+           "  스텝당 22채널 = z-score 고속 15",
+           "  + log(1+Δt) + 타겟별 3(이월값 ·",
+           "  신선도 · 과거관측 flag)"],
+          accent=BLUE, body_size=11.5)
 
-    fcard(s, 8.05, 4.15, 4.73, 2.55,
-          "이 그림이 논문에서 하는 일",
-          ["fig_missing = 논문 그림 1.",
-           "",
-           "Tᵢ와 V_rot이 독립적으로 결측된다는",
-           "사실이 “행 필터링이 아니라 타겟별",
-           "마스킹”이라는 설계 논거를 그림 하나로",
-           "세운다.",
-           "",
-           "이 그림이 없으면 §3.3의 마스킹 손실",
-           "항목은 설계 취향처럼 읽힌다."],
-          accent=NAVY, body_size=11.5)
+    add_image_fit(s, os.path.join(FIG, "fig_missing.png"),
+                  Inches(0.55), Inches(4.15), Inches(7.3), Inches(2.5))
+
+    fcard(s, 8.05, 4.12, 4.73, 2.55,
+          "설계 원칙 3종 (§3.3)",
+          ["· 가짜 라벨 금지 — impute 없음. 윈도에서는 입력이",
+           "  완전하고 CES 중 최소 하나가 관측된 행만 유지,",
+           "  시퀀스에서 라벨 없는 행은 맥락으로만 기여.",
+           "· 타겟별 마스킹 손실 —",
+           "  ℒ = Σₖ mₖ(ŷₖ-yₖ)² / Σₖ mₖ.",
+           "  두-타겟-필수 필터는 라벨 행의 ≈28%를 버렸을 것.",
+           "· 누수 방지 3중 — 파일 단위 분할 · 학습 파일 전용",
+           "  z-score(시퀀스는 + shot별 고속 표준화) ·",
+           "  타겟 시점 완전 마스킹."],
+          accent=NAVY, body_size=11)
     return note(s, """
-main_ko.tex §sec:data (324–370행), 그림 fig:missing.
+main_ko.tex \\label{sec:data} · \\label{sec:framing}, 그림 \\label{fig:missing}.
 
 인용 시 주의
 · 결측률은 '행 기준·타겟별 독립'이며 두 타겟이 함께 결측되는 비율이 아니다.
+· 0.5 s 임계값은 이봉 delta 분포의 골이다 — 약 247k개 delta 중 (0.1, 0.5) s 구간은 82개뿐.
+· 옛 초고의 "캠페인 #24000–#33000 · ~100 ms 절편"은 현재 데이터와 맞지 않아 폐기했다.
+  이 슬라이드의 사양이 641파일 실측이다.
 · 타겟 시점 마스킹은 값과 관측 플래그를 '모두' 0으로 만든다 — 플래그만 남기면 누수다.
 · ces_history 4채널 = 직전 정규화 Tᵢ, 직전 정규화 V_rot, Tᵢ 관측 플래그, V_rot 관측 플래그.
+· 시퀀스 22채널 = 고속 15(BES 9 + ECEI 4 + MC 2) + log(1+Δt_prev) + 타겟 2개 × 3채널.
 """)
 
 
-# --- 5. Held (stuck) audit ------------------------------------------------
-def f_stuck():
+# --- 5. Two data-quality audits (sec:stuck / sec:spikes) ------------------
+def f_audits():
     s = slide()
-    header(s, "§3.4  sec:stuck", "데이터 품질 감사 — 유지(forward-fill)된 V_rot", accent=ORANGE)
+    header(s, "§3.4–3.5  sec:stuck · sec:spikes",
+           "데이터 품질 감사 2종 — 유지값, 그리고 두 모집단이 생긴 이유", accent=ORANGE)
 
-    fcard(s, 0.55, 1.45, 3.95, 2.35,
-          "① 무엇을 발견했나",
-          ["관측된 V_rot 값의 54%가",
-           "계기 유지값 — 같은 연속 블록",
-           "안에서 직전 관측과 비트 단위",
-           "동일한 반복.",
-           "최대 1,214행 연속,",
-           "641개 중 499개 파일 영향.",
-           "Tᵢ는 영향 없음(0.0%)."],
+    fcard(s, 0.55, 1.45, 6.03, 4.35,
+          "감사 1: 유지(forward-fill)된 V_rot  §3.4",
+          ["· 관측된 V_rot 값의 54%가 계측기 유지값 — 같은 연속",
+           "  블록 안에서 직전 관측과 비트 단위로 동일한 반복.",
+           "  최대 1,214행 연속, 641개 중 499개 파일이 영향.",
+           "· V_rot의 고유 측정 주기가 행 주기보다 느려서 생긴다.",
+           "  독립적인 측정이 아니다.",
+           "· 위양성 통로 없음: V_rot은 소수점 다섯 자리까지",
+           "  기록되고 서로 다른 값의 최소 간격이 4×10⁻⁵다.",
+           "  Tᵢ는 영향 없음 — 226,991행 중 1행.",
+           "",
+           "확정 프로토콜: 유지값은 어디서나 제거한다",
+           "  ① 지도 타겟  ② 이력·이월 입력과 그 관측 플래그",
+           "  ③ 정규화 통계  ④ 모든 기준선의 보간 앵커",
+           "→ 어떤 팔도 forward-fill로 공짜 점수를 받을 수 없다.",
+           "본 논문의 모든 수치는 진짜 측정만 사용한다."],
           accent=ORANGE, body_size=11.5)
 
-    fcard(s, 4.72, 1.45, 3.95, 2.35,
-          "② 평가에서 제외한 결과",
-          ["유지값은 전 구간에서 채점에서",
-           "제외한다.",
-           "물리 단위 V_rot RMSE가",
-           "35–55% 커진다(22–33 → 35–46).",
-           "유지 타겟의 기준선 오차가",
-           "0에 가까웠기 때문 — 보정은",
-           "우리에게 불리한 방향이다."],
+    fcard(s, 6.75, 1.45, 6.03, 4.35,
+          "감사 2: Tᵢ 피팅 실패와 두 모집단  §3.5",
+          ["· 관측 Tᵢ의 p99 = 2,089 eV, p99.9 = 9,601 eV,",
+           "  최댓값 14,984 eV → 먼 꼬리는 실패한 스펙트럼 피팅.",
+           "· >3 keV가 1,197행(0.53%) = 274 방전의 951개 run.",
+           "  run의 85%가 단일 행, 5행 이상은 2%,",
+           "  run 정점 중앙값은 관측 이웃 평균의 13×(IQR 6–26×).",
+           "· 두 대응 모두 방어 가능하고 각각 비판 가능하다:",
+           "  제거 = “어려운 행을 없앴다”, 유지 = 스파이크 앵커가",
+           "  오프라인 기준선을 오염시킨다.",
+           "→ 두 개의 공동 1차 모집단(컷 / 포함)을 사전등록.",
+           "",
+           "· 값 컷은 한쪽 방향 프록시 — 하향 급락(양쪽 이웃의",
+           "  ½ 이하) 4,965행은 건드리지 않고, ≥2× 상향 이상치의",
+           "  19%만 제거한다.",
+           "· V_rot 스파이크(>1,000 km/s 119행 / 16 방전, 101행은",
+           "  한 방전의 한 블록)는 컷하지 않고 SSE 비중을 병기."],
           accent=RED, body_size=11.5)
 
-    fcard(s, 8.89, 1.45, 3.89, 2.35,
-          "③ 학습도 오염시킨다",
-          ["학습에서도 제거하면(타겟·이력",
-           "값과 플래그·정규화 통계·보간",
-           "앵커 전부) 진짜 측정 V_rot이",
-           "4개 분할 전부에서 개선:",
-           "평균 +0.039 (MSE ≈4% 감소),",
-           "3/4 CI가 0 제외, 역방향 없음.",
-           "Tᵢ는 무영향(+0.004)."],
-          accent=GREEN, body_size=11.5)
-
-    add_image_fit(s, os.path.join(FIG, "fig_stuckfree_paired.png"),
-                  Inches(0.55), Inches(3.95), Inches(7.0), Inches(2.55))
-
-    fcard(s, 7.75, 3.95, 5.03, 2.72,
-          "본문에 함께 쓸 두 문장",
-          ["· 한 번도 시험된 적 없는 축에서 같은 효과가",
-           "  재현된다: 유지값 제거 이득이 W = 2,3,4,6,8에서",
-           "  +0.088 → +0.048 → +0.035 → +0.003 → +0.006로",
-           "  단조 감소. 유지값은 긴 window에 상을 준 게 아니라",
-           "  짧은 window를 벌하고 있었다.",
-           "· 헤드라인은 이 처리에 불변이다: 재학습해도 Tᵢ는",
-           "  4/4 PASS(+0.184 / +0.291 / +0.238 / +0.221),",
-           "  V_rot 점추정은 전부 상승하나 3/4은 여전히 n.s."],
-          accent=NAVY, body_size=11)
+    band(s, 5.95,
+         [[("왜 하나로 못 고르나 — ", 13, TEAL, True, False, None),
+           ("컷 없이는 모든 팔이 PCHIP 대비 더 좋아 보인다(백본 +0.268 대 +0.236). "
+            "스파이크가 보간 앵커를 오염시키기 때문이며, 학습된 모델은 그것을 할인할 수 있지만 보간은 못 한다. "
+            "§6.7이 그 성분을 정량화한다 — 그래서 두 모집단을 항상 함께 보고한다.",
+            13, WHITE, False, False, None)]], h=0.85)
     return note(s, """
-main_ko.tex §sec:stuck (372–413행). THESIS_RESULTS.md §1, §8c.
+main_ko.tex \\label{sec:stuck}(§3.4) · \\label{sec:spikes}(§3.5). THESIS_RESULTS.md §8w, §8y, §8ab.
 
-이 절의 핵심 문장: V_rot이 자기 과거에 의존하는 것은 실제 물리인 '동시에' 부분적으로 계측
-아티팩트이며, 정직한 서술은 두 몫을 모두 정량화해야 한다.
-
-보정하지 않으면 이 아티팩트 하나가 "V_rot은 긴 이력이 필요하다"는 겉보기 추세(+0.118 → +0.202)를
-만들어내고, 보정하면 사라진다 — §6.7 window sweep이 그 대조군이다.
+인용 시 주의
+· 유지값 제거는 민감도 한 줄이 아니라 '프로토콜'이다 — 유지값은 평가뿐 아니라 학습도 오염시킨다
+  (forward-fill 계단은 "이력을 복사하는 것이 거의 최적"이라고 모델에 가르친다).
+  짝지은 재학습 근거는 프로젝트 기록에 있고, 논문 본문은 프로토콜만 진술한다.
+· 두 모집단은 '공동 1차'다. p100 단일 헤드라인으로 합치지 않는다(2026-08-16 결정).
+· 컷은 로드 시점에 적용되고 전 arm이 비트 단위로 같은 모집단 키를 쓰는지 검증한다.
+· V_rot 프로토콜은 불변 — 컷/점프 규칙도 재학습도 없고, anchored 비교마다 스파이크 행의
+  제곱오차 비중만 병기한다(2026-08-16 결정).
 """)
 
 
-# --- 6. Model -------------------------------------------------------------
+# --- 6. Model (sec:model) -------------------------------------------------
 def f_model():
     s = slide()
-    header(s, "§4  sec:model", "모델 — 201,258 파라미터, 병목은 용량이 아니라 정보", accent=BLUE)
+    header(s, "§4  sec:model", "모델 — 병목은 용량이 아니라 정보다", accent=BLUE)
 
-    add_image_fit(s, os.path.join(FIG, "fig_architecture.png"),
-                  Inches(0.55), Inches(1.45), Inches(6.6), Inches(5.05))
+    add_image_fit(s, os.path.join(FIG, "fig_architecture_seq.png"),
+                  Inches(0.55), Inches(1.45), Inches(5.40), Inches(5.20))
 
-    fcard(s, 7.35, 1.45, 5.43, 1.55,
-          "진단별 인코더",
-          ["모달리티별(BES/ECEI/MC) 전용 시간 인지 1-D CNN",
-           "(Conv–BN–GELU 2블록, 전역 평균 풀링, 96차원).",
-           "시간 특징 전용 소형 CNN 하나 추가.",
-           "결측 제거로 샘플링이 불규칙해 순환 구조는 부적합."],
+    fcard(s, 6.10, 1.45, 6.68, 2.55,
+          "주 모델: 전체격자 시퀀스 백본 seq_v2 (357,570)",
+          ["22채널 격자 시퀀스 위의 서로 독립인 인과 LSTM 2개.",
+           "· Tᵢ 분기(2층, 160) = 전체 상태: 고속 진단 · 두 타겟의",
+           "  이월값 · 신선도 플래그 · Δt",
+           "· V_rot 분기(1층, 64) = 비-고속 7채널만: Δt와 타겟별",
+           "  이월값 · 신선도 · 관측 플래그",
+           "· LayerNorm + 작은 GELU 헤드, 손실은 세그먼트의 모든",
+           "  라벨 행에 대한 타겟별 마스킹 MSE",
+           "· AdamW 10⁻³, batch 16 세그먼트, 조기 종료(patience 6,",
+           "  상한 30; 확정 실행은 14–25 epoch에서 종료)"],
           accent=BLUE, body_size=11)
 
-    fcard(s, 7.35, 3.06, 5.43, 2.05,
-          "이력 인코더 — 관측 마스킹 어텐션",
-          ["양방향 GRU(64) → 타겟별로 독립인 두 멀티헤드",
-           "가산 어텐션 readout.",
-           "softmax 이전에 그 타겟의 관측 플래그가 0인 시점을",
-           "−∞로 밀어, 어텐션 질량이 실제 측정된 행에만 놓인다.",
-           "= 보간의 귀납 편향을 파라미터 비용 0으로 주입.",
-           "윈도는 과거 전용 — 양방향성이 미래를 주지 않는다."],
+    fcard(s, 6.10, 4.10, 6.68, 2.55,
+          "프레이밍의 두 함의 · 짝지은 대조군 · 사다리 칸",
+          ["① 도달 범위 = 세그먼트 전체(고정 윈도가 아니다) —",
+           "   §6.3에서 이 모델을 윈도 변형과 가르는 바로 그 양.",
+           "② 라우팅이 인코더 수준에서 성립 — 고속 15채널을 전부",
+           "   교란해도 V_rot 출력이 비트 단위로 동일하다(§6.7).",
+           "· 윈도 대조군(201,258): 시간 인지 1-D CNN(W=2) + 양방향",
+           "  GRU(64) + 타겟별 관측 마스킹 어텐션(파라미터 비용 0).",
+           "· b3k8(21,498): 헤드를 정확 분해 ŷ = 이월값 + Σ wₖzₖ + b",
+           "  로 교체(readout 0 초기화 → persistence에서 출발)."],
           accent=TEAL, body_size=11)
-
-    fcard(s, 7.35, 5.13, 5.43, 1.57,
-          "타겟별 라우팅 · 용량은 레버가 아니다",
-          ["Tᵢ 헤드 = 고속+시간+이력(72k) / V_rot 헤드 = 이력+",
-           "시간만(14k, 고속 차단 — §6.6이 근거). 출력은 정규화 단위.",
-           "~40회 통제 반복에서 용량 확대·복잡 스킵·추가 conv는",
-           "전부 무효였다(정규화 위치만이 안정성 전환점)."],
-          accent=GRAY, body_size=11)
     return note(s, """
-main_ko.tex §sec:model (416–469행).
+main_ko.tex \\label{sec:model}(§4). 그림은 fig_architecture_seq.png(주 모델 seq_v2 도식).
+윈도 대조군 도식은 fig_architecture.png — 필요하면 §6.3 슬라이드에서 함께 쓴다.
 
-논문이 아키텍처 기여로 내세우는 지점은 하나다 — "일반적이지 않은 유일한 구성요소는 이 풀링
-마스크". 마스킹되지 않은 어텐션 풀은 0으로 채워진 타겟 행과 측정값 없는 이력 행에 가중치를
-쓸 수 있어 readout을 희석시키고, 그 억제를 플래그 채널로 암묵 학습하게 떠넘긴다.
-하드 마스킹은 같은 편향을 파라미터 비용 0으로 공급한다 — 이것이 §7 선택 프로토콜이 마지막으로
-채택한 변경이다.
-
-탐색 경위 자체는 논문에 쓰지 않는다. 쓰는 것은 '용량은 레버가 아니었다'는 음성 결과뿐이다.
+인용 시 주의
+· 주 모델은 seq_v2다. 옛 주 모델(윈도 GRU + 관측마스킹 attention, 201,258, iter009)은
+  이제 'W=2 윈도 대조군'이며, 그렇게만 부른다.
+· b3k8의 z ∈ [-1,1]^K는 소형 인과 GRU(64/32)의 tanh 잠재이고 K=8(Tᵢ) / 4(V_rot),
+  readout이 0 초기화라 학습이 정확히 persistence에서 출발한다. 파라미터는 백본의 6%.
+· 탐색이 가르쳐 준 것(본문에 쓰는 유일한 탐색 서사): 윈도 계열 두 라운드의 통제 반복에서
+  살아남은 메커니즘은 어텐션 풀링 하나뿐이고 용량 확장·스킵·추가 추출기는 한 번도 돕지 않았다.
+  확정 프로토콜에서 같은 교훈이 두 번 더 반복된다(어텐션 후보 비유의 §7, 폭 스윕 평평 §6.9).
+  그래서 모델 절은 짧고 평가 절은 길다.
 """)
 
 
-# --- 7. Evaluation protocol ----------------------------------------------
+# --- 7. Evaluation protocol (sec:eval) ------------------------------------
 def f_eval():
     s = slide()
     header(s, "§5  sec:eval", "평가 방법론 — 스스로에게 불리하게 세운 bar", accent=NAVY)
 
     fcard(s, 0.55, 1.45, 6.03, 2.35,
           "지표와 채점 모집단",
-          ["· skill_PCHIP = 1 − MSE_model / MSE_PCHIP",
-           "  (Murphy skill), 물리 단위로 역정규화 후 타겟별.",
-           "· 모든 팔이 동일한 (파일, 행) 집합에서 동일한",
-           "  타겟별 유지 마스크로 채점된다.",
+          ["· skill = 1 - MSE_model / MSE_PCHIP (Murphy),",
+           "  물리 CES 단위로 역정규화한 뒤 타겟별로 계산.",
+           "· 모든 팔이 동일한 (파일, 행) 집합에서 동일한 타겟별",
+           "  마스크로 채점되고, 짝지은 비교 이전에 모집단 키가",
+           "  비트 단위로 동일함을 검증한다.",
            "· 보간은 타겟 자신의 값을 제외(누수 없음).",
-           "· 세그먼트 경계를 넘지 않으며, 경계 너머가 필요한",
-           "  시점은 persistence로 예측(PR2, 커버리지 불변)."],
+           "· 세그먼트 경계를 넘지 않으며, 경계 밖 이웃이 필요하면",
+           "  보간이 persistence 값을 예측한다(PR2, 모집단 불변)."],
           accent=NAVY, body_size=11.5)
 
     fcard(s, 6.75, 1.45, 6.03, 2.35,
-          "사전등록 PR1–PR4",
-          ["PR1  헤드라인 상대는 PCHIP (사다리도 함께 보고)",
-           "PR2  보간은 모델이 채점되는 모든 곳에서 예측,",
-           "        미래 이웃이 없으면 persistence로 후퇴",
-           "PR3  test 최소 규모 ≥15 shot, ≥3,000 Tᵢ 샘플",
+          "기준선 사다리 — 인과 GP가 새로 들어왔다",
+          ["· 인과: persistence · 국소 과거 전용 AR · 인과 GP",
+           "  (같은 GP를 과거 이웃 16개로 제한, NaN 조건 동일 →",
+           "  채점 모집단이 움직이지 않는다)",
+           "· 오프라인(미래 사용): 선형 · PCHIP · GP",
+           "  (Matérn-3/2 + 백색잡음, 최근접 16+16 국소 적합,",
+           "  표본별 주변우도 격자 선택)",
+           "· 인과 GP가 배치 가능한 가장 강한 기준선이다",
+           "  (시드 42 Tᵢ RMSE 164.3 대 persistence 197.2, 컷)."],
+          accent=TEAL, body_size=11.5)
+
+    fcard(s, 0.55, 3.90, 6.03, 2.75,
+          "사전등록 PR1–PR4 + 확정 프로토콜이 더한 것",
+          ["PR1  헤드라인 상대는 PCHIP (사다리 전체도 함께 보고)",
+           "PR2  보간은 모델이 채점되는 모든 곳에서 예측, 미래 이웃이",
+           "        없으면 persistence로 후퇴하고 후퇴율을 보고 — Tᵢ",
+           "        0.3–0.4%, V_rot 40–44%(“vs PCHIP”의 2/5가 사실상",
+           "        “vs persistence”다)",
+           "PR3  test 최소 규모 ≥15 shot, ≥3,000 관측 Tᵢ (전부 충족)",
            "PR4  유의 = shot 군집 bootstrap 95% CI가 0 제외",
-           "test 셋은 탐색 이전에 예약되었고 선택 중 한 번도",
-           "읽지 않았다 → 헤드라인에 winner’s curse가 없다."],
-          accent=GREEN, body_size=11.5)
+           "＋ held-free · W=2 · 파일당 500 · 두 모집단 · 문턱 민감도 ·",
+           "     모든 결정 규칙을 TEST 채점 이전에 문서 확정"],
+          accent=GREEN, body_size=11)
 
-    fcard(s, 0.55, 3.95, 6.03, 2.15,
-          "Shot 군집 paired bootstrap",
-          ["한 방전 안의 인접 행은 강하게 상관 → 샘플을",
-           "독립으로 보면 불확실성이 크게 과소평가된다.",
-           "SE_model − SE_PCHIP를 shot 단위로 집계하고",
-           "shot 전체를 복원추출(10,000회, 고정 시드).",
-           "대가: 유효 표본이 shot 수(≈96) — 이것이 모든",
-           "유의성 판정의 검정력을 제한한다(§10 첫 항목)."],
-          accent=BLUE, body_size=11.5)
-
-    fcard(s, 6.75, 3.95, 6.03, 2.15,
-          "두 채점 모집단 — 항상 함께 명시",
-          ["· genuine(진짜 측정만) = 유지값 제외. 헤드라인.",
-           "  시드 42 test: 33,693 샘플 / Tᵢ n = 32,787(96 shot)",
-           "  / 진짜 V_rot n = 10,729(61 shot)",
-           "· stuck0(유지값 포함) = 민감도 확인 전용",
-           "  (V_rot n이 27,437로 부푼다)",
-           "하나를 인용하며 다른 하나를 주장하는 것이 감사에서",
-           "실제로 발견된 오류다(§8h)."],
-          accent=ORANGE, body_size=11.5)
-
-    band(s, 6.22,
-         [[("MNAR 예고 — ", 12.5, TEAL, True, False, None),
-           ("결측은 무작위가 아니므로 관측 시점 skill은 낙관적 추정이다. "
-            "명시하고 멈추면 핵심 수치에 크기를 모르는 보정항이 남으므로, §6.4에서 재가중해 "
-            "얼마가 살아남는지 보고한다.", 12.5, WHITE, False, False, None)]],
-         h=0.72)
+    fcard(s, 6.75, 3.90, 6.03, 2.75,
+          "3-way 분할, TEST 동결, shot 군집 paired bootstrap",
+          ["· 시드 42 test(컷): 관측 Tᵢ n = 32,589 / 96 shot,",
+           "  진짜 V_rot n = 10,463 / 60 shot (포함 32,721 / 10,461)",
+           "· 4개 분할(42·1·7·123): Tᵢ 32.6–35.9k행 / 96 shot,",
+           "  V_rot 10.5–14.5k행 / 60–66 shot",
+           "· 짝지은 SE 차이를 shot 단위로 집계하고 shot 전체를 복원",
+           "  추출(10,000회, 고정 시드). 모델 대 모델 비교도 동일.",
+           "· 대가: 유효 표본 = shot 수 → 전체 검정력의 상한.",
+           "· MNAR 예고: 결측은 무작위가 아니므로(저신호·ELM·천이에서",
+           "  탈락) 관측 지점 skill은 낙관적 추정이다. §6.5에서 실제",
+           "  결측 지점으로 재가중해 얼마가 살아남는지 보고한다."],
+          accent=BLUE, body_size=11)
     return note(s, """
-main_ko.tex §sec:eval (472–524행).
+main_ko.tex \\label{sec:eval}(§5).
 
-세그먼트 사실(본문에 있음): 641개 shot 전부가 ≥0.5 s 간극으로 나뉜 복수 측정 세그먼트를
-가진다 — 파일당 중앙값 2개, 간극 중앙값 6.3 s.
-
-검정력 한계(shot ≈96)를 방법론 절에서 미리 인정하고 §10에서 다시 받는 구조를 유지할 것.
+인용 시 주의
+· "test 셋은 어떤 아키텍처 탐색 이전에 예약되었고 모델 선택 과정에서 절대 읽지 않았다" —
+  이 문장이 헤드라인에 winner's curse가 없다는 근거이며 §7이 그 이행을 문서화한다.
+· V_rot의 PR2 폴백률 40–44%는 반드시 함께 인용할 것. V_rot "vs PCHIP" 수치의 2/5는
+  사실상 "vs persistence"다.
+· 검정력 한계(shot ≈96 / 60–66)를 방법론 절에서 미리 인정하고 §10 첫 항목에서 다시 받는
+  구조를 유지한다.
+· 모든 수치는 단일 수집 스크립트가 동결된 실행 디렉터리에서 읽으므로 본문·표·그림이 어긋날 수 없다.
 """)
 
 
-# --- 8. Result 1: causal ladder ------------------------------------------
-def f_res_causal():
+# --- 8. Result 6.1: RMSE ladder ------------------------------------------
+def f_res_ladder():
     s = slide()
-    header(s, "§6.1  결과 ①", "모델은 모든 인과 기준선을 압도한다 — 가장 강건한 결과", accent=GREEN)
+    header(s, "§6.1  tab:ladder · fig:ladder",
+           "나우캐스터는 모든 인과 기준선을 압도한다 — 가장 강건한 결과", accent=GREEN)
 
-    col_w = [Inches(3.05), Inches(3.10), Inches(1.75), Inches(1.75)]
+    col_w = [Inches(2.00), Inches(2.95), Inches(1.40), Inches(1.45)]
     table(s, Inches(0.55), Inches(1.45), col_w,
-          ["팔", "정보 접근", "Tᵢ RMSE", "V_rot RMSE"],
-          [[("모델 (나우캐스터)", NAVY, True, None), "고속 진단 + 과거 CES",
-            ("407.0", GREEN, True, None), ("35.0", GREEN, True, None)],
-           ["선형 보간", "과거 + 미래 CES", "441.0", "38.4"],
-           ["PCHIP 보간", "과거 + 미래 CES", "449.3", "39.2"],
-           ["Persistence", "마지막 관측 CES", "504.3", "44.4"],
-           ["AR (국소, 인과)", "과거 CES만", "2425.9", "91.5"]],
-          row_h=Inches(0.50), size=12)
+          ["팔", "정보 접근", "Tᵢ RMSE (eV)", "V_rot (km/s)"],
+          [[("seq_v2 (나우캐스터)", NAVY, True, None), "고속 진단 + 과거 CES, 세그먼트 전체",
+            ("157.8", GREEN, True, None), ("23.6", GREEN, True, None)],
+           ["윈도 대조군 (W=2)", "고속 진단 + 과거 CES 2행", "169.2", "26.1"],
+           ["인과 GP", "과거 CES 이웃 16개", "164.3", "28.8"],
+           ["Persistence", "마지막 관측 CES", "197.2", "33.4"],
+           ["AR (국소, 인과)", "과거 CES만", "472.2", "51.0"],
+           [("GP (오프라인)", GRAY, True, None), "과거 + 미래 CES", "153.8", "24.7"],
+           [("선형 보간", GRAY, True, None), "과거 + 미래 CES", "169.8", "29.0"],
+           [("PCHIP 보간", GRAY, True, None), "과거 + 미래 CES", "173.6", "30.2"]],
+          row_h=Inches(0.38), size=11, head_size=11.5)
 
     add_image_fit(s, os.path.join(FIG, "fig_rmse_ladder.png"),
-                  Inches(0.55), Inches(4.35), Inches(6.0), Inches(2.3))
+                  Inches(8.50), Inches(1.45), Inches(4.28), Inches(2.85))
 
-    fcard(s, 6.75, 1.45, 6.03, 2.35,
+    fcard(s, 8.50, 4.40, 4.28, 2.25,
+          "포함 모집단 — 순서는 불변",
+          ["· seq_v2 363.0 / 23.7",
+           "· PCHIP 412.4 / 30.2",
+           "· 인과 GP 394.6 / 28.8",
+           "· persistence 478.0 / 33.4",
+           "피팅 실패 스파이크가 모든 Tᵢ RMSE를",
+           "두 배 이상으로 키우지만 사다리의",
+           "순서는 바꾸지 않는다."],
+          accent=ORANGE, body_size=11)
+
+    fcard(s, 0.55, 5.00, 7.80, 1.65,
           "본문에 쓸 논지",
-          ["· 모델이 두 타겟 모두에서 최저 RMSE이며, 실시간에",
-           "  실제 사용 가능한 모든 것(persistence·과거 전용 AR)을",
-           "  큰 차이로 이긴다.",
-           "· 미래 CES가 정의상 없는 온라인 환경에서 명백한 승자.",
-           "· 이것이 논문에서 가장 강건한 결과 — 스트레스 테스트",
-           "  두 종을 모두 통과하는 주장의 뿌리(§6.4·§6.5).",
-           "· 표와 그림은 같은 동결 산출물에서 생성된다."],
-          accent=GREEN, body_size=11.5)
-
-    fcard(s, 6.75, 3.95, 6.03, 2.7,
-          "캡션에 넣을 주의 세 가지",
-          ["· V_rot RMSE가 ≈23이 아니라 ≈35인 이유: 유지값 포함",
-           "  모집단에서는 유지 타겟의 기준선 오차가 0에 가깝다",
-           "  (§3.4). 이 표는 진짜 측정 기준이다.",
-           "· AR의 2425.9는 오타가 아니다 — 국소 선형 외삽은 희소·",
-           "  불규칙 격자에서 발산한다. 사다리에 남기는 이유는",
-           "  ‘과거만 쓰는 단순 외삽’이 왜 대안이 못 되는지를 보이기",
-           "  위함이다.",
-           "· 어느 팔이 미래를 읽는지를 표 안에 명시할 것(정보 접근 열)."],
-          accent=NAVY, body_size=11.5)
+          ["· seq_v2는 미래를 읽지 않는 모든 방법 중 두 타겟 최저 RMSE이고, 인과 GP를 4%(Tᵢ)·18%(V_rot) 이긴다.",
+           "· 유일한 동률 팔은 잡음 앵커를 통과하는 대신 평균해 내는 오프라인 GP다(153.8 대 157.8).",
+           "· 미래 CES가 정의상 없는 온라인 환경에서 시퀀스 나우캐스터는 명백한 승자 — 가장 강건한 결과다.",
+           "· 표와 그림은 같은 동결 산출물에서 생성된다. 두 스트레스 테스트를 통과하는 주장의 뿌리(§6.5·§6.6)."],
+          accent=GREEN, body_size=11)
     return note(s, """
-main_ko.tex §sec:results 첫 소절, 표 tab:ladder, 그림 fig:ladder (530–566행).
-시드 42 held-out test 분할, 진짜 측정 평가 기준.
+main_ko.tex §sec:results 첫 소절(소절 label 없음), 표 \\label{tab:ladder}, 그림 \\label{fig:ladder}.
+
+인용 시 주의
+· 표는 시드 42 held-out test · 컷 모집단 · 진짜 측정만(n = 32,589 Tᵢ / 10,463 V_rot)이다.
+· 어느 팔이 미래를 읽는지를 표 안에 반드시 명시할 것(정보 접근 열). 아래 세 행이 미래를 읽는다.
+· AR의 472.2는 오타가 아니다 — 국소 선형 외삽은 희소·불규칙 격자에서 발산한다.
+  사다리에 남기는 이유는 '과거만 쓰는 단순 외삽'이 왜 대안이 못 되는지를 보이기 위함이다.
+· 표와 그림은 같은 동결 산출물에서 생성된다.
 """)
 
 
-# --- 9. Result 2: headline ------------------------------------------------
+# --- 9. Result 6.2: headline (sec:headline) ------------------------------
 def f_res_headline():
     s = slide()
-    header(s, "§6.2  sec:headline", "헤드라인 — Tᵢ는 4개 독립 분할에서 미래를 쓰는 보간을 이긴다",
+    header(s, "§6.2  sec:headline",
+           "헤드라인 — Tᵢ는 두 모집단 모두 4/4로 미래를 쓰는 보간을 이긴다",
            accent=GREEN)
-    add_image_fit(s, os.path.join(FIG, "fig_forest.png"),
-                  Inches(0.55), Inches(1.45), Inches(6.6), Inches(3.55))
 
-    fcard(s, 7.35, 1.45, 5.43, 2.05,
-          "인용할 수치 (genuine TEST)",
-          ["· Tᵢ  +0.179 [+0.007, +0.302] · +0.197 [+0.091, +0.276]",
-           "  +0.280 [+0.192, +0.347] · +0.263 [+0.109, +0.348]",
-           "  → 4/4 PASS (유지값 포함에서도 4/4)",
-           "· 선형 보간 상대로도 3/4 생존 (시드 42만 +0.148 n.s.)",
-           "· V_rot  +0.203 / +0.162 / +0.100 / +0.183 —",
-           "  점추정 전부 양수, PASS는 시드 1뿐 → 동률로 보고"],
+    fcard(s, 0.55, 1.45, 7.40, 2.95,
+          "인용할 수치 — Tᵢ, held-out TEST (컷 / 포함)",
+          ["· 42     +0.174 [+0.097, +0.236]   /   +0.225 [+0.109, +0.293]",
+           "· 1       +0.248 [+0.188, +0.295]   /   +0.238 [+0.153, +0.302]",
+           "· 7       +0.257 [+0.199, +0.302]   /   +0.292 [+0.232, +0.344]",
+           "· 123   +0.264 [+0.188, +0.320]   /   +0.316 [+0.186, +0.392]",
+           "→ 컷 4/4 · 포함 4/4 PASS. 8개 셀 전부가 인과 GP와",
+           "   persistence(+0.36~+0.46)도 이긴다.",
+           "   vs 인과 GP(컷 / 포함): +0.078/+0.154 · +0.133/+0.169 ·",
+           "   +0.138/+0.123 · +0.105/+0.149",
+           "→ 두 모집단 모두에서 성립하므로 논문의 무조건부 주장이다."],
           accent=GREEN, body_size=11)
 
-    fcard(s, 7.35, 3.58, 5.43, 1.42,
-          "사후 GP 팔 — 오프라인 주장의 상한",
-          ["GP는 Tᵢ 4개 분할 전부에서 PCHIP을 유의하게 이기는",
-           "(+0.21~+0.28) 가장 강한 오프라인 평활기이고,",
-           "모델은 그것과 동률(유의 승 1/4, 유의 패 0/4)."],
+    add_image_fit(s, os.path.join(FIG, "fig_forest.png"),
+                  Inches(0.55), Inches(4.55), Inches(7.40), Inches(2.10))
+
+    fcard(s, 8.15, 1.45, 4.63, 2.35,
+          "V_rot — 승리가 아니라 동률",
+          ["컷    +0.390* / +0.183 / +0.135 / +0.305",
+           "        → PR4 1/4",
+           "포함  +0.384* / +0.195* / +0.132 / +0.304",
+           "        → PR4 2/4",
+           "vs persistence 양쪽 3/4(+0.30~+0.50),",
+           "vs 인과 GP 2/4. 4개 중 1–2개 유의는",
+           "잡음이 만들 수 있는 수준이므로 회전",
+           "채널의 승리는 주장하지 않는다."],
           accent=ORANGE, body_size=11)
 
-    fcard(s, 0.55, 5.15, 6.6, 1.5,
-          "§7과 함께 쓰는 ‘정직한 진행’ 문단",
-          ["초기 기준 모델은 유의하지 않았다(+0.088, CI [−0.221, +0.323]).",
-           "선택 게이트를 검증 손실 → 깨끗한 보간 대비 skill로 바꾼 것이",
-           "최종 모델을 낳았고 4개 분할 모두에서 유의하다(fig_progression)."],
-          accent=BLUE, body_size=11)
-
-    fcard(s, 7.35, 5.15, 5.43, 1.5,
-          "동률을 해소할 지목된 측정",
-          ["· 더 많은 test shot — 시드 7은 이미 해소한다",
-           "· 아직 실행하지 않은 인과(과거 전용) GP 팔",
-           "배치 주장은 무관 — 미래 앵커 없는 GP는 온라인에 없다."],
+    fcard(s, 8.15, 3.95, 4.63, 2.70,
+          "포함이 더 높은 이유 · 오프라인 상한",
+          ["· 컷이 없으면 모든 팔이 PCHIP 대비 더",
+           "  좋은 점수를 받는다(백본 평균 +0.268 대",
+           "  +0.236, 대조군 +0.238 대 +0.173).",
+           "  스파이크가 보간 앵커를 오염시키기 —",
+           "  모델은 할인하고 보간은 못 한다(§6.7).",
+           "· 오프라인 GP와는 동률(-0.05~+0.11,",
+           "  8개 중 1개 유의) = 오프라인 주장의 상한",
+           "→ 헤드라인은 “사전등록된 보간들을",
+           "  이긴다”로 읽어야 한다."],
           accent=NAVY, body_size=11)
     return note(s, """
-main_ko.tex §sec:headline (568–658행), 표 tab:headline, 그림 fig:forest / fig:progression.
+main_ko.tex \\label{sec:headline}(§6.2), 표 \\label{tab:headline}, 그림 \\label{fig:forest}.
 
 인용 시 주의
-· 시드 1/7/123은 모델 선택이 전혀 건드리지 않은 진짜 복제다.
-· 유지값 포함 Tᵢ: +0.257 / +0.194 / +0.263 / +0.280 (4/4).
-· 선형 보간 대비 genuine: 시드 42 +0.148(n.s.), 나머지 +0.167 / +0.259 / +0.234(PASS).
-  사전등록된 PCHIP 비교만 인용하지 말고 이 사실을 명시할 것.
-· V_rot은 점추정이 4/4 양수인데도 n.s.로 보고한다 — 이 보고 기준 자체를 본문에 쓴다.
-· GP 점추정 범위는 −0.08~+0.09이고 V_rot은 전부 n.s.
+· 시드 1/7/123은 어떤 선택 단계에도 쓰이지 않은 진짜 복제다.
+· 표기 순서는 언제나 "컷 / 포함". 한쪽만 인용하지 말 것.
+· V_rot은 점추정이 8/8 양수인데도 동률로 보고한다 — 이 보고 기준 자체를 본문에 쓴다.
+  PASS 셀은 컷 시드 42, 포함 시드 42와 1(1은 [+0.000, +0.286]로 경계에 있다).
+· "미래를 쓰는 보간을 이긴다"는 §10에서 "사전등록된 보간들을 이긴다"로 한정된다(GP 동률).
+· V_rot의 PR2 폴백률 40–44%(§5)를 함께 기억할 것.
 """)
 
 
-# --- 10. Result 3: gap stratification ------------------------------------
+# --- 10. Result 6.3: backbone gate (sec:gate) ----------------------------
+def f_res_gate():
+    s = slide()
+    header(s, "§6.3  sec:gate",
+           "백본 관문 — 전체격자 프레이밍이 산 것은 '도달 범위'다", accent=BLUE)
+
+    add_image_fit(s, os.path.join(FIG, "fig_gate_b1.png"),
+                  Inches(0.55), Inches(1.45), Inches(6.40), Inches(3.55))
+
+    fcard(s, 7.15, 1.45, 5.63, 3.55,
+          "사전등록 4조건 관문 (컷 모집단, 한 번만 채점)",
+          ["분할 시드 × 초기화 시드의 4×4 격자를 돌리고 각 실행을",
+           "그 분할의 W=2 윈도 대조군과 행 단위로 짝지었다.",
+           "· 짝지은 Tᵢ skill 16/16 실행 양수 · 13/16 개별 유의",
+           "· 분할별 초기화 평균 +0.129 / +0.059 / +0.078 / +0.058",
+           "  (초기화 산포가 분할 산포보다 훨씬 작다)",
+           "· 통합 평균 +0.081, 실행 군집 95% CI [+0.067, +0.096]",
+           "· 예산 균등화(고정 10 epoch, 최종 가중치, val 선택 없음)",
+           "  에서도 4/4 부호 유지: +0.063 / +0.033 / +0.045 / +0.030",
+           "  → 이 이득은 학습 예산이 아니라 아키텍처에서 온다",
+           "· V_rot 유의 열세 0/16 (유의 우세 8/16)",
+           "→ 네 조건이 모두 성립했다. 관문은 채점 이전에 고정됐다(§7)."],
+          accent=BLUE, body_size=11)
+
+    fcard(s, 0.55, 5.15, 12.23, 1.50,
+          "확증 4 분할, 그리고 프레이밍이 '무엇을' 사는가",
+          ["· 확증 4 분할의 같은 비교(seq_v2 - 대조군): 컷 +0.130 / +0.058 / +0.062 / +0.044, 포함 +0.053 / +0.024 / +0.047 / +0.029 — 8/8 양수, 각 2/4 유의.",
+           "· 윈도 대조군은 인과 GP와 동률(컷 1/4)인데 시퀀스 백본은 두 모집단 모두 4/4 — 세그먼트 과거 전체로의 도달 범위가 최강 배치 기준선을 넘어서게 한다.",
+           "· 비용은 음수다: 샘플별 윈도 조립도 조합적 증강도 없어 학습비가 윈도 계열의 1/10이다. 이 네 분할이 논문의 나머지 전부에서 보고되는 확정 분할이다."],
+          accent=GREEN, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:gate}(§6.3). 그림은 fig_gate_b1.png(B.1 관문 16 run). THESIS_RESULTS.md §8z.
+
+인용 시 주의
+· 관문은 '컷 모집단'에서 채점한다 — 내부 모델 선택이 수행되는 모집단이기 때문이다. 그 사실을 밝힐 것.
+· pooled +0.081의 CI는 shot 군집이 아니라 'run 군집'이다(16 run). 표기를 섞지 말 것.
+· 예산 균등화 팔이 이 이득이 학습 예산 효과가 아니라 아키텍처에서 온다는 증거다.
+· 이 절은 §7 선택 프로토콜과 짝을 이룬다 — 관문 4조건은 채점 이전에 문서로 고정되었다.
+""")
+
+
+# --- 11. Result 6.4: gap strata (sec:gap) --------------------------------
 def f_res_gap():
     s = slide()
-    header(s, "§6.3  sec:gap", "간극 층화 — 큰 간극에서 올바른 상대는 persistence다", accent=BLUE)
+    header(s, "§6.4  sec:gap", "skill이 사는 곳 ① — 간극 영역 (4 분할 통합)", accent=BLUE)
 
-    col_w = [Inches(2.35), Inches(1.30), Inches(1.15), Inches(3.75), Inches(3.68)]
+    col_w = [Inches(2.10), Inches(1.95), Inches(1.15), Inches(3.50), Inches(3.53)]
     table(s, Inches(0.55), Inches(1.45), col_w,
-          ["Δt (4 분할 통합)", "n", "shot", "PCHIP 대비 (미래 사용)", "persistence 대비 (인과)"],
-          [[("Tᵢ  ≤ 15 ms", NAVY, True, None), "134,629", "298",
-            ("+0.262 [+0.20, +0.31]", GREEN, True, None),
-            ("+0.407 [+0.36, +0.45]", GREEN, True, None)],
-           [("Tᵢ  전체 > 15 ms", NAVY, True, None), "4,496", "272",
-            ("+0.191 [+0.10, +0.28]", GREEN, True, None),
-            ("+0.388 [+0.32, +0.46]", GREEN, True, None)],
-           [("Tᵢ  전체 > 45 ms", NAVY, True, None), "435", "105",
-            "−0.057 [−0.45, +0.21]  n.s.",
-            ("+0.271 [+0.12, +0.41]", GREEN, True, None)],
-           [("Tᵢ  > 105 ms", NAVY, True, None), "167", "62",
-            ("−0.542 [−2.07, −0.08]", RED, True, None), "+0.266 [−0.00, +0.46]"],
-           [("V_rot  ≤ 15 ms", NAVY, True, None), "51,457", "195",
-            "+0.209 [−0.02, +0.29]  n.s.",
-            ("+0.368 [+0.17, +0.45]", GREEN, True, None)],
-           [("V_rot  전체 > 15 ms", NAVY, True, None), "1,756", "161",
-            "+0.027 [−0.20, +0.24]  n.s.",
-            ("+0.309 [+0.13, +0.47]", GREEN, True, None)]],
-          row_h=Inches(0.48), size=11)
+          ["Δt", "n (컷 / 포함)", "shot", "컷: PCHIP 대비", "포함: PCHIP 대비"],
+          [[("Tᵢ  ≤ 15 ms", NAVY, True, None), "134,546 / 135,317", "301",
+            ("+0.239 [+0.197, +0.274]", GREEN, True, None),
+            ("+0.299 [+0.244, +0.347]", GREEN, True, None)],
+           [("Tᵢ  > 15 ms", NAVY, True, None), "3,422 / 3,334", "265 / 263",
+            ("+0.268 [+0.187, +0.337]", GREEN, True, None),
+            ("+0.206 [+0.108, +0.290]", GREEN, True, None)],
+           [("Tᵢ  > 45 ms", NAVY, True, None), "460 / 429", "104 / 101",
+            ("+0.267 [+0.092, +0.414]", GREEN, True, None),
+            ("-0.004 [-0.304, +0.246]", ORANGE, True, None)],
+           [("V_rot  ≤ 15 ms", NAVY, True, None), "51,689", "197",
+            ("+0.233 [+0.020, +0.318]", GREEN, True, None),
+            ("+0.233 [+0.020, +0.317]", GREEN, True, None)],
+           [("V_rot  > 15 ms", NAVY, True, None), "466 / 456", "130",
+            ("+0.418 [+0.104, +0.680]", GREEN, True, None),
+            ("+0.432 [+0.128, +0.696]", GREEN, True, None)],
+           [("V_rot  > 45 ms", NAVY, True, None), "14", "7", "미채점 (n < 50)", "미채점 (n < 50)"]],
+          row_h=Inches(0.44), size=11, head_size=11.5)
 
-    fcard(s, 0.55, 4.75, 4.0, 1.9,
-          "① 우위는 인접 이력에 국한되지 않는다",
-          ["4개 분할을 통합하고 bootstrap을",
-           "방전 단위로 군집화해 처음으로 넓은",
-           "구간에 CI를 붙였다. Δt > 15 ms 전체",
-           "+0.191, (15,25]·(25,35]·(55,105]가",
-           "각각 단독 유의."],
+    fcard(s, 0.55, 4.62, 3.95, 2.03,
+          "① 인접 이력에 국한되지 않는다",
+          ["채점 타겟의 ≥96%가 Δt ≤ 15 ms에",
+           "있지만, 15 ms를 넘어서도 백본은",
+           "두 모집단 모두에서 미래를 쓰는",
+           "PCHIP을 이긴다(+0.268 / +0.206).",
+           "같은 층에서 persistence 대비는",
+           "+0.40과 +0.43이다."],
           accent=GREEN, body_size=11)
 
-    fcard(s, 4.72, 4.75, 4.0, 1.95,
-          "② 가장 넓은 간극은 보간의 영역",
-          ["105 ms 초과에서 모델은 PCHIP보다",
-           "유의하게 나쁘다(−0.542). 그대로 보고.",
-           "올바른 진술: “모델이 큰 간극에서",
-           "실패한다”가 아니라 “큰 간극은 양측",
-           "보간의 영역이고, 그것은 실시간이",
-           "가질 수 없는 바로 그것이다”."],
+    fcard(s, 4.72, 4.62, 3.95, 2.03,
+          "② >45 ms는 모집단 조건부",
+          ["컷에서는 여전히 이기지만(+0.267)",
+           "포함에서는 동률이다(-0.004,",
+           "CI [-0.30, +0.25]).",
+           "101 shot의 429행은 소수의 스파이크",
+           "앵커 행이 한 계층을 지배할 수 있는",
+           "바로 그 규모 — 동률로 보고한다."],
           accent=ORANGE, body_size=11)
 
-    fcard(s, 8.89, 4.75, 3.89, 1.9,
-          "③ V_rot은 동률이되 인과는 전부 승",
-          ["§6.2의 전역 동률은 미래를 쓰는",
-           "방법과의 동률이다.",
-           "persistence 대비로는 작은 간극",
-           "(+0.368)에서도, 15 ms를 넘어서도",
-           "(+0.309) 유의하게 우수하다."],
+    fcard(s, 8.89, 4.62, 3.89, 2.03,
+          "③ 논문 유일의 무조건부 V_rot 양성",
+          ["전역 V_rot 동률은 '인접 영역에서의'",
+           "동률이다. Δt > 15 ms에서는 백본이",
+           "두 모집단 모두 PCHIP을 이긴다",
+           "(+0.418 / +0.432, 130 shot).",
+           "≤ 15 ms에서는 persistence를 이긴다",
+           "(+0.39). 가장 넓은 구간은 14행뿐."],
           accent=TEAL, body_size=11)
     return note(s, """
-main_ko.tex §sec:gap (660–726행), 표 tab:gap.
+main_ko.tex \\label{sec:gap}(§6.4), 표 \\label{tab:gap}.
 
 인용 시 주의
-· 실제 타겟의 ≥96%가 Δt ≤ 15 ms 영역에 있다.
-· Δt가 커질수록 PCHIP의 문제는 쉬워지고(양쪽 실측을 잇기만 하면 된다) 우리 문제는 어려워진다.
-  이 비대칭을 본문에 명시해야 −0.542가 정직하게 읽힌다.
-· 시드별로는 넓은 구간 표본이 수십 개뿐이라 이전 초안은 결론을 지탱할 수 없었다 —
-  4개 분할 통합 + shot 군집화가 이 절을 가능하게 한 방법론적 변경이다.
+· Δt가 커질수록 PCHIP의 과제는 쉬워지고(간극 양쪽의 실제 관측을 잇기만 하면 된다) 우리 과제는
+  어려워진다. 이 비대칭을 본문에 명시해야 이 층의 승리가 정직하게 읽힌다.
+· 분할별로는 넓은 층에 수백 개 표본뿐이라 4개 test 분할을 통합하고 bootstrap을 물리적 방전 단위로
+  군집했다 — 이 절을 가능하게 한 방법론적 변경이다.
+· 표본 50개 미만 층은 채점하지 않는다(V_rot > 45 ms = 14행 / 7 shot).
 """)
 
 
-# --- 11. Result 4: MNAR ---------------------------------------------------
+# --- 12. Result 6.5: MNAR reweighting (sec:mnar) -------------------------
 def f_res_mnar():
     s = slide()
-    header(s, "§6.4  sec:mnar", "실제로 결측인 지점에서 얼마나 살아남는가", accent=ORANGE)
+    header(s, "§6.5  sec:mnar", "스트레스 ① — 실제로 결측인 지점에서 얼마가 살아남는가",
+           accent=ORANGE)
 
-    box(s, Inches(0.55), Inches(1.42), Inches(12.23), Inches(1.00),
+    box(s, Inches(0.55), Inches(1.42), Inches(12.23), Inches(1.02),
         fill=RGBColor(0xFF, 0xF3, 0xE6), round_=True)
-    box(s, Inches(0.55), Inches(1.42), Inches(0.12), Inches(1.00), fill=ORANGE)
-    text(s, Inches(0.85), Inches(1.51), Inches(11.6), Inches(0.9),
-         [[("먼저 적용 범위 사실 — ", 13, ORANGE, True, False, None),
-           ("표본이 예측 가능하려면 그 타겟의 관측값이 모델 window 안에 있어야 한다. "
-            "진짜 결측 행 중 도메인 내인 것은 ", 13, DARK, False, False, None),
-           ("Tᵢ 54.1% · V_rot 4.8%", 13, RED, True, False, None),
+    box(s, Inches(0.55), Inches(1.42), Inches(0.12), Inches(1.02), fill=ORANGE)
+    text(s, Inches(0.85), Inches(1.48), Inches(11.6), Inches(0.96),
+         [[("먼저 적용 범위 결과 — ", 13, ORANGE, True, False, None),
+           ("도메인 = “진짜 관측이 두 행 이내”(W=2). 진짜 결측 행 중 도메인 안은 ",
+            13, DARK, False, False, None),
+           ("Tᵢ 54–68% · V_rot 4–6%", 13, RED, True, False, None),
            ("뿐이다.", 13, DARK, False, False, None)],
-          [("정확도 한계가 아니라 커버리지 한계이며 구조적으로 고칠 수 있다(§9 레버 1).",
+          [("살아남은 층의 커버리지는 Tᵢ 0.99 · V_rot 0.73–0.76. 재가중된 V_rot은 결측 질량의 20분의 1에 대한 답이라 아무것도 끌어내지 않는다.",
             11.5, GRAY, False, False, None)]],
          line_spacing=1.2)
 
-    col_w = [Inches(3.30), Inches(1.20), Inches(2.30), Inches(3.55), Inches(1.88)]
-    table(s, Inches(0.55), Inches(2.50), col_w,
-          ["비교", "시드", "관측 가중", "결측 정합 (95% CI)", "낙관 편향"],
-          [[("Tᵢ vs persistence", NAVY, True, None), "42", "+0.349",
-            ("+0.292 [+0.162, +0.415]", GREEN, True, None), "+0.056"],
-           ["", "1", "+0.380", ("+0.308 [+0.143, +0.429]", GREEN, True, None), "+0.072"],
-           ["", "7", "+0.405", ("+0.293 [+0.192, +0.441]", GREEN, True, None), "+0.112"],
-           ["", "123", "+0.415", ("+0.293 [+0.155, +0.392]", GREEN, True, None), "+0.121"],
-           [("Tᵢ vs PCHIP", NAVY, True, None), "42", "+0.146", "+0.061 [−0.075, +0.267]", "+0.084"],
-           ["", "1", "+0.188", "+0.132 [−0.064, +0.274]", "+0.056"],
-           ["", "7", "+0.280", ("+0.211 [+0.050, +0.374]", GREEN, True, None), "+0.069"],
-           ["", "123", "+0.264", "+0.175 [−0.025, +0.290]", "+0.090"]],
-          row_h=Inches(0.33), size=10.5)
+    col_w = [Inches(1.05), Inches(0.80), Inches(1.55), Inches(3.60),
+             Inches(1.55), Inches(3.68)]
+    table(s, Inches(0.55), Inches(2.55), col_w,
+          ["모집단", "분할", "vs PCHIP 무가중", "vs PCHIP 결측 정합 (95% CI)",
+           "vs persist. 무가중", "vs persist. 결측 정합 (95% CI)"],
+          [[("컷", NAVY, True, None), "42", "+0.174", "+0.140 [-0.071, +0.290]",
+            "+0.360", ("+0.398 [+0.278, +0.518]", GREEN, True, None)],
+           ["", "1", "+0.248", ("+0.164 [+0.062, +0.250]", GREEN, True, None),
+            "+0.406", ("+0.366 [+0.299, +0.448]", GREEN, True, None)],
+           ["", "7", "+0.257", "+0.203 [-0.024, +0.346]",
+            "+0.403", ("+0.310 [+0.227, +0.398]", GREEN, True, None)],
+           ["", "123", "+0.264", ("+0.283 [+0.069, +0.392]", GREEN, True, None),
+            "+0.415", ("+0.381 [+0.246, +0.464]", GREEN, True, None)],
+           [("포함", NAVY, True, None), "42", "+0.225",
+            ("+0.140 [+0.033, +0.250]", GREEN, True, None),
+            "+0.423", ("+0.443 [+0.141, +0.623]", GREEN, True, None)],
+           ["", "1", "+0.238", ("+0.217 [+0.086, +0.319]", GREEN, True, None),
+            "+0.436", ("+0.383 [+0.273, +0.536]", GREEN, True, None)],
+           ["", "7", "+0.292", ("+0.167 [+0.067, +0.265]", GREEN, True, None),
+            "+0.406", ("+0.283 [+0.172, +0.380]", GREEN, True, None)],
+           ["", "123", "+0.316", ("+0.221 [+0.050, +0.320]", GREEN, True, None),
+            "+0.459", ("+0.337 [+0.164, +0.455]", GREEN, True, None)]],
+          row_h=Inches(0.33), head_h=Inches(0.38), size=10.5, head_size=10.5)
 
-    fcard(s, 0.55, 5.66, 6.03, 1.24,
-          "방법 — 한 문단으로",
-          ["Δt × 국소 활동도로 사후 층화해 재가중. 활동 플래그는",
-           "자기 행을 제외한 이웃에서 계산되므로 결측 행에서도 정의된다."],
-          accent=BLUE, body_size=11)
-
-    fcard(s, 6.75, 5.66, 6.03, 1.24,
-          "결론 문장 (그대로 인용 가능)",
-          ["진짜 결측·도메인 내 시점에서 이 나우캐스터는 어떤 인과적 CES 전용",
-           "방법보다 유의하게 낫고(4/4, +0.29), 오프라인 우위는 미입증(1/4)."],
-          accent=GREEN, body_size=11)
+    band(s, 5.65,
+         [[("방법 — ", 12.5, TEAL, True, False, None),
+           ("층 = Δt(15/25/45 ms) × 입력 전용 활동 플래그(자기 행 제외 → 결측 행에서도 정의). "
+            "30 미만 층 기각, 커버리지 병기, 가중 격자에도 컷 적용.", 12.5, WHITE, False, False, None)],
+          [("결론 문장 — ", 12.5, TEAL, True, False, None),
+           ("“진짜 결측·도메인 내 시점에서 나우캐스터는 두 모집단 모두 CES 단독의 어떤 인과 방법보다 "
+            "유의하게 낫고(4/4+4/4, +0.28~+0.44), 오프라인 보간보다는 모집단 조건부(컷 2/4, 포함 4/4)로 낫다.”",
+            12.5, WHITE, False, False, None)]],
+         h=1.00)
     return note(s, """
-main_ko.tex §sec:mnar (728–799행), 표 tab:mnar.
-
-· MNAR 보정 비용은 0.06–0.12에 불과하다(인과 비교에 대해).
-· 층 커버리지 95–100%, 채점 표본 30개 미만 층은 버린다. 가정(층 안에서 결측·관측 행이 교환 가능)은
-  숨기지 않고 명시한다. 대조 확인: 활동도 비율이 동결 산출물의 플래그와 Tᵢ 0.004 / V_rot 0.009 이내 일치.
-· 두 비교가 갈라지는 것이 이 절에서 가장 쓸모 있는 결과 — §6.3과 기계적으로 일관된다
-  (결측 지점은 더 큰 Δt에 있고, 그곳이 양측 앵커가 가장 크게 돕는 곳).
-· V_rot은 기반이 얇아(도메인 내 4.8%, persistence 대비 2/4) 회전에 대한 배치 결론은 내지 않는다.
-""")
-
-
-# --- 12. Result 5: campaign shift + repair -------------------------------
-def f_res_campaign():
-    s = slide()
-    header(s, "§6.5  sec:campaign", "캠페인 이동 — 실패를 측정하고, 지목한 수리를 실행했다",
-           accent=RED)
-
-    fcard(s, 0.55, 1.45, 4.0, 2.35,
-          "① 설계 — 시간으로 자른 분할",
-          ["shot 번호로 정렬해 엄격히 절단:",
-           "train 416 [30801, 31991]",
-           "val 128 [32002, 32310]",
-           "test 97 [32312, 32751]",
-           "어떤 test shot도 어떤 train shot",
-           "보다 앞서지 않는다. 바뀐 변수는",
-           "분할 규칙뿐이고, 네 실행은",
-           "초기화 시드만 다르다."],
-          accent=NAVY, body_size=11)
-
-    fcard(s, 4.72, 1.45, 4.0, 2.35,
-          "② 결과 — 오프라인 주장이 죽는다",
-          ["PCHIP 대비: +0.051 / +0.044 /",
-           "  −0.148 / −0.018 → 평균 −0.018,",
-           "  0/4 PASS",
-           "persistence 대비: +0.275 / +0.270",
-           "  / +0.123 / +0.223 → 평균 +0.222",
-           "test 구간은 모든 팔에게 더 어렵지만",
-           "skill이 그것을 정규화한다 — 즉",
-           "보간 ‘대비’ 손실이다."],
-          accent=RED, body_size=11)
-
-    fcard(s, 8.89, 1.45, 3.89, 2.35,
-          "③ 원인 — 주장이 아니라 측정",
-          ["train→test 드리프트(정규화 단위,",
-           "중앙값):",
-           "· BES 1.22 σ (스케일비 0.75)",
-           "· ECEI 0.53 σ (0.62)",
-           "· CES 타겟 0.115 σ (1.06)",
-           "고속 진단이 예측 대상보다 5–11배",
-           "더 이동한다. 이력 경로는 온전해",
-           "persistence 마진은 유지된다."],
-          accent=ORANGE, body_size=11)
-
-    fcard(s, 0.55, 3.85, 6.03, 2.35,
-          "④ 수리 — 고속 진단의 shot별 표준화 (§8s)",
-          ["각 방전의 고속 진단을 그 방전 자신의 평균·분산으로",
-           "적재 시점에 표준화(타겟 불변 → 기준선도 불변).",
-           "· 캠페인 분할: 짝지은 Tᵢ가 4/4 초기화에서 +0.10~+0.29",
-           "  개선(평균 +0.155), 95% CI 모두 0 제외.",
-           "  PCHIP 관문 0/4 → 2/4 (+0.18, +0.14, +0.19, +0.08)",
-           "· V_rot 불변(−0.019) — 예상된 음성 대조군",
-           "· 헤드라인 분할 비용: 어느 시드도 유의한 손실 없음",
-           "  (평균 −0.036, 최악 −0.127이며 CI 상한 +0.008)"],
-          accent=GREEN, body_size=11)
-
-    fcard(s, 6.75, 3.85, 6.03, 2.35,
-          "⑤ ‘공짜’가 아니라 ‘측정 가능한 비용 없음’",
-          ["· 수리는 기제도 인과적으로 확정한다: 캠페인 손실이",
-           "  물리의 변화였다면 입력의 수준 이동을 제거하는 것으로",
-           "  회복될 수 없었다.",
-           "· 정직한 주의: shot별 표준화는 절대 수준 정보도 버리고",
-           "  그것이 Tᵢ 정보를 나를 수 있다(BES 높음 ↔ 밀도 높음).",
-           "  그래서 가정이 아니라 통제 실험으로 확인했다.",
-           "· 남은 미검증: 배치 가능한 형태(인과 running / EWMA).",
-           "  shot별 표준화는 이 계열의 오프라인 상한이다."],
-          accent=NAVY, body_size=11)
-    return note(s, """
-main_ko.tex §sec:campaign (801–891행), 표 tab:campaign / tab:stress. THESIS_RESULTS §8n, §8s.
-
-· 분할이 고정이므로 네 실행은 '초기화' 시드만 다르다 — 이를 "4개 시드"로 제시하지 말고 그대로 밝힌다.
-· test 구간의 PCHIP RMSE는 601(무작위 분할 449).
-· V_rot이 안 변하는 것이 오히려 기제 확인이다: V_rot 헤드는 구조상 고속 진단이 차단돼 있다.
-· 이 절의 서사 구조 자체가 기여다 — 실패를 보고하고, 원인을 측정하고, 지목한 수리를 실행해 되돌렸다.
-""")
-
-
-# --- 13. Result 6: asymmetry ---------------------------------------------
-def f_res_asym():
-    s = slide()
-    header(s, "§6.6  sec:asym", "Tᵢ ↔ V_rot 정보 비대칭 — 본 연구의 과학적 발견", accent=ORANGE)
-
-    col_w = [Inches(3.5), Inches(1.85), Inches(1.85)]
-    table(s, Inches(0.55), Inches(1.45), col_w,
-          ["입력 모달리티 절제 (val, vs persistence)", "Tᵢ skill", "V_rot skill"],
-          [["전체 (이력 + 고속 진단 + 시간)", "+0.43", "+0.30"],
-           ["이력만 (no_fast)", "+0.46", "+0.29"],
-           ["고속 진단만 (no_history)",
-            ("+0.37", GREEN, True, None), ("−0.64", RED, True, None)]],
-          emphasis={2}, emphasis_fill=RGBColor(0xFF, 0xF3, 0xE6), size=12.5)
-
-    text(s, Inches(0.55), Inches(3.35), Inches(6.6), Inches(1.0),
-         [[("읽는 법: ", 12.5, NAVY, True, False, None),
-           ("고속 진단만 주면 Tᵢ는 여전히 persistence를 크게 이기지만(+0.37 = 전체 +0.43의 대부분), "
-            "V_rot은 −0.64이고 평균 예측 대비 R² = −0.06 — ", 12.5, DARK, False, False, None),
-           ("입력을 무시하고 평균을 내놓는 것보다 엄격히 나쁘다.", 12.5, ORANGE, True, False, None)]],
-         line_spacing=1.25)
-
-    add_image_fit(s, os.path.join(FIG, "fig_ablation.png"),
-                  Inches(0.55), Inches(4.35), Inches(6.0), Inches(2.3))
-
-    fcard(s, 6.75, 1.45, 6.03, 2.35,
-          "물리적 근거 — 절제 이전에 예측되었다",
-          ["· Tᵢ: 충돌 전자–이온 결합 (t_ei ∝ Tₑ^{3/2}/nₑ).",
-           "  ECEI가 Tₑ를, BES가 nₑ 구조를 공급한다.",
-           "· V_rot: 토로이달 회전은 우리 입력이 관측하지 못하는",
-           "  운동량 소스 — 외부 NBI 토크와 고유 회전 구동 —",
-           "  이 지배한다.",
-           "· Mirnov는 100 Hz로 샘플되어 회전을 대리할 수 있었던",
-           "  kHz 모드 회전 주파수가 앨리어싱으로 사라진다."],
-          accent=ORANGE, body_size=11.5)
-
-    fcard(s, 6.75, 3.95, 6.03, 2.7,
-          "이 절이 논문에서 하는 세 가지 일",
-          ["· V_rot의 비-승리를 모델 실패가 아니라 진단 정보 내용에",
-           "  관한 발견으로 재정의한다.",
-           "· §4의 타겟별 라우팅(V_rot 헤드에서 고속 진단 차단)을",
-           "  사후 합리화가 아닌 근거 기반 설계로 만든다.",
-           "· §9 레버 2·3(원 kHz Mirnov, NBI 토크)의 출발점을 놓는다.",
-           "인용 시 주의: 검증 분할 절제이며, 동일 학습 예산 · 한 번에",
-           "한 모달리티 그룹만 0 · persistence는 항상 실제 이력에서",
-           "계산한다."],
-          accent=NAVY, body_size=11.5)
-    return note(s, """
-main_ko.tex §sec:asym (893–942행), 표 tab:ablation, 그림 fig:ablation.
-이 비대칭은 물리로 먼저 예측되었고 절제로 확인되었다 — 순서를 본문에서 그대로 밝힐 것.
-""")
-
-
-# --- 14. Result 7: window + complexity ladder ----------------------------
-def f_res_window():
-    s = slide()
-    header(s, "§6.7–6.8", "이력은 관측 하나면 충분하고, 복잡도가 사는 것은 정량화된다",
-           accent=GREEN)
-
-    col_w = [Inches(1.55), Inches(1.20), Inches(1.30), Inches(0.85), Inches(1.30), Inches(0.85)]
-    table(s, Inches(0.55), Inches(1.45), col_w,
-          ["이력 관측 수", "W", "Tᵢ skill", "PASS", "V_rot", "PASS"],
-          [["0 (no_history)", "4", ("−0.026", RED, True, None), "0/4",
-            ("−0.783", RED, True, None), "0/4"],
-           ["1", "2", ("+0.238", GREEN, True, None), "4/4",
-            ("+0.206", GREEN, True, None), "0/4"],
-           ["2", "3", ("+0.246", GREEN, True, None), "4/4", "+0.203", "1/4"],
-           ["3", "4 (기본)", "+0.221", "3/4", "+0.190", "1/4"],
-           ["5", "6", "+0.190", "3/4", "+0.205", "1/4"],
-           ["7", "8", "+0.216", "4/4", "+0.204", "2/4"]],
-          row_h=Inches(0.42), size=11)
-
-    add_image_fit(s, os.path.join(FIG, "fig_window_sweep.png"),
-                  Inches(7.0), Inches(1.45), Inches(5.6), Inches(2.75))
-
-    fcard(s, 0.55, 4.33, 6.03, 2.35,
-          "선택 규칙과 그 답 — W = 2",
-          ["· 이력을 완전히 제거하면 Tᵢ는 PCHIP 아래로(−0.026),",
-           "  V_rot은 −0.78. 마진 전체가 고속 진단과 과거 CES의",
-           "  결합에서 나온다.",
-           "· 단 하나의 과거 관측이 두 타겟을 동시에 최대치로 올리고",
-           "  이후 곡선은 평탄(Tᵢ 0.190–0.246, V_rot 폭 0.016).",
-           "  점 하나 안의 seed 산포 0.07–0.16이 곡선보다 넓다.",
-           "· 넓은 window의 유일한 근거는 skill이 아니라 커버리지:",
-           "  W=2→8에서 Δt>15 ms 456→1,958, >45 ms 14→135."],
-          accent=GREEN, body_size=11)
-
-    fcard(s, 6.75, 4.33, 6.03, 2.35,
-          "복잡도 사다리 (§6.8) — 앵커+Δ, 1,258 파라미터",
-          ["앵커(최근접 관측을 학습된 가중으로 평균 쪽 혼합)",
-           "+ 기울기(최근 2점 × 갭) + 진단별 변화율의 합.",
-           "학습 항이 전부 0 초기화 → persistence에서 정확히",
-           "출발하므로 도달 skill은 학습이 더한 값 그 자체다.",
-           "· Tᵢ: −0.272 → −0.113 → +0.234 ⇒ 격차의 31.5% 회수",
-           "· V_rot: 7.0%만 회수 — 그 신호는 국소 기울기가 아니다",
-           "· paired 비교는 앵커를 4/4 분할에서 기각한다.",
-           "  부족분은 모델이 아니라 문제에 대한 정보다."],
-          accent=BLUE, body_size=11)
-    return note(s, """
-main_ko.tex §sec:window (944–1008행) 표 tab:window, §sec:ladder (1010–1069행) 표 tab:ladder2.
+main_ko.tex \\label{sec:mnar}(§6.5), 표 \\label{tab:mnar}.
 
 인용 시 주의
-· 24개 독립 실행(W ∈ {2,3,4,6,8} × seed {42,1,7,123}) + history-0 ×4. 전 구간 유지값 제거 학습.
-· paired가 아닌 독립 실행이므로 곡선 위 차이는 전부 seed 잡음 안 — 주장은 순위가 아니라 '효과의 부재'다.
-· shot당 표본 상한 때문에 절대 skill을 헤드라인 계열과 직접 비교할 수 없다(곡선 내부 비교용).
-· 통제 검증: 24개 실행 전부 seed당 동일한 96개 test shot을 평가하고, 채점 표본은 W=2→8에서 1.8%만 줄었다.
-· 앵커+Δ는 decompose()로 항별 기여를 반환한다 — "앵커 + 기울기 + BES 기반 변화율"로 읽을 수 있다.
+· MNAR 보정이 앗아가는 skill은 인과 비교에 대해 많아야 0.12이고 어떤 분할에서는 전혀 없다.
+· PCHIP 대비 점추정은 +0.14~+0.28로 유지되지만 고정 가중치의 넓은 CI가 컷 2개 분할에서 0을 지난다.
+  결측 지점은 더 큰 Δt에 놓이는데 그곳이 바로 양쪽 앵커가 가장 크게 돕고 재가중 bootstrap이
+  가장 얇은 곳이다 — §6.4와 기계적으로 일관된다.
+· 한 층 안에서 결측 행과 관측 행이 교환 가능하다는 가정은 없앤 척하지 않고 명시한다.
+· 윈도 대조군도 같은 방식으로 거동한다(PCHIP 대비 2/4와 4/4, persistence 대비 4/4).
+· V_rot은 도메인 도달이 4–6%뿐이라 회전에 대한 배치 결론은 내지 않는다.
 """)
 
 
-# --- 15. Result 8: peak ---------------------------------------------------
+# --- 13. Result 6.6: campaign shift (sec:campaign) -----------------------
+def f_res_campaign():
+    s = slide()
+    header(s, "§6.6  sec:campaign",
+           "스트레스 ② — 캠페인(시간) 분할: 대조군은 붕괴하고 백본은 견딘다", accent=RED)
+
+    col_w = [Inches(0.95), Inches(2.55), Inches(3.55), Inches(0.70),
+             Inches(1.55), Inches(2.93)]
+    table(s, Inches(0.55), Inches(1.45), col_w,
+          ["모집단", "팔", "Tᵢ vs PCHIP (초기화 42 / 1 / 7 / 123)", "PASS",
+           "vs 인과 GP", "seq_v2 - 대조군"],
+          [[("컷", NAVY, True, None), "윈도 대조군 (OFF)",
+            "+0.027 / +0.091 / -0.001 / +0.061", ("2/4", RED, True, None), "0/4", "—"],
+           ["", "대조군, shot별 표준화 (ON)",
+            "+0.103 / +0.107 / +0.094 / +0.107", ("4/4", GREEN, True, None), "—", "—"],
+           ["", ("seq_v2", NAVY, True, None),
+            ("+0.187 / +0.174 / +0.181 / +0.177", GREEN, True, None),
+            ("4/4", GREEN, True, None), "4/4 (+0.11~+0.12)",
+            ("+0.164 / +0.091 / +0.182 / +0.124", GREEN, True, None)],
+           [("포함", NAVY, True, None), "윈도 대조군 (OFF)",
+            "+0.014 / +0.047 / +0.055 / +0.089", ("0/4", RED, True, None), "0/4", "—"],
+           ["", ("seq_v2", NAVY, True, None),
+            ("+0.173 / +0.202 / +0.198 / +0.184", GREEN, True, None),
+            ("4/4", GREEN, True, None), "4/4 (+0.13~+0.16)",
+            ("+0.161 / +0.163 / +0.151 / +0.104", GREEN, True, None)]],
+          row_h=Inches(0.40), size=10.5, head_size=10.5)
+
+    add_image_fit(s, os.path.join(FIG, "fig_campaign.png"),
+                  Inches(0.55), Inches(3.95), Inches(4.40), Inches(2.70))
+
+    fcard(s, 5.15, 3.95, 3.75, 2.70,
+          "설계와 측정된 원인",
+          ["shot 번호로 시간 분할:",
+           "· train 416 [30801, 31991]",
+           "· val 128 [32002, 32310]",
+           "· test 97 [32312, 32751]",
+           "어떤 test shot도 어떤 train shot보다",
+           "앞서지 않는다. 네 실행은 초기화 시드만",
+           "다르다(분할 4개가 아님).",
+           "train→test 드리프트(중앙값): BES 1.22 σ ·",
+           "ECEI 0.53 σ 대 타겟 0.115 σ → 5–11×."],
+          accent=ORANGE, body_size=11)
+
+    fcard(s, 9.05, 3.95, 3.73, 2.70,
+          "명시할 것 세 가지",
+          ["① 윈도의 오프라인 우위는 이동을 못",
+           "   견딘다(2/4 · 0/4, 인과 GP 0/4).",
+           "② 지목됐던 수리가 작동 — shot별",
+           "   표준화로 컷 관문 2/4→4/4,",
+           "   paired +0.078/+0.018/+0.095/+0.049,",
+           "   V_rot 불변(-0.003~+0.008).",
+           "③ 시퀀스는 붕괴하지 않는다 — 대조군",
+           "   대비 8/8, V_rot은 persistence를",
+           "   양쪽 4/4로 이긴다(대조군 0/4)."],
+          accent=GREEN, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:campaign}(§6.6), 표 \\label{tab:campaign} · \\label{tab:stress},
+그림 \\label{fig:campaign}.
+
+인용 시 주의
+· 분할이 고정이므로 네 실행은 '초기화' 시드만 다르다 — "4개 시드"나 "4개 분할"로 제시하지 말 것.
+· 학습 파일 전용 정규화는 무작위 분할에서는 올바른 누수 방지 선택이지만 캠페인 이동에서 바로 그것이
+  깨진다. shot별 표준화는 그 방전 자신의 데이터만 쓰므로 누수가 없다.
+· seq_v2가 전이되는 이유는 둘이다 — 정의상 shot별 표준화 + 도달 범위(§6.3).
+· 대조군 대비 V_rot 마진도 8/8 유의다(+0.06~+0.18).
+· 남는 단서: 캠페인 4회는 하나의 시간 test 블록 위의 초기화들이며, 컷 모집단 seq_v2 실행 4개 중
+  2개는 30-epoch 상한에서 멈췄다. 이 두 단서를 §10에서 다시 받는다.
+· 이 절의 서사 구조 자체가 기여다 — 실패를 보고하고, 원인을 측정하고, 지목한 수리를 실행했다.
+  새 열이 원래부터 거기 있었던 것처럼 제시하지 않는다.
+""")
+
+
+# --- 14. Result 6.7: information asymmetry (sec:asym) --------------------
+def f_res_asym():
+    s = slide()
+    header(s, "§6.7  sec:asym",
+           "Tᵢ ↔ V_rot 정보 비대칭 — 본 연구의 과학적 발견", accent=ORANGE)
+
+    col_w = [Inches(2.95), Inches(0.75), Inches(0.95), Inches(2.90),
+             Inches(0.95), Inches(3.73)]
+    table(s, Inches(0.55), Inches(1.45), col_w,
+          ["입력 (평가 시 절제, 재학습 없음)", "타겟", "컷", "컷: paired (42/1/7/123)",
+           "포함", "포함: paired (42/1/7/123)"],
+          [[("전체 (이력 + 고속 + 시간)", NAVY, True, None), "Tᵢ", "+0.173", "—",
+            "+0.238", "—"],
+           ["이력 + 시간만 (고속 없음)", "Tᵢ", ("-0.125", RED, True, None),
+            ("-0.25* / -0.38* / -0.42* / -0.43*", RED, True, None),
+            "+0.201", "-0.03* / -0.04 / -0.03 / -0.09*"],
+           ["고속 + 시간만 (이력 없음)", "Tᵢ", ("-2.11", RED, True, None),
+            ("-4.6* / -1.8* / -2.3* / -1.9*", RED, True, None),
+            ("-1.16", RED, True, None), ("-1.5* / -3.4* / -1.2* / -1.1*", RED, True, None)],
+           [("전체", NAVY, True, None), "V_rot", "+0.213", "—", "+0.206", "—"],
+           ["이력 + 시간만 (고속 없음)", "V_rot", "+0.213",
+            ("+0.000 ×4 (비트 동일)", GREEN, True, None), "+0.206",
+            ("+0.000 ×4 (비트 동일)", GREEN, True, None)],
+           ["고속 + 시간만 (이력 없음)", "V_rot", ("-2.89", RED, True, None),
+            ("-5.4* / -6.3* / -1.8* / -2.3*", RED, True, None),
+            ("-3.51", RED, True, None), ("-6.9* / -7.8* / -1.9* / -2.2*", RED, True, None)]],
+          row_h=Inches(0.42), size=10.5, head_size=10.5)
+
+    add_image_fit(s, os.path.join(FIG, "fig_ablation.png"),
+                  Inches(0.55), Inches(4.50), Inches(4.90), Inches(2.15))
+
+    fcard(s, 5.65, 4.50, 3.55, 2.15,
+          "읽는 법",
+          ["· 이력은 두 타겟 모두에 필수 —",
+           "  제거하면 -1에서 -4까지 떨어진다.",
+           "· Tᵢ, 컷: 마진은 고속 진단 정보다.",
+           "  고속을 0으로 하면 보간 아래로",
+           "  간다(-0.10~-0.18). 물리 채널은",
+           "  충돌성 전자–이온 결합(ECEI Tₑ, BES nₑ).",
+           "· V_rot: 정보는 전적으로 CES 이력."],
+          accent=ORANGE, body_size=11)
+
+    fcard(s, 9.40, 4.50, 3.38, 2.15,
+          "포함 마진의 스파이크 성분",
+          ["포함 모집단에서는 이력 전용 모델도",
+           "PCHIP을 +0.15~+0.23으로 이기고,",
+           "고속이 더하는 건 0.03–0.09뿐이다",
+           "(2/4 유의). 보간 앵커에 스파이크가",
+           "끼어 있고 학습된 모델은 그것을",
+           "할인하기 때문 → 고속 기여를 분리하는",
+           "쪽은 컷 모집단이다."],
+          accent=NAVY, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:asym}(§6.7), 표 \\label{tab:ablation}, 그림 \\label{fig:ablation}.
+
+인용 시 주의
+· 절제는 '윈도 대조군'에 대해 '평가 시점'에 수행한다 — 재학습 없음, 한 번에 한 모달리티 그룹만 0,
+  persistence와 보간은 언제나 실제 이력에서 계산. TEST 두 모집단.
+· seq_v2와 b3k8의 V_rot 분기도 같은 교란 시험을 통과한다(비트 동일). 라우팅이 인코더 수준이라는
+  §4의 진술이 여기서 측정으로 확인된다.
+· 이 비대칭은 절제 이전에 물리로부터 예측되었고 절제로 확인되었다 — 순서를 본문에서 그대로 밝힌다.
+· V_rot의 비승리는 모델 실패가 아니라 진단 정보량에 관한 발견이며, §9 레버 2·3의 출발점이다.
+""")
+
+
+# --- 15. Result 6.8: window sweep (sec:window) ---------------------------
+def f_res_window():
+    s = slide()
+    header(s, "§6.8  sec:window", "이력은 얼마나 필요한가 — 관측 하나 (W=2 선택 근거)",
+           accent=GREEN)
+
+    col_w = [Inches(1.65), Inches(1.15), Inches(1.25), Inches(0.80),
+             Inches(1.25), Inches(0.80)]
+    table(s, Inches(0.55), Inches(1.45), col_w,
+          ["이력 관측 수", "W", "Tᵢ skill", "PASS", "V_rot skill", "PASS"],
+          [["0 (history-0)", "4", ("-0.026", RED, True, None), "0/4",
+            ("-0.783", RED, True, None), "0/4"],
+           ["1", ("2 (확정)", NAVY, True, None), ("+0.238", GREEN, True, None),
+            ("4/4", GREEN, True, None), ("+0.206", GREEN, True, None), "0/4"],
+           ["2", "3", ("+0.246", GREEN, True, None), ("4/4", GREEN, True, None),
+            "+0.203", "1/4"],
+           ["3", "4 (구 기본값)", "+0.221", "3/4", "+0.190", "1/4"],
+           ["5", "6", "+0.190", "3/4", "+0.205", "1/4"],
+           ["7", "8", "+0.216", ("4/4", GREEN, True, None), "+0.204", "2/4"]],
+          row_h=Inches(0.42), size=11, head_size=11.5)
+
+    add_image_fit(s, os.path.join(FIG, "fig_window_sweep.png"),
+                  Inches(7.60), Inches(1.45), Inches(5.18), Inches(2.94))
+
+    fcard(s, 0.55, 4.50, 6.03, 2.15,
+          "선택 규칙과 그 답 — W = 2",
+          ["· 24회 독립 실행(W ∈ {2,3,4,6,8} × 시드 4개) + history-0 ×4.",
+           "  held-free · 파일당 500 · 컷 없음(동결 W=2 실행이 §6.2",
+           "  포함 모집단의 윈도 대조군이다).",
+           "· 이력을 제거하면 Tᵢ는 PCHIP 아래로(-0.026), V_rot은 -0.78.",
+           "· 단 하나의 과거 관측이 두 타겟을 plateau로 올리고 곡선은",
+           "  평평하다(Tᵢ 0.190–0.246, V_rot 0.190–0.206). 한 지점 안의",
+           "  시드 산포 0.07–0.16이 곡선 전체보다 넓다 → W = 2."],
+          accent=GREEN, body_size=11)
+
+    fcard(s, 6.75, 4.50, 6.03, 2.15,
+          "넓은 W의 유일한 논거는 커버리지 — 그것은 시퀀스의 논거다",
+          ["· 정확도를 근거로 더 긴 윈도의 비용을 치를 이유는 데이터",
+           "  안에 없다. 구 기본값 W=4는 두 타겟 모두 W=2/W=3 아래다.",
+           "· 방어 가능한 이유는 커버리지 하나 — W=2→8에서 Δt>15 ms",
+           "  채점 행이 456 → 1,958개, >45 ms가 14 → 135개가 된다.",
+           "· 그러나 이는 긴 윈도의 근거가 아니라, 도달 범위가 세그먼트",
+           "  전체이고 W가 하이퍼파라미터조차 아닌 시퀀스의 근거다(§6.3).",
+           "· 통제: 시드별 동일한 96개 test shot, 채점 모집단 1.8% 감소."],
+          accent=BLUE, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:window}(§6.8), 표 \\label{tab:window}. 그림은 fig_window_sweep.png
+(held-free 스윕). fig_window_sweep_heldkept.png는 폐기 — 쓰지 말 것.
+
+인용 시 주의
+· paired가 아닌 독립 실행이므로 곡선 위 차이는 전부 시드 잡음 안이다 — 주장은 순위가 아니라
+  '효과의 부재'다.
+· 파일당 상한 500이 시간 부분집합 증강(W=2의 240k 샘플 → W=8의 30.1M)이 소수의 긴 블록 방전에
+  지배되는 것을 막는다.
+· shot당 표본 상한 때문에 이 곡선의 절대 skill을 헤드라인 계열과 직접 비교하지 말 것(곡선 내부 비교용).
+· 이 스윕은 스파이크 컷보다 앞선다 — 컷 없음이며, 동결된 W=2 실행이 §6.2 포함 모집단의 윈도 대조군이다.
+""")
+
+
+# --- 16. Result 6.9: complexity ladder + width sweep (sec:ladder) --------
+def f_res_ladder2():
+    s = slide()
+    header(s, "§6.9  sec:ladder",
+           "복잡도는 무엇을 사고, 크기는 돕는가 — 사다리와 폭 스윕", accent=BLUE)
+
+    col_w = [Inches(2.95), Inches(1.35), Inches(1.30), Inches(1.30)]
+    table(s, Inches(0.55), Inches(1.45), col_w,
+          ["팔", "파라미터", "Tᵢ 컷", "Tᵢ 포함"],
+          [["Persistence", "0", ("-0.264", RED, True, None), ("-0.288", RED, True, None)],
+           ["앵커+Δ (명명된 항)", "1,258", ("-0.261", RED, True, None),
+            ("-0.287", RED, True, None)],
+           [("b3k8", NAVY, True, None), ("21,498", NAVY, True, None),
+            ("+0.237", GREEN, True, None), ("+0.126", ORANGE, True, None)],
+           ["윈도 대조군", "201,258", "+0.173", "+0.238"],
+           [("seq_v2 백본", NAVY, True, None), ("357,570", NAVY, True, None),
+            ("+0.236", GREEN, True, None), ("+0.268", GREEN, True, None)]],
+          row_h=Inches(0.42), size=11, head_size=11.5)
+
+    add_image_fit(s, os.path.join(FIG, "fig_ladder_scaling.png"),
+                  Inches(7.30), Inches(1.45), Inches(5.48), Inches(2.95))
+
+    fcard(s, 0.55, 4.10, 6.53, 2.55,
+          "사전등록된 두 조건, 그 판정, 그리고 probe",
+          ["· 조건 ① b3k8 - 앵커+Δ: 컷 +0.35~+0.42 4/4* / 포함",
+           "  +0.29~+0.34 4/4* → V_rot 손실 없이 4/4 승, 충족(양쪽).",
+           "· 조건 ② b3k8 - seq_v2: 컷 평균 +0.002(모든 CI가 0 포함) /",
+           "  포함 평균 -0.194(4/4*) → “백본 -0.05 이내”는 컷 조건부.",
+           "· 컷에서는 백본의 Tᵢ skill 전부가 유계 수 8개 + persistence로",
+           "  압축된다: 짝지은 -0.009 / -0.005 / +0.026 / -0.004,",
+           "  PCHIP 대비 PR4 4/4, 인과 GP 4/4.",
+           "· 선형 probe: Tᵢ 잠재는 직전 관측 Tᵢ(R² 0.47–0.75)와 ECEI Tₑ",
+           "  대리(0.31–0.48)를 분산 부호화, 활동 0.09–0.13은 거의 안 담음."],
+          accent=GREEN, body_size=11)
+
+    fcard(s, 7.30, 4.50, 5.48, 2.15,
+          "포함에서는 -0.16~-0.21 · 크기 축은 닫혔다",
+          ["· 컷이 없으면 백본 대비 -0.16~-0.21(4/4 유의), 3/4 분할에서",
+           "  윈도 대조군 아래. 유계 보정이 스파이크 이월값을 못 살리기",
+           "  때문 — persistence 오차 >2 keV 행은 포함 test의 0.6–1.3%",
+           "  인데 b3k8 Tᵢ 제곱오차의 73–83%를 담는다(다른 팔 70–83%).",
+           "· 폭 24→260(34k / 49k / 114k / 358k / 879k): Tᵢ +0.230 /",
+           "  +0.236 / +0.235 / +0.236 / +0.230(컷), 358k 대비 ±0.008,",
+           "  최대 폭 유의 우세 1/4, V_rot 불변(+0.250~+0.254)."],
+          accent=ORANGE, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:ladder}(§6.9), 표 \\label{tab:ladder2}, 그림 \\label{fig:ladder_scaling}.
+
+인용 시 주의
+· 앵커+Δ(1,258)는 W=2에서 persistence로 붕괴한다 — 기울기 항이 관측된 이력 행 두 개를 요구하는데
+  결코 발화하지 않는다. 옛 초고의 "앵커+Δ가 마진의 31.5%를 회수" 문장은 폐기됐다.
+· b3k8의 학습된 보정은 예측 분산의 25–39%를 설명한다.
+· 사다리 칸 조건은 두 모집단 모두에서 성립하지만(앵커 대비 4/4) '백본 허용' 조건은 컷 조건부이며,
+  본문도 그렇게 진술한다.
+· 남는 분산은 용량이 아니라 분할 분산이다(시드 42의 +0.14~+0.17 대 시드 123의 +0.23~+0.28).
+· 결론 문장: 상한은 추정기가 아니라 정보다. {100 Hz BES/ECEI/MC + CES 이력 + 시간}에 든 Tᵢ 정보는
+  ~50k 파라미터의 인과 순환 상태로 소진된다.
+""")
+
+
+# --- 17. Result 6.10: peak stratification (sec:peak) ---------------------
 def f_res_peak():
     s = slide()
-    header(s, "§6.9  sec:peak", "우위는 고변동 국소 구간에 집중된다 — 그리고 V_rot은 분해된다",
+    header(s, "§6.10  sec:peak", "skill이 사는 곳 ② — 우위는 고변동 국소 구간에 집중된다",
            accent=TEAL)
-    add_image_fit(s, os.path.join(FIG, "fig_peak.png"),
-                  Inches(0.55), Inches(1.45), Inches(6.3), Inches(3.3))
 
-    fcard(s, 7.05, 1.45, 5.73, 1.75,
-          "수치 (검증 분할, shot 군집 CI)",
-          ["· Tᵢ  전역 +0.27 → 피크 +0.70 [+0.50, +0.85] PASS",
-           "  (124개 shot의 4,764행)",
-           "· V_rot  전역 +0.13 → 피크 +0.44 [+0.07, +0.73] PASS",
-           "· 피크 한정 절제: Tᵢ는 유의하게 나빠지고(멀티모달을",
-           "  실제로 사용) V_rot은 불변(이력 기반)"],
+    add_image_fit(s, os.path.join(FIG, "fig_peak.png"),
+                  Inches(0.55), Inches(1.45), Inches(6.30), Inches(5.20))
+
+    fcard(s, 7.05, 1.45, 5.73, 1.85,
+          "Tᵢ — 무조건부 진술",
+          ["· peak: 컷 +0.45~+0.61 / 포함 +0.62~+0.72 → 8/8 PASS",
+           "  (미래 이웃을 가진 보간을 상대로)",
+           "· bulk: 컷 +0.09~+0.20(4/4) / 포함 +0.06~+0.19(2/4)",
+           "→ “매끄러운 bulk에서는 보간이 거의 최적이고 모델의",
+           "  가치는 활동 구간에 있다” — 무조건부 진술."],
           accent=TEAL, body_size=11)
 
-    fcard(s, 7.05, 3.30, 5.73, 1.45,
-          "피크 선정이 순환 논리가 아닌 이유",
-          ["타겟 행을 제외하고 계산한 입력 측 활동 대리변수(이웃 괄호",
-           "기울기 / 국소 CES 이웃 분산)로 나눈다 — 타겟 자신의 값을",
-           "보지 않는다. 단 검증 분할이므로 헤드라인으로 쓰지 않는다."],
-          accent=GRAY, body_size=11)
-
-    fcard(s, 0.55, 4.9, 12.23, 1.75,
-          "V_rot 결과의 분해 (§8r) — 전역 동률은 부호가 다른 세 영역의 평균이다",
-          ["· 예상과 반대인 사실: 피크가 벌크보다 유지값이 더 많다(4개 분할 전부 68/62/71/73% 대 58/51/48/46%).",
-           "  forward-fill 계단(평평–평평–도약) 자체가 큰 국소 기울기여서 활동 검출기가 계측기 패턴을 부분 검출한다.",
-           "· 진짜 측정된 고활동 행: PCHIP 대비 +0.55~+0.63 · 인과 기준선 대비 +0.75~+0.82로 4/4 유의.",
-           "  진짜 측정된 조용한 벌크: 보간과 동률(≈0). 유지값 행: −48 ~ −411 — 실패가 아니라 구조적이다.",
-           "· Tᵢ는 유지값이 사실상 없는 깨끗한 대조군으로 피크 집중을 4/4 재현한다(+0.59~+0.68, 전부 유의)."],
+    fcard(s, 7.05, 3.40, 5.73, 1.85,
+          "V_rot — 비대칭은 '지역적'이다",
+          ["· peak: +0.54~+0.79 (8/8 점추정 양수, 각 모집단 PASS 2/4;",
+           "  persistence 대비 +0.75~+0.86에 8/8 PASS)",
+           "· bulk: ≈0 (-0.07~+0.15, PASS 0/8)",
+           "→ 전역은 동률이지만 매끄러운 과거+미래 보간이 가장 나쁜",
+           "  고활동 구간에서는 이력 기반 예측기도 가치를 더한다."],
           accent=ORANGE, body_size=11)
-    return note(s, """
-main_ko.tex §sec:peak (1071–1121행) + 유지값 교차 문단, THESIS_RESULTS §8r.
 
-· 채점을 진짜 측정 행으로 한정하면 모든 분할이 상승하지만(+0.154→+0.201, +0.109→+0.126,
-  +0.065→+0.098, +0.127→+0.170) 사전등록 관문에는 못 미친다 ⇒ 유지값 희석은 실재하나
-  V_rot 동률의 전부는 아니고, 나머지는 검정력이다.
-· 유지값 행에서 지는 것은 구조적이다 — PCHIP은 정의상 직전 값인 그 값을 정확히 통과하므로
-  어떤 인과 방법도 그곳에서는 이길 수 없다.
-· 이를 더 날카롭게 할 지목된 측정: 유지값을 배제한 활동 검출기 — 아직 실행하지 않았다.
+    fcard(s, 7.05, 5.30, 5.73, 1.35,
+          "peak 선정이 순환 논리가 아닌 이유",
+          ["층은 타겟 행을 제외하고 계산한 입력 측 활동 대리(이웃 괄호",
+           "기울기 · 국소 CES 이웃 분산)로 나눈다. 규모는 분할당",
+           "peak Tᵢ 4.1–4.6k행 · V_rot 2.4–2.9k행이며 채점은 TEST."],
+          accent=GRAY, body_size=11)
+    return note(s, """
+main_ko.tex \\label{sec:peak}(§6.10), 그림 \\label{fig:peak}.
+
+인용 시 주의
+· peak/bulk 분할은 TEST 위에서, seq_v2에 대해 수행한다(옛 판의 '검증 분할' 단서는 더 이상 없다).
+· V_rot의 PASS 2/4는 각 모집단에서의 수다. 점추정은 8/8 양수.
+· Tᵢ의 8/8 PASS가 이 절을 무조건부 진술로 만들어 준다 — 두 모집단 모두에서 성립하기 때문이다.
 """)
 
 
-# --- 16. Deployability ----------------------------------------------------
-def f_deploy():
+# --- 18. Result 6.11: cut-threshold sensitivity (sec:cutsens) ------------
+def f_res_cutsens():
     s = slide()
-    header(s, "§8  sec:deploy", "배치 가능한가 — 지연과 불확실성, 둘 다 예상 밖의 답", accent=BLUE)
+    header(s, "§6.11  sec:cutsens", "컷 임계값 민감도 — 문턱은 무관하고, 두 모집단이 본질이다",
+           accent=ORANGE)
 
-    fcard(s, 0.55, 1.45, 6.03, 2.5,
-          "지연: CPU에서는 들어가고, GPU가 틀린 장치다",
-          ["· 측정: 순전파만(특징 조립 제외), warmup 후 1,000회,",
-           "  batch 1.",
-           "· CPU W=4: p99 6.4 ms, 중앙값 2.8 ms (W=2는 p99 8.7 ms)",
-           "  → 10 ms 격자 한 주기의 64–87%",
-           "· 같은 기계에서 CUDA batch-1은 약 8× 느리다",
-           "  (중앙값 21 ms, p99 43–72 ms). 20만 파라미터로는",
-           "  커널 실행 오버헤드를 상쇄할 것이 없다.",
-           "· 실무 지침은 기본값의 반대: 제어 컴퓨터의 CPU에서 돌려라."],
+    col_w = [Inches(2.30), Inches(2.55), Inches(2.55), Inches(2.35), Inches(2.48)]
+    table(s, Inches(0.55), Inches(1.45), col_w,
+          ["임계값 (재학습)", "Tᵢ skill (4 분할 평균)", "PCHIP 대비 PR4",
+           "인과 GP 대비", "V_rot skill"],
+          [["2.5 keV", "+0.230", ("4/4", GREEN, True, None),
+            ("4/4", GREEN, True, None), "+0.252"],
+           [("3 keV (확정 프로토콜)", NAVY, True, None),
+            ("+0.236", GREEN, True, None), ("4/4", GREEN, True, None),
+            ("4/4", GREEN, True, None), "+0.253"],
+           ["4 keV", "+0.232", ("4/4", GREEN, True, None),
+            ("4/4", GREEN, True, None), "+0.257"]],
+          row_h=Inches(0.46), size=12, head_size=11.5)
+
+    fcard(s, 0.55, 3.45, 3.95, 2.35,
+          "① 무엇을 했나",
+          ["스파이크 임계값을 2.5와 4 keV로",
+           "두고 백본을 재학습했다. 각각 4개",
+           "분할이고, 각 팔은 자기 모집단에서",
+           "채점된다.",
+           "모든 임계값에서 PCHIP 대비 PR4",
+           "4/4, 인과 GP 대비 4/4. 물리학자가",
+           "방어할 만한 범위 안에서 임계값은",
+           "무의미하다."],
           accent=BLUE, body_size=11)
 
-    fcard(s, 6.75, 1.45, 6.03, 2.5,
-          "불확실성: 모델을 건드리지 않는 분포 무가정 구간",
-          ["· 분산/분위 헤드는 재학습이 필요하고 점 예측을 움직여",
-           "  위의 모든 수치를 교란한다 → split conformal.",
-           "  val에서 캘리브레이션, 예측기는 전혀 바꾸지 않는다.",
-           "· 두 변형: 단일 분위(global), Δt × 활동도 층별(Mondrian).",
-           "  두 기준선에도 동일 절차를 적용하므로 비교되는 것은",
-           "  캘리브레이션 기법이 아니라 구간 품질이다.",
-           "· α = 0.10에서 모델 구간이 모든 시드·타겟·변형에서 두",
-           "  기준선을 이긴다(각 8/8). Winkler로 persistence의 ≈0.80배."],
-          accent=TEAL, body_size=11)
+    fcard(s, 4.72, 3.45, 3.95, 2.35,
+          "② 그래서 논문이 말하는 것",
+          ["중요한 것은 꼬리 안의 '어디에서'",
+           "자르느냐가 아니라 '두 모집단'이다.",
+           "컷/포함을 언제나 함께 보고하고,",
+           "무조건부 주장은 둘 다 성립할 때만",
+           "조건 없이 진술한다.",
+           "한쪽에서만 성립하는 결과는 모집단을",
+           "명시해 보고한다(예: 간극 >45 ms,",
+           "b3k8의 백본 허용치)."],
+          accent=GREEN, body_size=11)
 
-    fcard(s, 0.55, 4.1, 6.03, 1.6,
-          "비대칭은 불확실성에도 약하게 나타난다",
-          ["커버리지를 맞춘 상태에서 모델은 구간을 Tᵢ에 대해",
-           "persistence 폭의 0.884배로 줄이지만 V_rot에 대해서는",
-           "0.937배에 그친다 — 점 예측과 같은 방향이되 크기는",
-           "훨씬 작다. 모델은 자기가 모르는 것을 부분적으로 안다."],
+    fcard(s, 8.89, 3.45, 3.89, 2.35,
+          "③ V_rot 스파이크는 컷하지 않는다",
+          ["V_rot에도 피팅 실패 스파이크가",
+           "있다 — 16 shot에서 1,000 km/s를",
+           "넘는 119행, 그중 101행은 한 방전의",
+           "한 블록.",
+           "프로토콜은 V_rot을 컷하지 않고,",
+           "persistence 기반 V_rot 비교마다",
+           "그 행들이 담는 제곱오차 비중을",
+           "함께 보고한다(§6.9와 같은 규칙)."],
           accent=ORANGE, body_size=11)
 
-    fcard(s, 6.75, 4.1, 6.03, 1.6,
-          "정직한 실패 — 주변 커버리지지 조건부가 아니다",
-          ["Tᵢ는 4개 중 2개 분할에서 목표 90%에 미달(87.0–88.9%),",
-           "shot별 커버리지는 10분위 ≈50–68%에서 90분위 100%까지",
-           "퍼진다. 캘리브레이션과 test가 서로 다른 방전이고 shot",
-           "수준 이동이 교환 가능성을 깬다."],
-          accent=RED, body_size=11)
-
-    band(s, 5.9,
-         [[("이 절을 쓰는 이유 — ", 13, TEAL, True, False, None),
-           ("skill 점수와 쓸 수 있는 계측 사이에는 두 가지가 놓여 있다. 측정 주기 안에서 돌아야 하고, "
-            "얼마나 믿어야 하는지를 말해야 한다. 둘 다 이 문헌에서 보고된 적이 없다.",
-            13, WHITE, False, False, None)]])
+    band(s, 5.95,
+         [[("결정 기록 (2026-08-16) — ", 12.5, TEAL, True, False, None),
+           ("① 두 모집단 공동 1차 유지(p100 단일 헤드라인으로 합치지 않음) "
+            "② V_rot 프로토콜 불변(컷·점프 규칙 없음, 재학습 없음, anchored 비교엔 스파이크 행 SSE 비중 병기) "
+            "③ B.6 kHz Mirnov 특징 미도착 — 대기.",
+            12.5, WHITE, False, False, None)]], h=0.80)
     return note(s, """
-main_ko.tex §sec:deploy (1146–1197행). PROJECT_KNOWLEDGE "Deployment Facts".
+main_ko.tex \\label{sec:cutsens}(§6.11).
 
-· 지연은 호출별(장치를 사이에 유휴로 두는 10 ms 루프의 현실적 모형)과 연속 amortized 두 방식으로
-  측정했고 둘이 일치하므로 GPU 유휴 아티팩트가 아니다.
-· 대량 재처리도 여기서는 CPU가 유리했지만(batch 512에서 48k 대 24k samples/s) 노트북 GPU +
-  매우 작은 신경망에 특정한 결과이므로 일반화하지 않는다는 단서를 함께 쓸 것.
-· Mondrian은 평균 구간을 넓히면서도 구간 점수를 모든 곳에서 개선한다 — Δt와 활동도가 필요하다고
-  말하는 곳에 폭을 배치한다는 뜻이다.
-· 조건부 커버리지를 맞추려면 shot 조건부 캘리브레이션이 필요한데 현재 shot 수로는 지탱되지 않는다.
+인용 시 주의
+· 이 절은 §3.5(sec:spikes)의 "임계값은 2.5–4 keV 범위에서 무의미하다"는 문장의 근거다 —
+  두 절을 상호 참조로 묶어 둘 것.
+· 각 임계값 팔은 '자기 모집단'에서 채점된다. 서로 다른 모집단의 skill을 직접 비교하는 것이 아니다.
+· 값 기준 컷이 프록시라는 한계는 §10에 남고, 그것을 결말짓는 것은 §9 레버 1(CES 피팅 품질 메타데이터)이다.
 """)
 
 
-# --- 17. Headroom ---------------------------------------------------------
+# --- 19. Model selection protocol (sec:selection) ------------------------
+def f_selection():
+    s = slide()
+    header(s, "§7  sec:selection",
+           "모델 선택 프로토콜 — 결정 규칙은 결정할 수치보다 먼저 적혔다",
+           accent=NAVY)
+
+    fcard(s, 0.55, 1.45, 6.03, 2.30,
+          "윈도 계열 — 통제된 실험의 연속",
+          ["· 각 실험은 데이터 계약을 보존하는 '하나의' 변경이었고,",
+           "  깨끗한 비증강 검증 skill로만 채점했으며, 지금까지의",
+           "  최고 점수를 개선할 때만 유지했다.",
+           "· 증강된 검증 손실은 결코 쓰지 않았다 — 보간이 이미 강한",
+           "  바로 그곳에서 평활화를 보상하기 때문이다.",
+           "· 이후 이력 길이는 §6.8의 스윕으로 정해졌고(W=2),",
+           "  유지값은 §3.4의 감사에 따라 학습에서 제거됐다."],
+          accent=BLUE, body_size=11.5)
+
+    fcard(s, 6.75, 1.45, 6.03, 2.30,
+          "백본 관문 — 먼저 고정하고, 그 다음 충족",
+          ["시퀀스 프레이밍은 네 조건이 먼저 고정된 뒤에야 채택됐다:",
+           "  ① 4/4 분할에서 부호 유지",
+           "  ② 통합 실행 군집 CI가 0을 제외",
+           "  ③ 예산 균등화에서도 부호 유지",
+           "  ④ V_rot 손실 없음",
+           "네 조건은 §6.3에서 모두 성립했다(16/16 양수, 13/16 유의,",
+           "pooled +0.081 [+0.067, +0.096], 균등화 4/4, V_rot 0/16)."],
+          accent=GREEN, body_size=11.5)
+
+    fcard(s, 0.55, 3.87, 6.03, 2.30,
+          "유일한 후속 후보는 승격되지 않았다",
+          ["같은 규칙 아래 이후 탐색된 단 하나의 아키텍처 후보 — 각",
+           "타겟 자신의 과거 관측 스텝에 대한 관측 마스킹 인과 어텐션을",
+           "0으로 초기화된 사영과 함께 seq_v2에 추가한 것.",
+           "· 4/4 분할에서 양수: +0.009 / +0.013 / +0.033 / +0.020",
+           "· 사전 확정 기준(≥3/4 유의)에 대해 1/4에서만 유의 → 미승격",
+           "검증 이득은 탐색 분할에서 2/2 유의했다 — 선택 분할 결과의",
+           "통상적 낙관이며, 승격 기준을 TEST에 두는 이유다."],
+          accent=ORANGE, body_size=11)
+
+    fcard(s, 6.75, 3.87, 6.03, 2.30,
+          "사다리 칸과 폭 스윕도 같은 규율 아래",
+          ["· 두 갈래 판정(사다리 칸이 앵커를 이길 것 · 백본 -0.05",
+           "  이내)과 서술적 독법(천장 / 무릎)을 어떤 TEST 채점",
+           "  이전에 적어 두었다.",
+           "· 구성상 이 스윕 위에서 백본을 재선택하는 것은 허용되지",
+           "  않았다 — 스윕은 서술이지 선택이 아니다.",
+           "· 전체 사전등록 문서와 배치별 실행 기록, 러너 스크립트는",
+           "  공개 저장소에 있다(experiments/PREREGISTRATION_W2.md)."],
+          accent=TEAL, body_size=11)
+
+    band(s, 6.28,
+         [[("이 절이 논문에서 하는 일 — ", 12.5, TEAL, True, False, None),
+           ("헤드라인에 winner’s curse가 없다는 주장을 '절차'로 뒷받침한다. "
+            "TEST는 결정마다 한 번만 채점됐고, 승격되지 않은 후보까지 그대로 보고한다는 사실이 그 증거다.",
+            12.5, WHITE, False, False, None)]], h=0.66)
+    return note(s, """
+main_ko.tex \\label{sec:selection}(§7).
+
+인용 시 주의
+· "본 논문의 모든 모델 결정은 검증 데이터 위에서, 또는 해당 TEST 채점 이전에 문서로 확정된 결정
+  규칙 아래에서 이루어졌고, TEST는 결정마다 한 번만 채점되었다"가 이 절의 첫 문장이다.
+· 승격되지 않은 어텐션 후보를 '싣는 것' 자체가 기여의 일부다 — val 2/2 유의 → TEST 1/4 유의는
+  선택 분할 낙관의 교과서적 사례다.
+· 옛 판의 "게이트를 val loss → clean skill로 바꾼 것이 최종 모델을 낳았다(fig_progression)"는
+  W=4 시대 서사이며 폐기됐다. 진행(progression) 그림도 삭제됐다.
+""")
+
+
+# --- 20. Deployability (sec:deploy) --------------------------------------
+def f_deploy():
+    s = slide()
+    header(s, "§8  sec:deploy", "배치 가능한가 — 지연과 불확실성, 둘 다 측정했다", accent=BLUE)
+
+    fcard(s, 0.55, 1.45, 6.03, 2.45,
+          "지연: 상태 유지 1-스텝은 여유를 두고 CPU에 들어간다",
+          ["· 온라인에서는 은닉 상태가 격자를 따라 이월되고 새 행마다",
+           "  배치 1의 순환 스텝 하나가 든다 — 이것이 중요한 수치다.",
+           "· seq_v2 스텝: CPU 중앙값 1.05 ms / p99 1.61 ms(격자 주기의",
+           "  16%, p95 1.35), GPU 1.21 / 2.31 ms → 이 크기에서 GPU는",
+           "  배치 1에서 아무것도 사주지 않는다.",
+           "· 세그먼트 재실행: 100행 2.9 / 5.6 ms, 300행 6.4 / 8.9 ms.",
+           "· 배치 1 윈도 대조군은 더 느리고 꼬리가 무겁다(W=2 CPU 3.8",
+           "  / p99 18.9 ms, W=4 4.0 / 8.1 ms)."],
+          accent=BLUE, body_size=11)
+
+    fcard(s, 6.75, 1.45, 6.03, 2.45,
+          "불확실성: 모델을 건드리지 않는 분포 무가정 구간",
+          ["· 분산·분위 헤드는 재학습이 필요하고 위의 모든 수치를",
+           "  움직인다 → split conformal. 해당 실행 자신의 검증",
+           "  분할에서 보정하고 예측기는 아무것도 바꾸지 않는다.",
+           "· 변형 둘: 단일 분위(global), Δt 구간별(Mondrian). 동일",
+           "  절차를 두 기준선에도 적용하므로 비교되는 것은 구간 품질.",
+           "· α = 0.10, TEST, 두 모집단: 모델 구간이 32/32 셀에서 두",
+           "  기준선을 이긴다. Winkler — Tᵢ 1,272 / 1,554(PCHIP) /",
+           "  1,727(pers.) 컷, 포함 2,290 / 2,851 / 3,120."],
+          accent=TEAL, body_size=11)
+
+    fcard(s, 0.55, 4.00, 6.03, 1.85,
+          "포함 모집단의 역설 — 더 넓은데 더 좋다",
+          ["모델의 Tᵢ 구간은 PCHIP의 것보다 실제로 넓은데(반폭 224–255",
+           "대 211–241 eV) 그럼에도 점수는 더 좋다: 스파이크가 빗나감",
+           "벌점을 부풀리는데 모델이 덜 빗나가기 때문이다. Mondrian은",
+           "모든 Tᵢ 팔을 ≈4–5% 좁히고 판정은 바꾸지 않는다."],
+          accent=ORANGE, body_size=11)
+
+    fcard(s, 6.75, 4.00, 6.03, 1.85,
+          "정직한 실패 — 커버리지는 주변적이지 조건부가 아니다",
+          ["Tᵢ 커버리지는 목표 0.90에 대해 0.87–0.92(모든 팔에서 한",
+           "분할이 미달), V_rot은 0.91–0.94이며 shot별 커버리지는 넓게",
+           "흩어진다. 보정과 test가 서로소인 '방전'이고 shot 수준 이동이",
+           "교환가능성을 깨기 때문 — shot 조건부 보정이 필요한데 현재",
+           "shot 수로는 지탱되지 않는다."],
+          accent=RED, body_size=11)
+
+    band(s, 5.95,
+         [[("실무 지침 — ", 13, TEAL, True, False, None),
+           ("상태 유지형 나우캐스터를 제어 계산기의 CPU에서 돌리라. 10 ms 예산의 80% 이상이 획득과 제어에 남는다. "
+            "skill 점수와 쓸 만한 계측기 사이에 놓인 두 가지 — 주기 안에서 도는가, 얼마나 믿어도 되는가 — 를 이 절이 답한다.",
+            13, WHITE, False, False, None)]], h=0.72)
+    return note(s, """
+main_ko.tex \\label{sec:deploy}(§8).
+
+인용 시 주의
+· 지연은 유휴 노트북급 머신 한 대에서 워밍업 후 1,000회 호출, 네트워크 순전파만(특징 조립은 모델 밖)
+  잰 값이다. 같은 벤치마크를 두 번 돌리면 절대값이 최대 2× 달라졌고(다른 실행의 seq_v2 스텝은
+  0.51 / 0.99 ms) 전원 상태가 원인이지만, 순서 — 시퀀스 스텝 ≪ 윈도 순전파, CPU로 충분 — 는 불변이었다.
+· 옛 판의 "CPU W=4 p99 6.4 ms · CUDA가 8× 느리다"는 W=4 시대 수치이며 폐기됐다.
+· 32/32는 '모집단 × 타겟 × 변형 × 분할' 셀 수다(2 × 2 × 2 × 4).
+· conformal 구간 우위는 더 나은 점추정에서 따라 나오는 것이 아니라 별개의 성질이다 — 그렇게 진술할 것.
+""")
+
+
+# --- 21. Headroom (sec:headroom) -----------------------------------------
 def f_headroom():
     s = slide()
-    header(s, "§9  sec:headroom", "남은 개선 여지 — 음성 결과가 지목하는 레버 3종", accent=ORANGE)
+    header(s, "§9  sec:headroom", "남은 개선 여지 — 음성 결과가 지목하는 레버 3종 (전부 데이터)",
+           accent=ORANGE)
 
     band(s, 1.42,
          [[("이 절의 규칙 — ", 12.5, TEAL, True, False, None),
-           ("음성 결과는 “어떤 변경이 문제를 움직이는가”를 말할 때만 실린다. 용량은 배제됐고(§4), "
-            "더 긴 이력도 배제됐다(§6.7). 남는 셋은 모두 추정기가 아니라 측정 또는 커버리지에 대한 변경이다.",
-            12.5, WHITE, False, False, None)]],
-         h=0.72)
+           ("음성 결과는 “어떤 변경이 이를 움직이는가”를 말할 때만 실린다. 용량은 배제됐고(§6.9), "
+            "더 긴 윈도도 배제됐으며(§6.8), 도달 범위를 사는 프레이밍은 채택됐다(§6.3). "
+            "남은 것은 데이터이고, 각 레버는 이미 이 데이터셋 안의 증거로 지목된다.",
+            12.5, WHITE, False, False, None)]], h=0.72)
 
-    fcard(s, 0.55, 2.30, 3.95, 3.76,
-          "1. 깊이가 아니라 도달 범위",
-          ["진짜 결측 행 중 W=4 window 안에",
-           "관측값을 가진 것은 Tᵢ 54.1% ·",
-           "V_rot 4.8%뿐(§6.4).",
+    fcard(s, 0.55, 2.30, 3.95, 3.80,
+          "1. CES 피팅 품질 메타데이터",
+          ["두 모집단 보고가 존재하는 이유는",
+           "값 기준 컷이 “피팅이 실패했다”의",
+           "대리 지표이기 때문이다:",
+           "어떤 방법도 예측할 수 없는 단일",
+           "표본 상향 사건을 제거하지만 한쪽",
+           "방향뿐이고(하향 급락은 손대지",
+           "않는다) ≥2× 상향 이상치의 19%만",
+           "잡는다(§3.5).",
            "",
-           "올바른 대응은 더 긴 연속 window가",
-           "아니다 — skill을 전혀 사지 못한다.",
-           "더 넓은 도달 범위다: W=2→8에서",
-           "총 채점 수는 그대로인데 Δt>15 ms는",
-           "456→1,958, >45 ms는 14→135.",
-           "",
-           "→ 슬롯은 2–3개로 유지하되 더 넓은",
-           "span에서 뽑는다. 실제 문제 중",
-           "다루는 비율을 직접 키우는 유일한",
-           "변경이다."],
+           "표본별 피팅 χ²이나 신호 수준이",
+           "있다면 품질 컷이 모든 팔에서",
+           "값 컷을 대체하거나 동반할 수 있고,",
+           "→ 두 모집단이 하나로 합쳐진다.",
+           "V_rot 자신의 스파이크(>1,000 km/s",
+           "119행)도 같은 규칙으로 처리된다."],
           accent=BLUE, body_size=11)
 
-    fcard(s, 4.72, 2.30, 3.95, 3.76,
-          "2. Mirnov 정보는 파괴됐다",
-          ["같은 10 ms 격자에서 블록 내 lag-1",
-           "자기상관: BES +0.568 ·",
-           "ECEI +0.572 · Mirnov −0.009,",
-           "블록의 82%가 |r| < 0.1.",
-           "즉 자기 채널은 이 격자 위에서",
-           "백색잡음이다.",
-           "원인: kHz dB/dt를 안티앨리어싱",
-
-           "없이 100 Hz로 데시메이션 →",
-           "상대 위상이 무작위. 회전을",
-           "대리할 수 있었던 모드 회전",
-           "주파수가 상류에서 폐기됐다.",
-           "",
-           "→ 해법은 전처리 변경: 원 kHz",
-           "시계열의 window별 RMS·대역",
-           "파워·모드 번호."],
+    fcard(s, 4.72, 2.30, 3.95, 3.80,
+          "2. Mirnov 정보는 전처리가 파괴했다",
+          ["같은 10 ms 격자, 연속 블록 내 lag-1",
+           "자기상관:",
+           "· BES +0.568 · ECEI +0.572",
+           "· Mirnov -0.009 (블록의 82%가",
+           "  |r| < 0.1)",
+           "즉 이 격자 '위에서' 자기 채널은",
+           "백색잡음이다. kHz dB/dt를 안티",
+           "앨리어싱 없이 100 Hz로 데시메이션한",
+           "결과의 특징 — 연속 표본의 상대",
+           "위상이 무작위가 된다.",
+           "→ 해법은 모델이 아니라 전처리:",
+           "원시 kHz 시계열에서 윈도별 RMS ·",
+           "대역 파워 · 모드 수 · 모드 회전",
+           "주파수를 뽑아 V_rot 분기로 라우팅",
+           "(사전등록 pilot-then-expand)."],
           accent=TEAL, body_size=11)
 
-    fcard(s, 8.89, 2.30, 3.89, 3.76,
-          "3. 구동기 채널이 아예 없다",
-          ["토로이달 회전은 주입 토크가",
-           "결정하는데 이 데이터셋에 토크",
-           "신호가 없다.",
-           "",
-           "shot 간 ECE 유래 Tₑ 대리는",
+    fcard(s, 8.89, 2.30, 3.89, 3.80,
+          "3. 액추에이터 채널이 아예 없다",
+          ["토로이달 회전은 주입된 토크가",
+           "결정하는데 이 데이터셋에는 토크",
+           "신호가 존재하지 않는다.",
+           "데이터가 그 단절을 보여준다 —",
+           "shot 사이 ECE 유래 Tₑ 대리는",
            "· Tᵢ와 r = +0.353 (p = 3×10⁻¹⁷)",
-           "· V_rot와 r = +0.024 (p = 0.58)",
-           "shot 내에서도 Tᵢ 상관은 부호가",
+           "· V_rot과 r = +0.024 (p = 0.58)",
+           "shot 내부에서도 Tᵢ 상관은 부호가",
            "일관되나 V_rot은 무작위다.",
            "즉 파워는 토크가 아니다.",
-           "",
-           "→ NBI 토크(또는 빔별 파워·기하)",
-           "확보는 모델링이 아니라 데이터의",
-           "문제. 양성 대조군도 문헌에 있다",
-           "(DIII-D 전체-방전 시뮬레이터)."],
+           "→ NBI 토크(또는 그것을 계산하는",
+           "빔별 파워·기하) 확보는 모델링이",
+           "아니라 데이터 획득 과제.",
+           "양성 대조: DIII-D 순환 전방전",
+           "시뮬레이터(Char et al. 2024)."],
           accent=ORANGE, body_size=11)
 
-    band(s, 6.14,
+    band(s, 6.20,
          [[("맺는 문장 — ", 12.5, TEAL, True, False, None),
-           ("이 중 어느 것도 현재 결과가 천장에 도달했다는 진술이 아니다. 시도 비용이 낮은 순으로 "
-            "정렬돼 있고, 셋 모두 아카이브된 KSTAR 데이터에서 실행 가능하다.",
-            12.5, WHITE, False, False, None)]],
-         h=0.72)
+           ("이 중 어느 것도 현재 결과가 천장에 있다는 진술이 아니다. 다음의 측정 가능한 이득이 있는 자리를 "
+            "값싸게 시도할 수 있는 순서로 늘어놓은 것이며, 셋 모두 아카이브된 KSTAR 데이터에서 실행 가능하다.",
+            12.5, WHITE, False, False, None)]], h=0.70)
     return note(s, """
-main_ko.tex §sec:headroom (1200–1250행).
+main_ko.tex \\label{sec:headroom}(§9). 보조 그림이 필요하면 fig_mirnov.png(자기상관 사실, 유효).
 
 PROJECT_KNOWLEDGE "Framing Rules"(승상님 2026-08-05): 음성 결과는 그것을 뒤집을 측정을
 함께 지목할 때만 결론이 된다. "정보가 부족하다"는 결론이 아니라 변명이다.
 
-· 레버 1은 skill이 이력 길이에 평탄하다는 사실 덕분에 거의 공짜인 적용 가능성 확장이다.
-· 레버 2가 우리가 시도한 모든 MC 파생 특징(적분, PCHIP 적분, |MC|, 이동 RMS)이 실패한 이유다 —
-  이미 잃은 정보는 하류에서 복원되지 않는다.
-· 레버 3의 양성 대조군: Char et al. 2024, DIII-D 순환 전체-방전 시뮬레이터가 빔 액추에이터를
-  입력으로 받아 회전 전개를 예측한다 — 이 채널은 측정만 되면 학습 가능하다.
+· 레버 2가 우리가 시도한 모든 파생 MC 특징(적분, PCHIP 적분, |MC|, 이동 RMS)이 실패한 이유다 —
+  이미 잃은 정보는 하류에서 복구할 수 없다.
+· 레버 2는 V_rot에 대해 지목할 수 있는 가장 가치 높은 실험이며 아카이브 데이터로 검정 가능하다.
+  B.6(kHz Mirnov 특징)은 2026-08-16 현재 미도착 — 도착하면 사전등록 §7 규칙을 개정 커밋한 뒤
+  파일럿→확대로 간다.
+· 옛 판의 레버 1("깊이가 아니라 도달 범위 — W=2→8 커버리지")은 이제 §6.3에서 '채택된 프레이밍'이므로
+  개선 여지가 아니다. 레버 목록에서 뺐다.
 """)
 
 
-# --- 18. Limits + conclusion ---------------------------------------------
+# --- 22. Limits + conclusion (sec:limits / sec:conclusion) ---------------
 def f_limits_conclusion():
     s = slide()
-    header(s, "§10–11", "한계와 결론 — 무엇을 인정하고 무엇을 주장하는가", accent=NAVY)
+    header(s, "§10–11  sec:limits · sec:conclusion",
+           "한계와 결론 — 무엇을 인정하고 무엇을 주장하는가", accent=NAVY)
 
-    fcard(s, 0.55, 1.45, 6.03, 5.2,
+    fcard(s, 0.55, 1.45, 6.03, 5.20,
           "§10 한계 — 논문이 먼저 인정하는 것",
-          ["· 통계적 검정력: 재현 단위는 shot이고 test에 ≈96(Tᵢ) /",
-           "  91(V_rot)개뿐이며 shot별 오차 차이는 꼬리가 두껍다.",
-           "· MNAR 낙관성: skill은 관측 시점에서만 측정된다.",
-           "· 오프라인 주장의 상한은 GP 동률 — “미래를 쓰는 보간을",
-           "  이긴다”는 “사전등록된 보간들을 이긴다”로 읽어야 한다.",
-           "· CES 적합실패 아티팩트는 헤드라인을 부풀리는 게 아니라",
-           "  끌어내린다: Tᵢ > 3 keV 값(행의 0.4–0.6%)을 모든 팔에서",
-           "  동일하게 제거하면 4/4 PASS를 유지한 채 skill이 약 2배",
-           "  (+0.18~+0.28 → +0.36~+0.59) ⇒ 헤드라인은 보수적이다.",
-           "· 지표 비대칭: 보간은 shot 전체 이웃을, 모델은 W=4 이력만",
-           "  본다(의도적으로 불리하나 해석을 복잡하게 한다).",
-           "· 단일 장치·단일 계열. 우리 헤드라인에 대해서도 보고한다 —",
-           "  전체 격자 시퀀스 변형(동일 라우팅 + 유지값 제거 + shot별",
-           "  표준화)이 4개 분할 전부에서 더 높은 Tᵢ skill(평균 +0.045,",
-           "  1/4 유의), 학습 비용 ≈1/10. 사전등록이 모델을 미리",
-           "  지명하므로 헤드라인을 다시 쓰지는 않는다.",
-           "· 캠페인 수리의 배치 가능한 형태(인과 running)는 미검증.",
-           "· 불확실성은 주변적으로만 캘리브레이션된다(shot별 50–100%).",
-           "· 가장 넓은 간극은 여전히 62 shot의 167 표본이다.",
-           "· 범위: 페데스탈-상단 프레이밍은 데이터 선택에서 상속됐고",
-           "  반경 의존성·이벤트 위상 분석은 수행하지 않았다."],
+          ["· 통계적 검정력: 재현 단위는 shot이고 분할당 test shot이",
+           "  96(Tᵢ) / 60–66(V_rot)뿐이며 shot별 제곱오차 차이는 꼬리가",
+           "  두껍다. 포함 모집단에서는 행의 ≈1%가 모든 팔 Tᵢ 제곱오차의",
+           "  70–83%를 담는다.",
+           "· MNAR 낙관: skill은 관측 지점에서만 측정된다. 재가중은 인과",
+           "  비교에 대해서는 양쪽, 오프라인 비교에 대해서는 모집단 조건부",
+           "  유의성으로 상한을 정하며 결측 Tᵢ 54–68% · V_rot 4–6%만 포괄.",
+           "· 오프라인 주장의 상한은 GP 동률(8셀 중 1개 유의) →",
+           "  “미래를 쓰는 보간을 이긴다”는 “사전등록된 보간들을 이긴다”를",
+           "  뜻하며, 다만 배치 가능한 최강 방법인 인과 GP로는 확장된다.",
+           "· 값 기준 컷은 대리 지표이고 V_rot 스파이크는 컷되지 않는다.",
+           "· 캠페인 전이는 하나의 시간 블록에 기댄다(4개 분할이 아니라",
+           "  4개 초기화, 컷 실행 2/4가 epoch 상한 종료). shot별 표준화는",
+           "  오프라인 형태이며 인과 러닝/EWMA 판본은 측정되지 않았다.",
+           "· 지표의 비대칭: 보간은 shot 전체 이웃을, 대조군은 두 행을,",
+           "  백본은 세그먼트의 과거를 본다 — 의도적으로 불리하지만",
+           "  직접적인 해석은 어렵게 만든다.",
+           "· 단일 장치 · 단일 진단 집합 · 밀접하게 관련된 두 순환 계열.",
+           "· 불확실성은 조건부가 아니라 주변적으로 보정된다.",
+           "· 지연은 네트워크만 잰 값이고 전원 상태에 따라 최대 2× 변동.",
+           "· 범위: 페데스탈 상단 프레이밍은 데이터 선정에서 물려받았고,",
+           "  반경 의존성·사건 위상(ELM, L–H) 분석은 수행하지 않았다."],
           accent=RED, body_size=11)
 
-    fcard(s, 6.75, 1.45, 6.03, 2.95,
+    fcard(s, 6.75, 1.45, 6.03, 3.05,
           "§11 결론 — 세 문단의 뼈대",
-          ["① 관측 모집단: 이온온도에 대해 미래를 쓰는 PCHIP을",
-           "  유의하고 재현된 skill(+0.18~+0.28, 4개 독립 분할)로",
-           "  이기고 — 가장 강한 오프라인 평활기 GP와는 동률 —",
-           "  두 타겟 모두에서 모든 인과 기준선을 큰 차이로 이긴다.",
-           "  검정력이 없어 아무 말도 못 하던 Δt > 15 ms를 포함해서.",
-           "② 배치 주장은 더 좁고 더 잘 뒷받침된다: 두 스트레스",
-           "  테스트가 같은 답을 준다 — 인과 대비는 둘 다 통과",
-           "  (+0.29, +0.22), 오프라인 대비는 어느 것도 통과 못 한다",
-           "  (1/4, 0/4). MNAR 보정 비용은 0.06–0.12.",
-           "③ 작동하지 않는 지점과 그 이유도 함께 보고하며, 각각은",
-           "  구체적이고 검증 가능한 변경을 지목한다."],
+          ["① 관측 모집단: Tᵢ에 대해 미래를 쓰는 PCHIP을 유의하고 재현",
+           "  가능한 skill로 이기고(4개 독립 분할 × 두 모집단,",
+           "  +0.17~+0.32), 가장 강한 오프라인 평활기와 동률이며, 두",
+           "  타겟 모두에서 모든 인과 기준선을 이긴다 — 인과 GP 8개 셀",
+           "  전부와 비인접 영역(Δt > 15 ms)을 포함해서.",
+           "② 배치 주장은 이제 두 스트레스 모두의 지지를 받는다: 진짜",
+           "  결측·도메인 내에서 인과 대비 8/8 생존, 캠페인 경계 너머",
+           "  PCHIP·인과 GP 대비 4/4+4/4(대체된 윈도 대조군은 오프라인",
+           "  우위를 완전히 잃었던 자리). 그 차이는 측정이다.",
+           "③ 작동하지 않는 곳과 그 이유도 함께 보고하며, 각각은 구체",
+           "  적이고 검정 가능한 변경을 지목한다. 크기 축은 닫혔다."],
           accent=GREEN, body_size=11)
 
-    fcard(s, 6.75, 4.55, 6.03, 2.1,
-          "결론 문단이 명시하는 기여 4가지",
-          ["① 보정된 V_rot 평가 — 관측값의 54%가 계기 유지값이며",
-           "  평가뿐 아니라 학습도 오염시킨다는 것을 4-seed로 입증",
-           "② 관측 마스킹 어텐션 풀링 — 보간의 귀납 편향을 무비용 주입",
-           "③ 복잡도 사다리 — 불투명성의 가격을 “해석 가능한 1,258",
-           "  파라미터가 회수하는 Tᵢ 마진의 31.5%”로 매긴다",
-           "④ 깨끗한 보간 대비 skill을 게이트로 삼는 선택 프로토콜"],
+    fcard(s, 6.75, 4.58, 6.03, 2.07,
+          "결론이 명시하는 기여 4가지",
+          ["① 교정된 V_rot 평가 — 관측값의 54%가 계측기 유지값이며",
+           "  학습·채점·앵커 전 구간에서 제거했다",
+           "② 스펙트럼 피팅 실패의 두-모집단 처리와, 어느 한쪽만으로는",
+           "  왜 충분하지 않은지를 보이는 측정",
+           "③ 최강 배치 기준선을 넘어서게 하는 도달 범위의 전체격자 프레이밍",
+           "④ 모든 결정 규칙이 결정할 수치보다 먼저 적힌 test 동결 프로토콜"],
           accent=NAVY, body_size=11)
     return note(s, """
-main_ko.tex §sec:limits (1253–1299행), §sec:conclusion (1302–1338행).
+main_ko.tex \\label{sec:limits}(§10), \\label{sec:conclusion}(§11).
 
-재현성·코드 공개·데이터 공개 문단은 이미 논문에 있다(1341–1360행) — 별도 슬라이드로 만들지 않는다.
-코드 공개에 남은 TODO 하나: 투고본에 대한 아카이브 DOI(Zenodo) 발급 후 인용 추가.
+· 재현성 · 코드 가용성 · 데이터 가용성 문단은 이미 논문에 있다 — 별도 슬라이드로 만들지 않는다.
+  코드 공개에 남은 TODO 하나: 투고본에 대한 아카이브 DOI(Zenodo) 발급 후 인용 추가.
+· 결론 2문단의 마지막 문장을 그대로 인용할 것: "온라인 가상 센서는 미래를 읽는 보간이 아니라
+  persistence와 인과 평활기와 경쟁하며, 그 비교로 보면 나우캐스터는 중요한 지점에서 작동한다."
+· 결론 3문단이 나열하는 '안 되는 것': 회전은 전역 동률(skill은 과도 구간에), 값 컷은 한쪽 방향
+  대리 지표, 재가중은 결측 Tᵢ 54–68%와 결측 V_rot의 20분의 1에 닿음, 예측 구간은 주변적 보정,
+  45 ms를 넘어서면 포함 모집단은 동률.
 """)
 
 
@@ -1193,24 +1535,28 @@ def build():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except Exception:
         pass
-    f_title()
-    f_map()
-    f_two_claims()
-    f_data_setup()
-    f_stuck()
-    f_model()
-    f_eval()
-    f_res_causal()
-    f_res_headline()
-    f_res_gap()
-    f_res_mnar()
-    f_res_campaign()
-    f_res_asym()
-    f_res_window()
-    f_res_peak()
-    f_deploy()
-    f_headroom()
-    f_limits_conclusion()
+    f_title()            # 1
+    f_map()              # 2
+    f_two_claims()       # 3
+    f_data_setup()       # 4
+    f_audits()           # 5
+    f_model()            # 6
+    f_eval()             # 7
+    f_res_ladder()       # 8   §6.1
+    f_res_headline()     # 9   §6.2  sec:headline
+    f_res_gate()         # 10  §6.3  sec:gate
+    f_res_gap()          # 11  §6.4  sec:gap
+    f_res_mnar()         # 12  §6.5  sec:mnar
+    f_res_campaign()     # 13  §6.6  sec:campaign
+    f_res_asym()         # 14  §6.7  sec:asym
+    f_res_window()       # 15  §6.8  sec:window
+    f_res_ladder2()      # 16  §6.9  sec:ladder
+    f_res_peak()         # 17  §6.10 sec:peak
+    f_res_cutsens()      # 18  §6.11 sec:cutsens
+    f_selection()        # 19  §7    sec:selection
+    f_deploy()           # 20  §8    sec:deploy
+    f_headroom()         # 21  §9    sec:headroom
+    f_limits_conclusion()  # 22  §10–11
     prs.save(OUT)
     print(f"wrote {OUT}  ({len(prs.slides.__iter__.__self__._sldIdLst)} slides)")
     for w in _WARNED:
