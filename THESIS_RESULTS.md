@@ -2192,9 +2192,11 @@ quality cut replaces or accompanies it (§8v). `CES_VT` (no cut in the protocol)
 sustained block in s31181** and the other 18 are single-row spikes; 145 single-row jumps
 > 300 km/s against quiet (|·| ≤ 300) neighbours, 588 > 100 km/s. That is the population §8z's
 spiked anchors come from (0–4 rows per TEST split carrying 28–72% of b3's `V_rot` SSE). No
-protocol change is made here: whether `V_rot` gets a value cut, a jump rule, or stays uncut is
-승상님's decision, recorded as pending; any rule would apply identically in every arm and in both
-populations, and the same audit script is the place to price it.
+protocol change is made here — and **승상님 decided (2026-08-16) that `V_rot` stays uncut**: no value
+or jump rule, no retraining; every persistence-anchored `V_rot` comparison must report the
+spike-anchor rows' share of squared error, to be revisited if CES fit-quality metadata arrives.
+The same decision kept the two-population report as co-primary (no p100-only headline) and left
+B.6 waiting (no kHz Mirnov features in `data/` as of 2026-08-16).
 
 **What this section does not show.** No model was selected or re-selected here (the backbone is
 §8x's; b3k8 is §8z's rung). The campaign evidence is one temporal block × 4 init seeds, not four

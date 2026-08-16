@@ -630,8 +630,10 @@ Every W = 4-based analysis is now replaced by W = 2 · held-free numbers in **bo
 - **Fit-failure spikes are one-sample events, and value cuts are one-sided**
   (`b5_rescore/spike_structure_audit.py`): > 3 keV = 951 runs, 85% single-row, median 13× its
   neighbours, but the cut catches only 19% of ≥ 2× upward outliers and none of the 4,965 dips.
-  `V_rot` has 119 rows > 1,000 km/s in 16 shots (101 in one block of s31181). Rule for `V_rot`
-  is 승상님's decision (pending); the audit script is where to price any candidate rule.
+  `V_rot` has 119 rows > 1,000 km/s in 16 shots (101 in one block of s31181). **Decided 2026-08-16
+  (승상님): `V_rot` stays uncut** — no rule, no retraining; report the spike-row SSE share with
+  every anchored `V_rot` comparison; the audit script is where to price a rule if fit metadata
+  ever arrives. Same decision: two-population report stays co-primary; B.6 waits.
 - **Operational**: the resumable stage runner + `run_step`'s fresh-artifact rule let a 6-stage
   batch be interrupted and resumed with zero re-runs; check `best_epoch == epochs_run` on every
   new seq run (7/8 cut-sensitivity runs and 2/4 campaign runs sat at the 30 cap).
