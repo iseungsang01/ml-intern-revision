@@ -1271,21 +1271,27 @@ runner scripts are in the released repository.
 Two things stand between a skill score and a usable instrument: it has to run
 inside the measurement cadence, and it has to say how much to trust it.
 
-\paragraph{Latency: stateful one-step inference fits on a CPU.}
+\paragraph{Latency: stateful one-step inference fits on a CPU with room to spare.}
 CES sits on a 10\,ms grid, so an online gap-filler has 10\,ms per step minus
 whatever acquisition and control already spend. A recurrent nowcaster is run
 online \emph{statefully}: the hidden state is carried across the grid and each new
 row costs one recurrent step at batch 1, which is the number that matters.
-\todo{latency: idle-machine re-measurement pending (the 2026-08-16 run was taken
-under a concurrent GPU/CPU training job and its tail latencies are inflated); the
-paragraph below is completed from \texttt{.latency\_benchmark.json} once the
-re-run lands.} Measured as the network forward pass only (feature assembly is
-outside the model), the median and p99 of the \seqv{} step on CPU, of the
-whole-segment re-run that offline scoring uses ($L{=}100$ and $300$ rows), and of
-the windowed control at $W{=}2$ are reported here together with the CUDA numbers;
-the practical guidance carried over from the windowed family---at this size the
-control computer's CPU is the right device and a laptop GPU is slower at
-batch 1---is re-checked on the same run.
+Measured as the network forward pass only (feature assembly is outside the model)
+over 1{,}000 timed calls after warm-up on an idle laptop-class machine, the
+\seqv{} step costs \textbf{1.05\,ms median and 1.61\,ms at p99 on CPU} (16\% of one
+grid period; p95 1.35\,ms), and 1.21 / 2.31\,ms on the GPU---at this size a GPU buys
+nothing at batch 1. The whole-segment re-run that offline scoring uses costs
+2.9\,ms median / 5.6\,ms p99 for a 100-row (1\,s) block and 6.4 / 8.9\,ms for
+300 rows on CPU, i.e.\ 35--47k rows/s of bulk reprocessing (47--63k rows/s on
+the GPU). The windowed control at batch 1 is slower and, on this machine,
+tail-heavy: $W{=}2$ 3.8\,ms median but 18.9\,ms at p99 on CPU (7.2 / 11.6\,ms on
+the GPU); $W{=}4$ 4.0 / 8.1\,ms. Two idle-machine runs of the same benchmark
+differed by up to 2$\times$ in absolute terms (the \seqv{} step measured
+0.51 / 0.99\,ms median / p99 in the other run) because a laptop's power states move
+these numbers; the ordering---sequence step $\ll$ windowed forward pass, CPU
+sufficient---did not. The practical guidance is therefore: \emph{run the
+stateful nowcaster on the control computer's CPU}; it leaves more than 80\% of
+the 10\,ms budget to acquisition and control.
 
 \paragraph{Uncertainty: distribution-free intervals without touching the model.}
 The community standard for fusion profile data is Gaussian-process regression,
@@ -1416,8 +1422,9 @@ set and two closely related recurrent families; nothing here establishes transfe
 to another tokamak.
 \textbf{Uncertainty is calibrated marginally, not conditionally}
 (\S\ref{sec:deploy}).
-\textbf{Latency} is a network-only measurement and awaits its idle-machine
-re-run (\S\ref{sec:deploy}).
+\textbf{Latency} is a network-only measurement on one laptop-class machine, with
+up to 2$\times$ run-to-run variation from power states (\S\ref{sec:deploy});
+feature assembly and acquisition overhead are not included.
 \textbf{Scope.} The pedestal-top framing is inherited from the data selection
 (pedestal-top CES channels); no radial-dependence experiment is performed, and
 event-phase analyses (ELM cycle, L--H transitions) are future work---the
