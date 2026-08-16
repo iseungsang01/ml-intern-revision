@@ -1791,6 +1791,14 @@ backbone's claim 2. `V_rot` vs persistence PASS 4/4.
 | w2cut window model | 201,258 | +0.173 | 87% |
 | seq_v2 backbone | 357,570 | +0.236 | 100% |
 
+> **Restated 2026-08-16 (§8ab):** this ladder is a **cut-population** statement. Re-run in the
+> spike-*inclusive* population (§8ab block 3), b3k8 still beats the retrained anchor 4/4 with no
+> `V_rot` deficit, but loses to the backbone −0.160\* / −0.200\* / −0.203\* / −0.214\* (mean −0.194
+> against the −0.05 tolerance) and to the window family on 3/4 splits: the ≈ 1% spike-anchor rows
+> carry 73–83% of its `T_i` squared error there, and a bounded correction cannot recover a spiked
+> anchor — the same mechanism this section documents for `V_rot` below. "21k = backbone" is
+> therefore conditional on the 3 keV cut.
+
 *(All rungs computed from the frozen TEST npz files. Two backbone dirs' unsuffixed
 `comparison_metrics.json` had been overwritten by a later val re-score — caught 2026-08-15,
 reports regenerated with population verified bit-identical, and `eval_seq.py` /
@@ -1891,6 +1899,315 @@ is split variance, not capacity. Two consequences for the thesis: the model-size
 capped at 879k by the project's 1 M rule, so "no gain up to 879k" is the measured statement, not
 "no gain ever"; and w80/w260's isolated significant wins on s7 (+0.030\*/+0.033\*) are single-split
 effects with the opposite sign on s42, exactly the split-variance pattern §8x recorded.
+
+---
+
+## 8ab. B.5 full re-score (2026-08-16) — every W = 4-based analysis replaced, in both populations
+
+**Question.** §8v demanded that every quantitative analysis of the draft — headline, MNAR
+reweighting, campaign (temporal) split, conformal intervals, peak / large-gap strata, the
+interpretability ladder, the modality ablation behind the `V_rot` routing — be recomputed once
+under the confirmed protocol (`W = 2` · held-free · cap 500), and §1.1 of the pre-registration
+demands it in **two populations**: the **cut** regime (`CES_TI_SPIKE_CUT_EV = 3000`, "p99") and
+the **inclusive** regime (cut 0, "p100"), each internally consistent across training targets,
+history inputs, interpolation anchors and evaluation, and identical for every arm inside it. An
+unqualified claim must hold in both; anything that holds in one is reported conditional on that
+population.
+
+**Design** (`experiments/b5_rescore/run_b5.py`, plan committed 2026-08-15 before the run,
+`PREREGISTRATION_W2.md` §6 B.5; run in two sessions — interrupted 2026-08-16 00:40 at
+`cut_sens` 4/8 and resumed from the per-stage artifacts, no stage re-run; verdict
+`data/.b5_summary.json`, all nine analysis blocks `ok`). Models: the adopted backbone `seq_v2`
+(§8x), the `W = 2` window family as the paired control, and the interpretable rung `b3k8` +
+retrained anchor+Δ (§8z). No new decision rule — every verdict below uses the rule already fixed
+for that analysis. TEST scored once per new run.
+
+| population | backbone `seq_v2` | window control (`W = 2`) | split | ladder |
+|---|---|---|---|---|
+| **cut** (3 keV) | B.1 `.b1_seqv2_s{s}_i{s}` (val scored additively for conformal) | B.1 `.b1_w2cut_s*` | `.b1_w2cut_split_s*` | §8z `.b3c_b3k8_s*`, `.b3_anchor_s*` |
+| **inclusive** (cut 0) | **new** `.b5i_seqv2_s*` (4 seeds, val + TEST; rule-terminated 14–22 epochs) | frozen no-cut W = 2 sweep `.wsweep_hf_w2_s*` re-scored with the current harness → `.b5i_w2_s*` (10 population keys bit-identical vs the frozen npz on 4/4 seeds, `se_model` drift 0.000) | `.b1_manifest_s*` | **new** `.b5i_b3k8_s*` (cap 100, terminated 55–59), `.b5i_anchor_s*` |
+
+Plus: campaign split (65/20/15 by shot number — train 30801–31991 / val 32002–32310 / test
+32312–32751, 416 / 128 / 97 files, `.campaign_split_manifest.json` rebuilt) with window OFF /
+window ON (cut only) / `seq_v2` × 4 init seeds in each population (20 runs,
+`.b5_camp_{cut,incl}_{win,winps,seq}_s*`); cut-threshold sensitivity `.b5c{2500,4000}_seqv2_s*`
+(8 runs, self-population scoring); modality ablation of the window family at evaluation
+(`CES_ABLATE ∈ {no_fast, no_history}`, zeroed inputs, no retraining, copies
+`.b5_abl_{pop}_{abl}_s*`, 16 scorings). CPU analyses (headline, coverage / PR2, ladder,
+conformal, peak + large-gap, campaign, cut sensitivity, ablation, MNAR) all live in
+`.b5_summary.json`; every number below is read from it.
+
+### 1. Headline (TEST, 4 splits, PR4 = shot-clustered paired bootstrap; \* = CI excludes 0)
+
+`T_i` skill vs PCHIP per seed (42 / 1 / 7 / 123), PR4 pass counts vs PCHIP · persistence ·
+causal GP, and the row-paired `seq_v2 − window` skill:
+
+| population | arm | s42 | s1 | s7 | s123 | mean | vs PCHIP | vs persistence | vs causal GP | `seq_v2 − window` |
+|---|---|---:|---:|---:|---:|---:|---|---|---|---|
+| cut | **`seq_v2`** | +0.174\* | +0.248\* | +0.257\* | +0.264\* | **+0.236** | **4/4** | 4/4 | **4/4** | +0.130\* / +0.058\* / +0.062 / +0.044 |
+| cut | window | +0.051 | +0.203\* | +0.208\* | +0.231\* | +0.173 | 3/4 | 4/4 | 1/4 | — |
+| inclusive | **`seq_v2`** | +0.225\* | +0.238\* | +0.292\* | +0.316\* | **+0.268** | **4/4** | 4/4 | **4/4** | +0.053\* / +0.024 / +0.047\* / +0.029 |
+| inclusive | window | +0.181\* | +0.219\* | +0.258\* | +0.296\* | +0.238 | 4/4 | 4/4 | 3/4 | — |
+
+`V_rot`: `seq_v2` vs PCHIP +0.390\* / +0.183 / +0.135 / +0.305 (cut, **1/4**) and +0.384\* /
++0.195\* / +0.132 / +0.304 (inclusive, **2/4**); vs persistence 3/4 in both populations
+(+0.30…+0.50); vs the causal GP 2/4 in both. Window `V_rot` vs PCHIP 0/4 in both.
+
+**Unconditional (holds in both populations):** the backbone's `T_i` beats PCHIP **4/4 + 4/4**,
+beats the causal GP **4/4 + 4/4** (claim 2 stands, §8y), beats persistence 4/4 + 4/4; and it is
+positive against the window family on 8/8 pairs (2/4 significant in each population — the
+confirmatory evidence for the backbone remains §8x's 16-run grid; this 4-run slice is
+consistent with it, cut mean +0.074 vs pooled +0.081). **Conditional:** the *window* model's
+`T_i` PR4 vs PCHIP is 3/4 in the cut regime and 4/4 inclusive. **Not established in either:**
+`V_rot` vs offline interpolation (1/4, 2/4); `V_rot` vs persistence stays 3/4 in both — the
+`V_rot` verdict remains "tie with interpolation, ahead of persistence on most splits".
+
+Two things the pair of populations says that one alone would not. The inclusive numbers are
+*higher* than the cut numbers for every arm (backbone +0.268 vs +0.236, window +0.238 vs
++0.173, and the `seq_v2 − window` gap shrinks from +0.074 to +0.038): the spikes poison the
+interpolation anchors, so the offline baseline is weaker in p100 — exactly the §1.1 rationale
+for not using p100 alone. And the cut regime is the one where the *fast-diagnostic* content of
+the model is isolated (ablation, block 8 below).
+
+### 2. Coverage and PR2 fallback (TEST, per split 42 / 1 / 7 / 123; identical for both arms)
+
+| population | target | scored rows | Δt > 15 ms rows | Δt > 45 ms rows | PR2 persistence-fallback rate |
+|---|---|---|---|---|---|
+| cut | `T_i` | 32,589 / 35,582 / 35,759 / 34,038 | 603 / 974 / 815 / 1,030 | 120 / 124 / 97 / 119 | 0.4 / 0.3 / 0.3 / 0.3 % |
+| cut | `V_rot` | 10,463 / 13,247 / 14,477 / 13,968 | 91 / 135 / 130 / 110 | 3 / 2 / 6 / 3 | **43 / 44 / 40 / 42 %** |
+| inclusive | `T_i` | 32,721 / 35,743 / 35,916 / 34,271 | 584 / 959 / 803 / 988 | 115 / 117 / 90 / 107 | 0.4 / 0.3 / 0.3 / 0.3 % |
+| inclusive | `V_rot` | 10,461 / 13,243 / 14,475 / 13,966 | 89 / 131 / 128 / 108 | 3 / 2 / 6 / 3 | 43 / 44 / 40 / 42 % |
+
+The cut removes 132–233 scored `T_i` rows per split (0.4–0.7%). PR3 holds everywhere. The
+`V_rot` fallback rate is the number the pre-registration asked to be surfaced: for 40–44% of
+scored `V_rot` rows the interpolation baseline has no future neighbour and degrades to
+persistence, so "vs PCHIP" for `V_rot` is 40% "vs persistence" — one more reason the `V_rot`
+comparison to offline interpolation carries little information at W = 2 (block 9 gives the
+MNAR side of the same fact).
+
+### 3. Interpretability ladder in both populations — §8z is a cut-population statement
+
+TEST `T_i` skill vs PCHIP (4-seed mean) and the paired verdicts of the §8z rule:
+
+| population | persistence | anchor+Δ | **b3k8** | window | `seq_v2` | b3 − anchor (`T_i`) | b3 − `seq_v2` (`T_i`) | `V_rot` deficit vs anchor | rung / tolerance |
+|---|---:|---:|---:|---:|---:|---|---|---|---|
+| cut (§8z) | −0.264 | −0.261 | **+0.237** | +0.173 | +0.236 | +0.35\* / +0.40\* / +0.42\* / +0.41\* (4/4) | −0.009 / −0.005 / +0.026 / −0.004, mean **+0.002**, all CIs ∋ 0 | 0/4 (b3 wins 4/4) | **met / met** |
+| inclusive | −0.288 | −0.287 | **+0.126** | +0.238 | +0.268 | +0.33\* / +0.32\* / +0.29\* / +0.34\* (4/4) | **−0.160\* / −0.200\* / −0.203\* / −0.214\***, mean **−0.194**, all CIs exclude 0 | 0/4 (b3 wins 4/4) | **met / FAILED** |
+
+The rung condition (beats the retrained anchor 4/4 with no `V_rot` deficit) holds in both
+populations; the backbone-tolerance condition (mean ≥ −0.05) holds **only in the cut
+population**. In p100 the 21k model sits below the window family too (paired −0.098 / −0.171\* /
+−0.147\* / −0.178\*, 3/4 significant). **Mechanism, measured from the frozen npz:** rows whose
+persistence error exceeds 2 keV — i.e. whose carried anchor is a fit-failure spike — are 0.64 /
+0.86 / 0.78 / 1.28% of the inclusive TEST rows and carry **73 / 73 / 83 / 82%** of b3's `T_i`
+squared error; the same rows carry 76–83% of the backbone's, 70–82% of the window model's and
+73–79% of PCHIP's. A bounded correction (`anchor + Σ|w_k| ≤ 4–5σ`) cannot recover a spiked
+anchor; the unbounded heads of `seq_v2` and the window model partly can. So the §8z verdict "the
+backbone's entire `T_i` skill survives compression to eight numbers" is **conditional on the
+cut population** — in p100 the interpretable rung costs −0.16…−0.21 against the backbone, and
+that price is the price of *not* having the cut, not of the latent size (it is the same
+mechanism §8z documented for `V_rot`). §8z's ladder table has been annotated accordingly.
+
+### 4. Conformal intervals (backbone `seq_v2`, α = 0.10, calibrated on the run's own val, TEST)
+
+4-seed means of the Winkler score (lower is better) with the coverage range across seeds;
+identical procedure for the two baselines:
+
+| population | target | mode | model (coverage) | PCHIP (coverage) | persistence (coverage) | model best, seeds |
+|---|---|---|---:|---:|---:|---|
+| cut | `T_i` | global | **1,272** (0.87–0.92) | 1,554 (0.85–0.91) | 1,727 (0.86–0.91) | 4/4 vs each |
+| cut | `T_i` | mondrian | **1,224** | 1,490 | 1,647 | 4/4 |
+| inclusive | `T_i` | global | **2,290** (0.87–0.92) | 2,851 (0.85–0.91) | 3,120 (0.86–0.91) | 4/4 |
+| inclusive | `T_i` | mondrian | **2,186** | 2,720 | 2,978 | 4/4 |
+| cut | `V_rot` | global | **150** (0.91–0.94) | 164 (0.92–0.94) | 179 (0.92–0.94) | 4/4 |
+| inclusive | `V_rot` | global | **149** (0.92–0.94) | 163 (0.92–0.94) | 179 (0.92–0.94) | 4/4 |
+
+Coverage is at or just under the 0.90 nominal for `T_i` (0.87–0.92; seed 1 is the low split for
+every arm) and slightly over for `V_rot`; the model's Winkler score is the best of the three arms
+in **every** population × target × mode × seed cell (32/32). In the inclusive regime the
+model's `T_i` intervals are actually *wider* than PCHIP's (half-width 224–255 vs 211–241 eV,
+global) and still score better — the miss penalty is what the spikes inflate, and the model
+misses less. Mondrian (per-Δt-bin) calibration tightens every `T_i` arm by ≈ 4–5%, leaves `V_rot`
+unchanged, and changes no verdict. Unconditional.
+
+### 5. Peak strata and large-gap regime
+
+Peak-stratified PR4 (per-seed skill vs PCHIP, `is_peak` key, ≥ 4,000 peak rows per split for
+`T_i`, ≥ 2,400 for `V_rot`):
+
+| stratum | arm | cut: skill range · PASS | inclusive: skill range · PASS |
+|---|---|---|---|
+| `T_i` peak | `seq_v2` | +0.45…+0.61 · **4/4** | +0.62…+0.72 · **4/4** |
+| `T_i` peak | window | +0.36…+0.49 · 4/4 | +0.57…+0.65 · 4/4 |
+| `T_i` non-peak | `seq_v2` | +0.09…+0.20 · **4/4** | +0.06…+0.19 · 2/4 |
+| `T_i` non-peak | window | −0.05…+0.17 · 3/4 | +0.06…+0.18 · 2/4 |
+| `V_rot` peak | `seq_v2` | +0.54…+0.79 · 2/4 | +0.54…+0.79 · 2/4 |
+| `V_rot` non-peak | `seq_v2` | −0.07…+0.15 · 0/4 | −0.06…+0.15 · 0/4 |
+
+The transient-capture claim is **unconditional** for `T_i` (peak rows PASS 4/4 in both
+populations, for both models, at +0.45…+0.72 against an interpolator that has the future
+neighbour); the non-peak `T_i` margin is conditional (backbone 4/4 cut, 2/4 inclusive). `V_rot`
+skill lives entirely in the peak stratum (+0.54…+0.79 point estimates on every split, 2/4
+significant) and is nil elsewhere — the same "three regimes" picture as §8r, now under the
+confirmed protocol.
+
+Large-gap, 4-seed pooled by physical shot (skill vs PCHIP [CI]):
+
+| stratum | arm | cut | inclusive |
+|---|---|---|---|
+| `T_i` Δt ≤ 15 ms (n ≈ 135k, 301 shots) | `seq_v2` | +0.239 [+0.197, +0.274]\* | +0.299 [+0.244, +0.347]\* |
+| `T_i` Δt > 15 ms (n = 3,422 / 3,334, 265 / 263 shots) | `seq_v2` | +0.268 [+0.187, +0.337]\* | +0.206 [+0.108, +0.290]\* |
+| `T_i` Δt > 45 ms (n = 460 / 429, 104 / 101 shots) | `seq_v2` | +0.267 [+0.092, +0.414]\* | −0.004 [−0.304, +0.246] |
+| `T_i` Δt > 45 ms | window | +0.325 [+0.160, +0.471]\* | +0.062 [−0.231, +0.317] |
+| `V_rot` Δt > 15 ms (n = 466 / 456, 130 shots) | `seq_v2` | +0.418 [+0.104, +0.680]\* | +0.432 [+0.128, +0.696]\* |
+| `V_rot` Δt > 45 ms (n = 14) | — | not scored (< 50 rows) | not scored |
+
+The `T_i` gain persists into the > 15 ms regime in both populations (unconditional) and into
+the > 45 ms regime only in the cut population (429 rows / 101 shots in p100 is where a handful of
+spike rows dominate a small stratum). `V_rot` beats interpolation in the > 15 ms stratum in both
+populations — the one `V_rot` regime with a positive unconditional verdict, on 130 shots.
+
+### 6. Campaign (temporal) split — the offline-superiority claim survives for the backbone
+
+`T_i` skill vs PCHIP per init seed (42 / 1 / 7 / 123) on the temporal TEST block (97 files,
+shots 32312–32751); \* = PR4 PASS:
+
+| population | arm | s42 | s1 | s7 | s123 | vs PCHIP | vs persistence | vs causal GP | paired vs window OFF |
+|---|---|---:|---:|---:|---:|---|---|---|---|
+| cut | window OFF | +0.027 | +0.091\* | −0.001 | +0.061\* | 2/4 | 4/4 | 0/4 (−0.05 / +0.02 / −0.08 / −0.01) | — |
+| cut | window ON (per-shot) | +0.103\* | +0.107\* | +0.094\* | +0.107\* | **4/4** | 4/4 | — | +0.078\* / +0.018 / +0.095\* / +0.049\* |
+| cut | **`seq_v2`** | +0.187\* | +0.174\* | +0.181\* | +0.177\* | **4/4** | 4/4 | **4/4** (+0.12 / +0.11 / +0.12 / +0.11) | +0.164\* / +0.091\* / +0.182\* / +0.124\* |
+| inclusive | window OFF | +0.014 | +0.047 | +0.055 | +0.089 | **0/4** | 4/4 | 0/4 | — |
+| inclusive | **`seq_v2`** | +0.173\* | +0.202\* | +0.198\* | +0.184\* | **4/4** | 4/4 | **4/4** (+0.13 / +0.16 / +0.16 / +0.14) | +0.161\* / +0.163\* / +0.151\* / +0.104\* |
+
+`V_rot` on the temporal split: `seq_v2` vs persistence **4/4** in both populations (+0.33 cut,
++0.31…+0.33 inclusive), vs PCHIP 0/4 (+0.19…+0.23 n.s.); window OFF vs persistence 0/4;
+`seq_v2 − window` `V_rot` +0.128\* / +0.131\* / +0.175\* / +0.136\* (cut) and +0.144\* /
++0.101\* / +0.105\* / +0.063\* (inclusive) — 8/8 significant.
+
+This re-adjudicates §8n/§8o. The **window** model's advantage over offline interpolation does
+collapse under campaign shift (2/4 cut, 0/4 inclusive — the §8n finding reproduces at W = 2 in
+both populations), and per-shot standardization repairs it in the cut regime exactly as §8s
+found (ON 4/4, ON − OFF positive 4/4, 3/4 significant). But the **backbone** does not collapse:
+`seq_v2` beats PCHIP 4/4, beats the causal GP 4/4 and beats the window family 4/4 in **both**
+populations on a test block of shots that all post-date every training shot. The offline
+superiority claim, which §8n had to restate as "survives only against causal baselines", is
+restored for the adopted model — unconditionally. Caveat that stays: the four campaign passes
+are init seeds on one temporal test block (97 files), so this is one temporal split's evidence,
+not four splits'; and 2/4 of the cut `seq_v2` campaign runs stopped at the 30-epoch cap.
+
+### 7. Cut-threshold sensitivity (backbone, cut population, self-population scoring)
+
+| threshold | `T_i` skill vs PCHIP (42 / 1 / 7 / 123) | mean | PR4 vs PCHIP | vs causal GP | `V_rot` vs PCHIP mean · PASS |
+|---|---|---:|---|---|---|
+| 2.5 keV | +0.160\* / +0.254\* / +0.249\* / +0.255\* | +0.230 | 4/4 | 4/4 | +0.252 · 1/4 |
+| **3 keV** (protocol) | +0.174\* / +0.248\* / +0.257\* / +0.264\* | +0.236 | 4/4 | 4/4 | +0.253 · 1/4 |
+| 4 keV | +0.176\* / +0.234\* / +0.258\* / +0.260\* | +0.232 | 4/4 | 4/4 | +0.257 · 2/4 |
+
+The threshold is immaterial across 2.5–4 keV: means within ±0.006, every PR4 verdict identical.
+(7/8 of the new threshold runs reached the 30-epoch cap with `best_epoch` 25–29, while the 3 keV
+reference stopped by rule at 14–25 — the neighbouring thresholds are if anything lower bounds.)
+
+### 8. Modality ablation of the window family (evaluation-time, no retraining; audit C-2)
+
+Paired skill vs the un-ablated run (42 / 1 / 7 / 123; \* = significantly worse):
+
+| ablation | target | cut | inclusive |
+|---|---|---|---|
+| `no_fast` | `T_i` | −0.246\* / −0.375\* / −0.418\* / −0.425\* (skill → −0.10…−0.18) | −0.034\* / −0.043 / −0.033 / −0.089\* (skill → +0.15…+0.23) |
+| `no_fast` | `V_rot` | **+0.000 / +0.000 / +0.000 / +0.000** | **+0.000 / +0.000 / +0.000 / +0.000** |
+| `no_history` | `T_i` | −4.6\* / −1.8\* / −2.3\* / −1.9\* | −1.5\* / −3.4\* / −1.2\* / −1.1\* |
+| `no_history` | `V_rot` | −5.4\* / −6.3\* / −1.8\* / −2.3\* | −6.9\* / −7.8\* / −1.9\* / −2.2\* |
+
+Two routing facts are re-grounded held-free at W = 2 in both populations: zeroing the fast
+channels leaves the `V_rot` output **bit-identical** (the routing is structural, not learned),
+and zeroing the history collapses both targets (skill −1…−8: neither target is predictable from
+100 Hz diagnostics without the CES anchor). The third row is the informative one for the
+population question. In the cut regime the window model's `T_i` margin over PCHIP is *made of*
+fast-diagnostic information: without BES/ECEI/MC it falls below the interpolator (−0.10…−0.18).
+In the inclusive regime a history-only model still beats PCHIP by +0.15…+0.23 and the fast
+channels add only 0.03–0.09 (2/4 significant) — because PCHIP's anchors are spiked and a learned
+model discounts them where an interpolator cannot. **The p100 margin therefore contains a
+spike-robustness component that is not fast-diagnostic information; the cut population is the one
+that isolates what the fast diagnostics contribute.** That is the measured argument for keeping
+the two-population report rather than a p100-only headline.
+
+### 9. MNAR reweighting (W = 2 in-domain: nearest past observation within 2 rows)
+
+Strata = Δt bin (15 / 25 / 45 ms) × input-only activity flag; weights from the genuinely-missing
+rows of the same split (population-consistent: the cut is applied to the weight grid too);
+coverage = missing-mass of the strata that survive the ≥ 30-scored-rows floor.
+
+| population | target | in-domain fraction of missing rows | coverage | `seq_v2` reweighted vs PCHIP (42 / 1 / 7 / 123) | PASS | vs persistence PASS | window vs PCHIP PASS |
+|---|---|---|---|---|---|---|---|
+| cut | `T_i` | 0.54 / 0.61 / 0.63 / 0.67 | 0.99–1.00 | +0.140 / +0.164\* / +0.203 / +0.283\* | 2/4 | 4/4 | 2/4 |
+| inclusive | `T_i` | 0.54 / 0.62 / 0.64 / 0.68 | 0.99 | +0.140\* / +0.217\* / +0.167\* / +0.221\* | **4/4** | 4/4 | 4/4 |
+| cut | `V_rot` | **0.048 / 0.064 / 0.049 / 0.044** | 0.73–0.76 | +0.115 / +0.126 / +0.177 / +0.280 | 0/4 | 1/4 | 0/4 |
+| inclusive | `V_rot` | 0.048 / 0.064 / 0.049 / 0.044 | 0.73–0.76 | +0.118 / +0.141 / +0.179 / +0.321\* | 1/4 | 2/4 | 0/4 |
+
+Reweighted to the genuinely-missing distribution, the backbone's `T_i` margin over PCHIP is
+significant on 2/4 splits in the cut regime and 4/4 inclusive (point estimates +0.14…+0.28 in
+both; the reweighting bootstrap is wide because the > 45 ms strata are thin), and over
+persistence 4/4 everywhere — the §8i pattern (unconditional vs causal, conditional vs offline)
+holds at W = 2. The coverage numbers the pre-registration asked for: only **54–68% of
+genuinely-missing `T_i` rows** are in the W = 2 model's domain at all (a past observation within
+2 rows), and for `V_rot` **4–6%** — `V_rot` gaps are long blocks, so the MNAR-reweighted `V_rot`
+estimate answers a question about 5% of the missing mass and is not informative at W = 2.
+
+### Verdict — what is unconditional under the confirmed protocol
+
+| claim | cut | inclusive | status |
+|---|---|---|---|
+| backbone `T_i` beats offline PCHIP (PR4) | 4/4 | 4/4 | **unconditional** |
+| backbone `T_i` beats the causal GP (claim 2) | 4/4 | 4/4 | **unconditional** |
+| backbone `T_i` beats persistence / window family (sign) | 4/4 / 4/4 | 4/4 / 4/4 | **unconditional** (window gap significant 2/4 each; §8x carries the 16-run proof) |
+| `T_i` transient (peak) capture | 4/4 | 4/4 | **unconditional** |
+| conformal: model intervals beat both baselines (Winkler) | 32/32 cells | | **unconditional** |
+| campaign shift: backbone `T_i` beats PCHIP and causal GP | 4/4, 4/4 | 4/4, 4/4 | **unconditional** (one temporal block, 4 inits) |
+| `T_i` Δt > 15 ms pooled | PASS | PASS | **unconditional** |
+| `V_rot` routing structural / history indispensable | yes | yes | **unconditional** |
+| cut threshold 2.5–4 keV | insensitive | (n/a) | reported |
+| window model `T_i` beats PCHIP | 3/4 | 4/4 | conditional |
+| b3k8 (21k) = backbone `T_i` | +0.002 | −0.194\* | **cut-conditional** (§8z restated) |
+| non-peak `T_i`, backbone | 4/4 | 2/4 | conditional |
+| `T_i` Δt > 45 ms pooled | PASS | tie | conditional |
+| MNAR-reweighted `T_i` vs PCHIP | 2/4 | 4/4 | conditional (vs persistence 4/4 both) |
+| `V_rot` vs PCHIP (PR4) | 1/4 | 2/4 | not established; vs persistence 3/4 both, campaign 4/4 both, Δt > 15 ms PASS both |
+
+**Fit-failure spike structure — B.7 follow-up audit memo** (`experiments/b5_rescore/
+spike_structure_audit.py` → `data/.b5_spike_structure.json`, 641 files, observed rows in time
+order, blocks split at ≥ 0.5 s gaps). The 1,197 `CES_TI` rows above 3 keV form **951 runs in
+274 shots**: 85% are single rows (813), 121 runs are 2–4 rows long, only **17 runs (2%) last
+≥ 5 rows** (max 15); 70% of runs are *isolated* (a single row with both observed neighbours
+< 2 keV) and the median run peak is **13×** the mean of its neighbours (IQR 6–26×). So the cut
+removes almost exclusively one-sample events — what a fit failure looks like, not what an
+ELM/transient looks like. But single-sample outliers are **bidirectional**: on the 225,580
+observed rows with two observed neighbours, 3,845 are ≥ 2× *above* both neighbours and 4,965 are
+≤ ½× *below* both (dips), and the 3 keV cut removes only **19%** (731) of the upward outliers
+(their median value is ≈ 0.9 keV) and none of the dips. A value cut is therefore partial and
+one-sided; it is the pre-registered, physically-motivated proxy ("> 3 keV is not a KSTAR ion
+temperature") until CES fit-quality metadata (fit χ², signal level) arrives, at which point a
+quality cut replaces or accompanies it (§8v). `CES_VT` (no cut in the protocol): |V_rot| p99 =
+223, p99.9 = 666, max 9,725 km/s; **119 rows > 1,000 km/s in 16 shots**, of which **101 are one
+sustained block in s31181** and the other 18 are single-row spikes; 145 single-row jumps
+> 300 km/s against quiet (|·| ≤ 300) neighbours, 588 > 100 km/s. That is the population §8z's
+spiked anchors come from (0–4 rows per TEST split carrying 28–72% of b3's `V_rot` SSE). No
+protocol change is made here: whether `V_rot` gets a value cut, a jump rule, or stays uncut is
+승상님's decision, recorded as pending; any rule would apply identically in every arm and in both
+populations, and the same audit script is the place to price it.
+
+**What this section does not show.** No model was selected or re-selected here (the backbone is
+§8x's; b3k8 is §8z's rung). The campaign evidence is one temporal block × 4 init seeds, not four
+temporal splits. The MNAR `V_rot` row is uninformative by coverage, not negative. And every p100
+`T_i` verdict is hostage to the ≈ 1% spike-anchor rows that carry 70–83% of every arm's squared
+error — which is why the cut population remains co-primary rather than a sensitivity row, and
+why the p100 population's own headline is not quoted alone.
+
+Artifacts: `data/.b5_summary.json` (verdict), `data/.b5i_{w2,seqv2,anchor,b3k8}_s*`,
+`data/.b5_camp_*`, `data/.b5c{2500,4000}_seqv2_s*`, `data/.b5_abl_*`,
+`data/.b5_spike_structure.json`, `data/.campaign_split_manifest.json`; the cut-population inputs
+are B.1's `.b1_*` and §8z's `.b3c_b3k8_s*` / `.b3_anchor_s*` untouched (val npz added to the
+backbone dirs additively, TEST reports split-tagged).
 
 ---
 

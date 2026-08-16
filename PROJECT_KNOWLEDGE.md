@@ -532,7 +532,9 @@ Decided 2026-08-12 on the Notion working page; recorded in THESIS_RESULTS.md §8
 - **Confirmed protocol for every new run: `W = 2` · held-free (`genuine`) · pre-registered
   `CES_TI` fit-failure exclusion** — the cut applies in three places (training targets, history
   inputs → treated as missing, evaluation population), identically for every arm; the
-  spike-inclusive population is demoted to a sensitivity row. Threshold re-justified from the
+  spike-inclusive population is demoted to a sensitivity row (**amended 2026-08-14 by 승상님: the
+  inclusive population is co-primary — an unqualified claim must hold in both**; §8ab below).
+  Threshold re-justified from the
   current data's p99 (2,089 eV; > 3 keV = 1,197 rows = 0.53% of observed `CES_TI`), with
   2.5 / 3 / 4 keV sensitivity reported.
 - **Every `W = 4` number is provisional and will be replaced.** Do not quote the draft's §5–§7
@@ -594,6 +596,48 @@ dwarfs capacity effects. **How to apply:** do not propose a bigger/deeper model 
 the remaining levers are inputs (NBI, kHz Mirnov, CES fit-quality metadata) and data treatment
 (the `V_rot` spike issue in §8z). Read any future "model X is better" claim against the ±0.03
 single-split noise seen here.
+
+## The Two-Population Rule Earned Its Keep — B.5 (2026-08-16) — §8ab
+
+Every W = 4-based analysis is now replaced by W = 2 · held-free numbers in **both** populations
+(cut 3 keV / spike-inclusive), runner `experiments/b5_rescore/run_b5.py`, verdict
+`data/.b5_summary.json`. What is now safe to quote, and what changed:
+
+- **Unconditional (holds in both populations)**: backbone `seq_v2` `T_i` beats PCHIP 4/4 + 4/4
+  (means +0.236 / +0.268), beats the causal GP 4/4 + 4/4, peak-stratum `T_i` 4/4 + 4/4,
+  conformal Winkler best in 32/32 cells, `T_i` Δt > 15 ms pooled PASS, `V_rot` routing
+  bit-identical under `no_fast`, history-0 collapse, cut threshold 2.5–4 keV immaterial.
+- **The campaign-shift verdict flipped for the adopted model.** §8n (W = 4 window model) had
+  the offline-superiority claim collapse under a temporal split. At W = 2 the *window* model
+  still collapses (2/4 cut, 0/4 inclusive; per-shot standardization repairs it, §8s), but the
+  **`seq_v2` backbone beats PCHIP 4/4 and the causal GP 4/4 in both populations** on a test block
+  of shots that post-date every training shot. Quote it as one temporal block × 4 init seeds.
+- **§8z's "21k = backbone" is cut-conditional.** In the inclusive population b3k8 loses
+  −0.16…−0.21\* to the backbone and 3/4 to the window family; the ≈ 1% spike-anchor rows carry
+  70–83% of *every* arm's `T_i` squared error there. Bounded corrections cannot recover a spiked
+  anchor (the §8z `V_rot` mechanism, now on `T_i` in p100).
+- **Why p100 alone would mislead — measured.** The window family's eval-time `no_fast` ablation
+  loses −0.25…−0.43 in the cut population (its margin *is* fast-diagnostic information) but only
+  −0.03…−0.09 inclusive, where a history-only model still beats PCHIP by +0.15…+0.23 because the
+  interpolator's anchors are spiked. The p100 margin contains a spike-robustness component; the
+  cut population isolates the fast-diagnostic contribution. Keep both; never headline p100 alone.
+- **Coverage numbers to attach to any W = 2 claim**: PR2 fallback `T_i` 0.3–0.4% but `V_rot`
+  40–44%; MNAR in-domain `T_i` 54–68%, `V_rot` 4–6% (the reweighted `V_rot` row is
+  uninformative, not negative). MNAR-reweighted `T_i` vs PCHIP is 2/4 cut / 4/4 inclusive, vs
+  persistence 4/4 everywhere.
+- **`V_rot` stays unresolved vs offline interpolation** (1/4, 2/4), ahead of persistence 3/4 in
+  both, 4/4 on the campaign block, and PASS in the Δt > 15 ms stratum in both populations.
+- **Fit-failure spikes are one-sample events, and value cuts are one-sided**
+  (`b5_rescore/spike_structure_audit.py`): > 3 keV = 951 runs, 85% single-row, median 13× its
+  neighbours, but the cut catches only 19% of ≥ 2× upward outliers and none of the 4,965 dips.
+  `V_rot` has 119 rows > 1,000 km/s in 16 shots (101 in one block of s31181). Rule for `V_rot`
+  is 승상님's decision (pending); the audit script is where to price any candidate rule.
+- **Operational**: the resumable stage runner + `run_step`'s fresh-artifact rule let a 6-stage
+  batch be interrupted and resumed with zero re-runs; check `best_epoch == epochs_run` on every
+  new seq run (7/8 cut-sensitivity runs and 2/4 campaign runs sat at the 30 cap).
+- **How to apply:** quote B.5 numbers with the population named; an unqualified sentence in the
+  thesis must be backed by both columns of §8ab's verdict table. Do not quote §8n's collapse for
+  the backbone, §8z's ladder for p100, or §8i's W = 4 MNAR numbers.
 
 ## Useful Reference
 
