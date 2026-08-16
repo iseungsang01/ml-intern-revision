@@ -382,15 +382,26 @@ A MiKTeX toolchain is now installed (`pdflatex`/`xelatex`/`bibtex` under
 `%LOCALAPPDATA%/Programs/MiKTeX/miktex/bin/x64`); build `main.tex` with pdflatex+bibtex, `main_ko.tex`
 with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a failed build.
 
-## Deployment Facts (2026-08-05, measured)
+## Deployment Facts (2026-08-05, re-measured 2026-08-16 for the backbone)
 
-- **Run the model on CPU, not GPU, for online inference.** batch-1 p99 = 6.4 ms (W=4) / 8.7 ms
-  (W=2) on CPU vs **21 ms median / 43–72 ms p99 on CUDA** — an 8× penalty, because 201k parameters
-  give kernel-launch overhead nothing to amortize against. Verified per-call *and* amortized.
-  CPU also won bulk throughput here (48k vs 24k samples/s at batch 512).
+- **The adopted seq_v2 backbone is run online *statefully*** (carry the LSTM (h, c) across the 10 ms
+  grid; one recurrent step per row at batch 1 — `experiments/latency/bench_latency.py`, `seq_v2_step`).
+  Idle laptop: **1.05 ms median / 1.61 ms p99 on CPU** (16% of the budget; a second idle run gave
+  0.51 / 0.99 ms — laptop power states move absolutes up to 2×, never the ordering), 1.21 / 2.31 ms on
+  CUDA. Whole-segment re-run (what eval_seq does): 2.9 / 5.6 ms per 100 rows, 6.4 / 8.9 ms per 300
+  rows on CPU (35–47k rows/s). Windowed control at batch 1: 3.8 ms median but 18.9 ms p99 (W=2, CPU).
+  Never benchmark with anything else on the machine — a concurrent training job inflated tails 5–10×
+  and the artifact was annotated and re-run.
+- **(2026-08-05, windowed model, W=4 era) Run the model on CPU, not GPU, for online inference.** batch-1
+  p99 = 6.4 ms (W=4) / 8.7 ms (W=2) on CPU vs 21 ms median / 43–72 ms p99 on CUDA — an 8× penalty,
+  because 201k parameters give kernel-launch overhead nothing to amortize against. Still the right
+  guidance for the backbone (CPU step ≈ GPU step at batch 1; nothing to amortize).
 - **Uncertainty without retraining: split conformal.** A learned variance/quantile head would move
   the point predictions and confound every skill number; conformal calibrates on val, changes
-  nothing, and is distribution-free. Model intervals beat both baselines' 8/8 by Winkler score.
+  nothing, and is distribution-free. Model intervals beat both baselines' 8/8 by Winkler score at W=4,
+  and **32/32 cells (2 populations × 2 targets × 2 variants × 4 splits) for the seq_v2 backbone at W=2**
+  (§8ab); in the inclusive population the model's T_i intervals are wider than PCHIP's and still score
+  better because they miss less.
   Its real limitation is that coverage is **marginal, not conditional** — per-shot coverage runs
   50–100%, because calibration and test are disjoint discharges and shot-level shift breaks
   exchangeability. Report per-shot spread, never just the pooled number.
