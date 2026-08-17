@@ -402,6 +402,15 @@ with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a fai
   skill, 1.6× lower tail, and it *ties the acausal GP* using past data only. Window control:
   4.46 ms p99 at `W = 2` (45%), 5.05 at `W = 4` — **3.0× the backbone, but inside the budget**.
   Cheap arms: persistence 0.034 ms, `ar_local` 0.045 ms but skill **−4.04** (far worse than holding).
+- **Batch-1 latency tracks OPERATOR COUNT, not parameters or FLOPs** (2026-08-17, §8ac §3).
+  The window model does 274k MACs per step — **0.11 ms of arithmetic at 5 GFLOP/s, 3% of its
+  measured 3.56 ms**; the rest is per-op dispatch across its **57 leaf ops**. `seq_v2`'s stateful
+  step has **10**, does 1.29× *more* multiplies, and runs 3.5× faster. Consequences: (a) `W = 2`
+  and `W = 4` have the **same 201,258 parameters** — the window sets sequence length, not weights;
+  (b) shrinking widths barely helps (window −40% params → −21% ms; `seq_v2` −90% params → −17% ms),
+  and the smallest window variant is still 2.7× slower than the largest `seq_v2`; (c) the lever
+  that works is graph fusion — `torch.jit.trace` + `freeze` gave **1.73×** on the window model with
+  identical outputs. Never argue about deployment cost from parameter counts on this project.
 - **Latency absolutes on this laptop are not reproducible to better than ~4×; only the ORDERING is.**
   §8ac's first draft quoted the frozen §8l `W = 2` p99 of 18.9 ms and concluded the window family
   misses the deadline; a same-session re-measure gave 4.46 ms and refuted it. The frozen value was

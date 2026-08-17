@@ -2309,6 +2309,36 @@ ordering"; a 4.2× gap exceeds that, so the frozen tail was contaminated, not me
 `gp_causal` < window `W = 2` < window `W = 4`. No conclusion in this section rests on an absolute
 millisecond value, and the reach ladder (§1 above) is a skill measurement untouched by any of this.
 
+### 3. Why the arithmetic is free and the latency is not (2026-08-17, 승상님)
+
+Two follow-ups — "a `W = 2` model should be smaller, why 201k parameters?" and "it is a CNN, it is
+a few multiplies, why is it slow?" — turn out to have the same answer, and it is not the one the
+parameter counts suggest. Measured with forward hooks (MAC counts) and the same batch-1 timing
+loop:
+
+| | params | MACs / step | leaf ops | median | effective |
+|---|---:|---:|---:|---:|---:|
+| window `iter009` (`W = 2`) | 201,258 | 274,416 | **57** | 3.56 ms | 154 MFLOP/s |
+| `seq_v2` stateful step | 357,570 | 353,920 | **10** | 1.02 ms | 691 MFLOP/s |
+
+- **Parameter count does not depend on the window.** `W = 2` and `W = 4` instantiate the *same*
+  201,258 weights — the window changes sequence length, not the convolution kernels, the GRU cell
+  or the heads. "`W = 2` should be smaller" does not follow.
+- **The arithmetic really is negligible, exactly as the intuition says.** 274k MACs at a modest
+  5 GFLOP/s is **0.11 ms — 3% of the measured 3.56 ms.** The other 97% is per-operator dispatch
+  at batch 1, and the two models' op counts (57 vs 10) predict their ordering better than their
+  parameter counts do: `seq_v2` performs **1.29× more multiplies and is 3.5× faster**.
+- **Shrinking widths therefore does not buy latency.** Window at quarter widths: 121,050 params
+  (−40%) → 2.81 ms (−21%). `seq_v2` at `hidden_ti = 24`: 34,162 params (−90%) → 0.86 ms (−17%).
+  The *smallest* window variant (121k) is still **2.7× slower than the largest `seq_v2`** (358k).
+- **Fusing the graph is the lever that works.** `torch.jit.trace` + `freeze` on the window model:
+  3.05 → **1.76 ms, 1.73× faster**, outputs identical to 1e-5. Not applied to any scored artifact —
+  this is a deployment note, not a change to the measured pipeline.
+
+Read together with §8aa (skill flat from 34k to 879k parameters) and §8z (a 21k latent model
+matches the backbone on `T_i`), the capacity of *both* families is far above what this input set
+needs; the size axis is closed for cost as it was for skill.
+
 **Verdict.**
 
 1. **The window framing is refuted on information, and is merely more expensive on cost.**
