@@ -2213,6 +2213,124 @@ backbone dirs additively, TEST reports split-tagged).
 
 ---
 
+## 8ac. Effective recurrent reach + the real-time causal ladder (2026-08-17) — `T_i` needs 500 ms of context, and the window model cannot meet the deadline
+
+**Question (승상님).** Two challenges to the adopted backbone, asked together. (1) Multi-sensor
+papers routinely use convolutional stacks rather than an LSTM — what justifies the recurrence
+here? (2) The window family is smaller and looked physically adequate (§8f: `T_i` skill plateaus
+at `W = 2`), so why carry an unbounded recurrent state at all? Both reduce to one measurable
+quantity that had never been measured: **how many contiguous past steps does the trained model
+actually use?** §8aa closed the *width* axis; this closes the *reach* axis.
+
+**Design** (`experiments/reach/`, runners `run_reach.py` → `bench_causal_arms.py`; 6 min wall for
+the ladder with `--jobs 4`; artifacts `data/.reach_s*`, `data/.reach_summary.json`,
+`data/.reach_pareto.json`). **No retraining.** The four frozen B.1 backbone checkpoints
+(`.b1_seqv2_s{seed}_i{seed}`, §8x) are re-scored on the *same* TEST population with the recurrent
+state reset `ctx` steps before every scored row (`eval_seq._forward_truncated`, reached by the new
+additive env `CES_SEQ_CONTEXTS`; unset reproduces the frozen path exactly). Sequence blocks run
+median 298 rows = 3.0 s (p95 796, max 1482), and `train_seq.py` applies no truncation, so
+full-block inference is the model's true reach.
+
+Only the *recurrent* reach is cut. The per-target carry-forward / staleness INPUT channels are
+still computed over the whole block by `seq_data.build_blocks`, because the `W = 2` window control
+receives exactly that carried history — so `ctx = 2` is the honest "same information as the window
+family" rung, not a crippled model. **Identity check: `ctx = full` reproduces each frozen
+`se_model`, `se_pchip`, `shot` and `dt_ms` array bit-identically on 4/4 splits**, which is the
+whole warrant for reusing the frozen population — every truncated column then differs for exactly
+one reason.
+
+**Headline baseline is `gp_causal`, not PCHIP** (승상님): a reach probe asks how much *past* the
+model needs, so the reference must itself be causal, and PCHIP cannot run online at all. The
+`persistence` column is carried alongside because it is what the claim actually displaces — on the
+10 ms grid, when CES is missing, holding the last value **is** current practice.
+
+### 1. Reach ladder (mean over 4 splits; "worst gap" = largest |paired deficit vs full| on any split)
+
+`CES_TI`:
+
+| ctx (steps × 10 ms) | vs `gp_causal` | vs persistence | vs PCHIP | % of persistence margin | sig. deficit | worst gap |
+|---:|---:|---:|---:|---:|---|---:|
+| 1 | −0.881 | **−0.283** | −0.623 | −73.0% | 4/4 | 1.259 |
+| 2 | −0.340 | +0.086 | −0.157 | 20.7% | 4/4 | 0.627 |
+| 3 | −0.112 | +0.242 | +0.041 | 60.6% | 4/4 | 0.315 |
+| 5 | +0.013 | +0.327 | +0.149 | 82.6% | 4/4 | 0.136 |
+| 10 | +0.087 | +0.378 | +0.213 | 95.5% | 3/4 | 0.050 |
+| 20 | +0.100 | +0.387 | +0.224 | 97.7% | 3/4 | 0.041 |
+| **50** | +0.113 | +0.396 | +0.235 | **99.9%** | 0/4 | 0.0011 |
+| 100 / 300 / full | +0.113 | +0.396 | +0.236 | 100.0% | 0/4 | ≤ 1e-5 |
+
+`CES_VT`:
+
+| ctx | vs `gp_causal` | vs persistence | vs PCHIP | % of persistence margin | sig. deficit | worst gap |
+|---:|---:|---:|---:|---:|---|---:|
+| 1 | +0.015 | +0.288 | +0.128 | 74.9% | 4/4 | 0.474 |
+| 2 | +0.111 | +0.358 | +0.214 | 91.7% | 4/4 | 0.117 |
+| 3 | +0.135 | +0.376 | +0.236 | 96.1% | 3/4 | 0.044 |
+| 5 | +0.146 | +0.384 | +0.246 | 98.4% | 2/4 | 0.016 |
+| 10 | +0.152 | +0.389 | +0.251 | 99.5% | 1/4 | 0.005 |
+| **20** | +0.154 | +0.390 | +0.253 | **100.0%** | 1/4 | 0.00008 |
+| 50 / 100 / 300 / full | +0.154 | +0.390 | +0.253 | 100.0% | 1/4 | ≤ 8e-5 |
+
+Saturation is read with an effect-size floor (`PRACTICAL_EPS = 0.002` skill) as well as by
+significance, because the arms are paired row-for-row: `CES_VT` on split 7 keeps a *statistically*
+significant deficit of **−5e-7** out to ctx = 300, which is float-level, not an effect. Under the
+floor: **`T_i` saturates at 50 steps = 500 ms; `V_rot` at 20 steps = 200 ms.**
+
+### 2. The real-time ladder (10 ms CES budget; skill vs persistence, mean over the same 4 splits)
+
+Baseline latency is the predictor call on an already-built neighbour set; network latency is the
+forward pass only (§8l scope, same machine, CPU batch 1). Feature assembly is excluded for both.
+GP cost is measured on the **real** neighbour sets of the frozen TEST files (|neighbours| median
+544 for `T_i`), since `gp_causal` refits a Matern-3/2 GP per row with hyperparameters selected by
+exact log marginal likelihood over a 5 × 4 grid on up to 16 past neighbours.
+
+| arm | causal? | `T_i` skill | `V_rot` skill | median | p99 | p99 vs budget | deployable |
+|---|---|---:|---:|---:|---:|---:|---|
+| persistence | yes | 0 (ref) | 0 (ref) | 0.009 ms | 0.024 ms | 0.2% | yes |
+| `ar_local` | yes | −4.039 | −1.462 | 0.012 ms | 0.038 ms | 0.4% | yes (but far worse than holding) |
+| `gp_causal` | yes | +0.319 | +0.276 | 1.084 ms | 2.841 ms | 28.4% | yes |
+| **`seq_v2` (stateful 1-step)** | yes | **+0.396** | **+0.390** | **1.051 ms** | **1.607 ms** | **16.1%** | **yes** |
+| window `iter009` `W = 2` | yes | — | — | 3.838 ms | **18.933 ms** | **189.3%** | **NO** |
+| window `iter009` `W = 4` | yes | — | — | 4.048 ms | 8.102 ms | 81.0% | marginal |
+| linear (acausal) | no | +0.246 | +0.214 | 0.017 ms | 0.043 ms | — | no (needs future) |
+| PCHIP (acausal) | no | +0.209 | +0.182 | 0.340 ms | 0.846 ms | — | no (needs future) |
+| GP (acausal) | no | +0.396 | +0.390 | 1.285 ms | 3.185 ms | — | no (needs future) |
+
+**Verdict.**
+
+1. **The window framing is refuted on its own terms, twice.** On information: `ctx = 2` — the
+   contiguous context a `W = 2` model sees — loses to the causal GP by **−0.340** on `T_i` and
+   recovers only 20.7% of the persistence margin, while full reach beats it by +0.113. §8f's
+   "`W = 2` is enough" was about how many past *CES observations* to staple on; it never measured
+   the dense-diagnostic context, and that is where the skill is. On cost: the window model's p99 is
+   **18.9 ms at `W = 2`, 189% of the entire 10 ms budget**, because it re-runs three sensor CNNs
+   over the whole window every step. The lighter-looking architecture is the one that misses the
+   deadline.
+2. **`ctx = 1` is worse than doing nothing** (`T_i` −0.283 vs persistence): the instantaneous
+   fast-diagnostic state alone does not identify `T_i`. The recurrence is not decoration.
+3. **The backbone is the best deployable arm, and by a wide margin on both axes** — higher skill
+   than `gp_causal` (+0.396 vs +0.319 on `T_i`) at **1.8× lower p99**, and it *ties the acausal GP*
+   (+0.396 / +0.390 vs +0.396 / +0.390) using past data only. This is §8p's "the model ties the GP"
+   restated where it matters: the tie now happens against the arm that is allowed to see the future,
+   from an arm that is not.
+4. **The `T_i` / `V_rot` asymmetry appears again, in a new coordinate.** `V_rot` needs 200 ms of
+   context, `T_i` 500 ms — consistent with §8ab's routing result: `V_rot` rides a highly
+   autocorrelated carried value, `T_i` integrates fast-diagnostic history.
+
+**What it does not show.** This measures the reach of *this trained model*, not the reach a
+differently-trained model would need. Truncation resets the state to zero, so part of the short-ctx
+deficit is warm-up rather than missing information — the two cannot be separated by this design,
+though the window control has exactly the same handicap, which is why `ctx = 2` is the fair rung.
+Most importantly, **it does not establish that recurrence is the only way to reach 50 steps**: a
+dilated causal TCN reaches 63 steps with 5 layers and remains an untested candidate. What the
+latency column does add is the reason to expect the recurrence to stay cheaper — an LSTM carries
+its summary in O(1) per step, whereas a convolutional stack recomputes its receptive field every
+step unless a streaming cache is built explicitly, and the window family's 18.9 ms p99 is precisely
+that recomputation being paid. A TCN arm under the B.2 rule (val-only exploration → pre-registered
+decision → TEST once, ≥3/4 significant to promote) is the measurement that would settle it.
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test

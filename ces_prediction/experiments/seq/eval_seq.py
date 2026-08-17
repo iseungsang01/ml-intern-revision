@@ -58,8 +58,39 @@ def _rmse(err):
     return float(np.sqrt(np.mean(err ** 2)))
 
 
-def build_pred_lookup(data_dir, eval_names, my_stats, device):
-    """name -> {float(time) -> (ti_phys, vt_phys)} via one causal pass per block.
+def _forward_truncated(model, x, ctx, max_batch=256):
+    """(1, L, F) -> (L, 2) where step t sees ONLY steps [max(0, t-ctx+1) .. t].
+
+    The reach probe (THESIS_RESULTS.md sec. 8ac): the recurrent state is reset `ctx`
+    steps before every scored step, so the model keeps exactly `ctx` steps of
+    contiguous context instead of the whole block. The INPUT channels are untouched --
+    `seq_data.build_blocks` computed carry-forward / staleness over the full block, and
+    the window family gets that same carried history, so this isolates the *recurrent
+    reach* over the dense diagnostics rather than re-deriving the history features.
+    """
+    L = x.shape[1]
+    idx = torch.arange(L, device=x.device)
+    starts = torch.clamp(idx - ctx + 1, min=0)
+    lens = idx - starts + 1                                  # (L,) in [1, ctx]
+    maxlen = int(lens.max())
+    out = x.new_zeros(L, 2)
+    for b0 in range(0, L, max_batch):
+        b1 = min(b0 + max_batch, L)
+        sl = slice(b0, b1)
+        # gather windows; positions past each row's length are garbage that
+        # pack_padded_sequence discards, so they never reach the LSTM.
+        gather = (starts[sl, None] + torch.arange(maxlen, device=x.device)[None, :]).clamp(max=L - 1)
+        pred = model(x[0][gather], lens[sl])                 # (n, maxlen, 2)
+        out[sl] = pred[torch.arange(b1 - b0, device=x.device), lens[sl] - 1]
+    return out
+
+
+def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=()):
+    """ctx -> {name -> {float(time) -> (ti_phys, vt_phys)}}, one causal pass per block.
+
+    `contexts` is the sec. 8ac reach ladder; "full" (whole block, the published
+    inference path) is always computed and is the only entry when `contexts` is empty,
+    so an unset `CES_SEQ_CONTEXTS` reproduces the frozen artifacts bit-identically.
 
     Features AND denormalization use the seq model's OWN training stats
     (`my_stats`); the table stores physical-unit predictions so the harness's
@@ -77,29 +108,41 @@ def build_pred_lookup(data_dir, eval_names, my_stats, device):
     model.load_state_dict(torch.load(out_dir / "weights" / "seq_lstm.pth", map_location="cpu"))
     model.eval()
 
+    needs_obs = bool(getattr(model, "needs_obs", False))
+    ladder = ["full", *contexts]
+    if contexts and needs_obs:
+        raise SystemExit("FATAL: the reach probe is defined for models taking (x, lengths); "
+                         f"{variant!r} needs an observation mask.")
+
     my_mean = torch.as_tensor(my_stats["target"]["mean"], dtype=torch.float32)
     my_std = torch.as_tensor(my_stats["target"]["std"], dtype=torch.float32)
-    lookup = {}
+    lookups = {c: {} for c in ladder}
     with torch.no_grad():
         for name in eval_names:
             if name not in grid:
                 continue
-            table = {}
+            tables = {c: {} for c in ladder}
             for blk in build_blocks(grid[name], dims, my_stats,
                                     per_shot_norm=per_shot):
                 x = torch.from_numpy(blk["x"]).unsqueeze(0).to(device)
-                if getattr(model, "needs_obs", False):
+                preds = {}
+                if needs_obs:
                     obs = torch.from_numpy(blk["mask"]).unsqueeze(0).to(device)
-                    pred = (model(x, None, obs)[0].cpu() * my_std + my_mean).numpy()
+                    preds["full"] = model(x, None, obs)[0]
                 else:
-                    pred = (model(x)[0].cpu() * my_std + my_mean).numpy()  # (L, 2) physical
-                for i, t in enumerate(blk["time"]):
-                    key = float(t)
-                    if key in table:
-                        raise SystemExit(f"FATAL: duplicate time {key} in {name}")
-                    table[key] = pred[i]
-            lookup[name] = table
-    return lookup
+                    preds["full"] = model(x)[0]               # (L, 2) normalized
+                for ctx in contexts:
+                    preds[ctx] = _forward_truncated(model, x, ctx)
+                for ctx in ladder:
+                    phys = (preds[ctx].cpu() * my_std + my_mean).numpy()
+                    for i, t in enumerate(blk["time"]):
+                        key = float(t)
+                        if key in tables[ctx]:
+                            raise SystemExit(f"FATAL: duplicate time {key} in {name}")
+                        tables[ctx][key] = phys[i]
+            for ctx in ladder:
+                lookups[ctx][name] = tables[ctx]
+    return lookups
 
 
 def compare():
@@ -142,7 +185,13 @@ def compare():
 
     device = torch.device(os.getenv("CES_SEQ_DEVICE",
                                     "cuda" if torch.cuda.is_available() else "cpu"))
-    pred_lookup = build_pred_lookup(data_dir, sorted(eval_files), my_stats, device)
+    # sec. 8ac reach ladder: unset -> "full" only -> frozen artifacts reproduce exactly.
+    raw_ctx = os.getenv("CES_SEQ_CONTEXTS", "").strip()
+    contexts = [int(c) for c in raw_ctx.split(",") if c.strip()] if raw_ctx else []
+    if any(c < 1 for c in contexts):
+        raise SystemExit(f"CES_SEQ_CONTEXTS must be >= 1, got {contexts}")
+    pred_lookups = build_pred_lookup(data_dir, sorted(eval_files), my_stats, device, contexts)
+    ladder = ["full", *contexts]
 
     target_mean = torch.as_tensor(stats["target"]["mean"], dtype=torch.float32)
     target_std = torch.as_tensor(stats["target"]["std"], dtype=torch.float32)
@@ -152,7 +201,8 @@ def compare():
 
     loader = DataLoader(Subset(dataset, eval_indices), batch_size=batch_size, shuffle=False)
 
-    model_chunks, target_chunks, keep_chunks = [], [], []
+    model_chunks = {c: [] for c in ladder}
+    target_chunks, keep_chunks = [], []
     base_chunks = {m: [] for m in methods}
     dt_chunks, shot_chunks, row_chunks = [], [], []
     n_future = np.zeros(2, dtype=np.int64)
@@ -185,17 +235,19 @@ def compare():
 
             # seq-LSTM predictions via (file, time)-keyed lookup -- the ONE diff.
             # Table values are already physical units (denormalized with my_stats).
-            out = np.zeros((b, 2), dtype=np.float32)
+            outs = {c: np.zeros((b, 2), dtype=np.float32) for c in ladder}
             for j in range(b):
                 fa = dataset.file_arrays[path_to_idx[files[j]]]
                 key = float(fa[rows[j], time_col])
                 name = Path(files[j]).name
-                try:
-                    out[j] = pred_lookup[name][key]
-                except KeyError:
-                    raise SystemExit(
-                        f"FATAL: no seq prediction for {name} @ t={key} -- grid mismatch.")
-            model_chunks.append(out)
+                for c in ladder:
+                    try:
+                        outs[c][j] = pred_lookups[c][name][key]
+                    except KeyError:
+                        raise SystemExit(
+                            f"FATAL: no seq prediction for {name} @ t={key} -- grid mismatch.")
+            for c in ladder:
+                model_chunks[c].append(outs[c])
 
             target_chunks.append(to_phys(batch["target"]))
             keep_chunks.append(((batch["target_mask"] > 0.5) & has_obs.cpu()).numpy())
@@ -227,7 +279,8 @@ def compare():
             shot_chunks.append(np.array([path_to_idx[f] for f in files], dtype=np.int64))
             row_chunks.append(np.array(rows, dtype=np.int64))
 
-    model_phys = np.concatenate(model_chunks)
+    model_ctx = {c: np.concatenate(model_chunks[c]) for c in ladder}
+    model_phys = model_ctx["full"]
     target_phys = np.concatenate(target_chunks)
     keep = np.concatenate(keep_chunks)
     base_phys = {m: np.concatenate(base_chunks[m]) for m in methods}
@@ -316,6 +369,18 @@ def compare():
             boot[f"{name}_se_gp_causal"] = (base_phys["gp_causal"][valid, t] - y) ** 2
         boot[f"{name}_y_true"] = y
         boot[f"{name}_is_peak"] = is_peak[valid]
+        if contexts:
+            # Additive only: every key above is untouched, so the frozen-artifact
+            # comparison stays bit-exact (experiments/README.md non-negotiable 3).
+            reach = {}
+            for c in contexts:
+                se = (model_ctx[c][valid, t] - y) ** 2
+                boot[f"{name}_se_model_ctx{c}"] = se
+                m = float(np.mean(se))
+                reach[str(c)] = {"rmse_model": m ** 0.5,
+                                 "skill_vs_pchip": (1 - m / mse_head) if mse_head > 0 else float("nan")}
+            reach["full"] = {"rmse_model": rmse_model, "skill_vs_pchip": skill_head}
+            report["per_target"][name]["reach"] = reach
 
     err_path = output_dir / f"comparison_errors_{split_tag}.npz"
     np.savez(err_path, **boot)

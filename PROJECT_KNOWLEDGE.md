@@ -392,6 +392,15 @@ with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a fai
   rows on CPU (35–47k rows/s). Windowed control at batch 1: 3.8 ms median but 18.9 ms p99 (W=2, CPU).
   Never benchmark with anything else on the machine — a concurrent training job inflated tails 5–10×
   and the artifact was annotated and re-run.
+- **The causal GP is deployable but expensive; the backbone dominates it on both axes**
+  (2026-08-17, §8ac, `experiments/reach/bench_causal_arms.py`, measured on the *real* TEST
+  neighbour sets because GP cost scales with neighbour count). `gp_causal` refits a Matern-3/2 GP
+  per row over a 5 × 4 hyperparameter grid: **1.08 ms median / 2.84 ms p99 (28% of the 10 ms
+  budget)** for skill vs persistence +0.319 `T_i` / +0.276 `V_rot`. The backbone's stateful step is
+  **1.05 / 1.61 ms (16%)** for **+0.396 / +0.390** — higher skill, 1.8× lower tail, and it *ties
+  the acausal GP* (+0.396 / +0.390) using past data only. Cheap arms for scale: persistence
+  0.009 / 0.024 ms, `ar_local` 0.012 / 0.038 ms but skill **−4.04** (far worse than holding).
+  **The windowed control at `W = 2` does not fit the budget at all: p99 18.9 ms = 189%.**
 - **(2026-08-05, windowed model, W=4 era) Run the model on CPU, not GPU, for online inference.** batch-1
   p99 = 6.4 ms (W=4) / 8.7 ms (W=2) on CPU vs 21 ms median / 43–72 ms p99 on CUDA — an 8× penalty,
   because 201k parameters give kernel-launch overhead nothing to amortize against. Still the right
@@ -660,6 +669,26 @@ Every W = 4-based analysis is now replaced by W = 2 · held-free numbers in **bo
 - **How to apply:** quote B.5 numbers with the population named; an unqualified sentence in the
   thesis must be backed by both columns of §8ab's verdict table. Do not quote §8n's collapse for
   the backbone, §8z's ladder for p100, or §8i's W = 4 MNAR numbers.
+
+## The Reach Axis Is Now Measured, And It Refutes The Window Framing (2026-08-17) — §8ac
+
+`experiments/reach/`, no retraining: the frozen B.1 checkpoints re-scored with the LSTM state
+reset `ctx` steps before every row (`CES_SEQ_CONTEXTS`; `ctx = full` reproduces the frozen
+`se_model` **bit-identically** 4/4, which is what licenses reusing the population).
+
+- **`T_i` uses 50 contiguous steps (500 ms); `V_rot` uses 20 (200 ms).** Beyond that the worst
+  paired deficit across four splits is < 0.002 skill.
+- **`ctx = 2` — the contiguous context a `W = 2` window model sees — loses to `gp_causal` by
+  −0.34 on `T_i`, and `ctx = 1` is *worse than persistence* (−0.28).** §8f's "`W = 2` is enough"
+  was about how many past CES **observations** to staple on; it never measured the dense-diagnostic
+  context, which is where the `T_i` skill lives. Do not cite §8f as evidence that a short window
+  suffices — cite it only for the history-length question it actually asked.
+- **Read significance with an effect-size floor when arms are paired row-for-row.** `CES_VT` on
+  split 7 holds a *significant* deficit of −5e-7 out to ctx = 300. The runner reports both the
+  strict rule and a 0.002-skill practical floor; quote the floor-based saturation.
+- **How to apply:** the open architecture question is no longer "recurrent vs. windowed" (settled)
+  but "recurrent vs. a 50-step-receptive-field causal TCN" (untested). Any such arm goes through
+  the B.2 rule: val-only exploration → pre-registered decision → TEST once, ≥3/4 significant.
 
 ## Useful Reference
 
