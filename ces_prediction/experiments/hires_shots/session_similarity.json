@@ -1,0 +1,98 @@
+{
+ "n_shots": 594,
+ "n_pairs": 176121,
+ "bins": [
+  {
+   "gap_lo": 1,
+   "gap_hi": 2,
+   "n": 738,
+   "summary_dist": 1.9541935522682172,
+   "d_ti_ev": 91.53139304120072,
+   "calibration_dist": 0.8184097747776673
+  },
+  {
+   "gap_lo": 3,
+   "gap_hi": 6,
+   "n": 1211,
+   "summary_dist": 2.52681895428059,
+   "d_ti_ev": 137.71507194630863,
+   "calibration_dist": 1.4900343259785698
+  },
+  {
+   "gap_lo": 7,
+   "gap_hi": 20,
+   "n": 3140,
+   "summary_dist": 3.5327396813613325,
+   "d_ti_ev": 227.07942624876415,
+   "calibration_dist": 2.951602052128896
+  },
+  {
+   "gap_lo": 21,
+   "gap_hi": 60,
+   "n": 8205,
+   "summary_dist": 3.9123126678328184,
+   "d_ti_ev": 270.78016351679594,
+   "calibration_dist": 3.5922023512220354
+  },
+  {
+   "gap_lo": 61,
+   "gap_hi": 200,
+   "n": 27101,
+   "summary_dist": 4.048902372339169,
+   "d_ti_ev": 257.2229399858204,
+   "calibration_dist": 3.8510367267464316
+  },
+  {
+   "gap_lo": 201,
+   "gap_hi": 600,
+   "n": 68111,
+   "summary_dist": 4.1058704503941925,
+   "d_ti_ev": 265.86239804548336,
+   "calibration_dist": 4.044980340559684
+  },
+  {
+   "gap_lo": 601,
+   "gap_hi": 2000,
+   "n": 67615,
+   "summary_dist": 4.303451281690061,
+   "d_ti_ev": 272.9510878428132,
+   "calibration_dist": 4.936477087583014
+  }
+ ],
+ "pairs": {
+  "31921-31923": {
+   "summary_dist": 0.492783880680757,
+   "summary_pct": 0.030660738923808065,
+   "calibration_dist": 0.16614544884274882,
+   "calibration_pct": 0.08573651069435217,
+   "d_ti_ev": 20.656695439001965
+  },
+  "31357-31359": {
+   "summary_dist": 3.3064232352375247,
+   "summary_pct": 25.83735045792381,
+   "calibration_dist": 0.6880661981145683,
+   "calibration_pct": 2.231420443899365,
+   "d_ti_ev": 201.83520157148405
+  }
+ },
+ "permutation": {
+  "summary_dist": {
+   "adjacent_median": 1.9541935522682172,
+   "random_median": 4.142460826170497,
+   "p_one_sided": 0.0,
+   "n_adjacent_pairs": 738
+  },
+  "d_ti_ev": {
+   "adjacent_median": 91.53139304120072,
+   "random_median": 264.8635144569496,
+   "p_one_sided": 0.0,
+   "n_adjacent_pairs": 738
+  },
+  "calibration_dist": {
+   "adjacent_median": 0.8184097747776673,
+   "random_median": 4.277306806743693,
+   "p_one_sided": 0.0,
+   "n_adjacent_pairs": 738
+  }
+ }
+}

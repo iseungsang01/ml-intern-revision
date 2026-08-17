@@ -59,26 +59,48 @@ ENV_WIN = 5            # 50 ms rolling window for the MC amplitude envelope
 # already published is a shot whose raw microsecond data can be checked against a known
 # answer. The rest is chosen by score, to cover the axes the published shots miss
 # (CES_VT sampling, very long discharges, the strongest Mirnov activity).
+#
+# Split membership is NOT reassigned: every shot keeps the role the confirmed W = 2
+# protocol's seed-42 manifest already gives it (3 test / 4 val / 3 train).
+#
+# No two shots in the list come from the same session. Adjacent shot numbers are repeat
+# discharges that share plasma setup and diagnostic gain, and `session_similarity.py`
+# measures how much that matters: over all 641 shots, pairs with a gap <= 2 sit at a
+# median |dTi| of 92 eV against 265 eV for random pairs, and a median calibration distance
+# of 0.82 against 4.28 (one-sided p < 1e-4). The earlier version of this list contained
+# two such pairs (#31921/#31923 at the 0.0th percentile of all 176k pair distances, and
+# #31357/#31359); one member of each was dropped and replaced from the same split side.
 FINAL = [
     # --- literature-confirmed -------------------------------------------------------
     (31921, "test",  "PUBLISHED (FIRE mode, 2 papers): FIRE 5.40 s vs H-mode 8.05 s on CES "
-                     "edge profiles; also the best data shot we have (rank 2/121) and the "
-                     "highest MC-turbulence coupling of all 641"),
+                     "edge profiles, plus BES bispectral WCM analysis; also the best data "
+                     "shot we have (rank 2/121) and the highest MC-turbulence coupling of "
+                     "all 641"),
     (31873, "test",  "PUBLISHED (Nat. Commun. 2024): fully automated ELM suppression with "
                      "ML-integrated RMP; our window covers the whole suppressed phase"),
-    (31923, "val",   "PUBLISHED (I-mode edge of FIRE mode): WCM ~50 kHz measured on BES_0206 "
-                     "-- the very channel in our CSVs; highest sustained-mode fraction here"),
     (31359, "val",   "PUBLISHED (Nat. Commun. 2024): no n=1 ERMP -> density ETB at 5.5 s, ELMs, "
-                     "core Ti drops; 246 CES_VT and strong BES/ECEI dynamics"),
-    (31357, "val",   "PUBLISHED (Nat. Commun. 2024): with n=1 ERMP the H-mode transition is "
-                     "avoided -- the paired control of #31359; two-coil coherence 0.87"),
+                     "core Ti drops; 246 CES_VT and the liveliest BES/ECEI of the published set"),
+    (32027, "val",   "PUBLISHED (PanoMHD): clear L/H transition with 100-300 kHz cross-power / "
+                     "cross-phase spectrograms -- the frequency band a microsecond fetch buys"),
     # --- chosen by the data score ----------------------------------------------------
     (31114, "test",  "largest clean MC amplitude among test shots; model gains on both targets"),
     (32097, "val",   "strongest Mirnov shot overall: RMS 17.3, two-coil coherence 0.93 (rank 1)"),
+    (31745, "val",   "highest two-coil envelope coherence of any candidate (0.96) at RMS 16.6 "
+                     "-- replaces the mode-coherence role the dropped #31923/#31357 played"),
     (31604, "train", "largest spike-free MC (RMS 21.3, kurtosis ~0): steady-state mode"),
     (31074, "train", "balanced: two-coil coherence 0.74, 7.5 s, 446 CES_VT"),
     (31937, "train", "longest discharge (15.2 s), most labels (1479 TI / 722 VT), quiet MC"),
 ]
+# Dropped to remove same-session pairs; each replacement came from the same split side.
+DROPPED_FOR_SESSION = {
+    31923: "same session as #31921 (gap 2): summary distance at the 0.0th percentile of all "
+           "176k pairs, |dTi| 21 eV. Kept #31921 -- 2 papers, 296 CES_VT, data rank 2/121. "
+           "Replaced by #32027 (val, published)",
+    31357: "same session as #31359 (gap 2): calibration distance at the 2.2th percentile. "
+           "Kept #31359 -- 246 vs 44 CES_VT, MC 8.3 vs 5.4, MC-BES coupling +0.32 vs -0.08. "
+           "Replaced by #31745 (val, two-coil coherence 0.96)",
+}
+# Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
 # Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
 CONFIRMED_SHOTS = {31921, 31923, 31873, 31276, 31357, 31359, 32027, 31888}
 # Published shots that did NOT make the list, and why (see SELECTION.md).
@@ -86,8 +108,10 @@ REJECTED_PUBLISHED = {
     31276: "MC RMS 12.7 collapses to 32 % when the 5 largest samples are dropped "
            "(kurtosis 363) -- an electrical spike, not mode activity",
     31888: "disruption example shot; MC RMS carried by spikes (trim ratio 0.36, kurtosis 105)",
-    32027: "PanoMHD L/H transition shot -- kept as the first alternate; only 8 CES_VT values "
-           "and weak MC coupling",
+    31923: "dropped for same-session overlap with #31921, not for quality -- see "
+           "DROPPED_FOR_SESSION",
+    31357: "dropped for same-session overlap with #31359, not for quality -- see "
+           "DROPPED_FOR_SESSION",
 }
 
 
@@ -486,6 +510,16 @@ def main():
     print("\npublished shots deliberately left out:")
     for s, why in REJECTED_PUBLISHED.items():
         print(f"  #{s}: {why}")
+    print("\ndropped to remove same-session pairs:")
+    for s, why in DROPPED_FOR_SESSION.items():
+        print(f"  #{s}: {why}")
+    picked = sorted(int(x) for x in sel.shot)
+    gaps = [(picked[i], picked[i + 1], picked[i + 1] - picked[i]) for i in range(len(picked) - 1)]
+    print(f"\nsmallest shot-number gap in the final list: {min(g for _, _, g in gaps)} "
+          f"({[f'{a}->{b}:{g}' for a, b, g in gaps if g == min(x for _, _, x in gaps)]})")
+    roles = sel.split_s42.value_counts().to_dict()
+    assert all(sel.role == sel.split_s42), "role must equal the frozen s42 split membership"
+    print(f"split (unchanged from the frozen s42 manifest): {roles}")
     plot_final(d)
     print(f"\nwrote {HERE / 'FINAL_10.csv'} and FINAL_10.png")
 

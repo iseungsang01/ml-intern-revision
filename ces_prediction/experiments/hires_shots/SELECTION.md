@@ -76,25 +76,64 @@ shot under the protocol the paper reports.
 
 ---
 
+## Screen 3 — one shot per session
+
+Adjacent shot numbers are repeat discharges from a single session: same plasma setup, same
+diagnostic gain and offset, same wall state. `session_similarity.py` measures what that is
+worth over all 641 shots (176k pairs):
+
+| gap | pairs | summary distance | \|ΔT_i\| [eV] | **calibration distance** |
+|---|---|---|---|---|
+| 1–2 | 738 | 1.95 | **91.5** | **0.82** |
+| 3–6 | 1,211 | 2.53 | 137.7 | 1.49 |
+| 7–20 | 3,140 | 3.53 | 227.1 | 2.95 |
+| 61–200 | 27,101 | 4.05 | 257.2 | 3.85 |
+| all | 176,121 | 4.14 | 264.9 | 4.28 |
+
+Shots two apart differ in mean T_i by a third of what random pairs do, and their per-channel
+BES/ECEI calibration is five times closer (one-sided permutation p < 1e-4). Since the model
+z-scores its inputs, that calibration channel is how a session leaks **even when the physics
+differs** — the ERMP pair #31357/#31359 differ by 202 eV in mean T_i (the paper's whole point)
+yet sit at the 2.2nd percentile of calibration distance.
+
+So the list takes **at most one shot per session**. Two same-session pairs were removed:
+
+* **#31923** dropped, **#31921** kept — the pair sat at the *0.0th percentile* of all 176k
+  summary distances (|ΔT_i| = 21 eV). #31921 wins on every axis: two papers instead of one,
+  296 independent V_rot instead of none, data rank 2/121. Replaced by **#32027**, also
+  published, also on the val side.
+* **#31357** dropped, **#31359** kept — 246 vs 44 V_rot, MC 8.3 vs 5.4, MC↔BES coupling +0.32
+  vs −0.08. Replaced by **#31745**, the highest two-coil envelope coherence of any candidate.
+
+Gap is a proxy, not the criterion: the measured distance is. #31273 sits 86 shots away from
+#31604 yet lands at the 3.6th calibration percentile, so it was passed over; #31745 is
+128 away *and* at the 23rd percentile.
+
+**Split membership is never reassigned.** Every shot keeps the role the frozen seed-42
+manifest gives it, and both replacements were drawn from the same (val) side, so the list is
+still 3 test / 4 val / 3 train.
+
+---
+
 ## The list
 
 `t_start`–`t_end` is the discharge's contiguous block — the window to request.
 
 | # | shot | split (s42) | window [s] | T_i / V_rot | MC RMS (trim, kurt) | why |
 |---|---|---|---|---|---|---|
-| 1 | **31921** | **test** (2 seeds) | 3.51–8.61 | 446 / 296 | 5.0 (0.82, 15) | **published ×2 (FIRE mode, CES edge profiles)** *and* the best data shot we have — rank 2/121, MC↔turbulence coupling 0.575, the highest of all 641 |
+| 1 | **31921** | **test** (2 seeds) | 3.51–8.61 | 446 / 296 | 5.0 (0.82, 15) | **published ×2 (FIRE mode, CES edge profiles + BES bispectral WCM)** *and* the best data shot we have — rank 2/121, MC↔turbulence coupling 0.575, the highest of all 641 |
 | 2 | **31873** | **test** | 5.41–13.08 | 748 / — | 2.6 (0.85, 40) | **published, Nat. Commun. 2024** — automated ELM suppression; 7.7 s window covering the whole suppressed phase |
 | 3 | **31114** | **test** | 4.00–9.08 | 506 / 311 | **8.0** (0.88, 11) | largest clean MC amplitude among test shots; model gains on **both** targets (+0.26 T_i, +0.16 V_rot vs PCHIP) |
-| 4 | **31923** | val (2 seeds) | 3.51–7.99 | 390 / — | 5.8 (0.83, 12) | **published — WCM ~50 kHz on `BES_0206`**; also the highest sustained-mode fraction of the ten (34 %) |
-| 5 | **31359** | val | 4.00–6.98 | 234 / 246 | 8.3 (0.73, 32) | **published, Nat. Commun. 2024** — no ERMP → ETB + ELMs; 246 V_rot values and the liveliest BES/ECEI of the published set |
-| 6 | **31357** | val | 3.00–6.98 | 396 / 44 | 5.4 (0.85, 8.8) | **published — the paired control of #31359** (ERMP on, transition avoided); two-coil coherence 0.87 |
-| 7 | **32097** | val | 3.01–9.49 | 631 / 221 | **17.3** (0.87, 17) | strongest Mirnov shot overall (rank 1/121): two-coil coherence **0.93**, sustained mode 22 % |
+| 4 | **31359** | val | 4.00–6.98 | 234 / 246 | 8.3 (0.73, 32) | **published, Nat. Commun. 2024** — no ERMP → ETB + ELMs; 246 V_rot values and the liveliest BES/ECEI of the published set |
+| 5 | **32027** | val | 2.21–6.19 | 396 / 8 | 4.2 (0.86, 7.8) | **published (PanoMHD)** — clear L/H transition with **100–300 kHz cross-power / cross-phase**: exactly the band a μs fetch buys. Largest level step of the ten (0.98) |
+| 6 | **32097** | val | 3.01–9.49 | 631 / 221 | **17.3** (0.87, 17) | strongest Mirnov shot overall (rank 1/121): two-coil coherence **0.93**, sustained mode 22 % |
+| 7 | **31745** | val | 3.01–5.99 | 234 / 216 | 16.6 (0.79, 11) | **two-coil envelope coherence 0.96 — the highest of any candidate**, sustained mode 32 %, level step 0.97. Carries the coherent-mode role the dropped shots played |
 | 8 | **31604** | train | 6.01–13.39 | 716 / 425 | **21.3** (**0.98**, **−0.9**) | the cleanest large MC in the dataset — near-Gaussian, spike-free, steady-state mode: ideal for spectral / mode-number analysis once phase is restored |
 | 9 | **31074** | train | 0.50–7.99 | 736 / 446 | 4.3 (0.74, 36) | balanced all-round: coherence 0.74, 7.5 s, 446 V_rot |
 | 10 | **31937** | train | 0.00–15.24 | **1479 / 722** | 1.7 (0.83, 56) | longest discharge by 2×, most labels of any shot; MC is quiet → the negative control that makes "does MC information help?" answerable |
 
-Five published shots, five picked by score. Three test shots, so a paper figure has a legitimate
-held-out case; #31921 and #31923 are test shots under two of the four split seeds.
+Four published shots, six picked by score; smallest shot-number gap in the list is **16**.
+Three test shots, so a paper figure has a legitimate held-out case.
 
 ### Published shots left out
 
@@ -102,22 +141,19 @@ held-out case; #31921 and #31923 are test shots under two of the four split seed
   (kurtosis 363). Spike, not mode.
 * **#31888** — disruption example; same problem (trim ratio 0.36, kurtosis 105), and a
   disruption tail corrupts the CES labels.
-* **#32027** — kept as **first alternate**: the physics (L/H transition, 100–300 kHz
-  cross-spectra) fits the μs case well, but it has only 8 independent V_rot values and no MC↔BES
-  coupling.
+* **#31923**, **#31357** — dropped for same-session overlap, not for quality. If a second
+  discharge from either session is ever wanted, these are the ones to add.
 
 ### Why not simply the top ten by score
 
-* **Session diversity.** Adjacent shot numbers are repeat discharges. The list takes at most one
-  per session cluster and spreads across 310xx–320xx — except #31357/#31359, which are taken
-  *deliberately as a pair* because the paper varies exactly one knob between them.
+* **One shot per session** (screen 3), measured rather than assumed.
 * **Role balance.** Eight shots carry strong magnetic activity; #31937 and #31873 are MC-quiet.
   Without a quiet arm there is no contrast against which "raw MC restores mode information the
   100 Hz grid destroyed" can be tested.
-* **CES_VT is not the point of this fetch.** #31873 and #31923 have no independent V_rot at all
-  (a single held value for the whole shot) and would fail the data gate on that alone. The raw
-  fetch upgrades the *inputs* (BES/ECEI/MC); the CES labels stay at 10 ms either way, and those
-  two shots earn their slot on published physics.
+* **CES_VT is not the point of this fetch.** #31873 has no independent V_rot at all (a single
+  held value for the whole shot) and would fail the data gate on that alone. The raw fetch
+  upgrades the *inputs* (BES/ECEI/MC); the CES labels stay at 10 ms either way, and that shot
+  earns its slot on published physics.
 
 ## Caveats
 
