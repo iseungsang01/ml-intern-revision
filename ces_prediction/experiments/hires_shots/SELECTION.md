@@ -155,6 +155,64 @@ Three test shots, so a paper figure has a legitimate held-out case.
   upgrades the *inputs* (BES/ECEI/MC); the CES labels stay at 10 ms either way, and that shot
   earns its slot on published physics.
 
+---
+
+## How the ten are used: 7-fold rotation, and why test stays at 3
+
+`folds.py` fixes the structure; `power_analysis.py` is why it looks like this.
+
+```
+test  = 31921 · 31873 · 31114        frozen, never trained on, never used for selection
+pool  = the other seven, rotated leave-one-shot-out
+fold  = train 6 / val 1, seven folds, each pool shot is the val shot exactly once
+```
+
+Final model: run all seven folds, take the **median stopping epoch**, refit on all seven
+pool shots at that epoch. The fold-to-fold spread of the val metric is the model-selection
+stability estimate — which is the thing a single fixed val shot cannot give you.
+
+### Why not 2 test shots
+
+The gate resamples **shots**, so k test shots means k bootstrap clusters. Replaying the real
+gate on the real 96-shot test set (seq_v2 vs the W = 2 control — the same shape as "does a
+μs-MC feature help?"):
+
+| k test shots | 2 | 3 | 6 | 10 | 12 |
+|---|---|---|---|---|---|
+| CES_TI, shot clusters | *40.5 %* | 28.7 % | 34.5 % | 34.0 % | 36.0 % |
+| CES_TI, shot × 500 ms blocks | 36.2 % | 41.2 % | 43.2 % | **49.5 %** | — |
+| CES_VT, shot clusters | *77.0 %* | 66.5 % | 84.2 % | **90.8 %** | 92.2 % |
+| CES_VT, shot × 500 ms blocks | 60.2 % | 62.5 % | 71.2 % | 85.0 % | — |
+
+The k = 2 numbers in italics are **not power**. With two clusters the resample space is four
+draws, half of which repeat one shot, so the CI collapses and the pass rate *rises* going
+from k = 3 to k = 2 while nothing has improved. Those extra passes are false positives.
+k = 3 is the smallest size that is not sitting on that artifact.
+
+Three further things the sweep says:
+
+* **Effect size barely moves power.** Shrinking the arm difference to a quarter leaves
+  CES_TI at 28.7 → 34.0 % and CES_VT at 90.8 → 89.8 %. `skill` is a ratio, so attenuating
+  the effect attenuates the spread with it. A small μs-MC effect is not, by itself, a reason
+  the experiment cannot conclude.
+* **Consistency is what decides.** The fraction of shots where the arm actually wins is 0.66
+  for CES_TI and 0.88 for CES_VT — and that is exactly the ordering of the power columns.
+  Ten shots cannot fix an inconsistent effect; nothing can, at this scale.
+* **CES_VT is the detectable target here.** That is convenient for a Mirnov-focused fetch:
+  mode activity acts on rotation through NTV, so μs MC → V_rot is both the physically
+  motivated direction and the statistically reachable one. CES_TI at ~30–50 % power should
+  be treated as exploratory.
+
+### Bootstrap policy
+
+* **primary** — shot-clustered, identical to every batch in `THESIS_RESULTS.md` §8.
+* **secondary** — shot × 500 ms blocks, pre-registered, always reported next to the primary.
+
+Both are always shown together so a reader can check that the block assumption (which buys
+CES_TI 34 % → 49.5 %) did not manufacture the conclusion.
+
+---
+
 ## Caveats
 
 * #31604, #31074 and #31937 are **training** shots of the confirmed protocol. Raw data from
