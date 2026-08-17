@@ -686,6 +686,30 @@ Every W = 4-based analysis is now replaced by W = 2 · held-free numbers in **bo
   thesis must be backed by both columns of §8ab's verdict table. Do not quote §8n's collapse for
   the backbone, §8z's ladder for p100, or §8i's W = 4 MNAR numbers.
 
+## Size Is Not The Mechanism — Structure Is (2026-08-17) — §8ad
+
+`experiments/wslim/`: the window model re-derived for the `W = 2` input (flatten instead of a
+receptive-field-5 conv stack over 2 steps; no `AdaptiveAvgPool1d(1)` averaging the 2 steps away;
+no bidirectional GRU + 4-head attention over 2 steps). **25,602 params / 21 leaf ops / 0.66 ms vs
+201,258 / 57 / 3.02 ms** — the shrink is real, and it is the *structure* axis, not the width axis
+§8ac measured. But paired against the frozen B.1 control on the same rows: **`T_i` −0.087, 4/4
+significant deficits** (below PCHIP entirely on s42), while **`V_rot` is indifferent** (+0.005,
+0/4 either way).
+
+- **The `V_rot` half of `iter009` is dead weight**, exactly as §8ab's routing predicts — a carried
+  value plus staleness needs no sequence machinery. The `T_i` half is not.
+- **Reconcile with §8aa/§8z**: skill is flat across a 26× *width* range and a 21k latent matches
+  the backbone, yet 25.6k here loses 0.087. Capacity was never the binding constraint; the
+  functional form is. Do not read "size doesn't matter" as "shape doesn't matter".
+- **How to apply:** when a cost argument says "make it smaller", ask *which* axis. Width is free
+  (and buys almost no latency); structure buys latency and can cost skill. And check whether
+  latency binds at all first — §8ac says it does not here, so W-SLIM is measured, recorded, and
+  **not adopted**.
+- **Named follow-up** (the deficit is unattributed — three things changed at once): restore only
+  the sensor conv stack, then only the history GRU+attention, and run W-SLIM at
+  `sensor_feature_dim = 96` to separate structure from width. The sensor conv path is the better
+  first guess, given `V_rot`'s indifference to the history machinery.
+
 ## The Reach Axis Is Now Measured, And It Refutes The Window Framing (2026-08-17) — §8ac
 
 `experiments/reach/`, no retraining: the frozen B.1 checkpoints re-scored with the LSTM state

@@ -2328,9 +2328,11 @@ loop:
   5 GFLOP/s is **0.11 ms — 3% of the measured 3.56 ms.** The other 97% is per-operator dispatch
   at batch 1, and the two models' op counts (57 vs 10) predict their ordering better than their
   parameter counts do: `seq_v2` performs **1.29× more multiplies and is 3.5× faster**.
-- **Shrinking widths therefore does not buy latency.** Window at quarter widths: 121,050 params
+- **Shrinking *widths* therefore does not buy latency.** Window at quarter widths: 121,050 params
   (−40%) → 2.81 ms (−21%). `seq_v2` at `hidden_ti = 24`: 34,162 params (−90%) → 0.86 ms (−17%).
   The *smallest* window variant (121k) is still **2.7× slower than the largest `seq_v2`** (358k).
+  Shrinking the **structure** is a different axis and does buy latency — §8ad measures it, and
+  what it costs.
 - **Fusing the graph is the lever that works.** `torch.jit.trace` + `freeze` on the window model:
   3.05 → **1.76 ms, 1.73× faster**, outputs identical to 1e-5. Not applied to any scored artifact —
   this is a deployment note, not a change to the measured pipeline.
@@ -2378,6 +2380,68 @@ cached. That is an argument about cost, not correctness, and it is weaker than t
 this section claimed (see the accuracy note). A TCN arm under the B.2 rule (val-only exploration →
 pre-registered decision → TEST once, ≥3/4 significant to promote) is the measurement that would
 settle the skill question.
+
+---
+
+## 8ad. W-SLIM (2026-08-17) — sizing the window model to its window is 7.9× smaller and 4.6× faster, and costs `T_i` skill
+
+**Question (승상님).** §8ac §3 answered "why so many parameters?" with "the window never
+controlled the count", but the follow-up was sharper: **`W = 2` is a different input, so the
+structure itself can be smaller.** That is correct as stated, and §8ac had only measured *width*
+shrinkage (which leaves the 57-operator graph intact). This batch derives the structure from the
+input and measures what it costs.
+
+**Design** (`experiments/wslim/`, model `model_win_slim.py`, runner `run_wslim.py`; 13.1 min wall
+with `--jobs 4`; artifacts `data/.wslim_s*`, verdict `data/.wslim_summary.json`). At `W = 2`
+`iter009` spends structure a length-2 sequence cannot use: two stacked `Conv1d(k=3, padding=1)`
+per sensor (receptive field 5 over 2 steps, so a third of every kernel reads only zero padding),
+an `AdaptiveAvgPool1d(1)` that averages the 2 steps and **discards the ordering the window
+existed to provide**, and a bidirectional GRU with a 4-head attention pool over those same 2
+steps. W-SLIM replaces each stream with `flatten → Linear → GELU` and **keeps the `V_rot` routing
+exactly** (verified structurally: perturbing the fast channels changes `T_i` and leaves `V_rot`
+bit-identical). **25,602 params / 21 leaf ops / 0.66 ms median** vs 201,258 / 57 / 3.02 ms.
+
+One controlled variable — the architecture, via `CES_MODEL_FILE`. Everything else is B.1 stage A
+verbatim: same `GATE_ENV`, same frozen split manifests (`data/.b1_manifest_s*`, test-isolation
+assert passed 4/4), same seeds, same harness; the control is the frozen `.b1_w2cut_s{seed}` run,
+paired row-for-row. The reading was fixed before the run.
+
+| seed | params | `T_i` skill vs PCHIP | `T_i` paired vs `w2cut` | `V_rot` skill | `V_rot` paired |
+|---|---:|---:|---:|---:|---:|
+| 42 | 25,602 | **−0.031** | **−0.086\*** | +0.298 | +0.058 |
+| 1 | 25,602 | +0.136 | **−0.084\*** | +0.185 | −0.001 |
+| 7 | 25,602 | +0.124 | **−0.106\*** | +0.104 | −0.040 |
+| 123 | 25,602 | +0.176 | **−0.072\*** | +0.275 | +0.004 |
+
+(\* = paired CI excludes zero.)
+
+**Verdict — the two targets answer differently, and the pre-fixed rule fires on `T_i`.**
+
+1. **`T_i`: the extra structure earns its keep.** Paired mean **−0.087, 4/4 significant deficits**
+   — past the ≥3/4 threshold, so W-SLIM is a *cheaper-but-worse* point, not a free lunch. On split
+   42 it drops below PCHIP entirely (−0.031, PR4 fails where the control passed). The intuition
+   that a length-2 window needs no structure is wrong for `T_i`.
+2. **`V_rot`: the reduction is free.** Paired mean **+0.005, 0/4 deficits and 0/4 wins** — a GRU
+   plus a 4-head masked-attention pool over 2 timesteps is fully replaceable by
+   `flatten → Linear` here. This is what §8ab's routing result predicts: `V_rot` rides a carried
+   value plus staleness, and nothing in that needs sequence machinery.
+3. **The cost/skill trade-off is now priced.** 7.9× fewer parameters and 4.6× lower latency for
+   −0.087 `T_i`. W-SLIM still beats PCHIP on 3/4 splits, so it remains a legitimate operating
+   point if latency ever binds — but nothing in §8ac's ladder says it binds (every causal arm fits
+   the 10 ms budget), so **there is no reason to adopt it, and the backbone stays `seq_v2`.**
+4. **Capacity is not the mechanism.** §8aa flattened skill across a 26× *width* range and §8z
+   compressed the backbone to a 21k latent with no `T_i` loss — yet 25.6k here loses 0.087. So
+   what `iter009` buys on `T_i` is **structure, not size**, which is the same lesson §8z drew for
+   interpretability, arriving from the opposite direction.
+
+**What it does not show.** Three things changed at once (conv stack → linear, pooling → flatten,
+GRU+attention → linear), so the `T_i` deficit is not attributed. The measurement that would
+attribute it is a two-arm follow-up on this same control: restore **only** the sensor conv stack,
+then restore **only** the history GRU+attention. Given finding 2 (`V_rot` indifferent to the
+history machinery) the sensor conv path is the better first guess for where the 0.087 lives.
+Also unmeasured: W-SLIM at larger widths — this file fixed `sensor_feature_dim = 48` (half of
+`iter009`'s 96), so part of the deficit may be width rather than structure, which the same
+follow-up should separate by running W-SLIM at 96.
 
 ---
 
