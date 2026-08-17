@@ -2213,7 +2213,7 @@ backbone dirs additively, TEST reports split-tagged).
 
 ---
 
-## 8ac. Effective recurrent reach + the real-time causal ladder (2026-08-17) — `T_i` needs 500 ms of context, and the window model cannot meet the deadline
+## 8ac. Effective recurrent reach + the real-time causal ladder (2026-08-17) — `T_i` uses 500 ms of context, and two steps of it is not enough
 
 **Question (승상님).** Two challenges to the adopted backbone, asked together. (1) Multi-sensor
 papers routinely use convolutional stacks rather than an LSTM — what justifies the recurrence
@@ -2279,40 +2279,57 @@ floor: **`T_i` saturates at 50 steps = 500 ms; `V_rot` at 20 steps = 200 ms.**
 ### 2. The real-time ladder (10 ms CES budget; skill vs persistence, mean over the same 4 splits)
 
 Baseline latency is the predictor call on an already-built neighbour set; network latency is the
-forward pass only (§8l scope, same machine, CPU batch 1). Feature assembly is excluded for both.
-GP cost is measured on the **real** neighbour sets of the frozen TEST files (|neighbours| median
-544 for `T_i`), since `gp_causal` refits a Matern-3/2 GP per row with hyperparameters selected by
-exact log marginal likelihood over a 5 × 4 grid on up to 16 past neighbours.
+forward pass only (§8l scope). Feature assembly is excluded for both. **Every row below was
+re-measured in one idle session** (CPU, batch 1) rather than quoting §8l's frozen numbers — see
+the accuracy note after the table for why that mattered. GP cost is measured on the **real**
+neighbour sets of the frozen TEST files (|neighbours| median 544 for `T_i`), since `gp_causal`
+refits a Matern-3/2 GP per row with hyperparameters selected by exact log marginal likelihood over
+a 5 × 4 grid on up to 16 past neighbours.
 
 | arm | causal? | `T_i` skill | `V_rot` skill | median | p99 | p99 vs budget | deployable |
 |---|---|---:|---:|---:|---:|---:|---|
-| persistence | yes | 0 (ref) | 0 (ref) | 0.009 ms | 0.024 ms | 0.2% | yes |
-| `ar_local` | yes | −4.039 | −1.462 | 0.012 ms | 0.038 ms | 0.4% | yes (but far worse than holding) |
-| `gp_causal` | yes | +0.319 | +0.276 | 1.084 ms | 2.841 ms | 28.4% | yes |
-| **`seq_v2` (stateful 1-step)** | yes | **+0.396** | **+0.390** | **1.051 ms** | **1.607 ms** | **16.1%** | **yes** |
-| window `iter009` `W = 2` | yes | — | — | 3.838 ms | **18.933 ms** | **189.3%** | **NO** |
-| window `iter009` `W = 4` | yes | — | — | 4.048 ms | 8.102 ms | 81.0% | marginal |
-| linear (acausal) | no | +0.246 | +0.214 | 0.017 ms | 0.043 ms | — | no (needs future) |
-| PCHIP (acausal) | no | +0.209 | +0.182 | 0.340 ms | 0.846 ms | — | no (needs future) |
-| GP (acausal) | no | +0.396 | +0.390 | 1.285 ms | 3.185 ms | — | no (needs future) |
+| persistence | yes | 0 (ref) | 0 (ref) | 0.010 ms | 0.034 ms | 0.3% | yes |
+| `ar_local` | yes | −4.039 | −1.462 | 0.015 ms | 0.045 ms | 0.4% | yes (but far worse than holding) |
+| `gp_causal` | yes | +0.319 | +0.276 | 1.136 ms | 2.344 ms | 23.4% | yes |
+| **`seq_v2` (stateful 1-step)** | yes | **+0.396** | **+0.390** | **0.966 ms** | **1.494 ms** | **14.9%** | **yes** |
+| window `iter009` `W = 2` | yes | — | — | 2.854 ms | 4.455 ms | 44.6% | yes |
+| window `iter009` `W = 4` | yes | — | — | 3.121 ms | 5.053 ms | 50.5% | yes |
+| linear (acausal) | no | +0.246 | +0.214 | 0.020 ms | 0.046 ms | — | no (needs future) |
+| PCHIP (acausal) | no | +0.209 | +0.182 | 0.333 ms | 0.689 ms | — | no (needs future) |
+| GP (acausal) | no | +0.396 | +0.390 | 1.347 ms | 2.562 ms | — | no (needs future) |
+
+**Accuracy note — quote the ordering, not the absolutes.** This table's first draft quoted §8l's
+frozen `window_iter009 W = 2` p99 of 18.9 ms and concluded the window family misses the deadline.
+Re-measuring in one session refutes that: 4.455 ms, 44.6% of budget, comfortably inside. The frozen
+value was already suspect on physical grounds — it put `W = 2` at 2.3× the p99 of `W = 4`, though
+`W = 2` walks the shorter sequence — and this session reproduces the sane order (`W = 2` 4.455 <
+`W = 4` 5.053). PROJECT_KNOWLEDGE recorded "laptop power states move absolutes up to 2×, never the
+ordering"; a 4.2× gap exceeds that, so the frozen tail was contaminated, not merely throttled.
+**The claim that survives is the ordering, which both sessions agree on:** `seq_v2` step <
+`gp_causal` < window `W = 2` < window `W = 4`. No conclusion in this section rests on an absolute
+millisecond value, and the reach ladder (§1 above) is a skill measurement untouched by any of this.
 
 **Verdict.**
 
-1. **The window framing is refuted on its own terms, twice.** On information: `ctx = 2` — the
-   contiguous context a `W = 2` model sees — loses to the causal GP by **−0.340** on `T_i` and
-   recovers only 20.7% of the persistence margin, while full reach beats it by +0.113. §8f's
-   "`W = 2` is enough" was about how many past *CES observations* to staple on; it never measured
-   the dense-diagnostic context, and that is where the skill is. On cost: the window model's p99 is
-   **18.9 ms at `W = 2`, 189% of the entire 10 ms budget**, because it re-runs three sensor CNNs
-   over the whole window every step. The lighter-looking architecture is the one that misses the
-   deadline.
+1. **The window framing is refuted on information, and is merely more expensive on cost.**
+   On information — the decisive axis: `ctx = 2`, the contiguous context a `W = 2` model sees,
+   loses to the causal GP by **−0.340** on `T_i` and recovers only 20.7% of the persistence margin,
+   while full reach beats it by +0.113. §8f's "`W = 2` is enough" was about how many past *CES
+   observations* to staple on; it never measured the dense-diagnostic context, and that is where
+   the skill is. On cost, the honest statement is weaker than the first draft's: the window model
+   **does** fit the 10 ms budget (p99 4.455 ms, 44.6%), it is simply **3.0× the backbone's tail**
+   (1.494 ms, 14.9%), because it re-runs three sensor CNNs over the whole window every step while
+   the LSTM carries its summary in O(1). "Lighter in parameters" (201k vs 358k) does not mean
+   cheaper to run — but it does not mean undeployable either.
 2. **`ctx = 1` is worse than doing nothing** (`T_i` −0.283 vs persistence): the instantaneous
    fast-diagnostic state alone does not identify `T_i`. The recurrence is not decoration.
-3. **The backbone is the best deployable arm, and by a wide margin on both axes** — higher skill
-   than `gp_causal` (+0.396 vs +0.319 on `T_i`) at **1.8× lower p99**, and it *ties the acausal GP*
+3. **The backbone is the best deployable arm on both axes at once** — higher skill than
+   `gp_causal` (+0.396 vs +0.319 on `T_i`) at **1.6× lower p99** (1.494 vs 2.344 ms), and the
+   cheapest tail of every arm that beats persistence. It also *ties the acausal GP*
    (+0.396 / +0.390 vs +0.396 / +0.390) using past data only. This is §8p's "the model ties the GP"
    restated where it matters: the tie now happens against the arm that is allowed to see the future,
-   from an arm that is not.
+   from an arm that is not. Note what is **not** claimed: no causal arm here misses the deadline, so
+   the argument for the backbone is skill-per-millisecond, not feasibility.
 4. **The `T_i` / `V_rot` asymmetry appears again, in a new coordinate.** `V_rot` needs 200 ms of
    context, `T_i` 500 ms — consistent with §8ab's routing result: `V_rot` rides a highly
    autocorrelated carried value, `T_i` integrates fast-diagnostic history.
@@ -2325,9 +2342,12 @@ Most importantly, **it does not establish that recurrence is the only way to rea
 dilated causal TCN reaches 63 steps with 5 layers and remains an untested candidate. What the
 latency column does add is the reason to expect the recurrence to stay cheaper — an LSTM carries
 its summary in O(1) per step, whereas a convolutional stack recomputes its receptive field every
-step unless a streaming cache is built explicitly, and the window family's 18.9 ms p99 is precisely
-that recomputation being paid. A TCN arm under the B.2 rule (val-only exploration → pre-registered
-decision → TEST once, ≥3/4 significant to promote) is the measurement that would settle it.
+step unless a streaming cache is built explicitly, and the window family's 3.0× tail is that
+recomputation being paid over a mere 2 steps; a 50-step receptive field would pay it over 50 unless
+cached. That is an argument about cost, not correctness, and it is weaker than the first draft of
+this section claimed (see the accuracy note). A TCN arm under the B.2 rule (val-only exploration →
+pre-registered decision → TEST once, ≥3/4 significant to promote) is the measurement that would
+settle the skill question.
 
 ---
 

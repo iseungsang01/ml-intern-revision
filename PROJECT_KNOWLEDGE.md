@@ -389,18 +389,25 @@ with xelatex+bibtex, and treat a non-zero rc or any `!` line in the log as a fai
   Idle laptop: **1.05 ms median / 1.61 ms p99 on CPU** (16% of the budget; a second idle run gave
   0.51 / 0.99 ms — laptop power states move absolutes up to 2×, never the ordering), 1.21 / 2.31 ms on
   CUDA. Whole-segment re-run (what eval_seq does): 2.9 / 5.6 ms per 100 rows, 6.4 / 8.9 ms per 300
-  rows on CPU (35–47k rows/s). Windowed control at batch 1: 3.8 ms median but 18.9 ms p99 (W=2, CPU).
-  Never benchmark with anything else on the machine — a concurrent training job inflated tails 5–10×
-  and the artifact was annotated and re-run.
-- **The causal GP is deployable but expensive; the backbone dominates it on both axes**
-  (2026-08-17, §8ac, `experiments/reach/bench_causal_arms.py`, measured on the *real* TEST
-  neighbour sets because GP cost scales with neighbour count). `gp_causal` refits a Matern-3/2 GP
-  per row over a 5 × 4 hyperparameter grid: **1.08 ms median / 2.84 ms p99 (28% of the 10 ms
-  budget)** for skill vs persistence +0.319 `T_i` / +0.276 `V_rot`. The backbone's stateful step is
-  **1.05 / 1.61 ms (16%)** for **+0.396 / +0.390** — higher skill, 1.8× lower tail, and it *ties
-  the acausal GP* (+0.396 / +0.390) using past data only. Cheap arms for scale: persistence
-  0.009 / 0.024 ms, `ar_local` 0.012 / 0.038 ms but skill **−4.04** (far worse than holding).
-  **The windowed control at `W = 2` does not fit the budget at all: p99 18.9 ms = 189%.**
+  rows on CPU (35–47k rows/s). Windowed control at batch 1: 3.8 ms median, p99 **18.9 ms in that
+  session but 4.46 ms when re-measured on 2026-08-17** — treat the 18.9 as contaminated and see the
+  ordering rule two bullets down. Never benchmark with anything else on the machine — a concurrent
+  training job inflated tails 5–10× and the artifact was annotated and re-run.
+- **Every causal arm fits the 10 ms budget; the backbone wins on skill-per-millisecond, not on
+  feasibility** (2026-08-17, §8ac, `experiments/reach/bench_causal_arms.py` + a same-session
+  re-run of `bench_latency.py`; GP measured on the *real* TEST neighbour sets because its cost
+  scales with neighbour count). `gp_causal` refits a Matern-3/2 GP per row over a 5 × 4
+  hyperparameter grid: **1.14 / 2.34 ms (23%)** for skill vs persistence +0.319 `T_i` / +0.276
+  `V_rot`. The backbone's stateful step: **0.97 / 1.49 ms (15%)** for **+0.396 / +0.390** — higher
+  skill, 1.6× lower tail, and it *ties the acausal GP* using past data only. Window control:
+  4.46 ms p99 at `W = 2` (45%), 5.05 at `W = 4` — **3.0× the backbone, but inside the budget**.
+  Cheap arms: persistence 0.034 ms, `ar_local` 0.045 ms but skill **−4.04** (far worse than holding).
+- **Latency absolutes on this laptop are not reproducible to better than ~4×; only the ORDERING is.**
+  §8ac's first draft quoted the frozen §8l `W = 2` p99 of 18.9 ms and concluded the window family
+  misses the deadline; a same-session re-measure gave 4.46 ms and refuted it. The frozen value was
+  already physically suspect (`W = 2` at 2.3× the p99 of `W = 4`, though it walks the shorter
+  sequence). **Never state a deadline verdict from a benchmark measured in a different session**
+  — re-run every arm together, and phrase conclusions as orderings.
 - **(2026-08-05, windowed model, W=4 era) Run the model on CPU, not GPU, for online inference.** batch-1
   p99 = 6.4 ms (W=4) / 8.7 ms (W=2) on CPU vs 21 ms median / 43–72 ms p99 on CUDA — an 8× penalty,
   because 201k parameters give kernel-launch overhead nothing to amortize against. Still the right
