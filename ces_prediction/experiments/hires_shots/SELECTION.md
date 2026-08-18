@@ -31,7 +31,7 @@ DOI fragments and a page range — rejected by reading the surrounding sentence)
 | shot | paper | what the paper does with it |
 |---|---|---|
 | **31921** | *On FIRE mode in KSTAR*, Nucl. Fusion (10.1088/1741-4326/ae332f) fig.10 · *Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR*, Nucl. Fusion (10.1088/1741-4326/adacfc) fig.3, 7–9 | **FIRE mode at 5.40 s vs H-mode at 8.05 s, compared on CES edge ion-temperature profiles** — the very diagnostic this repo predicts. Also BES bispectral analysis of WCM ↔ zonal-density phase coupling |
-| **31923** | *I-mode characteristics…* fig.2 | L-mode → FIRE transition; **weakly coherent mode at ~50 kHz measured on `BES_0206` at r/a = 0.95** — that channel is a column in our CSVs |
+| **31923** | *I-mode characteristics…* fig.2 · *On FIRE mode in KSTAR* fig.11–13 | L-mode → FIRE transition; **weakly coherent mode at ~50 kHz measured on `BES_0206` at r/a = 0.95** — that channel is a column in our CSVs. The second paper uses the same shot for the BES spectrogram, the 30–70 kHz two-channel coherence profile, and the poloidal wave number |
 | **31873** | *Highest fusion performance without harmful edge energy bursts in tokamak*, **Nat. Commun. 15 (2024)** (10.1038/s41467-024-48415-w) fig.5 | fully automated ELM suppression with ML-integrated RMP; Ip = 0.51 MA, q95 ≈ 5.1, optimizer triggered at 4.5 s |
 | **31357** | *Tailoring tokamak error fields to control plasma instabilities and transport*, **Nat. Commun. 15 (2024)** (10.1038/s41467-024-45454-1) fig.6 | **with** n = 1 ERMP → the H-mode transition is avoided; BES bicoherence at ρ_N ≈ 0.92 |
 | **31359** | same paper, fig.6 | **without** ERMP → density ETB forms at 5.5 s, ELMs appear, core T_i falls to ~5 keV. **The paired control of #31357: same target plasma, one knob changed** |
@@ -46,11 +46,28 @@ T_i ≈ 0.4 keV with MC envelope ≈ 1.7 until 7.3 s, then T_i → 1.25 keV, MC 
 file and the transition lands at 6.1 s. For #31873 our window (5.41–13.08 s) covers the whole
 suppressed phase, including the late performance decay the paper describes.
 
-**Limits of this screen, stated plainly.** Only open-access full text is searchable: of ~145 OA
-links, ~58 PDFs actually downloaded — several publishers (IOP especially) bot-block direct
-fetches. The two FIRE-mode papers were read through their article pages instead. So a shot
-*absent* from this table is **not** proven absent from the literature; paywalled papers,
-proceedings and theses are invisible here.
+**Coverage, measured rather than asserted.** The sweep sees **387 distinct papers** (the raw
+arXiv + OpenAlex union double-counts every paper that exists as both a preprint and a journal
+article; deduplicating by normalised title is what turns ~600 into 387) and gets full text for
+**75** of them — 143 carried a PDF link, the direct download won some, and an Unpaywall pass
+recovered 10 more from repository copies OpenAlex had missed. An arXiv-by-title fallback was
+also tried and recovered **0**, because `arxiv_list()` already pulls arXiv directly and the
+dedupe merges each preprint with its journal version. So the honest statement is not "these
+shots are not in the literature" but **"these shots are not in the 75 open-access full texts
+we can read."**
+
+**Three things this screen still cannot see**, each demonstrated rather than guessed:
+
+* **Supplementary material.** The Supplementary Information of `10.1038/s41467-024-45454-1`
+  names #31184, #31185 and #31189 — none of which appear in the main text the sweep scanned.
+  A publisher-specific supplement crawler is the fix.
+* **Bot-blocked publishers.** IOP serves this script a Radware challenge, so the two
+  FIRE-mode papers had to be read through their article pages. Doing that is what revealed
+  that **#31923 is used by both of them**, which the PDF sweep could never have found.
+* **The campaign is larger than our sample.** #31184/#31185/#31189 sit inside our shot-number
+  range but we hold no CSV for them. Our 641 shots are a sample of the 2022 campaign
+  (89 contiguous sessions), not the campaign itself, so "published shots in the campaign" and
+  "published shots we could fetch" are different sets.
 
 ---
 
@@ -105,9 +122,12 @@ yet sit at the 2.2nd percentile of calibration distance.
 So the list takes **at most one shot per session**. Two same-session pairs were removed:
 
 * **#31923** dropped, **#31921** kept — the pair sat at the *0.0th percentile* of all 176k
-  summary distances (|ΔT_i| = 21 eV). #31921 wins on every axis: two papers instead of one,
-  296 independent V_rot instead of none, data rank 2/121. Replaced by **#32027**, also
-  published, also on the val side.
+  summary distances (|ΔT_i| = 21 eV). #31921 wins on 296 independent V_rot instead of 1 and
+  on data rank (2/121). It does **not** win on publication count: a later read of the IOP
+  article pages showed #31923 is used by *both* FIRE-mode papers too, so that axis is a tie —
+  the earlier "two papers instead of one" was wrong. The decision stands on the other two
+  axes, and #31923 is fetched anyway as a companion. Replaced by **#32027**, also published,
+  also on the val side.
 * **#31357** dropped, **#31359** kept — 246 vs 44 V_rot, MC 8.3 vs 5.4, MC↔BES coupling +0.32
   vs −0.08. Replaced by **#31745**, the highest two-coil envelope coherence of any candidate.
 
@@ -148,7 +168,7 @@ come back — not as extra training data, but as the second half of two paired c
 
 | # | shot | pairs with | window [s] | T_i / V_rot | MC RMS (trim, kurt) | paper | why |
 |---|---|---|---|---|---|---|---|
-| 11 | **31923** | 31921 (test) | 3.51–7.99 | 390 / 1 | 5.8 (0.83, 12) | [P2] fig.2 | **published** — L-mode → FIRE transition with a weakly coherent mode at **~50 kHz on `BES_0206`**, r/a = 0.95. Highest sustained-mode fraction of any shot in this document (34 %), MC↔BES coupling 0.42 |
+| 11 | **31923** | 31921 (test) | 3.51–7.99 | 390 / 1 | 5.8 (0.83, 12) | [P1] fig.11–13 · [P2] fig.2 | **published** — L-mode → FIRE transition with a weakly coherent mode at **~50 kHz on `BES_0206`**, r/a = 0.95. Highest sustained-mode fraction of any shot in this document (34 %), MC↔BES coupling 0.42 |
 | 12 | **31357** | 31359 (pool) | 3.00–6.98 | 396 / 44 | 5.4 (0.85, 8.8) | [P4] fig.6 | **published** — **with** n = 1 ERMP, so the H-mode transition is avoided. The paper's own controlled contrast against #31359: same target plasma, one knob changed. Two-coil coherence 0.87 |
 
 **Why the redundancy argument does not survive the fetch.** Screen 3's distances are computed on the 100 Hz grid. #31921/#31923 sit at the 0.03rd percentile there — but what the papers actually use to tell those two discharges apart is a mode at ~50 kHz, three orders of magnitude above that grid's Nyquist frequency. *Redundant in the band we already have* is not *redundant in the band we are buying*. The ERMP pair is not even redundant at 100 Hz: #31357/#31359 sit at the **25.8th** percentile of summary distance and 202 eV apart in mean T_i, while their calibration distance is at the **2.2nd** — physically different, instrumentally identical, which is exactly what a controlled contrast wants.

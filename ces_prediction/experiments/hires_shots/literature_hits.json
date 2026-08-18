@@ -1,0 +1,1765 @@
+{
+ "confirmed": {
+  "31921": [
+   [
+    "On FIRE mode in KSTAR",
+    "10.1088/1741-4326/ae332f",
+    "fig.10: edge CES profiles, H-mode vs FIRE mode with I-mode pedestal"
+   ],
+   [
+    "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
+    "10.1088/1741-4326/adacfc",
+    "fig.3/7-9: FIRE 5.40 s vs H-mode 8.05 s, BES bispectral analysis, WCM-zonal density phase coupling"
+   ]
+  ],
+  "31923": [
+   [
+    "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
+    "10.1088/1741-4326/adacfc",
+    "fig.2: L-mode -> FIRE transition, WCM ~50 kHz on BES_0206 at r/a = 0.95, 3-6 s"
+   ]
+  ],
+  "31873": [
+   [
+    "Highest fusion performance without harmful edge energy bursts in tokamak",
+    "10.1038/s41467-024-48415-w",
+    "fig.5: fully automated ELM suppression, ML-integrated RMP, Ip = 0.51 MA, q95 ~ 5.1, optimizer triggered at 4.5 s"
+   ]
+  ],
+  "31276": [
+   [
+    "Tailoring tokamak error fields to control plasma instabilities and transport",
+    "10.1038/s41467-024-45454-1",
+    "fig.3: optimized path to edge stability; BES density-fluctuation bicoherence"
+   ]
+  ],
+  "31357": [
+   [
+    "Tailoring tokamak error fields to control plasma instabilities and transport",
+    "10.1038/s41467-024-45454-1",
+    "fig.6: WITH n=1 ERMP -- H-mode transition avoided; BES bicoherence at rho_N ~ 0.92"
+   ]
+  ],
+  "31359": [
+   [
+    "Tailoring tokamak error fields to control plasma instabilities and transport",
+    "10.1038/s41467-024-45454-1",
+    "fig.6: WITHOUT n=1 ERMP -- density ETB forms at 5.5 s, ELMs appear, core Ti drops to ~5 keV (paired control of #31357)"
+   ]
+  ],
+  "32027": [
+   [
+    "PanoMHD: multimodal modelling of plasma dynamics towards tokamak control",
+    "arXiv:2603.02672",
+    "fig.7: clear L/H transition, 100-300 kHz cross-power / cross-phase spectrograms"
+   ]
+  ],
+  "31888": [
+   [
+    "Enhancing disruption prediction through Bayesian neural network in KSTAR",
+    "10.48550/arXiv.2312.12979",
+    "fig.15 / appendix B: continuous disruption-prediction example shot"
+   ]
+  ]
+ },
+ "false_positives": {
+  "30907": "page range in a biochemistry reference",
+  "32017": "DOI fragment 10.1038/s41467-022-32017-5 (an unrelated paper named 'KSTAR')",
+  "31589": "DOI fragment 10.1038/s41467-022-31589-6"
+ },
+ "sweep_hits": [
+  {
+   "shot": 32027,
+   "title": "PanoMHD: Multimodal Modelling of Plasma Dynamics towards Tokamak Control",
+   "doi": "arXiv:2603.02672v1",
+   "year": "2026",
+   "n_mentions": 5,
+   "context": [
+    "NB [MW] (a) 1.0 2.5 N,H89 (b) True N H89 1 2 D [a.u.] (c) 100 300 Freq. [kHz] (d) GT Cross-power 100 300 Freq. [kHz] (e) Pred. Cross-power 100 300 Freq. [kHz] (f) GT Cross-phase 100 300 Freq. [kHz] (g) Pred. Cross-phase 5 0 5 0 2.5 0.0 2.5 2.5 0.0 2.5 0.0 0.5 Ip [MA] KSTAR #32027 1.8 T Figure 7. PanoMHD prediction on KSTAR discharge #32027. (a) Plasma control inputs. (b) Comparison of true and predicted plasma performance parameters. (c) The Dα emission signal. Note that Dα is an independent experimental measurement not used as input for PanoMHD; it ser",
+    "00 300 Freq. [kHz] (d) GT Cross-power 100 300 Freq. [kHz] (e) Pred. Cross-power 100 300 Freq. [kHz] (f) GT Cross-phase 100 300 Freq. [kHz] (g) Pred. Cross-phase 5 0 5 0 2.5 0.0 2.5 2.5 0.0 2.5 0.0 0.5 Ip [MA] KSTAR #32027 1.8 T Figure 7. PanoMHD prediction on KSTAR discharge #32027. (a) Plasma control inputs. (b) Comparison of true and predicted plasma performance parameters. (c) The Dα emission signal. Note that Dα is an independent experimental measurement not used as input for PanoMHD; it serves here as a ground truth indicator for distinguishing L-mode",
+    "task difficulty, PanoMHD achieves 97.3% accuracy, surpass- ing the baseline. This validates that predicted spectrograms are not merely visual approximations but encode the physi- cal semantics required for mode classification. To visually corroborate this, we present KSTAR shot #32027 in Figure 7, which features a clear L/H mode transition. Given that this transition is physically characterised by a visible drop in the Dα baseline followed by the emergence of ELMs, we utilise the Dα emission (Figure 7(c)) as an independent ground truth. PanoMHD’s multimodal p"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 31589,
+   "title": "Construction and analysis of guiding center distributions for tokamak plasmas with ambient radial electric field",
+   "doi": "arXiv:2411.19288v2",
+   "year": "2024",
+   "n_mentions": 1,
+   "context": [
+    "Ph. Lauber, M. Nocente, ˇZ. ˇStancar, S. Sumida, M. Yagi, J. Gar- cia, S. Ide, and JET Contributors. Energy-selective con- ﬁnement of fusion-born alpha particles during internal relax- ations in a tokamak plasma. Nature Commun., 13:3941, 2022. https://doi.org/10.1038/s41467-022-31589-6. [66] The MathWorks Inc. MATLAB version: 24.1.0 (r2024a), 2024. [67] The MathWorks Inc. Parallel Processing Toolbox: 24.1.0 (r2024a), 2024. [68] A.J. Brizard and T.S. Hahm. Foundations of nonlinear gyroki- netic theory. Rev. Mod. Phys., 79:421, 2007. See p.461, top right. http"
+   ],
+   "false_positive": "DOI fragment 10.1038/s41467-022-31589-6"
+  },
+  {
+   "shot": 31873,
+   "title": "Highest Fusion Performance without Harmful Edge Energy Bursts in Tokamak",
+   "doi": "arXiv:2405.05452v1",
+   "year": "2024",
+   "n_mentions": 3,
+   "context": [
+    "ee operation and underlying physics phenomena allowing the burst-free operation with high G are presented. Lastly, the discussions on the application in ITER and future reactors are drawn in summary. Figure 5. Plasma parameters for a fully automated ELM sup- pression discharge (#31873) with integrated RMP optimization. a IRMP (blue) and Dα emission (orange) near outer divertor target. c H89(blue) and G (orange). c Phasing between top/middle (φT, blue) and middle/bottom coils (φB, orange). d Current amplitude ratio between of top/middle (RM, blue) and top/bott",
+    "s the performance of ML- 3D with a randomly selected test discharge, showing good agreement between the offline and ML-3D outputs. A low- pass filter is applied to prevent overly rapid changes in the 3D-coil commands that could result in damage to the coils. In KSTAR discharge (#31873) with plasma current, Ip = 0.51 MA, edge magnetic pitch angle, q95 ∼5.1, and ∼2.5 MW of neutral beam injection heating, the ML-integrated adaptive RMP optimizer is triggered at 4.5 s and successfully achieves fully-automated ELM suppression without the need for pre-programmed wa",
+    "straightforward. This robust applicability to future de- vices highlights the advantage of the ML-integrated 3D-field optimization scheme. It is worth pointing out that the oper- ational limits of the KSTAR-3D coils are restricting the ML- 3D’s ability to further optimize rB in #31873. In future devices with higher current limits for 3D coils, better field optimiza- tion and improved fusion performance are expected. As shown in Fig. 5a, the plasma performance significantly decreases from G ∼0.17 (4 s, before 3D-field application) to G ∼0.1 after the first ELM"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 31888,
+   "title": "Enhancing Disruption Prediction through Bayesian Neural Network in KSTAR",
+   "doi": "arXiv:2312.12979v1",
+   "year": "2023",
+   "n_mentions": 8,
+   "context": [
+    "firmation of the model’s proficiency in identifying disruptive phases becomes achievable by analyzing the distributions of hidden vectors computed by the models with input data, as demonstrated by [5]. We conduct simulations of continuous disruption prediction in shots 30312 and 31888 with uncertainty estimation over time, which showcase the impressive results of alerting disruptions at least 500 ms before the onset of thermal quench. To elucidate the advantages of the proposed model, the investigation of uncertainty distribution among KSTAR experimental shot",
+    "ast up to 40 ms preceding the onset of the thermal quench in KSTAR. To demonstrate the model’s efficacy as a disruption warning system for tokamak devices, simulations for continuous disruption prediction were conducted with KSTAR experimental data. Specifically, shots 30312 and 31888 were selected as examples to validate our proposed model. Figure 14 and Figure 15 in Appendix B provide information on the KSTAR experiment shots 30312 and 31888, respectively. Figure 4 and Figure 5 present the simulation results of continuous disruption prediction with shots 30",
+    "tions for continuous disruption prediction were conducted with KSTAR experimental data. Specifically, shots 30312 and 31888 were selected as examples to validate our proposed model. Figure 14 and Figure 15 in Appendix B provide information on the KSTAR experiment shots 30312 and 31888, respectively. Figure 4 and Figure 5 present the simulation results of continuous disruption prediction with shots 30312 and 31888, including the uncertainty estimation over time. The 7 A PREPRINT - DECEMBER 21, 2023 Figure 3: Proportion of detected shot over prediction time Fi"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 30907,
+   "title": "KSTAR: An algorithm to predict patient-specific kinase activities from phosphoproteomic data",
+   "doi": "https://doi.org/10.1038/s41467-022-32017-5",
+   "year": 2022,
+   "n_mentions": 1,
+   "context": [
+    "Sakai, R. Evidence that SH2 domains pro- mote processive phosphorylation by protein-tyrosine kinases. Curr. Biol. 5, 296–305 (1995). 14. Meyn, M.A. et al. Src family kinases phosphorylate the Bcr-Abl SH3- SH2 region and modulate Bcr-Abl transforming activity. J. Biol. Chem. 281, 30907–30916 (2006). 15. Park, H. et al. Regulation of Btk function by a major autopho- sphorylation site within the SH3 domain. Immunity 4, 515–25 (1996). 16. Taylor, S. S. & Kornev, A. P. Protein kinases: evolution of dynamic regulatory proteins. Trends Biochem. Sci. 36, 65–77 (2011)"
+   ],
+   "false_positive": "page range in a biochemistry reference"
+  },
+  {
+   "shot": 32017,
+   "title": "KSTAR: An algorithm to predict patient-specific kinase activities from phosphoproteomic data",
+   "doi": "https://doi.org/10.1038/s41467-022-32017-5",
+   "year": 2022,
+   "n_mentions": 17,
+   "context": [
+    "nature communications Article https://doi.org/10.1038/s41467-022-32017-5 KSTAR: An algorithm to predict patient- speciﬁc kinase activities from phosphopro- teomic data Sam Crowl1,3, Ben T. Jordan 1,3, Hamza Ahmed 1, Cynthia X. Ma 2 & Kristen M. Naegle 1 Kinase inhibitors as targeted therapies have played an important role in improving cancer outcom",
+    "in the ﬁnal network to ensure that kinases are not isolated from the network, due to having only low probability edges. The example graphs shown in Fig. 1 depicts the success of this approach for reducing homologous kinase overlap – on Article https://doi.org/10.1038/s41467-022-32017-5 Nature Communications| (2022) 13:4283 2 average, KSTAR networks reduce the overlap of evidence between EGFR and ERBB2 for sites observed in an experiment from 80% in a thresholded network to 18% overlap. We have provided an extended description of the problems addressed by",
+    "e is larger when there is more evidence phosphorylation sites are coordinately sampled from a kinase network. The FPR is indicated by “Sig- niﬁcance” of having less than a speciﬁc empirical FPR. Source data are provided with this paper. Article https://doi.org/10.1038/s41467-022-32017-5 Nature Communications| (2022) 13:4283 3 in Supplementary Note 3. We ﬁnd that KSTAR predicts expected activity changes in response to either activation or inhibition and introduces interesting hypotheses. We also found from these experiments that using the base kinase-subst"
+   ],
+   "false_positive": "DOI fragment 10.1038/s41467-022-32017-5 (an unrelated paper named 'KSTAR')"
+  },
+  {
+   "shot": 31276,
+   "title": "Tailoring tokamak error fields to control plasma instabilities and transport",
+   "doi": "https://doi.org/10.1038/s41467-024-45454-1",
+   "year": 2024,
+   "n_mentions": 2,
+   "context": [
+    "indicated with a vertical dashed line in a. Corrected core EF no EF correc\u0002on Tailored EF for instability control no EF correction ( T = 5 kA only) 7.1 s 5 s Time [s] Normalized flux [ N] res [G] core [G] Resonant 3D field profiles a b c edge error field edge [G] cor e/ edge 31276 Stored energy [kJ] 3D coil amp. [kA] 3D coil phasing [°] α [arb. units] Stabiliza\u0002on of ELM T, B M TM MB Time [s] Fig. 3 | Optimized path to edge stability maintaining core stability. a From top to bottom: time evolution of the plasma stored energy showing conﬁnement degradation",
+    "xed to raise the edge resonant ﬁeld above the ELM suppression thresholds, which is taken using a single empirical oper- ating point from the reference discharge (#26014). Note that this approach can work even without any empirical threshold, as shown in another example (Fig. 3, #31276). Bicoherence of density ﬂuctuation Density ﬂuctuations (~n) for the bispectral analysis are measured with beam emission spectroscopy (BES) in KSTAR. The bispectral analysisof the conditionally ensemble-averaged BES signal is commonly used to show the three-wave non-linear inter"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 31357,
+   "title": "Tailoring tokamak error fields to control plasma instabilities and transport",
+   "doi": "https://doi.org/10.1038/s41467-024-45454-1",
+   "year": 2024,
+   "n_mentions": 4,
+   "context": [
+    "e. Here, ⃡Cedge is chosen to couple the external ﬁeld to the edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bo",
+    "external ﬁeld to the edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bottom: The time evolution of plasma curr",
+    "edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bottom: The time evolution of plasma current, total external he"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 31359,
+   "title": "Tailoring tokamak error fields to control plasma instabilities and transport",
+   "doi": "https://doi.org/10.1038/s41467-024-45454-1",
+   "year": 2024,
+   "n_mentions": 4,
+   "context": [
+    "3D plasma response with EFC to access H-mode (red), to avoid H-mode (black), and proxy error ﬁeld IT = 5 kA without error ﬁeld correction (violet, dashed). Article https://doi.org/10.1038/s41467-024-45454-1 Nature Communications| (2024) 15:1275 5 without an n = 1 ERMP (shot 31359) begins to form an ETB in density at 5.5 s, as indicated by the increase of \u0001ne, βN and ~n bicoherence. The formation of the ETB then leads to ELMs as shown by the Dα spikes. After the H-mode transition, as shown in Fig. 6c, the core ion tem- perature falls to Ti ~ 5keV. This re",
+    ", ⃡Cedge is chosen to couple the external ﬁeld to the edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bottom: T",
+    "eld to the edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bottom: The time evolution of plasma current, total"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 32017,
+   "title": "1104 Bayesian inference reveals the effects of tumor cells and macrophages in kinase signal detection in glioblastoma (GBM)",
+   "doi": "https://doi.org/10.1136/jitc-2025-sitc2025.1104",
+   "year": 2025,
+   "n_mentions": 1,
+   "context": [
+    "fficial views of the National Institutes of Health. Croucher Foundation. REFERENCES 1. Crowl S, Jordan BT, Ahmed H, et al. KSTAR: an algorithm to predict patient-spe- cific kinase activities from phosphoproteomic data. Nat Commun. 2022;13:4283. https://doi.org/10.1038/s41467-022-32017-5 2. Multi-scale signaling and tumor evolution in high-grade gliomas. Liu, Jingxian, Agarwal, Anupriya, et al. Cancer Cell. 42:7:1217–1238.e19 3. Newman AM, Steen CB, Liu CL, et al. Determining cell type abundance and expression from bulk tissues with digital cytometry. Nat Biot"
+   ],
+   "false_positive": "DOI fragment 10.1038/s41467-022-32017-5 (an unrelated paper named 'KSTAR')"
+  }
+ ],
+ "n_papers": 387,
+ "n_fulltext": 75,
+ "coverage": {
+  "by_source": {
+   "cache": 74,
+   "direct": 1
+  },
+  "still_missing": [
+   {
+    "title": "Overview of the KSTAR experiments toward fusion reactor",
+    "doi": "https://doi.org/10.1088/1741-4326/ad3b1d",
+    "why": "download blocked"
+   },
+   {
+    "title": "Development of an operation trajectory design algorithm for control of multiple 0D parameters using deep reinforcement learning in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ac79be",
+    "why": "download blocked"
+   },
+   {
+    "title": "Data-driven disruption prediction using random forest in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.114128",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Disruption prediction and analysis through multimodal deep learning in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114204",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Plasma response impact on RMP divertor footprint modeling for KSTAR",
+    "doi": "https://doi.org/10.1016/j.nme.2023.101380",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Argon–seeded detachment during ELM control by RMPs in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/acbec6",
+    "why": "download blocked"
+   },
+   {
+    "title": "Thermal behavior of the KSTAR tungsten cassette divertor in KSTAR 2023 campaign",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114795",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Design and operation results of KSTAR ECH system",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114461",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Mesoscopic transport in KSTAR plasmas: avalanches and the <i>E</i> × <i>B</i> staircase",
+    "doi": "https://doi.org/10.1088/1361-6587/ad4176",
+    "why": "download blocked"
+   },
+   {
+    "title": "Development of prototype real-time Thomson scattering diagnostic in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113532",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Bifurcation-like transition of divertor conditions induced by X-point radiation in KSTAR L-mode plasmas <sup>*</sup>",
+    "doi": "https://doi.org/10.1088/1741-4326/acdefe",
+    "why": "download blocked"
+   },
+   {
+    "title": "Criterion for long sustained highly peaked ion temperature in diverted configuration of KSTAR tokamak",
+    "doi": "https://doi.org/10.1063/5.0184007",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Validation of a plasma burn-through simulation with an ECH power absorption model in KSTAR",
+    "doi": "https://doi.org/10.1088/1402-4896/acc9e8",
+    "why": "no pdf link"
+   },
+   {
+    "title": "KSTAR plasma commissioning to support the tokamak physics experiments",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113803",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Wall conditioning effects of boron powder injection in KSTAR with a tungsten divertor",
+    "doi": "https://doi.org/10.1088/1741-4326/adf123",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Tailoring resonant magnetic perturbation to optimize fast-ion confinement during ELM control in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad0161",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Energetic passing particle-driven instabilities and their impact on discharge evolution in KSTAR",
+    "doi": "https://doi.org/10.1088/1361-6587/ace3f2",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Engineering evaluation of the upgrade KSTAR divertor system",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115100",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Evaluation of plasma current quench time using a discrete Rogowski coil in the KSTAR tokamak",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113324",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Characteristic test of dual shattered pellet injection systems of KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113911",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Experimental and numerical evaluation of the neutral beam deposition profile in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113320",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "The evolution of the interlocks for KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113871",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Kinetic modelling of start-up runaway electrons in KSTAR and ITER",
+    "doi": "https://doi.org/10.1088/1741-4326/ace9ea",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Review of the Structural Behavior of the KSTAR TF Magnet",
+    "doi": "https://doi.org/10.1109/tasc.2023.3244154",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Observation of improved confinement by non-axisymmetric magnetic field in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/acc3ad",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Progress in the optimization of wall conditioning techniques for the reliable operation of KSTAR plasmas",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113386",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Determination of best operation parameters of electron cyclotron wall conditioning in KSTAR",
+    "doi": "https://doi.org/10.1016/j.nme.2022.101275",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Time series KSTAR PF superconducting coil temperature forecasting using recurrent transformer model",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113693",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Startup experiment with the newly installed lower tungsten divertor of KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114697",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Development of machine learning model for automatic ELM-burst detection without hyperparameter adjustment in KSTAR tokamak",
+    "doi": "https://doi.org/10.1016/j.net.2022.08.026",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "RF conditioning to suppress multipactor discharge for helicon wave current drive in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113782",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Toroidal rotation dynamics in KSTAR ohmic plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ac8a5e",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Design of a slotted waveguide antenna to launch lower hybrid fast wave in the KSTAR Tokamak",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113531",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "On FIRE mode in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae332f",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "MARS-F/K modeling of plasma response and fast ion losses due to RMP in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad2fe8",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Analysis of the Structural Behavior of the KSTAR TF Magnet for Safe Operation",
+    "doi": "https://doi.org/10.1109/tasc.2024.3369600",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Validation of density pump-out by pedestal-foot magnetic island formation prior to ELM suppression in KSTAR and DIII-D tokamaks",
+    "doi": "https://doi.org/10.1088/1741-4326/ace5c0",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Non-monotonic radial structures of fluctuating temperatures and densities associated with fishbone activities in KSTAR",
+    "doi": "https://doi.org/10.1063/5.0134354",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Tungsten coated tiles for KSTAR PFC upgrade",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115055",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Feasibility study of fast-ion velocity-space tomography in KSTAR via phantom tests",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114639",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Nonlinear MHD modeling of neon doped shattered pellet injection with JOREK and its comparison to experiments in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad6ea1",
+    "why": "chased, no OA full text"
+   },
+   {
+    "title": "Demonstration of ITER Real-Time Framework with application of PF coil control in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113653",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Initial results from neoclassical tearing mode stabilization experiment in KSTAR high normalized beta plasmas",
+    "doi": "https://doi.org/10.1088/1361-6587/ad8a8a",
+    "why": "no pdf link"
+   },
+   {
+    "title": "M3D-K simulations of beam-driven instabilities in an energetic particle dominant KSTAR discharge",
+    "doi": "https://doi.org/10.1088/1741-4326/ad4535",
+    "why": "download blocked"
+   },
+   {
+    "title": "RF design of helical long-wire traveling wave antenna for helicon current drive in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113983",
+    "why": "no pdf link"
+   },
+   {
+    "title": "LabVIEW programming for the KSTAR XICS towards real-time ion temperature measurement",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113549",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimizing 3D magnetic perturbations for edge instability control in the KSTAR tokamak",
+    "doi": "https://doi.org/10.1007/s41614-023-00137-0",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Formation of small-scale modes via ECCD injection into KSTAR plasma core",
+    "doi": "https://doi.org/10.1088/1741-4326/ad279c",
+    "why": "download blocked"
+   },
+   {
+    "title": "Machine learning based disruption prediction using long short-term memory in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/adeb9b",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Vacuum commissioning and operation result after the KSTAR PFC upgrade",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115249",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Unified ELM suppression on KSTAR and DIII-D via adaptive feedback control strategies",
+    "doi": "https://doi.org/10.1088/1741-4326/adeda0",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/adacfc",
+    "why": "download blocked"
+   },
+   {
+    "title": "Calibration of toroidal visible bremsstrahlung diagnostics and reconstruction of effective charge profiles in Korea Superconducting Tokamak ",
+    "doi": "https://doi.org/10.1063/5.0176471",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A New Integrated Analysis Suite for Fast-Ion Study in KSTAR",
+    "doi": "https://doi.org/10.1080/15361055.2022.2126292",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development status of the HVPS and control system for KSTAR ECH system upgrade",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113664",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Application of non-axisymmetric magnetic field for control of Alfvén eigenmodes in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad645e",
+    "why": "download blocked"
+   },
+   {
+    "title": "Development of a fixed Langmuir probe system for newly installed tungsten monoblock lower divertors in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114552",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Classification of the L-, H-mode, and plasma-free state: Convolutional neural networks and variational autoencoders on the edge reflectomete",
+    "doi": "https://doi.org/10.1063/5.0219478",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Data streaming infra-red video bolometer (IRVB) of Korea Superconducting Tokamak Advanced Research (KSTAR)",
+    "doi": "https://doi.org/10.1063/5.0218942",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a slotted waveguide antenna for lower hybrid fast wave coupling in KSTAR plasmas",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115146",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Mutual Induction Caused by IVCC Currents on Quench Detection Circuits of the KSTAR TF Coils",
+    "doi": "https://doi.org/10.1109/tasc.2023.3241267",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Analysis of AC Losses in KSTAR Superconducting PF Magnets at Low Current Ramp Rates",
+    "doi": "https://doi.org/10.1109/tasc.2024.3354215",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Observation of a stationary double transport barrier in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad521a",
+    "why": "download blocked"
+   },
+   {
+    "title": "Development of a scintillator-based optical soft x-ray (OSXR) diagnostic system for KSTAR tokamak",
+    "doi": "https://doi.org/10.1063/5.0146169",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Real-time data-driven disruption prediction and its mitigation of MA-plasma experiments in KSTAR with a lower carbon divertor",
+    "doi": "https://doi.org/10.1088/1741-4326/adcc41",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a toroidally resolved broadband ECE imaging system for measurement of turbulent fluctuations on the KSTAR",
+    "doi": "https://doi.org/10.1063/5.0219245",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The impact of stray magnetic fields on the KSTAR NBI performance",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114646",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a remote automatic in-vessel calibration system for KSTAR motional Stark effect diagnostics",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114431",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Progress in gyrokinetic validation studies using NBI heated L-mode discharge in KSTAR",
+    "doi": "https://doi.org/10.1016/j.cap.2022.07.015",
+    "why": "download blocked"
+   },
+   {
+    "title": "Estimation of neutral beam injector power transferred to KSTAR plasmas",
+    "doi": "https://doi.org/10.1016/j.net.2024.08.057",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Neural network-based analysis of charge exchange spectra in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115518",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Preparation of KSTAR pellet injection system for advanced plasma scenarios",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115121",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Microtearing mode in electron temperature pedestal evolution and collapse of KSTAR H-mode plasmas",
+    "doi": "https://doi.org/10.1063/5.0210947",
+    "why": "download blocked"
+   },
+   {
+    "title": "Experimental investigation of toroidal eddy current in the in-vessel components during plasma disruption in the KSTAR tokamak",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113551",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimized collection optic design for divertor Thomson scattering diagnostics in KSTAR",
+    "doi": "https://doi.org/10.1063/5.0218850",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Radioactive waste analysis and disposal following KSTAR device diverter upgrade",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115342",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Turbulence statistical analysis of the L-H transition and RMPs in KSTAR",
+    "doi": "https://doi.org/10.1088/1361-6587/ae087a",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Determination of the Operating Current of the Bending Magnet in the KSTAR Neutral Beam Injector",
+    "doi": "https://doi.org/10.4283/jmag.2025.30.2.107",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Erosion and impurity transport for the edge localized mode suppression window in KSTAR",
+    "doi": "https://doi.org/10.1063/5.0213155",
+    "why": "download blocked"
+   },
+   {
+    "title": "Verification of fast ion and rotation effects on turbulence through comparison of GENE and CGYRO with L-mode plasmas in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/addc7e",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Heat load inside the gaps of castellated tungsten blocks with different shapes in KSTAR",
+    "doi": "https://doi.org/10.1016/j.nme.2023.101390",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Simulation and analysis of scattered light from laser beam dump inside the W divertor in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115484",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Transition characteristics, fluctuation evolution, and the role of coherent mode in electron cyclotron resonance heated low to high mode tra",
+    "doi": "https://doi.org/10.1063/5.0225207",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A scintillating-fiber detector for making high-time-resolution secondary D–T neutron measurements in KSTAR",
+    "doi": "https://doi.org/10.1063/5.0213697",
+    "why": "download blocked"
+   },
+   {
+    "title": "Multi-scale recurrent transformer model for predicting KSTAR PF superconducting coil temperature",
+    "doi": "https://doi.org/10.1088/1361-6587/ad3671",
+    "why": "download blocked"
+   },
+   {
+    "title": "Origin of the up/down poloidal asymmetric dependence of ELM control in ITER-like RMP configuration in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ad5e93",
+    "why": "download blocked"
+   },
+   {
+    "title": "Electron cyclotron emission calibration with Thomson scattering using a wide scan of toroidal magnetic field of KSTAR",
+    "doi": "https://doi.org/10.1063/5.0218522",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Deep-learning based real-time KSTAR fusion neutron energy spectrum unfolding with TRIASSIC and MCNP simulation",
+    "doi": "https://doi.org/10.1109/nss/mic/rtsd57108.2024.10657667",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Real-time reconstruction and control of pedestal-top electron density using RMP and gas puff at KSTAR",
+    "doi": "https://doi.org/10.1088/1361-6587/ae2ba5",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of the upgraded single crystal dispersion interferometer (SCDI-U) and its first measurements of the line integrated electron den",
+    "doi": "https://doi.org/10.1088/1741-4326/ad0acb",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The first experimental results from W divertor utilizing x-ray imaging crystal spectrometer on KSTAR",
+    "doi": "https://doi.org/10.1063/5.0210736",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Gated Inverted Recurrent Transformer for multivariate time series forecasting: A deep learning approach to predict KSTAR PF superconducting ",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115528",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Observation of edge kink-like modes induced by resonant magnetic perturbations in KSTAR plasmas and their effects on density pump-out",
+    "doi": "https://doi.org/10.1063/5.0237640",
+    "why": "download blocked"
+   },
+   {
+    "title": "Experimental results from x-ray imaging crystal spectrometer utilizing double crystal assembly in Korea Superconducting Tokamak Advanced Res",
+    "doi": "https://doi.org/10.1063/5.0098520",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Enhancing Pan evaporation predictions: Accuracy and uncertainty in hybrid machine learning models",
+    "doi": "https://doi.org/10.1016/j.ecoinf.2024.102933",
+    "why": "no pdf link"
+   },
+   {
+    "title": "KSTAR Supplementary Data",
+    "doi": "https://doi.org/10.6084/m9.figshare.14919726",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Urban Functional Zone Classification Based on POI Data and Machine Learning",
+    "doi": "https://doi.org/10.3390/su15054631",
+    "why": "download blocked"
+   },
+   {
+    "title": "Application of an Electronic Nose as a New Technology for Rapid Detection of Adulteration in Honey",
+    "doi": "https://doi.org/10.3390/app13084881",
+    "why": "download blocked"
+   },
+   {
+    "title": "Lighting the FIRE in KSTAR Plasmas",
+    "doi": "https://doi.org/10.52843/cassyni.12txmj",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a Virtual Tokamak platform",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113281",
+    "why": "no pdf link"
+   },
+   {
+    "title": "KSTAR ECH System Development Progress",
+    "doi": "https://doi.org/10.1051/epjconf/202431302006",
+    "why": "download blocked"
+   },
+   {
+    "title": "Performance of pellet injection system in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2026.115871",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Predicting Rock Brittleness Using a Robust Evolutionary Programming Paradigm and Regression-Based Feature Selection Model",
+    "doi": "https://doi.org/10.3390/app12147101",
+    "why": "download blocked"
+   },
+   {
+    "title": "Overview of the KSTAR experiments and future plan",
+    "doi": "https://doi.org/10.1088/1741-4326/ae8283",
+    "why": "download blocked"
+   },
+   {
+    "title": "Status of LHFW research in KSTAR and Future Plan",
+    "doi": "https://doi.org/10.1051/epjconf/202634602010/pdf",
+    "why": "download blocked"
+   },
+   {
+    "title": "Progress in Digital Twin Development of Virtual Tokamak Platform",
+    "doi": "https://doi.org/10.1109/tps.2024.3390159",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Experimental environment for testing the shattered pellet injection of KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114511",
+    "why": "no pdf link"
+   },
+   {
+    "title": "An integrated multi-diagnostic visualization platform for KSTAR tokamak",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2026.115786",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Mechanical Behavior of the KSTAR Magnets for Long-Pulse Discharges",
+    "doi": "https://doi.org/10.1109/tasc.2025.3635094",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine learning-based plasma profile reconstruction in KSTAR",
+    "doi": "https://doi.org/10.1007/s40042-026-01580-1",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Multi-step ahead soil temperature forecasting at different depths based on meteorological data: Integrating resampling algorithms and machin",
+    "doi": "https://doi.org/10.1016/j.pedsph.2022.06.056",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Upgrades in the KSTAR soft X-ray arrays in preparation for multichannel measurements",
+    "doi": "https://doi.org/10.1016/j.net.2026.104323",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine Learning Approaches for Early Identification of Thyroid Disease",
+    "doi": "https://doi.org/10.1109/wconf58270.2023.10235086",
+    "why": "no pdf link"
+   },
+   {
+    "title": "KSTAR Grounding System and the Operation Result of the Ground Current Detection System",
+    "doi": "https://doi.org/10.1109/tasc.2024.3351790",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Revisiting Normalized Fusion-Gain Metrics for Evaluation of KSTAR Operation Scenarios",
+    "doi": "https://doi.org/10.2139/ssrn.7115531",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a laser sweeping system for precise positioning of Thomson measurement in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.114993",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Demonstration of enhanced abnormal Plasma Current detection in KSTAR Fast Interlock System",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115579",
+    "why": "no pdf link"
+   },
+   {
+    "title": "An overview of 3D field optimization for control of transport and edge instabilities on KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae4887",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The Use of Digital Color Imaging and Machine Learning for the Evaluation of the Effects of Shade Drying and Open-Air Sun Drying on Mint Leaf",
+    "doi": "https://doi.org/10.3390/app13010206",
+    "why": "download blocked"
+   },
+   {
+    "title": "Design and development of 105GHz KFE compact gyrotron components for KSTAR ECH system",
+    "doi": "https://doi.org/10.1109/irmmw-thz60956.2024.10697849",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Snow water equivalent prediction in a mountainous area using hybrid bagging machine learning approaches",
+    "doi": "https://doi.org/10.1007/s11600-022-00934-0",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Potential of Machine Learning for Predicting Sleep Disorders: A Comprehensive Analysis of Regression and Classification Models",
+    "doi": "https://doi.org/10.3390/diagnostics14010027",
+    "why": "download blocked"
+   },
+   {
+    "title": "On how fast ions enhance the regulation of drift wave turbulence by zonal flows",
+    "doi": "https://doi.org/10.1088/1741-4326/ad0f5f",
+    "why": "download blocked"
+   },
+   {
+    "title": "Re-evaluation of shielding ability and induced activity of KSTAR with increased neutron yields",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114346",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Divertor detachment and heat exhaust mitigation control in KSTAR with tungsten divertor",
+    "doi": "https://doi.org/10.1088/1361-6587/ae67a2",
+    "why": "download blocked"
+   },
+   {
+    "title": "KSTAR 더블널 구조에서의 고성능 하이브리드 시나리오를 위한 연구",
+    "doi": "",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Analysis of neoclassical tearing mode stabilization experiment by electron cyclotron injection in KSTAR",
+    "doi": "https://doi.org/10.1051/epjconf/202431302005",
+    "why": "download blocked"
+   },
+   {
+    "title": "Application of novel hybrid machine learning techniques for particle Froude number estimation in sewer pipes",
+    "doi": "https://doi.org/10.1007/s11069-022-05786-x",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Re-Evaluation of Shielding Ability and Induced Radioactivity of Kstar Facility with Increasing Neutron Yields",
+    "doi": "https://doi.org/10.2139/ssrn.4611069",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Developing the hybrid scenario in DIII-D and KSTAR for W-compatible long-pulse operation",
+    "doi": "https://doi.org/10.1088/1741-4326/ae6f2c",
+    "why": "no pdf link"
+   },
+   {
+    "title": "From image-based detection to parameter-based prediction of UFO events in KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae91fc",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Assessment of KSTAR Nb3Sn superconducting magnet property after long term operation since 2008",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115020",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Divertor",
+    "doi": "https://doi.org/10.1088/1361-6587/ae9725",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Radiation-front position control with scenario adjustments during the first tungsten divertor operation on KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae4d24",
+    "why": "download blocked"
+   },
+   {
+    "title": "Integration and Evolution of Architectural Components in the ITER Plasma Control System: Deployment and Experimental Validation at KSTAR",
+    "doi": "https://doi.org/10.2139/ssrn.7283975",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Validating the Multi-Mode Model’s Ability to Reproduce Diverse Tokamak Scenarios",
+    "doi": "https://doi.org/10.3390/plasma6030030",
+    "why": "download blocked"
+   },
+   {
+    "title": "Radiative divertor detachment and impurity transport with nitrogen and neon seeding in KSTAR H-mode plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ae6fcd",
+    "why": "download blocked"
+   },
+   {
+    "title": "Global E × B flow pattern formation and saturation",
+    "doi": "https://doi.org/10.1088/1741-4326/ac906f",
+    "why": "download blocked"
+   },
+   {
+    "title": "Design of a Decision Support System to Operate a NO2 Gas Sensor Using Machine Learning, Sensitive Analysis and Conceptual Control Process Mo",
+    "doi": "https://doi.org/10.3390/chemosensors11020126",
+    "why": "download blocked"
+   },
+   {
+    "title": "A study on the dependence of neutron emission on plasma performance following the transition from graphite to tungsten divertor in KSTAR",
+    "doi": "https://doi.org/10.1016/j.net.2026.104551",
+    "why": "download blocked"
+   },
+   {
+    "title": "Feasibility investigation of minimum island width growth rate seeking controller using TokSys simulator on KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2026.115666",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Relative calibration correction using fast LEDs to enhance the reliability of Thomson scattering diagnostic on KSTAR",
+    "doi": "https://doi.org/10.1088/1748-0221/20/10/c10003",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Avoidance of disruptions on KSTAR due to vertical displacement events via novel real-time stability assessment",
+    "doi": "https://doi.org/10.1063/5.0320639",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Spatiotemporal structure of edge harmonic oscillation and its role in ELM-free QH-mode at KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae8679",
+    "why": "download blocked"
+   },
+   {
+    "title": "첨단 NBI 제어 시스템 개발 및 KSTAR FIRE 모드 적용 연구",
+    "doi": "",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Performance Evaluation of High Voltage Signal Conditioners for ITER Superconducting Magnets During Plasma Operation in the KSTAR Tokamak",
+    "doi": "https://doi.org/10.1109/tasc.2025.3614574",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Status of High-Voltage Power Supply, Integrated Control System, and Gyrotron of KSTAR EC System for Plasma Heating",
+    "doi": "https://doi.org/10.1109/ppps56198.2025.11248789",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Gliomas Disease Prediction: An Optimized Ensemble Machine Learning-Based Approach",
+    "doi": "https://doi.org/10.1109/ictacs59847.2023.10390226",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Review for \"Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Divertor\"",
+    "doi": "https://doi.org/10.1088/1361-6587/ae9725/v1/review2",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Decision letter for \"Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Dive",
+    "doi": "https://doi.org/10.1088/1361-6587/ae9725/v2/decision1",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Analysis and mitigation of backstreaming-electron-induced heat load on the KSTAR NBI E-dump under a cusp magnetic fields",
+    "doi": "https://doi.org/10.1088/1361-6587/ae3ad5",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development and High-Power Validation of a 476 MHz Twin-Disk RF Window for the KSTAR Helicon Current Drive System",
+    "doi": "https://doi.org/10.2139/ssrn.6880636",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Author response for \"Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Dive",
+    "doi": "https://doi.org/10.1088/1361-6587/ae9725/v2/response1",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Temps, géométrie et viabilité : test de couplage entre Kstar et Phi_W sur 33 séries RR PhysioNet",
+    "doi": "https://doi.org/10.5281/zenodo.19557083",
+    "why": "no pdf link"
+   },
+   {
+    "title": "An FPGA-Based, Full-Digital Phase Comparator of a Multi-chord Interferometer for Real-Time Density Control in KSTAR",
+    "doi": "https://doi.org/10.1109/tps.2026.3706725",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Study on the effect of sidebands of KSTAR-like traveling wave antenna power spectrum on helicon wave current drive in EXL-50U spherical toru",
+    "doi": "https://doi.org/10.1088/1361-6587/ade4fc",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Corrigendum: TorbeamNN: machine learning-based steering of ECH mirrors on KSTAR (2025 <i>Plasma Phys. Control. Fusion</i> 67 055036)",
+    "doi": "https://doi.org/10.1088/1361-6587/ade826",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Evaluation of ITER Real-Time Framework in plasma diagnostics applications",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113623",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Turbulence spreading induced <mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\"> <mml:mrow> <mml:mi>E</mml:mi> <mml:mstyle/> <mml:mo>×",
+    "doi": "https://doi.org/10.1088/1741-4326/ad82fa",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Distinguishing lacto-fermented and fresh carrot slice images using the Multilayer Perceptron neural network and other machine learning algor",
+    "doi": "https://doi.org/10.1007/s00217-022-04057-0",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Unlocking precision in hydraulic engineering: machine learning insights into labyrinth sluice gate discharge coefficients",
+    "doi": "https://doi.org/10.2166/hydro.2024.310",
+    "why": "download blocked"
+   },
+   {
+    "title": "Vertical instability forecasting and controllability assessment of multi-device tokamak plasmas in DECAF with data-driven optimization",
+    "doi": "https://doi.org/10.1088/1361-6587/ad7531",
+    "why": "no pdf link"
+   },
+   {
+    "title": "First application of minimum island width growth rate seeking feedback controller for neoclassical tearing mode stabilization",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.114850",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Erratum: Nonlinear MHD modeling of neon doped shattered pellet injection with JOREK and its comparison to experiments in KSTAR (2024 Nucl. F",
+    "doi": "https://doi.org/10.1088/1741-4326/ad79d7",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimized Ensemble model for Heart Disease Prediction using Machine Learning",
+    "doi": "https://doi.org/10.1109/asiancon58793.2023.10270436",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Performance Analysis of Drug Toxicity Prediction Using Machine Learning Approaches",
+    "doi": "https://doi.org/10.1109/cisct57197.2023.10351253",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Preliminary Design Study on Non-Twisted HTS Conductor for Fusion Applications",
+    "doi": "https://doi.org/10.1109/tasc.2023.3262490",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Gaussian process-based quasi-coherent noise suppression in magnetic confinement devices with superconductors",
+    "doi": "https://doi.org/10.1088/1741-4326/acf1b1",
+    "why": "download blocked"
+   },
+   {
+    "title": "Opinion Mining of Politics and Inflation using Roman Urdu Dataset",
+    "doi": "https://doi.org/10.1109/hccs55241.2022.10090276",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Analysis of the highest energy confinement in tokamaks based on thermodynamic approach",
+    "doi": "https://doi.org/10.1088/1361-6587/ac999c",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Non-linear MHD modelling of transients in tokamaks: a review of recent advances with the JOREK code",
+    "doi": "https://doi.org/10.1088/1741-4326/ad5a21",
+    "why": "download blocked"
+   },
+   {
+    "title": "Corrigendum: Integrated RMP-based ELM-crash-control process for plasma performance enhancement during ELM crash suppression in KSTAR (2023 N",
+    "doi": "https://doi.org/10.1088/1741-4326/ad0700",
+    "why": "download blocked"
+   },
+   {
+    "title": "Gene Expression Classification for Biomarker Identification in Maize Subjected to Various Biotic Stresses",
+    "doi": "https://doi.org/10.1109/tcbb.2022.3233844",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimized Ensemble Model for Wholesale Market Prediction using Machine Learning",
+    "doi": "https://doi.org/10.1109/icesc54411.2022.9885315",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine failure prediction using joint reserve intelligence with feature selection technique",
+    "doi": "https://doi.org/10.1080/1206212x.2023.2260619",
+    "why": "download blocked"
+   },
+   {
+    "title": "Investigation of multiple-ion-source neutral beam operation conditions compatible with motional Stark effect diagnostics",
+    "doi": "https://doi.org/10.1063/5.0101482",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Decision letter for \"Corrigendum: TorbeamNN: machine learning-based steering of ECH mirrors on KSTAR (2025 &lt;i&gt;Plasma Phys. Control. Fu",
+    "doi": "https://doi.org/10.1088/1361-6587/ade826/v1/decision1",
+    "why": "no pdf link"
+   },
+   {
+    "title": "On the simulation of streamflow using hybrid tree-based machine learning models: a case study of Kurkursar basin, Iran",
+    "doi": "https://doi.org/10.1007/s12517-022-11045-x",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Predictive Machine Learning Techniques for Diabetes Detection: An Analytical Comparison",
+    "doi": "https://doi.org/10.1109/delcon57910.2023.10127344",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Prediction of three vital rainfall characteristics: Advanced hybrid tree- or lazy-based learner?",
+    "doi": "https://doi.org/10.1016/j.rineng.2024.103840",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Frequency decomposition associated with machine learning algorithms and copula modeling for river flow prediction",
+    "doi": "https://doi.org/10.1007/s00477-023-02425-0",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Advances in physics of the magneto-hydro-dynamic and turbulence-based instabilities in toroidal plasmas via 2-D/3-D visualization",
+    "doi": "https://doi.org/10.1007/s41614-022-00076-2",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Radiatively tamed divertor thermal loading in resonant magnetic perturbation (RMP)-driven, ELM-crash-suppressed plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ad3e14",
+    "why": "download blocked"
+   },
+   {
+    "title": "Metrics and extrapolation of resonant magnetic perturbation thresholds for ELM suppression",
+    "doi": "https://doi.org/10.1088/1741-4326/ade0cf",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Kinetic profile inference with outlier detection using support vector machine regression and Gaussian process regression",
+    "doi": "https://doi.org/10.1088/1741-4326/ad7304",
+    "why": "download blocked"
+   },
+   {
+    "title": "Prediction of precipitation using wavelet-based hybrid models considering the periodicity",
+    "doi": "https://doi.org/10.1007/s00521-024-10006-7",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Performance Analysis Of Machine Learning-Based Models For Early Diagnosis Of Obesity Using Blood Test Parameters",
+    "doi": "",
+    "why": "download blocked"
+   },
+   {
+    "title": "An Enhancement Method in Few-Shot Scenarios for Intrusion Detection in Smart Home Environments",
+    "doi": "https://doi.org/10.3390/electronics12153304",
+    "why": "download blocked"
+   },
+   {
+    "title": "Exploring DeepDream and XAI Representations for Classifying Histological Images",
+    "doi": "https://doi.org/10.1007/s42979-024-02671-1",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Initial design concepts for solid boron injection in ITER",
+    "doi": "https://doi.org/10.1016/j.nme.2024.101809",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Neural-Network Model for Linear MHD Stability Analysis of Tokamak Edge Pedestals",
+    "doi": "https://doi.org/10.1109/ijcnn54540.2023.10191627",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Sensitivity of motional Stark effect on different beam energy components for radial electric field measurements in tokamak plasmas",
+    "doi": "https://doi.org/10.1063/5.0219593",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine Learning-Based Prediction of Muscle Injury Risk in Professional Football: A Four-Year Longitudinal Study",
+    "doi": "https://doi.org/10.3390/jcm14228039",
+    "why": "download blocked"
+   },
+   {
+    "title": "Extending the operational boundaries of RMP-ELM suppression with optimized 3D field control",
+    "doi": "https://doi.org/10.1088/1741-4326/adeda3",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Ensemble Classifier for Eye State Classification using EEG Signals",
+    "doi": "https://doi.org/10.35950/cbej.v23i99.6764",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Vertical stray field measurements using an electron beam in the MEPhIST-0 tokamak",
+    "doi": "https://doi.org/10.1088/1361-6587/ad0d87",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Exploring blood–brain barrier passage using atomic weighted vector and machine learning",
+    "doi": "https://doi.org/10.1007/s00894-024-06188-5",
+    "why": "no pdf link"
+   },
+   {
+    "title": "ATTITUDE OF PG SCHOLARS OF AGRICULTURAL EXTENSION TOWARDS APPLICATION OF MOBILE TECHNOLOGY USING ARTIFICIAL INTELLIGENCE TECHNIQUE",
+    "doi": "https://doi.org/10.56572/gjoee.2022.33.1.0028",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimized Ensembled Predictive Model for Drug Toxicity",
+    "doi": "https://doi.org/10.1007/978-3-031-48774-3_23",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Frequency linearization of voltage controlled oscillator (VCO) for 2 <i>µ</i>s frequency modulated continuous wave (FMCW) reflectometer",
+    "doi": "https://doi.org/10.1063/5.0216639",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A comprehensive approach for predicting local scour depth using machine learning models",
+    "doi": "https://doi.org/10.1088/2631-8695/ae4b0d",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Thermal energy mitigation and toroidal peaking effects in JET disruptions",
+    "doi": "https://doi.org/10.1063/5.0261146",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Classifying Psychiatric Patients Using Machine Learning",
+    "doi": "https://doi.org/10.1109/acit62805.2024.10877074",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Prediction of Crop Water Stress Index (CWSI) Using Machine Learning Algorithms",
+    "doi": "https://doi.org/10.1061/9780784485477.086",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Investigation of radiation power and carbon evaporation in infrared sensor bolometer",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114421",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of novel collision detection algorithms for the estimation of fast ion losses in tokamak fusion device",
+    "doi": "https://doi.org/10.1016/j.cpc.2024.109490",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Employing an Artificial Neural Network Model to Predict Citrus Yield Based on Climate Factors",
+    "doi": "https://doi.org/10.3390/agronomy14071548",
+    "why": "download blocked"
+   },
+   {
+    "title": "Investigation of the influence of seed size on the biochemical and physical characteristics of black cumin (Nigella sativa) with machine lea",
+    "doi": "https://doi.org/10.1007/s00217-025-04839-2",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Diffusion bonding between tungsten base tiles and copper for fusion applications",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115227",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Multi-device analysis of energy loss duration and pellet penetration with implications for shattered pellet injection in ITER",
+    "doi": "https://doi.org/10.1088/1741-4326/add170",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Research on Crosstalk of High-Voltage Signal Transmission Cables for Quench Detection System of Chinese Next-Generation Fusion Device",
+    "doi": "https://doi.org/10.1109/tasc.2025.3610104",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Prediction of Insurance Premium using Machine Learning with an Adaptive Approach",
+    "doi": "https://doi.org/10.1109/icccnt56998.2023.10307009",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Evaluation of the impact of plasma operation scenarios on the fusion reactor blanket design using an integrated numerical plasma and neutron",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2024.114350",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Liver Tumor Detection Using Deep Learning Techniques",
+    "doi": "https://doi.org/10.1109/iccubea58933.2023.10391975",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Global energy balance simulations of shattered pellet injection",
+    "doi": "https://doi.org/10.1063/5.0308546",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine-Learning-Based Survival Prediction in Glioblastoma Using Graph-Theoretical Analysis of Structural Network Alterations",
+    "doi": "https://doi.org/10.3390/cancers18071161",
+    "why": "download blocked"
+   },
+   {
+    "title": "Identifying Optimal Parameters And Their Impact On Predicting Credit Card Defaulters Using Machine-Learning Algorithm",
+    "doi": "https://doi.org/10.54692/lgurjcsit.2022.0601260",
+    "why": "download blocked"
+   },
+   {
+    "title": "Experimental and Modeling Evaluation of Impacts of Different Tillage Practices on Fitting Parameters of Kostiakov’s Cumulative Infiltration ",
+    "doi": "https://doi.org/10.3390/w15142673",
+    "why": "download blocked"
+   },
+   {
+    "title": "RESOURCE_FILES",
+    "doi": "https://doi.org/10.6084/m9.figshare.14885121.v7",
+    "why": "no pdf link"
+   },
+   {
+    "title": "NETWORKS",
+    "doi": "https://doi.org/10.6084/m9.figshare.14944305",
+    "why": "no pdf link"
+   },
+   {
+    "title": "TransROTA: A code for solving collisionality-extended Braginskii's closure formalism for toroidally-rotating plasmas with nonlinear successi",
+    "doi": "https://doi.org/10.1016/j.cpc.2023.108992",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Gema Presents the XT12 and YT05 Axes",
+    "doi": "https://doi.org/10.1016/j.fopow.2023.03.023",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Colour and the environment of accountability",
+    "doi": "https://doi.org/10.1016/j.fopow.2023.03.033",
+    "why": "no pdf link"
+   },
+   {
+    "title": "BCF Won Two Awards During the 2023 Trade Association Forum",
+    "doi": "https://doi.org/10.1016/j.fopow.2023.03.005",
+    "why": "no pdf link"
+   },
+   {
+    "title": "FOCUS 2023 Opens Registration",
+    "doi": "https://doi.org/10.1016/j.fopow.2023.03.004",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Comparative Evaluation of Intelligent Machine Learning Models for Prediction of Uniaxial Compressive Strength of Rocks",
+    "doi": "https://doi.org/10.1007/s40515-026-00972-x",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Machine Learning Approaches for Breast Cancer Prediction: A WEKA-Based Performance Analysis",
+    "doi": "https://doi.org/10.1109/ictbig64922.2024.10911576",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Numerical Patterns of the Perfect Number 6 in Tokamak Physics",
+    "doi": "",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Plasma Control for Nuclear Fusion: 30 Days of Continuous Stable Operation",
+    "doi": "https://doi.org/10.5281/zenodo.20705040",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Construction and Accuracy Study of Agricultural Machinery Carbon Footprint Verification Model",
+    "doi": "https://doi.org/10.1007/978-981-96-1531-5_31",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Assessing Machine Learning Algorithms in Sablayan Occidental Mindoro for Data-Driven Rice Yield Prediction",
+    "doi": "https://doi.org/10.51583/ijltemas.2025.1409000098",
+    "why": "download blocked"
+   },
+   {
+    "title": "Development of V-band Doppler reflectometer based on frequency steering phased array antenna",
+    "doi": "https://doi.org/10.1088/1361-6587/adcf54",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Statistical analysis code and model outputs for \"Data-Driven Modelling of Water Surface Profiles in Compound Channels with Converging Floodp",
+    "doi": "https://doi.org/10.5281/zenodo.20642688",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Scalable modeling of 3D eddy current problem for magnetic fusion devices",
+    "doi": "https://doi.org/10.1016/j.cpc.2025.109864",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Optimization of extraction of bioactive compounds from Piper corcovadensis C.DC leaves using a generalized linear model",
+    "doi": "https://doi.org/10.1007/s13197-025-06433-6",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Perfect Number Arithmetic in Fusion Plasma Physics: From D-T Nucleon Conservation to Tokamak Stability",
+    "doi": "https://doi.org/10.5281/zenodo.19430917",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Link-Length Optimization of a Fusion Remote-Maintenance Robot via Geometry-Based Link-Count Screening and a Pareto-Based Covariance Matrix A",
+    "doi": "https://doi.org/10.2139/ssrn.7284018",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Numerical Patterns of the Perfect Number 6 in Tokamak Physics: Observation, Verification, and Honest Limits",
+    "doi": "https://doi.org/10.5281/zenodo.19430913",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Early Prediction of Chronic Kidney Disease using Machine Learning Techniques",
+    "doi": "https://doi.org/10.5281/zenodo.19450750",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Real-time observation of toroidal current redistributions induced by three-dimensional MHD phenomena triggering vertical displacement events",
+    "doi": "https://doi.org/10.1088/1361-6587/ae900d",
+    "why": "download blocked"
+   },
+   {
+    "title": "CBSI–machine learning hybrid model for urban pumping station demand and risk assessment",
+    "doi": "https://doi.org/10.1108/wje-09-2025-0613",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A theory of E×B staircase stability: favorable role of fast ions",
+    "doi": "https://doi.org/10.1088/1741-4326/ae97f4",
+    "why": "download blocked"
+   },
+   {
+    "title": "Investigation of Radiation Power and Carbon Evaporation in Infrared Sensor Bolometer for Tokamak Disruption Mitigation",
+    "doi": "https://doi.org/10.2139/ssrn.4668890",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of tungsten actively cooled divertor target plasma facing components for W7-X and JT-60SA fusion devices",
+    "doi": "https://doi.org/10.1088/1741-4326/ae93db",
+    "why": "download blocked"
+   },
+   {
+    "title": "A Phenomenological Analytic Surrogate Model for Pedestal Entropy Production Rate as a Real-Time Scalar Precursor of Type-I ELM Crashes in To",
+    "doi": "https://doi.org/10.5281/zenodo.19591916",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A Mobile Based Activity Recog-nition Model",
+    "doi": "https://doi.org/10.35950/cbej.v23i98.8846",
+    "why": "download blocked"
+   },
+   {
+    "title": "CBCT Image Corpus for Tooth Implantation &amp; Automatic Medical Report Generation",
+    "doi": "https://doi.org/10.1109/iccosd66074.2025.11348158",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Identification of Protein Kinase Drug Targets Using Activity Estimation in Clinical Phosphoproteomics",
+    "doi": "https://doi.org/10.1007/978-1-0716-4418-8_10",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Analyzing the safety framework for fusion demonstration plants in Korea",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2025.115312",
+    "why": "no pdf link"
+   },
+   {
+    "title": "From 0≠0 to Everything: A Geometric Computation Engine for All of Physics",
+    "doi": "https://doi.org/10.5281/zenodo.19616072",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of Powerful Gyrotrons with Improved Parameters in IAP RAS/GYCOM",
+    "doi": "https://doi.org/10.1109/piers62282.2024.10618497",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development of a Machine-Learning Model for monitoring the Friction-Stir-Welding Tool using Vibration Signatures",
+    "doi": "https://doi.org/10.1109/c2i663243.2024.10895762",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Exploiting Machine Learning Technique for Attack Detection in Intrusion Detection System (IDS) Based on Protocol",
+    "doi": "https://doi.org/10.1007/978-3-031-51664-1_11",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Intrinsic rotation of fusion plasmas induced by the ion-neutral charge exchanges",
+    "doi": "https://doi.org/10.1016/j.cap.2023.08.008",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Classification and Prediction-Based Data Mining Algorithms to Predict Visitors to the Museum",
+    "doi": "https://doi.org/10.2139/ssrn.4471791",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Análisis del impacto social de los infocentros comunitarios en el cantón La Maná-Ecuador",
+    "doi": "",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A Crop Recommendation System with High Accuracy Utilizing Ensemble Machine Learning Techniques",
+    "doi": "https://doi.org/10.1201/9781003768654-35",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Enhanced Chronic Kidney Disease Prediction Using Hybrid Technology",
+    "doi": "https://doi.org/10.1109/oidt59407.2024.11082702",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Amendment CCCLXXI — SOL Geometry Laser Fusion Chamber: Coherence-Contained Laser Star via Hard SOL Barrier and Recursive Photon Overlap",
+    "doi": "https://doi.org/10.5281/zenodo.20768100",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Malware Detection Using Machine Learning & Performance Evaluation",
+    "doi": "https://doi.org/10.5281/zenodo.18921650",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Multimachine analysis of intermittent fluctuations in the scrape-off layer of magnetically confined fusion plasmas",
+    "doi": "https://doi.org/10.1088/1361-6587/ae7157",
+    "why": "download blocked"
+   },
+   {
+    "title": "Design and Testing of a High-Voltage Temperature Transducer for ITER High-Temperature Superconducting Current Leads",
+    "doi": "https://doi.org/10.1109/tasc.2025.3618600",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Investigating long-duration plasma operation with the international multi-machine CICLOP database",
+    "doi": "https://doi.org/10.1088/1741-4326/ae89cc",
+    "why": "download blocked"
+   },
+   {
+    "title": "entropic_time_fusion_main.py",
+    "doi": "https://doi.org/10.5281/zenodo.17664608",
+    "why": "no pdf link"
+   },
+   {
+    "title": "DispersionRelations: v1.0.0",
+    "doi": "",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Premature Discovery of Long-Term Prolonged Renal Disorder Using Machine Learning Algorithm",
+    "doi": "https://doi.org/10.1109/ic-etite58242.2024.10493410",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The effect of the electron <i>κ</i>-distribution on the dust particle charging in the radio-frequency thermal-sheaths",
+    "doi": "https://doi.org/10.1088/1402-4896/ad6199",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Real-time organic scintillator neutron spectrum unfolding using a deep learning approach and data generated from TRIASSIC and MCNP",
+    "doi": "https://doi.org/10.1016/j.net.2025.104035",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Rapid Identification and Content Prediction of Mildew Nutmeg Based on Electronic-Nose",
+    "doi": "https://doi.org/10.2139/ssrn.4642485",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Geometric Stability Limit: A Scale-Invariant Curvature Functional for First-Principles Prediction of Tokamak Disruptions",
+    "doi": "https://doi.org/10.5281/zenodo.20696016",
+    "why": "no pdf link"
+   },
+   {
+    "title": "LXVII: SOL-Coherent Plasma Confinement",
+    "doi": "https://doi.org/10.5281/zenodo.21463604",
+    "why": "no pdf link"
+   },
+   {
+    "title": "GOD Theory IV: Tokamak Disruptions as Geometric Phase Transitions of the Projection",
+    "doi": "https://doi.org/10.5281/zenodo.19428770",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Modeling study of synergistic effects of neutral beam injection hot ions on helicon wave current drive in HL-3 tokamak",
+    "doi": "https://doi.org/10.1088/1674-1056/adf17e",
+    "why": "no pdf link"
+   },
+   {
+    "title": "DispersionRelations: v1.1.0",
+    "doi": "https://doi.org/10.5281/zenodo.18900575",
+    "why": "no pdf link"
+   },
+   {
+    "title": "BCCF Prediction Register",
+    "doi": "https://doi.org/10.5281/zenodo.19555480",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Evaluating the Impact of Nano-Zeolite and Lime on Reconstituted Soil Resistance Using Explainable Machine Learning Framework",
+    "doi": "https://doi.org/10.3390/constrmater6030037",
+    "why": "download blocked"
+   },
+   {
+    "title": "Machine learning-based transcriptome mining to discover key genes for density stress in sweet corn",
+    "doi": "https://doi.org/10.1016/j.egg.2025.100349",
+    "why": "no pdf link"
+   },
+   {
+    "title": "DECISION MAKING PATTERN OF FARM WOMEN IN ANIMAL HUSBANDRY PRACTICES USING MACHINE LEARNING",
+    "doi": "https://doi.org/10.56572/gjoee.2022.33.2.0017",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Autoregressive long-horizon prediction of plasma edge dynamics <sup>*</sup>",
+    "doi": "https://doi.org/10.1088/1741-4326/ae666c",
+    "why": "download blocked"
+   },
+   {
+    "title": "A Geometric Interpretation of Low-Frequency Components in Tokamak Diagnostics",
+    "doi": "https://doi.org/10.5281/zenodo.17784672",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A Brief History and Evolution of Electron Cyclotron Emission Imaging (ECEI) Systems",
+    "doi": "https://doi.org/10.1109/irmmw-thz61557.2025.11319801",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Performance analysis of UKM-IDS20 dataset on machine learning algorithms",
+    "doi": "https://doi.org/10.47974/jsms-1296",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Systematic Approaches to Studying Kinase Signaling and RNA Splicing in Cancer",
+    "doi": "https://doi.org/10.18130/qxkw-fc63",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Métrologie de la viabilité par la mémoire dynamique : de la variable tau_c à la loi de rupture, validations directes et cohérence multi-doma",
+    "doi": "https://doi.org/10.5281/zenodo.19556637",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Explainable tokamak-agnostic forecasting of fusion plasma instability via megahertz turbulent fluctuations",
+    "doi": "https://doi.org/10.1038/s42005-026-02689-2",
+    "why": "no pdf link"
+   },
+   {
+    "title": "A Novel Tool for Biodiversity Studies: Earthworm Classification via NGS and Neural Networks",
+    "doi": "https://doi.org/10.3390/app15126597",
+    "why": "download blocked"
+   },
+   {
+    "title": "Separable Gyro-Bohm Scaling for Fusion Energy Confinement: Resolving the Isotope Sign Conflict",
+    "doi": "https://doi.org/10.5281/zenodo.19117879",
+    "why": "no pdf link"
+   },
+   {
+    "title": "НЕЛОКАЛЬНОСТЬ ТУРБУЛЕНТНОСТИ НА ПРИМЕРЕ СПЕКТРАЛЬНЫХ И ПРОСТРАНСТВЕННЫХ ХАРАКТЕРИСТИК КРОСС-КОРРЕЛЯЦИОННОЙ РЕФЛЕКТОМЕТРИИ ФЛУКТУАЦИЙ ПЛОТНОС",
+    "doi": "https://doi.org/10.7868/s3034641x25120135",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Multi-machine validation of plasma initiation modelling and prospects for future devices: Predicting plasma initiation using only hardware d",
+    "doi": "https://doi.org/10.1088/1741-4326/ae3caa",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Study of Low-Frequency Core-Edge Coupling in a Tokamak: II. Spatial Channeling &amp; Focusing In Antenna-Driven MHD",
+    "doi": "https://doi.org/10.48550/arxiv.2603.24463",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Helicon Wave Auxiliary Current Drive under D-T Plasma Operation Mode on HL-3 Tokamak Device",
+    "doi": "https://doi.org/10.7538/yzk.2025.youxian.0057",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Eddy current heating and thermo-mechanical response of the in-vessel control coil in the Korea Superconducting Tokamak Advanced Research",
+    "doi": "https://doi.org/10.1016/j.applthermaleng.2025.129304",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The Fire That Thinks: Fusion Information Condensate as the Embodied Substrate of Non-Biological Conscious Systems",
+    "doi": "https://doi.org/10.5281/zenodo.19956585",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Resolving Tokamak Anomalies via Spacetime Ladder Theory: From Rotation Reversal and Greenwald Limit to the Cold-Hot Fusion Union",
+    "doi": "https://doi.org/10.5281/zenodo.20496950",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The Entropic Emergence of Temporal Dynamics in Fusion Plasmas: A Micro-Scale Rate-Based Framework.",
+    "doi": "https://doi.org/10.5281/zenodo.17658473",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The Plasma Is the Weak Force: Octonionic Boundary Conditions, Catalytic Confinement, and a Zero-Parameter Ignition Protocol",
+    "doi": "https://doi.org/10.5281/zenodo.19267375",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Supplementary Dataset and Experimental Artifacts for Counterfactual Recourse Explanation for Sustainable Job-Shop Scheduling with Discrete S",
+    "doi": "https://doi.org/10.5281/zenodo.18380960",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Simulations of ion cyclotron emission from highly energetic fusion-born protons in aneutronic deuterium-helium-3 plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/adfbda",
+    "why": "no pdf link"
+   },
+   {
+    "title": "THE COMPLETE FUSION ENERGY PUBLICATION: N-K Model vs. Mainstream — CHMR Is the Only Path",
+    "doi": "https://doi.org/10.5281/zenodo.18708175",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Post-Fusion Humanity: The only viable path to sustainable Fusion: The Next-Generation Granular-Control Tokamak for Rare Earth Dominance",
+    "doi": "https://doi.org/10.5281/zenodo.18356683",
+    "why": "no pdf link"
+   },
+   {
+    "title": "The Incompressibility of Topological Charge and the Energy Cost of Distinguishability: An Information-Geometric Reduction of the Yang-Mills ",
+    "doi": "https://doi.org/10.5281/zenodo.17846520",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Post-Fusion Humanity: The only viable path to sustainable Fusion: The Next-Generation Granular-Control Tokamak for Hydrogen & Rare Earth Dom",
+    "doi": "https://doi.org/10.5281/zenodo.19257084",
+    "why": "no pdf link"
+   },
+   {
+    "title": "《后聚变时代的人类:实现可持续聚变的唯一路径——面向稀土主导权的新一代精细调控托卡马克装置》",
+    "doi": "https://doi.org/10.5281/zenodo.18356541",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Post-Fusion Humanity: The Next-Generation Granular-Control Tokamak for Hydrogen & Rare Earth Dominance in a TriPolar World",
+    "doi": "https://doi.org/10.5281/zenodo.17924681",
+    "why": "no pdf link"
+   },
+   {
+    "title": "《后聚变时代的人类:实现可持续聚变的唯一路径——面向稀土主导权的新一代精细调控托卡马克装置》",
+    "doi": "https://doi.org/10.5281/zenodo.19014616",
+    "why": "no pdf link"
+   },
+   {
+    "title": "N-K 3D+ GAUSS LAW — COMPLETE TOKAMAK FUSION VERIFICATION From JET to ITER — All Observed Data Matched with 100% Accuracy Why Plasma Instabil",
+    "doi": "https://doi.org/10.5281/zenodo.21755963",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Postmodern Physics of Hamzah Information.(14)",
+    "doi": "https://doi.org/10.5281/zenodo.21500538",
+    "why": "no pdf link"
+   },
+   {
+    "title": "《后聚变时代的人类:实现可持续聚变的唯一路径——面向稀土主导权的新一代精细调控托卡马克装置》Post-Fusion Humanity: The only viable path to sustainable Fusion: The Next-Generation Granular",
+    "doi": "https://doi.org/10.5281/zenodo.19927501",
+    "why": "no pdf link"
+   },
+   {
+    "title": "《后聚变时代的人类:实现可持续聚变的唯一路径——面向稀土主导权的新一代精细调控托卡马克装置》",
+    "doi": "https://doi.org/10.5281/zenodo.19305253",
+    "why": "no pdf link"
+   },
+   {
+    "title": "「ポスト核融合時代の人類:持続可能な核融合実現への唯一の道——レアアース覇権に向けた次世代精密制御トカマク装置」",
+    "doi": "https://doi.org/10.5281/zenodo.19305631",
+    "why": "no pdf link"
+   },
+   {
+    "title": "「ポスト核融合時代の人類:持続可能な核融合実現への唯一の道——レアアース覇権に向けた次世代精密制御トカマク装置」",
+    "doi": "https://doi.org/10.5281/zenodo.18237824",
+    "why": "no pdf link"
+   },
+   {
+    "title": "「ポスト核融合時代の人類:持続可能な核融合実現への唯一の道——レアアース覇権に向けた次世代精密制御トカマク装置」",
+    "doi": "https://doi.org/10.5281/zenodo.19343583",
+    "why": "no pdf link"
+   }
+  ]
+ }
+}
