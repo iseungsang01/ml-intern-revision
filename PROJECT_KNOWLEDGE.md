@@ -730,6 +730,53 @@ reset `ctx` steps before every row (`CES_SEQ_CONTEXTS`; `ctx = full` reproduces 
   but "recurrent vs. a 50-step-receptive-field causal TCN" (untested). Any such arm goes through
   the B.2 rule: val-only exploration → pre-registered decision → TEST once, ≥3/4 significant.
 
+## Published Shots Are V_rot-Poor Shots (2026-08-18) — a selection criterion that fights the target
+
+Asked whether the six μs-fetch shots that carry no publication could be swapped for published
+ones, the data gate answered instead of an argument. Of the **nine published shots we hold a CSV
+for, exactly one passes** — #31921. Seven of the eight rejections are the *same* rejection,
+`vt_clean_n >= 60`: #31873 and #31923 have **one** independent V_rot value each, #31097 one,
+#31888 one, #32027 eight, #31276 ten, #31357 forty-four. (#31359 fails elsewhere, on
+`ti_clean_frac`.)
+
+The discharges that get written up are edge/MHD experiments — FIRE mode, ELM suppression, error
+fields, disruption — and in those the CES rotation fit is largely absent or held. Whatever the
+instrumental cause, the consequence is a rule for future selections: **selecting shots for
+publication status selects against V_rot supervision**, the target this project is already
+weakest on. Publication buys external validation (a figure whose physics an independent group
+already characterised), not training value, and the two must be traded explicitly, never
+conflated. The `hires_shots` list therefore admits #31873 / #32027 on published physics *while
+recording that they fail the gate*, and keeps the six data-picked shots.
+
+Related, from the same pass: per-shot skill vs PCHIP correlates **+0.27 with `ti_std`** and
+**+0.23 with `ti_transient`** for CES_TI (the model earns its keep where T_i actually moves;
+flat stretches are where interpolation is already optimal) and **−0.31 with `vt_std`** for
+CES_VT (it loses *more* where rotation moves). n = 288 / 179 shots, shot-level aggregates, so
+this is structure to test at the segment level, not a headline. It is also the sharpest
+statement yet of why NBI torque is the missing input rather than a missing layer.
+
+## Searching The Fusion Literature: What Actually Works (2026-08-18)
+
+Four routes were measured on this repo's own known-positive shots, which is the only way to
+tell a real absence from an unreachable source:
+
+- **OpenAlex `fulltext.search:KSTAR <shot>`** — the strongest tool. 4/4 on positive controls,
+  and it reaches papers no downloader here can (it returned the IOP article `adacfc`, which has
+  never once been fetchable, independently corroborating a hand-read claim). Caveats: OpenAlex
+  meters the API (~a few hundred requests/day free, `Resets at midnight UTC`), so a 641-shot pass
+  must be resumable; and `title_and_abstract.search` sees only 456 works where `fulltext.search`
+  sees 2692 — the narrow filter is what hid the Nature ELM paper from the corpus.
+- **Nature/Springer** — `nature.com` HTML and `media.springernature.com` SI files download fine.
+  Supplementary material is worth crawling: it named three discharges (#31184/#31185/#31189)
+  that appear nowhere in the main text.
+- **IOP, AIP, Elsevier** — IOP serves a Radware CAPTCHA (to WebFetch, to scripts, and to browser
+  automation alike), AIP returns 403. **Do not try to work around the CAPTCHAs.** The papers are
+  frequently open access: sampling 60 unread relevant works found 38 OA. The barrier is a bot
+  wall, so "we could not download it" must never be written as "it is not in the literature".
+- **NASA ADS full-text search** — looked promising and is *not* usable: the positive control
+  returned 0 results, then the site switched to a human-verification page. Any zero it produced
+  is meaningless. Always run the positive control before believing a negative.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
