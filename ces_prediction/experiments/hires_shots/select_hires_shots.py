@@ -125,7 +125,19 @@ def blocks_of(t):
 def main_block(df):
     """Every CSV carries two sentinel rows (t = 0 s and t = 30 s) outside the plasma
     phase; the discharge itself is one contiguous block. That block is also the window a
-    microsecond fetch would request, so everything is measured on it."""
+    microsecond fetch would request, so everything is measured on it.
+
+    The sentinels are dropped by what they ARE -- edge rows with neither CES target -- and
+    not by the GAP_S gap alone. Gap is not sufficient: in #31937 the discharge begins at
+    0.402 s, so the t = 0 sentinel sits 0.402 s away, inside GAP_S, and was absorbed into
+    the main block. That put `t_start = 0.000` on the fetch request: 0.4 s of time that
+    exists in no diagnostic, asked for because a padding row looked contiguous."""
+    tgt = [c for c in ("CES_TI", "CES_VT") if c in df.columns]
+    if tgt:
+        observed = df[tgt].notna().any(axis=1).to_numpy()
+        if observed.any():
+            first, last = observed.argmax(), len(observed) - 1 - observed[::-1].argmax()
+            df = df.iloc[first:last + 1].reset_index(drop=True)
     t = df["time"].to_numpy(float)
     blk = blocks_of(t)
     if len(blk) == 0:
