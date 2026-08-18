@@ -106,9 +106,13 @@ def check_identity(new_npz, frozen_npz, seed):
     return {"identity_vs_frozen": "bit-identical"}
 
 
-def score_one(seed, contexts, smoke, resume):
+def score_one(seed, contexts, smoke, resume, out_tag="reach"):
+    """`out_tag` lets a later batch re-score the same frozen backbones at DIFFERENT rungs
+    without touching §8ac's artifacts: B.9 needs the truncated ladder on 7/15/31/63 to sit
+    beside its trained-at-reach ladder, and overwriting `.reach_s*` to get it would edit a
+    published result rather than add to it."""
     src = backbone_dir(seed)
-    out_dir = DATA / (f".reach_s{seed}" + ("_smoke" if smoke else ""))
+    out_dir = DATA / (f".{out_tag}_s{seed}" + ("_smoke" if smoke else ""))
     npz = out_dir / "comparison_errors_test.npz"
 
     for need in (src / "weights" / "seq_lstm.pth", src / "metrics.json",
@@ -185,9 +189,9 @@ FRACTION_FLOOR = 0.02
 PRACTICAL_EPS = 0.002
 
 
-def analyze(seed, contexts, smoke):
+def analyze(seed, contexts, smoke, out_tag="reach"):
     """Paired, shot-clustered: each ctx against the full-block inference path."""
-    out_dir = DATA / (f".reach_s{seed}" + ("_smoke" if smoke else ""))
+    out_dir = DATA / (f".{out_tag}_s{seed}" + ("_smoke" if smoke else ""))
     z = np.load(out_dir / "comparison_errors_test.npz")
     rng = np.random.default_rng(BOOTSTRAP_SEED)
     per_target = {}
