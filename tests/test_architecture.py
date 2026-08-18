@@ -160,3 +160,37 @@ def test_temporal_subset_sample_uses_previous_ces_only():
     # every observed history row has at least one observed CES target (TI or VT)
     assert torch.all(sample["ces_history"][: valid_steps - 1, 2:].sum(dim=1) >= 1.0)
     assert torch.all(sample["ces_history"][valid_steps:, :] == 0.0)
+
+
+def test_seq_family_is_causal_and_reach_bounded():
+    """Every B.9 arm must be strictly causal, and the bounded ones must actually be bounded.
+
+    `eval_seq._forward_truncated` gathers a window that can contain rows AFTER the row it
+    scores and then reads the output at that row's own index. That is only correct for a
+    causal operator, so a non-causal arm would silently score itself on the future. The
+    reach bound is checked the same way: perturbing a step further back than the receptive
+    field must leave the output untouched, otherwise "reach 63" is a label, not a property.
+    """
+    seq_dir = Path(__file__).resolve().parents[1] / "ces_prediction" / "experiments" / "seq"
+    sys.path.insert(0, str(seq_dir))
+    from seq_models import SEQ_MODELS
+    from seq_data import N_FEATURES
+
+    torch.manual_seed(0)
+    length, cut = 200, 150          # cut - receptive_field must stay > 0 below
+    x = torch.randn(1, length, N_FEATURES)
+    for name in ("v2", "tcn15", "tcn63", "xfmr63"):
+        model = SEQ_MODELS[name]().eval()
+        with torch.no_grad():
+            base = model(x)
+            future = x.clone()
+            future[:, cut + 1:] += 5.0
+            assert torch.equal(model(future)[:, :cut + 1], base[:, :cut + 1]), \
+                f"{name} is not causal: a future perturbation moved an earlier output"
+
+            rf = getattr(model, "receptive_field", None)
+            if rf is not None:
+                far = x.clone()
+                far[:, : cut - rf] += 5.0          # strictly older than the receptive field
+                assert torch.equal(model(far)[:, cut:cut + 1], base[:, cut:cut + 1]), \
+                    f"{name} reads past its declared receptive field of {rf}"

@@ -15,6 +15,8 @@ from model_seq import SeqCESLSTM
 from model_seq_v2 import SeqCESLSTMv2
 from model_seq_v3 import SeqCESLSTMv3
 from model_seq_b3 import SeqCESB3
+from model_seq_tcn import SeqCESTCN
+from model_seq_xfmr import SeqCESXfmr
 
 SEQ_MODELS = {
     "v1": SeqCESLSTM,
@@ -47,6 +49,13 @@ SEQ_MODELS = {
     "b3m7k": functools.partial(SeqCESB3, hidden_ti=32, hidden_vt=16, latent_ti=4, latent_vt=2),
     "b3m2k": functools.partial(SeqCESB3, hidden_ti=16, hidden_vt=8, latent_ti=3, latent_vt=2),
     "b3m1k": functools.partial(SeqCESB3, hidden_ti=8, hidden_vt=8, latent_ti=2, latent_vt=1),
+
+    # B.9 axis B family comparison. Receptive fields land on the reach-ladder rungs
+    # (2^(L+1)-1 for the TCN, the attention band for the transformer) so each arm
+    # pairs against a v2 rung trained at the same reach, not against an interpolation.
+    "tcn15": functools.partial(SeqCESTCN, layers=3),
+    "tcn63": functools.partial(SeqCESTCN, layers=5),
+    "xfmr63": functools.partial(SeqCESXfmr, reach=63),
 }
 
 

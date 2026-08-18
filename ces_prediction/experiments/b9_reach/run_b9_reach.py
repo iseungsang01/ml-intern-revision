@@ -56,16 +56,25 @@ ROWS_PER_BATCH = 4800      # = 16 blocks x 298 median rows, the backbone's own v
 PRACTICAL_EPS = 0.02       # PREREGISTRATION_B9.md §3.1
 
 
-def run_dir(reach, seed, smoke=False):
-    return DATA / (f".b9_v2r{reach}_s{seed}" + ("_smoke" if smoke else ""))
+def run_dir(tag, seed, smoke=False):
+    return DATA / (f".b9_{tag}_s{seed}" + ("_smoke" if smoke else ""))
 
 
 def backbone_dir(seed, smoke=False):
     return DATA / (f".b1_seqv2_s{seed}_i{seed}" + ("_smoke" if smoke else ""))
 
 
-def one_run(reach, seed, smoke, resume):
-    out_dir = run_dir(reach, seed, smoke)
+def one_run(reach, seed, smoke, resume, variant="v2", tag=None):
+    """One arm x one split, paired against both the backbone and the window control.
+
+    Axis B reuses this rather than copying it: the pairing, the env hygiene and the
+    resume logic are the parts a duplicated runner silently gets wrong (experiments/
+    README.md, "a batch that copies the constants is a batch that can drift out of
+    pairing"). `variant` picks the architecture, `reach` the trained/scored context,
+    `tag` names the output dir.
+    """
+    tag = tag or f"v2r{reach}"
+    out_dir = run_dir(tag, seed, smoke)
     ref_dir = backbone_dir(seed, smoke)
     split_dir = DATA / (f".b1_w2cut_split_s{seed}" + ("_smoke" if smoke else ""))
     control_out = DATA / (f".b1_w2cut_s{seed}" + ("_smoke" if smoke else ""))
@@ -73,8 +82,8 @@ def one_run(reach, seed, smoke, resume):
     paired_win = out_dir / "paired_vs_w2cut.json"
     if resume and not smoke and paired_ref.exists() and paired_win.exists():
         print(f"[b9a] === {out_dir.name}: complete, skipping (--resume)", flush=True)
-        return {"reach": reach, "seed": seed, "out_dir": str(out_dir),
-                "status": "ok", "resumed": True}
+        return {"reach": reach, "variant": variant, "tag": tag, "seed": seed,
+                "out_dir": str(out_dir), "status": "ok", "resumed": True}
     if not smoke and not (ref_dir / "comparison_errors_test.npz").exists():
         raise SystemExit(f"FATAL: B.1 backbone run missing: {ref_dir}")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -94,7 +103,7 @@ def one_run(reach, seed, smoke, resume):
         "CES_OUTPUT_DIR": str(out_dir),
         "CES_SPLIT_TAG": "test",
         "CES_CONTROL_METRICS": str(control_out / "metrics.json"),
-        "CES_SEQ_MODEL": "v2",
+        "CES_SEQ_MODEL": variant,
         "CES_PER_SHOT_NORM": "1",
         "CES_SEQ_EPOCHS": EPOCH_CAP,
         "CES_SEQ_TRAIN_CTX": str(reach),
@@ -104,7 +113,8 @@ def one_run(reach, seed, smoke, resume):
     if smoke:
         env.update({"CES_SEQ_EPOCHS": "2", "CES_SEQ_MAX_FILES": "40", "CES_SEQ_DEVICE": "cpu"})
 
-    record = {"reach": reach, "seed": seed, "out_dir": str(out_dir), "status": "ok",
+    record = {"reach": reach, "variant": variant, "tag": tag, "seed": seed,
+              "out_dir": str(out_dir), "status": "ok",
               "seq_batch": int(env["CES_SEQ_BATCH"])}
     start = time.time()
     print(f"[b9a] === {out_dir.name} (batch={env['CES_SEQ_BATCH']} blocks)", flush=True)
@@ -129,12 +139,12 @@ def one_run(reach, seed, smoke, resume):
                         artifacts=(out_dir / "bootstrap_summary.json",)):
             record["status"] = "bootstrap_failed"
             return record
-        for ref, tag, dst in ((ref_dir, "vs_backbone", paired_ref),
-                              (control_out, "vs_w2cut", paired_win)):
+        for ref, pair_tag, dst in ((ref_dir, "vs_backbone", paired_ref),
+                                   (control_out, "vs_w2cut", paired_win)):
             if not run_step([PAIRED, "--a", out_dir / "comparison_errors_test.npz",
                              "--b", ref / "comparison_errors_test.npz", "--out", dst],
-                            env, log, f"paired({tag})", artifacts=(dst,)):
-                record["status"] = f"paired_{tag}_failed"
+                            env, log, f"paired({pair_tag})", artifacts=(dst,)):
+                record["status"] = f"paired_{pair_tag}_failed"
                 return record
     finally:
         record["seconds"] = round(time.time() - start, 1)
@@ -143,6 +153,7 @@ def one_run(reach, seed, smoke, resume):
         m = json.loads((out_dir / "metrics.json").read_text())
         record["best_epoch"] = m.get("best_epoch")
         record["train_ctx"] = m.get("train_ctx")
+        record["params"] = m.get("n_params")
     except Exception:
         pass
     try:
