@@ -1,4 +1,4 @@
-# Ten shots to re-acquire at microsecond resolution
+# Twelve shots to re-acquire at microsecond resolution
 
 Not a controlled experiment — a **data-acquisition selection**. Two independent screens run
 over all 641 shot CSVs, and the final list is the union of what they each say:
@@ -10,7 +10,13 @@ py ces_prediction/experiments/hires_shots/literature_crosscheck.py --report   # 
 ```
 
 Outputs next to the scripts: `shot_metrics.csv` (all 641), `shot_scored.csv` (ranked),
-`literature_hits.json`, `FINAL_10.csv`, `FINAL_10.png`.
+`literature_hits.json`, `FINAL_12.csv` (the request list), `FINAL_10.csv` / `FINAL_10.png`
+(the ten that carry a learning role).
+
+**Twelve shots, ten roles.** Ten shots carry the frozen protocol roles (3 test / 7 pool).
+Two more — the same-session partners of #31921 and #31359 — are fetched as *companions*:
+never trained on, never in the bootstrap, present so that two published paired comparisons
+can be made at full bandwidth. See **The two companions** below.
 
 ---
 
@@ -119,21 +125,45 @@ still 3 test / 4 val / 3 train.
 
 `t_start`–`t_end` is the discharge's contiguous block — the window to request.
 
-| # | shot | split (s42) | window [s] | T_i / V_rot | MC RMS (trim, kurt) | why |
-|---|---|---|---|---|---|---|
-| 1 | **31921** | **test** (2 seeds) | 3.51–8.61 | 446 / 296 | 5.0 (0.82, 15) | **published ×2 (FIRE mode, CES edge profiles + BES bispectral WCM)** *and* the best data shot we have — rank 2/121, MC↔turbulence coupling 0.575, the highest of all 641 |
-| 2 | **31873** | **test** | 5.41–13.08 | 748 / — | 2.6 (0.85, 40) | **published, Nat. Commun. 2024** — automated ELM suppression; 7.7 s window covering the whole suppressed phase |
-| 3 | **31114** | **test** | 4.00–9.08 | 506 / 311 | **8.0** (0.88, 11) | largest clean MC amplitude among test shots; model gains on **both** targets (+0.26 T_i, +0.16 V_rot vs PCHIP) |
-| 4 | **31359** | val | 4.00–6.98 | 234 / 246 | 8.3 (0.73, 32) | **published, Nat. Commun. 2024** — no ERMP → ETB + ELMs; 246 V_rot values and the liveliest BES/ECEI of the published set |
-| 5 | **32027** | val | 2.21–6.19 | 396 / 8 | 4.2 (0.86, 7.8) | **published (PanoMHD)** — clear L/H transition with **100–300 kHz cross-power / cross-phase**: exactly the band a μs fetch buys. Largest level step of the ten (0.98) |
-| 6 | **32097** | val | 3.01–9.49 | 631 / 221 | **17.3** (0.87, 17) | strongest Mirnov shot overall (rank 1/121): two-coil coherence **0.93**, sustained mode 22 % |
-| 7 | **31745** | val | 3.01–5.99 | 234 / 216 | 16.6 (0.79, 11) | **two-coil envelope coherence 0.96 — the highest of any candidate**, sustained mode 32 %, level step 0.97. Carries the coherent-mode role the dropped shots played |
-| 8 | **31604** | train | 6.01–13.39 | 716 / 425 | **21.3** (**0.98**, **−0.9**) | the cleanest large MC in the dataset — near-Gaussian, spike-free, steady-state mode: ideal for spectral / mode-number analysis once phase is restored |
-| 9 | **31074** | train | 0.50–7.99 | 736 / 446 | 4.3 (0.74, 36) | balanced all-round: coherence 0.74, 7.5 s, 446 V_rot |
-| 10 | **31937** | train | 0.00–15.24 | **1479 / 722** | 1.7 (0.83, 56) | longest discharge by 2×, most labels of any shot; MC is quiet → the negative control that makes "does MC information help?" answerable |
+| # | shot | split (s42) | window [s] | T_i / V_rot | MC RMS (trim, kurt) | paper | why |
+|---|---|---|---|---|---|---|---|
+| 1 | **31921** | **test** (2 seeds) | 3.51–8.61 | 446 / 296 | 5.0 (0.82, 15) | [P1] fig.10 · [P2] fig.3, 7–9 | **published ×2 (FIRE mode, CES edge profiles + BES bispectral WCM)** *and* the best data shot we have — rank 2/121, MC↔turbulence coupling 0.575, the highest of all 641 |
+| 2 | **31873** | **test** | 5.41–13.08 | 748 / — | 2.6 (0.85, 40) | [P3] fig.5 | **published, Nat. Commun. 2024** — automated ELM suppression; 7.7 s window covering the whole suppressed phase |
+| 3 | **31114** | **test** | 4.00–9.08 | 506 / 311 | **8.0** (0.88, 11) | — | largest clean MC amplitude among test shots; model gains on **both** targets (+0.26 T_i, +0.16 V_rot vs PCHIP) |
+| 4 | **31359** | val | 4.00–6.98 | 234 / 246 | 8.3 (0.73, 32) | [P4] fig.6 | **published, Nat. Commun. 2024** — no ERMP → ETB + ELMs; 246 V_rot values and the liveliest BES/ECEI of the published set |
+| 5 | **32027** | val | 2.21–6.19 | 396 / 8 | 4.2 (0.86, 7.8) | [P5] fig.7 | **published (PanoMHD)** — clear L/H transition with **100–300 kHz cross-power / cross-phase**: exactly the band a μs fetch buys. Largest level step of the ten (0.98) |
+| 6 | **32097** | val | 3.01–9.49 | 631 / 221 | **17.3** (0.87, 17) | — | strongest Mirnov shot overall (rank 1/121): two-coil coherence **0.93**, sustained mode 22 % |
+| 7 | **31745** | val | 3.01–5.99 | 234 / 216 | 16.6 (0.79, 11) | — | **two-coil envelope coherence 0.96 — the highest of any candidate**, sustained mode 32 %, level step 0.97. Carries the coherent-mode role the dropped shots played |
+| 8 | **31604** | train | 6.01–13.39 | 716 / 425 | **21.3** (**0.98**, **−0.9**) | — | the cleanest large MC in the dataset — near-Gaussian, spike-free, steady-state mode: ideal for spectral / mode-number analysis once phase is restored |
+| 9 | **31074** | train | 0.50–7.99 | 736 / 446 | 4.3 (0.74, 36) | — | balanced all-round: coherence 0.74, 7.5 s, 446 V_rot |
+| 10 | **31937** | train | 0.00–15.24 | **1479 / 722** | 1.7 (0.83, 56) | — | longest discharge by 2×, most labels of any shot; MC is quiet → the negative control that makes "does MC information help?" answerable |
 
-Four published shots, six picked by score; smallest shot-number gap in the list is **16**.
-Three test shots, so a paper figure has a legitimate held-out case.
+Four published shots, six picked by score; smallest shot-number gap among these ten is
+**16**. Three test shots, so a paper figure has a legitimate held-out case.
+
+## The two companions (+2 = 12)
+
+Screen 3 demoted two published shots for same-session overlap. With room for twelve they
+come back — not as extra training data, but as the second half of two paired comparisons.
+
+| # | shot | pairs with | window [s] | T_i / V_rot | MC RMS (trim, kurt) | paper | why |
+|---|---|---|---|---|---|---|---|
+| 11 | **31923** | 31921 (test) | 3.51–7.99 | 390 / 1 | 5.8 (0.83, 12) | [P2] fig.2 | **published** — L-mode → FIRE transition with a weakly coherent mode at **~50 kHz on `BES_0206`**, r/a = 0.95. Highest sustained-mode fraction of any shot in this document (34 %), MC↔BES coupling 0.42 |
+| 12 | **31357** | 31359 (pool) | 3.00–6.98 | 396 / 44 | 5.4 (0.85, 8.8) | [P4] fig.6 | **published** — **with** n = 1 ERMP, so the H-mode transition is avoided. The paper's own controlled contrast against #31359: same target plasma, one knob changed. Two-coil coherence 0.87 |
+
+**Why the redundancy argument does not survive the fetch.** Screen 3's distances are computed on the 100 Hz grid. #31921/#31923 sit at the 0.03rd percentile there — but what the papers actually use to tell those two discharges apart is a mode at ~50 kHz, three orders of magnitude above that grid's Nyquist frequency. *Redundant in the band we already have* is not *redundant in the band we are buying*. The ERMP pair is not even redundant at 100 Hz: #31357/#31359 sit at the **25.8th** percentile of summary distance and 202 eV apart in mean T_i, while their calibration distance is at the **2.2nd** — physically different, instrumentally identical, which is exactly what a controlled contrast wants.
+
+**They stay out of the learning structure.** A companion in train while its partner is test would put near-identical calibration on both sides of the split — the leakage screen 3 exists to prevent. They stay out of the bootstrap too: two of k test clusters drawn from one session is the k = 2 artifact again. `folds.py` asserts both.
+
+**What they buy, beyond the physics.** Screen 3 *inferred* session leakage from summary distances. Holding both members of a 0.03rd-percentile pair turns that inference into a measurement: train with the companion in, and the change in test skill on its partner is the leakage, in the units the gate reports.
+
+### Papers referenced
+
+* **[P1]** *On FIRE mode in KSTAR*, Nucl. Fusion — `10.1088/1741-4326/ae332f`
+* **[P2]** *Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR*, Nucl. Fusion — `10.1088/1741-4326/adacfc`
+* **[P3]** *Highest fusion performance without harmful edge energy bursts in tokamak*, Nat. Commun. **15** (2024) — `10.1038/s41467-024-48415-w`
+* **[P4]** *Tailoring tokamak error fields to control plasma instabilities and transport*, Nat. Commun. **15** (2024) — `10.1038/s41467-024-45454-1`
+* **[P5]** *PanoMHD*, arXiv:`2603.02672`
 
 ### Published shots left out
 
@@ -141,8 +171,8 @@ Three test shots, so a paper figure has a legitimate held-out case.
   (kurtosis 363). Spike, not mode.
 * **#31888** — disruption example; same problem (trim ratio 0.36, kurtosis 105), and a
   disruption tail corrupts the CES labels.
-* **#31923**, **#31357** — dropped for same-session overlap, not for quality. If a second
-  discharge from either session is ever wanted, these are the ones to add.
+* **#31923**, **#31357** — demoted for same-session overlap, not for quality, and now
+  restored as **companions** (see above): fetched, but with no learning role.
 
 ### Why not simply the top ten by score
 
@@ -157,14 +187,15 @@ Three test shots, so a paper figure has a legitimate held-out case.
 
 ---
 
-## How the ten are used: 7-fold rotation, and why test stays at 3
+## How the ten role holders are used: 7-fold rotation, and why test stays at 3
 
 `folds.py` fixes the structure; `power_analysis.py` is why it looks like this.
 
 ```
-test  = 31921 · 31873 · 31114        frozen, never trained on, never used for selection
-pool  = the other seven, rotated leave-one-shot-out
-fold  = train 6 / val 1, seven folds, each pool shot is the val shot exactly once
+test      = 31921 · 31873 · 31114    frozen, never trained on, never used for selection
+pool      = the other seven, rotated leave-one-shot-out
+fold      = train 6 / val 1, seven folds, each pool shot is the val shot exactly once
+companion = 31923 · 31357           fetched only; in no fold and in no bootstrap
 ```
 
 Final model: run all seven folds, take the **median stopping epoch**, refit on all seven
@@ -215,6 +246,8 @@ CES_TI 34 % → 49.5 %) did not manufacture the conclusion.
 
 ## Caveats
 
+* #31923 and #31357 are **companions**: fetch them, analyse them, but never train on them
+  and never put them in the gate's test set. `folds.py::_check` enforces both.
 * #31604, #31074 and #31937 are **training** shots of the confirmed protocol. Raw data from
   them is fine for method development and physics figures, but a headline performance number
   must not be drawn on them.
