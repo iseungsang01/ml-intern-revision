@@ -69,7 +69,7 @@ def _forward_truncated(model, x, ctx, max_batch=256):
     return out
 
 
-def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=()):
+def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=(), primary_ctx=0):
     """ctx -> {name -> {float(time) -> (ti_phys, vt_phys)}}, one causal pass per block.
 
     `contexts` is the sec. 8ac reach ladder; "full" (whole block, the published
@@ -113,6 +113,12 @@ def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=()):
                 if needs_obs:
                     obs = torch.from_numpy(blk["mask"]).unsqueeze(0).to(device)
                     preds["full"] = model(x, None, obs)[0]
+                elif primary_ctx:
+                    # B.9 axis A: this arm was TRAINED at reach `primary_ctx`, so its
+                    # primary inference path is the truncated one. The key stays "full"
+                    # because it means "this arm's own path", not "whole block" -- the
+                    # reach is recorded as `eval_ctx` in the report.
+                    preds["full"] = _forward_truncated(model, x, primary_ctx)
                 else:
                     preds["full"] = model(x)[0]               # (L, 2) normalized
                 for ctx in contexts:
@@ -174,7 +180,18 @@ def compare():
     contexts = [int(c) for c in raw_ctx.split(",") if c.strip()] if raw_ctx else []
     if any(c < 1 for c in contexts):
         raise SystemExit(f"CES_SEQ_CONTEXTS must be >= 1, got {contexts}")
-    pred_lookups = build_pred_lookup(data_dir, sorted(eval_files), my_stats, device, contexts)
+    # B.9 axis A: score the arm at the reach it was trained at. Default 0 keeps the
+    # published whole-block path, so every frozen artifact reproduces bit-identically.
+    primary_ctx = int(os.getenv("CES_SEQ_EVAL_CTX", "0"))
+    trained_ctx = metrics.get("train_ctx") or 0
+    if primary_ctx != trained_ctx:
+        raise SystemExit(
+            f"FATAL: CES_SEQ_EVAL_CTX={primary_ctx} but this run was trained at "
+            f"train_ctx={trained_ctx or 'full'} -- scoring a reach the arm was not "
+            f"trained for is the confound B.9 exists to remove; refusing."
+        )
+    pred_lookups = build_pred_lookup(data_dir, sorted(eval_files), my_stats, device,
+                                     contexts, primary_ctx)
     ladder = ["full", *contexts]
 
     target_mean = torch.as_tensor(stats["target"]["mean"], dtype=torch.float32)
@@ -276,6 +293,7 @@ def compare():
         "split": split_tag,
         "eval_samples": len(eval_indices),
         "window_size": window_size,
+        "eval_ctx": primary_ctx or None,
         "headline_baseline": HEADLINE_BASELINE,
         "units": "physical CES (raw CSV units)",
         "note": "held-out TEST split (seq-LSTM full-grid masked-loss experiment)",

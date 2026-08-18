@@ -37,6 +37,31 @@ from seq_data import load_grid_files, fit_stats, build_blocks  # noqa: E402
 from seq_models import SEQ_MODELS  # noqa: E402  (single registry)
 
 
+def chunk_blocks(blocks, ctx):
+    """Split every block into non-overlapping `ctx`-step segments (B.9 axis A).
+
+    Training a model "at reach r" means it never carries recurrent state across more
+    than r steps, so the honest implementation is truncated BPTT with the state reset at
+    every segment boundary — which is exactly what feeding non-overlapping length-r
+    sequences does. Every row stays supervised; its position inside a segment decides how
+    much context it gets (1..r), so the model learns to operate at every context length
+    up to r, and eval at exactly r (`CES_SEQ_EVAL_CTX`, sliding) is in-distribution.
+
+    No input channel is touched. `seq_data.build_blocks` already computed carry-forward /
+    staleness over the WHOLE block, and the `W = 2` window control receives exactly that
+    carried history, so this cuts the *recurrent* reach only — the same isolation the
+    §8ac probe makes at eval time, now applied during training as §8ae requires.
+    """
+    if ctx < 1:
+        raise SystemExit(f"CES_SEQ_TRAIN_CTX must be >= 1, got {ctx}")
+    out = []
+    for b in blocks:
+        n = b["x"].shape[0]
+        for s in range(0, n, ctx):
+            out.append({k: v[s:s + ctx] for k, v in b.items()})
+    return out
+
+
 def batched(blocks, batch_size, device, shuffle, rng):
     order = list(range(len(blocks)))
     if shuffle:
@@ -105,6 +130,9 @@ def main():
     if variant not in SEQ_MODELS:
         raise SystemExit(f"CES_SEQ_MODEL must be one of {sorted(SEQ_MODELS)}, got {variant!r}")
     per_shot = os.getenv("CES_PER_SHOT_NORM", "0") == "1"
+    # B.9 axis A: reach the model is TRAINED at (0 = whole block, the published
+    # regime). PREREGISTRATION_B9.md sec.2.1 -- eval must set CES_SEQ_EVAL_CTX to match.
+    train_ctx = int(os.getenv("CES_SEQ_TRAIN_CTX", "0"))
     device = torch.device(os.getenv("CES_SEQ_DEVICE",
                                     "cuda" if torch.cuda.is_available() else "cpu"))
 
@@ -123,10 +151,14 @@ def main():
     make = lambda names: [b for n in names if n in grid
                           for b in build_blocks(grid[n], dims, stats, per_shot_norm=per_shot)]
     train_blocks, val_blocks = make(train_names), make(val_names)
+    if train_ctx:
+        # Both sides, so the early-stopping signal describes the regime being trained.
+        train_blocks = chunk_blocks(train_blocks, train_ctx)
+        val_blocks = chunk_blocks(val_blocks, train_ctx)
     n_obs = sum(int(b["mask"].sum()) for b in train_blocks)
     print(f"[seq] blocks train={len(train_blocks)} val={len(val_blocks)} "
           f"train-labels={n_obs:,} drop_stuck={int(drop_stuck)} per_shot={int(per_shot)} "
-          f"model={variant} device={device.type} "
+          f"model={variant} train_ctx={train_ctx or 'full'} device={device.type} "
           f"({_time.time() - t0:.0f}s load)")
 
     model = SEQ_MODELS[variant]().to(device)
@@ -161,6 +193,7 @@ def main():
     metrics = {
         "experiment": "seq_lstm_full_grid_masked_loss",
         "seq_model": variant,
+        "train_ctx": train_ctx or None,
         "per_shot_input_norm": per_shot,
         "normalization": {"stats": {g: {k: v.tolist() for k, v in gs.items()}
                                     for g, gs in stats.items()}},
