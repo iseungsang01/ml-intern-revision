@@ -6,12 +6,13 @@ over all 641 shot CSVs, and the final list is the union of what they each say:
 ```bash
 py ces_prediction/experiments/hires_shots/select_hires_shots.py       # data screen (641 shots)
 py ces_prediction/experiments/hires_shots/literature_crosscheck.py    # literature screen
-py ces_prediction/experiments/hires_shots/literature_crosscheck.py --report   # verified table only
+py ces_prediction/experiments/hires_shots/literature_crosscheck.py --report          # verified table only
+py ces_prediction/experiments/hires_shots/literature_crosscheck.py --fulltext-index  # index screen (resumable)
 ```
 
 Outputs next to the scripts: `shot_metrics.csv` (all 641), `shot_scored.csv` (ranked),
-`literature_hits.json`, `FINAL_12.csv` (the request list), `FINAL_10.csv` / `FINAL_10.png`
-(the ten that carry a learning role).
+`literature_hits.json`, `fulltext_index_hits.json`, `FINAL_12.csv` (the request list),
+`FINAL_10.csv` / `FINAL_10.png` (the ten that carry a learning role).
 
 **Twelve shots, ten roles.** Ten shots carry the frozen protocol roles (3 test / 7 pool).
 Two more — the same-session partners of #31921 and #31359 — are fetched as *companions*:
@@ -72,20 +73,82 @@ So the number to quote is **46 fusion full texts of ~248 relevant papers (19 %)*
 and the honest statement is not "these shots are not in the literature" but **"these shots are
 not in the 46 fusion papers we can read in full."**
 
-**Three things this screen still cannot see**, each demonstrated rather than guessed:
+### Two routes added 2026-08-18, because "we could not download it" is not a finding
 
-* **Supplementary material.** The Supplementary Information of `10.1038/s41467-024-45454-1`
-  names #31184, #31185 and #31189 — none of which appear in the main text the sweep scanned.
-  A publisher-specific supplement crawler is the fix.
+The PDF sweep is bounded by what this machine can fetch, and that bound was doing more work
+than the conclusion could bear. Probing 60 of the unread relevant papers showed **38 are open
+access**: the obstacle is a bot wall, not a paywall. Two routes get behind it.
+
+**1. Supplementary material (`springer_fulltext`).** Measured, not assumed: nature.com HTML
+and `media.springernature.com` SI files both serve this script; IOP answers with its Radware
+challenge and AIP with 403. So the crawler covers `10.1038/` DOIs and says so. It reproduces
+by machine what had been entered by hand — #31873 in the 43-page supplement of
+`s41467-024-48415-w` ("Equilibrium parameters of #31873 with integrated ML-3D optimization"),
+and **#31184, #31185, #31189 in the 27-page supplement of `s41467-024-45454-1`**, confirming
+both that the SI gap was real and that none of those three is in our 641. It adds no shot we
+hold. A dedupe bug had to be fixed first: merging an arXiv preprint with its journal version
+kept the arXiv DOI, so the Nature ELM paper — one of this screen's most important hits — was
+invisible to any `10.1038/` test.
+
+**2. The full-text index itself (`--fulltext-index`).** OpenAlex indexes the body text of far
+more papers than we can download, and it can be asked about a shot number directly. Validated
+on four shots already known to be published, it returns exactly the right papers — including
+`10.1088/1741-4326/adacfc`, an IOP article this script has never once been able to fetch, which
+independently corroborates the hand-read #31921/#31923 claims. Two guards keep it honest: hits
+older than 2022 are dropped (a paper predating the campaign cannot cite its discharges), and
+`control_n` five-digit numbers from outside the campaign range are queried the same way, so the
+screen reports its own coincidence rate instead of assuming it is zero.
+
+This pass is **incomplete**: OpenAlex meters the API and 641 shots exceeds one day's free
+allowance (`429 ... Resets at midnight UTC`). The scan is resumable — rerun it and it picks up
+where the budget stopped. A pilot covering #30801–#31165 produced one new candidate,
+**#31097** (*Observation of edge kink-like modes induced by resonant magnetic perturbations in
+KSTAR plasmas*, Phys. Plasmas **32** 012303 (2025), `10.1063/5.0237640`). Its context is
+**unverified** — AIP returns 403, so the sentence around the number cannot be read, and this
+screen's rule is that a five-digit number is not believed until it is. It changes nothing about
+the list in any case: #31097 fails the data gate on `vt_clean_n = 1`.
+
+**Two things this screen still cannot see**, each demonstrated rather than guessed:
+
 * **Bot-blocked publishers.** IOP serves this script a Radware challenge, so the two
   FIRE-mode papers had to be read through their article pages. Doing that is what revealed
-  that **#31923 is used by both of them**, which the PDF sweep could never have found.
+  that **#31923 is used by both of them**, which the PDF sweep could never have found. IOP,
+  AIP and Elsevier supplements remain unread, and their CAPTCHAs are not to be worked around.
 * **The campaign is larger than our sample.** #31184/#31185/#31189 sit inside our shot-number
   range but we hold no CSV for them. Our 641 shots are a sample of the 2022 campaign
   (89 contiguous sessions), not the campaign itself, so "published shots in the campaign" and
   "published shots we could fetch" are different sets.
 
 ---
+
+### Being published and being usable are anti-correlated, and the gate says so
+
+The obvious follow-up to screen 1 is to swap the six shots that carry no paper for published
+ones. Running that question through the gate answers it: of the **nine published shots we hold
+a CSV for, exactly one passes** — #31921.
+
+| shot | why the gate rejects it | independent V_rot labels |
+|---|---|---|
+| #31873, #31923 | `vt_clean_n >= 60` | **1** |
+| #31097 (new candidate) | `vt_clean_n >= 60` | **1** |
+| #31888 | `vt_clean_n`, and MC is a spike (trim 0.36, kurt 105) | 1 |
+| #32027 | `vt_clean_n`, `ecei_ac1 > 0.2` | 8 |
+| #31276 | `vt_clean_n`, and MC is a spike (trim 0.32, kurt 363) | 10 |
+| #31357 | `vt_clean_n >= 60` | 44 |
+| #31359 | `ti_clean_frac >= 0.85` (0.79) | 246 |
+| #31921 | — passes everything, rank 2/121 | 296 |
+
+Seven of the eight rejections are the same rejection: **the discharges that get written up
+have essentially no fitted CES rotation.** That is not a coincidence to be explained away here,
+but it is a constraint with teeth — selecting for publications selects against V_rot
+supervision, which is the target this project is already weakest on.
+
+So no substitution is made. Every published shot we can reach is either already in the list
+(#31921, #31873, #31359, #32027 with roles; #31923, #31357 as companions) or was rejected on a
+measured artifact (#31276, #31888) and would be a downgrade. The six unpublished shots stay:
+they are rank 1 (#32097), 9 (#31074), 13 (#31937), 22 (#31604), 37 (#31114) and the
+highest two-coil coherence in the dataset (#31745). **The 3 test / 7 pool structure, and the
+train 6 / val 1 / test 3 folds it produces, are unchanged** — `folds.py::_check` asserts both.
 
 ## Screen 2 — would the raw data be worth fetching?
 
@@ -195,11 +258,35 @@ come back — not as extra training data, but as the second half of two paired c
 
 ### Papers referenced
 
-* **[P1]** *On FIRE mode in KSTAR*, Nucl. Fusion — `10.1088/1741-4326/ae332f`
-* **[P2]** *Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR*, Nucl. Fusion — `10.1088/1741-4326/adacfc`
-* **[P3]** *Highest fusion performance without harmful edge energy bursts in tokamak*, Nat. Commun. **15** (2024) — `10.1038/s41467-024-48415-w`
-* **[P4]** *Tailoring tokamak error fields to control plasma instabilities and transport*, Nat. Commun. **15** (2024) — `10.1038/s41467-024-45454-1`
-* **[P5]** *PanoMHD*, arXiv:`2603.02672`
+Every record below was re-resolved 2026-08-18 — the four journal articles through the Crossref
+API (title, journal, volume, article number and year as printed here) and the two preprints
+through the arXiv API — so the links are checked, not transcribed.
+
+* **[P1]** *On FIRE mode in KSTAR*, Nucl. Fusion **66** 026049 (2026) —
+  <https://doi.org/10.1088/1741-4326/ae332f>
+* **[P2]** *Experimental identification of I-mode characteristics at the edge of FIRE mode in
+  KSTAR*, Nucl. Fusion **65** 036003 (2025) — <https://doi.org/10.1088/1741-4326/adacfc>
+* **[P3]** *Highest fusion performance without harmful edge energy bursts in tokamak*,
+  Nat. Commun. **15** 3990 (2024) — <https://doi.org/10.1038/s41467-024-48415-w>
+  (preprint: <https://arxiv.org/abs/2405.05452>)
+* **[P4]** *Tailoring tokamak error fields to control plasma instabilities and transport*,
+  Nat. Commun. **15** 1275 (2024) — <https://doi.org/10.1038/s41467-024-45454-1>
+* **[P5]** *PanoMHD: Multimodal Modelling of Plasma Dynamics towards Tokamak Control*,
+  arXiv:2603.02672 (2026) — <https://arxiv.org/abs/2603.02672>
+* **[P6]** *Enhancing Disruption Prediction through Bayesian Neural Network in KSTAR*,
+  arXiv:2312.12979 (2023) — <https://arxiv.org/abs/2312.12979> (source of the rejected #31888)
+
+Which shot each link belongs to:
+
+| shot | papers |
+|---|---|
+| **31921** | [P1] fig.10 · [P2] fig.3, 7–9 |
+| **31923** | [P1] fig.11–13 · [P2] fig.2 |
+| **31873** | [P3] fig.5 (and its Supplementary Information) |
+| **31359** | [P4] fig.6 (without ERMP) |
+| **31357** | [P4] fig.6 (with ERMP) |
+| **32027** | [P5] fig.7 |
+| 31114, 31745, 32097, 31604, 31074, 31937 | none found — see the coverage statement above |
 
 ### Published shots left out
 

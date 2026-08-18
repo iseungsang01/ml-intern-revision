@@ -160,6 +160,28 @@
     "eld to the edge resonant ﬁeld at Time [s] Loop voltage [V] i [keV] 3D [kA] α [A.U.] Plasma current [MA] tot [10 MW] e [1019m−3] ETB forma\u0002on ETB forma\u0002on n=1 ERMP With n=1 ERMP 1[kHz] 2[kHz] Without n=1 ERMP Without n=1 ERMP shot 31357, 31359 1[kHz] 1[kHz] N~0.92 shot 31357 shot 31359 shot 31357 N~0.92 N~0.92 Without n=1 ERMP n=1 ERMP shot 31357, 31359 ϕ [krad/s] With n=1 ERMP Without n=1 ERMP i [keV] a b c N~0.91 N~0.53 N~0.39 N~0.04 − Fig. 6 | Avoidance of an H-mode transition with an ERMP. a From top to bottom: The time evolution of plasma current, total"
    ],
    "false_positive": null
+  },
+  {
+   "shot": 31276,
+   "title": "Tailoring tokamak error fields to control plasma instabilities and transport [main text, HTML]",
+   "doi": "https://doi.org/10.1038/s41467-024-45454-1",
+   "year": 2024,
+   "n_mentions": 1,
+   "context": [
+    "xed to raise the edge resonant field above the ELM suppression thresholds, which is taken using a single empirical operating point from the reference discharge (#26014). Note that this approach can work even without any empirical threshold, as shown in another example (Fig. 3 , #31276). Bicoherence of density fluctuation Density fluctuations ( \\(\\tilde{n}\\) ) for the bispectral analysis are measured with beam emission spectroscopy (BES) in KSTAR. The bispectral analysis of the conditionally ensemble-averaged BES signal is commonly used to show the three-wave"
+   ],
+   "false_positive": null
+  },
+  {
+   "shot": 31359,
+   "title": "Tailoring tokamak error fields to control plasma instabilities and transport [main text, HTML]",
+   "doi": "https://doi.org/10.1038/s41467-024-45454-1",
+   "year": 2024,
+   "n_mentions": 1,
+   "context": [
+    "ode scenario in KSTAR, and it has improved core confinement with a core ion temperature up to 10 k e V 38 . However, the improved core confinement is difficult to sustain without an ERMP and vanishes with the further development of an ETB. A discharge without an n = 1 ERMP (shot 31359) begins to form an ETB in density at 5.5 s , as indicated by the increase of \\({\\bar{n}}_{{{{{{{{\\rm{e}}}}}}}}}\\) , β N and \\(\\tilde{n}\\) bicoherence. The formation of the ETB then leads to ELMs as shown by the D α spikes. After the H-mode transition, as shown in Fig. 6 c, the c"
+   ],
+   "false_positive": null
   }
  ],
  "n_papers": 387,
@@ -168,6 +190,7 @@
   "by_source": {
    "cache": 76
   },
+  "n_supplementary_targets": 4,
   "n_offtopic_fulltext": 30,
   "n_relevant_fulltext": 46,
   "n_relevant_population": 248,
@@ -243,14 +266,14 @@
     "why": "no pdf link"
    },
    {
-    "title": "Wall conditioning effects of boron powder injection in KSTAR with a tungsten divertor",
-    "doi": "https://doi.org/10.1088/1741-4326/adf123",
-    "why": "no pdf link"
-   },
-   {
     "title": "Tailoring resonant magnetic perturbation to optimize fast-ion confinement during ELM control in KSTAR",
     "doi": "https://doi.org/10.1088/1741-4326/ad0161",
     "why": "download blocked"
+   },
+   {
+    "title": "Wall conditioning effects of boron powder injection in KSTAR with a tungsten divertor",
+    "doi": "https://doi.org/10.1088/1741-4326/adf123",
+    "why": "no pdf link"
    },
    {
     "title": "Energetic passing particle-driven instabilities and their impact on discharge evolution in KSTAR",
@@ -323,11 +346,6 @@
     "why": "download blocked"
    },
    {
-    "title": "RF conditioning to suppress multipactor discharge for helicon wave current drive in KSTAR",
-    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113782",
-    "why": "no pdf link"
-   },
-   {
     "title": "Toroidal rotation dynamics in KSTAR ohmic plasmas",
     "doi": "https://doi.org/10.1088/1741-4326/ac8a5e",
     "why": "download blocked"
@@ -335,6 +353,11 @@
    {
     "title": "Design of a slotted waveguide antenna to launch lower hybrid fast wave in the KSTAR Tokamak",
     "doi": "https://doi.org/10.1016/j.fusengdes.2023.113531",
+    "why": "no pdf link"
+   },
+   {
+    "title": "RF conditioning to suppress multipactor discharge for helicon wave current drive in KSTAR",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113782",
     "why": "no pdf link"
    },
    {
@@ -373,6 +396,11 @@
     "why": "no pdf link"
    },
    {
+    "title": "M3D-K simulations of beam-driven instabilities in an energetic particle dominant KSTAR discharge",
+    "doi": "https://doi.org/10.1088/1741-4326/ad4535",
+    "why": "download blocked"
+   },
+   {
     "title": "Nonlinear MHD modeling of neon doped shattered pellet injection with JOREK and its comparison to experiments in KSTAR",
     "doi": "https://doi.org/10.1088/1741-4326/ad6ea1",
     "why": "no pdf link"
@@ -391,11 +419,6 @@
     "title": "RF design of helical long-wire traveling wave antenna for helicon current drive in KSTAR",
     "doi": "https://doi.org/10.1016/j.fusengdes.2023.113983",
     "why": "no pdf link"
-   },
-   {
-    "title": "M3D-K simulations of beam-driven instabilities in an energetic particle dominant KSTAR discharge",
-    "doi": "https://doi.org/10.1088/1741-4326/ad4535",
-    "why": "download blocked"
    },
    {
     "title": "LabVIEW programming for the KSTAR XICS towards real-time ion temperature measurement",
@@ -423,18 +446,13 @@
     "why": "no pdf link"
    },
    {
-    "title": "Unified ELM suppression on KSTAR and DIII-D via adaptive feedback control strategies",
-    "doi": "https://doi.org/10.1088/1741-4326/adeda0",
-    "why": "no pdf link"
-   },
-   {
     "title": "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
     "doi": "https://doi.org/10.1088/1741-4326/adacfc",
     "why": "download blocked"
    },
    {
-    "title": "Development status of the HVPS and control system for KSTAR ECH system upgrade",
-    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113664",
+    "title": "Unified ELM suppression on KSTAR and DIII-D via adaptive feedback control strategies",
+    "doi": "https://doi.org/10.1088/1741-4326/adeda0",
     "why": "no pdf link"
    },
    {
@@ -445,6 +463,11 @@
    {
     "title": "A New Integrated Analysis Suite for Fast-Ion Study in KSTAR",
     "doi": "https://doi.org/10.1080/15361055.2022.2126292",
+    "why": "no pdf link"
+   },
+   {
+    "title": "Development status of the HVPS and control system for KSTAR ECH system upgrade",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2023.113664",
     "why": "no pdf link"
    },
    {
@@ -663,13 +686,13 @@
     "why": "download blocked"
    },
    {
-    "title": "Lighting the FIRE in KSTAR Plasmas",
-    "doi": "https://doi.org/10.52843/cassyni.12txmj",
+    "title": "Development of a Virtual Tokamak platform",
+    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113281",
     "why": "no pdf link"
    },
    {
-    "title": "Development of a Virtual Tokamak platform",
-    "doi": "https://doi.org/10.1016/j.fusengdes.2022.113281",
+    "title": "Lighting the FIRE in KSTAR Plasmas",
+    "doi": "https://doi.org/10.52843/cassyni.12txmj",
     "why": "no pdf link"
    },
    {
@@ -753,13 +776,18 @@
     "why": "no pdf link"
    },
    {
+    "title": "An overview of 3D field optimization for control of transport and edge instabilities on KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae4887",
+    "why": "no pdf link"
+   },
+   {
     "title": "Demonstration of enhanced abnormal Plasma Current detection in KSTAR Fast Interlock System",
     "doi": "https://doi.org/10.1016/j.fusengdes.2025.115579",
     "why": "no pdf link"
    },
    {
-    "title": "An overview of 3D field optimization for control of transport and edge instabilities on KSTAR",
-    "doi": "https://doi.org/10.1088/1741-4326/ae4887",
+    "title": "Snow water equivalent prediction in a mountainous area using hybrid bagging machine learning approaches",
+    "doi": "https://doi.org/10.1007/s11600-022-00934-0",
     "why": "no pdf link"
    },
    {
@@ -770,11 +798,6 @@
    {
     "title": "Design and development of 105GHz KFE compact gyrotron components for KSTAR ECH system",
     "doi": "https://doi.org/10.1109/irmmw-thz60956.2024.10697849",
-    "why": "no pdf link"
-   },
-   {
-    "title": "Snow water equivalent prediction in a mountainous area using hybrid bagging machine learning approaches",
-    "doi": "https://doi.org/10.1007/s11600-022-00934-0",
     "why": "no pdf link"
    },
    {
@@ -888,14 +911,14 @@
     "why": "no pdf link"
    },
    {
-    "title": "첨단 NBI 제어 시스템 개발 및 KSTAR FIRE 모드 적용 연구",
-    "doi": "",
-    "why": "no pdf link"
-   },
-   {
     "title": "Spatiotemporal structure of edge harmonic oscillation and its role in ELM-free QH-mode at KSTAR",
     "doi": "https://doi.org/10.1088/1741-4326/ae8679",
     "why": "download blocked"
+   },
+   {
+    "title": "첨단 NBI 제어 시스템 개발 및 KSTAR FIRE 모드 적용 연구",
+    "doi": "",
+    "why": "no pdf link"
    },
    {
     "title": "Performance Evaluation of High Voltage Signal Conditioners for ITER Superconducting Magnets During Plasma Operation in the KSTAR Tokamak",
@@ -915,7 +938,7 @@
    {
     "title": "Review for \"Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Divertor\"",
     "doi": "https://doi.org/10.1088/1361-6587/ae9725/v2/review1",
-    "why": "chased, no OA full text"
+    "why": "no pdf link"
    },
    {
     "title": "Decision letter for \"Validation of Integrated Modelling of KSTAR Plasmas with Carbon Divertor using JINTRAC and Prediction for Tungsten Dive",
@@ -1148,18 +1171,8 @@
     "why": "no pdf link"
    },
    {
-    "title": "Frequency linearization of voltage controlled oscillator (VCO) for 2 <i>µ</i>s frequency modulated continuous wave (FMCW) reflectometer",
-    "doi": "https://doi.org/10.1063/5.0216639",
-    "why": "no pdf link"
-   },
-   {
     "title": "Exploring blood–brain barrier passage using atomic weighted vector and machine learning",
     "doi": "https://doi.org/10.1007/s00894-024-06188-5",
-    "why": "no pdf link"
-   },
-   {
-    "title": "ATTITUDE OF PG SCHOLARS OF AGRICULTURAL EXTENSION TOWARDS APPLICATION OF MOBILE TECHNOLOGY USING ARTIFICIAL INTELLIGENCE TECHNIQUE",
-    "doi": "https://doi.org/10.56572/gjoee.2022.33.1.0028",
     "why": "no pdf link"
    },
    {
@@ -1168,8 +1181,18 @@
     "why": "no pdf link"
    },
    {
+    "title": "Frequency linearization of voltage controlled oscillator (VCO) for 2 <i>µ</i>s frequency modulated continuous wave (FMCW) reflectometer",
+    "doi": "https://doi.org/10.1063/5.0216639",
+    "why": "no pdf link"
+   },
+   {
     "title": "A comprehensive approach for predicting local scour depth using machine learning models",
     "doi": "https://doi.org/10.1088/2631-8695/ae4b0d",
+    "why": "no pdf link"
+   },
+   {
+    "title": "ATTITUDE OF PG SCHOLARS OF AGRICULTURAL EXTENSION TOWARDS APPLICATION OF MOBILE TECHNOLOGY USING ARTIFICIAL INTELLIGENCE TECHNIQUE",
+    "doi": "https://doi.org/10.56572/gjoee.2022.33.1.0028",
     "why": "no pdf link"
    },
    {
@@ -1513,13 +1536,13 @@
     "why": "no pdf link"
    },
    {
-    "title": "Geometric Stability Limit: A Scale-Invariant Curvature Functional for First-Principles Prediction of Tokamak Disruptions",
-    "doi": "https://doi.org/10.5281/zenodo.20696016",
+    "title": "LXVII: SOL-Coherent Plasma Confinement",
+    "doi": "https://doi.org/10.5281/zenodo.21463604",
     "why": "no pdf link"
    },
    {
-    "title": "LXVII: SOL-Coherent Plasma Confinement",
-    "doi": "https://doi.org/10.5281/zenodo.21463604",
+    "title": "Geometric Stability Limit: A Scale-Invariant Curvature Functional for First-Principles Prediction of Tokamak Disruptions",
+    "doi": "https://doi.org/10.5281/zenodo.20696016",
     "why": "no pdf link"
    },
    {
@@ -1653,13 +1676,13 @@
     "why": "no pdf link"
    },
    {
-    "title": "THE COMPLETE FUSION ENERGY PUBLICATION: N-K Model vs. Mainstream — CHMR Is the Only Path",
-    "doi": "https://doi.org/10.5281/zenodo.18708175",
+    "title": "Simulations of ion cyclotron emission from highly energetic fusion-born protons in aneutronic deuterium-helium-3 plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/adfbda",
     "why": "no pdf link"
    },
    {
-    "title": "Simulations of ion cyclotron emission from highly energetic fusion-born protons in aneutronic deuterium-helium-3 plasmas",
-    "doi": "https://doi.org/10.1088/1741-4326/adfbda",
+    "title": "THE COMPLETE FUSION ENERGY PUBLICATION: N-K Model vs. Mainstream — CHMR Is the Only Path",
+    "doi": "https://doi.org/10.5281/zenodo.18708175",
     "why": "no pdf link"
    },
    {

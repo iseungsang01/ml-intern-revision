@@ -29,11 +29,12 @@ quantitative instead of "we searched the literature".
 Known limits, stated so the result is not oversold:
   * Only open-access full text is searchable. A shot absent from this report is *not*
     proven absent from the literature -- see the coverage line the run prints.
-  * SUPPLEMENTARY material is not swept. This is not hypothetical: the Supplementary
-    Information of 10.1038/s41467-024-45454-1 names #31184, #31185 and #31189, none of
-    which appear in the main text. They are recorded by hand in IN_RANGE_NOT_OURS. Adding
-    a publisher-specific supplement crawler is the fix if this screen is ever rerun in
-    anger.
+  * SUPPLEMENTARY material is swept for Nature-family papers only (`springer_fulltext`).
+    It had to be: the Supplementary Information of 10.1038/s41467-024-45454-1 names
+    #31184, #31185 and #31189, none of which appear in the main text. Which publishers
+    this reaches was measured rather than assumed -- nature.com HTML and
+    static-content.springer.com SI files serve this script, IOP answers with a Radware
+    bot-challenge page and AIP with 403, so IOP/AIP/Elsevier supplements stay unread.
   * The two FIRE-mode papers are IOP-blocked to this script and were read through their
     article pages. Doing that is what turned up #31923 in the SECOND of them, which the
     PDF sweep could never have seen.
@@ -206,13 +207,28 @@ def norm_title(t):
 
 def dedupe(papers):
     """One entry per paper. arXiv and OpenAlex return the same work twice, which would
-    otherwise inflate both the paper count and the per-shot mention count."""
+    otherwise inflate both the paper count and the per-shot mention count.
+
+    Merge rather than pick: the arXiv record almost always carries the readable PDF while
+    only the OpenAlex record carries the publisher DOI, and dropping either loses something.
+    Keeping just the arXiv record is what hid the Nature Communications ELM paper from the
+    supplementary pass -- its surviving `doi` was `arXiv:2405.05452`, so a `10.1038/` test
+    could not see it, even though that paper is one of the screen's most important hits.
+    """
     best = {}
     for p in papers:
         k = norm_title(p["title"])[:120] or p["key"]
         cur = best.get(k)
-        if cur is None or (not cur.get("pdf") and p.get("pdf")):
-            best[k] = p
+        if cur is None:
+            best[k] = dict(p)
+            continue
+        if not cur.get("pdf") and p.get("pdf"):
+            cur["pdf"] = p["pdf"]
+            cur["key"] = p["key"]
+        cur_doi, new_doi = cur.get("doi") or "", p.get("doi") or ""
+        if new_doi and (not cur_doi or cur_doi.lower().startswith("arxiv:")
+                        or "arxiv" in cur_doi.lower()) and "arxiv" not in new_doi.lower():
+            cur["doi"] = new_doi
     return list(best.values())
 
 
@@ -370,6 +386,183 @@ def fetch_fallback(papers, budget_s=None):
     return n
 
 
+# Nature serves supplementary files from media.springernature.com in the article HTML and
+# from static-content.springer.com in older/redirected links; both are live, so match both.
+# (Scraping the link beats constructing it: the MOESM index is not derivable from the DOI.)
+SPRINGER_ESM_RE = re.compile(
+    r"https://(?:media\.springernature\.com/original/springer-static|static-content\.springer\.com)"
+    r"/esm/[^\"'\s<>\\]+")
+TAG_RE = re.compile(r"<(script|style)\b.*?</\1>|<[^>]+>", re.S | re.I)
+
+
+def html_to_text(raw):
+    import html as _html
+    return " ".join(_html.unescape(TAG_RE.sub(" ", raw)).split())
+
+
+def springer_fulltext(papers):
+    """Nature-family articles, plus their SUPPLEMENTARY files.
+
+    This is the gap the first pass named and did not close. The Supplementary Information
+    of 10.1038/s41467-024-45454-1 cites three discharges that appear nowhere in its main
+    text, so "not in the paper" was really "not in the part of the paper we downloaded".
+
+    Publisher routes were measured, not assumed (2026-08-18): nature.com HTML and
+    static-content.springer.com SI PDFs both serve this script; IOP returns its Radware
+    challenge page and AIP returns 403. So this pass covers 10.1038 DOIs and nothing else,
+    and the coverage line stays honest about the rest.
+    """
+    CACHE.mkdir(parents=True, exist_ok=True)
+    extras, seen_art = [], set()
+    targets = [p for p in papers
+               if "10.1038/" in (p.get("doi") or "") and FUSION_TITLE_RE.search(p.get("title") or "")]
+    print(f"springer/nature pass: {len(targets)} Nature-family papers")
+    for i, p in enumerate(targets, 1):
+        suffix = (p["doi"].split("10.1038/", 1)[1]).strip("/")
+        if not suffix or suffix in seen_art:
+            continue
+        seen_art.add(suffix)
+        art_txt = CACHE / f"nature_{suffix}.txt"
+        raw = ""
+        if art_txt.exists():
+            raw = art_txt.read_text(encoding="utf-8", errors="replace")
+        else:
+            try:
+                req = urllib.request.Request(f"https://www.nature.com/articles/{suffix}",
+                                             headers={"User-Agent": UA})
+                page = urllib.request.urlopen(req, timeout=90).read().decode("utf-8", "replace")
+            except Exception as exc:
+                print(f"  [{i}/{len(targets)}] {suffix}: article {type(exc).__name__}")
+                page = ""
+            if page:
+                raw = page
+                art_txt.write_text(page, encoding="utf-8")
+        if not raw:
+            continue
+        extras.append({**p, "key": f"{p['key']}-nature", "file": str(art_txt),
+                       "source": "nature-html", "title": p["title"] + " [main text, HTML]"})
+        for j, esm in enumerate(dict.fromkeys(SPRINGER_ESM_RE.findall(raw)), 1):
+            esm = esm.rstrip("&quot;").rstrip(",.;")
+            ext = ".pdf" if esm.lower().endswith(".pdf") else Path(esm).suffix or ".bin"
+            dst = CACHE / f"esm_{suffix}_{j}{ext}"
+            if not dst.exists():
+                if not try_download(esm, dst):
+                    continue
+                time.sleep(0.5)
+            extras.append({**p, "key": f"{p['key']}-esm{j}", "file": str(dst),
+                           "source": "springer-esm",
+                           "title": p["title"] + f" [supplementary {j}]"})
+        print(f"  [{i}/{len(targets)}] {suffix}: "
+              f"{sum(1 for e in extras if e['key'].startswith(p['key']))} scan targets", flush=True)
+    return extras
+
+
+def openalex_api(url, tries=5):
+    for t in range(tries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "ces-lit/1.0"})
+            return json.load(urllib.request.urlopen(req, timeout=90))
+        except Exception:
+            if t == tries - 1:
+                raise
+            time.sleep(2 * (t + 1))
+
+
+def fulltext_index_scan(shots, pace=0.8, control_n=20):
+    """Ask OpenAlex's full-text index for each shot number, instead of grepping PDFs.
+
+    This inverts the sweep, and it reaches what the sweep cannot. Validated against four
+    shots already known to be published, it returns exactly the right papers -- including
+    10.1088/1741-4326/adacfc, an IOP article that has never once been downloadable by this
+    script. Coverage stops being bounded by what we can fetch and starts being bounded by
+    what OpenAlex has indexed, which is a much larger set.
+
+    Two things keep the result honest:
+      * a paper published before the 2022 campaign cannot be citing its discharges, so
+        anything older than 2022 is a coincidence and is dropped;
+      * `control_n` five-digit numbers from OUTSIDE the campaign range are queried the same
+        way. Every hit there is by construction a false positive -- a page number, an
+        identifier, a year -- so that rate is this screen's measured coincidence rate,
+        reported next to the real hits rather than assumed to be zero.
+
+    OpenAlex meters this API: the free daily allowance is a few hundred requests and a 429
+    says `Resets at midnight UTC`. 641 shots does not fit in one day's budget, so the scan
+    is RESUMABLE -- every answered shot is written to `fulltext_index_hits.json` as it is
+    learned, and a rerun skips them. Interruption costs the current shot, not the pass.
+    """
+    kinase = "10.1038/s41467-022-32017-5"   # a paper literally titled KSTAR, about kinases
+    out_path = HERE / "fulltext_index_hits.json"
+    state = {"hits": {}, "queried": [], "control_numbers_tested": 0, "control_hits": 0}
+    if out_path.exists():
+        try:
+            state.update(json.loads(out_path.read_text(encoding="utf-8")))
+        except Exception:
+            pass
+    done = set(state.get("queried") or [])
+
+    def save():
+        state["queried"] = sorted(done)
+        state["control_rate"] = (state["control_hits"]
+                                 / max(state["control_numbers_tested"], 1))
+        out_path.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf-8")
+
+    def query(n):
+        url = ("https://api.openalex.org/works?filter=" +
+               urllib.parse.quote(f"fulltext.search:KSTAR {n}", safe=":,") +
+               f"&per-page=10&select=id,doi,title,publication_year&mailto={MAIL}")
+        out = []
+        for w in openalex_api(url)["results"]:
+            title, doi = w.get("title") or "", (w.get("doi") or "")
+            year = w.get("publication_year") or 0
+            if kinase in doi.lower() or not FUSION_TITLE_RE.search(title) or year < 2022:
+                continue
+            out.append({"title": title, "doi": doi, "year": year})
+        return out
+
+    todo = [s for s in sorted(shots) if s not in done]
+    print(f"index scan: {len(done)} shots already answered, {len(todo)} to go")
+    for i, s in enumerate(todo, 1):
+        try:
+            found = query(s)
+        except Exception as exc:
+            code = getattr(exc, "code", "")
+            print(f"  index scan stopped at #{s}: {type(exc).__name__} {code} "
+                  f"({len(done)}/{len(shots)} answered; rerun to resume)", flush=True)
+            break
+        done.add(s)
+        if found:
+            state["hits"][str(s)] = found
+            print(f"  INDEX HIT #{s}: " + " | ".join(
+                f"{w['year']} {w['title'][:70]} {w['doi']}" for w in found), flush=True)
+        if i % 25 == 0:
+            save()
+            print(f"  index scan {len(done)}/{len(shots)}", flush=True)
+        time.sleep(pace)
+    save()
+
+    base = max(shots) + 5000
+    for j in range(control_n):
+        n = base + j * 137
+        if n in done:
+            continue
+        try:
+            found = query(n)
+        except Exception:
+            break
+        done.add(n)
+        state["control_numbers_tested"] += 1
+        if found:
+            state["control_hits"] += 1
+            print(f"  control {n} (out of range) returned {len(found)}: "
+                  f"{found[0]['title'][:60]}", flush=True)
+        time.sleep(pace)
+    save()
+    print(f"\nindex scan: {len(state['hits'])} hits over "
+          f"{len([s for s in done if s in shots])}/{len(shots)} shots answered; "
+          f"coincidence control {state['control_hits']}/{state['control_numbers_tested']}")
+    return state
+
+
 def scan(papers, shots):
     try:
         import fitz
@@ -380,10 +573,14 @@ def scan(papers, shots):
         if not p.get("file"):
             continue
         try:
-            doc = fitz.open(p["file"])
-            head = "\n".join(pg.get_text() for pg in doc[:4])
-            text = "\n".join(pg.get_text() for pg in doc)
-            doc.close()
+            if p["file"].lower().endswith((".txt", ".html", ".htm")):
+                text = html_to_text(Path(p["file"]).read_text(encoding="utf-8", errors="replace"))
+                head = text[:12000]
+            else:
+                doc = fitz.open(p["file"])
+                head = "\n".join(pg.get_text() for pg in doc[:4])
+                text = "\n".join(pg.get_text() for pg in doc)
+                doc.close()
         except Exception:
             continue
         # Off-topic paper: any five-digit number in it is a page range or an ID, never one
@@ -426,14 +623,34 @@ def main():
             pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--report", action="store_true", help="print the verified table only")
+    ap.add_argument("--fulltext-index", action="store_true",
+                    help="query OpenAlex's full-text index per shot (reaches IOP, no PDFs)")
     args = ap.parse_args()
     shots = dataset_shots()
     if args.report:
         report(shots)
         return
+    if args.fulltext_index:
+        fulltext_index_scan(shots)   # writes/updates fulltext_index_hits.json as it goes
+        return
     papers = dedupe(arxiv_list() + openalex_list())
     print(f"papers since {FROM_DATE}: {len(papers)} distinct "
           f"(with a pdf link: {sum(1 for p in papers if p.get('pdf'))})")
+    # A corpus pull can fail SOFTLY: OpenAlex meters its API, and once the daily budget is
+    # spent `openalex_list` returns nothing and the run continues on the ~66 arXiv papers
+    # alone. That would overwrite a good literature_hits.json with a far worse one and the
+    # coverage line would simply report the smaller number as if it were the finding. Refuse.
+    prev = HERE / "literature_hits.json"
+    if prev.exists():
+        try:
+            before = json.loads(prev.read_text(encoding="utf-8")).get("n_papers", 0)
+        except Exception:
+            before = 0
+        if before and len(papers) < 0.5 * before:
+            raise SystemExit(
+                f"corpus collapsed: {len(papers)} papers now vs {before} in "
+                f"literature_hits.json. The pull failed (OpenAlex rate limit resets at "
+                f"midnight UTC); refusing to overwrite the artifact with a partial sweep.")
     n = fetch_pdfs(papers)
     print(f"full text after the direct download: {n}")
     n += fetch_fallback(papers, budget_s=float(os.environ.get("LIT_CHASE_BUDGET_S", 0)) or None)
@@ -447,7 +664,11 @@ def main():
             src = p.get("source", "?").split(":")[0]
             by_source[src] = by_source.get(src, 0) + 1
     print(f"full text after the chase: {n} of {len(papers)}   {by_source}")
-    hits = scan(papers, shots)
+    # Supplementary material is scanned as its own set of targets. It is deliberately kept
+    # out of the coverage arithmetic below: an SI file is not another paper, and counting it
+    # as one would inflate exactly the ratio this script exists to keep honest.
+    extras = springer_fulltext(papers)
+    hits = scan(papers + extras, shots)
     held = [p for p in papers if p.get("file")]
     offtopic = [p for p in held if p.get("offtopic")]
     relevant_missing = [p for p in papers if not p.get("file")
@@ -465,6 +686,7 @@ def main():
                     "false_positives": {str(k): v for k, v in FALSE_POSITIVES.items()},
                     "sweep_hits": hits, "n_papers": len(papers), "n_fulltext": n,
                     "coverage": {"by_source": by_source,
+                                 "n_supplementary_targets": len(extras),
                                  "n_offtopic_fulltext": len(offtopic),
                                  "n_relevant_fulltext": n_rel_held,
                                  "n_relevant_population": n_rel_pop,
