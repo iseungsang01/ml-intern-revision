@@ -48,6 +48,33 @@ class _CausalStack(nn.Module):
         self.drop = nn.Dropout(dropout)
         self.receptive_field = 1 + sum(self.pads)
 
+    def stream_init(self, device, dtype):
+        """Per-layer ring buffers holding each layer's own last `pad + 1` inputs.
+
+        Zeros, because the batch path left-pads with zeros — so a stream started at t = 0
+        reproduces the batch output exactly rather than merely approximating it.
+        """
+        return [torch.zeros(1, self.proj.out_features, pad + 1, device=device, dtype=dtype)
+                for pad in self.pads]
+
+    def stream_step(self, state, x_t):
+        """(1, 1, n_in) + state -> (1, 1, hidden), O(1) in sequence length.
+
+        This is the whole point of measuring the TCN at a 1 ms budget: §8ac argued a
+        convolutional stack "recomputes its receptive field every step unless a streaming
+        cache is built explicitly". This is that cache, so the family is priced by what it
+        costs to deploy rather than by the absence of an implementation. Eval-only —
+        dropout is identity here, which is why the buffers replay the batch math exactly.
+        """
+        h = self.proj(x_t)[:, 0]                               # (1, hidden)
+        for i, (conv, norm) in enumerate(zip(self.convs, self.norms)):
+            buf = torch.roll(state[i], -1, dims=2)
+            buf[:, :, -1] = h
+            state[i] = buf
+            z = nn.functional.gelu(conv(buf))[:, :, 0]         # (1, hidden)
+            h = norm(h + z)
+        return h.unsqueeze(1)                                  # (1, 1, hidden)
+
     def forward(self, x):
         h = self.proj(x).transpose(1, 2)                       # (B, hidden, L)
         for conv, norm, pad in zip(self.convs, self.norms, self.pads):
@@ -81,4 +108,15 @@ class SeqCESTCN(nn.Module):
         """x (B, L, n_in) -> (B, L, 2) normalized [CES_TI, CES_VT]. `lengths` unused."""
         h_ti = self.tcn_ti(x)
         h_vt = self.tcn_vt(x[..., self.n_fast:])
+        return torch.cat([self.head_ti(h_ti), self.head_vt(h_vt)], dim=-1)
+
+    def stream_init(self, device=None, dtype=torch.float32):
+        device = device or next(self.parameters()).device
+        return {"ti": self.tcn_ti.stream_init(device, dtype),
+                "vt": self.tcn_vt.stream_init(device, dtype)}
+
+    def stream_step(self, state, x_t):
+        """One online step: (1, 1, n_in) -> (1, 1, 2). Equals `forward`'s row t (see tests)."""
+        h_ti = self.tcn_ti.stream_step(state["ti"], x_t)
+        h_vt = self.tcn_vt.stream_step(state["vt"], x_t[..., self.n_fast:])
         return torch.cat([self.head_ti(h_ti), self.head_vt(h_vt)], dim=-1)

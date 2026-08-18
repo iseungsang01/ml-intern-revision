@@ -194,3 +194,30 @@ def test_seq_family_is_causal_and_reach_bounded():
                 far[:, : cut - rf] += 5.0          # strictly older than the receptive field
                 assert torch.equal(model(far)[:, cut:cut + 1], base[:, cut:cut + 1]), \
                     f"{name} reads past its declared receptive field of {rf}"
+
+
+def test_seq_family_streaming_equals_batch():
+    """The online step must BE the model, not an approximation of it.
+
+    B.9 axis C prices each family at a 1 ms budget, and a streaming step is the only way a
+    TCN or an attention stack is O(1) per step rather than re-running its receptive field
+    (§8ac). A cache that drifts from the batch path would make that price meaningless, so
+    the two are required to agree to float precision on every step of a real-length block.
+    """
+    seq_dir = Path(__file__).resolve().parents[1] / "ces_prediction" / "experiments" / "seq"
+    sys.path.insert(0, str(seq_dir))
+    from seq_models import SEQ_MODELS
+    from seq_data import N_FEATURES
+
+    torch.manual_seed(0)
+    length = 150
+    x = torch.randn(1, length, N_FEATURES)
+    for name in ("tcn15", "tcn63", "xfmr63"):
+        model = SEQ_MODELS[name]().eval()
+        with torch.no_grad():
+            batch = model(x)
+            state = model.stream_init()
+            stream = torch.cat([model.stream_step(state, x[:, i:i + 1])
+                                for i in range(length)], dim=1)
+        assert torch.allclose(batch, stream, atol=1e-5), \
+            f"{name} streaming diverges from batch by {float((batch - stream).abs().max()):.2e}"
