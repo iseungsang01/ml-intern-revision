@@ -2445,6 +2445,82 @@ follow-up should separate by running W-SLIM at 96.
 
 ---
 
+## 8ae. Trained-at-reach vs. truncated (2026-08-19) — at least 84% of §8ac's `T_i` reach deficit was cold start, not missing information
+
+**Question (승상님).** Before designing a model-family × latency-budget comparison (B.9) on top of
+§8ac's reach ladder, the ladder itself was re-checked. §8ac drew it by **truncating one trained
+backbone** — the recurrent state is reset to zero `ctx` steps before every scored row — and its
+Verdict 1 then read the `ctx = 2` rung as an *information* statement ("the window framing is
+refuted on information"). §8ac's own "What it does not show" had flagged the gap ("part of the
+short-ctx deficit is warm-up rather than missing information — the two cannot be separated by
+this design"). It can be separated, and the artifacts to do it were already on disk.
+
+**Design** (`experiments/reach/trained_vs_truncated.py`; seconds of wall, no retraining, no new
+scoring; artifact `data/.reach_trained_vs_truncated.json`). `data/.b1_w2cut_s{seed}` is a model
+**trained at reach 2** (the B.1 stage-A window control, §8x), scored by the same
+`compare_baselines` path on the **same rows** as `data/.reach_s{seed}`. Three points per target
+bracket the question, and the script refuses to compute anything until `shot`, `dt_ms`, `y_true`
+and `se_persistence` are verified **bit-identical** between the two files on all 4 splits (they
+are). Statistic is the same shot-clustered paired bootstrap as every other batch.
+
+### 1. Skill vs. persistence, mean over the 4 splits (identical rows)
+
+| target | full (whole block) | **trained@2** | trunc@2 (§8ac rung) | truncation deficit | recovered by training | warm-up share | full − trained@2 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `CES_TI` | +0.396 | **+0.346** | +0.086 | 0.310 | **+0.260** | **84%** | +0.049 |
+| `CES_VT` | +0.390 | **+0.357** | +0.358 | 0.032 | −0.001 | −3% | +0.033 |
+
+Paired bootstrap, per split (skill of the first arm relative to the second; \* = CI excludes 0):
+
+| | s42 | s1 | s7 | s123 | sig. |
+|---|---:|---:|---:|---:|---|
+| `CES_TI` trained@2 vs trunc@2 | +0.294\* | +0.260\* | +0.313\* | +0.268\* | **4/4** |
+| `CES_TI` full vs trained@2 | +0.130\* | +0.058\* | +0.062 | +0.044 | 2/4 |
+| `CES_VT` trained@2 vs trunc@2 | −0.092\* | +0.060\* | +0.027\* | −0.027\* | sign split |
+| `CES_VT` full vs trained@2 | +0.181\* | −0.003 | −0.004 | +0.045\* | 2/4 |
+
+**These 4 runs are the diagonal (`init = split`) of §8x's 16-run grid, not a new gate.** §8x's
+properly-powered estimate of the same *full vs trained@2* contrast is pooled **+0.081, CI
+[+0.067, +0.096], 13/16 individually significant** — the 2/4 here is the expected subset behaviour
+of 4 draws from that grid (per-split init-means were +0.129 / +0.059 / +0.078 / +0.058), **not** a
+challenge to §8x. The backbone still beats the window control.
+
+### 2. `CES_VT` is the internal control, and it behaves as the routing result predicts
+
+§8ab established that the `V_rot` branch never reads the fast diagnostics and rides carried input
+channels that `seq_data.build_blocks` computes over the whole block **regardless of truncation**.
+So cutting the recurrent state should cost `V_rot` almost nothing — and it costs 0.032, one tenth
+of `T_i`'s 0.310, with training at that reach recovering none of it (−0.001). The warm-up reading
+of the `CES_TI` gap therefore is not a convenient story: the same truncation applied to the branch
+that does not use its recurrent state produces no such gap.
+
+**Verdict.**
+
+1. **§8ac's `ctx = 2` rung is not an information measurement, and Verdict 1 of §8ac is hereby
+   narrowed.** A model *trained* at reach 2 recovers +0.260 of the 0.310 the truncated backbone
+   lost on `T_i`, 4/4 significant. Truncation resets a state the model was never trained to
+   rebuild in 2 steps; that is a warm-up penalty, not an absence of information.
+2. **What full-block context is worth on `T_i` is bounded above by +0.081, not +0.310.** The
+   `full − trained@2` contrast is the *combined* reach + architecture gap (`seq_v2` whole block vs
+   window `iter009` at `W = 2`), and §8x prices that combination at +0.081 pooled. Pure reach is
+   therefore worth **at most** +0.081 and §8ac's ladder overstates it by **≥ 3.8×**.
+3. **The `T_i` skill does not come mainly from long memory.** A model trained at 20 ms of context
+   already reaches **87.5%** of the backbone's margin over persistence. Whatever the backbone's
+   remaining advantage is, §8ad (structure, not size) and §8ab (routing) are the better candidates
+   than reach — and B.9 is designed to separate them.
+4. **`ctx = 1` is unaffected as a claim about this model** (§8ac Verdict 2), but the same objection
+   applies to reading it as an information statement, and B.9's ladder re-measures it.
+
+**What it does not show.** `trained@2` here is a different **architecture** (window `iter009`), not
+`seq_v2` retrained with a 2-step state, so reach and structure are confounded in every number in
+the right-hand column. This bounds the warm-up share rather than measuring it: the pure-reach
+value is **unmeasured**, and the measurement that would settle it is `seq_v2` trained with the
+recurrent state reset every `ctx` steps — pre-registered as B.9's reach ladder
+(`experiments/PREREGISTRATION_B9.md`). Until that runs, quote this as "a model trained at this
+reach reaches +0.346", never as "`seq_v2` at reach 2 reaches +0.346".
+
+---
+
 ## 9. Recommended framings for the thesis
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test

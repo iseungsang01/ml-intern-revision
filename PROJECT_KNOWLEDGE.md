@@ -710,7 +710,21 @@ significant deficits** (below PCHIP entirely on s42), while **`V_rot` is indiffe
   `sensor_feature_dim = 96` to separate structure from width. The sensor conv path is the better
   first guess, given `V_rot`'s indifference to the history machinery.
 
-## The Reach Axis Is Now Measured, And It Refutes The Window Framing (2026-08-17) — §8ac
+## The Reach Axis, Measured By Truncation (2026-08-17) — §8ac, **narrowed by §8ae**
+
+> **Read §8ae first (2026-08-19).** This section's headline used to read "…And It Refutes The
+> Window Framing". It does not. Every number below comes from **truncating one trained model**,
+> and a model *trained* at reach 2 recovers **+0.260 of the 0.310** that truncation cost on `T_i`
+> (4/4 significant, identical rows, `experiments/reach/trained_vs_truncated.py`). **At least 84%
+> of the `ctx = 2` deficit is cold-start warm-up, not missing information**, and what full-block
+> context is worth is bounded above by §8x's +0.081 — not −0.310. `CES_VT` is the internal control
+> and behaves as §8ab's routing predicts (truncation costs it 0.032, training recovers none of it,
+> because its branch rides carried input channels rather than the recurrent state).
+> **How to apply:** never quote a truncation rung as an information statement. Quote it as "this
+> model loses X when its state is thrown away". The trained-at-reach ladder is pre-registered as
+> B.9 axis A (`experiments/PREREGISTRATION_B9.md`); until it runs, the pure-reach value is
+> **unmeasured**.
+
 
 `experiments/reach/`, no retraining: the frozen B.1 checkpoints re-scored with the LSTM state
 reset `ctx` steps before every row (`CES_SEQ_CONTEXTS`; `ctx = full` reproduces the frozen
@@ -726,9 +740,11 @@ reset `ctx` steps before every row (`CES_SEQ_CONTEXTS`; `ctx = full` reproduces 
 - **Read significance with an effect-size floor when arms are paired row-for-row.** `CES_VT` on
   split 7 holds a *significant* deficit of −5e-7 out to ctx = 300. The runner reports both the
   strict rule and a 0.002-skill practical floor; quote the floor-based saturation.
-- **How to apply:** the open architecture question is no longer "recurrent vs. windowed" (settled)
-  but "recurrent vs. a 50-step-receptive-field causal TCN" (untested). Any such arm goes through
-  the B.2 rule: val-only exploration → pre-registered decision → TEST once, ≥3/4 significant.
+- **How to apply:** "recurrent vs. windowed" is **not** settled by this section (see §8ae above);
+  §8x settles it on the combined reach+architecture gap (+0.081 pooled), not on reach. The open
+  arms — a 63-step-receptive-field causal TCN and a causal-attention arm at the same reach — are
+  pre-registered as B.9 axis B. Any such arm goes through the B.2 rule: val-only exploration →
+  pre-registered decision → TEST once, ≥3/4 significant.
 
 ## Published Shots Are V_rot-Poor Shots (2026-08-18) — a selection criterion that fights the target
 
