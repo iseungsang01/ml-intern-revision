@@ -12,7 +12,6 @@ Env: CES_DATA_DIR, CES_SPLIT_DIR, CES_OUTPUT_DIR, CES_SEED, CES_INIT_SEED,
      "normalization.stats" schema evaluate._load_stats expects).
 """
 
-import functools
 import json
 import os
 import random
@@ -29,28 +28,13 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(1, str(HERE.parents[1]))  # ces_prediction/
 
 from seq_data import load_grid_files, fit_stats, build_blocks  # noqa: E402
-from model_seq import SeqCESLSTM  # noqa: E402
-from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
 # v1 = the §8d shared-encoder model; v2 = v1 + the iter009 V_rot routing (§8t).
-from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
-from model_seq_b3 import SeqCESB3  # noqa: E402
 
 # b3kN = the B.3 minimal interpretable model with an N-dim T_i latent (the ONE
 # explored variable; V_rot latent fixed at 4). Named variants, not env config,
 # so a checkpoint always reloads under the same architecture.
-SEQ_MODELS = {
-    "v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3,
-    "b3k4": functools.partial(SeqCESB3, latent_ti=4),
-    "b3k6": functools.partial(SeqCESB3, latent_ti=6),
-    "b3k8": functools.partial(SeqCESB3, latent_ti=8),
-    # B.4 width ladder: seq_v2 with ONLY the T_i encoder width varied (V_rot
-    # branch and heads fixed). "v2" itself is the 160-unit point.
-    "v2w24": functools.partial(SeqCESLSTMv2, hidden_ti=24),
-    "v2w40": functools.partial(SeqCESLSTMv2, hidden_ti=40),
-    "v2w80": functools.partial(SeqCESLSTMv2, hidden_ti=80),
-    "v2w260": functools.partial(SeqCESLSTMv2, hidden_ti=260),
-}
+from seq_models import SEQ_MODELS  # noqa: E402  (single registry)
 
 
 def batched(blocks, batch_size, device, shuffle, rng):

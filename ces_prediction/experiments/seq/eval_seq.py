@@ -11,7 +11,6 @@ schema -- is byte-identical, so bootstrap_compare.py runs unchanged and
 paired_model_compare.py's bit-identical se_pchip guard verifies the pairing.
 """
 
-import functools
 import json
 import os
 import sys
@@ -31,24 +30,9 @@ from analyze_gap import BIN_EDGES_MS  # noqa: E402
 import peak_analysis as PK  # noqa: E402
 
 from seq_data import load_grid_files, build_blocks  # noqa: E402
-from model_seq import SeqCESLSTM  # noqa: E402
-from model_seq_v2 import SeqCESLSTMv2  # noqa: E402
 
-from model_seq_v3 import SeqCESLSTMv3  # noqa: E402
-from model_seq_b3 import SeqCESB3  # noqa: E402
 
-SEQ_MODELS = {
-    "v1": SeqCESLSTM, "v2": SeqCESLSTMv2, "v3": SeqCESLSTMv3,
-    "b3k4": functools.partial(SeqCESB3, latent_ti=4),
-    "b3k6": functools.partial(SeqCESB3, latent_ti=6),
-    "b3k8": functools.partial(SeqCESB3, latent_ti=8),
-    # B.4 width ladder: seq_v2 with ONLY the T_i encoder width varied (V_rot
-    # branch and heads fixed). "v2" itself is the 160-unit point.
-    "v2w24": functools.partial(SeqCESLSTMv2, hidden_ti=24),
-    "v2w40": functools.partial(SeqCESLSTMv2, hidden_ti=40),
-    "v2w80": functools.partial(SeqCESLSTMv2, hidden_ti=80),
-    "v2w260": functools.partial(SeqCESLSTMv2, hidden_ti=260),
-}
+from seq_models import SEQ_MODELS  # noqa: E402  (single registry)
 
 TARGET_NAMES = ("CES_TI", "CES_VT")
 HEADLINE_BASELINE = "pchip"  # PR1
