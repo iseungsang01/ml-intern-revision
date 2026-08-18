@@ -202,7 +202,8 @@ def aggregate():
     if not sessions:
         raise SystemExit("FATAL: no session files; run --session 1..5 first")
     if len(sessions) < SESSIONS:
-        print(f"[b9c] WARNING: {len(sessions)}/{SESSIONS} sessions present — the §4 rule "
+        # ASCII only in prints: this console is cp949 (see b9_reach/run_b9_reach.py).
+        print(f"[b9c] WARNING: {len(sessions)}/{SESSIONS} sessions present; the sec.4 rule "
               f"requires all {SESSIONS}; verdicts below are provisional", flush=True)
 
     summary = {"question": "which arms clear a 10 ms and a 1 ms budget?",
@@ -218,7 +219,7 @@ def aggregate():
                "arms": {}}
 
     print("\n" + "=" * 96)
-    print(f"{len(sessions)} sessions, batch 1, 1 thread, CPU — max p99 over sessions decides")
+    print(f"{len(sessions)} sessions, batch 1, 1 thread, CPU: max p99 over sessions decides")
     print("arm".rjust(11) + "mode".rjust(17) + "params".rjust(9) + "med".rjust(9)
           + "p99".rjust(9) + "max p99".rjust(10) + "10 ms".rjust(10) + "1 ms".rjust(10))
     for name, _, _ in ARMS:

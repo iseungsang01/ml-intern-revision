@@ -111,7 +111,8 @@ def main():
                "runs": records, "arms": {}}
 
     print("\n" + "=" * 104)
-    print("paired vs the SAME-REACH LSTM rung (H3/H4) — positive = this family wins")
+    # ASCII only in prints: this console is cp949 (see run_b9_reach.py).
+    print("paired vs the SAME-REACH LSTM rung (H3/H4): positive = this family wins")
     print("arm".rjust(8) + "RF".rjust(5) + "params".rjust(9) + "TI vs ctrl".rjust(12)
           + "sig".rjust(6) + "VT vs ctrl".rjust(12) + "sig".rjust(6)
           + "TI vs backbone".rjust(16) + "verdict".rjust(10))

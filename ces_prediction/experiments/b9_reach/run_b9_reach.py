@@ -64,6 +64,41 @@ def backbone_dir(seed, smoke=False):
     return DATA / (f".b1_seqv2_s{seed}_i{seed}" + ("_smoke" if smoke else ""))
 
 
+def collect(out_dir, paired_ref, paired_win, record):
+    """Read a finished run's artifacts into its summary record (fresh or resumed)."""
+    try:
+        m = json.loads((out_dir / "metrics.json").read_text())
+        record["best_epoch"] = m.get("best_epoch")
+        record["train_ctx"] = m.get("train_ctx")
+        record["params"] = m.get("n_params")
+    except Exception:
+        pass
+    try:
+        b = json.loads((out_dir / "bootstrap_summary.json").read_text())
+        # Schema is splits.<tag>.<target>.<baseline>, not targets.<target>.<baseline>;
+        # reading the wrong path fails silently into an all-None ladder.
+        split = (b.get("splits", {}) or {}).get("test", {}) or {}
+        for target in ("CES_TI", "CES_VT"):
+            node_t = split.get(target, {}) or {}
+            for base in ("persistence", "pchip", "gp_causal"):
+                node = node_t.get(base, {}) or {}
+                if node:
+                    record[f"skill_{target}_{base}"] = node.get("skill_point")
+                    record[f"pass_{target}_{base}"] = node.get("pass")
+    except Exception:
+        pass
+    for dst, ref_tag in ((paired_ref, "backbone"), (paired_win, "w2cut")):
+        try:
+            payload = json.loads(dst.read_text())
+            for target in ("CES_TI", "CES_VT"):
+                node = (payload.get("targets", {}) or {}).get(target, {}) or {}
+                record[f"paired_{target}_vs_{ref_tag}"] = node.get("skill_point")
+                record[f"paired_{target}_vs_{ref_tag}_ci"] = node.get("skill_ci95")
+        except Exception:
+            pass
+    return record
+
+
 def one_run(reach, seed, smoke, resume, variant="v2", tag=None):
     """One arm x one split, paired against both the backbone and the window control.
 
@@ -82,8 +117,11 @@ def one_run(reach, seed, smoke, resume, variant="v2", tag=None):
     paired_win = out_dir / "paired_vs_w2cut.json"
     if resume and not smoke and paired_ref.exists() and paired_win.exists():
         print(f"[b9a] === {out_dir.name}: complete, skipping (--resume)", flush=True)
-        return {"reach": reach, "variant": variant, "tag": tag, "seed": seed,
-                "out_dir": str(out_dir), "status": "ok", "resumed": True}
+        # Still read the artifacts: a resumed run that reports no skill would silently
+        # drop its rung out of the ladder summary.
+        return collect(out_dir, paired_ref, paired_win,
+                       {"reach": reach, "variant": variant, "tag": tag, "seed": seed,
+                        "out_dir": str(out_dir), "status": "ok", "resumed": True})
     if not smoke and not (ref_dir / "comparison_errors_test.npz").exists():
         raise SystemExit(f"FATAL: B.1 backbone run missing: {ref_dir}")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -149,34 +187,7 @@ def one_run(reach, seed, smoke, resume, variant="v2", tag=None):
     finally:
         record["seconds"] = round(time.time() - start, 1)
 
-    try:
-        m = json.loads((out_dir / "metrics.json").read_text())
-        record["best_epoch"] = m.get("best_epoch")
-        record["train_ctx"] = m.get("train_ctx")
-        record["params"] = m.get("n_params")
-    except Exception:
-        pass
-    try:
-        b = json.loads((out_dir / "bootstrap_summary.json").read_text())
-        for t in ("CES_TI", "CES_VT"):
-            node_t = (b.get("targets", {}) or {}).get(t, {}) or {}
-            for base in ("persistence", "pchip", "gp_causal"):
-                node = node_t.get(base, {}) or {}
-                if node:
-                    record[f"skill_{t}_{base}"] = node.get("skill_point")
-                    record[f"pass_{t}_{base}"] = node.get("pass")
-    except Exception:
-        pass
-    for dst, tag in ((paired_ref, "backbone"), (paired_win, "w2cut")):
-        try:
-            p = json.loads(dst.read_text())
-            for t in ("CES_TI", "CES_VT"):
-                node = (p.get("targets", {}) or {}).get(t, {}) or {}
-                record[f"paired_{t}_vs_{tag}"] = node.get("skill_point")
-                record[f"paired_{t}_vs_{tag}_ci"] = node.get("skill_ci95")
-        except Exception:
-            pass
-    return record
+    return collect(out_dir, paired_ref, paired_win, record)
 
 
 def truncation_ladder():
@@ -214,7 +225,8 @@ def main():
         for seed in seeds:
             rec = one_run(reach, seed, args.smoke, args.resume)
             records.append(rec)
-            print(f"[b9a]   -> {rec.get('status')} ({rec.get('seconds')}s)", flush=True)
+            took = f"{rec['seconds']}s" if rec.get("seconds") is not None else "resumed"
+            print(f"[b9a]   -> {rec.get('status')} ({took})", flush=True)
     if args.smoke:
         print("\n[b9a] smoke done")
         return
@@ -230,10 +242,12 @@ def main():
                "runs": records, "ladder": {}, "truncation_ladder_8ac": trunc}
 
     print("\n" + "=" * 108)
-    print("paired vs the full-reach backbone (same architecture) — positive = the rung wins")
+    # ASCII only in prints: this console is cp949, and a stray em dash killed the summary
+    # after all four runs had already succeeded.
+    print("paired vs the full-reach backbone (same architecture): positive = the rung wins")
     print("reach".rjust(6) + "TI paired".rjust(11) + "sig".rjust(6) + "TI vs pers".rjust(12)
           + "VT paired".rjust(11) + "sig".rjust(6) + "VT vs pers".rjust(12)
-          + "  §8ac trunc TI/VT")
+          + "  8ac trunc TI/VT")
     for reach in reaches:
         pts = [r for r in records if r.get("reach") == reach and r.get("status") == "ok"]
         if not pts:
@@ -258,7 +272,7 @@ def main():
               + fmt(node["mean_paired_CES_VT_vs_backbone"]).rjust(11)
               + f"{node['sig_deficit_CES_VT']}/{len(pts)}".rjust(6)
               + fmt(node["mean_skill_CES_VT_persistence"]).rjust(12)
-              + "  " + fmt(trunc.get(f"CES_TI_r{reach}")) + " / "
+              + "   " + fmt(trunc.get(f"CES_TI_r{reach}")) + " / "
               + fmt(trunc.get(f"CES_VT_r{reach}")))
 
     for t in ("CES_TI", "CES_VT"):
