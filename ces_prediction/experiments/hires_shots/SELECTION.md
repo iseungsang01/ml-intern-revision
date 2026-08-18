@@ -46,15 +46,31 @@ T_i ≈ 0.4 keV with MC envelope ≈ 1.7 until 7.3 s, then T_i → 1.25 keV, MC 
 file and the transition lands at 6.1 s. For #31873 our window (5.41–13.08 s) covers the whole
 suppressed phase, including the late performance decay the paper describes.
 
-**Coverage, measured rather than asserted.** The sweep sees **387 distinct papers** (the raw
+**Coverage, measured rather than asserted — and "KSTAR" is not a unique string.** The raw
 arXiv + OpenAlex union double-counts every paper that exists as both a preprint and a journal
-article; deduplicating by normalised title is what turns ~600 into 387) and gets full text for
-**75** of them — 143 carried a PDF link, the direct download won some, and an Unpaywall pass
-recovered 10 more from repository copies OpenAlex had missed. An arXiv-by-title fallback was
-also tried and recovered **0**, because `arxiv_list()` already pulls arXiv directly and the
-dedupe merges each preprint with its journal version. So the honest statement is not "these
-shots are not in the literature" but **"these shots are not in the 75 open-access full texts
-we can read."**
+article; deduplicating by normalised title turns ~600 into **387**, and full text arrives for
+**76** of those (143 carried a PDF link, the direct download won some, an Unpaywall pass
+recovered 10 more from repository copies OpenAlex had missed, and arXiv-by-title recovered
+exactly 1).
+
+But 387 is not the population that matters. **30 of the 76 full texts are not about fusion at
+all** — concrete compressive strength, drug toxicity, polymer science, Turkish e-commerce
+reviews, top-k planning. They are there because `KSTAR` also names the Weka **K\*** instance-based
+classifier and the **K\*** search algorithm, and because a Nature Communications paper about
+kinase activity is literally titled *KSTAR*. That contamination is where the hand-maintained
+false positives came from: `#30907` is a page range in a biochemistry reference. The scan now
+filters on the **body** text (title is not enough — the kinase paper says KSTAR in its title),
+which drops `#30907` and `#32017` automatically; only `#31589`, a DOI fragment in a genuine
+fusion paper's reference list, still needs listing by hand.
+
+The single arXiv-by-title recovery makes the same point: it found the correct preprint for its
+OpenAlex record, and that record was *Ensemble Classifier for Eye State Classification using
+EEG Signals*, whose abstract mentions the KStar classifier. The title matcher was right; the
+corpus was wrong.
+
+So the number to quote is **46 fusion full texts of ~248 relevant papers (19 %)**, not 76/387,
+and the honest statement is not "these shots are not in the literature" but **"these shots are
+not in the 46 fusion papers we can read in full."**
 
 **Three things this screen still cannot see**, each demonstrated rather than guessed:
 

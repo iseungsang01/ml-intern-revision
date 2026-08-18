@@ -69,6 +69,20 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
 FROM_DATE = "2022-06-01"
 BARE_RE = re.compile(r"\b(30[89]\d{2}|3[12]\d{3})\b")
 
+# "KSTAR" is not a unique string. The OpenAlex title/abstract search for it also returns
+# the Weka K* (KStar) instance-based classifier, the K* search algorithm in top-k planning,
+# and a Nature Communications paper literally named KSTAR about kinase activity -- 39 % of
+# the full texts we managed to download are about concrete strength, drug toxicity, polymer
+# science or e-commerce reviews. That contamination is exactly where the hand-maintained
+# false positives came from (#30907 is a page range in a biochemistry reference), so the
+# corpus is filtered on the BODY text before any shot number is believed. Title alone is
+# not enough: the kinase paper has KSTAR in its title.
+FUSION_RE = re.compile(r"tokamak|plasma|fusion|divertor|pedestal|\bELM\b|H-mode", re.I)
+FUSION_TITLE_RE = re.compile(
+    r"tokamak|plasma|fusion|divertor|pedestal|disrupt|KSTAR|\bITER\b|stellarator|"
+    r"magnetohydro|\bMHD\b", re.I)
+FUSION_MIN_HITS = 3   # in the first four pages
+
 # Hand-verified hits, including the two papers whose full text is paywalled but whose
 # figure captions name the shot explicitly.
 CONFIRMED = {
@@ -367,9 +381,15 @@ def scan(papers, shots):
             continue
         try:
             doc = fitz.open(p["file"])
+            head = "\n".join(pg.get_text() for pg in doc[:4])
             text = "\n".join(pg.get_text() for pg in doc)
             doc.close()
         except Exception:
+            continue
+        # Off-topic paper: any five-digit number in it is a page range or an ID, never one
+        # of our discharges. Recorded, not scanned.
+        if len(FUSION_RE.findall(head)) < FUSION_MIN_HITS:
+            p["offtopic"] = True
             continue
         for s in sorted({int(m) for m in BARE_RE.findall(text)} & shots):
             ctxs = []
@@ -417,6 +437,10 @@ def main():
     n = fetch_pdfs(papers)
     print(f"full text after the direct download: {n}")
     n += fetch_fallback(papers, budget_s=float(os.environ.get("LIT_CHASE_BUDGET_S", 0)) or None)
+    # NOTE: the arXiv-by-title fallback earns its keep only if the corpus is clean. Over a
+    # full pass it recovered exactly one paper -- and that paper was an EEG eye-state
+    # classifier whose abstract mentions the Weka "KStar" classifier. The title match was
+    # correct; the corpus was not.
     by_source = {}
     for p in papers:
         if p.get("file"):
@@ -424,11 +448,27 @@ def main():
             by_source[src] = by_source.get(src, 0) + 1
     print(f"full text after the chase: {n} of {len(papers)}   {by_source}")
     hits = scan(papers, shots)
+    held = [p for p in papers if p.get("file")]
+    offtopic = [p for p in held if p.get("offtopic")]
+    relevant_missing = [p for p in papers if not p.get("file")
+                        and FUSION_TITLE_RE.search(p.get("title") or "")]
+    n_rel_held = len(held) - len(offtopic)
+    n_rel_pop = n_rel_held + len(relevant_missing)
+    print(f"\ncorpus: {len(papers)} papers matched 'KSTAR', {len(held)} with full text, "
+          f"of which {len(offtopic)} are NOT about fusion (Weka K*, K* search, the KSTAR "
+          f"kinase paper, ...)")
+    print(f"fusion-relevant coverage: {n_rel_held} full texts of ~{n_rel_pop} relevant "
+          f"papers ({100 * n_rel_held / max(n_rel_pop, 1):.0f} %)  <- quote THIS, not "
+          f"{len(held)}/{len(papers)}")
     (HERE / "literature_hits.json").write_text(
         json.dumps({"confirmed": {str(k): v for k, v in CONFIRMED.items()},
                     "false_positives": {str(k): v for k, v in FALSE_POSITIVES.items()},
                     "sweep_hits": hits, "n_papers": len(papers), "n_fulltext": n,
-                    "coverage": {"by_source": by_source, "still_missing": [
+                    "coverage": {"by_source": by_source,
+                                 "n_offtopic_fulltext": len(offtopic),
+                                 "n_relevant_fulltext": n_rel_held,
+                                 "n_relevant_population": n_rel_pop,
+                                 "still_missing": [
                         {"title": p["title"], "doi": p["doi"], "why": p.get("miss", "?")}
                         for p in papers if not p.get("file")]}},
                    indent=1, ensure_ascii=False), encoding="utf-8")
