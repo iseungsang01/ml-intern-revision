@@ -60,6 +60,13 @@ SEQ_MODELS = {
     # step -- so this is the arm that asks whether the transformer misses 1 ms because
     # of attention or because it was only ever built at reach 63.
     "xfmr15": functools.partial(SeqCESXfmr, reach=15),
+    "xfmr7": functools.partial(SeqCESXfmr, reach=7),
+
+    # Low rungs of the per-family reach ladder. The 70 ms threshold was measured on
+    # ONE family (seq_v2) and then applied to all of them; these ask whether it is a
+    # property of the problem or of the LSTM. RF = 2^(L+1) - 1, so L = 1 -> 3, L = 2 -> 7.
+    "tcn3": functools.partial(SeqCESTCN, layers=1),
+    "tcn7": functools.partial(SeqCESTCN, layers=2),
 
     # B.9 axis D: the 1k-10k band, which b8_minimal swept with recurrent arms only.
     # Reach is fixed at 15 (>= the 7-step saturation measured in axis A) so the only

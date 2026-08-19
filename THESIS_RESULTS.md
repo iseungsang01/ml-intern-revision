@@ -2775,21 +2775,121 @@ so "convolution cannot make 1 ms" is **not** a claim this section supports.
 
 ---
 
-## 9. Recommended framings for the thesis
+## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
-1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
-   splits, including three never touched by model selection. This is the headline.
-2. **Lead the practical case with causal superiority.** The nowcaster substantially outperforms every
-   causal CES gap-filler; for real-time use the comparison to future-using interpolation is generous
-   to the baseline and the model still wins on `CES_TI`.
-3. **Report `CES_VT` as an honest tie and foreground the asymmetry as the scientific contribution.**
-   The physics story (fast diagnostics inform core temperature but not toroidal rotation at 10 ms) is
-   a genuine, interpretable finding, and the ablation makes the mechanism explicit.
-4. **The top lever for `CES_VT` is data, not architecture: get NBI torque/power into the dataset.**
-   It is the actual driver of toroidal rotation and it is currently absent.
-5. **Planned refinement — bracket-distance stratification.** Stratify by distance to the nearest
-   *future* anchor rather than by Δt-since-last-observed alone; this should isolate the regime where
-   the nowcaster's fast-diagnostic information has the most marginal value over interpolation.
+**The claim to lead with.** *Crossing 70 ms of contiguous causal context is what decides whether
+the nowcaster beats the strongest deployable baseline; how you cross it decides cost, not skill.*
+
+That sentence is a compression of the one contrast B.9 was built to make. Two things were varied
+and only one moved the result:
+
+| varied | range | `CES_TI` vs `gp_causal` | significant |
+|---|---|---|---|
+| **architecture**, reach fixed | LSTM 357,570 / TCN 3,238 / attention 295,746 | +0.113 / +0.119 / +0.119 | 4/4 · 4/4 · 4/4 |
+| **context**, architecture fixed | `seq_v2` at 20 ms → 70 ms → 630 ms | **+0.055 → +0.115 → +0.138** | **2/4 → 4/4 → 4/4** |
+
+A 110× parameter range and three of the most dissimilar sequence operators available produce no
+distinguishable difference. Fifty milliseconds of context is the difference between missing the
+promotion bar and clearing it 4/4.
+
+### 9.1 State the threshold relative to its baseline — it is not "the context needed to be useful"
+
+At 20 ms of context the model already beats persistence by **+0.356**, which is what a deployed
+system actually displaces. What 20 ms fails to beat is `gp_causal`, the strongest past-only method
+(§8x). **70 ms is the context needed to beat the best available alternative, not the context needed
+to be worth deploying.** Say it that way; the weaker phrasing invites the objection that the
+threshold is an artifact of an easy baseline, and the stronger one is not what was measured.
+
+The rungs are coarse (2 → 7), so the true minimum lies somewhere in **3–7 steps** and this study
+does not resolve it. Quote "≈ 70 ms", not "exactly 7 steps".
+
+### 9.2 Two resources, not one — this reconciles §8f with §8af
+
+§8f found the *window* sweep flat from W = 2 to W = 8 and §8af finds a 70 ms threshold. They do not
+conflict, because they count different things:
+
+- **past CES observations** — one is enough (§8f, unchanged);
+- **contiguous fast-diagnostic context** — 70 ms is needed (§8af, new).
+
+The window family satisfied the first and could not reach the second *at any W*, by construction:
+an `AdaptiveAvgPool1d(1)` averages the window and discards its ordering (§8ad), the temporal-subset
+augmentation makes each window an arbitrary non-contiguous subset of past rows, and rows without an
+observed target were dropped before the model ever saw them. The numbers land exactly where that
+explanation predicts — window `iter009` at W = 2 scores **+0.041 (1/4)** against `gp_causal` and
+`seq_v2` truncated to the same 2 steps scores **+0.055 (2/4)**. Different architectures, same
+starvation, same result.
+
+So the full-grid reframing (§8d, §8t) was not a modelling preference; it was the only way to make
+the resource that matters reachable. **That is the paper's mechanism story, and it retroactively
+explains why §8f was flat.**
+
+### 9.3 Choose the architecture on cost, because skill does not distinguish it
+
+Above a modest capacity the operator is irrelevant to skill, so the selection is made entirely on
+price — and the price is derivable from structure, not from parameter count or arithmetic
+(§8ah: latency tracks **dispatched operator count**, ~1.3–1.6 µs each; a 2,362-parameter model and
+a 357,570-parameter one differ by 1.6×):
+
+| family | cost vs reach R | per layer | layers to reach R | measured min |
+|---|---|---:|---|---:|
+| recurrent (LSTM) | **O(1)** — the state carries it | ~35 µs | 1 | 112–179 µs |
+| dilated causal conv | **O(log R)** | ~51 µs | log₂R | 222–345 µs |
+| banded attention | **O(1)** — the band absorbs it | **~238 µs** | 1–2 | 606–615 µs |
+
+Attention is *also* O(1) in reach — `xfmr15` (band 8) and `xfmr63` (band 32) differ by 1.5% — it
+simply carries a ~7× worse constant. On this problem it is **strictly dominated**: `tcn3k` matches
+its skill (+0.119, 4/4) with 91× fewer parameters at 2.7× lower cost.
+
+**Two operating points are worth naming.** `tcn3k` (3,238 parameters) matches the 357,570-parameter
+backbone on `T_i` and beats `gp_causal` 4/4 at 222 µs; `v2m4k` (3,898) is the cheapest arm that
+still clears 4/4, at 112 µs. Neither is "the small version of the model" — they are the answer to
+what the problem actually requires.
+
+### 9.4 Report the `T_i` / `V_rot` asymmetry as a mechanism, and attribute the gap to data
+
+`V_rot` is the honest weak side: **no arm reaches 3/4 against `gp_causal`** (best: `v2m4k` +0.162,
+2/4). Do not call this a failure of reconstruction — every arm beats persistence by ≈ +0.39 — call
+it what it is: the margin over the strongest deployable baseline is real but not resolvable at
+~96 test discharges.
+
+The asymmetry has a mechanism and it now shows up in a second coordinate. `V_rot`'s best family is
+the small **recurrent** arm and `T_i`'s is the small **convolutional** one, which is what §8ab's
+routing predicts: `V_rot` rides a highly autocorrelated carried value, so recurrence suffices, while
+`T_i` integrates fast-diagnostic history, where weight sharing across time pays.
+
+Attribute the residual gap to **named, testable data levers**, never to model inadequacy (§8j):
+NBI torque is absent from the dataset (`T_e`~`CES_VT` r = +0.024, p = 0.58, against
+`T_e`~`CES_TI` r = +0.353, p = 3e−17), and the Mirnov stream — the one plausible rotation proxy —
+was destroyed by unfiltered decimation (lag-1 autocorrelation −0.009 vs BES +0.568). Both are
+acquisition tasks, and the torque one is not fixed by a higher sampling rate.
+
+### 9.5 Frame the microsecond programme as an extension, not a dependency
+
+The thesis is complete on the 10 ms grid. Keep the µs work in one forward-looking section and be
+precise about what it can and cannot do:
+
+- **It cannot produce µs targets.** CES integration time is ~10 ms, so `T_i` and `V_rot` labels stay
+  on the 10 ms grid no matter what is acquired. The µs question is whether **higher-bandwidth
+  input** improves a 10 ms prediction (B.6), not whether prediction moves to µs cadence.
+- **It is where non-uniform sampling first appears.** The present grid is 99.46% uniform
+  (Δt = 0.01 s, three distinct values), so "handles irregular sampling" is not a claim this data
+  can support. Multi-rate acquisition is what makes it real.
+- **It turns attention's defeat into a prediction.** Attention is the only family whose reach is
+  defined in *elapsed time* rather than in *steps* — a recurrent transition and a dilated kernel
+  both assume a uniform grid by construction. So the arm that loses here is the one predicted to
+  win when the grid stops being uniform, which is a falsifiable statement rather than a consolation.
+
+### 9.6 What not to claim
+
+- Not "beats every offline method": the model **ties** the acausal GP (§8p, §8ac).
+- Not "the window framing is refuted on information" (§8ac's original wording): 87% of that deficit
+  was cold start, and a model *trained* at reach 2 recovers it (§8ae, §8af).
+- Not a 1 ms deployment verdict from this hardware: session-to-session p99 spread reached **21.84×**
+  and the pre-registered protocol correctly refused to rule. Minimum latencies are robust (noise
+  only adds) and support "every trained arm's step is under a quarter of a millisecond"; the p99
+  budget test needs a controlled machine.
+- Not "more context is better": the curve is a **threshold**, flat past 70 ms, and unbounded context
+  is slightly *worse* than a bounded 630 ms (§8af).
 
 ---
 

@@ -43,7 +43,9 @@ from run_b9_reach import (SEEDS, PRACTICAL_EPS, PAIRED, one_run, run_dir,  # noq
 from run_b1_gate import GATE_ENV, run_step  # noqa: E402
 
 # arm -> the receptive field it declares, which is also the axis A rung it pairs against.
-ARMS = {"tcn15": 15, "tcn63": 63, "xfmr63": 63, "xfmr15": 15}
+ARMS = {"tcn15": 15, "tcn63": 63, "xfmr63": 63, "xfmr15": 15,
+        # per-family low rungs: is the 70 ms threshold family-invariant?
+        "tcn3": 3, "tcn7": 7, "xfmr7": 7}
 
 
 def control_dir(reach, seed, smoke=False):

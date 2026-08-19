@@ -50,7 +50,9 @@ sys.path.insert(0, str(CES_DIR / "experiments" / "b1_gate"))
 from run_b1_gate import GATE_ENV, AMBIENT_VARS, SMOKE_OVERRIDES, run_step  # noqa: E402
 
 SEEDS = (42, 1, 7, 123)
-REACHES = (2, 7, 15, 31, 63)
+# 3 is here because 8af left the true CES_TI minimum unresolved between 2 and 7, and
+# because a 3-layer-free TCN (RF 3) needs a same-reach LSTM to pair against.
+REACHES = (2, 3, 7, 15, 31, 63)
 EPOCH_CAP = "100"          # non-binding; patience terminates (B.3 lesson)
 ROWS_PER_BATCH = 4800      # = 16 blocks x 298 median rows, the backbone's own value (§8ac)
 PRACTICAL_EPS = 0.02       # PREREGISTRATION_B9.md §3.1
