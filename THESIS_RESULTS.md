@@ -2665,6 +2665,11 @@ and that ordering would still be an order of magnitude below the reach effect.
 
 ## 8ah. B.9 axis C (2026-08-19) — 10 ms never binds; at 1 ms the backbone passes once the **implementation** stops being the cost
 
+> **Partly suspended by §8aj (2026-08-19).** A re-run of the same 5-session protocol recorded a
+> **21.84×** session-to-session p99 spread and overwrote the per-session artifacts behind the table
+> below, so **the 1 ms column and verdict 2 must not be quoted**. Verdicts 1, 3 and 4 stand; §8aj
+> re-derives them from operator counts, which do not depend on the machine.
+
 **Question (승상님).** "10 ms 구간에서는 어느 것이 가장 좋은지 … 1 ms를 새로운 제한으로 주면
 그때는 어떤 모델이 최선인지." §8ac priced the arms against 10 ms and found the budget never binds,
 so its argument was skill-per-millisecond rather than feasibility. A 1 ms deadline (a control-cycle
@@ -2775,6 +2780,225 @@ so "convolution cannot make 1 ms" is **not** a claim this section supports.
 
 ---
 
+## 8ai. B.9 axis D (2026-08-19) — the family tie **breaks below 10k**: convolution reaches the same ceiling with half the parameters
+
+**Question.** §8ag tied the three sequence-operator families at ~300k parameters once the reach
+matched. `b8_minimal` swept 1k–10k, but with **recurrent arms only** (`v2m*` / `b3m*`), so the band
+where an inductive bias should matter most had never been asked the family question. Pre-registered
+as PREREGISTRATION_B9.md §2.3-D — **H6: the family tie holds down there too** (|paired| < 0.02,
+significance ≤ 1/4 against the size-matched recurrent arm).
+
+**Design** (`experiments/b9_minimal/run_b9_minimal.py`, 12 runs, artifacts
+`data/.b9_{tcn8k,tcn3k,tcn2k}_s*`, verdict `data/.b9_minimal_family.json`). Reach is fixed at
+**15** for every arm — above the 7-step saturation §8af measured and equal to a 3-layer TCN's
+receptive field — so the operator is the only variable. Each arm is paired three ways: against the
+size-matched recurrent arm from `b8_minimal`, against `v2r15` (the same reach at full width, from
+axis A), and against the 357k backbone. `GATE_ENV`, cut population, the frozen B.1 manifests.
+
+**This is no longer a deployment argument.** §8ah found that with a minimal-operator step even the
+357k backbone is far from being the cost, so small models are not required by any budget. What is
+left is the measurement itself: how far down does "the family does not matter" hold.
+
+### 1. Paired vs the **size-matched recurrent** arm (mean of 4 splits; w/l = CI excludes 0)
+
+| arm | params | recurrent match | params | `CES_TI` | sig. w/l | `CES_VT` | sig. w/l | §3.2 verdict |
+|---|---:|---|---:|---:|---|---:|---|---|
+| `tcn8k` | 8,094 | `v2m7k` (LSTM) | 6,866 | **+0.028** | 4 / 0 | −0.020 | 0 / 1 | **differs** |
+| `tcn3k` | 3,238 | `v2m2k` (LSTM) | 2,362 | **+0.040** | 4 / 0 | −0.010 | 0 / 1 | **differs** |
+| `tcn2k` | 1,808 | `b3m1k` (B.3 GRU) | 1,208 | **+0.027** | 3 / 0 | +0.303 | 2 / 0 | **differs** |
+
+### 2. The same arms against the full-width rungs — where the tie *does* hold
+
+| arm | params | vs `v2r15` (184,626) | sig. | vs backbone (357,570) | sig. | vs `W = 2` window | skill vs causal GP | pass |
+|---|---:|---:|---|---:|---|---:|---:|---|
+| `tcn8k` | 8,094 | +0.007 | 0 / 0 | +0.012 | 1 / 0 | +0.084 | +0.124 | **4/4** |
+| `tcn3k` | 3,238 | +0.001 | 0 / 0 | +0.006 | 1 / 0 | +0.079 | +0.119 | **4/4** |
+| `tcn2k` | 1,808 | −0.004 | 0 / 0 | +0.001 | 1 / 0 | +0.074 | +0.114 | **4/4** |
+
+(`CES_TI`; the causal-GP column is the absolute skill the arm scores, and "pass" counts splits where
+its CI clears zero.)
+
+### 3. Verdict
+
+1. **H6 is falsified.** All three convolutional arms beat their size-matched recurrent arm on
+   `CES_TI` by **+0.027 … +0.040** with **3–4/4** significance — above `PRACTICAL_EPS` and at the
+   significance §3.2 demands in the same direction. Where capacity is scarce, the inductive bias
+   pays, and the pre-registered consequence applies: **the convolutional arm is the default shape
+   for a minimal model**, not the recurrent one.
+2. **This bounds §8ag rather than contradicting it.** Against the *full-width* arm at the same
+   reach every TCN is within **±0.007**, and within **±0.012** of the 357k backbone, at 1/100 of
+   its parameters. So the two results compose into one statement: **the family does not decide the
+   ceiling, it decides how many parameters you need to reach it.** At ~300k both families are at
+   the ceiling and the operator cannot show; below 10k the ceiling binds and it does.
+3. **The parameter floor that keeps 4/4 against the causal GP roughly halves.** `b8_minimal`'s
+   recurrent floor was `v2m4k` at **3,898** params (`v2m2k` at 2,362 fell to 3/4, `b3m1k` at 1,208
+   to 3/4). `tcn2k` holds **4/4 at 1,808** — 2.2× smaller — and its mean paired gap to the backbone
+   is **+0.001 with zero significant losses**, where `v2m2k` was −0.036 with 3. A 1,808-parameter
+   model that beats the causal GP on all four splits is the smallest thing this project has that
+   still carries the §8af claim.
+4. **The `CES_VT` column supports nothing here, and the one large number is a confound.** Against
+   the two LSTM arms `V_rot` is −0.020 / −0.010 and never 3/4 significant. The +0.303 is against
+   `b3m1k`, which is the B.3 *interpretable* family with a single-latent `V_rot` branch — that
+   contrast varies family, size and branch structure at once, so it is reported and not used.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). Reach is fixed at
+15 and depth at 3 layers, so this samples three points on the convolutional ladder rather than
+locating its floor; and the recurrent comparands come from `b8_minimal`'s own ladder, not from a
+matched sweep. The named measurement is **the TCN width sweep `b8_minimal` did for the LSTM** —
+same protocol, widths chosen to land on 1k / 2k / 4k / 8k — which would say where the convolutional
+floor actually is, rather than that it is below 1,808.
+
+---
+
+## 8aj. B.9 axis C, second pass (2026-08-19) — cost is **dispatched operator count**, and this machine can no longer decide 1 ms
+
+**Question.** §8ah's 1 ms verdict is decided by an absolute, and absolutes are the one thing this
+machine has never delivered reliably. Re-running the pre-registered 5-session protocol — after
+axis D made the small convolutional arms candidates and after `tight_step.py` added an
+operator-fused `seq_v2` step — asks whether that verdict reproduces.
+
+**It does not, and the protocol is what says so.**
+
+**Design.** `experiments/b9_latency/bench_budget.py --all` (5 sessions, 200 warm-up + 2,000 timed
+iterations, batch 1, 1 thread, CPU), artifacts `data/.b9_latency_s{1..5}.json`, verdict
+`data/.b9_latency.json`, minimum-of-sessions `data/.b9_latency_min.json`. New in this pass:
+`tight_step.py` (four exact fusions of the `seq_v2` step — both branches' first layer in one
+matmul, input and recurrent weights in one matmul, gates reordered so each activation is one
+contiguous slice, and both branches' cell update at once), the axis D convolutional arms, and
+`experiments/b9_latency/op_count.py`, which counts what the milliseconds were always proxying.
+
+### 1. The 1 ms verdict is **suspended**, on this machine, by the rule that was written for it
+
+Worst session-to-session p99 spread on this pass: **21.84×** — against 4.2× in §8ac and 2.56× on
+the pass §8ah recorded. Under PREREGISTRATION_B9.md §4 (an arm clears a budget only when *every*
+session's p99 does), **not one model arm clears 1 ms in this pass**, including the arms §8ah
+recorded as clearing it at max p99 0.4–0.6 ms.
+
+That is not a new physical finding. It is the pre-registered rule correctly refusing to resolve an
+absolute from a contaminated sample, which is exactly the failure mode §4 was written to catch.
+The consequence is bookkeeping, and it is stated plainly:
+
+- **§8ah's 1 ms table and its verdict 2 ("at 1 ms the backbone itself passes") are suspended, not
+  replaced.** The per-session artifacts behind them were overwritten by this pass, so they can no
+  longer be checked, and neither table should be quoted as a 1 ms result in the thesis.
+- **§8ah's verdicts 1, 3, 4 stand**, because they are *ratios and orderings* — 10 ms never binds;
+  size is not the lever; most of the family gap was `nn.Conv1d`, not convolution — and this section
+  re-derives all three from statistics that survive additive noise.
+
+### 2. The ladder read on the **minimum** of five sessions
+
+Contention adds time and never removes it, so the minimum over independent sessions is the closest
+this pass gets to the machine's own cost. It is therefore a **lower bound**: it is the right
+statistic for comparing arms and the wrong one for granting a pass, and no pass verdict is drawn
+from it below.
+
+| arm | mode | params | min median (ms) | min p99 | max p99 | session spread |
+|---|---|---:|---:|---:|---:|---:|
+| `persistence` | per-row baseline | 0 | 0.010 | 0.022 | 0.295 | 13.4x |
+| `gp_causal` | per-row baseline | 0 | 1.148 | 2.522 | 16.713 | 6.6x |
+| `seq_v2` | stock `nn.LSTM` step | 357,570 | 0.793 | 1.667 | 15.130 | 9.1x |
+| `v2m7k` | stock `nn.LSTM` step | 6,866 | 0.389 | 1.095 | 4.525 | 4.1x |
+| `v2m4k` | stock `nn.LSTM` step | 3,898 | 0.544 | 1.069 | 3.977 | 3.7x |
+| `v2m2k` | stock `nn.LSTM` step | 2,362 | 0.509 | 1.114 | 3.896 | 3.5x |
+| `tcn15` | stock streaming cache | 184,626 | 2.074 | 3.832 | 13.247 | 3.5x |
+| `tcn63` | stock streaming cache | 297,810 | 2.248 | 5.553 | 40.799 | 7.3x |
+| `xfmr63` | stock streaming cache | 295,746 | 1.056 | 2.156 | 32.375 | 15.0x |
+| `window_w2` | recomputed every step | 201,258 | 2.418 | 4.370 | 30.640 | 7.0x |
+| `seq_v2_jit` | jit-fused LSTM | 357,570 | 0.688 | 1.292 | 5.652 | 4.4x |
+| `v2m7k_jit` | jit-fused LSTM | 6,866 | 0.383 | 0.726 | 6.069 | 8.4x |
+| `v2m2k_jit` | jit-fused LSTM | 2,362 | 0.379 | 0.726 | 3.691 | 5.1x |
+| **`seq_v2_lean`** | lean explicit ops | 357,570 | **0.378** | 0.834 | 7.072 | 8.5x |
+| `v2m7k_lean` | lean explicit ops | 6,866 | 0.283 | 0.644 | 14.058 | 21.8x |
+| `v2m4k_lean` | lean explicit ops | 3,898 | 0.189 | 0.580 | 2.944 | 5.1x |
+| `v2m2k_lean` | lean explicit ops | 2,362 | 0.269 | 0.580 | 5.995 | 10.3x |
+| `tcn15_lean` | lean explicit ops | 184,626 | 0.488 | 1.196 | 2.387 | 2.0x |
+| `tcn8k_lean` | lean explicit ops | 8,094 | 0.441 | 0.959 | 4.456 | 4.6x |
+| `tcn3k_lean` | lean explicit ops | 3,238 | 0.453 | 1.007 | 6.747 | 6.7x |
+| `tcn2k_lean` | lean explicit ops | 1,808 | 0.522 | 1.056 | 6.082 | 5.8x |
+| `tcn63_lean` | lean explicit ops | 297,810 | 0.798 | 1.787 | 5.807 | 3.2x |
+| `xfmr63_lean` | lean explicit ops | 295,746 | 1.514 | 2.866 | 8.562 | 3.0x |
+| `xfmr15_lean` | lean explicit ops | 295,746 | 1.737 | 2.961 | 7.099 | 2.4x |
+| **`seq_v2_tight`** | operator-fused step | 357,570 | **0.352** | 0.751 | 1.914 | 2.6x |
+| `v2m4k_tight` | operator-fused step | 3,898 | 0.226 | 0.533 | 1.683 | 3.2x |
+| `v2m2k_tight` | operator-fused step | 2,362 | 0.241 | 0.568 | 1.434 | 2.5x |
+| `xfmr63_tight` | operator-fused step | 295,746 | 1.504 | 2.692 | 8.075 | 3.0x |
+| `xfmr15_tight` | operator-fused step | 295,746 | 1.273 | 2.566 | 11.095 | 4.3x |
+
+The implementation ladder for the backbone reads **0.793 → 0.688 → 0.378 → 0.352 ms** (stock →
+jit-fused → lean → operator-fused): **2.25× total**, of which the lean rewrite is 2.10× and the
+four exact fusions add a further 1.07×. Fusion has almost run out; §3 says why.
+
+### 3. Operator counts — the half of cost that does not depend on the machine
+
+`op_count.py` executes one online step under `torch.profiler` and tallies every dispatched `aten::`
+operator. The count is exact, reproducible anywhere, and — unlike every millisecond above — did not
+move when the machine was busy (`data/.b9_op_counts.json`).
+
+| arm | mode | reach | `aten::` ops / step | min median (µs) | µs per op |
+|---|---|---:|---:|---:|---:|
+| `seq_v2` | stock `nn.LSTM` | any | 118 | 793 | **6.72** |
+| `seq_v2_lean` | lean | any | 161 | 378 | 2.35 |
+| `seq_v2_tight` | fused | any | **111** | 352 | 3.17 |
+| `v2m2k_lean` | lean | any | 127 | 269 | 2.12 |
+| `v2m2k_tight` | fused | any | **86** | 241 | 2.80 |
+| `tcn3_lean` | lean | 3 | 113 | — | — |
+| `tcn7_lean` | lean | 7 | 161 | — | — |
+| `tcn15_lean` | lean | 15 | 209 | 488 | 2.33 |
+| `tcn63_lean` | lean | 63 | 305 | 799 | 2.62 |
+| `xfmr7_lean` | lean | 7 | 557 | — | — |
+| `xfmr15_lean` | lean | 15 | 565 | 1,737 | 3.07 |
+| `xfmr63_lean` | lean | 63 | 565 | 1,514 | 2.68 |
+| `xfmr15_tight` | fused | 15 | 473 | 1,273 | 2.69 |
+| `xfmr63_tight` | fused | 63 | 473 | 1,504 | 3.18 |
+
+**The scaling law, one line per family:**
+
+- **recurrence — O(1) in reach.** The state carries the past, so the step at reach 2 and the step at
+  reach 630 are *the same step*: 111 ops fused, 161 lean, at every rung of §8af's ladder.
+- **dilated convolution — O(log R).** Exactly **+48 ops per layer** (113 / 161 / 209 / 305 at
+  L = 1 / 2 / 3 / 5) and `RF = 2^(L+1) − 1`, so cost ≈ 48·log₂(R+1) + c. Reaching 70 ms costs one
+  extra layer over reaching 30 ms; reaching 630 ms costs two more.
+- **banded attention — O(1) in reach, with a large constant.** The KV cache makes reach genuinely
+  free (557 / 565 / 565 ops at bands 7 / 15 / 63; 473 / 473 fused), but the constant is
+  **4.3× the fused recurrent step** and 5.5× the 2,362-parameter one.
+
+**And the conversion is nearly a constant.** Excluding the stock `nn.LSTM` arm, min median ÷ op
+count lands at **2.1–3.2 µs per operator** across a 6.6× range of operator counts, a **151× range
+of parameters**, and all three families. That is §8ah's inferred law measured directly. The stock
+arm is the sole outlier at 6.72 µs/op precisely because `nn.Module` call protocol is *not* an ATen
+op and so never appears in the count — which is the whole of what the lean rewrite bought.
+
+### 4. Verdict
+
+1. **The cost model is `t ≈ N_ops × ~2–3 µs`.** Not parameters (151× buys 1.6×), not arithmetic
+   (`v2m2k` does ≈ 2.4k MAC per step and spends microseconds on it). Operator dispatch is the unit,
+   and this is now measured on both sides of the equation rather than inferred from one.
+2. **Reach is free for recurrence, logarithmic for convolution, free-but-expensive for attention.**
+   At reach 63: 111–161 ops recurrent, 305 convolutional, 473–565 attention. §8ah's ordering is
+   confirmed by a machine-independent count, and so is its magnitude — 305/161 = **1.9×** and
+   565/161 = **3.5×**, against the 1.3–1.8× and ~4.0× it measured in milliseconds.
+3. **No absolute deadline is decidable from this pass — and that includes 10 ms.** Under the
+   max-p99 rule six arms fail even the 10 ms budget here (`gp_causal` 16.7, stock `seq_v2` 15.1,
+   `tcn15` 13.2, `tcn63` 40.8, `xfmr63` 32.4, `window_w2` 30.6 ms), which is not a finding about
+   those arms: on the minimum statistic the same six sit at 2.5 / 1.7 / 3.8 / 5.6 / 2.2 / 4.4 ms,
+   and **every lean arm's min p99 is under 3 ms**. A pass that cannot reproduce a 10 ms result it
+   has already established four times is a pass that measures the room, not the model. So §8ah's
+   "10 ms never binds" survives as a lower-bound statement and 1 ms is not resolved in either
+   direction here.
+4. **What the operator law implies for the next attempt.** Since cost is dispatch count, the lever
+   with the most left in it is a runtime that collapses the ~111 remaining dispatches into a handful
+   of kernels — a compiled/quantized export (ONNX Runtime, `torch.compile` with a static graph) —
+   **not** further shrinking of the model, which §8ai has already taken to 1,808 parameters without
+   the milliseconds following.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). Unchanged from
+§8ah, plus one that this pass makes concrete: the 5 sessions must be run on a **quiet** machine
+(nothing training, no network job), because that is the single difference between the 2.56× pass
+and the 21.84× one. Until then the honest statement for the thesis is the operator count and the
+ordering, not a millisecond.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *Crossing 70 ms of contiguous causal context is what decides whether
@@ -2826,24 +3050,26 @@ explains why §8f was flat.**
 ### 9.3 Choose the architecture on cost, because skill does not distinguish it
 
 Above a modest capacity the operator is irrelevant to skill, so the selection is made entirely on
-price — and the price is derivable from structure, not from parameter count or arithmetic
-(§8ah: latency tracks **dispatched operator count**, ~1.3–1.6 µs each; a 2,362-parameter model and
-a 357,570-parameter one differ by 1.6×):
+price — and the price is derivable from structure, not from parameter count or arithmetic. **Quote
+the operator count, not the milliseconds**: §8aj measured cost as `N_ops × ~2–3 µs` and the counts
+are exact on any machine, while this machine's absolutes moved by 21.84× between sessions.
 
-| family | cost vs reach R | per layer | layers to reach R | measured min |
-|---|---|---:|---|---:|
-| recurrent (LSTM) | **O(1)** — the state carries it | ~35 µs | 1 | 112–179 µs |
-| dilated causal conv | **O(log R)** | ~51 µs | log₂R | 222–345 µs |
-| banded attention | **O(1)** — the band absorbs it | **~238 µs** | 1–2 | 606–615 µs |
+| family | cost vs reach R | `aten::` ops per online step | at R = 15 | at R = 63 |
+|---|---|---|---:|---:|
+| recurrent (LSTM) | **O(1)** — the state carries it | 111 fused / 161 lean, at *every* reach | 111 | 111 |
+| dilated causal conv | **O(log R)** | 113 + 48·(L−1), `R = 2^(L+1) − 1` | 209 | 305 |
+| banded attention | **O(1)** — the KV cache absorbs it | 473 fused / 565 lean, at *every* band | 473 | 473 |
 
-Attention is *also* O(1) in reach — `xfmr15` (band 8) and `xfmr63` (band 32) differ by 1.5% — it
-simply carries a ~7× worse constant. On this problem it is **strictly dominated**: `tcn3k` matches
-its skill (+0.119, 4/4) with 91× fewer parameters at 2.7× lower cost.
+Attention is *also* O(1) in reach — 565 ops at bands 7, 15 and 63 alike — it simply carries a
+**3.5–4.3× worse constant**. On this problem it is **strictly dominated**: `tcn3k` matches its
+skill (+0.119, 4/4) with 91× fewer parameters and 2.3–2.7× fewer dispatched operators.
 
 **Two operating points are worth naming.** `tcn3k` (3,238 parameters) matches the 357,570-parameter
-backbone on `T_i` and beats `gp_causal` 4/4 at 222 µs; `v2m4k` (3,898) is the cheapest arm that
-still clears 4/4, at 112 µs. Neither is "the small version of the model" — they are the answer to
-what the problem actually requires.
+backbone on `T_i` and beats `gp_causal` 4/4; `v2m4k` (3,898) is the cheapest recurrent arm that
+still clears 4/4, and `tcn2k` (1,808) is the cheapest arm of any family (§8ai). Neither is "the
+small version of the model" — they are the answer to what the problem actually requires. On this
+machine their minimum median steps were 0.45 / 0.19 / 0.52 ms, but those are lower bounds from a
+noisy pass and belong in a caption, not in a claim.
 
 ### 9.4 Report the `T_i` / `V_rot` asymmetry as a mechanism, and attribute the gap to data
 
