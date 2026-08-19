@@ -798,6 +798,59 @@ tell a real absence from an unreachable source:
   returned 0 results, then the site switched to a human-verification page. Any zero it produced
   is meaningless. Always run the positive control before believing a negative.
 
+## The Family Ties Only Where Capacity Is Ample (2026-08-19) — §8ag + §8ai together
+
+Two results that read as opposites are one statement, and quoting either alone is wrong.
+
+- **At ~300k parameters the operator is irrelevant** (§8ag): recurrence, dilated convolution and
+  banded attention trained at the *same* reach land inside ±0.02 of each other with no arm reaching
+  3/4 significance in either direction.
+- **Below 10k it is not** (§8ai): each dilated-conv arm beats the size-matched recurrent arm on
+  `T_i` by **+0.027 … +0.040** with **3–4/4** significance — pre-registered H6, falsified.
+
+The reconciliation: **the family does not decide the ceiling, it decides how many parameters you
+need to reach it.** Every small TCN still lands within ±0.007 of the *full-width* LSTM at the same
+reach and ±0.012 of the 357k backbone. The concrete consequence is the parameter floor that keeps
+4/4 against the causal GP: recurrent **3,898** (`v2m4k`), convolutional **1,808** (`tcn2k`) — 2.2×
+smaller, and tied to the backbone (+0.001 paired, 0 significant losses) where `v2m2k` was −0.036
+with 3.
+
+**How to apply.** Never write "the architecture does not matter" without the size qualifier; write
+"above ~10k parameters it does not." When a minimal model is wanted, start from the convolutional
+arm. And `V_rot` supports none of this — the one large number (+0.303) is against `b3m1k`, which
+varies family, size and branch structure at once, so it is reported and never used.
+
+## Cost Is Dispatched Operator Count — And This Machine's Milliseconds Are Not Evidence (2026-08-19) — §8aj
+
+`experiments/b9_latency/op_count.py` counts the `aten::` operators one online step dispatches. It
+is the statistic to quote, because it is exact, reproducible on any machine, and it does not move
+when something else is running:
+
+- **recurrence — O(1) in reach.** 111 ops fused / 161 lean, identical at reach 2 and reach 630.
+- **dilated convolution — O(log R).** Exactly **+48 ops per layer** (113/161/209/305 at
+  L = 1/2/3/5), `RF = 2^(L+1) − 1`.
+- **banded attention — O(1) in reach, 4.3× the constant.** 473 fused at bands 7, 15 and 63 alike.
+- **the conversion is nearly constant**: min-median ÷ op count = **2.1–3.2 µs** across a 6.6× op
+  range, a **151× parameter range**, and all three families. Stock `nn.LSTM` is the one outlier
+  (6.7 µs/op) because module call protocol is not an ATen op — that gap *is* what a lean rewrite
+  buys (2.10×, plus 1.07× from four exact fusions).
+
+**And the timing side failed, correctly.** The 5-session re-run recorded a **21.84×**
+session-to-session p99 spread (against 2.56× on the pass §8ah recorded), so the pre-registered rule
+refused to resolve 1 ms — and its artifacts overwrote the ones §8ah's table was built from, which
+is why that table is **suspended rather than corrected**.
+
+**How to apply.**
+1. **Never run a latency session next to a training batch or a network job.** That is the only
+   difference between the 2.56× pass and the 21.84× one.
+2. When a pass is contaminated, quote the **minimum** over sessions — noise only adds, so the
+   minimum is the closest estimate of the machine — and label it a *lower bound*: fine for ordering
+   arms, never sufficient to grant a budget pass.
+3. A benchmark that overwrites its own per-session artifacts destroys the record behind any
+   conclusion already drawn from them. Version the session files, or expect to suspend a section.
+4. The remaining lever on cost is the **runtime**, not the model: 1,808 parameters did not make the
+   milliseconds follow, because ~111 dispatches did not become fewer.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
