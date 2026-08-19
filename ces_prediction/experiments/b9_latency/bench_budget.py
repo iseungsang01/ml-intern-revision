@@ -77,6 +77,11 @@ ARMS = (
     ("tcn63", "seq", "tcn63"),
     ("xfmr63", "seq", "xfmr63"),
     ("window_w2", "window", 2),
+    # Fused deployment forms of the three recurrent arms — the only ones within reach of
+    # 1 ms in eager mode, so the only ones where fusion can change a verdict.
+    ("seq_v2_jit", "seq_fused", "v2"),
+    ("v2m7k_jit", "seq_fused", "v2m7k"),
+    ("v2m2k_jit", "seq_fused", "v2m2k"),
 )
 
 
@@ -119,9 +124,55 @@ def _neighbor_sets():
     return _NEIGHBOR_SETS
 
 
+class _V2StepPure(torch.nn.Module):
+    """seq_v2's online step with the recurrent state passed in and out as plain tensors.
+
+    `SeqV2Step` keeps its state as Python attributes, which `torch.jit.trace` cannot see —
+    tracing it would silently freeze the first step's state into the graph. Making the state
+    explicit is what makes the fused arm both traceable and *correct*, and the bench asserts
+    it reproduces the eager step before timing it.
+    """
+
+    def __init__(self, m):
+        super().__init__()
+        self.m = m
+        self.n_fast = m.n_fast
+
+    def forward(self, x_t, h_ti, c_ti, h_vt, c_vt):
+        m = self.m
+        out_ti, (h_ti2, c_ti2) = m.lstm_ti(x_t, (h_ti, c_ti))
+        out_vt, (h_vt2, c_vt2) = m.lstm_vt(x_t[..., self.n_fast:], (h_vt, c_vt))
+        y = torch.cat([m.head_ti(m.norm_ti(out_ti)), m.head_vt(m.norm_vt(out_vt))], dim=-1)
+        return y, h_ti2, c_ti2, h_vt2, c_vt2
+
+
+def _zero_state(lstm):
+    return (torch.zeros(lstm.num_layers, 1, lstm.hidden_size),
+            torch.zeros(lstm.num_layers, 1, lstm.hidden_size))
+
+
 def make_arm(kind, spec):
     """-> (callable, mode, n_params). The callable performs ONE online step."""
     torch.set_grad_enabled(False)
+    if kind == "seq_fused":
+        # PREREGISTRATION_B9.md §2.3: a deployment-optimisation LATENCY column, never a
+        # scored artifact. §8ac measured torch.jit fusion at 1.73x on the window model with
+        # outputs identical to 1e-5; at a 1 ms budget that factor decides admissibility, so
+        # it has to be measured rather than quoted.
+        model = SEQ_MODELS[spec]().eval()
+        pure = _V2StepPure(model).eval()
+        x_t = torch.randn(1, 1, N_FEATURES)
+        state = (*_zero_state(model.lstm_ti), *_zero_state(model.lstm_vt))
+        eager = pure(x_t, *state)[0]
+        traced = torch.jit.freeze(torch.jit.trace(pure, (x_t, *state)))
+        for _ in range(3):                       # let the fuser specialise
+            traced(x_t, *state)
+        fused = traced(x_t, *state)[0]
+        if not torch.allclose(eager, fused, atol=1e-5):
+            raise SystemExit(f"FATAL: fused {spec} differs from eager by "
+                             f"{float((eager - fused).abs().max()):.2e}; refusing to time it")
+        return (lambda: traced(x_t, *state)), "jit_fused_lstm", model.n_params
+
     if kind == "baseline":
         import baselines_interpolation as B
         fn = getattr(B, spec)

@@ -2604,6 +2604,142 @@ length up to `r` during training, but not identical. The rungs are coarse (2 →
 minimum for `T_i` lies somewhere in 3–7 steps and is not resolved here. And this is one
 architecture: whether 70 ms is a property of the *plasma* or of `seq_v2` is what axis B tests.
 
+---
+
+## 8ag. B.9 axis B (2026-08-19) — at matched reach the sequence-operator **family does not decide skill**
+
+**Question.** §8ac left one architecture question explicitly open: "it does not establish that
+recurrence is the only way to reach 50 steps: a dilated causal TCN reaches 63 steps with 5 layers
+and remains an untested candidate." §8af then showed the reach it was arguing from is 70 ms, not
+500. So the sharp form is: **hold the reach fixed and vary only the operator.**
+
+**Design** (`experiments/b9_family/run_b9_family.py`, 12 runs, artifacts
+`data/.b9_{tcn15,tcn63,xfmr63}_s*`, verdict `data/.b9_family.json`). Three families, all carrying
+seq_v2's routing (`V_rot` never sees the fast diagnostics), all trained and scored at the reach
+their receptive field declares, all under `GATE_ENV` on the frozen B.1 manifests:
+
+- `tcn15` / `tcn63` — dilated causal conv, kernel 3, dilations 1·2·4…, `RF = 2^(L+1) − 1`;
+- `xfmr63` — causal banded attention; the per-layer band is *derived* from the target reach because
+  two stacked 63-wide bands compose to 125 (caught by `test_seq_family_is_causal_and_reach_bounded`,
+  which asserts causality and the declared receptive field numerically);
+- position is encoded relatively (a shared ALiBi slope), so a KV cache is valid — §8ah says why
+  that mattered.
+
+**Each arm is paired against the axis A rung trained at its own reach**, not only against the
+backbone: against the backbone alone, family and reach would be confounded exactly as §8ae showed
+they were.
+
+### 1. Paired vs the same-reach LSTM (mean of 4 splits; wins/losses = CI excludes 0)
+
+| arm | RF | params | `CES_TI` | sig. w/l | `CES_VT` | sig. w/l | vs full backbone | §3.2 verdict |
+|---|---:|---:|---:|---|---:|---|---:|---|
+| `tcn15` | 15 | 184,626 | **+0.014** | 2 / 0 | +0.000 | 0 / 0 | +0.019 | undecided |
+| `tcn63` | 63 | 297,810 | **−0.016** | 0 / 2 | −0.036 | 0 / 1 | +0.013 | undecided |
+| `xfmr63` | 63 | 295,746 | **−0.019** | 0 / 1 | −0.024 | 0 / 1 | +0.010 | tie |
+
+### 2. Verdict
+
+1. **H3 is not falsified and H4 is supported.** Every arm lands **inside ±0.02** of the LSTM
+   trained at the same reach — under the pre-registered practical floor — and **no arm reaches
+   3/4 significance in either direction**, so no promotion is triggered and the backbone is
+   unchanged. Recurrence, dilated convolution and banded attention are indistinguishable on skill
+   once they see the same 70 ms.
+2. **Read with §8af, this is the batch's central result.** Changing the *family* moves `T_i` by
+   ≤ 0.019 and never significantly; changing the *reach* from 70 ms to 20 ms moves it by −0.065,
+   4/4 significant. **The ranking is set by how far back the model looks, not by what the model
+   is** — a statement about the problem, not about the architecture zoo.
+3. **§8ac's open TCN question is answered, and the answer removes that argument's premise.** A
+   63-step TCN does match the recurrent backbone, so recurrence was never load-bearing for
+   *skill*. What it still buys is cost, and §8ah prices it.
+4. **All three families sit nominally above the full-block backbone** (+0.019 / +0.013 / +0.010),
+   the same direction as §8af's rungs 31 and 63. Bounding the context is, if anything, mildly
+   helpful.
+
+**What it does not show.** Three families is not "all families"; a state-space model (S4/Mamba)
+would test whether the tie extends to an operator with O(1) state *and* long reach. `tcn15`'s 2/4
+wins and `tcn63`'s 2/4 losses are individually real but cancel across splits, which is what the
+±0.02 floor exists to express — a larger seed grid could resolve them into a small real ordering,
+and that ordering would still be an order of magnitude below the reach effect.
+
+---
+
+## 8ah. B.9 axis C (2026-08-19) — the 10 ms budget never binds, and at 1 ms the limit is the **runtime**, not the model
+
+**Question (승상님).** "10 ms 구간에서는 어느 것이 가장 좋은지 … 1 ms를 새로운 제한으로 주면
+그때는 어떤 모델이 최선인지." §8ac priced the arms against 10 ms and found the budget never binds,
+so its argument was skill-per-millisecond rather than feasibility. A 1 ms deadline (a control-cycle
+constraint rather than a diagnostic-cadence one) is the first place where structure could decide
+admissibility.
+
+**Design** (`experiments/b9_latency/bench_budget.py`, artifacts `data/.b9_latency_s{1..5}.json`,
+verdict `data/.b9_latency.json`). §8ac concluded "quote the ordering, not the absolutes" after two
+sessions disagreed by 4.2× — but a 1 ms verdict *is* an absolute, so PREREGISTRATION_B9.md §4
+replaced that rule: **5 independent sessions in separate processes**, 200 warm-up + 2,000 timed
+iterations, single-threaded batch-1 CPU, and an arm clears a budget only when **every** session's
+p99 does; a max p99 in **[0.8 B, 1.25 B]** is reported as **boundary**, not resolved.
+**Measured session-to-session p99 spread: 1.32×** — the protocol held.
+
+Every arm is timed in the form it would be deployed in. Crucially the TCN and the transformer were
+given **streaming caches** (per-layer ring buffers; a KV cache) before being timed: §8ac's cost
+argument was that a convolutional stack "recomputes its receptive field every step unless a
+streaming cache is built explicitly", and pricing them without one would have confirmed that
+argument by construction. Both caches reproduce the batch forward to **3e-7**
+(`test_seq_family_streaming_equals_batch`).
+
+### 1. Latency ladder (5 sessions, CPU, batch 1, 1 thread)
+
+| arm | mode | params | median | max p99 | 10 ms | **1 ms** |
+|---|---|---:|---:|---:|---|---|
+| persistence | per-row baseline | 0 | 0.014 | 0.041 | pass | **pass** |
+| `gp_causal` | per-row refit | 0 | 1.637 | 2.651 | pass | fail |
+| `seq_v2` | stateful LSTM | 357,570 | 1.236 | 1.876 | pass | fail |
+| `v2m7k` | stateful LSTM | 6,866 | 0.772 | 1.179 | pass | boundary |
+| `v2m2k` | stateful LSTM | 2,362 | 0.743 | 1.146 | pass | boundary |
+| `tcn15` | streaming cache | 184,626 | 3.144 | 4.029 | pass | fail |
+| `tcn63` | streaming cache | 297,810 | 5.586 | 7.253 | pass | fail |
+| `xfmr63` | streaming cache | 295,746 | 2.820 | 3.712 | pass | fail |
+| window `W = 2` | recomputed every step | 201,258 | 3.272 | 4.677 | pass | fail |
+| **`seq_v2` + jit fuse** | fused LSTM | 357,570 | 0.968 | 1.546 | pass | fail |
+| **`v2m7k` + jit fuse** | fused LSTM | 6,866 | **0.547** | **0.890** | pass | **boundary** |
+| **`v2m2k` + jit fuse** | fused LSTM | 2,362 | 0.546 | 0.936 | pass | **boundary** |
+
+Fusion is a latency column only (PREREGISTRATION_B9.md §2.3), never a scored artifact; the bench
+asserts the fused step reproduces the eager step to 1e-5 before timing it, because
+`torch.jit.trace` would otherwise silently bake the first step's recurrent state into the graph.
+
+### 2. Verdict
+
+1. **At 10 ms nothing binds — every arm passes, by 2× or more.** §8ac reproduced. Structure does
+   not decide deployability at the CES cadence, so at this budget the choice is made on skill, and
+   §8ag says skill does not distinguish the families. **The 10 ms answer is therefore: take the
+   cheapest arm that reaches 70 ms of context**, which is the stateful recurrent step.
+2. **At 1 ms, no arm that beats persistence resolves.** The four best candidates land in the
+   pre-registered **boundary band** (0.89–1.18 ms max p99 against a 1.00 ms deadline) and the rest
+   fail. Per §4.5 **no deployment claim is made for any of them.** Reporting a boundary as a pass
+   is exactly what the band was pre-registered to prevent.
+3. **What the 1 ms limit is made of is measured, and it is not the model.** `v2m2k` performs
+   ≈ 2.4k multiply-accumulates per step — microseconds of arithmetic — yet costs 0.55 ms fused.
+   **Essentially all of it is per-operator dispatch**, which is §8ac §3's finding (274k MACs = 3%
+   of a 3.56 ms step) arriving at its extreme: a 2,362-parameter model and a 357,570-parameter
+   model differ by only 1.8× in fused median. **Shrinking the model further cannot reach 1 ms;
+   changing the runtime can.**
+4. **Cost, unlike skill, does depend on the family — and recurrence wins it.** Given a *fair*
+   streaming cache, the TCN is still 2.6–4.5× the stateful LSTM's median and attention 2.3×,
+   because the cost is per-step operator count, not parameters or arithmetic. §8ag says the three
+   families tie on skill; this says they do not tie on price. **That is what selects the backbone,
+   and it is now the only thing that does.**
+
+**What it does not show, and the measurement that would settle it** (§8j rule). One machine, one
+runtime (PyTorch eager + TorchScript), CPU. The named next measurement is a runtime without
+Python-level operator dispatch — ONNX Runtime, a quantized/compiled kernel, or the control system's
+own hardware — timed under this same 5-session protocol. The arithmetic is microseconds and the
+boundary arms miss by ~0.1 ms, so that is the one change with the headroom to move a boundary
+verdict to a pass. Until it is run, **"a 1 ms CES nowcaster" is undetermined, not refused.**
+
+---
+
+## 9. Recommended framings for the thesis
+
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
    splits, including three never touched by model selection. This is the headline.
 2. **Lead the practical case with causal superiority.** The nowcaster substantially outperforms every
