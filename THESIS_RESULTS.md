@@ -2978,13 +2978,15 @@ op and so never appears in the count — which is the whole of what the lean rew
    confirmed by a machine-independent count, and so is its magnitude — 305/161 = **1.9×** and
    565/161 = **3.5×**, against the 1.3–1.8× and ~4.0× it measured in milliseconds.
 3. **No absolute deadline is decidable from this pass — and that includes 10 ms.** Under the
-   max-p99 rule six arms fail even the 10 ms budget here (`gp_causal` 16.7, stock `seq_v2` 15.1,
-   `tcn15` 13.2, `tcn63` 40.8, `xfmr63` 32.4, `window_w2` 30.6 ms), which is not a finding about
-   those arms: on the minimum statistic the same six sit at 2.5 / 1.7 / 3.8 / 5.6 / 2.2 / 4.4 ms,
-   and **every lean arm's min p99 is under 3 ms**. A pass that cannot reproduce a 10 ms result it
-   has already established four times is a pass that measures the room, not the model. So §8ah's
-   "10 ms never binds" survives as a lower-bound statement and 1 ms is not resolved in either
-   direction here.
+   max-p99 rule **seven** arms fail even the 10 ms budget here (`gp_causal` 16.7, stock `seq_v2`
+   15.1, `tcn15` 13.2, `tcn63` 40.8, `xfmr63` 32.4, `window_w2` 30.6, `v2m7k_lean` 14.1 ms) and
+   three more land on the boundary. That is not a finding about those arms: on the minimum
+   statistic the same seven sit at 2.5 / 1.7 / 3.8 / 5.6 / 2.2 / 4.4 / **0.6** ms — a
+   6,866-parameter lean step "failing" 10 ms at 14.1 while its own best session is 0.64 is the
+   contamination stated in one number — and **every lean and fused arm's min p99 is under 3 ms**.
+   A pass that cannot reproduce a 10 ms result already established four times is measuring the
+   room, not the model. So §8ah's "10 ms never binds" survives as a lower-bound statement, and
+   1 ms is not resolved in either direction here.
 4. **What the operator law implies for the next attempt.** Since cost is dispatch count, the lever
    with the most left in it is a runtime that collapses the ~111 remaining dispatches into a handful
    of kernels — a compiled/quantized export (ONNX Runtime, `torch.compile` with a static graph) —
