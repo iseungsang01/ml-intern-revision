@@ -62,8 +62,11 @@ def one_run(variant, seed, smoke, resume):
     paired_win = out_dir / "paired_vs_w2cut.json"
     if resume and not smoke and paired_ref.exists() and paired_win.exists():
         print("[b8] === " + out_dir.name + ": complete, skipping (--resume)", flush=True)
-        return {"variant": variant, "seed": seed, "out_dir": str(out_dir),
-                "status": "ok", "resumed": True}
+        # Read the artifacts anyway: a resumed run that reports nothing drops its rung out
+        # of the summary, which is how the first pass produced a table of "n/a".
+        record = {"variant": variant, "seed": seed, "out_dir": str(out_dir),
+                  "status": "ok", "resumed": True}
+        return _collect(out_dir, paired_ref, record)
     if not smoke and not (ref_dir / "comparison_errors_test.npz").exists():
         raise SystemExit("FATAL: B.1 backbone run missing: " + str(ref_dir))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -123,6 +126,11 @@ def one_run(variant, seed, smoke, resume):
     finally:
         record["seconds"] = round(time.time() - start, 1)
 
+    return _collect(out_dir, paired_ref, record)
+
+
+def _collect(out_dir, paired_ref, record):
+    """Read a finished run's artifacts into its summary record (fresh or resumed)."""
     try:
         m = json.loads((out_dir / "metrics.json").read_text())
         record["params"] = m.get("n_params")
@@ -131,8 +139,11 @@ def one_run(variant, seed, smoke, resume):
         pass
     try:
         b = json.loads((out_dir / "bootstrap_summary.json").read_text())
+        # Schema is splits.<tag>.<target>.<baseline>; reading targets.<target> fails
+        # silently into an all-None table (same defect the B.9 runners had).
+        split = (b.get("splits", {}) or {}).get("test", {}) or {}
         for t in ("CES_TI", "CES_VT"):
-            node_t = (b.get("targets", {}) or {}).get(t, {}) or {}
+            node_t = split.get(t, {}) or {}
             for base in ("pchip", "gp_causal"):
                 node = node_t.get(base, {}) or {}
                 if node:
