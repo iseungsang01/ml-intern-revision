@@ -48,6 +48,7 @@ DATA = REPO_ROOT / "data"
 sys.path.insert(0, str(CES_DIR))
 sys.path.insert(1, str(CES_DIR / "experiments" / "seq"))
 sys.path.insert(2, str(CES_DIR / "experiments" / "latency"))
+sys.path.insert(3, str(Path(__file__).resolve().parent))
 from model import MultimodalCESPredictor  # noqa: E402  (the window family)
 from seq_models import SEQ_MODELS  # noqa: E402
 from seq_data import N_FEATURES  # noqa: E402
@@ -82,6 +83,17 @@ ARMS = (
     ("seq_v2_jit", "seq_fused", "v2"),
     ("v2m7k_jit", "seq_fused", "v2m7k"),
     ("v2m2k_jit", "seq_fused", "v2m2k"),
+    # Minimal-operator steps, EVERY family, same weights (lean_steps.py). Added after the
+    # first pass put every model arm at or above 1 ms and the operator profile showed the
+    # budget was going to module machinery, not to the network. Optimising only the
+    # recurrent arm would have manufactured the "recurrence is cheapest" reading, so all
+    # three families get it.
+    ("seq_v2_lean", "seq_lean", "v2"),
+    ("v2m7k_lean", "seq_lean", "v2m7k"),
+    ("v2m2k_lean", "seq_lean", "v2m2k"),
+    ("tcn15_lean", "seq_lean", "tcn15"),
+    ("tcn63_lean", "seq_lean", "tcn63"),
+    ("xfmr63_lean", "seq_lean", "xfmr63"),
 )
 
 
@@ -172,6 +184,23 @@ def make_arm(kind, spec):
             raise SystemExit(f"FATAL: fused {spec} differs from eager by "
                              f"{float((eager - fused).abs().max()):.2e}; refusing to time it")
         return (lambda: traced(x_t, *state)), "jit_fused_lstm", model.n_params
+
+    if kind == "seq_lean":
+        import lean_steps
+        model = SEQ_MODELS[spec]().eval()
+        lean = lean_steps.build(model)
+        # Equivalence is the licence to time it: replay a 40-step block one step at a time
+        # and require the streamed output to match the model's own forward.
+        block = torch.randn(1, 40, N_FEATURES)
+        ref = model(block)[0]
+        st = lean.stream_init()
+        got = torch.cat([lean(block[0, i:i + 1], st) for i in range(block.shape[1])], 0)
+        if not torch.allclose(ref, got, atol=1e-4):
+            raise SystemExit(f"FATAL: lean {spec} differs from its model by "
+                             f"{float((ref - got).abs().max()):.2e}; refusing to time it")
+        state = lean.stream_init()
+        x_t = block[0, :1]
+        return (lambda: lean(x_t, state)), "lean_ops", model.n_params
 
     if kind == "baseline":
         import baselines_interpolation as B

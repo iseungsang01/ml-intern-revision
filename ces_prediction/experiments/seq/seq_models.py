@@ -56,6 +56,14 @@ SEQ_MODELS = {
     "tcn15": functools.partial(SeqCESTCN, layers=3),
     "tcn63": functools.partial(SeqCESTCN, layers=5),
     "xfmr63": functools.partial(SeqCESXfmr, reach=63),
+
+    # B.9 axis D: the 1k-10k band, which b8_minimal swept with recurrent arms only.
+    # Reach is fixed at 15 (>= the 7-step saturation measured in axis A) so the only
+    # variable against the LSTM rungs is the operator, and the question is whether the
+    # family tie of axis B survives where capacity is scarce enough to bite.
+    "tcn8k": functools.partial(SeqCESTCN, layers=3, hidden_ti=24, hidden_vt=12, head=16),
+    "tcn3k": functools.partial(SeqCESTCN, layers=3, hidden_ti=14, hidden_vt=8, head=12),
+    "tcn2k": functools.partial(SeqCESTCN, layers=3, hidden_ti=10, hidden_vt=6, head=8),
 }
 
 
