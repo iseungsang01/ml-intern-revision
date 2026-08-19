@@ -54,6 +54,7 @@ import re
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -457,15 +458,28 @@ def springer_fulltext(papers):
     return extras
 
 
-def openalex_api(url, tries=5):
-    for t in range(tries):
+def openalex_api(url, tries=6):
+    """OpenAlex, with a backoff that can actually outlast a 429.
+
+    The first version topped out at ~20 s of retry, which is fine for a flaky connection
+    and useless against rate limiting: the shot-number index scan died at 100/641 with the
+    backoff exhausted. A 429 now waits minutes, not seconds, because the alternative is
+    abandoning a scan that is resumable anyway.
+    """
+    for attempt in range(tries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "ces-lit/1.0"})
             return json.load(urllib.request.urlopen(req, timeout=90))
-        except Exception:
-            if t == tries - 1:
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429 or attempt == tries - 1:
                 raise
-            time.sleep(2 * (t + 1))
+            wait = 30 * (2 ** attempt)          # 30 s, 1, 2, 4, 8 min
+            print(f"    429; waiting {wait}s before retry {attempt + 2}/{tries}", flush=True)
+            time.sleep(wait)
+        except Exception:
+            if attempt == tries - 1:
+                raise
+            time.sleep(2 * (attempt + 1))
 
 
 def fulltext_index_scan(shots, pace=0.8, control_n=20):
@@ -623,6 +637,8 @@ def main():
             pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--report", action="store_true", help="print the verified table only")
+    ap.add_argument("--pace", type=float, default=0.8,
+                    help="seconds between index-scan queries (raise it if 429s persist)")
     ap.add_argument("--fulltext-index", action="store_true",
                     help="query OpenAlex's full-text index per shot (reaches IOP, no PDFs)")
     args = ap.parse_args()
@@ -631,7 +647,7 @@ def main():
         report(shots)
         return
     if args.fulltext_index:
-        fulltext_index_scan(shots)   # writes/updates fulltext_index_hits.json as it goes
+        fulltext_index_scan(shots, pace=args.pace)   # resumable; writes as it goes
         return
     papers = dedupe(arxiv_list() + openalex_list())
     print(f"papers since {FROM_DATE}: {len(papers)} distinct "

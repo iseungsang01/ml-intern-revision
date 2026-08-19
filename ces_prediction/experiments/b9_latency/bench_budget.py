@@ -74,6 +74,9 @@ ARMS = (
     ("seq_v2", "seq", "v2"),
     ("v2m7k", "seq", "v2m7k"),
     ("v2m2k", "seq", "v2m2k"),
+    # 3,898 params is the cheapest rung that still beats the causal GP 4/4 on CES_TI
+    # (b8_minimal), so it is the headroom operating point the 1 ms table needs.
+    ("v2m4k", "seq", "v2m4k"),
     ("tcn15", "seq", "tcn15"),
     ("tcn63", "seq", "tcn63"),
     ("xfmr63", "seq", "xfmr63"),
@@ -91,6 +94,7 @@ ARMS = (
     ("seq_v2_lean", "seq_lean", "v2"),
     ("v2m7k_lean", "seq_lean", "v2m7k"),
     ("v2m2k_lean", "seq_lean", "v2m2k"),
+    ("v2m4k_lean", "seq_lean", "v2m4k"),
     ("tcn15_lean", "seq_lean", "tcn15"),
     ("tcn63_lean", "seq_lean", "tcn63"),
     ("xfmr63_lean", "seq_lean", "xfmr63"),
@@ -99,6 +103,7 @@ ARMS = (
     # one got, so its 1 ms verdict is not an artifact of who was optimised.
     ("seq_v2_tight", "seq_tight", "v2"),
     ("v2m2k_tight", "seq_tight", "v2m2k"),
+    ("v2m4k_tight", "seq_tight", "v2m4k"),
     ("xfmr63_tight", "seq_tight", "xfmr63"),
     ("xfmr15_tight", "seq_tight", "xfmr15"),
 )
