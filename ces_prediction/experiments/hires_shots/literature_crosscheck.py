@@ -458,23 +458,71 @@ def springer_fulltext(papers):
     return extras
 
 
-def openalex_api(url, tries=6):
-    """OpenAlex, with a backoff that can actually outlast a 429.
+class DailyBudgetExhausted(RuntimeError):
+    """OpenAlex's metered daily allowance is gone; nothing but waiting refills it."""
 
-    The first version topped out at ~20 s of retry, which is fine for a flaky connection
-    and useless against rate limiting: the shot-number index scan died at 100/641 with the
-    backoff exhausted. A 429 now waits minutes, not seconds, because the alternative is
-    abandoning a scan that is resumable anyway.
+
+def _retry_after_seconds(exc):
+    """Seconds OpenAlex asks us to wait, or None if it did not say."""
+    try:
+        raw = (exc.headers.get("retry-after") or "").strip()
+    except Exception:
+        return None
+    if not raw:
+        return None
+    if raw.isdigit():
+        return int(raw)
+    try:                                        # HTTP-date form
+        from email.utils import parsedate_to_datetime
+        import datetime as _dt
+        when = parsedate_to_datetime(raw)
+        now = _dt.datetime.now(_dt.timezone.utc)
+        return max(0, int((when - now).total_seconds()))
+    except Exception:
+        return None
+
+
+# A 429 that clears in a minute and a 429 that clears at midnight UTC are the same status
+# code and completely different situations. Anything past this many seconds is the daily
+# budget, not a burst limit.
+QUOTA_SECONDS = 900
+
+
+def openalex_api(url, tries=6):
+    """OpenAlex, distinguishing a burst limit from the metered daily budget.
+
+    The earlier version treated every 429 as burst throttling and escalated the wait to
+    minutes. That was the wrong read: OpenAlex now meters this API per request, and when
+    the free daily allowance is gone it answers 429 with `retry-after` in the *hours* --
+    `Insufficient budget ... Resets at midnight UTC`. No backoff outlasts that, and since
+    each retry is itself a billable request, waiting simply spends more of tomorrow's
+    budget on nothing.
+
+    So: read `retry-after` first. Past QUOTA_SECONDS it is the daily quota and we raise
+    immediately -- the scans are resumable, so stopping costs one request, not the pass.
+    Below it, it really is a burst limit and the old backoff is right.
     """
     for attempt in range(tries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "ces-lit/1.0"})
             return json.load(urllib.request.urlopen(req, timeout=90))
         except urllib.error.HTTPError as exc:
-            if exc.code != 429 or attempt == tries - 1:
+            if exc.code != 429:
                 raise
-            wait = 30 * (2 ** attempt)          # 30 s, 1, 2, 4, 8 min
-            print(f"    429; waiting {wait}s before retry {attempt + 2}/{tries}", flush=True)
+            after = _retry_after_seconds(exc)
+            if after is not None and after > QUOTA_SECONDS:
+                try:
+                    body = exc.read().decode("utf-8", "replace")[:200]
+                except Exception:
+                    body = ""
+                raise DailyBudgetExhausted(
+                    f"daily budget spent; retry-after {after}s "
+                    f"(~{after / 3600:.1f} h). {body}") from None
+            if attempt == tries - 1:
+                raise
+            wait = after if after else 30 * (2 ** attempt)
+            print(f"    429 (burst, retry-after {after}); waiting {wait}s before "
+                  f"retry {attempt + 2}/{tries}", flush=True)
             time.sleep(wait)
         except Exception:
             if attempt == tries - 1:
@@ -628,6 +676,96 @@ def report(shots):
 
 
 
+KINASE_DOI = "10.1038/s41467-022-32017-5"   # a paper literally titled KSTAR, about kinases
+
+
+def batch_ask(group, per_page=25):
+    """Ask OpenAlex's full-text index about a whole group of shot numbers in one request.
+
+    `fulltext.search:KSTAR AND (a OR b OR ...)` -- the boolean form is what makes a 641
+    shot sweep affordable under a metered API. It is also the single point of failure of
+    this whole screen: if the operators are not honoured, every batch comes back empty and
+    641 shots read as `absent from the literature` when they were never actually asked
+    about. `syntax_control()` is what stops that reading, and it calls THIS function, not
+    a copy of it.
+    """
+    expr = " OR ".join(str(g) for g in group)
+    url = ("https://api.openalex.org/works?filter=" +
+           urllib.parse.quote(f"fulltext.search:KSTAR AND ({expr})", safe=":,") +
+           f"&per-page={per_page}&select=id,doi,title,publication_year&mailto={MAIL}")
+    found = []
+    for w in openalex_api(url)["results"]:
+        title, doi = w.get("title") or "", (w.get("doi") or "")
+        year = w.get("publication_year") or 0
+        if KINASE_DOI in doi.lower() or not FUSION_TITLE_RE.search(title) or year < 2022:
+            continue
+        found.append({"title": title, "doi": doi, "year": year})
+    return found
+
+
+# Shots whose publication is hand-verified in CONFIRMED and which the batch form therefore
+# HAS to return. They are the positive control.
+CONTROL_POSITIVE = [31921, 31359, 31873, 32027]
+
+
+def decoys(shots, n, start=5000, step=137):
+    """`n` five-digit numbers from outside the campaign -- nothing can legitimately cite
+    them, so a hit on one is this screen's coincidence rate, not a discharge."""
+    base = max(shots) + start
+    return [base + j * step for j in range(n)]
+
+
+def syntax_control(shots, pace=1.0, batch=32):
+    """Two requests that decide whether the batched scan means anything.
+
+    A batch that returns nothing is ambiguous by construction -- it means either `no paper
+    cites these 32 shots` or `the query did not run`. One request each way separates them:
+
+      POSITIVE  four hand-verified published shots, hidden among out-of-range decoys.
+                Empty here means the operators are being dropped and every negative in the
+                sweep would be an artefact. Stop.
+      NEGATIVE  the same batch shape with decoys ONLY. Hits here mean the numbers are being
+                ignored and `KSTAR` alone is driving the match, so every positive in the
+                sweep would be an artefact. Also stop.
+
+    Passing both is what licenses reading a batch miss as real absence.
+    """
+    filler = decoys(shots, batch - len(CONTROL_POSITIVE))
+    pos_group = sorted(CONTROL_POSITIVE + filler)
+    neg_group = decoys(shots, batch, start=9000, step=211)
+
+    print("=" * 78)
+    print(f"BATCH SYNTAX CONTROL  (2 requests, batch of {batch})")
+    print(f"  positive: {CONTROL_POSITIVE} + {len(filler)} out-of-range decoys")
+    got_pos = batch_ask(pos_group)
+    for w in got_pos:
+        print(f"    {w['year']}  {w['title'][:78]}\n           {w['doi']}")
+    print(f"  -> {len(got_pos)} fusion papers")
+    time.sleep(pace)
+
+    print(f"  negative: {batch} out-of-range decoys, no real shot")
+    got_neg = batch_ask(neg_group)
+    for w in got_neg:
+        print(f"    {w['year']}  {w['title'][:78]}\n           {w['doi']}")
+    print(f"  -> {len(got_neg)} fusion papers")
+
+    ok = bool(got_pos) and not got_neg
+    print("-" * 78)
+    if not got_pos:
+        print("FAIL (positive empty): the AND/OR form is not being honoured. Every batch\n"
+              "     would come back empty and that is NOT evidence of absence. Do not run\n"
+              "     the sweep; fix the query form first.")
+    elif got_neg:
+        print(f"FAIL (negative returned {len(got_neg)}): the shot numbers are not\n"
+              "     constraining the match -- `KSTAR` alone is. Every batch would look\n"
+              "     positive and bisection would burn the budget chasing nothing.")
+    else:
+        print("PASS: positives are found, decoys are not. A batch miss can be read as the\n"
+              "      shot being absent from the indexed literature.")
+    print("=" * 78)
+    return ok, got_pos, got_neg
+
+
 def batched_index_scan(shots, batch=32, pace=1.0):
     """The same index screen, but asking about 32 shots per request instead of one.
 
@@ -652,7 +790,6 @@ def batched_index_scan(shots, batch=32, pace=1.0):
         except Exception:
             pass
     done = set(state.get("queried") or [])
-    kinase = "10.1038/s41467-022-32017-5"
 
     def save():
         state["queried"] = sorted(done)
@@ -661,18 +798,7 @@ def batched_index_scan(shots, batch=32, pace=1.0):
         out_path.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf-8")
 
     def ask(group):
-        """One request for a whole group; [] means no paper cites any of them."""
-        expr = " OR ".join(str(g) for g in group)
-        url = ("https://api.openalex.org/works?filter=" +
-               urllib.parse.quote(f"fulltext.search:KSTAR AND ({expr})", safe=":,") +
-               f"&per-page=25&select=id,doi,title,publication_year&mailto={MAIL}")
-        found = []
-        for w in openalex_api(url)["results"]:
-            title, doi = w.get("title") or "", (w.get("doi") or "")
-            year = w.get("publication_year") or 0
-            if kinase in doi.lower() or not FUSION_TITLE_RE.search(title) or year < 2022:
-                continue
-            found.append({"title": title, "doi": doi, "year": year})
+        found = batch_ask(group)
         time.sleep(pace)
         return found
 
@@ -722,6 +848,8 @@ def main():
     ap.add_argument("--report", action="store_true", help="print the verified table only")
     ap.add_argument("--pace", type=float, default=0.8,
                     help="seconds between index-scan queries (raise it if 429s persist)")
+    ap.add_argument("--control", action="store_true",
+                    help="2-request positive/negative check that the batch query form works")
     ap.add_argument("--batched", action="store_true",
                     help="index scan in OR-batches of 32 (OpenAlex is metered per request)")
     ap.add_argument("--fulltext-index", action="store_true",
@@ -731,6 +859,9 @@ def main():
     if args.report:
         report(shots)
         return
+    if args.control:
+        ok, _, _ = syntax_control(shots, pace=args.pace)
+        raise SystemExit(0 if ok else 1)
     if args.fulltext_index:
         if args.batched:
             batched_index_scan(shots, pace=args.pace)
