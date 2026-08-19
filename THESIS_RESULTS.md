@@ -2521,7 +2521,88 @@ reach reaches +0.346", never as "`seq_v2` at reach 2 reaches +0.346".
 
 ---
 
-## 9. Recommended framings for the thesis
+## 8af. B.9 axis A (2026-08-19) — trained at each reach, `T_i` and `V_rot` both saturate at **70 ms**, not 500
+
+**Question (승상님).** §8ae bounded the warm-up share using the `W = 2` window control, a
+*different architecture*, so reach and structure stayed confounded and the pure-reach value was
+unmeasured. This measures it: `seq_v2`, byte-identical at every rung, **trained and scored** at
+reach 2 / 7 / 15 / 31 / 63 (`CES_SEQ_TRAIN_CTX` / `CES_SEQ_EVAL_CTX`). Pre-registered before any
+number existed in `experiments/PREREGISTRATION_B9.md` (axis A, H1–H2).
+
+**Design** (`experiments/b9_reach/run_b9_reach.py`, 20 runs, artifacts `data/.b9_v2r*_s*`, verdict
+`data/.b9_reach_ladder.json`). Training chops each block into non-overlapping `r`-step segments,
+so the recurrent state is never carried further than `r` and every row stays supervised; eval uses
+the sliding `_forward_truncated(r)`, so every scored row receives exactly `r` steps. Everything
+else is `GATE_ENV` (W = 2 · held-free · 3 keV cut · per-shot norm · frozen B.1 manifests · 4
+splits, init = split). **`r = full` is the frozen B.1 backbone, reused, not retrained.**
+
+**Rows per batch is held constant, not blocks per batch** — chunking a median-298-row block at
+`r = 2` makes 149 sequences out of one, so a fixed `CES_SEQ_BATCH = 16` would have moved the
+effective batch from ~4,800 rows to 32 and changed gradient noise by two orders of magnitude: a
+second variable larger than the one under test. Block-batch is derived as `max(8, 4800 / r)`.
+
+Rungs are 2 / 7 / 15 / 31 / 63 so a dilated causal TCN's receptive field (`2^(L+1) − 1`) lands on
+the same integers and axis B compares against them directly rather than against an interpolation.
+
+### 1. The two ladders on the same rungs (`CES_TI`, paired vs full-block, mean of 4 splits)
+
+`experiments/b9_reach/truncated_at_rungs.py` re-scores the **same frozen backbones** at these rungs
+into `.b9trunc_s*`, leaving §8ac's artifacts untouched; `ctx = full` reproduces each frozen run
+**bit-identically on 4/4 splits**, and the rung-2 value **exactly reproduces §8ac's** −0.510.
+
+| rung (context) | truncated (state cut) | sig. | **trained at that reach** | sig. | warm-up share |
+|---:|---:|---|---:|---|---:|
+| 2 (20 ms) | **−0.510** | 4/4 | **−0.065** | 4/4 | **87%** |
+| 7 (70 ms) | −0.064 | 4/4 | +0.002 | 0/4 | 103% |
+| 15 (150 ms) | −0.018 | 2/4 | +0.005 | 1/4 | — |
+| 31 (310 ms) | −0.009 | 1/4 | +0.023 | 0/4 | — |
+| 63 (630 ms) | +0.000 | 0/4 | +0.029 | 0/4 | — |
+
+`CES_VT`: truncated −0.055 (4/4) → trained −0.013 (2/4) at rung 2, warm-up share 76%; both curves
+are at zero from rung 7 on.
+
+Skill vs persistence for the trained rungs: `CES_TI` +0.356 / +0.397 / +0.398 / +0.409 / +0.413
+and `CES_VT` +0.384 / +0.393 / +0.376 / +0.393 / +0.390 (full-block backbone: +0.396 / +0.390).
+
+### 2. Verdict
+
+1. **Saturation is 7 steps = 70 ms for BOTH targets** (§3.4 rule: the smallest rung with
+   |paired| < 0.02 and ≤ 1/4 significant deficits). §8ac's truncation-based values were 50 steps
+   (500 ms) for `T_i` and 20 (200 ms) for `V_rot` — **7× and 3× too long**. The truncated ladder
+   needs **63 steps to match itself** where a model trained at the reach needs **7**; the factor
+   of 9 is entirely cold start.
+2. **§8ac measured correctly and was read wrongly.** The independent re-score reproduces its
+   ctx = 2 number to the digit. What does not follow from that number is the *information*
+   statement §8ac's Verdict 1 made, and §8ae/§8af replace it.
+3. **Unbounded context is not needed, and is not better.** Rungs 31 and 63 sit *nominally above*
+   the full-block backbone (+0.023, +0.029, 0/4 significant either way). Carrying state across a
+   1,482-step block buys nothing over bounding it at 310 ms.
+4. **`V_rot` is not reach-free.** At rung 2 it loses 2/4 significant — small (−0.013) but not the
+   clean independence §8ab's routing result made plausible. It needs the same 70 ms.
+5. **§8x's +0.081 backbone-over-window gap now decomposes**: reach −0.065, architecture ≈ −0.016.
+   Four fifths of what the backbone buys over the window family is *how far back it looks*, and
+   one fifth is *what it is*.
+
+### 3. Pre-registered hypotheses, executed as written
+
+- **H1 (`T_i` depends weakly on reach: deficit ≤ 0.10 at reach 2) is REJECTED**, on the
+  significance clause: the deficit is −0.065 (inside the 0.10 bound) but 4/4 significant, and the
+  rule falsified H1 on `평균 > 0.10 **또는** 4/4 유의`.
+- **The rule was mis-specified, and is reported that way rather than repaired after the fact.**
+  Bundling an effect-size bound and a significance count into one disjunction makes any small but
+  robust effect falsify a "weak dependence" hypothesis. The attached consequence — "§8ac Verdict 1
+  is restored" — **does not follow**: Verdict 1 asserted −0.34 vs the causal GP from a −0.510
+  truncation rung, and the trained measurement is −0.065. The batch's own §3.2 decision rule gives
+  the usable reading: |−0.065| ≥ 0.02 with ≥ 3/4 significant = "differs", magnitude 0.065.
+  PREREGISTRATION_B9.md is left unedited; the defect is recorded here.
+- **H2 (`V_rot` reach-independent) is NOT supported** at rung 2 (2/4 significant, so neither tie
+  nor difference under §3.2); it holds from rung 7 on.
+
+**What it does not show.** Truncated training gives rows near a segment boundary less than `r`
+steps, while eval gives every row exactly `r` — in-distribution, since the model sees every context
+length up to `r` during training, but not identical. The rungs are coarse (2 → 7), so the true
+minimum for `T_i` lies somewhere in 3–7 steps and is not resolved here. And this is one
+architecture: whether 70 ms is a property of the *plasma* or of `seq_v2` is what axis B tests.
 
 1. **Lead with `CES_TI` beating offline interpolation** — it passes PR4 on four independent test
    splits, including three never touched by model selection. This is the headline.
