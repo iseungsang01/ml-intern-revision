@@ -96,6 +96,11 @@ ARMS = (
     ("v2m2k_lean", "seq_lean", "v2m2k"),
     ("v2m4k_lean", "seq_lean", "v2m4k"),
     ("tcn15_lean", "seq_lean", "tcn15"),
+    # Axis D: at 1k-10k the convolutional arm beats the size-matched recurrent one
+    # 3-4/4 while tying the 357k LSTM, so these are live 1 ms candidates.
+    ("tcn8k_lean", "seq_lean", "tcn8k"),
+    ("tcn3k_lean", "seq_lean", "tcn3k"),
+    ("tcn2k_lean", "seq_lean", "tcn2k"),
     ("tcn63_lean", "seq_lean", "tcn63"),
     ("xfmr63_lean", "seq_lean", "xfmr63"),
     ("xfmr15_lean", "seq_lean", "xfmr15"),
