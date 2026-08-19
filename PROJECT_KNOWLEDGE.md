@@ -721,9 +721,14 @@ significant deficits** (below PCHIP entirely on s42), while **`V_rot` is indiffe
 > and behaves as §8ab's routing predicts (truncation costs it 0.032, training recovers none of it,
 > because its branch rides carried input channels rather than the recurrent state).
 > **How to apply:** never quote a truncation rung as an information statement. Quote it as "this
-> model loses X when its state is thrown away". The trained-at-reach ladder is pre-registered as
-> B.9 axis A (`experiments/PREREGISTRATION_B9.md`); until it runs, the pure-reach value is
-> **unmeasured**.
+> model loses X when its state is thrown away".
+>
+> **B.9 axis A has now measured it (§8af, 2026-08-19).** `seq_v2` trained AND scored at reach
+> 2/7/15/31/63: **both targets saturate at 7 steps = 70 ms**, not 500 / 200 ms. The truncated
+> ladder needs **63** steps to match itself where a trained one needs **7** — a factor of 9, all
+> cold start. Rungs 31 and 63 sit *nominally above* the unbounded backbone, so carrying state
+> across a 1,482-step block buys nothing. §8x's +0.081 backbone-over-window gap decomposes into
+> **reach −0.065 + architecture −0.016**. Quote 70 ms, not 500 ms.
 
 
 `experiments/reach/`, no retraining: the frozen B.1 checkpoints re-scored with the LSTM state
