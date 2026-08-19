@@ -94,6 +94,13 @@ ARMS = (
     ("tcn15_lean", "seq_lean", "tcn15"),
     ("tcn63_lean", "seq_lean", "tcn63"),
     ("xfmr63_lean", "seq_lean", "xfmr63"),
+    ("xfmr15_lean", "seq_lean", "xfmr15"),
+    # Operator-fused steps. The attention arm gets the same treatment the recurrent
+    # one got, so its 1 ms verdict is not an artifact of who was optimised.
+    ("seq_v2_tight", "seq_tight", "v2"),
+    ("v2m2k_tight", "seq_tight", "v2m2k"),
+    ("xfmr63_tight", "seq_tight", "xfmr63"),
+    ("xfmr15_tight", "seq_tight", "xfmr15"),
 )
 
 
@@ -185,10 +192,10 @@ def make_arm(kind, spec):
                              f"{float((eager - fused).abs().max()):.2e}; refusing to time it")
         return (lambda: traced(x_t, *state)), "jit_fused_lstm", model.n_params
 
-    if kind == "seq_lean":
-        import lean_steps
+    if kind in ("seq_lean", "seq_tight"):
+        import lean_steps, tight_step
         model = SEQ_MODELS[spec]().eval()
-        lean = lean_steps.build(model)
+        lean = (tight_step if kind == "seq_tight" else lean_steps).build(model)
         # Equivalence is the licence to time it: replay a 40-step block one step at a time
         # and require the streamed output to match the model's own forward.
         block = torch.randn(1, 40, N_FEATURES)
@@ -200,7 +207,8 @@ def make_arm(kind, spec):
                              f"{float((ref - got).abs().max()):.2e}; refusing to time it")
         state = lean.stream_init()
         x_t = block[0, :1]
-        return (lambda: lean(x_t, state)), "lean_ops", model.n_params
+        return (lambda: lean(x_t, state)), ("tight_ops" if kind == "seq_tight"
+                                            else "lean_ops"), model.n_params
 
     if kind == "baseline":
         import baselines_interpolation as B

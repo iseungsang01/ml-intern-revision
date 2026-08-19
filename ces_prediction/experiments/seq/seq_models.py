@@ -56,6 +56,10 @@ SEQ_MODELS = {
     "tcn15": functools.partial(SeqCESTCN, layers=3),
     "tcn63": functools.partial(SeqCESTCN, layers=5),
     "xfmr63": functools.partial(SeqCESXfmr, reach=63),
+    # Reach 15 is where axis A says skill saturates, and attention pays O(band) per
+    # step -- so this is the arm that asks whether the transformer misses 1 ms because
+    # of attention or because it was only ever built at reach 63.
+    "xfmr15": functools.partial(SeqCESXfmr, reach=15),
 
     # B.9 axis D: the 1k-10k band, which b8_minimal swept with recurrent arms only.
     # Reach is fixed at 15 (>= the 7-step saturation measured in axis A) so the only
