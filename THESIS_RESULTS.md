@@ -2663,7 +2663,7 @@ and that ordering would still be an order of magnitude below the reach effect.
 
 ---
 
-## 8ah. B.9 axis C (2026-08-19) — the 10 ms budget never binds, and at 1 ms the limit is the **runtime**, not the model
+## 8ah. B.9 axis C (2026-08-19) — 10 ms never binds; at 1 ms the backbone passes once the **implementation** stops being the cost
 
 **Question (승상님).** "10 ms 구간에서는 어느 것이 가장 좋은지 … 1 ms를 새로운 제한으로 주면
 그때는 어떤 모델이 최선인지." §8ac priced the arms against 10 ms and found the budget never binds,
@@ -2690,22 +2690,50 @@ argument by construction. Both caches reproduce the batch forward to **3e-7**
 
 | arm | mode | params | median | max p99 | 10 ms | **1 ms** |
 |---|---|---:|---:|---:|---|---|
-| persistence | per-row baseline | 0 | 0.014 | 0.041 | pass | **pass** |
-| `gp_causal` | per-row refit | 0 | 1.637 | 2.651 | pass | fail |
-| `seq_v2` | stateful LSTM | 357,570 | 1.236 | 1.876 | pass | fail |
-| `v2m7k` | stateful LSTM | 6,866 | 0.772 | 1.179 | pass | boundary |
-| `v2m2k` | stateful LSTM | 2,362 | 0.743 | 1.146 | pass | boundary |
-| `tcn15` | streaming cache | 184,626 | 3.144 | 4.029 | pass | fail |
-| `tcn63` | streaming cache | 297,810 | 5.586 | 7.253 | pass | fail |
-| `xfmr63` | streaming cache | 295,746 | 2.820 | 3.712 | pass | fail |
-| window `W = 2` | recomputed every step | 201,258 | 3.272 | 4.677 | pass | fail |
-| **`seq_v2` + jit fuse** | fused LSTM | 357,570 | 0.968 | 1.546 | pass | fail |
-| **`v2m7k` + jit fuse** | fused LSTM | 6,866 | **0.547** | **0.890** | pass | **boundary** |
-| **`v2m2k` + jit fuse** | fused LSTM | 2,362 | 0.546 | 0.936 | pass | **boundary** |
+| persistence | per-row baseline | 0 | 0.007 | 0.018 | pass | **pass** |
+| `gp_causal` | per-row refit | 0 | 0.638 | 2.277 | pass | fail |
+| `seq_v2` | stock `nn.LSTM` step | 357,570 | 0.487 | 1.829 | pass | fail |
+| `v2m7k` | stock `nn.LSTM` step | 6,866 | 0.291 | 0.804 | pass | boundary |
+| `v2m2k` | stock `nn.LSTM` step | 2,362 | 0.331 | 1.153 | pass | boundary |
+| `tcn15` | stock streaming cache | 184,626 | 1.100 | 2.522 | pass | fail |
+| `tcn63` | stock streaming cache | 297,810 | 1.978 | 4.123 | pass | fail |
+| `xfmr63` | stock streaming cache | 295,746 | 1.121 | 2.597 | pass | fail |
+| window `W = 2` | recomputed every step | 201,258 | 1.311 | 3.181 | pass | fail |
+| `seq_v2` + jit fuse | fused LSTM | 357,570 | 0.440 | 1.602 | pass | fail |
+| `v2m7k` + jit fuse | fused LSTM | 6,866 | 0.202 | 0.578 | pass | **pass** |
+| `v2m2k` + jit fuse | fused LSTM | 2,362 | 0.207 | 0.485 | pass | **pass** |
+| **`seq_v2` lean step** | explicit ops | 357,570 | **0.218** | **0.591** | pass | **pass** |
+| **`v2m7k` lean step** | explicit ops | 6,866 | 0.145 | 0.396 | pass | **pass** |
+| **`v2m2k` lean step** | explicit ops | 2,362 | 0.140 | 0.539 | pass | **pass** |
+| **`tcn15` lean step** | explicit ops | 184,626 | 0.273 | 0.975 | pass | boundary |
+| **`tcn63` lean step** | explicit ops | 297,810 | 0.401 | 1.122 | pass | boundary |
+| **`xfmr63` lean step** | explicit ops | 295,746 | 0.876 | 2.102 | pass | fail |
 
-Fusion is a latency column only (PREREGISTRATION_B9.md §2.3), never a scored artifact; the bench
-asserts the fused step reproduces the eager step to 1e-5 before timing it, because
-`torch.jit.trace` would otherwise silently bake the first step's recurrent state into the graph.
+Session-to-session p99 spread on this pass: **2.56×** — larger than the fused-only pass (1.32×)
+but still below the 4.2× §8ac saw on a contaminated session, and the max-p99 rule absorbs it.
+
+**Why the lean rows exist, and why every family has one.** The first pass put every model arm at
+or above 1 ms, so §8j's rule applies: name the measurement that would overturn the negative, then
+run it. Profiling the online step named it immediately — the budget was going to module call
+protocol, not to the network:
+
+| operation | cost | arithmetic |
+|---|---:|---|
+| `torch.mm`, 32 × 32 | **1.5 µs** | 32k MAC |
+| `nn.LSTM`, 1 layer, hidden 8 | **70.1 µs** | ~1k MAC |
+| `nn.LSTMCell`, hidden 8 | 25.7 µs | ~1k MAC |
+| `nn.Conv1d`, 128 channels, k = 3 | **214.8 µs** | — |
+| `nn.MultiheadAttention`, d = 128 | 108.8 µs | — |
+
+`experiments/b9_latency/lean_steps.py` re-expresses each step in explicit `addmm` / `bmm` calls
+over the **same parameters** — a kernel-3 dilated convolution over a ring buffer *is* three matrix
+multiplies, and one attention query against a band is a packed QKV projection plus two `bmm`. Each
+lean arm is asserted equal to its own model's forward (measured **2e-7**) before it is timed, and
+so is the fused arm (1e-5), because `torch.jit.trace` would otherwise bake the first step's
+recurrent state into the graph. **All three families get the treatment on purpose**: optimising
+only the recurrent arm would have manufactured the conclusion this section previously drew.
+Neither fusion nor the lean rewrite is a scored artifact (PREREGISTRATION_B9.md §2.3), and the
+pass rule is unchanged — what changed is the implementation being measured, not the decision rule.
 
 ### 2. Verdict
 
@@ -2713,28 +2741,37 @@ asserts the fused step reproduces the eager step to 1e-5 before timing it, becau
    not decide deployability at the CES cadence, so at this budget the choice is made on skill, and
    §8ag says skill does not distinguish the families. **The 10 ms answer is therefore: take the
    cheapest arm that reaches 70 ms of context**, which is the stateful recurrent step.
-2. **At 1 ms, no arm that beats persistence resolves.** The four best candidates land in the
-   pre-registered **boundary band** (0.89–1.18 ms max p99 against a 1.00 ms deadline) and the rest
-   fail. Per §4.5 **no deployment claim is made for any of them.** Reporting a boundary as a pass
-   is exactly what the band was pre-registered to prevent.
-3. **What the 1 ms limit is made of is measured, and it is not the model.** `v2m2k` performs
-   ≈ 2.4k multiply-accumulates per step — microseconds of arithmetic — yet costs 0.55 ms fused.
-   **Essentially all of it is per-operator dispatch**, which is §8ac §3's finding (274k MACs = 3%
-   of a 3.56 ms step) arriving at its extreme: a 2,362-parameter model and a 357,570-parameter
-   model differ by only 1.8× in fused median. **Shrinking the model further cannot reach 1 ms;
-   changing the runtime can.**
-4. **Cost, unlike skill, does depend on the family — and recurrence wins it.** Given a *fair*
-   streaming cache, the TCN is still 2.6–4.5× the stateful LSTM's median and attention 2.3×,
-   because the cost is per-step operator count, not parameters or arithmetic. §8ag says the three
-   families tie on skill; this says they do not tie on price. **That is what selects the backbone,
-   and it is now the only thing that does.**
+2. **At 1 ms the backbone itself passes — the model was never the constraint.** `seq_v2` with a
+   lean step clears the deadline at **max p99 0.591 ms** on all five sessions, and so do the
+   6,866- and 2,362-parameter variants (0.396 / 0.539 ms). **No shrinking was required.** The
+   first pass's "every model arm is at or above 1 ms" was a statement about `nn.Module` call
+   overhead, and it did not survive removing it.
+3. **Size is not the lever, and the numbers say so twice.** Through stock modules a
+   2,362-parameter model and a 357,570-parameter one differ by 1.5× in median; through lean steps
+   they differ by 1.6× (0.140 vs 0.218 ms) across a **151× parameter range**, because the cost is
+   per-step *operator count*, not parameters or arithmetic. `v2m2k` does ≈ 2.4k MAC per step —
+   microseconds of arithmetic — and everything above that is dispatch. This is §8ac §3's finding
+   (274k MAC = 3% of a 3.56 ms step) arriving at its extreme.
+4. **Skill does not depend on the family (§8ag); price does — but far less than the first pass
+   said.** Through stock modules the TCN looked 2.6–4.5× the recurrent step. Given each family the
+   *same* lean treatment, that falls to **1.3–1.8×** (0.273 / 0.401 vs 0.218 ms median): most of
+   the gap was `nn.Conv1d`, not convolution. Attention stays genuinely expensive (0.876 ms, 4.0×).
+   **At 10 ms this ordering is irrelevant — everything passes. At 1 ms it decides the answer:
+   recurrent passes, convolutional lands on the boundary (0.975 / 1.122 ms), attention fails
+   (2.102 ms).** So the budget, not the physics and not the skill, is what selects the backbone.
+5. **The honest correction.** This section's first version concluded "no arm resolves at 1 ms" and
+   "recurrence wins on price". Both were artifacts of measuring stock implementations: the first is
+   now false, and the second is true by a factor of 1.5 rather than 4. The decision rule was never
+   changed — only the implementation under it.
 
 **What it does not show, and the measurement that would settle it** (§8j rule). One machine, one
-runtime (PyTorch eager + TorchScript), CPU. The named next measurement is a runtime without
-Python-level operator dispatch — ONNX Runtime, a quantized/compiled kernel, or the control system's
-own hardware — timed under this same 5-session protocol. The arithmetic is microseconds and the
-boundary arms miss by ~0.1 ms, so that is the one change with the headroom to move a boundary
-verdict to a pass. Until it is run, **"a 1 ms CES nowcaster" is undetermined, not refused.**
+runtime, CPU, and a *hand-written* step rather than a compiled one — so these are an upper bound
+on cost, not a floor. The remaining named measurements are (a) a compiled runtime (ONNX Runtime, a
+quantized kernel) under this same 5-session protocol, which should take the recurrent arm well
+below 0.1 ms and could move both convolutional arms off the boundary, and (b) the control system's
+own hardware, since every absolute here is machine-specific. Note also what the boundary arms
+being *close* means: `tcn15`/`tcn63` sit at 0.975 / 1.122 ms and would very likely pass compiled,
+so "convolution cannot make 1 ms" is **not** a claim this section supports.
 
 ---
 
