@@ -627,6 +627,89 @@ def report(shots):
         print(f"    #{s_}  {title}\n      {doi}\n      {role}")
 
 
+
+def batched_index_scan(shots, batch=32, pace=1.0):
+    """The same index screen, but asking about 32 shots per request instead of one.
+
+    OpenAlex moved to a metered budget: the free daily allowance ran out after ~100
+    requests with `Insufficient budget ... Resets at midnight UTC`, which puts 641
+    one-shot queries six days away. The API supports uppercase boolean operators inside
+    a search filter, so a batch asks `KSTAR AND (a OR b OR ... )` and one request rules
+    out 32 shots at a time. Positive batches are then bisected, which costs ~log2(32) = 5
+    requests per shot that is actually cited.
+
+    Expected cost at the hit rate measured on the first 100 shots (2 hits): ~20 batch
+    requests plus ~5 per hit -- inside one day's allowance instead of six days'.
+
+    Resumable at batch granularity, and it shares `fulltext_index_hits.json` with the
+    one-at-a-time scan, so shots already answered are skipped and the two can be mixed.
+    """
+    out_path = HERE / "fulltext_index_hits.json"
+    state = {"hits": {}, "queried": [], "control_numbers_tested": 0, "control_hits": 0}
+    if out_path.exists():
+        try:
+            state.update(json.loads(out_path.read_text(encoding="utf-8")))
+        except Exception:
+            pass
+    done = set(state.get("queried") or [])
+    kinase = "10.1038/s41467-022-32017-5"
+
+    def save():
+        state["queried"] = sorted(done)
+        state["control_rate"] = (state["control_hits"]
+                                 / max(state["control_numbers_tested"], 1))
+        out_path.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf-8")
+
+    def ask(group):
+        """One request for a whole group; [] means no paper cites any of them."""
+        expr = " OR ".join(str(g) for g in group)
+        url = ("https://api.openalex.org/works?filter=" +
+               urllib.parse.quote(f"fulltext.search:KSTAR AND ({expr})", safe=":,") +
+               f"&per-page=25&select=id,doi,title,publication_year&mailto={MAIL}")
+        found = []
+        for w in openalex_api(url)["results"]:
+            title, doi = w.get("title") or "", (w.get("doi") or "")
+            year = w.get("publication_year") or 0
+            if kinase in doi.lower() or not FUSION_TITLE_RE.search(title) or year < 2022:
+                continue
+            found.append({"title": title, "doi": doi, "year": year})
+        time.sleep(pace)
+        return found
+
+    def bisect(group, known):
+        """`group` is known positive; split until each hit is attributed to one shot."""
+        if len(group) == 1:
+            state["hits"][str(group[0])] = known
+            print(f"  INDEX HIT #{group[0]}: " + " | ".join(
+                f"{w['year']} {w['title'][:70]} {w['doi']}" for w in known), flush=True)
+            return
+        mid = len(group) // 2
+        for half in (group[:mid], group[mid:]):
+            got = ask(half)
+            if got:
+                bisect(half, got)
+
+    todo = [s for s in sorted(shots) if s not in done]
+    groups = [todo[i:i + batch] for i in range(0, len(todo), batch)]
+    print(f"batched index scan: {len(done)} answered, {len(todo)} to go "
+          f"in {len(groups)} groups of {batch}", flush=True)
+    for gi, group in enumerate(groups, 1):
+        try:
+            found = ask(group)
+            if found:
+                bisect(group, found)
+        except Exception as exc:
+            code = getattr(exc, "code", "")
+            print(f"  stopped in group {gi}/{len(groups)}: {type(exc).__name__} {code} "
+                  f"({len(done)} answered; rerun to resume)", flush=True)
+            save()
+            return
+        done.update(group)
+        save()
+        print(f"  group {gi}/{len(groups)} done ({len(done)}/{len(shots)} shots)", flush=True)
+    save()
+    print(f"batched scan complete: {len(state['hits'])} shots cited in the literature")
+
 def main():
     # Paper text carries ligatures and dashes that the Windows console codepage cannot
     # encode; without this the run dies on the report AFTER doing all the work.
@@ -639,6 +722,8 @@ def main():
     ap.add_argument("--report", action="store_true", help="print the verified table only")
     ap.add_argument("--pace", type=float, default=0.8,
                     help="seconds between index-scan queries (raise it if 429s persist)")
+    ap.add_argument("--batched", action="store_true",
+                    help="index scan in OR-batches of 32 (OpenAlex is metered per request)")
     ap.add_argument("--fulltext-index", action="store_true",
                     help="query OpenAlex's full-text index per shot (reaches IOP, no PDFs)")
     args = ap.parse_args()
@@ -647,7 +732,10 @@ def main():
         report(shots)
         return
     if args.fulltext_index:
-        fulltext_index_scan(shots, pace=args.pace)   # resumable; writes as it goes
+        if args.batched:
+            batched_index_scan(shots, pace=args.pace)
+        else:
+            fulltext_index_scan(shots, pace=args.pace)   # resumable; writes as it goes
         return
     papers = dedupe(arxiv_list() + openalex_list())
     print(f"papers since {FROM_DATE}: {len(papers)} distinct "
