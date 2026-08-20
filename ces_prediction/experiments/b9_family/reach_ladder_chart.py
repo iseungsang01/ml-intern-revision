@@ -144,8 +144,6 @@ h1 { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px
 .dot-demo { width: 11px; height: 11px; border-radius: 50%; display: inline-block;
   border: 2px solid var(--ink-3); }
 .dot-demo.solid { background: var(--ink-3); }
-.band-demo { width: 22px; height: 11px; border-radius: 2px; display: inline-block;
-  background: var(--ink-3); opacity: 0.22; }
 .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 26px; }
 .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
@@ -211,9 +209,7 @@ def build_html(fams, missing):
         vals = [r[target]["mean"] for f in fams.values() for r in f["rungs"]]
         if not vals:
             continue
-        edges = ([r[target]["ci_lo"] for f in fams.values() for r in f["rungs"]]
-                 + [r[target]["ci_hi"] for f in fams.values() for r in f["rungs"]])
-        lo, hi = min(vals + edges + [0.0]), max(vals + edges + [0.0])
+        lo, hi = min(vals + [0.0]), max(vals + [0.0])
         pad = max(0.02, (hi - lo) * 0.18)
         y0, y1 = lo - pad, hi + pad
 
@@ -250,19 +246,6 @@ def build_html(fams, missing):
                  f'text-anchor="middle">causal context (ms, log scale)</text>')
         s.append(f'<text class="axis-title" x="{-((T + H - B) / 2):.0f}" y="13" '
                  f'transform="rotate(-90)" text-anchor="middle">skill vs causal GP</text>')
-
-        # Every band first, then every line: a later family's wash must not sit on an
-        # earlier family's line.
-        for key, fam in fams.items():
-            if not fam["rungs"]:
-                continue
-            up = [(px(r["ms"]), py(r[target]["ci_hi"])) for r in fam["rungs"]]
-            dn = [(px(r["ms"]), py(r[target]["ci_lo"])) for r in fam["rungs"]]
-            band = (" ".join(("M" if i == 0 else "L") + f"{x:.1f} {y:.1f}"
-                             for i, (x, y) in enumerate(up))
-                    + " " + " ".join(f"L{x:.1f} {y:.1f}" for x, y in reversed(dn)) + " Z")
-            s.append(f'<path d="{band}" fill="var(--{key})" fill-opacity="0.10" '
-                     f'stroke="none"/>')
 
         ends = []
         for key, fam in fams.items():
@@ -363,8 +346,7 @@ on all 4</p>
   <span class="item"><span class="key" style="background:var(--tcn)"></span>Dilated convolution</span>
   <span class="item"><span class="key" style="background:var(--xfmr)"></span>Banded attention</span>
   <span class="sig"><span class="dot-demo solid"></span>4/4 significant
-  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4
-  <span class="band-demo" style="margin-left:14px"></span>95% CI envelope</span>
+  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4</span>
 </div>
 <div class="panels">{"".join(panels)}</div>
 <div class="table-wrap">
@@ -386,13 +368,12 @@ trained at the <i>same</i> reach, the convolution arm ties at both 30 and 70 ms
 (&minus;0.004, no significant split either way), while attention at 70 ms loses by
 &minus;0.023 with 3 of 4 significant &mdash; the pre-registered &quot;differs&quot; verdict, and
 the only one in this batch. It ties again from 150 ms up.<br><br>
-<b>What the shaded band is.</b> Not a standard error: it is the <b>envelope of the four splits'
-95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound. That definition is
-chosen so the band cannot disagree with the markers: the envelope clears zero exactly when every
-split's interval does, which is the condition a filled marker encodes. Its width therefore carries
-split-to-split disagreement and bootstrap uncertainty at once, and reading it is the point &mdash;
-the <i>V_rot</i> envelope is about four times taller than the <i>T_i</i> one on the same four
-splits, which is the whole reason that panel settles nothing.<br><br>
+<b>The uncertainty is in the table, not on the plot.</b> Each row carries the <b>envelope of the
+four splits' 95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound. It
+clears zero exactly when every split's interval does, which is the condition a filled marker
+encodes, so the column and the markers never disagree. Read the two panels' envelopes against each
+other: <i>V_rot</i>'s is about four times wider than <i>T_i</i>'s on the same four splits, which is
+the whole reason that panel settles nothing.<br><br>
 <b>What the attention curve does not show.</b> Its lowest rung <i>is</i> 70 ms &mdash; a shorter
 band was never trained &mdash; so its 3-of-4 crossing is an upper bound, not a measured turn.</p>
 </main>
