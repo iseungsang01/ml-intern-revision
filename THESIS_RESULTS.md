@@ -3207,7 +3207,9 @@ more than offsets the net loss on all the others. The `T_i` control behaves oppo
 3. **The peak stratum does not explain which discharges.** Splitting shots by their peak fraction
    gives a win rate of 0.435 for the high-peak half against 0.528 for the low-peak half — the wrong
    direction. §8's "`V_rot` skill lives in the peak stratum" was a *row-level* result against PCHIP;
-   it does not transfer to the shot level against the causal GP.
+   it does not transfer to the shot level against the causal GP. **§8an found the variable that
+   does work** — the discharge-level spread of the truth, which is not the same quantity as the
+   row-level peak flag.
 
 **What it does not show, and the measurement that would settle it** (§8j rule). Which discharges the
 model wins on is now the open question, and peak fraction is ruled out. The named measurement is a
@@ -3339,6 +3341,92 @@ same number of runs and remove the caveat entirely.
 
 ---
 
+## 8an. Which discharges the model wins on (2026-08-21) — it wins where the quantity moves, and that closes `V_rot`'s open question
+
+**Question.** §8am replaced "`V_rot` is underpowered" with "`V_rot`'s advantage is not
+shot-general", which is more accurate and still only a description. §8j forbids stopping there:
+a negative result has to name the measurement that explains it. The named measurement was a
+per-discharge covariate regression, and this is it.
+
+**Design** (`experiments/b9_reach/shot_covariates.py`, no training — every column comes from the
+frozen `comparison_errors_test.npz` of the `v2r63` runs, pooled over the four splits). One row per
+physical discharge: its skill against the causal GP, plus eight covariates the artifacts already
+carry — campaign position (the shot number), scored rows, mean and max gap, peak fraction, the
+truth's level and spread within that discharge, and the causal GP's own RMSE there. `CES_TI` is
+carried as the control, since its win *is* shot-general (69.9%). Significance is by permutation
+(10⁴ shuffles) and Bonferroni-adjusted across the eight; **exploratory — no rule was
+pre-registered, so nothing here promotes or demotes a claim.**
+
+### 1. Only two covariates survive, and they are the same covariate
+
+| covariate | `CES_TI` ρ | p (Bonf.) | `CES_VT` ρ | p (Bonf.) |
+|---|---:|---:|---:|---:|
+| campaign position | +0.044 | 1.00 | +0.042 | 1.00 |
+| scored rows | +0.015 | 1.00 | +0.083 | 1.00 |
+| mean gap | +0.140 | 0.15 | +0.081 | 1.00 |
+| max gap | +0.086 | 1.00 | +0.064 | 1.00 |
+| **peak fraction** | +0.116 | 0.42 | −0.005 | 1.00 |
+| target level | +0.305 | **0.0008** | +0.055 | 1.00 |
+| **target spread** | **+0.401** | **0.0008** | **+0.281** | **0.0024** |
+| **causal-GP RMSE there** | **+0.373** | **0.0008** | **+0.318** | **0.0008** |
+
+The last two are not separable: `target spread` and `baseline RMSE` correlate at **ρ = 0.85** on
+both targets, because a discharge whose truth moves is exactly a discharge the GP interpolates
+badly. Partialling one out leaves the other weak (`T_i`: +0.170 / +0.067; `V_rot`: +0.028 / +0.156),
+so the honest statement is one covariate — **how much the quantity moves in that discharge** — not
+two.
+
+**And `baseline RMSE` alone would have been an artifact trap**: it is the denominator of the skill
+ratio, so a discharge where the GP does badly scores high skill more easily. The check that removes
+the ratio entirely is the **binary win/loss**, and it holds:
+
+| | ρ(spread, win) | p (perm.) |
+|---|---:|---:|
+| `CES_TI` | **+0.393** | 0.0001 |
+| `CES_VT` | **+0.198** | 0.0075 |
+
+### 2. Read as terciles of how much the target moves
+
+| tercile of target spread | `CES_TI` win rate | median skill | `CES_VT` win rate | median skill |
+|---|---:|---:|---:|---:|
+| quiet | **42%** | −0.051 | **34%** | −0.091 |
+| middle | 83% | — | 48% | — |
+| variable | **85%** | +0.156 | **55%** | +0.031 |
+
+### 3. Verdict
+
+1. **The mechanism is physical, not statistical.** The model wins where the quantity *moves*.
+   Where a discharge is flat, the causal GP is already near-optimal — interpolating a straight line
+   is easy — and the model loses slightly by adding variance to a problem that had none. The 46%
+   pooled `V_rot` win rate is not mysterious: **most discharges are quiet, so most discharges have
+   nothing to win.**
+2. **`peak fraction` is not the variable, and that corrects §8am.** §8am split discharges by peak
+   fraction and got the wrong sign (0.435 high-peak vs 0.528 low-peak). The peak flag is a
+   *row-level* activity proxy built from neighbour slopes; what predicts the win is the
+   *discharge-level spread of the truth*. Different quantity, and only the second one works.
+3. **This is why `T_i` is shot-general and `V_rot` is not — and it is only half the reason.** In
+   the most variable third `T_i` wins **85%** and `V_rot` only **55%**. Variability explains why
+   quiet discharges are lost; it does **not** explain why `V_rot` barely wins even when it moves.
+   That residual points straight at §2.3d: **the driver of rotation is not in the dataset.** A model
+   cannot track motion it has no input for, so it wins the variable discharges only slightly, by
+   carrying the last observation better than a GP does. Two independent lines of evidence — the
+   `T_e`~`V_rot` null (r = +0.024, p = 0.58) and this tercile table — now say the same thing.
+4. **`V_rot`'s open question is closed as far as this dataset can close it.** The sentence is:
+   *the advantage concentrates in discharges where rotation actually varies, and even there it is
+   small, because the quantity that drives the variation is unobserved.* That is a mechanism, a
+   measurement, and a named data lever — not "insufficient information".
+
+**What it does not show, and the measurement that would settle it** (§8j rule). This is
+exploratory: eight covariates, one arm, no pre-registered rule, and the two surviving covariates
+are collinear. It also cannot separate "the model is good at variable discharges" from "the GP is
+bad at them" beyond the binary check. The measurement that would settle it is **B.6**: if the μs
+re-acquisition delivers a mode-rotation frequency, the prediction this section makes is specific
+and falsifiable — the `V_rot` win rate should rise **in the variable tercile first**, because that
+is where a rotation-carrying input has something to explain. If it rises uniformly, or in the quiet
+tercile, this mechanism is wrong.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over
@@ -3444,6 +3532,13 @@ So write: **the `V_rot` advantage is not shot-general — large wins on a minori
 losses on the rest.** Do not write "underpowered at ~96 discharges"; more discharges do not fix a
 coin-flip win rate, and saying so promises a fix that does not exist. Do not call it a failure of
 reconstruction either — every arm beats persistence by ≈ +0.39.
+
+**And give the mechanism, because §8an measured it.** The win concentrates where the quantity
+*moves*: by tercile of the truth's spread within a discharge, `V_rot` wins 34% / 48% / 55%, and
+`T_i` wins 42% / 83% / 85%. Quiet discharges are lost because a flat line is what a GP is best at.
+That explains the quiet half — and the fact that `V_rot` reaches only 55% even in the variable third
+is the same finding as §2.3d from the other side: **the driver of rotation is unobserved**, so the
+model cannot track motion it has no input for.
 
 The asymmetry has a mechanism and it now shows up in a second coordinate. `V_rot`'s best family is
 the small **recurrent** arm and `T_i`'s is the small **convolutional** one, which is what §8ab's
