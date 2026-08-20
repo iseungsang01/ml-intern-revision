@@ -3218,10 +3218,136 @@ Until then `V_rot` is reported as a regime-conditional result, not a power-limit
 
 ---
 
+## 8am. Pooled re-scoring of the reach ladder (2026-08-20) — the threshold buys **generality**, and a tight interval is not the same as a general effect
+
+**Question (승상님).** "4/4 → 3/4 → 4/4로 튀면 문맥 증가 → 정확도 증가라는 결론에도 도달할 수 없는
+상황이고, seed를 하나만 놓고 실험하기에도 애매하다." Both halves are right about the *statistic*.
+Neither is right about the *data*: the point estimates underneath the flicker rise smoothly. The
+fault is that a count of four binary outcomes discards the magnitude and precision each split
+actually produced.
+
+**Design** (`experiments/b9_reach/pooled_ladder.py`, no training — every number comes from the
+frozen `comparison_errors_test.npz` of runs already on disk). Instead of four verdicts on 96
+discharges, one verdict on the union: per-row squared errors from all four splits are concatenated
+and bootstrapped with the **physical discharge** as the cluster, the same rule
+`largegap/analyze_largegap.py` uses. Two facts license it, both measured first:
+
+- **Overlap is mild.** Each split tests 96 of a 301-discharge union; **224 appear in exactly one
+  split**, 72 in two, 5 in three or more; pairwise overlap is 10–20%.
+- **Reuse is absorbed.** A discharge in two splits is *one* cluster carrying both its row sets, not
+  two draws — conservative in the right direction.
+
+And the ladder gets the test the count could never give: the **slope of skill against log context**,
+refitted inside every bootstrap resample so its interval carries the same clustering.
+
+### 1. `CES_TI`, pooled over 301 discharges (recurrent family)
+
+| context | skill vs causal GP [95% CI] | win rate | −top10 |
+|---:|---:|---:|---:|
+| 20 ms | +0.057 [+0.027, +0.085] | **0.52** | +0.028 |
+| 30 ms | +0.087 [+0.061, +0.111] | 0.60 | +0.060 |
+| 50 ms | +0.104 [+0.079, +0.128] | 0.64 | +0.077 |
+| 70 ms | +0.119 [+0.095, +0.142] | 0.66 | +0.092 |
+| 150 ms | +0.123 [+0.096, +0.148] | 0.66 | +0.096 |
+| 630 ms | +0.143 [+0.118, +0.168] | 0.67 | +0.116 |
+
+"win rate" = the fraction of discharges on which the model beats the causal GP. "−top10" = the
+pooled skill after deleting the ten best-contributing discharges. Both are printed beside the
+interval on purpose; §3 says why.
+
+**Trend: +0.0497 skill per decade of context [+0.0363, +0.0638] — rises.** One test, one interval,
+no rung-by-rung flicker.
+
+### 2. Two corrections this forces
+
+1. **The model beats the causal GP at *every* measured context, 20 ms included.** The pooled CI at
+   20 ms is [+0.027, +0.085]. The per-split rule read that rung as 2/4 = below the bar, and §9.1
+   turned it into "70 ms (then 50 ms) is the context needed to beat the best available alternative".
+   **That sentence is wrong.** The threshold was never a crossing point.
+2. **What the threshold actually marks is saturation — and, better, generality.** Read the win-rate
+   column: **0.52 → 0.60 → 0.64 → 0.66**, flat from ~70 ms. At 20 ms the model beats the causal GP
+   on barely half the discharges while still winning on average; by 70 ms it wins on two thirds.
+   **Context does not raise the average so much as it makes the win typical.** That is a better
+   statement of the same finding and it is the one the deployment audience needs.
+
+### 3. A tight interval is not a general effect — and `V_rot` is the proof
+
+Pooling narrows every interval, and on `CES_VT` it produces a result that would be badly misread on
+its own: **every rung's pooled CI clears zero** (e.g. 70 ms: +0.123 [+0.036, +0.248]). Read alone,
+that reverses years of "`V_rot` is not resolved".
+
+It should not be read alone. The same rows say:
+
+| | discharges | pooled | win rate | −top5 | −top10 | top-1 share |
+|---|---:|---:|---:|---:|---:|---:|
+| `T_i` (v2r63) | 301 | +0.143 | 0.67 | +0.124 | +0.116 | 8% |
+| **`V_rot` (v2r63)** | **197** | **+0.121** | **0.46** | **+0.021** | **−0.022** | **29%** |
+
+**Deleting ten of 197 discharges flips the `V_rot` sign; deleting ten of 301 barely moves `T_i`.**
+The bootstrap does not catch this, and the reason is mechanical rather than a flaw: with ~200
+clusters a resample almost always contains several of the carrying discharges, so the interval is
+genuinely reproducible *for this discharge set* while the effect is still not typical of a
+discharge. The interval answers "would re-drawing these discharges agree"; the win rate answers "is
+the win typical". **On `V_rot` those two questions have opposite answers, and the second one governs
+the claim.**
+
+The runner therefore prints both and flags the disagreement (`*!` = interval clears zero AND the
+effect is not shot-general: win rate ≤ 0.60 or −top10 ≤ 0). Every `V_rot` rung of every family is
+`*!`. `CES_TI` is `*!` only at 20 ms and, for the SSM, at 150 and 630 ms.
+
+### 4. The other three families
+
+| family | `T_i` trend per decade | `V_rot` trend |
+|---|---|---|
+| recurrent | **+0.050 [+0.036, +0.064]** rises | +0.003, not resolved |
+| dilated conv | **+0.032 [+0.020, +0.044]** rises | **−0.016 [−0.043, −0.003] declines** |
+| banded attention | **+0.031 [+0.011, +0.053]** rises | **−0.014 [−0.038, −0.003] declines** |
+| diagonal SSM | +0.004 [−0.007, +0.014] **not resolved** | **−0.019 [−0.038, −0.009] declines** |
+
+1. **Three families rise with context; the SSM does not.** Its `T_i` skill is flat at ~+0.10 from
+   70 ms to 630 ms — it does not convert extra context into skill, which is a sharper statement of
+   its paired result (it loses to the same-reach LSTM by −0.022 at 7 and −0.044 at 63) and an
+   independent reason not to adopt it here.
+2. **`V_rot` gets *worse* with context for three of four families**, significantly. More context is
+   not neutral for the target that rides carried values — it is harmful. This is consistent with
+   §8ab's routing story (the `V_rot` branch reads a slowly-varying carried value; a longer window
+   adds variance, not signal) and it is a new, testable statement rather than a null.
+
+### 5. Verdict
+
+1. **The count is retired as an estimator, and pooling replaces it.** One interval over 301
+   discharges, plus a trend test, in place of four verdicts over 96. No run was discarded and no
+   rung was dropped.
+2. **"More context, more accuracy" is established for `T_i`** by a single pre-specified trend test
+   (+0.050 per decade, CI clears zero) in three of four families, rather than inferred from a
+   flickering vote.
+3. **"You need N ms to beat the causal GP" is withdrawn.** The model beats it at 20 ms already. What
+   N marks is where the win becomes *typical* (win rate 0.52 → 0.66) and where the deficit against
+   unbounded context falls under the practical floor (§8al: 50 ms).
+4. **Pooling does not rescue `V_rot`, and the audit columns are why we know.** A narrower interval
+   made an effect carried by 5% of discharges look settled. Any future pooled result in this project
+   is reported with the win rate and −top10 beside it.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). Pooling four splits
+estimates the *procedure's* expected skill, not one model's — the four runs per rung are four models
+trained on different data, and their errors are concatenated. That is the right estimand for "does
+this method work", and the wrong one for "will this checkpoint work"; a deployment claim still needs
+a single trained model on a held-out campaign (§8's temporal split). And the mild split overlap
+(72 discharges in two test sets) is absorbed by the clustering but not removed: a fully clean design
+is **discharge-level k-fold**, where every discharge is tested exactly once, which would cost the
+same number of runs and remove the caveat entirely.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
-**The claim to lead with.** *Crossing ~50 ms of contiguous causal context is what decides whether
-the nowcaster beats the strongest deployable baseline; how you cross it decides cost, not skill.*
+**The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over
+the strongest deployable baseline **typical** rather than average-only; how you cross it decides
+cost, not skill.*
+
+§8am corrected the earlier wording ("what decides whether the nowcaster beats..."): pooled over 301
+discharges the model beats the causal GP at **every** measured context, 20 ms included. What context
+buys is generality — the fraction of discharges it wins rises 0.52 -> 0.66 and flattens.
 
 That sentence is a compression of the one contrast B.9 was built to make. Two things were varied
 and only one moved the result:
@@ -3252,7 +3378,8 @@ to be worth deploying.** Say it that way; the weaker phrasing invites the object
 threshold is an artifact of an easy baseline, and the stronger one is not what was measured.
 
 **The number is 50 ms and the rule that produces it is §3.4** (smallest reach whose deficit
-against full context is under 0.02, ≤ 1/4 significant). §8al densified the ladder to one-step
+against full context is under 0.02, ≤ 1/4 significant). It is a **saturation** point, not a crossing
+point — §8am shows 20 ms already beats the causal GP (+0.057 [+0.027, +0.085] pooled). §8al densified the ladder to one-step
 spacing; 70 ms was an artifact of never having trained rungs 4, 5 and 6. Quote "≈ 50 ms".
 
 Do **not** quote "the first rung reaching 4/4 against `gp_causal`" as the threshold. That count
