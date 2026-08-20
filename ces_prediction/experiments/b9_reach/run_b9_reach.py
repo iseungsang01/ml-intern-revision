@@ -50,9 +50,17 @@ sys.path.insert(0, str(CES_DIR / "experiments" / "b1_gate"))
 from run_b1_gate import GATE_ENV, AMBIENT_VARS, SMOKE_OVERRIDES, run_step  # noqa: E402
 
 SEEDS = (42, 1, 7, 123)
-# 3 is here because 8af left the true CES_TI minimum unresolved between 2 and 7, and
-# because a 3-layer-free TCN (RF 3) needs a same-reach LSTM to pair against.
-REACHES = (2, 3, 7, 15, 31, 63)
+# The geometric rungs (3, 7, 15, 31, 63) exist because a dilated TCN's receptive field IS
+# 2^(L+1) - 1, so the convolutional family can only land there, and the LSTM ladder was put
+# on the same rungs to keep "same reach, only the operator differs" true.
+#
+# The LSTM has no such constraint, and 8ak's threshold sits inside the widest remaining gap:
+# 30 ms is 3/4 significant, 70 ms is 4/4, and nothing was measured in between. 4, 5, 6 close
+# that gap one step at a time and 10 checks that the plateau really starts at 7 rather than
+# somewhere between 7 and 15 (2026-08-20). The decision rule is unchanged -- section 3.4's
+# "smallest r within PRACTICAL_EPS of full" is being read at finer spacing, not replaced --
+# so these rungs add resolution, not a new hypothesis to select on.
+REACHES = (2, 3, 4, 5, 6, 7, 10, 15, 31, 63)
 EPOCH_CAP = "100"          # non-binding; patience terminates (B.3 lesson)
 ROWS_PER_BATCH = 4800      # = 16 blocks x 298 median rows, the backbone's own value (§8ac)
 PRACTICAL_EPS = 0.02       # PREREGISTRATION_B9.md §3.1

@@ -67,6 +67,15 @@ SEQ_MODELS = {
     # property of the problem or of the LSTM. RF = 2^(L+1) - 1, so L = 1 -> 3, L = 2 -> 7.
     "tcn3": functools.partial(SeqCESTCN, layers=1),
     "tcn7": functools.partial(SeqCESTCN, layers=2),
+    # RF 5 needs a schedule that is not a doubling: dilations (1, 1) instead of (1, 2).
+    # It lands between rungs 3 and 7, which is where 8ak left the threshold unresolved, and
+    # it carries the SAME 128,034 parameters as tcn7 -- so reach 5 vs 7 is size-controlled
+    # by construction. Kernel 3 keeps every reachable RF odd, so 4 / 6 / 10 are not
+    # available to this family at all without changing the kernel.
+    "tcn5": functools.partial(SeqCESTCN, layers=2, dilations=(1, 1)),
+    # The attention band is a free integer, but at 2 layers RF = 2*(band-1)+1 is odd too,
+    # so 5 is likewise the only new rung this family can share with the other two.
+    "xfmr5": functools.partial(SeqCESXfmr, reach=5),
 
     # B.9 axis D: the 1k-10k band, which b8_minimal swept with recurrent arms only.
     # Reach is fixed at 15 (>= the 7-step saturation measured in axis A) so the only

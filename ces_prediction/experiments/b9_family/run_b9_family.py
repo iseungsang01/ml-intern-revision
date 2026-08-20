@@ -45,7 +45,12 @@ from run_b1_gate import GATE_ENV, run_step  # noqa: E402
 # arm -> the receptive field it declares, which is also the axis A rung it pairs against.
 ARMS = {"tcn15": 15, "tcn63": 63, "xfmr63": 63, "xfmr15": 15,
         # per-family low rungs: is the 70 ms threshold family-invariant?
-        "tcn3": 3, "tcn7": 7, "xfmr7": 7}
+        "tcn3": 3, "tcn7": 7, "xfmr7": 7,
+        # 8ak put the CES_TI threshold between 30 and 70 ms with nothing measured in
+        # between. RF 5 is the ONLY rung in that gap that all three families can stand on
+        # (kernel 3 and a 2-layer band both give odd receptive fields), so it is the one
+        # place the finer question -- 50 or 70 ms? -- can still be asked family-by-family.
+        "tcn5": 5, "xfmr5": 5}
 
 
 def control_dir(reach, seed, smoke=False):

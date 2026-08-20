@@ -34,14 +34,23 @@ from seq_data import N_FEATURES, N_FAST_CHANNELS
 class _CausalStack(nn.Module):
     """`layers` residual dilated conv blocks; receptive field 2^(layers+1) − 1 at k = 3."""
 
-    def __init__(self, n_in, hidden, layers, kernel=3, dropout=0.1):
+    def __init__(self, n_in, hidden, layers, kernel=3, dropout=0.1, dilations=None):
+        """`dilations` overrides the doubling schedule; `layers` is then its length.
+
+        The default 1, 2, 4, ... is what makes RF = 2^(layers+1) - 1, and it can only land
+        on 3 / 7 / 15 / 31 / 63. A rung between two of those needs a schedule that is not a
+        doubling -- RF 5 is dilations (1, 1) -- so the list is exposed rather than derived.
+        Note the receptive field stays ODD for any schedule at kernel 3, because
+        RF = 1 + (k-1) * sum(d); an even RF would need an even kernel, which would change
+        more than the reach.
+        """
         super().__init__()
         self.proj = nn.Linear(n_in, hidden)
         self.convs = nn.ModuleList()
         self.norms = nn.ModuleList()
         self.pads = []
-        for i in range(layers):
-            dilation = 2 ** i
+        schedule = [2 ** i for i in range(layers)] if dilations is None else list(dilations)
+        for dilation in schedule:
             self.convs.append(nn.Conv1d(hidden, hidden, kernel, dilation=dilation))
             self.norms.append(nn.LayerNorm(hidden))
             self.pads.append((kernel - 1) * dilation)
@@ -86,16 +95,18 @@ class _CausalStack(nn.Module):
 
 class SeqCESTCN(nn.Module):
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS, layers=5,
-                 hidden_ti=128, hidden_vt=48, head=64, dropout=0.1):
+                 hidden_ti=128, hidden_vt=48, head=64, dropout=0.1, dilations=None):
         super().__init__()
         self.n_fast = int(n_fast)
         self.n_slow = int(n_in) - self.n_fast
         if self.n_slow <= 0:
             raise ValueError(f"n_fast={n_fast} leaves no non-fast channels of {n_in}")
 
-        self.tcn_ti = _CausalStack(n_in, hidden_ti, layers, dropout=dropout)
+        self.tcn_ti = _CausalStack(n_in, hidden_ti, layers, dropout=dropout,
+                                   dilations=dilations)
         self.head_ti = nn.Sequential(nn.Linear(hidden_ti, head), nn.GELU(), nn.Linear(head, 1))
-        self.tcn_vt = _CausalStack(self.n_slow, hidden_vt, layers, dropout=dropout)
+        self.tcn_vt = _CausalStack(self.n_slow, hidden_vt, layers, dropout=dropout,
+                                   dilations=dilations)
         self.head_vt = nn.Sequential(nn.Linear(hidden_vt, head), nn.GELU(), nn.Linear(head, 1))
 
         self.receptive_field = self.tcn_ti.receptive_field
