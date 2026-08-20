@@ -45,6 +45,7 @@ Known limits, stated so the result is not oversold:
 from __future__ import annotations
 
 import argparse
+import csv
 import concurrent.futures as cf
 import difflib
 import glob
@@ -80,9 +81,14 @@ BARE_RE = re.compile(r"\b(30[89]\d{2}|3[12]\d{3})\b")
 # corpus is filtered on the BODY text before any shot number is believed. Title alone is
 # not enough: the kinase paper has KSTAR in its title.
 FUSION_RE = re.compile(r"tokamak|plasma|fusion|divertor|pedestal|\bELM\b|H-mode", re.I)
+# `fusion` on its own is not a plasma-physics word. It let in "Fusexins, HAP2/GCS1 and
+# Evolution of Gamete Fusion", a cell-biology paper, which then contributed two spurious
+# shots. Every token here has to be one that a membrane-biology title cannot carry.
 FUSION_TITLE_RE = re.compile(
-    r"tokamak|plasma|fusion|divertor|pedestal|disrupt|KSTAR|\bITER\b|stellarator|"
-    r"magnetohydro|\bMHD\b", re.I)
+    r"tokamak|plasma|divertor|pedestal|disrupt|KSTAR|\bITER\b|stellarator|"
+    r"magnetohydro|\bMHD\b|gyrokinet|cyclotron|tearing mode|scrape-?off|H-mode|"
+    r"\bELM\b|confinement|fusion (energy|reactor|performance|power|device|born|alpha)",
+    re.I)
 FUSION_MIN_HITS = 3   # in the first four pages
 
 # Hand-verified hits, including the two papers whose full text is paywalled but whose
@@ -140,8 +146,42 @@ IN_RANGE_NOT_OURS = {
 FALSE_POSITIVES = {
     30907: "page range in a biochemistry reference",
     32017: "DOI fragment 10.1038/s41467-022-32017-5 (an unrelated paper named 'KSTAR')",
-    31589: "DOI fragment 10.1038/s41467-022-31589-6",
+    31589: "DOI fragment 10.1038/s41467-022-31589-6 (Bierwage et al., Nat. Commun. 13, "
+           "3941) -- verified in the reference list of 10.1007/s41614-025-00199-2",
+    # Discharge numbers are not unique across machines, and this one is the clearest case:
+    # the NLED-AUG benchmark equilibrium is "the AUG shot considered is the #31213, at
+    # t = 0.84 s" (10.1007/s41614-025-00199-2, sect. 2). ASDEX Upgrade, not KSTAR.
+    31213: "ASDEX Upgrade shot #31213 (NLED-AUG benchmark case), not a KSTAR discharge",
+    31886: "five-digit number inside a cell-biology paper ('Fusexins, HAP2/GCS1 and "
+           "Evolution of Gamete Fusion'); it passed an earlier title filter on 'Fusion'",
+    31913: "same cell-biology paper as 31886",
 }
+
+# A tokamak paper that is not a KSTAR paper is not evidence about a KSTAR discharge. ASDEX
+# Upgrade, DIII-D, EAST, JET and JT-60 all number shots in five digits and their ranges
+# overlap the 2022 KSTAR campaign, so a bare number in a generic paper is ambiguous by
+# construction -- that is exactly how #31213 entered the ledger as an AUG shot.
+KSTAR_RE = re.compile(r"KSTAR", re.I)
+OTHER_MACHINE_RE = re.compile(
+    r"ASDEX|\bAUG\b|DIII-?D|\bJET\b|\bEAST\b|JT-?60|W7-X|\bTCV\b|\bMAST\b|"
+    r"HL-2A|\bNSTX\b|TFTR|Tore Supra|WEST", re.I)
+
+
+def hit_verdict(shot, work):
+    """How much a full-text index hit is worth, without pretending it is worth more.
+
+    `rejected`   hand-checked and known not to be a discharge of ours.
+    `confirmed`  hand-verified against the paper itself.
+    `kstar`      the citing paper is about KSTAR, so a number in campaign range is
+                 plausibly one of its discharges -- still not proof, but attributable.
+    `unverified` a fusion paper that never names KSTAR. Could be another machine's shot,
+                 a DOI fragment or a page number. Never select on this alone.
+    """
+    if shot in FALSE_POSITIVES:
+        return "rejected"
+    if shot in CONFIRMED:
+        return "confirmed"
+    return "kstar" if KSTAR_RE.search(work.get("title") or "") else "unverified"
 
 
 def dataset_shots():
@@ -593,9 +633,11 @@ def fulltext_index_scan(shots, pace=0.8, control_n=20):
             break
         done.add(s)
         if found:
+            for w in found:
+                w["verdict"] = hit_verdict(s, w)
             state["hits"][str(s)] = found
             print(f"  INDEX HIT #{s}: " + " | ".join(
-                f"{w['year']} {w['title'][:70]} {w['doi']}" for w in found), flush=True)
+                f"{w['verdict']} {w['year']} {w['title'][:56]}" for w in found), flush=True)
         if i % 25 == 0:
             save()
             print(f"  index scan {len(done)}/{len(shots)}", flush=True)
@@ -766,7 +808,32 @@ def syntax_control(shots, pace=1.0, batch=32):
     return ok, got_pos, got_neg
 
 
-def batched_index_scan(shots, batch=32, pace=1.0):
+def vt_priority(shots):
+    """Shots ordered by how many valid `V_rot` rows they carry, richest first.
+
+    Order matters because the budget runs out mid-sweep, not because the query changes.
+    `V_rot` is the target no arm beats causal GP on, so valid `V_rot` rows are the first
+    selection metric (SELECTION.md); and the open question -- one literature set, or a
+    literature tier plus a separate `V_rot` tier -- turns only on whether a shot with
+    BOTH a citation and >= 200 valid `V_rot` rows exists. Shots with almost no `V_rot`
+    cannot answer that no matter what the literature says, so they go last.
+
+    Falls back to numeric order if the metrics table is missing.
+    """
+    path = HERE / "shot_metrics.csv"
+    if not path.exists():
+        return sorted(shots)
+    rank = {}
+    with open(path, encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            try:
+                rank[int(row["shot"])] = float(row["vt_clean_n"] or 0)
+            except (TypeError, ValueError):
+                continue
+    return sorted(shots, key=lambda s: (-rank.get(s, -1.0), s))
+
+
+def batched_index_scan(shots, batch=32, pace=1.0, priority=False):
     """The same index screen, but asking about 32 shots per request instead of one.
 
     OpenAlex moved to a metered budget: the free daily allowance ran out after ~100
@@ -805,20 +872,39 @@ def batched_index_scan(shots, batch=32, pace=1.0):
     def bisect(group, known):
         """`group` is known positive; split until each hit is attributed to one shot."""
         if len(group) == 1:
-            state["hits"][str(group[0])] = known
-            print(f"  INDEX HIT #{group[0]}: " + " | ".join(
-                f"{w['year']} {w['title'][:70]} {w['doi']}" for w in known), flush=True)
+            shot = group[0]
+            for w in known:
+                w["verdict"] = hit_verdict(shot, w)
+            state["hits"][str(shot)] = known
+            worth = max((w["verdict"] for w in known),
+                        key=["rejected", "unverified", "kstar", "confirmed"].index)
+            print(f"  INDEX HIT #{shot} [{worth}]: " + " | ".join(
+                f"{w['year']} {w['title'][:60]} {w['doi']}" for w in known), flush=True)
             return
         mid = len(group) // 2
-        for half in (group[:mid], group[mid:]):
-            got = ask(half)
-            if got:
-                bisect(half, got)
+        first, second = group[:mid], group[mid:]
+        got_first = ask(first)
+        if got_first:
+            bisect(first, got_first)
+        # The parent batch is already paid for, so use what it said. Any paper it returned
+        # that the first half does not account for has to be cited from the second half --
+        # that half is positive and asking again would only re-buy the same answer. Only
+        # when the first half explains everything is the second half genuinely unknown.
+        seen = {w["doi"] for w in got_first}
+        unexplained = [w for w in known if w["doi"] not in seen]
+        if unexplained:
+            bisect(second, unexplained)
+        else:
+            got_second = ask(second)
+            if got_second:
+                bisect(second, got_second)
 
-    todo = [s for s in sorted(shots) if s not in done]
+    order = vt_priority(shots) if priority else sorted(shots)
+    todo = [s for s in order if s not in done]
     groups = [todo[i:i + batch] for i in range(0, len(todo), batch)]
     print(f"batched index scan: {len(done)} answered, {len(todo)} to go "
-          f"in {len(groups)} groups of {batch}", flush=True)
+          f"in {len(groups)} groups of {batch}"
+          f"{' (richest V_rot first)' if priority else ''}", flush=True)
     for gi, group in enumerate(groups, 1):
         try:
             found = ask(group)
@@ -850,6 +936,8 @@ def main():
                     help="seconds between index-scan queries (raise it if 429s persist)")
     ap.add_argument("--control", action="store_true",
                     help="2-request positive/negative check that the batch query form works")
+    ap.add_argument("--priority", action="store_true",
+                    help="scan shots with the most valid V_rot first (budget runs out mid-sweep)")
     ap.add_argument("--batched", action="store_true",
                     help="index scan in OR-batches of 32 (OpenAlex is metered per request)")
     ap.add_argument("--fulltext-index", action="store_true",
@@ -864,7 +952,7 @@ def main():
         raise SystemExit(0 if ok else 1)
     if args.fulltext_index:
         if args.batched:
-            batched_index_scan(shots, pace=args.pace)
+            batched_index_scan(shots, pace=args.pace, priority=args.priority)
         else:
             fulltext_index_scan(shots, pace=args.pace)   # resumable; writes as it goes
         return
