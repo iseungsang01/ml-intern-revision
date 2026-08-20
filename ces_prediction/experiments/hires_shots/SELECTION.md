@@ -121,6 +121,91 @@ the list in any case: #31097 fails the data gate on `vt_clean_n = 1`.
 
 ---
 
+### The batch scan, 2026-08-20: one control, 388 of 641, and three ways to be wrong
+
+Asking OpenAlex about one shot per request puts 641 shots six days away, because the API is
+now metered and the free allowance is roughly a hundred requests a day. Batching fixes the
+arithmetic — `fulltext.search:KSTAR AND (a OR b OR ...)` rules out 32 shots at once — but it
+also introduces a failure mode that looks exactly like a result: if the boolean operators are
+not honoured, every batch returns empty and 641 shots read as *absent from the literature*
+when they were never asked about.
+
+So the syntax was measured before it was trusted (`--control`, two requests). A batch holding
+the four hand-verified shots #31921 / #31359 / #31873 / #32027 among 28 out-of-range decoys
+came back with exactly their papers — the FIRE-mode IOP article, the ELM-suppression Nature
+Communications paper and its preprint, the error-field paper and its preprint, and PanoMHD —
+and a batch of 32 decoys and nothing else came back empty. Positives found, decoys not: a
+batch miss can now be read as real absence. **That control is a precondition, not a
+formality**, and it is wired to call the same `batch_ask` the sweep uses so it cannot drift
+away from what is actually run.
+
+The sweep then answered **388 of 641** and stopped in group 10 when the daily budget went.
+It stopped in one request rather than several: a 429 carrying `retry-after` in the hours is
+the metered quota, not a burst limit, and no backoff outlasts midnight UTC while every retry
+is itself billable. The scan is resumable, so stopping costs the current group, not the pass.
+
+**Eleven hits, and three of them are artefacts.** Screening them turned up three distinct
+ways for a five-digit number to be in a fusion paper without being one of our discharges.
+
+* **Another machine's discharge.** #31213 is an **ASDEX Upgrade** shot. The gyrokinetic
+  benchmark review says so in as many words: *"the AUG shot considered is the #31213, at
+  t = 0.84 s"* (`10.1007/s41614-025-00199-2`, sect. 2 — the NLED-AUG test case). Discharge
+  numbers are not unique across machines, and AUG, DIII-D, EAST, JET and JT-60 all number in
+  five digits over ranges that overlap the 2022 KSTAR campaign. A number inside a *generic*
+  tokamak paper is therefore ambiguous by construction. #31213 had been carried since
+  2026-08-19 as one of two new A-tier finds; it is now struck.
+* **A cited DOI.** #31589 is the article number of `10.1038/s41467-022-31589-6`, read
+  directly out of that same review's reference list. The hand-maintained false-positive table
+  had said this since the PDF sweep; the index path simply never consulted it, which is the
+  actual defect and is now fixed.
+* **A paper that is not about plasma at all.** #31886 and #31913 came from *"Fusexins,
+  HAP2/GCS1 and Evolution of Gamete Fusion"*, a cell-biology article that passed the topic
+  filter on the word `fusion`. Bare `fusion` is no longer a plasma-physics token; it has to
+  appear as `fusion energy`, `fusion performance`, `fusion-born`, `fusion alpha` and so on.
+
+Every index hit now carries a verdict — `confirmed` (hand-verified against the paper),
+`kstar` (the citing paper is about KSTAR, so a number in range is attributable), `unverified`
+(a fusion paper that never names KSTAR) and `rejected` — so `unverified` can never again be
+read as a citation. #31365 is the one `unverified` hit: *Doublet splitting of fusion alpha
+particle driven ion cyclotron emission* is D-T alpha physics, which KSTAR does not do, and
+IOP will not serve the sentence around the number. It is not selectable on that basis, and at
+`vt_clean_n = 65` it would not be selected anyway.
+
+**What the ledger says after 388 shots.** Ten shots survive as usable literature: #31097,
+#31276, #31357, #31359, #31747, #31873, #31888, #31921, #31923, #32027. That is the same
+count as before the sweep, but not the same set — #31213 left and **#31747** arrived
+(*Analysis of neoclassical tearing mode stabilization experiment by electron cyclotron
+injection in KSTAR*, EPJ Web Conf. **313** 02005). The anti-correlation that Screen 1 first
+measured is unchanged: of the ten, only **#31921 (296) and #31359 (246)** clear 200 valid
+`V_rot` rows. #31747 is the near miss at 162, and its `vt_held_frac = 0.66` would disqualify
+it regardless.
+
+**The 253 shots left are #31937–#32751, and 55 of them carry ≥ 200 valid `V_rot` rows.**
+Those 55 are the only shots that can still turn this into a single set rather than two tiers,
+so the resumed scan takes them first (`--priority` orders by `vt_clean_n`, richest first).
+Ordering changes nothing about which shots get asked — only which answers exist when the
+budget runs out again. Bisection was also made cheaper: a paper the first half of a group
+cannot account for proves the second half positive, so that half no longer has to be re-bought.
+Replayed over six fake-literature cases it recovers every cited shot at 25–36 % fewer requests.
+
+### A defect this screen exposes in the current test triple
+
+The list's three test shots are #31921, #31873 and #31114, with **1**, 296 and 311 valid
+`V_rot` rows respectively. #31873 is `vt_held_frac = 1.00` — its rotation channel is stuck,
+not sparse, and microsecond re-acquisition cannot fix it, because what is being re-acquired is
+BES / ECEI / MC, not the CES target.
+
+So for `CES_TI` the gate has three test clusters, and for `CES_VT` it effectively has **two**.
+`power_analysis.json` measured what that costs, and the cost is not lost power but false
+confidence: `CES_VT | seqv2_vs_w2control` passes at **0.770 at k = 2 against 0.665 at k = 3**.
+The pass rate goes *up* as the evidence gets thinner, because with two clusters half of all
+resamples repeat one shot and the interval collapses. `folds.py` already documents this as the
+reason test never drops below three — the triple simply was not checked against it per target.
+Whatever comes out of the completed scan, the `CES_VT` arm of the test set needs a third shot
+that actually has `V_rot`.
+
+---
+
 ### Being published and being usable are anti-correlated, and the gate says so
 
 The obvious follow-up to screen 1 is to swap the six shots that carry no paper for published
