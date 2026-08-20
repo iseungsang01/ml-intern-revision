@@ -32,90 +32,77 @@ STEP_MS = 10.0                       # the CES grid: one step of reach is 10 ms
 
 # family -> (label, run-dir prefix by reach, the rungs that exist)
 FAMILIES = {
-    "lstm": {"label": "Recurrent (LSTM)", "short": "Recurrent",
-             "arm": "v2r{r}", "reaches": [2, 3, 4, 5, 6, 7, 10, 15, 31, 63]},
-    "tcn": {"label": "Dilated convolution", "short": "Convolution",
-            "arm": "tcn{r}", "reaches": [3, 5, 7, 15, 63]},
-    "xfmr": {"label": "Banded attention", "short": "Attention",
-             "arm": "xfmr{r}", "reaches": [5, 7, 15, 63]},
+    "lstm": {"label": "Recurrent (LSTM)", "short": "Recurrent", "arm": "v2r{r}"},
+    "tcn": {"label": "Dilated convolution", "short": "Convolution", "arm": "tcn{r}"},
+    "xfmr": {"label": "Banded attention", "short": "Attention", "arm": "xfmr{r}"},
+    "ssm": {"label": "Diagonal SSM", "short": "SSM", "arm": "ssmr{r}"},
 }
+POOLED = "b9_pooled_ladder.json"     # written by b9_reach/pooled_ladder.py
 
 
-def read_rung(arm):
-    """-> {target: {mean, values, n_pass, ci_lo, ci_hi}} over the 4 seeds, or None.
-
-    `ci_lo`/`ci_hi` are the **envelope** of the four splits' 95% bootstrap intervals — the
-    lowest lower bound and the highest upper bound. That choice is not cosmetic: the
-    envelope clears zero exactly when *every* split's interval does, which is the same
-    condition the filled marker encodes. Band and marker therefore state one fact twice
-    rather than two facts that a reader has to reconcile.
-    """
-    out = {t: {"values": [], "n_pass": 0, "lows": [], "highs": []} for t in TARGETS}
-    for seed in SEEDS:
-        path = DATA / f".b9_{arm}_s{seed}" / "bootstrap_summary.json"
-        if not path.exists():
-            return None
-        node = json.loads(path.read_text())["splits"]["test"]
-        for t in TARGETS:
-            gp = node[t]["gp_causal"]
-            out[t]["values"].append(gp["skill_point"])
-            lo, hi = gp["skill_ci95"]
-            out[t]["lows"].append(lo)
-            out[t]["highs"].append(hi)
-            # "significant" = the paired CI excludes zero on the winning side.
-            if lo > 0:
-                out[t]["n_pass"] += 1
-    for t in TARGETS:
-        out[t]["mean"] = st.mean(out[t]["values"])
-        out[t]["n"] = len(out[t]["values"])
-        out[t]["ci_lo"] = min(out[t]["lows"])
-        out[t]["ci_hi"] = max(out[t]["highs"])
-    return out
-
-
-US_PER_OP = 2.5          # 8aj measured 2.1-3.2 us/op across 3 families and a 151x param range
+US_PER_OP = 2.5          # 8aj measured 2.1-3.2 us/op across 4 families and a 151x param range
 
 
 def op_counts():
     """arm -> dispatched `aten::` operators per online step (`b9_latency/op_count.py`).
 
     Every recurrent rung shares one entry on purpose: the LSTM step is literally the same
-    step at reach 2 and reach 63, which is the O(1)-in-reach finding. The other two
-    families are keyed per rung because theirs are not.
+    step at reach 2 and reach 63, which is the O(1)-in-reach finding. The SSM shares one
+    for the same reason. The other two families are keyed per rung because theirs are not.
     """
     path = DATA / ".b9_op_counts.json"
     if not path.exists():
         return {}
     raw = json.loads(path.read_text())
+
     def get(name):
         return raw[name]["aten_ops"] if name in raw else None
-    lstm = get("seq_v2_lean")
-    out = {f"v2r{r}": lstm for r in FAMILIES["lstm"]["reaches"]}
-    for r in FAMILIES["tcn"]["reaches"]:
+
+    out = {}
+    for r in range(2, 64):
+        out[f"v2r{r}"] = get("seq_v2_lean")
+        out[f"ssmr{r}"] = get("ssm")
         out[f"tcn{r}"] = get(f"tcn{r}_lean")
-    for r in FAMILIES["xfmr"]["reaches"]:
         out[f"xfmr{r}"] = get(f"xfmr{r}_lean")
     return {k: v for k, v in out.items() if v}
 
 
 def collect():
-    fams = {}
-    missing = []
+    """Read `pooled_ladder.py`'s verdict: one interval per rung over 301 discharges.
+
+    The per-split reader this replaced reduced four runs to "how many cleared zero", a
+    five-level count that flickered between adjacent rungs (§8al). What is read now is the
+    pooled estimate, its interval, and the two generality columns that say whether the win
+    is typical of a discharge or carried by a few (§8am) -- because on `CES_VT` those two
+    answers disagree, and the plot must not show only the flattering one.
+    """
+    src = DATA / f".{POOLED}"
+    if not src.exists():
+        raise SystemExit(f"FATAL: {src} missing - run b9_reach/pooled_ladder.py first")
+    raw = json.loads(src.read_text())["families"]
     ops = op_counts()
+    fams = {}
     for key, spec in FAMILIES.items():
+        node = raw.get(key, {})
+        reaches = sorted({int(r) for tgt in node.values() for r in tgt["rungs"]})
         rungs = []
-        for r in spec["reaches"]:
+        for r in reaches:
             arm = spec["arm"].format(r=r)
-            rung = read_rung(arm)
-            if rung is None:
-                missing.append(arm)
-                continue
-            rungs.append({"reach": r, "ms": r * STEP_MS, "arm": arm, "ops": ops.get(arm),
-                          **{t: {"mean": rung[t]["mean"], "n_pass": rung[t]["n_pass"],
-                                 "values": rung[t]["values"], "ci_lo": rung[t]["ci_lo"],
-                                 "ci_hi": rung[t]["ci_hi"]} for t in TARGETS}})
-        fams[key] = {"label": spec["label"], "rungs": rungs}
-    return fams, missing
+            rung = {"reach": r, "ms": r * STEP_MS, "arm": arm, "ops": ops.get(arm)}
+            for t in TARGETS:
+                cell = node.get(t, {}).get("rungs", {}).get(str(r))
+                if cell is None:
+                    break
+                rung[t] = {"skill": cell["skill"], "ci": cell["ci95"],
+                           "win": cell["win_rate"], "drop10": cell["drop_top10"],
+                           "general": cell["general"], "clears": cell["clears_zero"]}
+            else:
+                rungs.append(rung)
+        fams[key] = {"label": spec["label"], "rungs": rungs,
+                     "trend": {t: node.get(t, {}).get("trend") for t in TARGETS},
+                     "slope": {t: node.get(t, {}).get("trend_slope_per_decade")
+                               for t in TARGETS}}
+    return fams, []
 
 
 # --- the page -------------------------------------------------------------------------
@@ -136,19 +123,19 @@ HTML_HEAD = """<title>Reach Ladder by Family</title>
 :root {
   --surface: #ffffff; --surface-2: #f6f7f9; --ink: #10151c; --ink-2: #48525f;
   --ink-3: #737f8d; --rule: #e3e7ec; --rule-strong: #c3ccd6;
-  --lstm: #2a78d6; --tcn: #eb6834; --xfmr: #1baf7a;
+  --lstm: #2a78d6; --tcn: #eb6834; --xfmr: #1baf7a; --ssm: #9457d6;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --surface: #11151a; --surface-2: #171c23; --ink: #eef2f6; --ink-2: #b3bec9;
     --ink-3: #8593a1; --rule: #262d36; --rule-strong: #3b4551;
-    --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70;
+    --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70; --ssm: #a06ae0;
   }
 }
 :root[data-theme="dark"] {
   --surface: #11151a; --surface-2: #171c23; --ink: #eef2f6; --ink-2: #b3bec9;
   --ink-3: #8593a1; --rule: #262d36; --rule-strong: #3b4551;
-  --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70;
+  --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70; --ssm: #a06ae0;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--surface); color: var(--ink);
@@ -232,7 +219,7 @@ def build_html(fams, missing):
              "positive = beats the causal GP &middot; this is where the threshold lives"),
             ("CES_VT", "Rotation velocity V_rot",
              "no rung is significant on 4 of 4 splits &mdash; this panel settles nothing")):
-        vals = [r[target]["mean"] for f in fams.values() for r in f["rungs"]]
+        vals = [r[target]["skill"] for f in fams.values() for r in f["rungs"]]
         if not vals:
             continue
         lo, hi = min(vals + [0.0]), max(vals + [0.0])
@@ -282,13 +269,16 @@ def build_html(fams, missing):
             if not fam["rungs"]:
                 continue
             col = f"var(--{key})"
-            pts = [(px(r["ms"]), py(r[target]["mean"])) for r in fam["rungs"]]
+            pts = [(px(r["ms"]), py(r[target]["skill"])) for r in fam["rungs"]]
             d = " ".join(("M" if i == 0 else "L") + f"{x:.1f} {y:.1f}"
                          for i, (x, y) in enumerate(pts))
             s.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="2" '
                      f'stroke-linejoin="round" stroke-linecap="round"/>')
             for (x, y), r in zip(pts, fam["rungs"]):
-                full = r[target]["n_pass"] >= 3
+                # Filled = the win is TYPICAL of a discharge, not merely significant.
+                # 8am: on CES_VT every pooled interval clears zero while the model wins on
+                # 46% of discharges, so "significant" would be the misleading encoding.
+                full = r[target]["general"]
                 # 2px surface ring keeps overlapping markers legible
                 s.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6.5" fill="var(--surface)"/>')
                 if full:
@@ -298,8 +288,10 @@ def build_html(fams, missing):
                              f'stroke="{col}" stroke-width="2"/>')
                 s.append(f'<circle class="hit" cx="{x:.1f}" cy="{y:.1f}" r="13" '
                          f'fill="transparent" data-fam="{fam["label"]}" data-ms="{r["ms"]:.0f}" '
-                         f'data-v="{_fmt(r[target]["mean"])}" data-p="{r[target]["n_pass"]}" '
-                         f'data-ci="{_fmt(r[target]["ci_lo"])} to {_fmt(r[target]["ci_hi"])}" '
+                         f'data-v="{_fmt(r[target]["skill"])}" '
+                         f'data-ci="{_fmt(r[target]["ci"][0])} to {_fmt(r[target]["ci"][1])}" '
+                         f'data-w="{r[target]["win"]:.2f}" '
+                         f'data-d="{_fmt(r[target]["drop10"])}" '
                          f'data-arm="{r["arm"]}"/>')
             ends.append({"x": pts[-1][0], "y": pts[-1][1], "col": col,
                          "text": FAMILIES[key]["short"]})
@@ -327,10 +319,11 @@ def build_html(fams, missing):
     for key, fam in fams.items():
         for r in fam["rungs"]:
             cells = "".join(
-                f'<td>{_fmt(r[t]["mean"])}</td><td>{r[t]["n_pass"]}/4</td>' for t in TARGETS)
+                f'<td>{_fmt(r[t]["skill"])}</td>'
+                f'<td>{_fmt(r[t]["ci"][0])} &hellip; {_fmt(r[t]["ci"][1])}</td>'
+                f'<td>{r[t]["win"]:.2f}</td><td>{_fmt(r[t]["drop10"])}</td>' for t in TARGETS)
             ops = r.get("ops")
-            speed = (f'<td>{ops}</td><td>{ops * US_PER_OP:.0f}</td>' if ops
-                     else '<td>&mdash;</td><td>&mdash;</td>')
+            speed = f'<td>{ops}</td>' if ops else '<td>&mdash;</td>' 
             rows.append(f'<tr><td><span class="swatch" style="background:var(--{key})"></span>'
                         f'{fam["label"]}</td><td>{r["ms"]:.0f}</td><td>{r["reach"]}</td>'
                         f'{cells}{speed}</tr>')
@@ -341,43 +334,48 @@ def build_html(fams, missing):
                 + ", ".join(f"<code>{m}</code>" for m in missing) + "</p>")
 
     # The headline is derived, not typed: it says what the ladders actually did.
-    first4 = {k: next((r["ms"] for r in f["rungs"] if r["CES_TI"]["n_pass"] >= 3), None)
+    # "Turns" now means the first rung where the win is TYPICAL of a discharge, not the
+    # first rung where a vote count crossed a bar (8am).
+    first4 = {k: next((r["ms"] for r in f["rungs"] if r["CES_TI"]["general"]), None)
               for k, f in fams.items() if f["rungs"]}
-    if missing or None in first4.values() or len(first4) < 3:
-        head = "Does the 70 ms threshold belong to the problem or to the LSTM?"
-        lede = ("Ladders are still incomplete, so the turning points below are upper bounds "
-                "rather than values.")
-    elif len(set(first4.values())) == 1:
-        head = f"All three families turn at {list(first4.values())[0]:.0f} ms"
-        lede = "The threshold is a property of the problem, not of the operator."
+    if None in first4.values() or len(first4) < 2:
+        head = "Where does the win over the causal GP become typical?"
+        lede = ("Some families have no rung where the model beats the causal GP on a "
+                "majority of discharges, so the turning points are not yet comparable.")
     else:
         common = min(first4.values())
         agree = [FAMILIES[k]["short"].lower() for k, v in first4.items() if v == common]
-        late = {k: v for k, v in first4.items() if v != common}
-        tail = ", ".join(f"{FAMILIES[k]['short'].lower()} needs {v:.0f} ms"
-                         for k, v in late.items())
-        head = (f"{'Two' if len(agree) == 2 else str(len(agree))} of three families turn at "
-                f"{common:.0f} ms &mdash; {tail}")
-        lede = (f"The {' and '.join(agree)} ladders clear the promotion bar at {common:.0f} ms "
-                f"and tie each other at every rung they share; the remaining family clears it "
-                f"one rung later.")
+        late = sorted(((v, FAMILIES[k]["short"].lower())
+                       for k, v in first4.items() if v != common))
+        if not late:
+            head = f"Every family's win becomes typical at {common:.0f} ms"
+            lede = ("The threshold is a property of the problem, not of the operator.")
+        else:
+            tail = ", ".join(f"{n} at {v:.0f} ms" for v, n in late)
+            head = (f"The win becomes typical at {common:.0f} ms &mdash; "
+                    f"except {late[-1][1]}, which needs {late[-1][0]:.0f}")
+            lede = (f"{' and '.join(agree).capitalize()} cross into a majority of discharges "
+                    f"at {common:.0f} ms; {tail}.")
 
     body = f"""<main>
 <h1>{head}</h1>
 <p class="sub"><b>{lede}</b> Each family is trained at every reach its receptive field can
 declare, then scored against the causal GP &mdash; the strongest past-only baseline &mdash;
-on the same four frozen splits. Where the curves turn together, the threshold belongs to the
-measurement problem; where one turns later, that is a fact about the operator.</p>
-<p class="meta">B.9 axis A + per-family low rungs &middot; W = 2 protocol, held-free, cut
-population &middot; mean of 4 split seeds &middot; filled marker = the promotion bar,
-CI clears zero on &ge; 3 of the 4 splits</p>
+then scored against the causal GP &mdash; the strongest past-only baseline &mdash; with all four
+splits <b>pooled over 301 discharges</b> and the discharge as the bootstrap cluster. A filled
+marker does not mean &quot;significant&quot;: it means the model beats the causal GP on a
+<b>majority of discharges</b> and still does after its ten best are deleted.</p>
+<p class="meta">B.9 reach ladder, pooled (&sect;8am) &middot; W = 2 protocol, held-free, cut
+population &middot; 301 discharges, shot-clustered bootstrap &middot; filled marker = the win is
+typical of a discharge, not merely significant</p>
 {miss}
 <div class="legend">
   <span class="item"><span class="key" style="background:var(--lstm)"></span>Recurrent (LSTM)</span>
   <span class="item"><span class="key" style="background:var(--tcn)"></span>Dilated convolution</span>
   <span class="item"><span class="key" style="background:var(--xfmr)"></span>Banded attention</span>
-  <span class="sig"><span class="dot-demo solid"></span>clears the bar (&ge; 3 of 4 splits)
-  <span class="dot-demo" style="margin-left:10px"></span>below it</span>
+  <span class="item"><span class="key" style="background:var(--ssm)"></span>Diagonal SSM</span>
+  <span class="sig"><span class="dot-demo solid"></span>win is typical
+  <span class="dot-demo" style="margin-left:10px"></span>average-only</span>
 </div>
 <div class="panels">{"".join(panels)}</div>
 <div class="table-wrap">
@@ -387,9 +385,10 @@ CI clears zero on &ge; 3 of the 4 splits</p>
 exact and identical on any machine. The microsecond column is that count &times; 2.5 &micro;s, the
 constant measured across three families and a 151&times; parameter range (2.1&ndash;3.2 &micro;s per
 operator) &mdash; an estimate of this machine, not a deadline verdict.</caption>
-<thead><tr><th>family</th><th>context (ms)</th><th>reach (steps)</th>
-<th>T_i skill</th><th>sig.</th><th>V_rot skill</th><th>sig.</th>
-<th>ops / step</th><th>&asymp; &micro;s / step</th></tr></thead>
+<thead><tr><th>family</th><th>context (ms)</th><th>reach</th>
+<th>T_i skill</th><th>95% CI</th><th>won</th><th>&minus;top10</th>
+<th>V_rot skill</th><th>95% CI</th><th>won</th><th>&minus;top10</th>
+<th>ops / step</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
@@ -426,10 +425,12 @@ for (const h of document.querySelectorAll('.hit')) {{
       ' ms &middot; <code>' + h.dataset.arm + '</code></div>' +
       '<div class="t-r"><span>skill vs causal GP</span><span class="t-v">' +
       h.dataset.v + '</span></div>' +
-      '<div class="t-r"><span>splits with CI &gt; 0</span><span class="t-v">' +
-      h.dataset.p + ' / 4</span></div>' +
-      '<div class="t-r"><span>95% CI envelope</span><span class="t-v">' +
-      h.dataset.ci + '</span></div>';
+      '<div class="t-r"><span>95% CI (301 discharges)</span><span class="t-v">' +
+      h.dataset.ci + '</span></div>' +
+      '<div class="t-r"><span>discharges won</span><span class="t-v">' +
+      h.dataset.w + '</span></div>' +
+      '<div class="t-r"><span>skill without top 10</span><span class="t-v">' +
+      h.dataset.d + '</span></div>';
     const r = h.getBoundingClientRect();
     tip.style.opacity = 1;
     tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 12,
@@ -480,16 +481,17 @@ def read_paired_vs_control(arm, reach):
 def verdicts(fams, missing):
     """Where each family turns, and whether it turns where the LSTM does."""
     print("\n" + "=" * 92)
-    print("1. first rung reaching the promotion bar (skill vs causal GP, CI>0 on N of 4)")
-    print("family".rjust(8) + "target".rjust(9) + "  >=3/4 at" + "   4/4 at"
-          + "      ladder (ms: skill, sig)")
+    print("1. pooled over 301 discharges: first rung whose CI clears zero, and first rung")
+    print("   where the win is TYPICAL (win rate > 0.60 and surviving the top-10 drop)")
+    print("family".rjust(8) + "target".rjust(9) + "   CI>0 at" + " typical at"
+          + "      ladder (ms: skill/win-rate)")
     first = {}
     for key, fam in fams.items():
         for t in TARGETS:
-            r3 = next((r["ms"] for r in fam["rungs"] if r[t]["n_pass"] >= 3), None)
-            r4 = next((r["ms"] for r in fam["rungs"] if r[t]["n_pass"] >= 4), None)
+            r3 = next((r["ms"] for r in fam["rungs"] if r[t]["clears"]), None)
+            r4 = next((r["ms"] for r in fam["rungs"] if r[t]["general"]), None)
             first[(key, t)] = (r3, r4)
-            ladder = "  ".join(f"{r['ms']:.0f}:{r[t]['mean']:+.3f}/{r[t]['n_pass']}"
+            ladder = "  ".join(f"{r['ms']:.0f}:{r[t]['skill']:+.3f}/{r[t]['win']:.2f}"
                                for r in fam["rungs"])
             print(key.rjust(8) + t.rjust(9)
                   + (f"{r3:.0f} ms" if r3 else "  n/a").rjust(11)
