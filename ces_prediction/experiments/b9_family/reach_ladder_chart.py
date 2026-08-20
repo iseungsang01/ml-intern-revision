@@ -42,8 +42,15 @@ FAMILIES = {
 
 
 def read_rung(arm):
-    """-> {target: {mean, values, n_pass, n}} over the 4 seeds, or None if not run."""
-    out = {t: {"values": [], "n_pass": 0} for t in TARGETS}
+    """-> {target: {mean, values, n_pass, ci_lo, ci_hi}} over the 4 seeds, or None.
+
+    `ci_lo`/`ci_hi` are the **envelope** of the four splits' 95% bootstrap intervals — the
+    lowest lower bound and the highest upper bound. That choice is not cosmetic: the
+    envelope clears zero exactly when *every* split's interval does, which is the same
+    condition the filled marker encodes. Band and marker therefore state one fact twice
+    rather than two facts that a reader has to reconcile.
+    """
+    out = {t: {"values": [], "n_pass": 0, "lows": [], "highs": []} for t in TARGETS}
     for seed in SEEDS:
         path = DATA / f".b9_{arm}_s{seed}" / "bootstrap_summary.json"
         if not path.exists():
@@ -52,12 +59,17 @@ def read_rung(arm):
         for t in TARGETS:
             gp = node[t]["gp_causal"]
             out[t]["values"].append(gp["skill_point"])
+            lo, hi = gp["skill_ci95"]
+            out[t]["lows"].append(lo)
+            out[t]["highs"].append(hi)
             # "significant" = the paired CI excludes zero on the winning side.
-            if gp["skill_ci95"][0] > 0:
+            if lo > 0:
                 out[t]["n_pass"] += 1
     for t in TARGETS:
         out[t]["mean"] = st.mean(out[t]["values"])
         out[t]["n"] = len(out[t]["values"])
+        out[t]["ci_lo"] = min(out[t]["lows"])
+        out[t]["ci_hi"] = max(out[t]["highs"])
     return out
 
 
@@ -74,7 +86,8 @@ def collect():
                 continue
             rungs.append({"reach": r, "ms": r * STEP_MS, "arm": arm,
                           **{t: {"mean": rung[t]["mean"], "n_pass": rung[t]["n_pass"],
-                                 "values": rung[t]["values"]} for t in TARGETS}})
+                                 "values": rung[t]["values"], "ci_lo": rung[t]["ci_lo"],
+                                 "ci_hi": rung[t]["ci_hi"]} for t in TARGETS}})
         fams[key] = {"label": spec["label"], "rungs": rungs}
     return fams, missing
 
@@ -88,6 +101,7 @@ COLORS = {"lstm": ("#2a78d6", "#3987e5"), "tcn": ("#eb6834", "#d95926"),
           "xfmr": ("#1baf7a", "#199e70")}
 
 HTML_HEAD = """<title>Reach Ladder by Family</title>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +144,8 @@ h1 { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px
 .dot-demo { width: 11px; height: 11px; border-radius: 50%; display: inline-block;
   border: 2px solid var(--ink-3); }
 .dot-demo.solid { background: var(--ink-3); }
+.band-demo { width: 22px; height: 11px; border-radius: 2px; display: inline-block;
+  background: var(--ink-3); opacity: 0.22; }
 .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 26px; }
 .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
@@ -195,7 +211,9 @@ def build_html(fams, missing):
         vals = [r[target]["mean"] for f in fams.values() for r in f["rungs"]]
         if not vals:
             continue
-        lo, hi = min(vals + [0.0]), max(vals + [0.0])
+        edges = ([r[target]["ci_lo"] for f in fams.values() for r in f["rungs"]]
+                 + [r[target]["ci_hi"] for f in fams.values() for r in f["rungs"]])
+        lo, hi = min(vals + edges + [0.0]), max(vals + edges + [0.0])
         pad = max(0.02, (hi - lo) * 0.18)
         y0, y1 = lo - pad, hi + pad
 
@@ -204,7 +222,11 @@ def build_html(fams, missing):
 
         s = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="{title} reach ladder">']
         # y grid + ticks, rounded to clean steps
-        step = 0.05 if (y1 - y0) > 0.18 else 0.02
+        # ~5 gridlines whatever the span: the CI band can make one panel 6x taller than
+        # the other, and a step chosen for the narrow one turns the wide one into a grid.
+        span = y1 - y0
+        step = next(s for s in (0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1.0)
+                    if span / s <= 7)
         t = math.ceil(y0 / step) * step
         while t <= y1 + 1e-9:
             yy = py(t)
@@ -229,6 +251,19 @@ def build_html(fams, missing):
         s.append(f'<text class="axis-title" x="{-((T + H - B) / 2):.0f}" y="13" '
                  f'transform="rotate(-90)" text-anchor="middle">skill vs causal GP</text>')
 
+        # Every band first, then every line: a later family's wash must not sit on an
+        # earlier family's line.
+        for key, fam in fams.items():
+            if not fam["rungs"]:
+                continue
+            up = [(px(r["ms"]), py(r[target]["ci_hi"])) for r in fam["rungs"]]
+            dn = [(px(r["ms"]), py(r[target]["ci_lo"])) for r in fam["rungs"]]
+            band = (" ".join(("M" if i == 0 else "L") + f"{x:.1f} {y:.1f}"
+                             for i, (x, y) in enumerate(up))
+                    + " " + " ".join(f"L{x:.1f} {y:.1f}" for x, y in reversed(dn)) + " Z")
+            s.append(f'<path d="{band}" fill="var(--{key})" fill-opacity="0.10" '
+                     f'stroke="none"/>')
+
         ends = []
         for key, fam in fams.items():
             if not fam["rungs"]:
@@ -251,6 +286,7 @@ def build_html(fams, missing):
                 s.append(f'<circle class="hit" cx="{x:.1f}" cy="{y:.1f}" r="13" '
                          f'fill="transparent" data-fam="{fam["label"]}" data-ms="{r["ms"]:.0f}" '
                          f'data-v="{_fmt(r[target]["mean"])}" data-p="{r[target]["n_pass"]}" '
+                         f'data-ci="{_fmt(r[target]["ci_lo"])} to {_fmt(r[target]["ci_hi"])}" '
                          f'data-arm="{r["arm"]}"/>')
             ends.append({"x": pts[-1][0], "y": pts[-1][1], "col": col,
                          "text": FAMILIES[key]["short"]})
@@ -278,7 +314,9 @@ def build_html(fams, missing):
     for key, fam in fams.items():
         for r in fam["rungs"]:
             cells = "".join(
-                f'<td>{_fmt(r[t]["mean"])}</td><td>{r[t]["n_pass"]}/4</td>' for t in TARGETS)
+                f'<td>{_fmt(r[t]["mean"])}</td><td>{r[t]["n_pass"]}/4</td>'
+                f'<td>{_fmt(r[t]["ci_lo"])} &hellip; {_fmt(r[t]["ci_hi"])}</td>'
+                for t in TARGETS)
             rows.append(f'<tr><td><span class="swatch" style="background:var(--{key})"></span>'
                         f'{fam["label"]}</td><td>{r["ms"]:.0f}</td><td>{r["reach"]}</td>'
                         f'{cells}</tr>')
@@ -325,14 +363,16 @@ on all 4</p>
   <span class="item"><span class="key" style="background:var(--tcn)"></span>Dilated convolution</span>
   <span class="item"><span class="key" style="background:var(--xfmr)"></span>Banded attention</span>
   <span class="sig"><span class="dot-demo solid"></span>4/4 significant
-  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4</span>
+  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4
+  <span class="band-demo" style="margin-left:14px"></span>95% CI envelope</span>
 </div>
 <div class="panels">{"".join(panels)}</div>
 <div class="table-wrap">
 <table>
 <caption>Table view &mdash; every plotted value, so nothing is gated behind hue or hover</caption>
 <thead><tr><th>family</th><th>context (ms)</th><th>reach (steps)</th>
-<th>T_i skill</th><th>sig.</th><th>V_rot skill</th><th>sig.</th></tr></thead>
+<th>T_i skill</th><th>sig.</th><th>T_i 95% CI envelope</th>
+<th>V_rot skill</th><th>sig.</th><th>V_rot 95% CI envelope</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
@@ -346,6 +386,13 @@ trained at the <i>same</i> reach, the convolution arm ties at both 30 and 70 ms
 (&minus;0.004, no significant split either way), while attention at 70 ms loses by
 &minus;0.023 with 3 of 4 significant &mdash; the pre-registered &quot;differs&quot; verdict, and
 the only one in this batch. It ties again from 150 ms up.<br><br>
+<b>What the shaded band is.</b> Not a standard error: it is the <b>envelope of the four splits'
+95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound. That definition is
+chosen so the band cannot disagree with the markers: the envelope clears zero exactly when every
+split's interval does, which is the condition a filled marker encodes. Its width therefore carries
+split-to-split disagreement and bootstrap uncertainty at once, and reading it is the point &mdash;
+the <i>V_rot</i> envelope is about four times taller than the <i>T_i</i> one on the same four
+splits, which is the whole reason that panel settles nothing.<br><br>
 <b>What the attention curve does not show.</b> Its lowest rung <i>is</i> 70 ms &mdash; a shorter
 band was never trained &mdash; so its 3-of-4 crossing is an upper bound, not a measured turn.</p>
 </main>
@@ -359,7 +406,9 @@ for (const h of document.querySelectorAll('.hit')) {{
       '<div class="t-r"><span>skill vs causal GP</span><span class="t-v">' +
       h.dataset.v + '</span></div>' +
       '<div class="t-r"><span>splits with CI &gt; 0</span><span class="t-v">' +
-      h.dataset.p + ' / 4</span></div>';
+      h.dataset.p + ' / 4</span></div>' +
+      '<div class="t-r"><span>95% CI envelope</span><span class="t-v">' +
+      h.dataset.ci + '</span></div>';
     const r = h.getBoundingClientRect();
     tip.style.opacity = 1;
     tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 12,
