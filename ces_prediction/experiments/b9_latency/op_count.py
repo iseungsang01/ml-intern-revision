@@ -44,9 +44,11 @@ ARMS = (
     ("v2m2k_tight", "seq_tight", "v2m2k"),
     # reach ladder within each family: this is where the scaling law shows up
     ("tcn3_lean", "seq_lean", "tcn3"),           # RF 3,  1 layer
+    ("tcn5_lean", "seq_lean", "tcn5"),           # RF 5,  2 layers (dilations 1,1)
     ("tcn7_lean", "seq_lean", "tcn7"),           # RF 7,  2 layers
     ("tcn15_lean", "seq_lean", "tcn15"),         # RF 15, 3 layers
     ("tcn63_lean", "seq_lean", "tcn63"),         # RF 63, 5 layers
+    ("xfmr5_lean", "seq_lean", "xfmr5"),         # band 5
     ("xfmr7_lean", "seq_lean", "xfmr7"),         # band 7
     ("xfmr15_lean", "seq_lean", "xfmr15"),       # band 15
     ("xfmr63_lean", "seq_lean", "xfmr63"),       # band 63

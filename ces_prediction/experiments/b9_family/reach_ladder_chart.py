@@ -73,9 +73,35 @@ def read_rung(arm):
     return out
 
 
+US_PER_OP = 2.5          # 8aj measured 2.1-3.2 us/op across 3 families and a 151x param range
+
+
+def op_counts():
+    """arm -> dispatched `aten::` operators per online step (`b9_latency/op_count.py`).
+
+    Every recurrent rung shares one entry on purpose: the LSTM step is literally the same
+    step at reach 2 and reach 63, which is the O(1)-in-reach finding. The other two
+    families are keyed per rung because theirs are not.
+    """
+    path = DATA / ".b9_op_counts.json"
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text())
+    def get(name):
+        return raw[name]["aten_ops"] if name in raw else None
+    lstm = get("seq_v2_lean")
+    out = {f"v2r{r}": lstm for r in FAMILIES["lstm"]["reaches"]}
+    for r in FAMILIES["tcn"]["reaches"]:
+        out[f"tcn{r}"] = get(f"tcn{r}_lean")
+    for r in FAMILIES["xfmr"]["reaches"]:
+        out[f"xfmr{r}"] = get(f"xfmr{r}_lean")
+    return {k: v for k, v in out.items() if v}
+
+
 def collect():
     fams = {}
     missing = []
+    ops = op_counts()
     for key, spec in FAMILIES.items():
         rungs = []
         for r in spec["reaches"]:
@@ -84,7 +110,7 @@ def collect():
             if rung is None:
                 missing.append(arm)
                 continue
-            rungs.append({"reach": r, "ms": r * STEP_MS, "arm": arm,
+            rungs.append({"reach": r, "ms": r * STEP_MS, "arm": arm, "ops": ops.get(arm),
                           **{t: {"mean": rung[t]["mean"], "n_pass": rung[t]["n_pass"],
                                  "values": rung[t]["values"], "ci_lo": rung[t]["ci_lo"],
                                  "ci_hi": rung[t]["ci_hi"]} for t in TARGETS}})
@@ -301,12 +327,13 @@ def build_html(fams, missing):
     for key, fam in fams.items():
         for r in fam["rungs"]:
             cells = "".join(
-                f'<td>{_fmt(r[t]["mean"])}</td><td>{r[t]["n_pass"]}/4</td>'
-                f'<td>{_fmt(r[t]["ci_lo"])} &hellip; {_fmt(r[t]["ci_hi"])}</td>'
-                for t in TARGETS)
+                f'<td>{_fmt(r[t]["mean"])}</td><td>{r[t]["n_pass"]}/4</td>' for t in TARGETS)
+            ops = r.get("ops")
+            speed = (f'<td>{ops}</td><td>{ops * US_PER_OP:.0f}</td>' if ops
+                     else '<td>&mdash;</td><td>&mdash;</td>')
             rows.append(f'<tr><td><span class="swatch" style="background:var(--{key})"></span>'
                         f'{fam["label"]}</td><td>{r["ms"]:.0f}</td><td>{r["reach"]}</td>'
-                        f'{cells}</tr>')
+                        f'{cells}{speed}</tr>')
 
     miss = ""
     if missing:
@@ -355,10 +382,14 @@ CI clears zero on &ge; 3 of the 4 splits</p>
 <div class="panels">{"".join(panels)}</div>
 <div class="table-wrap">
 <table>
-<caption>Table view &mdash; every plotted value, so nothing is gated behind hue or hover</caption>
+<caption>Table view &mdash; every plotted value, plus what each rung costs to run.
+&quot;ops / step&quot; counts the <code>aten::</code> operators one online step dispatches; it is
+exact and identical on any machine. The microsecond column is that count &times; 2.5 &micro;s, the
+constant measured across three families and a 151&times; parameter range (2.1&ndash;3.2 &micro;s per
+operator) &mdash; an estimate of this machine, not a deadline verdict.</caption>
 <thead><tr><th>family</th><th>context (ms)</th><th>reach (steps)</th>
-<th>T_i skill</th><th>sig.</th><th>T_i 95% CI envelope</th>
-<th>V_rot skill</th><th>sig.</th><th>V_rot 95% CI envelope</th></tr></thead>
+<th>T_i skill</th><th>sig.</th><th>V_rot skill</th><th>sig.</th>
+<th>ops / step</th><th>&asymp; &micro;s / step</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
@@ -381,10 +412,10 @@ LSTM trained at the <i>same</i> reach, the convolutional arm ties at 30, 50 and 
 at both low rungs &mdash; &minus;0.009 at 50 ms and &minus;0.023 at 70 &mdash; and only the second
 crosses the pre-registered bar for &quot;differs&quot;. Read together: the operator moves
 <i>T_i</i> by at most 0.023 anywhere, while moving reach from 20 to 70 ms moves it by +0.060.<br><br>
-<b>The uncertainty is in the table, not on the plot.</b> Each row carries the <b>envelope of the
-four splits' 95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound.
-<i>V_rot</i>'s is about four times wider than <i>T_i</i>'s on the same four splits, which is the
-whole reason that panel settles nothing.</p>
+<b>Skill and price in one table.</b> Reach is free for recurrence (the same 161 operators at every
+rung), logarithmic for convolution (+48 per layer), and free-but-expensive for attention (557&ndash;565
+at every band). So the rightmost columns say what the left ones cannot: the families that tie on
+skill differ by <b>3.5&times;</b> in what a step costs.</p>
 </main>
 <div id="tip"></div>
 <script>
