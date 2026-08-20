@@ -226,14 +226,21 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--reaches", nargs="*", type=int, default=list(REACHES))
+    # A second architecture can be walked down the SAME ladder: reach is truncated context
+    # here, not a receptive field, so any arm whose state carries the past qualifies. The
+    # tag prefix and the summary filename both follow the variant so the two ladders never
+    # overwrite each other.
+    ap.add_argument("--variant", default="v2", help="SEQ_MODELS key (v2, ssm, ...)")
     args = ap.parse_args()
     reaches = [r for r in args.reaches if r in REACHES] or list(REACHES)
+    prefix = "v2r" if args.variant == "v2" else f"{args.variant}r"
     seeds = SEEDS[:1] if args.smoke else SEEDS
 
     records = []
     for reach in reaches:
         for seed in seeds:
-            rec = one_run(reach, seed, args.smoke, args.resume)
+            rec = one_run(reach, seed, args.smoke, args.resume,
+                          variant=args.variant, tag=f"{prefix}{reach}")
             records.append(rec)
             took = f"{rec['seconds']}s" if rec.get("seconds") is not None else "resumed"
             print(f"[b9a]   -> {rec.get('status')} ({took})", flush=True)
@@ -245,7 +252,7 @@ def main():
     summary = {"question": "what is full-block context worth once the model is TRAINED at "
                            "each reach?",
                "protocol": {"env": GATE_ENV, "seeds": list(SEEDS), "reaches": list(REACHES),
-                            "architecture": "seq_v2 (identical at every rung)",
+                            "architecture": f"{args.variant} (identical at every rung)",
                             "rows_per_batch": ROWS_PER_BATCH,
                             "practical_eps": PRACTICAL_EPS,
                             "prereg": "experiments/PREREGISTRATION_B9.md axis A"},
@@ -292,7 +299,8 @@ def main():
         print(f"[b9a] {t}: trained-at-reach saturation (|paired| < {PRACTICAL_EPS}, "
               f"sig deficits <= 1/4) = {sat if sat else 'not reached within ' + str(max(reaches))}")
 
-    out = DATA / ".b9_reach_ladder.json"
+    out = DATA / (".b9_reach_ladder.json" if args.variant == "v2"
+                  else f".b9_reach_ladder_{args.variant}.json")
     out.write_text(json.dumps(summary, indent=1))
     print(f"\n[b9a] wrote {out}")
 

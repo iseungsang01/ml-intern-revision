@@ -41,6 +41,10 @@ ARMS = (
     ("seq_v2_lean", "seq_lean", "v2"),
     ("seq_v2_tight", "seq_tight", "v2"),
     ("v2m2k_lean", "seq_lean", "v2m2k"),
+    # The fourth family. No lean rewrite exists for it -- the point of measuring it is what
+    # its OWN streaming step costs, since that step is already a handful of element-wise
+    # ops rather than an nn.Module call protocol.
+    ("ssm", "seq", "ssm"),
     ("v2m2k_tight", "seq_tight", "v2m2k"),
     # reach ladder within each family: this is where the scaling law shows up
     ("tcn3_lean", "seq_lean", "tcn3"),           # RF 3,  1 layer

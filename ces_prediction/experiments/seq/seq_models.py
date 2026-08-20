@@ -17,6 +17,7 @@ from model_seq_v3 import SeqCESLSTMv3
 from model_seq_b3 import SeqCESB3
 from model_seq_tcn import SeqCESTCN
 from model_seq_xfmr import SeqCESXfmr
+from model_seq_ssm import SeqCESSSM
 
 SEQ_MODELS = {
     "v1": SeqCESLSTM,
@@ -76,6 +77,13 @@ SEQ_MODELS = {
     # The attention band is a free integer, but at 2 layers RF = 2*(band-1)+1 is odd too,
     # so 5 is likewise the only new rung this family can share with the other two.
     "xfmr5": functools.partial(SeqCESXfmr, reach=5),
+
+    # B.9 axis B, fourth family: a diagonal state-space model. It is the only operator
+    # that is O(1) in reach like the LSTM AND parallel in training like the convolution,
+    # so it is the one arm that can contest 8aj's cost conclusion rather than confirm it.
+    # Reach is truncated context, not a receptive field -- so the tag ladder is `ssmr{r}`,
+    # exactly like `v2r{r}`.
+    "ssm": SeqCESSSM,
 
     # B.9 axis D: the 1k-10k band, which b8_minimal swept with recurrent arms only.
     # Reach is fixed at 15 (>= the 7-step saturation measured in axis A) so the only
