@@ -76,3 +76,9 @@ Both were learned the hard way (§8f cost a wrong published conclusion, and the
    family × real-time budget). It inherits §1–§3 of `PREREGISTRATION_W2.md` and adds the
    `PRACTICAL_EPS = 0.02` tie rule and the 5-session latency protocol that a 1 ms budget needs
    (absolutes decide there, so §8ac's "ordering only" rule is not sufficient).
+7. **The μs raw-data programme (B.6) follows `PREREGISTRATION_B6.md`** — frozen 2026-08-21,
+   before any raw byte arrives. It encodes the shot-list freeze, the `V_rot` confirmatory
+   eligibility gate (≥ 3 effective test clusters — the k = 2 false-positive artifact), the raw-data
+   positive controls, the H1 joint decision rule (pooled CI + per-seed + generality guard + block
+   bootstrap), and the structural demotion of `T_i` to exploratory at this shot count. Only its
+   ⟦on-arrival⟧ slots may be filled after data arrives; decision rules are immutable.
