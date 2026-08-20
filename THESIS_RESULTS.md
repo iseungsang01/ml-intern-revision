@@ -3416,8 +3416,33 @@ the ratio entirely is the **binary win/loss**, and it holds:
    small, because the quantity that drives the variation is unobserved.* That is a mechanism, a
    measurement, and a named data lever — not "insufficient information".
 
+### 4. Addendum (same day) — the three §8al-named covariates the artifacts do not carry
+
+§8al named five covariates; the first pass tested what the npz files hold and left out the held
+fraction, the independent-observation count and the `T_e` level. This pass completes the list —
+the first two from the hires_shots census (`shot_metrics.csv`, computed under the confirmed
+protocol's treatment), the `T_e` level as the discharge's mean raw ECEI (the §8b.3 proxy,
+uncalibrated) — on its own rng stream, so §1's numbers reproduce **bit-for-bit** (verified against
+the pre-addendum JSON); Bonferroni is over all 11 covariates tested per target. Merge is 286/286
+and 174/174; the npz `shot` key is an index into `dataset.valid_files`, verified equal to
+`sorted(data/s*.csv)` (all 641, in order, in every disk cache) before mapping to shot numbers.
+
+| covariate | `CES_TI` ρ | p (Bonf.) | `CES_VT` ρ | p (Bonf.) |
+|---|---:|---:|---:|---:|
+| held fraction | +0.043 | 1.00 | −0.084 | 1.00 |
+| independent observations | −0.006 | 1.00 | +0.114 | 1.00 |
+| `T_e` level (mean ECEI) | +0.152 | 0.11 | −0.031 | 1.00 |
+
+**None survives, and the verdict does not move.** Three readings: (a) all five covariates §8al
+named are now measured, and the only variable that predicts the win remains how much the target
+moves in that discharge; (b) the `V_rot`~`T_e`-level null is a **third** independent line for the
+torque-unobserved mechanism, after §8b.3's row-level r = +0.024 and §3's tercile residual — the
+discharges where the model wins on rotation are not the hot ones, they are the moving ones;
+(c) `T_i`'s +0.152 raw is directionally consistent with `target_level` (+0.305) but does not
+survive correction — report neither as a finding.
+
 **What it does not show, and the measurement that would settle it** (§8j rule). This is
-exploratory: eight covariates, one arm, no pre-registered rule, and the two surviving covariates
+exploratory: eleven covariates, one arm, no pre-registered rule, and the two surviving covariates
 are collinear. It also cannot separate "the model is good at variable discharges" from "the GP is
 bad at them" beyond the binary check. The measurement that would settle it is **B.6**: if the μs
 re-acquisition delivers a mode-rotation frequency, the prediction this section makes is specific

@@ -26,12 +26,21 @@ nothing here promotes or demotes a claim. Significance is by permutation (10,000
 of the response, which respects the covariates' own distribution) and reported both raw and
 Bonferroni-adjusted across the covariates tested; the adjusted column is the one to read.
 
+A second pass adds the three covariates §8al actually named that the npz files do not
+carry — the held fraction, the independent-observation count (both from the hires_shots
+per-shot census, computed under the confirmed protocol's treatment) and the discharge's
+mean ECEI level as the `T_e` proxy (uncalibrated, read from the raw CSVs; the same proxy
+§8b.3 used dataset-wide). It runs on its own rng stream so the first pass reproduces the
+recorded §8an numbers bit-for-bit, and its Bonferroni divisor counts every covariate
+tested on the target (11), not just its own three.
+
 Usage (repo root):
   py ces_prediction/experiments/b9_reach/shot_covariates.py
   py ces_prediction/experiments/b9_reach/shot_covariates.py --arm v2r63
 """
 
 import argparse
+import csv
 import json
 from pathlib import Path
 
@@ -87,6 +96,96 @@ def per_shot_table(arm, target):
 COVARIATES = ("campaign_position", "rows", "gap_mean_ms", "gap_max_ms",
               "peak_fraction", "target_level", "target_spread", "baseline_rmse")
 
+# --- second pass: the three covariates SS8al named that the npz does not carry ---
+
+METRICS_CSV = REPO_ROOT / "ces_prediction" / "experiments" / "hires_shots" / "shot_metrics.csv"
+NAMED_PREFIX = {"CES_TI": "ti", "CES_VT": "vt"}
+
+
+def idx_to_shot():
+    """npz `shot` is an index into dataset.valid_files. Verified 2026-08-21 against every
+    disk cache in data/.ces_cache: valid_files == sorted(data/s*.csv), all 641, in order —
+    so the index maps to the filename's shot number (same rule select_hires_shots.py uses)."""
+    import glob
+    files = sorted(glob.glob(str(DATA / "s*.csv")))
+    return {i: int(Path(f).name[1:].split(".")[0]) for i, f in enumerate(files)}
+
+
+def load_shot_metrics():
+    with METRICS_CSV.open(newline="", encoding="utf-8") as f:
+        return {int(r["shot"]): r for r in csv.DictReader(f)}
+
+
+def te_levels(shots):
+    """Per-discharge mean over the raw ECEI channels — the T_e proxy of SS8b.3.
+
+    Uncalibrated, so it is a cross-shot *level* only in the sense SS8b.3 already
+    relied on; treat the resulting rho as a proxy statement.
+    """
+    out = {}
+    for s in shots:
+        path = DATA / f"s{int(s)}.csv"
+        if not path.exists():
+            continue
+        with path.open(newline="", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            header = next(reader)
+            idx = [i for i, c in enumerate(header) if c.startswith("ECEI")]
+            if not idx:
+                continue
+            total, n = 0.0, 0
+            for row in reader:
+                for i in idx:
+                    v = row[i]
+                    if v:
+                        try:
+                            x = float(v)
+                        except ValueError:
+                            continue
+                        if np.isfinite(x):
+                            total += x
+                            n += 1
+        if n:
+            out[int(s)] = total / n
+    return out
+
+
+def named_covariate_pass(rows, target, metrics, te, i2s, rng, n_total_covs):
+    p = NAMED_PREFIX[target]
+    skill, cols = [], {"held_fraction": [], "independent_obs": [], "te_level": []}
+    missing = 0
+    for r in rows:
+        s = i2s[int(r["shot"])]
+        m = metrics.get(s)
+        if m is None or s not in te:
+            missing += 1
+            continue
+        skill.append(r["skill"])
+        cols["held_fraction"].append(float(m[f"{p}_held_frac"]))
+        cols["independent_obs"].append(float(m[f"{p}_clean_n"]))
+        cols["te_level"].append(te[s])
+    skill = np.array(skill)
+    print(f"  named covariates (SS8al): {len(skill)} of {len(rows)} discharges merged"
+          + (f", {missing} missing" if missing else ""))
+    if len(skill) < 30:
+        raise SystemExit(f"FATAL: only {len(skill)} discharges merged for {target} — "
+                         "the index-to-shot mapping or the census file is wrong")
+    node = {"n_shots": int(len(skill)), "n_missing": int(missing), "covariates": {}}
+    for cov, vals in cols.items():
+        x = np.array(vals)
+        if np.allclose(x, x[0]):
+            print(cov.rjust(19) + "  (constant, skipped)")
+            continue
+        rho = spearman(x, skill)
+        pv = permutation_p(x, skill, rng)
+        padj = min(1.0, pv * n_total_covs)
+        note = ("higher -> model wins more" if rho > 0 else
+                "higher -> model wins less") if padj < 0.05 else ""
+        node["covariates"][cov] = {"spearman_rho": rho, "p_perm": pv, "p_bonferroni": padj}
+        print(cov.rjust(19) + f"{rho:+.3f}".rjust(8) + f"{pv:.4f}".rjust(10)
+              + f"{padj:.4f}".rjust(10) + "  " + note)
+    return node
+
 
 def rank(a):
     order = np.argsort(a, kind="stable")
@@ -123,11 +222,13 @@ def main():
     args = ap.parse_args()
     rng = np.random.default_rng(PERM_SEED)
     out = {"arm": args.arm, "n_perm": N_PERM, "exploratory": True, "targets": {}}
+    tables = {}
 
     for target in TARGETS:
         rows = per_shot_table(args.arm, target)
         if not rows:
             raise SystemExit(f"FATAL: no artifacts for {args.arm}")
+        tables[target] = rows
         skill = np.array([r["skill"] for r in rows])
         won = (skill > 0).mean()
         print("\n" + "=" * 88)
@@ -150,6 +251,21 @@ def main():
             print(cov.rjust(19) + f"{rho:+.3f}".rjust(8) + f"{p:.4f}".rjust(10)
                   + f"{padj:.4f}".rjust(10) + "  " + note)
         out["targets"][target] = node
+
+    # Second pass on its own rng so the loop above reproduces the recorded numbers.
+    rng2 = np.random.default_rng(PERM_SEED + 1)
+    metrics = load_shot_metrics()
+    i2s = idx_to_shot()
+    all_shots = sorted({i2s[int(r["shot"])] for rows in tables.values() for r in rows})
+    te = te_levels(all_shots)
+    n_total = len(COVARIATES) + 3
+    print("\n" + "=" * 88)
+    print(f"named-covariate pass (SS8al: held fraction, independent obs, T_e level); "
+          f"Bonferroni over {n_total}")
+    for target in TARGETS:
+        print(f"\n{args.arm} {target}:")
+        out["targets"][target]["named_covariates"] = named_covariate_pass(
+            tables[target], target, metrics, te, i2s, rng2, n_total)
 
     dst = DATA / f".b9_shot_covariates_{args.arm}.json"
     dst.write_text(json.dumps(out, indent=1))
