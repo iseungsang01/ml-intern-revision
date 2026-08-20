@@ -1,0 +1,140 @@
+<title>Reach Ladder by Family</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --surface: #ffffff; --surface-2: #f6f7f9; --ink: #10151c; --ink-2: #48525f;
+  --ink-3: #737f8d; --rule: #e3e7ec; --rule-strong: #c3ccd6;
+  --lstm: #2a78d6; --tcn: #eb6834; --xfmr: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #11151a; --surface-2: #171c23; --ink: #eef2f6; --ink-2: #b3bec9;
+    --ink-3: #8593a1; --rule: #262d36; --rule-strong: #3b4551;
+    --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70;
+  }
+}
+:root[data-theme="dark"] {
+  --surface: #11151a; --surface-2: #171c23; --ink: #eef2f6; --ink-2: #b3bec9;
+  --ink-3: #8593a1; --rule: #262d36; --rule-strong: #3b4551;
+  --lstm: #3987e5; --tcn: #d95926; --xfmr: #199e70;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface); color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px; line-height: 1.55; }
+main { max-width: 1120px; margin: 0 auto; padding: 40px 24px 72px; }
+h1 { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px; }
+.sub { color: var(--ink-2); margin: 0 0 4px; max-width: 74ch; }
+.meta { color: var(--ink-3); font-size: 13px; margin: 0 0 28px; }
+.legend { display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+  margin: 0 0 18px; font-size: 13.5px; color: var(--ink-2); }
+.legend .item { display: flex; align-items: center; gap: 8px; }
+.key { width: 22px; height: 2px; border-radius: 1px; display: inline-block; }
+.legend .sig { display: flex; align-items: center; gap: 7px; color: var(--ink-3); }
+.dot-demo { width: 11px; height: 11px; border-radius: 50%; display: inline-block;
+  border: 2px solid var(--ink-3); }
+.dot-demo.solid { background: var(--ink-3); }
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 26px; }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 18px 16px 12px; min-width: 0; }
+.panel h2 { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+.panel .cap { font-size: 12.5px; color: var(--ink-3); margin: 0 0 10px; }
+.plot { width: 100%; overflow-x: auto; }
+svg { display: block; width: 100%; height: auto; }
+.tick { font-size: 11px; fill: var(--ink-3); font-variant-numeric: tabular-nums; }
+.axis-title { font-size: 11.5px; fill: var(--ink-2); }
+.dlabel { font-size: 11.5px; font-weight: 500; fill: var(--ink-2); }
+.thresh { font-size: 11px; fill: var(--ink-3); }
+/* `color` is set explicitly: a table does not inherit it in quirks mode, which is what
+   the raw file is served as when it is opened without the artifact wrapper's doctype. */
+table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 10px;
+  color: var(--ink); font-family: inherit; }
+caption { text-align: left; font-size: 13px; color: var(--ink-2); padding: 22px 0 8px;
+  font-weight: 600; }
+th, td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--rule);
+  font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; font-variant-numeric: normal; }
+thead th { color: var(--ink-3); font-weight: 500; font-size: 12px;
+  border-bottom: 1px solid var(--rule-strong); }
+tbody tr:hover { background: var(--surface-2); }
+.swatch { width: 9px; height: 9px; border-radius: 50%; display: inline-block;
+  margin-right: 7px; vertical-align: -1px; }
+.note { color: var(--ink-2); font-size: 13.5px; max-width: 78ch; margin: 26px 0 0;
+  padding-top: 18px; border-top: 1px solid var(--rule); }
+.note b { color: var(--ink); font-weight: 600; }
+#tip { position: fixed; pointer-events: none; opacity: 0; transition: opacity .09s;
+  background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 8px;
+  padding: 9px 11px; font-size: 12.5px; color: var(--ink); box-shadow: 0 6px 22px rgba(0,0,0,.14);
+  z-index: 20; white-space: nowrap; }
+#tip .t-h { color: var(--ink-3); font-size: 11.5px; margin-bottom: 5px; }
+#tip .t-r { display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+#tip .t-v { font-variant-numeric: tabular-nums; font-weight: 500; }
+.table-wrap { overflow-x: auto; }
+</style>
+<main>
+<h1>Two of three families turn at 70 ms &mdash; attention needs 150 ms</h1>
+<p class="sub"><b>The recurrent and convolution ladders clear the bar on all four splits at 70 ms and tie each other rung for rung; the remaining family needs one more rung to get there.</b> Each family is trained at every reach its receptive field can
+declare, then scored against the causal GP &mdash; the strongest past-only baseline &mdash;
+on the same four frozen splits. Where the curves turn together, the threshold belongs to the
+measurement problem; where one turns later, that is a fact about the operator.</p>
+<p class="meta">B.9 axis A + per-family low rungs &middot; W = 2 protocol, held-free, cut
+population &middot; mean of 4 split seeds &middot; filled marker = the paired CI clears zero
+on all 4</p>
+
+<div class="legend">
+  <span class="item"><span class="key" style="background:var(--lstm)"></span>Recurrent (LSTM)</span>
+  <span class="item"><span class="key" style="background:var(--tcn)"></span>Dilated convolution</span>
+  <span class="item"><span class="key" style="background:var(--xfmr)"></span>Banded attention</span>
+  <span class="sig"><span class="dot-demo solid"></span>4/4 significant
+  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4</span>
+</div>
+<div class="panels"><section class="panel"><h2>Ion temperature T_i</h2><p class="cap">positive = beats the causal GP &middot; this is where the threshold lives</p><div class="plot"><svg viewBox="0 0 570 330" role="img" aria-label="Ion temperature T_i reach ladder"><line x1="62" y1="252.0" x2="458" y2="252.0" stroke="var(--rule-strong)" stroke-width="1"/><text class="tick" x="54" y="255.5" text-anchor="end">+0.00</text><line x1="62" y1="179.7" x2="458" y2="179.7" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="183.2" text-anchor="end">+0.05</text><line x1="62" y1="107.4" x2="458" y2="107.4" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="110.9" text-anchor="end">+0.10</text><line x1="62" y1="35.1" x2="458" y2="35.1" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="38.6" text-anchor="end">+0.15</text><line x1="205.7" y1="16" x2="205.7" y2="288" stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 3"/><text class="thresh" x="210.7" y="27">70 ms</text><text class="tick" x="73.1" y="305" text-anchor="middle">20</text><text class="tick" x="116.0" y="305" text-anchor="middle">30</text><text class="tick" x="205.7" y="305" text-anchor="middle">70</text><text class="tick" x="286.3" y="305" text-anchor="middle">150</text><text class="tick" x="363.1" y="305" text-anchor="middle">310</text><text class="tick" x="438.2" y="305" text-anchor="middle">630</text><text class="axis-title" x="260" y="324" text-anchor="middle">causal context (ms, log scale)</text><text class="axis-title" x="-152" y="13" transform="rotate(-90)" text-anchor="middle">skill vs causal GP</text><path d="M73.1 172.3 L116.0 131.3 L205.7 86.1 L286.3 82.6 L363.1 59.2 L438.2 52.0" fill="none" stroke="var(--lstm)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="73.1" cy="172.3" r="6.5" fill="var(--surface)"/><circle cx="73.1" cy="172.3" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="73.1" cy="172.3" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="20" data-v="+0.055" data-p="2" data-arm="v2r2"/><circle cx="116.0" cy="131.3" r="6.5" fill="var(--surface)"/><circle cx="116.0" cy="131.3" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="116.0" cy="131.3" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="30" data-v="+0.083" data-p="3" data-arm="v2r3"/><circle cx="205.7" cy="86.1" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="86.1" r="4.5" fill="var(--lstm)"/><circle class="hit" cx="205.7" cy="86.1" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="70" data-v="+0.115" data-p="4" data-arm="v2r7"/><circle cx="286.3" cy="82.6" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="82.6" r="4.5" fill="var(--lstm)"/><circle class="hit" cx="286.3" cy="82.6" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="150" data-v="+0.117" data-p="4" data-arm="v2r15"/><circle cx="363.1" cy="59.2" r="6.5" fill="var(--surface)"/><circle cx="363.1" cy="59.2" r="4.5" fill="var(--lstm)"/><circle class="hit" cx="363.1" cy="59.2" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="310" data-v="+0.133" data-p="4" data-arm="v2r31"/><circle cx="438.2" cy="52.0" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="52.0" r="4.5" fill="var(--lstm)"/><circle class="hit" cx="438.2" cy="52.0" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="630" data-v="+0.138" data-p="4" data-arm="v2r63"/><path d="M116.0 137.3 L205.7 91.4 L286.3 64.7 L438.2 72.4" fill="none" stroke="var(--tcn)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="116.0" cy="137.3" r="6.5" fill="var(--surface)"/><circle cx="116.0" cy="137.3" r="4" fill="var(--surface)" stroke="var(--tcn)" stroke-width="2"/><circle class="hit" cx="116.0" cy="137.3" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="30" data-v="+0.079" data-p="3" data-arm="tcn3"/><circle cx="205.7" cy="91.4" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="91.4" r="4.5" fill="var(--tcn)"/><circle class="hit" cx="205.7" cy="91.4" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="70" data-v="+0.111" data-p="4" data-arm="tcn7"/><circle cx="286.3" cy="64.7" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="64.7" r="4.5" fill="var(--tcn)"/><circle class="hit" cx="286.3" cy="64.7" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="150" data-v="+0.130" data-p="4" data-arm="tcn15"/><circle cx="438.2" cy="72.4" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="72.4" r="4.5" fill="var(--tcn)"/><circle class="hit" cx="438.2" cy="72.4" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="630" data-v="+0.124" data-p="4" data-arm="tcn63"/><path d="M205.7 115.5 L286.3 79.4 L438.2 74.9" fill="none" stroke="var(--xfmr)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="205.7" cy="115.5" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="115.5" r="4" fill="var(--surface)" stroke="var(--xfmr)" stroke-width="2"/><circle class="hit" cx="205.7" cy="115.5" r="13" fill="transparent" data-fam="Banded attention" data-ms="70" data-v="+0.094" data-p="3" data-arm="xfmr7"/><circle cx="286.3" cy="79.4" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="79.4" r="4.5" fill="var(--xfmr)"/><circle class="hit" cx="286.3" cy="79.4" r="13" fill="transparent" data-fam="Banded attention" data-ms="150" data-v="+0.119" data-p="4" data-arm="xfmr15"/><circle cx="438.2" cy="74.9" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="74.9" r="4.5" fill="var(--xfmr)"/><circle class="hit" cx="438.2" cy="74.9" r="13" fill="transparent" data-fam="Banded attention" data-ms="630" data-v="+0.122" data-p="4" data-arm="xfmr63"/><path d="M445.2 52.0 L451.2 52.0 L455.2 52.0" fill="none" stroke="var(--lstm)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="55.5">Recurrent</text><path d="M445.2 72.4 L451.2 72.4 L455.2 72.4" fill="none" stroke="var(--tcn)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="75.9">Convolution</text><path d="M445.2 74.9 L451.2 86.4 L455.2 86.4" fill="none" stroke="var(--xfmr)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="89.9">Attention</text></svg></div></section><section class="panel"><h2>Rotation velocity V_rot</h2><p class="cap">no rung is significant on 4 of 4 splits &mdash; this panel settles nothing</p><div class="plot"><svg viewBox="0 0 570 330" role="img" aria-label="Rotation velocity V_rot reach ladder"><line x1="62" y1="252.0" x2="458" y2="252.0" stroke="var(--rule-strong)" stroke-width="1"/><text class="tick" x="54" y="255.5" text-anchor="end">+0.00</text><line x1="62" y1="190.4" x2="458" y2="190.4" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="193.9" text-anchor="end">+0.05</text><line x1="62" y1="128.9" x2="458" y2="128.9" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="132.4" text-anchor="end">+0.10</text><line x1="62" y1="67.3" x2="458" y2="67.3" stroke="var(--rule)" stroke-width="1"/><text class="tick" x="54" y="70.8" text-anchor="end">+0.15</text><line x1="205.7" y1="16" x2="205.7" y2="288" stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 3"/><text class="thresh" x="210.7" y="27">70 ms</text><text class="tick" x="73.1" y="305" text-anchor="middle">20</text><text class="tick" x="116.0" y="305" text-anchor="middle">30</text><text class="tick" x="205.7" y="305" text-anchor="middle">70</text><text class="tick" x="286.3" y="305" text-anchor="middle">150</text><text class="tick" x="363.1" y="305" text-anchor="middle">310</text><text class="tick" x="438.2" y="305" text-anchor="middle">630</text><text class="axis-title" x="260" y="324" text-anchor="middle">causal context (ms, log scale)</text><text class="axis-title" x="-152" y="13" transform="rotate(-90)" text-anchor="middle">skill vs causal GP</text><path d="M73.1 74.4 L116.0 67.6 L205.7 58.6 L286.3 86.4 L363.1 59.7 L438.2 62.7" fill="none" stroke="var(--lstm)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="73.1" cy="74.4" r="6.5" fill="var(--surface)"/><circle cx="73.1" cy="74.4" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="73.1" cy="74.4" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="20" data-v="+0.144" data-p="0" data-arm="v2r2"/><circle cx="116.0" cy="67.6" r="6.5" fill="var(--surface)"/><circle cx="116.0" cy="67.6" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="116.0" cy="67.6" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="30" data-v="+0.150" data-p="0" data-arm="v2r3"/><circle cx="205.7" cy="58.6" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="58.6" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="205.7" cy="58.6" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="70" data-v="+0.157" data-p="1" data-arm="v2r7"/><circle cx="286.3" cy="86.4" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="86.4" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="286.3" cy="86.4" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="150" data-v="+0.135" data-p="0" data-arm="v2r15"/><circle cx="363.1" cy="59.7" r="6.5" fill="var(--surface)"/><circle cx="363.1" cy="59.7" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="363.1" cy="59.7" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="310" data-v="+0.156" data-p="2" data-arm="v2r31"/><circle cx="438.2" cy="62.7" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="62.7" r="4" fill="var(--surface)" stroke="var(--lstm)" stroke-width="2"/><circle class="hit" cx="438.2" cy="62.7" r="13" fill="transparent" data-fam="Recurrent (LSTM)" data-ms="630" data-v="+0.154" data-p="2" data-arm="v2r63"/><path d="M116.0 66.4 L205.7 56.2 L286.3 86.2 L438.2 94.9" fill="none" stroke="var(--tcn)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="116.0" cy="66.4" r="6.5" fill="var(--surface)"/><circle cx="116.0" cy="66.4" r="4" fill="var(--surface)" stroke="var(--tcn)" stroke-width="2"/><circle class="hit" cx="116.0" cy="66.4" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="30" data-v="+0.151" data-p="1" data-arm="tcn3"/><circle cx="205.7" cy="56.2" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="56.2" r="4" fill="var(--surface)" stroke="var(--tcn)" stroke-width="2"/><circle class="hit" cx="205.7" cy="56.2" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="70" data-v="+0.159" data-p="2" data-arm="tcn7"/><circle cx="286.3" cy="86.2" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="86.2" r="4" fill="var(--surface)" stroke="var(--tcn)" stroke-width="2"/><circle class="hit" cx="286.3" cy="86.2" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="150" data-v="+0.135" data-p="0" data-arm="tcn15"/><circle cx="438.2" cy="94.9" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="94.9" r="4" fill="var(--surface)" stroke="var(--tcn)" stroke-width="2"/><circle class="hit" cx="438.2" cy="94.9" r="13" fill="transparent" data-fam="Dilated convolution" data-ms="630" data-v="+0.128" data-p="1" data-arm="tcn63"/><path d="M205.7 52.0 L286.3 65.1 L438.2 84.0" fill="none" stroke="var(--xfmr)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="205.7" cy="52.0" r="6.5" fill="var(--surface)"/><circle cx="205.7" cy="52.0" r="4" fill="var(--surface)" stroke="var(--xfmr)" stroke-width="2"/><circle class="hit" cx="205.7" cy="52.0" r="13" fill="transparent" data-fam="Banded attention" data-ms="70" data-v="+0.162" data-p="2" data-arm="xfmr7"/><circle cx="286.3" cy="65.1" r="6.5" fill="var(--surface)"/><circle cx="286.3" cy="65.1" r="4" fill="var(--surface)" stroke="var(--xfmr)" stroke-width="2"/><circle class="hit" cx="286.3" cy="65.1" r="13" fill="transparent" data-fam="Banded attention" data-ms="150" data-v="+0.152" data-p="2" data-arm="xfmr15"/><circle cx="438.2" cy="84.0" r="6.5" fill="var(--surface)"/><circle cx="438.2" cy="84.0" r="4" fill="var(--surface)" stroke="var(--xfmr)" stroke-width="2"/><circle class="hit" cx="438.2" cy="84.0" r="13" fill="transparent" data-fam="Banded attention" data-ms="630" data-v="+0.136" data-p="0" data-arm="xfmr63"/><path d="M445.2 62.7 L451.2 62.7 L455.2 62.7" fill="none" stroke="var(--lstm)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="66.2">Recurrent</text><path d="M445.2 84.0 L451.2 84.0 L455.2 84.0" fill="none" stroke="var(--xfmr)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="87.5">Attention</text><path d="M445.2 94.9 L451.2 98.0 L455.2 98.0" fill="none" stroke="var(--tcn)" stroke-width="1.5" stroke-linejoin="round"/><text class="dlabel" x="459.2" y="101.5">Convolution</text></svg></div></section></div>
+<div class="table-wrap">
+<table>
+<caption>Table view &mdash; every plotted value, so nothing is gated behind hue or hover</caption>
+<thead><tr><th>family</th><th>context (ms)</th><th>reach (steps)</th>
+<th>T_i skill</th><th>sig.</th><th>V_rot skill</th><th>sig.</th></tr></thead>
+<tbody><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>20</td><td>2</td><td>+0.055</td><td>2/4</td><td>+0.144</td><td>0/4</td></tr><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>30</td><td>3</td><td>+0.083</td><td>3/4</td><td>+0.150</td><td>0/4</td></tr><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>70</td><td>7</td><td>+0.115</td><td>4/4</td><td>+0.157</td><td>1/4</td></tr><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>150</td><td>15</td><td>+0.117</td><td>4/4</td><td>+0.135</td><td>0/4</td></tr><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>310</td><td>31</td><td>+0.133</td><td>4/4</td><td>+0.156</td><td>2/4</td></tr><tr><td><span class="swatch" style="background:var(--lstm)"></span>Recurrent (LSTM)</td><td>630</td><td>63</td><td>+0.138</td><td>4/4</td><td>+0.154</td><td>2/4</td></tr><tr><td><span class="swatch" style="background:var(--tcn)"></span>Dilated convolution</td><td>30</td><td>3</td><td>+0.079</td><td>3/4</td><td>+0.151</td><td>1/4</td></tr><tr><td><span class="swatch" style="background:var(--tcn)"></span>Dilated convolution</td><td>70</td><td>7</td><td>+0.111</td><td>4/4</td><td>+0.159</td><td>2/4</td></tr><tr><td><span class="swatch" style="background:var(--tcn)"></span>Dilated convolution</td><td>150</td><td>15</td><td>+0.130</td><td>4/4</td><td>+0.135</td><td>0/4</td></tr><tr><td><span class="swatch" style="background:var(--tcn)"></span>Dilated convolution</td><td>630</td><td>63</td><td>+0.124</td><td>4/4</td><td>+0.128</td><td>1/4</td></tr><tr><td><span class="swatch" style="background:var(--xfmr)"></span>Banded attention</td><td>70</td><td>7</td><td>+0.094</td><td>3/4</td><td>+0.162</td><td>2/4</td></tr><tr><td><span class="swatch" style="background:var(--xfmr)"></span>Banded attention</td><td>150</td><td>15</td><td>+0.119</td><td>4/4</td><td>+0.152</td><td>2/4</td></tr><tr><td><span class="swatch" style="background:var(--xfmr)"></span>Banded attention</td><td>630</td><td>63</td><td>+0.122</td><td>4/4</td><td>+0.136</td><td>0/4</td></tr></tbody>
+</table>
+</div>
+<p class="note">Read the <b>shape</b>, not the level: the y value is skill against the causal
+GP, so zero is &quot;as good as the best deployable baseline&quot; and the question is where
+each curve crosses and flattens.<br><br>
+<b>Two bars, and they disagree by one rung.</b> The project's promotion bar is <b>&ge; 3 of 4</b>
+splits significant, and <i>all three</i> families meet it at 70 ms. The filled markers above use
+the stricter <b>4 of 4</b>, and there the attention arm needs 150 ms. Paired against the LSTM
+trained at the <i>same</i> reach, the convolution arm ties at both 30 and 70 ms
+(&minus;0.004, no significant split either way), while attention at 70 ms loses by
+&minus;0.023 with 3 of 4 significant &mdash; the pre-registered &quot;differs&quot; verdict, and
+the only one in this batch. It ties again from 150 ms up.<br><br>
+<b>What the attention curve does not show.</b> Its lowest rung <i>is</i> 70 ms &mdash; a shorter
+band was never trained &mdash; so its 3-of-4 crossing is an upper bound, not a measured turn.</p>
+</main>
+<div id="tip"></div>
+<script>
+const tip = document.getElementById('tip');
+for (const h of document.querySelectorAll('.hit')) {
+  const show = (e) => {
+    tip.innerHTML = '<div class="t-h">' + h.dataset.fam + ' &middot; ' + h.dataset.ms +
+      ' ms &middot; <code>' + h.dataset.arm + '</code></div>' +
+      '<div class="t-r"><span>skill vs causal GP</span><span class="t-v">' +
+      h.dataset.v + '</span></div>' +
+      '<div class="t-r"><span>splits with CI &gt; 0</span><span class="t-v">' +
+      h.dataset.p + ' / 4</span></div>';
+    const r = h.getBoundingClientRect();
+    tip.style.opacity = 1;
+    tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 12,
+                              r.left + r.width / 2 - tip.offsetWidth / 2) + 'px';
+    tip.style.top = Math.max(8, r.top - tip.offsetHeight - 10) + 'px';
+  };
+  h.addEventListener('mouseenter', show);
+  h.addEventListener('focus', show);
+  h.setAttribute('tabindex', '0');
+  h.addEventListener('mouseleave', () => tip.style.opacity = 0);
+  h.addEventListener('blur', () => tip.style.opacity = 0);
+}
+</script>

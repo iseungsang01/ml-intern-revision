@@ -2608,6 +2608,11 @@ architecture: whether 70 ms is a property of the *plasma* or of `seq_v2` is what
 
 ## 8ag. B.9 axis B (2026-08-19) — at matched reach the sequence-operator **family does not decide skill**
 
+> **Bounded below by §8ak (2026-08-20).** Every arm here is trained at reach 15 or 63. At the
+> threshold rung itself (7 = 70 ms) the attention arm **differs** from the same-reach LSTM;
+> the convolutional arm still ties. Read "family does not decide skill" as holding at
+> 150 ms and above.
+
 **Question.** §8ac left one architecture question explicitly open: "it does not establish that
 recurrence is the only way to reach 50 steps: a dilated causal TCN reaches 63 steps with 5 layers
 and remains an untested candidate." §8af then showed the reach it was arguing from is 70 ms, not
@@ -2643,7 +2648,10 @@ they were.
    trained at the same reach — under the pre-registered practical floor — and **no arm reaches
    3/4 significance in either direction**, so no promotion is triggered and the backbone is
    unchanged. Recurrence, dilated convolution and banded attention are indistinguishable on skill
-   once they see the same 70 ms.
+   once they see the same **150 ms or more** — amended 2026-08-20: this section's arms were
+   trained at 150 and 630 ms, so it never observed the 70 ms rung, and §8ak finds the attention
+   arm **0.023 below** the LSTM there with 3/4 significance. The convolutional arm ties at 70 ms
+   and at 30 ms.
 2. **Read with §8af, this is the batch's central result.** Changing the *family* moves `T_i` by
    ≤ 0.019 and never significantly; changing the *reach* from 70 ms to 20 ms moves it by −0.065,
    4/4 significant. **The ranking is set by how far back the model looks, not by what the model
@@ -3001,6 +3009,84 @@ ordering, not a millisecond.
 
 ---
 
+## 8ak. B.9 per-family reach ladder (2026-08-20) — the 70 ms threshold is **not** the LSTM's; it is the attention arm that moves
+
+**Question (승상님).** §8af measured the threshold on **one** family and every section since has
+applied it to all three. §8ag then compared families at *matched* reach — but only at rungs 15 and
+63, both far above the threshold. So the load-bearing rung had never been tested: **train each
+family at 30 and 70 ms and see where its own ladder turns.**
+
+**Design** (`experiments/b9_family/run_b9_family.py --arms tcn3 tcn7 xfmr7`, 12 runs, artifacts
+`data/.b9_{tcn3,tcn7,xfmr7}_s*`, verdict `data/.b9_family.json`, figure + verdict block
+`experiments/b9_family/reach_ladder_chart.py` → `docs/paper/figures/reach_ladder_by_family.*`).
+Same `GATE_ENV`, same frozen manifests, same 4 split seeds. Each arm is paired against the axis A
+LSTM rung at its **own** reach, so family is the single variable. `RF = 2^(L+1) − 1` puts the
+convolutional rungs on 3 and 7 exactly; the attention band is set to 7 directly. There is **no
+attention rung below 70 ms** — a band of 3 was not trained, which bounds one reading below.
+
+### 1. The three ladders (`CES_TI` skill vs `gp_causal`, mean of 4 splits; `n`/4 = CI clears zero)
+
+| context | recurrent (LSTM) | dilated convolution | banded attention |
+|---:|---:|---:|---:|
+| 20 ms | +0.055 · 2/4 | — | — |
+| 30 ms | +0.083 · **3/4** | +0.079 · **3/4** | — |
+| **70 ms** | +0.115 · **4/4** | +0.111 · **4/4** | +0.094 · 3/4 |
+| 150 ms | +0.117 · 4/4 | +0.130 · 4/4 | +0.119 · **4/4** |
+| 310 ms | +0.133 · 4/4 | — | — |
+| 630 ms | +0.138 · 4/4 | +0.124 · 4/4 | +0.122 · 4/4 |
+
+### 2. Paired against the LSTM rung at the **same** reach (§3.2 verdicts)
+
+| arm | reach | params | `CES_TI` | w/l | verdict | `CES_VT` | w/l | verdict |
+|---|---:|---:|---:|---|---|---:|---|---|
+| `tcn3` | 3 | 71,442 | −0.004 | 0/0 | **tie** | +0.001 | 0/1 | tie |
+| `tcn7` | 7 | 128,034 | −0.004 | 0/1 | **tie** | +0.003 | 0/0 | tie |
+| `tcn15` | 15 | 184,626 | +0.014 | 2/0 | undecided | +0.000 | 0/0 | tie |
+| `tcn63` | 63 | 297,810 | −0.016 | 0/2 | undecided | −0.036 | 0/1 | undecided |
+| **`xfmr7`** | 7 | 295,746 | **−0.023** | **0/3** | **differs** | +0.007 | 0/0 | tie |
+| `xfmr15` | 15 | 295,746 | +0.002 | 0/0 | tie | +0.022 | 0/0 | undecided |
+| `xfmr63` | 63 | 295,746 | −0.019 | 0/1 | tie | −0.024 | 0/1 | undecided |
+
+### 3. Verdict
+
+1. **The threshold is a property of the problem for the two families that can be measured across
+   it.** Recurrence and dilated convolution turn at the *same* rung and agree at every rung they
+   share: 3/4 at 30 ms, 4/4 at 70 ms, and paired ties at both (−0.004, no significant split either
+   way). A 71,442-parameter convolution reproduces a 357,570-parameter LSTM's threshold to within
+   0.004 skill. **"70 ms" survives the family test it had never been given.**
+2. **Attention is the one family that moves it, and it moves it *later*.** At 70 ms `xfmr7` scores
+   +0.094 (3/4) and is **−0.023 below the LSTM at the same reach with 3/4 significant losses** —
+   `differs` under §3.2, and the **only** such verdict anywhere in B.9's family axes. It reaches
+   4/4 at 150 ms and ties the LSTM from there up. So the same architecture that is the most
+   expensive per step (§8aj: 473 dispatched operators, 4.3× the recurrent step) is also the one
+   that needs the most context to reach the same skill. Nothing recommends it on this problem.
+3. **This bounds §8ag rather than overturning it.** §8ag concluded the families are
+   indistinguishable "once they see the same 70 ms" — but its arms were trained at 150 ms and
+   630 ms, so it never observed 70 ms. The corrected statement is **"once they see 150 ms or
+   more"**; §8ag's wording is amended in place. Its magnitude claim is untouched and, if anything,
+   sharpened: the largest family effect at matched reach anywhere in B.9 is **0.023**, while
+   moving reach from 20 ms to 70 ms moves `T_i` by **+0.060** — still 2.6× larger, and the reach
+   effect is 4/4 significant where the family effect appears at exactly one rung.
+4. **Which bar you read changes the headline by one rung, so state the bar.** At the project's own
+   promotion criterion (**≥ 3/4**) all three families clear at 70 ms and the threshold is
+   unqualifiedly family-invariant. At the stricter **4/4** reading used for the figure's filled
+   markers, attention needs 150 ms. Both are reported; neither is rounded toward the tidier story.
+5. **`CES_VT` again settles nothing, and says so consistently.** No rung of any family reaches 3/4
+   (best: `xfmr7` +0.162, 2/4). Every paired `V_rot` contrast at 30 and 70 ms is a tie. The target
+   that rides carried input rather than fast-diagnostic history is indifferent to both reach and
+   family — which is what §8ab's routing predicts and what §8af already found for the LSTM alone.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). The attention
+ladder starts *at* the threshold: `xfmr3` was never trained, so "attention crosses ≥3/4 at 70 ms"
+is an upper bound, not a turn. The named measurement is **a band-3 attention arm on the same four
+splits** — 4 runs — which would say whether attention's ladder is the LSTM's shifted by one rung or
+a different shape entirely. Second, all three convolutional rungs below 15 also change *width* with
+depth (71k → 128k → 185k parameters, since layers carry channels), so `tcn3`/`tcn7` vary reach and
+size together; the tie with the full-width LSTM at each rung is what makes that confound
+non-fatal, but a width-held convolutional ladder would remove it outright.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *Crossing 70 ms of contiguous causal context is what decides whether
@@ -3017,6 +3103,14 @@ and only one moved the result:
 A 110× parameter range and three of the most dissimilar sequence operators available produce no
 distinguishable difference. Fifty milliseconds of context is the difference between missing the
 promotion bar and clearing it 4/4.
+
+**Two qualifiers the sentence needs, both measured after it was written.** *Skill, not cost* holds
+**above ~10k parameters** (below that the convolutional arm beats the size-matched recurrent one by
++0.027…+0.040, §8ai) and **at 150 ms of context or more** (at the 70 ms rung itself the attention
+arm is 0.023 below the same-reach LSTM, 3/4 significant — §8ak). Recurrence and dilated convolution
+turn at the *same* 70 ms rung and tie each other at every rung they share, so the threshold itself
+is not an artifact of the LSTM. Both qualifiers are small next to the effect being claimed: the
+largest family gap anywhere is 0.023 against a reach effect of +0.060.
 
 ### 9.1 State the threshold relative to its baseline — it is not "the context needed to be useful"
 
@@ -3051,8 +3145,9 @@ explains why §8f was flat.**
 
 ### 9.3 Choose the architecture on cost, because skill does not distinguish it
 
-Above a modest capacity the operator is irrelevant to skill, so the selection is made entirely on
-price — and the price is derivable from structure, not from parameter count or arithmetic. **Quote
+Above a modest capacity **and above 150 ms of context** the operator is irrelevant to skill (§8ag,
+bounded by §8ai below ~10k parameters and by §8ak at the 70 ms rung), so the selection is made
+entirely on price — and the price is derivable from structure, not from parameter count or arithmetic. **Quote
 the operator count, not the milliseconds**: §8aj measured cost as `N_ops × ~2–3 µs` and the counts
 are exact on any machine, while this machine's absolutes moved by 21.84× between sessions.
 

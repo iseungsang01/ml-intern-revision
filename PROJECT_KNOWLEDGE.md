@@ -815,10 +815,24 @@ reach and ±0.012 of the 357k backbone. The concrete consequence is the paramete
 smaller, and tied to the backbone (+0.001 paired, 0 significant losses) where `v2m2k` was −0.036
 with 3.
 
-**How to apply.** Never write "the architecture does not matter" without the size qualifier; write
-"above ~10k parameters it does not." When a minimal model is wanted, start from the convolutional
-arm. And `V_rot` supports none of this — the one large number (+0.303) is against `b3m1k`, which
-varies family, size and branch structure at once, so it is reported and never used.
+**The tie has a second bound, and it is reach (§8ak, 2026-08-20).** §8ag's arms were all trained
+at 150 ms or 630 ms, so it never observed the threshold rung it was generalising over. Trained at
+70 ms: recurrence and dilated convolution turn at the **same** rung (3/4 at 30 ms, 4/4 at 70 ms)
+and tie paired at both (−0.004, no significant split), while **banded attention is 0.023 below the
+same-reach LSTM with 3/4 significance** — `differs`, the only such verdict in B.9 — and does not
+reach 4/4 until 150 ms. So the 70 ms threshold is **not** an LSTM artifact, and the arm that needs
+the most context is also the one that costs the most per step (§8aj).
+
+**How to apply.** Never write "the architecture does not matter" without **both** qualifiers:
+"above ~10k parameters **and** above 150 ms of context, it does not." When a minimal model is
+wanted, start from the convolutional arm. Nothing on this problem recommends attention. And
+`V_rot` supports none of this — no rung of any family reaches 3/4, and the one large number
+(+0.303) is against `b3m1k`, which varies family, size and branch structure at once, so it is
+reported and never used.
+
+**And state which bar you are reading.** At the project's own promotion criterion (≥3/4) all three
+families clear at 70 ms; at the stricter 4/4 the attention arm needs 150 ms. The two readings
+differ by one rung, so a sentence that omits the bar is ambiguous rather than wrong.
 
 ## Cost Is Dispatched Operator Count — And This Machine's Milliseconds Are Not Evidence (2026-08-19) — §8aj
 
