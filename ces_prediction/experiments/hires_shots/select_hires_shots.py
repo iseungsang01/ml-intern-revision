@@ -34,6 +34,7 @@ Writes: shot_metrics.csv, shot_scored.csv, FINAL_10.csv, FINAL_10.png (next to t
 from __future__ import annotations
 
 import glob
+import sys
 import json
 import os
 from pathlib import Path
@@ -432,6 +433,101 @@ def score(d):
     return d
 
 
+def literature_verdicts():
+    """Best verdict per shot from the full-text index scan, plus the hand-verified set.
+
+    `confirmed` and `kstar` are citations; `unverified` and `rejected` are not, and the
+    distinction is load-bearing -- #31213 was carried for a day as a literature shot before
+    the benchmark review turned out to be quoting an ASDEX Upgrade discharge of the same
+    number. See SELECTION.md, "The batch scan, 2026-08-20".
+    """
+    out = {s: "confirmed" for s in CONFIRMED_SHOTS}
+    path = HERE / "fulltext_index_hits.json"
+    if path.exists():
+        rank = ["rejected", "dropped-title", "unverified", "kstar", "confirmed"]
+        state = json.loads(path.read_text(encoding="utf-8"))
+        for shot, works in (state.get("hits") or {}).items():
+            best = max((w.get("verdict") or "unverified" for w in works),
+                       key=lambda v: rank.index(v) if v in rank else 0)
+            if best in ("kstar", "confirmed"):
+                out.setdefault(int(shot), best)
+    return out
+
+
+def score_v2(d):
+    """The ranking B.9 leaves us with, which is not the one that produced FINAL_12.
+
+    Three of the original score's assumptions did not survive the reach ladder and the
+    per-family sweep, so they are changed here and nowhere else -- every column below is
+    still produced by `scan_file`, so the two rankings cannot drift apart:
+
+      * `t_span` is gone. It carried a quarter of `label_value` on the premise that a long
+        discharge is a richer one, and section 8af puts the useful context at 70 ms. Seven
+        contiguous steps is all a shot needs, which nearly every shot has, so length stops
+        being a selection axis instead of silently dominating one.
+      * `V_rot` outranks `T_i`. It is the only target where no arm reaches 3/4 against
+        causal GP, so valid `V_rot` rows are the first metric rather than the smaller half
+        of a blended label term.
+      * Transient content now scores. Section 5.2 puts the model's gain in the transitions,
+        and `ti_transient` / `vt_transient` measure exactly that -- they were computed all
+        along and never entered `score`.
+
+    `mc_value` and `diag_value` are untouched. They answer a different question -- is the
+    raw signal worth the microsecond fetch -- and B.9 says nothing about it.
+    """
+    def pct(col):
+        """Percentile among the shots where the metric EXISTS; missing scores zero.
+
+        `vt_transient` is undefined for the 249 shots with too few valid `V_rot` rows to
+        measure a transition, and a plain rank propagates that NaN all the way to the
+        total -- which silently deleted 263 of 641 shots from the first ranking this
+        function produced, including every literature shot whose rotation channel is
+        stuck. A metric that could not be measured has to contribute nothing, not erase
+        the shot that could not provide it.
+        """
+        return d[col].astype(float).rank(pct=True).fillna(0.0)
+
+    d["label_value_v2"] = 0.60 * pct("vt_clean_n") + 0.40 * pct("ti_clean_n")
+    d["transient_value"] = 0.5 * pct("ti_transient") + 0.5 * pct("vt_transient")
+    d["score_v2"] = (0.40 * d["label_value_v2"] + 0.15 * d["transient_value"]
+                     + 0.30 * d["mc_value"].fillna(0.0)
+                     + 0.15 * d["diag_value"].fillna(0.0))
+    lit = literature_verdicts()
+    d["literature"] = d.shot.map(lambda x: lit.get(int(x), "none"))
+    return d
+
+
+def rescore():
+    """Re-rank from `shot_scored.csv` instead of re-reading 641 CSVs.
+
+    The metrics do not change, only their weighting, so a rescore must not touch
+    `scan_file`. Keeping this path separate is what makes the old ranking reproducible
+    after the new one exists.
+    """
+    src = HERE / "shot_scored.csv"
+    if not src.exists():
+        raise SystemExit(f"{src} missing -- run this script without --rescore first")
+    d = pd.read_csv(src)
+    d = score_v2(d)
+    d.sort_values("score_v2", ascending=False).to_csv(HERE / "shot_scored_v2.csv",
+                                                      index=False, encoding="utf-8")
+    ok = d[d.pass_gate & d.artifact_free].sort_values("score_v2", ascending=False)
+    lit_n = int((d.literature != "none").sum())
+    print(f"rescored {len(d)} shots; gate-passing and artifact-free: {len(ok)}; "
+          f"shots with a citation: {lit_n}")
+    both = ok[(ok.literature != "none") & (ok.vt_clean_n >= 200)]
+    print(f"cited AND >= 200 valid V_rot, inside the gate: {sorted(both.shot.astype(int))}")
+    show = ["shot", "split_s42", "literature", "vt_clean_n", "ti_clean_n", "vt_held_frac",
+            "ti_transient", "vt_transient", "mc_rms", "label_value_v2", "transient_value",
+            "mc_value", "diag_value", "score_v2"]
+    pd.set_option("display.width", 300)
+    pd.set_option("display.max_columns", 60)
+    print("\n=== top 25 by score_v2 (gate-passing, artifact-free) ===")
+    print(ok[show].head(25).round(3).to_string(index=False))
+    print(f"\nwrote {HERE / 'shot_scored_v2.csv'}")
+    return d
+
+
 # ----------------------------------------------------------------------------- plot
 def plot_final(d):
     fig, axes = plt.subplots(len(FINAL), 1, figsize=(13, 2.6 * len(FINAL)))
@@ -475,6 +571,9 @@ def plot_final(d):
 
 
 def main():
+    if "--rescore" in sys.argv:
+        rescore()
+        return
     files = sorted(glob.glob(str(DATA / "s*.csv")))
     if not files:
         raise SystemExit(f"no shot CSVs under {DATA}. Point CES_DATA_DIR at the real folder.")
