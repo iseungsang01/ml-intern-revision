@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --surface: #ffffff; --surface-2: #f6f7f9; --ink: #10151c; --ink-2: #48525f;
@@ -23,8 +23,12 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--surface); color: var(--ink);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 15px; line-height: 1.55; }
+code { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.92em; }
+.hit:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 main { max-width: 1120px; margin: 0 auto; padding: 40px 24px 72px; }
 h1 { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px; }
 .sub { color: var(--ink-2); margin: 0 0 4px; max-width: 74ch; }
