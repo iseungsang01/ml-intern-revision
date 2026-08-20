@@ -19,9 +19,11 @@ sys.path.insert(0, str(HERE))
 from select_hires_shots import main_block, blocks_of, held_mask, TI_SPIKE_EV  # noqa: E402
 
 SEL = [(31921, "test", "LIT"), (31873, "test", "LIT"), (31114, "test", "data"),
-       (31747, "pool", "LIT"), (31359, "pool", "LIT"), (31097, "pool", "LIT"),
-       (32027, "pool", "LIT"), (31914, "pool", "data"), (32097, "pool", "data"),
-       (31368, "pool", "data"), (31357, "comp", "LIT"), (31923, "comp", "LIT")]
+       (31686, "test", "data"),
+       (31097, "pool", "LIT"), (31359, "pool", "LIT"), (31747, "pool", "LIT"),
+       (32027, "pool", "LIT"), (31914, "pool", "data"), (31368, "pool", "data"),
+       (31357, "comp", "LIT"), (31923, "comp", "LIT"),
+       (32097, "alt", "data"), (31902, "alt", "data"), (31937, "alt", "data")]
 MIN_VT = 30          # fewer clean rotation samples than this is not a beam phase marker
 
 
@@ -77,8 +79,14 @@ for _, x in r.iterrows():
     print(A(f"{x.shot:>6} {x.role:>5} {x.src:>4} "
             f"{x.lo:>8.3f} - {x.hi:<7.3f} {x.span:>6.2f} "
             f"{x.n_ti:>5} {x.n_vt:>5}  {x.basis}"))
-print(A(f"\ntotal fetch time: {r.span.sum():.1f} s over {len(r)} shots"))
-print(A(f"roles only (10): {r[r.role != 'comp'].span.sum():.1f} s"))
+core = r[r.role.isin(("test", "pool"))]
+comp = r[r.role == "comp"]
+print(A(f"\ncore 10 (the request): {core.span.sum():.2f} s over {len(core)} shots"))
+print(A(f"  + 2 companions:      {comp.span.sum():.2f} s"
+        f"  -> {core.span.sum() + comp.span.sum():.2f} s total"))
+print(A("alternates priced separately: "
+        + ", ".join(f"#{int(x.shot)} {x.span:.2f}s"
+                    for _, x in r[r.role == "alt"].iterrows())))
 print(A("\nV_rot observed interval vs the dataset block (where they differ):"))
 for _, x in r.iterrows():
     if np.isfinite(x.v_lo) and (abs(x.v_lo - x.d_lo) > 0.05 or abs(x.v_hi - x.d_hi) > 0.05):
