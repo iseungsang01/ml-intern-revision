@@ -33,11 +33,11 @@ STEP_MS = 10.0                       # the CES grid: one step of reach is 10 ms
 # family -> (label, run-dir prefix by reach, the rungs that exist)
 FAMILIES = {
     "lstm": {"label": "Recurrent (LSTM)", "short": "Recurrent",
-             "arm": "v2r{r}", "reaches": [2, 3, 7, 15, 31, 63]},
+             "arm": "v2r{r}", "reaches": [2, 3, 4, 5, 6, 7, 10, 15, 31, 63]},
     "tcn": {"label": "Dilated convolution", "short": "Convolution",
-            "arm": "tcn{r}", "reaches": [3, 7, 15, 63]},
+            "arm": "tcn{r}", "reaches": [3, 5, 7, 15, 63]},
     "xfmr": {"label": "Banded attention", "short": "Attention",
-             "arm": "xfmr{r}", "reaches": [7, 15, 63]},
+             "arm": "xfmr{r}", "reaches": [5, 7, 15, 63]},
 }
 
 
@@ -194,7 +194,7 @@ def build_html(fams, missing):
 
     W, H = 570, 330
     L, R, T, B = 62, 112, 16, 42
-    xs = [20, 30, 70, 150, 310, 630]
+    xs = [20, 30, 50, 70, 100, 150, 310, 630]
     lx0, lx1 = math.log10(18), math.log10(760)
 
     def px(ms):
@@ -232,12 +232,16 @@ def build_html(fams, missing):
             s.append(f'<text class="tick" x="{L - 8}" y="{yy + 3.5:.1f}" '
                      f'text-anchor="end">{t:+.2f}</text>')
             t += step
-        # the threshold: dashed on purpose -- it IS a threshold, which is what
-        # dashing reads as, and that is why the gridlines above are solid.
-        tx = px(70)
-        s.append(f'<line x1="{tx:.1f}" y1="{T}" x2="{tx:.1f}" y2="{H - B}" '
-                 f'stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 3"/>')
-        s.append(f'<text class="thresh" x="{tx + 5:.1f}" y="{T + 11}">70 ms</text>')
+        # Dashed on purpose -- these ARE thresholds, which is what dashing reads as, and
+        # that is why the gridlines above are solid. Two lines, not one: the families cross
+        # the bar at different rungs, so a single line would assert a threshold they no
+        # longer share.
+        for ms, lab in ((30, None), (70, "crossings 30-70 ms")):
+            tx = px(ms)
+            s.append(f'<line x1="{tx:.1f}" y1="{T}" x2="{tx:.1f}" y2="{H - B}" '
+                     f'stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 3"/>')
+            if lab:
+                s.append(f'<text class="thresh" x="{tx + 5:.1f}" y="{T + 11}">{lab}</text>')
         # x ticks
         for ms in xs:
             s.append(f'<text class="tick" x="{px(ms):.1f}" y="{H - B + 17}" '
@@ -258,7 +262,7 @@ def build_html(fams, missing):
             s.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="2" '
                      f'stroke-linejoin="round" stroke-linecap="round"/>')
             for (x, y), r in zip(pts, fam["rungs"]):
-                full = r[target]["n_pass"] == 4
+                full = r[target]["n_pass"] >= 3
                 # 2px surface ring keeps overlapping markers legible
                 s.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6.5" fill="var(--surface)"/>')
                 if full:
@@ -310,7 +314,7 @@ def build_html(fams, missing):
                 + ", ".join(f"<code>{m}</code>" for m in missing) + "</p>")
 
     # The headline is derived, not typed: it says what the ladders actually did.
-    first4 = {k: next((r["ms"] for r in f["rungs"] if r["CES_TI"]["n_pass"] >= 4), None)
+    first4 = {k: next((r["ms"] for r in f["rungs"] if r["CES_TI"]["n_pass"] >= 3), None)
               for k, f in fams.items() if f["rungs"]}
     if missing or None in first4.values() or len(first4) < 3:
         head = "Does the 70 ms threshold belong to the problem or to the LSTM?"
@@ -327,9 +331,9 @@ def build_html(fams, missing):
                          for k, v in late.items())
         head = (f"{'Two' if len(agree) == 2 else str(len(agree))} of three families turn at "
                 f"{common:.0f} ms &mdash; {tail}")
-        lede = (f"The {' and '.join(agree)} ladders clear the bar on all four splits at "
-                f"{common:.0f} ms and tie each other rung for rung; the remaining family "
-                f"needs one more rung to get there.")
+        lede = (f"The {' and '.join(agree)} ladders clear the promotion bar at {common:.0f} ms "
+                f"and tie each other at every rung they share; the remaining family clears it "
+                f"one rung later.")
 
     body = f"""<main>
 <h1>{head}</h1>
@@ -338,15 +342,15 @@ declare, then scored against the causal GP &mdash; the strongest past-only basel
 on the same four frozen splits. Where the curves turn together, the threshold belongs to the
 measurement problem; where one turns later, that is a fact about the operator.</p>
 <p class="meta">B.9 axis A + per-family low rungs &middot; W = 2 protocol, held-free, cut
-population &middot; mean of 4 split seeds &middot; filled marker = the paired CI clears zero
-on all 4</p>
+population &middot; mean of 4 split seeds &middot; filled marker = the promotion bar,
+CI clears zero on &ge; 3 of the 4 splits</p>
 {miss}
 <div class="legend">
   <span class="item"><span class="key" style="background:var(--lstm)"></span>Recurrent (LSTM)</span>
   <span class="item"><span class="key" style="background:var(--tcn)"></span>Dilated convolution</span>
   <span class="item"><span class="key" style="background:var(--xfmr)"></span>Banded attention</span>
-  <span class="sig"><span class="dot-demo solid"></span>4/4 significant
-  <span class="dot-demo" style="margin-left:10px"></span>fewer than 4</span>
+  <span class="sig"><span class="dot-demo solid"></span>clears the bar (&ge; 3 of 4 splits)
+  <span class="dot-demo" style="margin-left:10px"></span>below it</span>
 </div>
 <div class="panels">{"".join(panels)}</div>
 <div class="table-wrap">
@@ -361,21 +365,26 @@ on all 4</p>
 <p class="note">Read the <b>shape</b>, not the level: the y value is skill against the causal
 GP, so zero is &quot;as good as the best deployable baseline&quot; and the question is where
 each curve crosses and flattens.<br><br>
-<b>Two bars, and they disagree by one rung.</b> The project's promotion bar is <b>&ge; 3 of 4</b>
-splits significant, and <i>all three</i> families meet it at 70 ms. The filled markers above use
-the stricter <b>4 of 4</b>, and there the attention arm needs 150 ms. Paired against the LSTM
-trained at the <i>same</i> reach, the convolution arm ties at both 30 and 70 ms
-(&minus;0.004, no significant split either way), while attention at 70 ms loses by
-&minus;0.023 with 3 of 4 significant &mdash; the pre-registered &quot;differs&quot; verdict, and
-the only one in this batch. It ties again from 150 ms up.<br><br>
+<b>Why the bar is 3 of 4 and not 4 of 4.</b> A count of splits whose interval clears zero is a
+five-level vote on four samples, and at one-step spacing it flickers: the recurrent ladder reads
+4/4 at 40 ms, <i>3/4 at 50</i>, 4/4 at 60 and 70, <i>3/4 at 100</i>. The point estimates underneath
+rise smoothly through all of it. The project's own promotion bar is <b>&ge; 3 of 4</b>, and on that
+bar every family's ladder is monotone &mdash; which is why the markers use it. Both counts are in
+the table; neither is used to place a threshold to the step.<br><br>
+<b>Two of the three crossings are bracketed by measurement.</b> The recurrent arm is below the bar
+at 20 ms and above it at 30; the attention arm is below at 50 and above at 70. The convolutional
+arm clears at 30 ms, which is its <i>structural minimum</i> &mdash; one layer, receptive field
+2&sup2;&minus;1 &mdash; so it cannot be asked to go lower.<br><br>
+<b>Matched-reach pairing is the robust contrast, and it is quieter than the ladder.</b> Against the
+LSTM trained at the <i>same</i> reach, the convolutional arm ties at 30, 50 and 70 ms
+(&minus;0.004, +0.005, &minus;0.004; no significant split either way). Attention sits a hair below
+at both low rungs &mdash; &minus;0.009 at 50 ms and &minus;0.023 at 70 &mdash; and only the second
+crosses the pre-registered bar for &quot;differs&quot;. Read together: the operator moves
+<i>T_i</i> by at most 0.023 anywhere, while moving reach from 20 to 70 ms moves it by +0.060.<br><br>
 <b>The uncertainty is in the table, not on the plot.</b> Each row carries the <b>envelope of the
-four splits' 95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound. It
-clears zero exactly when every split's interval does, which is the condition a filled marker
-encodes, so the column and the markers never disagree. Read the two panels' envelopes against each
-other: <i>V_rot</i>'s is about four times wider than <i>T_i</i>'s on the same four splits, which is
-the whole reason that panel settles nothing.<br><br>
-<b>What the attention curve does not show.</b> Its lowest rung <i>is</i> 70 ms &mdash; a shorter
-band was never trained &mdash; so its 3-of-4 crossing is an upper bound, not a measured turn.</p>
+four splits' 95% bootstrap intervals</b> &mdash; lowest lower bound to highest upper bound.
+<i>V_rot</i>'s is about four times wider than <i>T_i</i>'s on the same four splits, which is the
+whole reason that panel settles nothing.</p>
 </main>
 <div id="tip"></div>
 <script>

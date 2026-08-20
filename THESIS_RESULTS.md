@@ -2523,6 +2523,10 @@ reach reaches +0.346", never as "`seq_v2` at reach 2 reaches +0.346".
 
 ## 8af. B.9 axis A (2026-08-19) — trained at each reach, `T_i` and `V_rot` both saturate at **70 ms**, not 500
 
+> **Superseded on the number by §8al (2026-08-20).** Rungs 4, 5, 6 and 10 were added.
+> The pre-registered §3.4 rule now returns **50 ms**, not 70 — 7 was the first rung *below*
+> the bar, not the smallest, because 4/5/6 had never been trained. Everything else here stands.
+
 **Question (승상님).** §8ae bounded the warm-up share using the `W = 2` window control, a
 *different architecture*, so reach and structure stayed confounded and the pure-reach value was
 unmeasured. This measures it: `seq_v2`, byte-identical at every rung, **trained and scored** at
@@ -3011,6 +3015,12 @@ ordering, not a millisecond.
 
 ## 8ak. B.9 per-family reach ladder (2026-08-20) — the 70 ms threshold is **not** the LSTM's; it is the attention arm that moves
 
+> **Extended and softened by §8al (2026-08-20).** `tcn5` and `xfmr5` fill the one rung in
+> the 30–70 ms gap all three families can stand on. Attention is now measured *below* its
+> crossing (50 ms, 2/4), so that crossing is bracketed rather than bounded — but it also **ties**
+> the same-reach LSTM at 50 ms (−0.009), so "differs" fires at exactly one rung and the
+> family effect is at most 0.023 anywhere.
+
 **Question (승상님).** §8af measured the threshold on **one** family and every section since has
 applied it to all three. §8ag then compared families at *matched* reach — but only at rungs 15 and
 63, both far above the threshold. So the load-bearing rung had never been tested: **train each
@@ -3087,9 +3097,130 @@ non-fatal, but a width-held convolutional ladder would remove it outright.
 
 ---
 
+## 8al. The dense ladder and a generality audit (2026-08-20) — saturation is **50 ms**, the 4/4 count cannot localize a threshold, and `V_rot`'s advantage is **not shot-general**
+
+Three corrections, all from measurements this section adds rather than from re-reading old ones.
+Two of them retire numbers this file has been quoting since §8af.
+
+**Question (승상님).** "왜 2, 3, 7, 15만 실험하냐" — the ladder was spaced `2^(L+1) − 1` because that
+is a dilated TCN's receptive field, and the LSTM was put on those rungs so "same reach, only the
+operator differs" would be true. **The LSTM never needed that constraint**, and the widest unmeasured
+gap (30 → 70 ms) is exactly where §8af placed its threshold.
+
+**Design.** `run_b9_reach.py --reaches 4 5 6 10` (16 runs, `data/.b9_v2r{4,5,6,10}_s*`) fills the gap
+one step at a time and checks that the plateau starts at 7 rather than somewhere before 15.
+`run_b9_family.py --arms tcn5 xfmr5` (8 runs) adds the one rung in that gap the other two families
+can stand on — at kernel 3 a TCN's `RF = 1 + 2·Σd` is **always odd**, and a 2-layer attention band
+gives `RF = 2(band−1) + 1`, also odd, so 40 / 60 / 100 ms are unreachable for both without changing
+the kernel or the depth. `tcn5` uses dilations (1, 1) and carries the *same* 128,034 parameters as
+`tcn7`, so reach 5 vs 7 is size-controlled by construction.
+
+### 1. Saturation is 50 ms, not 70 (`CES_TI`, paired vs the full-block backbone)
+
+| context | 20 | 30 | **40** | **50** | **60** | 70 | **100** | 150 | 310 | 630 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| deficit | −0.066 | −0.033 | **−0.021** | **−0.017** | **−0.005** | +0.002 | **−0.009** | +0.005 | +0.023 | +0.029 |
+| sig. w/l | 0/4 | 0/3 | 0/1 | 0/1 | 1/0 | 1/0 | 1/0 | 1/1 | 2/0 | 3/0 |
+| §3.4 saturated | — | — | — | **yes** | yes | yes | yes | yes | yes | yes |
+
+PREREGISTRATION_B9.md §3.4 is "the smallest r whose deficit is under `PRACTICAL_EPS` with ≤ 1/4
+significant deficits". That rule now returns **5 steps = 50 ms**. §8af returned 7 only because 4, 5
+and 6 did not exist; 7 was the first rung below the bar, not the smallest. Reach 4 misses by
+**0.0009** — it is on the line, not clearly outside it.
+
+**On this rule the ladder is a clean step**: not saturated at 20/30/40, saturated at every rung from
+50 upward including 100. Quote **50 ms**.
+
+### 2. The 4/4 count is not a function of reach at one-step spacing
+
+Against `gp_causal`, the number of splits whose CI clears zero reads, along the recurrent ladder:
+
+`2/4 → 3/4 → 4/4 → 3/4 → 4/4 → 4/4 → 3/4 → 4/4 → 4/4 → 4/4`  (20 … 630 ms)
+
+It **falls back at 50 ms and again at 100 ms**, while the point estimates underneath rise smoothly
+(+0.055 → 0.083 → 0.094 → 0.098 → 0.109 → 0.115). That is what a five-level vote on four samples
+does; nothing is wrong with the runs. The coarse ladder hid it — with only {2, 3, 7, 15} measured,
+"first 4/4 = 70 ms" looked like a clean step.
+
+**Consequences, both applied here.** (a) The "first rung reaching 4/4" is retired as a threshold
+locator; it was introduced by §8ak's figure and was never a pre-registered rule. (b) The figure and
+the verdict block now use the project's **own promotion bar, ≥ 3/4**, on which every family's ladder
+*is* monotone. Both counts stay in the table. No rung was dropped — deleting the 100 ms point was
+considered and rejected, since 50 ms falls back too and the deletion would have bought nothing but
+a tidier-looking curve.
+
+### 3. The per-family ladders, read on the promotion bar
+
+| context | recurrent | dilated conv | banded attention |
+|---:|---|---|---|
+| 20 ms | +0.055 · 2/4 | — | — |
+| **30 ms** | **+0.083 · 3/4** | **+0.079 · 3/4** | — |
+| 50 ms | +0.098 · 3/4 | +0.103 · 3/4 | +0.090 · 2/4 |
+| **70 ms** | +0.115 · 4/4 | +0.111 · 4/4 | **+0.094 · 3/4** |
+| 150 ms | +0.117 · 4/4 | +0.130 · 4/4 | +0.119 · 4/4 |
+| 630 ms | +0.138 · 4/4 | +0.124 · 4/4 | +0.122 · 4/4 |
+
+Two crossings are bracketed by measurement: recurrence is below the bar at 20 ms and above at 30;
+attention is below at 50 and above at 70. The convolutional arm clears at **30 ms, its structural
+minimum** (one layer, RF 3) — it cannot be asked to go lower, so its crossing is an upper bound.
+
+Matched-reach pairing — the robust contrast — is quieter than the ladder: `tcn3` / `tcn5` / `tcn7`
+tie the same-reach LSTM (−0.004, +0.005, −0.004; no significant split either way), `xfmr5` is
+−0.009 (0/1, tie) and `xfmr7` is −0.023 (0/3, **differs**). So attention sits slightly below at
+*both* low rungs in the same direction and the pre-registered rule fires at one of them.
+**§8ak's "attention needs one more rung" is kept but softened**: the operator moves `T_i` by at most
+0.023 anywhere, against +0.060 for moving reach from 20 to 70 ms.
+
+### 4. `V_rot` is not underpowered — its advantage is not shot-general
+
+The project has attributed `V_rot`'s 2/4 to the ~96-discharge power ceiling since §8p. That is
+**wrong**, and the per-shot decomposition of the frozen B.1 artifacts says so directly.
+
+| comparison | shots | fraction of shots the model wins | pooled |
+|---|---:|---:|---:|
+| `T_i` vs `gp_causal` | 96 | **0.695** (0.65–0.75) | +0.078 … +0.138 |
+| `T_i` vs PCHIP | 96 | 0.557 | +0.174 … +0.264 |
+| **`V_rot` vs `gp_causal`** | ~62 | **0.481** (0.40–0.53) | +0.020 … +0.331 |
+| `V_rot` vs PCHIP | ~62 | 0.329 | +0.135 … +0.390 |
+
+A per-shot win rate of **0.48 is a coin flip**, and the median shot's `V_rot` skill is ≈ 0
+(−0.049 / −0.017 / +0.028 / +0.006). The positive pooled number comes from a handful of discharges:
+
+| split | pooled | drop top-1 shot | drop top-3 | drop top-5 | top-1 share of the total gain |
+|---|---:|---:|---:|---:|---:|
+| 42 | +0.331 | +0.080 | +0.031 | **−0.006** | **84%** |
+| 1 | +0.130 | +0.075 | +0.018 | **−0.041** | 49% |
+| 7 | +0.020 | **−0.027** | −0.087 | −0.137 | **164%** |
+| 123 | +0.134 | +0.048 | +0.015 | **−0.037** | 72% |
+
+**Removing five of ~62 discharges takes every split to zero or below.** On split 7 a single shot
+more than offsets the net loss on all the others. The `T_i` control behaves oppositely — top-1 share
+**9–16%**, and dropping five shots leaves +0.045 … +0.113.
+
+1. **More discharges will not fix this.** A shot-clustered bootstrap on a 0.48 win rate straddles
+   zero at any n; B.6's 12 μs shots certainly cannot move it. The existing
+   `hires_shots/power_analysis.py` already found that power here is set by *consistency*, not by
+   effect size — this is that finding applied to the comparison that actually matters.
+2. **The sentence changes.** Not "`V_rot` is underpowered at 96 discharges" but **"the `V_rot`
+   advantage is not shot-general: the model wins on a minority of discharges by large margins and
+   loses on the rest."** That is more specific, more defensible, and it names its own follow-up.
+3. **The peak stratum does not explain which discharges.** Splitting shots by their peak fraction
+   gives a win rate of 0.435 for the high-peak half against 0.528 for the low-peak half — the wrong
+   direction. §8's "`V_rot` skill lives in the peak stratum" was a *row-level* result against PCHIP;
+   it does not transfer to the shot level against the causal GP.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). Which discharges the
+model wins on is now the open question, and peak fraction is ruled out. The named measurement is a
+**per-shot covariate regression** on the frozen artifacts — win/loss against `gp_causal` versus
+campaign position, mean gap length, held fraction, `T_e` level, and independent-observation count —
+which costs no training and either finds the regime or establishes that the wins are idiosyncratic.
+Until then `V_rot` is reported as a regime-conditional result, not a power-limited one.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
-**The claim to lead with.** *Crossing 70 ms of contiguous causal context is what decides whether
+**The claim to lead with.** *Crossing ~50 ms of contiguous causal context is what decides whether
 the nowcaster beats the strongest deployable baseline; how you cross it decides cost, not skill.*
 
 That sentence is a compression of the one contrast B.9 was built to make. Two things were varied
@@ -3120,8 +3251,14 @@ system actually displaces. What 20 ms fails to beat is `gp_causal`, the stronges
 to be worth deploying.** Say it that way; the weaker phrasing invites the objection that the
 threshold is an artifact of an easy baseline, and the stronger one is not what was measured.
 
-The rungs are coarse (2 → 7), so the true minimum lies somewhere in **3–7 steps** and this study
-does not resolve it. Quote "≈ 70 ms", not "exactly 7 steps".
+**The number is 50 ms and the rule that produces it is §3.4** (smallest reach whose deficit
+against full context is under 0.02, ≤ 1/4 significant). §8al densified the ladder to one-step
+spacing; 70 ms was an artifact of never having trained rungs 4, 5 and 6. Quote "≈ 50 ms".
+
+Do **not** quote "the first rung reaching 4/4 against `gp_causal`" as the threshold. That count
+flickers by ±1 between adjacent rungs (4/4 at 40 ms, 3/4 at 50, 4/4 at 60 and 70, 3/4 at 100)
+because it is a five-level vote on four splits, while the point estimates underneath rise smoothly.
+Report the counts, decide on the deficit.
 
 ### 9.2 Two resources, not one — this reconciles §8f with §8af
 
@@ -3129,7 +3266,7 @@ does not resolve it. Quote "≈ 70 ms", not "exactly 7 steps".
 conflict, because they count different things:
 
 - **past CES observations** — one is enough (§8f, unchanged);
-- **contiguous fast-diagnostic context** — 70 ms is needed (§8af, new).
+- **contiguous fast-diagnostic context** — ~50 ms is needed (§8af, corrected by §8al).
 
 The window family satisfied the first and could not reach the second *at any W*, by construction:
 an `AdaptiveAvgPool1d(1)` averages the window and discards its ordering (§8ad), the temporal-subset
@@ -3170,10 +3307,16 @@ noisy pass and belong in a caption, not in a claim.
 
 ### 9.4 Report the `T_i` / `V_rot` asymmetry as a mechanism, and attribute the gap to data
 
-`V_rot` is the honest weak side: **no arm reaches 3/4 against `gp_causal`** (best: `v2m4k` +0.162,
-2/4). Do not call this a failure of reconstruction — every arm beats persistence by ≈ +0.39 — call
-it what it is: the margin over the strongest deployable baseline is real but not resolvable at
-~96 test discharges.
+`V_rot` is the honest weak side, and §8al identified *why* — which changes the sentence. **No arm
+reaches 3/4 against `gp_causal`**, but that is **not** a power ceiling: the model wins on only
+**48% of discharges**, the median discharge's skill is ≈ 0, and removing five of ~62 shots takes
+the pooled advantage to zero or below on all four splits (top-1 share 49–164%). The `T_i` control
+is the opposite — 70% of discharges, top-1 share 9–16%.
+
+So write: **the `V_rot` advantage is not shot-general — large wins on a minority of discharges,
+losses on the rest.** Do not write "underpowered at ~96 discharges"; more discharges do not fix a
+coin-flip win rate, and saying so promises a fix that does not exist. Do not call it a failure of
+reconstruction either — every arm beats persistence by ≈ +0.39.
 
 The asymmetry has a mechanism and it now shows up in a second coordinate. `V_rot`'s best family is
 the small **recurrent** arm and `T_i`'s is the small **convolutional** one, which is what §8ab's
