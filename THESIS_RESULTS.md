@@ -3452,6 +3452,62 @@ tercile, this mechanism is wrong.
 
 ---
 
+## 8ao. The μs shot set is frozen (2026-08-21) — the scan finishes by discovering a fourth way to be wrong, and test grows to four
+
+**Question.** Which twelve discharges get the microsecond re-acquisition? The 2026-08-20
+handoff left three opens: 253 unscanned shots, a provisional list marked for replacement,
+and the test-3-vs-4 decision.
+
+**Design.** (1) Finish the batched OpenAlex full-text sweep (`--priority`, V_rot-richest
+first; positive/negative controls had already licensed reading an empty batch as absence).
+(2) Hand-verify every new hit against a readable version (arXiv / Springer / Nature) before
+believing it. (3) Re-rank with `score_v2`, assign roles literature-first
+(`select_literature_first.py`), and put the one genuine open decision to 승상님.
+
+**Results.**
+
+1. **Scan complete, 641/641, in one budget day.** Fifteen new index hits — and every one
+   rejected by hand-verification, which discovered the **fourth false-positive class: AIP
+   article numbers.** PoP ids are `iissnn` (032302, 032111, 032309 …) and the index matches
+   the bare five digits inside them, so any KSTAR paper citing a PoP issue-3 article "hits"
+   the matching campaign shot number. Six-for-six direct proof: the readable versions carry
+   the zero-padded id in their bibliographies and never the bare number. The
+   `FALSE_POSITIVES` table now rejects 32004/32111/32115/32151/32301–32310 (evidence
+   per shot); the positive control could not have caught this class because its decoys
+   were out-of-range numbers that collide with nothing.
+2. **One hit survived: #32092** (NF 2026 `ae8679`, KSTAR edge-harmonic-oscillation paper;
+   `032092` is structurally impossible as an AIP id; IOP wall keeps the sentence unread —
+   kstar-grade, same standard as #31747/#31097). The usable literature ledger is **11**.
+3. **Decisions (승상님).** ① **test = 4**: literature-first keeps #31873 (V_rot fully held)
+   in test, so k = 3 gives two effective `CES_VT` clusters — the measured false-positive
+   regime (0.665 → 0.770 pass rate going k = 3 → 2). Adding **#31902** (412 V_rot, most of
+   any gate-passing s42-test candidate) restores three effective clusters; measured power
+   0.750 (`CES_VT`) / 0.368 (`CES_TI`). Price: pool 7 → 6 (#31914, 542 V_rot, lost its
+   slot). ② **#32092 included** (pool) — rule consistency; it is also a top-tier clean
+   Mirnov shot (RMS 20.5, trim 0.94, kurt 1.8, coherence 0.92).
+4. **The frozen twelve** (roles in `folds.py`, windows in `fetch_windows.csv`, table in
+   `hires_shots/SELECTION.md`): test 31921 · 31873 · 31114 · **31902**; pool 31097 · 31359
+   · 31747 · 32027 · **32092** · 32097; companions 31923 · 31357. Request volume 65.66 s.
+   Six of ten roles are literature shots. `PREREGISTRATION_B6.md` §1.2 (≥ 3 effective
+   V_rot test clusters) **passes**: 296 / 311 / 412.
+
+**Verdict.** The shot set is frozen and the B.6 execution gates §1.1–§1.3 are discharged;
+only the ⟦on-arrival⟧ slots (sampling rates) remain. The scan's lasting lesson joins the
+false-positive taxonomy: **a number that survives the machine filters is still not a
+discharge until a readable version shows it in a sentence** — the AIP-id class produced
+eleven plausible-looking literature shots in one day, several with excellent V_rot
+statistics, and accepting them would have handed role slots to bibliography artifacts.
+
+**What it does not show, and the measurement that would settle it** (§8j rule). #32092's
+citation is attributable but unread; the named measurement is an SNU institutional login to
+IOP (`10.1088/1741-4326/ae8679`) — if the sentence names the discharge, upgrade to
+confirmed; if the number is something else, #32092 drops to a data-only pool shot and the
+slot goes to the next score_v2 candidate. And the k = 4 measured power is shot-cluster
+only; the block-bootstrap sweep has no k = 4 row (recorded as absent in `folds.py`, worth
+adding when `power_analysis.py` next runs).
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over

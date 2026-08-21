@@ -93,7 +93,7 @@
     "title": "Fusexins, HAP2/GCS1 and Evolution of Gamete Fusion",
     "doi": "https://doi.org/10.3389/fcell.2021.824024",
     "year": 2022,
-    "verdict": "dropped-title"
+    "verdict": "rejected"
    }
   ],
   "31888": [
@@ -109,7 +109,7 @@
     "title": "Fusexins, HAP2/GCS1 and Evolution of Gamete Fusion",
     "doi": "https://doi.org/10.3389/fcell.2021.824024",
     "year": 2022,
-    "verdict": "dropped-title"
+    "verdict": "rejected"
    }
   ],
   "31921": [
@@ -126,6 +126,356 @@
     "doi": "https://doi.org/10.1088/1741-4326/adacfc",
     "year": 2025,
     "verdict": "confirmed"
+   }
+  ],
+  "32301": [
+   {
+    "title": "Impurity transport driven by kinetic ballooning mode in the strong gradient pedestal of tokamak plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ad9487",
+    "year": 2024,
+    "verdict": "unverified"
+   }
+  ],
+  "32308": [
+   {
+    "title": "Validating the Multi-Mode Model’s Ability to Reproduce Diverse Tokamak Scenarios",
+    "doi": "https://doi.org/10.3390/plasma6030030",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Verification of Fast Ion Effects on Turbulence through Comparison of GENE and CGYRO with L-mode Plasmas in KSTAR",
+    "doi": "https://doi.org/10.48550/arxiv.2408.13731",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Local transport dynamics of cold pulses in tokamak plasmas",
+    "doi": "https://doi.org/10.1007/s41614-022-00071-7",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Comprehensive Gyrokinetic Study of Eigenstate Transitions in Fast Ion-Driven Electrostatic Drift Instabilities",
+    "doi": "https://doi.org/10.48550/arxiv.2407.08123",
+    "year": 2024,
+    "verdict": "rejected"
+   }
+  ],
+  "32303": [
+   {
+    "title": "Mesoscopic transport in KSTAR plasmas: avalanches and the <i>E</i>  ×  <i>B</i> staircase",
+    "doi": "https://doi.org/10.1088/1361-6587/ad4176",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Mesoscopic transport in KSTAR plasmas: avalanches and the $E \\times B$ staircase",
+    "doi": "https://doi.org/10.48550/arxiv.2207.06610",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "MHD instability dynamics and turbulence enhancement towards the plasma disruption at the HL-2A tokamak",
+    "doi": "https://doi.org/10.1038/s41598-023-31304-5",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Long radial coherence of electron temperature fluctuations in non-local transport in HL-2A plasmas",
+    "doi": "https://doi.org/10.48550/arxiv.2311.05357",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Linear and Nonlinear Dynamics of Self-Consistent Collisionless Tearing Modes in Toroidal Gyrokinetic Simulations",
+    "doi": "https://doi.org/10.48550/arxiv.2410.11498",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Gyrokinetic simulations on zonal flow–turbulence spreading coupling",
+    "doi": "https://doi.org/10.1063/5.0301271",
+    "year": 2025,
+    "verdict": "rejected"
+   }
+  ],
+  "32151": [
+   {
+    "title": "A Spinster-like Transporter at the Inner Membrane Complex is critical for Toxoplasma gondii cytokinesis, motility and invasion",
+    "doi": "https://doi.org/10.1371/journal.ppat.1013886",
+    "year": 2026,
+    "verdict": "rejected"
+   }
+  ],
+  "32309": [
+   {
+    "title": "Global gyrokinetic simulations of the impact of magnetic island on ion temperature gradient driven turbulence",
+    "doi": "https://doi.org/10.1088/1741-4326/ace461",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Particle pump-out induced by trapped electron mode turbulence in electron cyclotron heated plasmas on XuanLong-50 spherical torus",
+    "doi": "https://doi.org/10.1088/1741-4326/acd4d2",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Stochastic modeling of blob-like plasma filaments in the scrape-off layer: Correlated amplitudes and velocities",
+    "doi": "https://doi.org/10.1063/5.0196938",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Multimachine analysis of intermittent fluctuations in the scrape-off layer of magnetically confined fusion plasmas",
+    "doi": "https://doi.org/10.1088/1361-6587/ae7157",
+    "year": 2026,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Global gyrokinetic simulations of the impact of magnetic island on ion temperature gradient driven turbulence",
+    "doi": "https://doi.org/10.48550/arxiv.2306.05607",
+    "year": 2023,
+    "verdict": "rejected"
+   }
+  ],
+  "32092": [
+   {
+    "title": "Spatiotemporal structure of edge harmonic oscillation and its role in ELM-free QH-mode at KSTAR",
+    "doi": "https://doi.org/10.1088/1741-4326/ae8679",
+    "year": 2026,
+    "verdict": "kstar"
+   }
+  ],
+  "32004": [
+   {
+    "title": "Observation of edge kink-like modes induced by resonant magnetic perturbations in KSTAR plasmas and their effects on density pump-out",
+    "doi": "https://doi.org/10.1063/5.0237640",
+    "year": 2025,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Upgrading of DC mechanical breaker for quench protection system of superconducting fusion devices",
+    "doi": "https://doi.org/10.1063/5.0284703",
+    "year": 2025,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Characterization of ELM Pacing via Vertical Jogs on DIII-D",
+    "doi": "",
+    "year": 2026,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Impurity-driven turbulence opens a pathway to ELM-free operation and enhanced pedestal stability in tokamaks",
+    "doi": "",
+    "year": 2026,
+    "verdict": "rejected"
+   }
+  ],
+  "32310": [
+   {
+    "title": "Gyrokinetic simulations on zonal flow–turbulence spreading coupling",
+    "doi": "https://doi.org/10.1063/5.0301271",
+    "year": 2025,
+    "verdict": "rejected"
+   }
+  ],
+  "32304": [
+   {
+    "title": "Energetic passing particle-driven instabilities and their impact on discharge evolution in KSTAR",
+    "doi": "https://doi.org/10.1088/1361-6587/ace3f2",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Internal rotation of ELM filaments on NSTX",
+    "doi": "https://doi.org/10.1063/5.0100807",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Numerical simulations of scrape-off layer plasma turbulence: Role of parallel transport and particle losses",
+    "doi": "https://doi.org/10.1063/5.0311672",
+    "year": 2026,
+    "verdict": "rejected"
+   }
+  ],
+  "32501": [
+   {
+    "title": "Interaction of SPI pellets with plasma on JET and associated disruptions",
+    "doi": "https://doi.org/10.1088/1402-4896/ad55bd",
+    "year": 2024,
+    "verdict": "unverified"
+   },
+   {
+    "title": "Prevention of resistive wall tearing mode major disruptions with feedback",
+    "doi": "https://doi.org/10.48550/arxiv.2411.13256",
+    "year": 2024,
+    "verdict": "unverified"
+   },
+   {
+    "title": "A toroidally spectral field solver in the X-point Gyrokinetic Code for accurate simulation of reduced magneto-hydrodynamic modes",
+    "doi": "",
+    "year": 2026,
+    "verdict": "unverified"
+   },
+   {
+    "title": "Nichtlineare magnetohydrodynamische Simulationen von unmitigierten und mitigierten Vertical Displacement Events und Validierung gegen Experimente im ASDEX Upgrade Tokamak",
+    "doi": "",
+    "year": 2024,
+    "verdict": "unverified"
+   }
+  ],
+  "32002": [
+   {
+    "title": "Nichtlineare magnetohydrodynamische Simulationen von unmitigierten und mitigierten Vertical Displacement Events und Validierung gegen Experimente im ASDEX Upgrade Tokamak",
+    "doi": "",
+    "year": 2024,
+    "verdict": "unverified"
+   }
+  ],
+  "32027": [
+   {
+    "title": "PanoMHD: Multimodal Modelling of Plasma Dynamics towards Tokamak Control",
+    "doi": "",
+    "year": 2026,
+    "verdict": "confirmed"
+   }
+  ],
+  "32111": [
+   {
+    "title": "Mode structure measurements of ion cyclotron emission and sub-cyclotron modes on DIII-D",
+    "doi": "https://doi.org/10.1088/1741-4326/ac8da6",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Mechanism for Collective Energy Transfer from Neutral Beam-Injected Ions to Fusion-Born Alpha Particles on Cyclotron Timescales in a Plasma",
+    "doi": "https://doi.org/10.1103/physrevlett.130.105102",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Interpretation of ion cyclotron emission from sub-Alfvénic beam-injected ions heated plasmas soon after L-H mode transition in EAST",
+    "doi": "https://doi.org/10.1088/1361-6587/ad0fa6",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Identification of core ion cyclotron instabilities on HL-2A tokamak",
+    "doi": "https://doi.org/10.1088/1741-4326/acf32a",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Doublet splitting of fusion alpha particle driven ion cyclotron emission",
+    "doi": "https://doi.org/10.1088/1361-6587/ac8ba4",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "The consequences of tritium mix for simulated ion cyclotron emission spectra from deuterium-tritium plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ad8244",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "A linear parameters study of ion cyclotron emission using drift ring beam distribution",
+    "doi": "https://doi.org/10.1088/1741-4326/acff0a",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Development of high-frequency magnetic probe for plasma diagnostics of XuanLong-50",
+    "doi": "https://doi.org/10.48550/arxiv.2208.05323",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Kinetic whistler instability in a mirror-confined plasma of a continuous ECR ion source",
+    "doi": "https://doi.org/10.48550/arxiv.2209.11512",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Observation and interpretation of core ion cyclotron emission driven by D–D fusion-produced tritium ions in EAST",
+    "doi": "https://doi.org/10.1088/1741-4326/ae5836",
+    "year": 2026,
+    "verdict": "rejected"
+   },
+   {
+    "title": "First observations of two-type energetic particle-driven ion cyclotron emission in MAST-U",
+    "doi": "https://doi.org/10.1088/1361-6587/ae4d06",
+    "year": 2026,
+    "verdict": "rejected"
+   }
+  ],
+  "32302": [
+   {
+    "title": "Gyrokinetic simulations of the effects of magnetic islands on microturbulence in KSTAR",
+    "doi": "https://doi.org/10.48550/arxiv.2412.09522",
+    "year": 2024,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Global fluid simulation of plasma turbulence in a stellarator with an island divertor",
+    "doi": "https://doi.org/10.1088/1741-4326/ac6ad2",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Self-consistent multi-component simulation of plasma turbulence and neutrals in detached conditions",
+    "doi": "https://doi.org/10.1088/1741-4326/ad0a0b",
+    "year": 2023,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Dependence of nonlinear coupling among turbulence, geodesic acoustic modes and tearing modes on magnetic island width in the HL-2A edge plasmas",
+    "doi": "https://doi.org/10.1088/1741-4326/ac9294",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "A resistive MHD model and simulation on plasma flow evolution in the presence of resonant magnetic perturbation in a tokamak",
+    "doi": "https://doi.org/10.1063/5.0085883",
+    "year": 2022,
+    "verdict": "rejected"
+   }
+  ],
+  "32305": [
+   {
+    "title": "Machine-Learning enabled analysis of ELM filament dynamics in KSTAR",
+    "doi": "https://doi.org/10.48550/arxiv.2201.07941",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "PanoMHD: Multimodal Modelling of Plasma Dynamics towards Tokamak Control",
+    "doi": "",
+    "year": 2026,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Progress toward fusion energy breakeven and gain as measured against the Lawson criterion",
+    "doi": "https://doi.org/10.1063/5.0083990",
+    "year": 2022,
+    "verdict": "rejected"
+   }
+  ],
+  "32115": [
+   {
+    "title": "Hybrid-gyrokinetic simulations of low-<i>n</i> toroidal Alfvén eigenmodes using gKPSP",
+    "doi": "https://doi.org/10.1063/5.0086570",
+    "year": 2022,
+    "verdict": "rejected"
+   },
+   {
+    "title": "Linear and Nonlinear Dynamics of Self-Consistent Collisionless Tearing Modes in Toroidal Gyrokinetic Simulations",
+    "doi": "https://doi.org/10.48550/arxiv.2410.11498",
+    "year": 2024,
+    "verdict": "rejected"
    }
   ]
  },
@@ -517,7 +867,260 @@
   31924,
   31925,
   31934,
-  31935
+  31935,
+  31937,
+  31938,
+  31939,
+  31940,
+  31941,
+  31942,
+  31943,
+  31944,
+  31946,
+  31947,
+  31948,
+  31964,
+  31965,
+  31967,
+  31968,
+  31971,
+  31972,
+  31974,
+  31978,
+  31979,
+  31980,
+  31983,
+  31984,
+  31985,
+  31987,
+  31988,
+  31990,
+  31991,
+  32002,
+  32004,
+  32005,
+  32009,
+  32011,
+  32013,
+  32014,
+  32015,
+  32016,
+  32017,
+  32018,
+  32020,
+  32023,
+  32024,
+  32025,
+  32027,
+  32028,
+  32030,
+  32031,
+  32032,
+  32035,
+  32054,
+  32061,
+  32062,
+  32065,
+  32067,
+  32073,
+  32074,
+  32076,
+  32080,
+  32082,
+  32087,
+  32088,
+  32089,
+  32090,
+  32091,
+  32092,
+  32093,
+  32094,
+  32096,
+  32097,
+  32098,
+  32099,
+  32100,
+  32101,
+  32103,
+  32104,
+  32106,
+  32107,
+  32108,
+  32111,
+  32112,
+  32113,
+  32115,
+  32118,
+  32128,
+  32132,
+  32133,
+  32135,
+  32136,
+  32137,
+  32138,
+  32139,
+  32140,
+  32141,
+  32142,
+  32143,
+  32144,
+  32145,
+  32146,
+  32147,
+  32149,
+  32150,
+  32151,
+  32152,
+  32153,
+  32154,
+  32155,
+  32156,
+  32158,
+  32161,
+  32164,
+  32165,
+  32167,
+  32171,
+  32172,
+  32173,
+  32174,
+  32175,
+  32176,
+  32178,
+  32179,
+  32180,
+  32181,
+  32184,
+  32185,
+  32188,
+  32190,
+  32192,
+  32193,
+  32194,
+  32212,
+  32214,
+  32218,
+  32219,
+  32220,
+  32221,
+  32222,
+  32223,
+  32224,
+  32286,
+  32291,
+  32292,
+  32293,
+  32294,
+  32295,
+  32296,
+  32297,
+  32298,
+  32299,
+  32301,
+  32302,
+  32303,
+  32304,
+  32305,
+  32308,
+  32309,
+  32310,
+  32312,
+  32323,
+  32324,
+  32325,
+  32326,
+  32327,
+  32328,
+  32331,
+  32332,
+  32333,
+  32334,
+  32335,
+  32336,
+  32337,
+  32338,
+  32339,
+  32340,
+  32374,
+  32377,
+  32378,
+  32384,
+  32385,
+  32386,
+  32388,
+  32389,
+  32391,
+  32404,
+  32405,
+  32406,
+  32407,
+  32408,
+  32409,
+  32410,
+  32412,
+  32419,
+  32423,
+  32424,
+  32434,
+  32436,
+  32437,
+  32438,
+  32441,
+  32442,
+  32443,
+  32444,
+  32445,
+  32446,
+  32447,
+  32449,
+  32450,
+  32451,
+  32452,
+  32453,
+  32454,
+  32455,
+  32456,
+  32459,
+  32463,
+  32484,
+  32485,
+  32487,
+  32488,
+  32489,
+  32490,
+  32491,
+  32492,
+  32493,
+  32497,
+  32498,
+  32500,
+  32501,
+  32521,
+  32522,
+  32523,
+  32524,
+  32527,
+  32570,
+  32597,
+  32598,
+  32612,
+  32613,
+  32614,
+  32615,
+  32623,
+  32653,
+  32654,
+  32657,
+  32658,
+  32661,
+  32662,
+  32663,
+  32669,
+  32715,
+  32718,
+  32745,
+  32748,
+  32751
  ],
  "control_numbers_tested": 0,
  "control_hits": 0,

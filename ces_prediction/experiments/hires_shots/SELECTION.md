@@ -466,3 +466,85 @@ CES_TI 34 % → 49.5 %) did not manufacture the conclusion.
 * The WCM is at ~50 kHz and the PanoMHD cross-spectra run to 300 kHz. Nothing at those
   frequencies survives a 100 Hz grid — which is the whole reason to fetch raw data, and the
   reason the fetch should cover **BES and ECEI at full rate, not only the Mirnov coils**.
+
+---
+
+# The frozen list (2026-08-21) — scan complete, literature first, test grows to four
+
+Everything above describes the 2026-08-18/20 provisional twelve. This section replaces it.
+The list below is FROZEN: it is the one `folds.py` asserts, `fetch_windows.csv` prices, and
+`PREREGISTRATION_B6.md` §1.1 binds to.
+
+## The scan finished, and its main product was a new way to be wrong
+
+The batched OpenAlex sweep completed **641/641** (2026-08-21, one budget day, `--priority`
+V_rot-richest first). It produced 15 new index hits — and hand-verification rejected every
+one of them, by discovering a **fourth false-positive class: AIP article numbers.**
+Physics of Plasmas article ids are `iissnn` (issue, section, sequence) — 032302, 032111,
+032309 … — and the full-text index matches the bare five digits inside them, so any KSTAR
+paper whose reference list cites a PoP issue-3 article "hits" the matching campaign shot
+number. Proof by hand, six for six: the readable (arXiv/Springer/Nature) versions of the
+indexed works contain the ZERO-PADDED id in their bibliographies and never the bare number
+(e.g. "Phys. Plasmas 28(3) 032305 (2021)" inside arXiv:2201.07941 — indexed as a hit on
+"#32305"). Rejected on direct or same-mechanism evidence: 32004, 32111, 32115, 32151
+(malaria paper, the 31886 class), 32301, 32302, 32303, 32304, 32305, 32308, 32309, 32310
+(15 total with the unverified ones; the `FALSE_POSITIVES` table in
+`literature_crosscheck.py` carries per-shot evidence).
+
+Two hits survived screening:
+
+* **#32092** — *Spatiotemporal structure of edge harmonic oscillation…*, Nucl. Fusion 2026
+  (10.1088/1741-4326/ae8679), a KSTAR EHO paper. `032092` is structurally impossible as an
+  AIP id (section-sequence 20/92 does not occur), no other FP class applies, and the same
+  kstar-grade standard already admitted #31747 and #31097. IOP's bot wall keeps the
+  sentence around the number unread — an SNU institutional login would settle it.
+* #32004 came from the same unreadable PoP paper as #31097 but `032004` IS a valid AIP id
+  shape (issue 3, section 20, seq 04) and a DIII-D paper sits in its work list — rejected,
+  with a note to reverse if the paper is ever read and names the shot.
+
+So the usable literature ledger is **eleven**: the previous ten plus #32092.
+
+## Two decisions (승상님, 2026-08-21)
+
+1. **test = 4.** Literature-first keeps #31873 (V_rot held for the whole shot) in test, so
+   a 3-shot test set has TWO effective `CES_VT` clusters — the measured false-positive
+   regime (pass rate 0.665 at k = 3 → 0.770 at k = 2). Adding **#31902** (412 valid V_rot,
+   the most of any gate-passing s42-test candidate) restores three effective clusters and
+   lifts measured power to **0.750 (`CES_VT`) / 0.368 (`CES_TI`)**. Price: pool 7 → 6
+   (data shot #31914, 542 V_rot, lost its slot), folds 7 → 6.
+2. **#32092 is included** (pool), on rule consistency with #31747/#31097. It also happens
+   to be a top-tier Mirnov shot: RMS 20.5 with trim ratio 0.94, kurtosis 1.8, two-coil
+   coherence 0.92 — a spike-free strong mode.
+
+The B.6 preregistration's §1.2 eligibility gate (≥ 3 effective V_rot test clusters)
+**PASSES**: 31921 (296), 31114 (311), 31902 (412).
+
+## The frozen twelve
+
+| # | shot | role | src | window [s] | span | T_i / V_rot | why (one line) |
+|---|---|---|---|---|---:|---|---|
+| 1 | **31921** | test | LIT | 3.51–8.61 | 5.10 | 446 / 296 | FIRE mode ×2 papers; best gate shot (score_v2 rank 1/121) |
+| 2 | **31873** | test | LIT | 5.41–13.08 | 7.67 | 748 / 1 | Nat. Commun. ELM suppression; V_rot held → the reason test has a 4th shot |
+| 3 | **31114** | test | data | 4.00–9.08 | 5.08 | 506 / 311 | largest clean MC of the test picks; gains on both targets |
+| 4 | **31902** | test | data | 1.75–7.72 | 5.97 | 703 / 412 | NEW — the k=2 fix: most V_rot of any s42-test candidate |
+| 5 | **31097** | pool | LIT | 3.01–10.99 | 7.98 | 796 / 1 | Phys. Plasmas 2025 RMP edge-kink (kstar-grade) |
+| 6 | **31359** | pool | LIT | 4.00–6.98 | 2.98 | 234 / 246 | Nat. Commun. ERMP OFF → ETB + ELMs |
+| 7 | **31747** | pool | LIT | 3.01–8.49 | 5.48 | 481 / 162 | EPJ WoC NTM stabilisation by ECCD (kstar-grade) |
+| 8 | **32027** | pool | LIT | 2.21–6.19 | 3.98 | 396 / 8 | PanoMHD L/H transition, 100–300 kHz band |
+| 9 | **32092** | pool | LIT | 3.01–9.49 | 6.48 | 497 / 98 | NEW — NF 2026 EHO (kstar-grade, unread) + top-tier clean Mirnov |
+| 10 | **32097** | pool | data | 3.01–9.49 | 6.48 | 631 / 221 | strongest gate-passing Mirnov (coherence 0.93); top score_v2 fill |
+| 11 | 31923 | comp | LIT | 3.51–7.99 | 4.48 | 390 / 1 | FIRE companion of #31921 — 50 kHz WCM lives above the old grid |
+| 12 | 31357 | comp | LIT | 3.00–6.98 | 3.98 | 396 / 44 | ERMP ON — the paper's own paired control of #31359 |
+
+Request volume: **57.20 s** over the ten role shots + **8.46 s** companions = **65.66 s**
+total (`fetch_windows.csv`). Windows open at the V_rot onset where a beam-phase proxy
+exists, else at the labelled block. That rule trims #31902 to 1.75–7.72 s and leaves its
+121 pre-onset `T_i` labels outside the window (`ti_outside` column) — the only shot where
+the proxy costs labels; acceptable because the shot's job is the `V_rot` test arm.
+
+What changed against the provisional twelve: **in** 31902 (test), 32092 (pool), 32097
+stays; **out** 31745, 31604, 31074, 31937 (the score_v2 re-rank dropped the length axis
+and put V_rot first), 31914/31368/31686 (interim fill candidates). Six of ten roles are
+literature shots (five of them gate-failing — the rule is literature first, and the gate
+fills only what is left). The one-shot-per-session rule is gone (2026-08-20); the in-pool
+pair #32092/#32097 (gap 5) is deliberate and never straddles the test boundary.

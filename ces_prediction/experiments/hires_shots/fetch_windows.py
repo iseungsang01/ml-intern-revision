@@ -18,12 +18,12 @@ DATA = pathlib.Path(os.environ.get("CES_DATA_DIR", HERE.parents[2] / "data"))
 sys.path.insert(0, str(HERE))
 from select_hires_shots import main_block, blocks_of, held_mask, TI_SPIKE_EV  # noqa: E402
 
+# Frozen 2026-08-21 (승상님: test 4 + #32092 included; see folds.py for the rationale).
 SEL = [(31921, "test", "LIT"), (31873, "test", "LIT"), (31114, "test", "data"),
-       (31686, "test", "data"),
+       (31902, "test", "data"),
        (31097, "pool", "LIT"), (31359, "pool", "LIT"), (31747, "pool", "LIT"),
-       (32027, "pool", "LIT"), (31914, "pool", "data"), (31368, "pool", "data"),
-       (31357, "comp", "LIT"), (31923, "comp", "LIT"),
-       (32097, "alt", "data"), (31902, "alt", "data"), (31937, "alt", "data")]
+       (32027, "pool", "LIT"), (32092, "pool", "LIT"), (32097, "pool", "data"),
+       (31357, "comp", "LIT"), (31923, "comp", "LIT")]
 MIN_VT = 30          # fewer clean rotation samples than this is not a beam phase marker
 
 

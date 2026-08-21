@@ -32,6 +32,8 @@ LIT = {31921: "P1/P2 FIRE mode (fig.10 / fig.3,7-9)",
        32027: "P5 PanoMHD, L/H transition (fig.7)",
        31097: "NEW Phys.Plasmas 2025 RMP-induced edge kink-like modes",
        31747: "NEW EPJ Web Conf 313 02005, NTM stabilisation by ECCD",
+       32092: "NEW NF 2026 ae8679, edge harmonic oscillation (kstar-grade, "
+              "IOP-blocked so the sentence around the number is unread)",
        31923: "P1/P2 FIRE mode companion (fig.11-13 / fig.2)",
        31357: "P4 error field, ERMP ON -- the paired control of 31359",
        31276: "P4 fig.3", 31888: "Bayesian NN disruption prediction"}
@@ -59,7 +61,9 @@ print(A(f"\nliterature role shots: {roles_lit}  ({len(roles_lit)})"))
 print(A(f"companions: {comps}"))
 
 # ---- Tier 2: fill the remaining role slots from the data score -------------------------
+import sys
 N_ROLES = 10
+N_TEST = int(sys.argv[sys.argv.index("--test") + 1]) if "--test" in sys.argv else 3
 need = N_ROLES - len(roles_lit)
 pool = d[(d.pass_gate) & (d.artifact_free)].sort_values("score_v2", ascending=False)
 cand = pool[~pool.index.isin(LIT)]
@@ -67,7 +71,7 @@ cand = pool[~pool.index.isin(LIT)]
 # test must be s42-test, and -- the k=2 fix -- every test shot must carry V_rot.
 lit_test = [s for s in roles_lit if d.loc[s].split_s42 == "test"]
 lit_test_with_vt = [s for s in lit_test if d.loc[s].vt_clean_n >= 200]
-n_test_needed = 3 - len(lit_test)
+n_test_needed = N_TEST - len(lit_test)
 print(A(f"\nliterature shots already on the s42-test side: {lit_test} "
         f"(of which carrying V_rot >= 200: {lit_test_with_vt})"))
 

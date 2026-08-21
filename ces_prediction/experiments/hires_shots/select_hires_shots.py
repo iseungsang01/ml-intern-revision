@@ -61,47 +61,52 @@ ENV_WIN = 5            # 50 ms rolling window for the MC amplitude envelope
 # answer. The rest is chosen by score, to cover the axes the published shots miss
 # (CES_VT sampling, very long discharges, the strongest Mirnov activity).
 #
-# Split membership is NOT reassigned: every shot keeps the role the confirmed W = 2
-# protocol's seed-42 manifest already gives it (3 test / 4 val / 3 train).
+# Split membership is NOT reassigned: every shot keeps the s42 membership the confirmed
+# W = 2 protocol's manifest gives it (test shots are s42-test members); roles here are the
+# LEARNING roles of folds.py -- test (frozen) / pool (leave-one-out rotation).
 #
-# No two shots in the list come from the same session. Adjacent shot numbers are repeat
-# discharges that share plasma setup and diagnostic gain, and `session_similarity.py`
-# measures how much that matters: over all 641 shots, pairs with a gap <= 2 sit at a
-# median |dTi| of 92 eV against 265 eV for random pairs, and a median calibration distance
-# of 0.82 against 4.28 (one-sided p < 1e-4). The earlier version of this list contained
-# two such pairs (#31921/#31923 at the 0.0th percentile of all 176k pair distances, and
-# #31357/#31359); one member of each was dropped and replaced from the same split side.
+# Frozen 2026-08-21, after the 641/641 literature scan and two decisions by 승상님:
+# literature first (2026-08-20: published discharges take slots even when they fail the
+# data gate), test grows to FOUR (the k = 2 CES_VT artifact fix; folds.py has the power
+# numbers), and kstar-grade #32092 enters the pool. The one-shot-per-session rule was
+# removed 2026-08-20; the in-pool pair #32092/#32097 (gap 5) is deliberate and never
+# straddles the test boundary (folds.py asserts that).
 FINAL = [
-    # --- literature-confirmed -------------------------------------------------------
-    (31921, "test",  "PUBLISHED (FIRE mode, 2 papers): FIRE 5.40 s vs H-mode 8.05 s on CES "
-                     "edge profiles, plus BES bispectral WCM analysis; also the best data "
-                     "shot we have (rank 2/121) and the highest MC-turbulence coupling of "
-                     "all 641"),
-    (31873, "test",  "PUBLISHED (Nat. Commun. 2024): fully automated ELM suppression with "
-                     "ML-integrated RMP; our window covers the whole suppressed phase"),
-    (31359, "val",   "PUBLISHED (Nat. Commun. 2024): no n=1 ERMP -> density ETB at 5.5 s, ELMs, "
-                     "core Ti drops; 246 CES_VT and the liveliest BES/ECEI of the published set"),
-    (32027, "val",   "PUBLISHED (PanoMHD): clear L/H transition with 100-300 kHz cross-power / "
-                     "cross-phase spectrograms -- the frequency band a microsecond fetch buys"),
-    # --- chosen by the data score ----------------------------------------------------
-    (31114, "test",  "largest clean MC amplitude among test shots; model gains on both targets"),
-    (32097, "val",   "strongest Mirnov shot overall: RMS 17.3, two-coil coherence 0.93 (rank 1)"),
-    (31745, "val",   "highest two-coil envelope coherence of any candidate (0.96) at RMS 16.6 "
-                     "-- replaces the mode-coherence role the dropped #31923/#31357 played"),
-    (31604, "train", "largest spike-free MC (RMS 21.3, kurtosis ~0): steady-state mode"),
-    (31074, "train", "balanced: two-coil coherence 0.74, 7.5 s, 446 CES_VT"),
-    (31937, "train", "longest discharge (15.2 s), most labels (1479 TI / 722 VT), quiet MC"),
+    # --- test (frozen; never trained on, never in model selection) -------------------
+    (31921, "test", "PUBLISHED x2 (FIRE mode): FIRE 5.40 s vs H-mode 8.05 s on CES edge "
+                    "profiles + BES bispectral WCM; best data shot of the gate (score_v2 "
+                    "rank 1/121), 296 V_rot"),
+    (31873, "test", "PUBLISHED (Nat. Commun. 2024): fully automated ELM suppression with "
+                    "ML-integrated RMP; V_rot held for the whole shot (1 independent row) "
+                    "-- kept by literature-first, and the reason test has a 4th shot"),
+    (31114, "test", "largest clean MC amplitude among 3-shot-era test picks (RMS 8.0), "
+                    "311 V_rot, model gains on both targets"),
+    (31902, "test", "added 2026-08-21 as the 4th test shot: 412 valid V_rot -- the most "
+                    "of any gate-passing s42-test candidate -- restoring 3 effective "
+                    "CES_VT clusters (power 0.665 -> 0.750)"),
+    # --- pool (leave-one-shot-out rotation, 6 folds) ---------------------------------
+    (31097, "pool", "PUBLISHED (Phys. Plasmas 2025, kstar-grade): RMP-induced edge "
+                    "kink-like modes; 1 independent V_rot"),
+    (31359, "pool", "PUBLISHED (Nat. Commun. 2024): no n=1 ERMP -> density ETB at 5.5 s, "
+                    "ELMs, core Ti drops; 246 V_rot"),
+    (31747, "pool", "PUBLISHED (EPJ Web Conf. 313 02005, kstar-grade): NTM stabilisation "
+                    "by ECCD; 162 V_rot"),
+    (32027, "pool", "PUBLISHED (PanoMHD): clear L/H transition with 100-300 kHz "
+                    "cross-power / cross-phase -- the band a microsecond fetch buys"),
+    (32092, "pool", "PUBLISHED (NF 2026 ae8679, kstar-grade, context unread -- IOP wall): "
+                    "edge harmonic oscillation; inclusion decided 2026-08-21; also a "
+                    "top-tier Mirnov shot (RMS 20.5, trim 0.94, kurt 1.8, coherence 0.92)"),
+    (32097, "pool", "strongest gate-passing Mirnov shot (RMS 17.3, two-coil coherence "
+                    "0.93), 221 V_rot; the top score_v2 data fill"),
 ]
-# Dropped to remove same-session pairs; each replacement came from the same split side.
+# The 2026-08-20 provisional list dropped these for same-session overlap; the rule was
+# then removed, but both remain out as COMPANIONS (never trained on, never in the gate).
 DROPPED_FOR_SESSION = {
-    31923: "same session as #31921 (gap 2): summary distance at the 0.0th percentile of all "
-           "176k pairs, |dTi| 21 eV. Kept #31921 -- 2 papers, 296 CES_VT, data rank 2/121. "
-           "Replaced by #32027 (val, published)",
-    31357: "same session as #31359 (gap 2): calibration distance at the 2.2th percentile. "
-           "Kept #31359 -- 246 vs 44 CES_VT, MC 8.3 vs 5.4, MC-BES coupling +0.32 vs -0.08. "
-           "Replaced by #31745 (val, two-coil coherence 0.96)",
+    31923: "same session as #31921 (gap 2, 0.0th percentile of all 176k pair distances); "
+           "fetched as a companion for the differential FIRE analysis",
+    31357: "same session as #31359 (gap 2, calibration distance 2.2nd percentile); "
+           "fetched as a companion -- the paper's own ERMP ON/OFF controlled pair",
 }
-# Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
 # Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
 CONFIRMED_SHOTS = {31921, 31923, 31873, 31276, 31357, 31359, 32027, 31888}
 # Published shots that did NOT make the list, and why (see SELECTION.md).

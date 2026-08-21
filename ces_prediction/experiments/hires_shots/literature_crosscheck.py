@@ -155,6 +155,33 @@ FALSE_POSITIVES = {
     31886: "five-digit number inside a cell-biology paper ('Fusexins, HAP2/GCS1 and "
            "Evolution of Gamete Fusion'); it passed an earlier title filter on 'Fusion'",
     31913: "same cell-biology paper as 31886",
+    # Fourth class, established 2026-08-21: AIP article numbers. Physics of Plasmas ids are
+    # iissnn (issue, section, sequence) -- 032302, 032111, 032309 ... -- and OpenAlex's
+    # full-text index matches the bare five digits inside them, so any KSTAR paper whose
+    # reference list cites a PoP issue-3 article "hits" the matching campaign shot number.
+    # Proof by hand: the readable (arXiv/Springer/Nature) versions of the indexed works
+    # contain the ZERO-PADDED id in their bibliographies and never the bare number:
+    32302: "PoP id: 'Phys. Plasmas 13(3) 032302 (2006)' in arXiv:2412.09522 refs",
+    32305: "PoP id: 'Phys. Plasmas 28(3) 032305 (2021)' in arXiv:2201.07941 refs",
+    32111: "PoP id: 'Phys. Plasmas 26(3) 032111' + '24, 032111' in two readable refs",
+    32115: "PoP id: 'Phys. Plasmas 31, 032115 (2024)' in arXiv:2410.11498 refs",
+    32309: "PoP id: 'Phys. Plasmas 20, 032309 (2013)' in arXiv:2306.05607 refs",
+    # Same mechanism, established indirectly: every readable version of the indexed works
+    # lacks the bare number, works predate the campaign (arXiv 2207.06610 = July 2022) or
+    # belong to other machines (NSTX, stellarator), and PoP ids 032303/032304/032308/032310
+    # are real citable articles. 32310's ONLY indexed work is shared with 32303's list.
+    32303: "AIP id collision (readable versions of all 4 indexed works lack the number; "
+           "one indexed work predates the 2022 campaign)",
+    32304: "AIP id collision (NSTX paper among the works; readable versions negative)",
+    32308: "AIP id collision (3 readable versions negative, incl. a work predating the "
+           "campaign window)",
+    32310: "AIP id collision (only work is shared with 32303's list -- one unreadable "
+           "PoP paper indexing both numbers = two reference-list ids)",
+    32004: "plausible AIP id collision (032004 fits the iissnn format, unlike 031097 from "
+           "the same unreadable PoP 5.0237640) + a DIII-D paper among the works; context "
+           "unreadable -- remove this entry if the paper is ever read and names the shot",
+    32151: "five-digit number inside a malaria cell-biology paper (PLoS Pathogens "
+           "'Spinster-like Transporter...'), the 31886 class again",
 }
 
 # A tokamak paper that is not a KSTAR paper is not evidence about a KSTAR discharge. ASDEX
