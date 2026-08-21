@@ -210,10 +210,141 @@ class TightXfmrStep(nn.Module):
         return torch.cat([m.head_ti(h_ti), m.head_vt(h_vt)], dim=-1)
 
 
+class TightTCNStep(nn.Module):
+    """The TCN step with both branches packed into ONE state vector — same fusions as the
+    LSTM tight step, applied to the convolutional family.
+
+    `LeanTCNStep` already turned each `nn.Conv1d` into three `addmm`s over a ring buffer;
+    what remains is that every layer still runs TWICE (once per branch) and every kernel tap
+    is its own matmul. Three fusions, all exact:
+
+    1. **Both branches' projection in one matmul.** `T_i` reads all `n_in` channels and
+       `V_rot` reads the slow tail, so a `(n_in -> h1+h2)` block matrix with zeros where the
+       `V_rot` branch must not see a channel produces both hidden vectors at once — §8ab's
+       routing enforced structurally, exactly like fusion 1 of `TightSeqV2Step`.
+    2. **The three taps in one matmul, for both branches.** The layer's three tapped
+       positions are concatenated into one `(1, 3(h1+h2))` vector and hit with one
+       block-diagonal `(3(h1+h2) -> h1+h2)` weight: one `addmm` where lean used six
+       (3 taps x 2 branches).
+    3. **GELU and the residual run on the packed vector**, so they are one op each per layer
+       instead of one per branch. Only LayerNorm stays per-branch (the two widths normalize
+       separately by definition), via one `split` and two `layer_norm`s.
+
+    The heads collapse the same way: one `(h1+h2 -> 2*head)` matmul, one GELU, and one
+    `(2*head -> 2)` matmul whose two rows ARE the `[CES_TI, CES_VT]` output — the final
+    concatenation disappears into the weight layout.
+
+    Nothing is approximated: every packed weight is a re-indexing of the model's own, and
+    `bench_budget.make_arm`'s equivalence gate replays a 40-step block against the model's
+    batch forward before this step is ever timed or counted.
+    """
+
+    def __init__(self, model):
+        super().__init__()
+        self.m = model
+        ti, vt = model.tcn_ti, model.tcn_vt
+        h1, h2 = ti.proj.out_features, vt.proj.out_features
+        self.h1, self.h2 = h1, h2
+        n = h1 + h2
+        if len(ti.pads) != len(vt.pads) or ti.pads != vt.pads:
+            raise SystemExit("tight TCN step assumes both branches share the dilation "
+                             "schedule (SeqCESTCN builds them that way)")
+        self.dilations = [pad // 2 for pad in ti.pads]      # kernel 3: pad = 2*dilation
+
+        n_in = ti.proj.in_features
+        w = torch.zeros(n, n_in)
+        w[:h1] = ti.proj.weight
+        w[h1:, model.n_fast:] = vt.proj.weight
+        self.register_buffer("w0", w.t().contiguous())
+        self.register_buffer("b0", torch.cat([ti.proj.bias, vt.proj.bias]))
+
+        for k, (c1, c2) in enumerate(zip(ti.convs, vt.convs)):
+            wt = torch.zeros(n, 3 * n)
+            bt = torch.cat([c1.bias, c2.bias])
+            for j in range(3):                              # tap j multiplies input t-(2-j)d
+                wt[:h1, j * n:j * n + h1] = c1.weight[:, :, j]
+                wt[h1:, j * n + h1:(j + 1) * n] = c2.weight[:, :, j]
+            self.register_buffer(f"wc{k}", wt.t().contiguous())
+            self.register_buffer(f"bc{k}", bt)
+
+        # Heads: Linear -> GELU -> Linear per branch, packed so row 0 of the last matmul is
+        # CES_TI and row 1 is CES_VT — the output needs no final cat.
+        head = model.head_ti[0].out_features
+        wh1 = torch.zeros(2 * head, n)
+        wh1[:head, :h1] = model.head_ti[0].weight
+        wh1[head:, h1:] = model.head_vt[0].weight
+        wh2 = torch.zeros(2, 2 * head)
+        wh2[0, :head] = model.head_ti[2].weight
+        wh2[1, head:] = model.head_vt[2].weight
+        self.register_buffer("wh1", wh1.t().contiguous())
+        self.register_buffer("bh1", torch.cat([model.head_ti[0].bias, model.head_vt[0].bias]))
+        self.register_buffer("wh2", wh2.t().contiguous())
+        self.register_buffer("bh2", torch.cat([model.head_ti[2].bias, model.head_vt[2].bias]))
+
+    def stream_init(self):
+        n = self.h1 + self.h2
+        # Python lists cost zero dispatches to rotate; zeros replay the batch left-pad.
+        return [[torch.zeros(1, n) for _ in range(2 * d + 1)] for d in self.dilations]
+
+    def forward(self, x_t, state):
+        """x_t (1, n_in) -> (1, 2). Same weights, same output as the model's forward."""
+        m = self.m
+        h = torch.addmm(self.b0, x_t, self.w0)
+        for k, d in enumerate(self.dilations):
+            buf = state[k]
+            buf.append(h)
+            del buf[0]
+            v = torch.cat([buf[-1 - 2 * d], buf[-1 - d], buf[-1]], 1)
+            z = h + nn.functional.gelu(
+                torch.addmm(getattr(self, f"bc{k}"), v, getattr(self, f"wc{k}")))
+            a, b = z.split([self.h1, self.h2], 1)
+            n1, n2 = m.tcn_ti.norms[k], m.tcn_vt.norms[k]
+            h = torch.cat([nn.functional.layer_norm(a, (self.h1,), n1.weight, n1.bias, n1.eps),
+                           nn.functional.layer_norm(b, (self.h2,), n2.weight, n2.bias, n2.eps)],
+                          1)
+        u = nn.functional.gelu(torch.addmm(self.bh1, h, self.wh1))
+        return torch.addmm(self.bh2, u, self.wh2)
+
+
+class _TCNStepPure(nn.Module):
+    """The tight TCN step as a pure tensor function, so `torch.jit.trace` + `freeze` can
+    collapse the remaining dispatches into fused kernels — §8aj's named next lever
+    ("compile the step, don't shrink the model") applied to this family.
+
+    State is the layer ring buffers as plain tensors `(1, n, 2d+1)`; each call returns the
+    output and the shifted buffers. No python-side containers, so the traced graph is the
+    whole step."""
+
+    def __init__(self, tight):
+        super().__init__()
+        self.t = tight
+
+    def forward(self, x_t, b0, b1, b2):
+        t = self.t
+        h1, h2 = t.h1, t.h2
+        m = t.m
+        h = torch.addmm(t.b0, x_t, t.w0)
+        outs = []
+        for k, (d, buf) in enumerate(zip(t.dilations, (b0, b1, b2))):
+            nb = torch.cat([buf[:, :, 1:], h.unsqueeze(2)], 2)
+            outs.append(nb)
+            v = torch.cat([nb[:, :, 0], nb[:, :, d], nb[:, :, 2 * d]], 1)
+            z = h + nn.functional.gelu(
+                torch.addmm(getattr(t, f"bc{k}"), v, getattr(t, f"wc{k}")))
+            a, b = z.split([h1, h2], 1)
+            n1, n2 = m.tcn_ti.norms[k], m.tcn_vt.norms[k]
+            h = torch.cat([nn.functional.layer_norm(a, (h1,), n1.weight, n1.bias, n1.eps),
+                           nn.functional.layer_norm(b, (h2,), n2.weight, n2.bias, n2.eps)], 1)
+        u = nn.functional.gelu(torch.addmm(t.bh1, h, t.wh1))
+        return torch.addmm(t.bh2, u, t.wh2), outs[0], outs[1], outs[2]
+
+
 def build(model):
-    """Pick the tight step for a model; only the two families that have one."""
+    """Pick the tight step for a model; the three families that have one."""
     if hasattr(model, "lstm_ti"):
         return TightSeqV2Step(model).eval()
     if hasattr(model, "enc_ti"):
         return TightXfmrStep(model).eval()
+    if hasattr(model, "tcn_ti"):
+        return TightTCNStep(model).eval()
     raise SystemExit(f"no tight step for {type(model).__name__}")

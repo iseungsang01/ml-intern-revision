@@ -3011,6 +3011,38 @@ op and so never appears in the count — which is the whole of what the lean rew
 and the 21.84× one. Until then the honest statement for the thesis is the operator count and the
 ordering, not a millisecond.
 
+### Addendum (2026-08-21) — the tcn2k step packed to 106 dispatches; jit.trace measured and rejected
+
+**Motivation (승상님).** §8ai left tcn2k as the smallest arm of any family (1,808 params, ties the
+backbone) but its online step was still the *shared* lean rewrite: 209 dispatched operators, slower
+than the fused 357k backbone (111). The request was to give it the same treatment the LSTM got —
+as few dispatches as the structure allows.
+
+**`TightTCNStep`** (`b9_latency/tight_step.py`), three exact fusions mirroring `TightSeqV2Step`:
+both branches' projection as one block matrix with structural zeros (routing enforced by layout,
+§8ab), the three dilated-kernel taps as ONE `addmm` over a concatenated tap vector for both
+branches at once (lean used six), and GELU/residual on the packed 16-wide vector. Only LayerNorm
+stays per-branch (widths 10 and 6 normalize separately by definition: one `split`, two
+`layer_norm`s, one `cat` per layer). The heads pack so the last matmul's two rows ARE
+`[CES_TI, CES_VT]`. Equivalence vs the model's batch forward: max diff **2.1e-7** over a 40-step
+replay (`make_arm`'s gate), and the full `op_count.py` table regenerated with every arm's gate
+passing (46/46 pytest).
+
+| step | aten ops / step | note |
+|---|---:|---|
+| `tcn2k_lean` (was the only option) | 209 | identical to `tcn15_lean` — count is structural, width-free |
+| **`tcn2k_tight`** | **106** | below the fused backbone (111); 1.23× `v2m2k_tight` (86) |
+| `_TCNStepPure` + `jit.trace`+`freeze` | 202 | **rejected** — measured once, not an arm |
+
+**The jit result is the instructive negative.** Tracing requires tensor-state ring buffers, and the
+shift (`cat` + `slice`/`narrow`/`select` per layer) costs more dispatches than the python-list
+rotation it replaces, which costs zero. At this size the fuser recovered none of it: 202 > 106,
+and 321 vs 279 µs on a busy machine. So "compile the step" (§8aj's own next-lever guess) is NOT
+free at 1.8k parameters — the compiled route only pays if it collapses the whole step into genuinely
+fused kernels (ONNX Runtime / a custom kernel), not via `torch.jit` on eager ops. The projected
+time for 106 ops under the measured 2–3 µs/op law is **0.21–0.32 ms**; the milliseconds themselves
+are deferred to a quiet-machine pass per this section's own rule (a GPU training job was running).
+
 ---
 
 ## 8ak. B.9 per-family reach ladder (2026-08-20) — the 70 ms threshold is **not** the LSTM's; it is the attention arm that moves
@@ -3612,7 +3644,9 @@ are exact on any machine, while this machine's absolutes moved by 21.84× betwee
 
 Attention is *also* O(1) in reach — 565 ops at bands 7, 15 and 63 alike — it simply carries a
 **3.5–4.3× worse constant**. On this problem it is **strictly dominated**: `tcn3k` matches its
-skill (+0.119, 4/4) with 91× fewer parameters and 2.3–2.7× fewer dispatched operators.
+skill (+0.119, 4/4) with 91× fewer parameters and 2.3–2.7× fewer dispatched operators. The conv
+column above is the shared lean rewrite; the packed tight step (§8aj addendum, 2026-08-21) halves
+it — `tcn2k_tight` runs at **106 dispatches**, below the fused backbone's 111.
 
 **Two operating points are worth naming.** `tcn3k` (3,238 parameters) matches the 357,570-parameter
 backbone on `T_i` and beats `gp_causal` 4/4; `v2m4k` (3,898) is the cheapest recurrent arm that

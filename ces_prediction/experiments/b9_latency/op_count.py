@@ -58,6 +58,13 @@ ARMS = (
     ("xfmr63_lean", "seq_lean", "xfmr63"),       # band 63
     ("xfmr15_tight", "seq_tight", "xfmr15"),
     ("xfmr63_tight", "seq_tight", "xfmr63"),
+    # The 1,808-parameter arm (§8ai), asked the same deployment question as the backbone:
+    # lean is the shared per-family rewrite; tight packs both branches into one state
+    # vector (TightTCNStep). A jit.trace+freeze of the tight step was measured once and
+    # REJECTED: 202 aten ops vs 106, because tensor-state shifting costs more dispatches
+    # than the python ring rotation it replaces (see tight_step._TCNStepPure).
+    ("tcn2k_lean", "seq_lean", "tcn2k"),
+    ("tcn2k_tight", "seq_tight", "tcn2k"),
 )
 
 
