@@ -36,6 +36,65 @@ N_FEATURES = 22
 N_FAST_CHANNELS = 15
 
 
+# ---- B.6 extra V_rot-branch channels (PREREGISTRATION_B6.md sec. 4.1) -----------------
+#
+# `CES_SEQ_EXTRA_VT` names a directory of per-shot feature tables on the 10 ms grid
+# (`mus_features_s{shot}.npz`: time (n,), feat (n, K) float32, plus a `feature_meta.json`
+# beside them naming K and the z-score-exempt channels). When set, the K channels are
+# appended AFTER the slow tail, so model_seq_v2's `x[..., n_fast:]` V_rot slice picks
+# them up while its T_i encoder input is explicitly bounded at the base N_FEATURES --
+# the A1 arm's "features enter the V_rot branch only" is enforced by construction.
+# Unset (the default, and every frozen run) => K = 0 and nothing changes.
+
+def extra_vt_meta():
+    """(K, exempt_indices, dir) for the CES_SEQ_EXTRA_VT feature dir; (0, (), None) if unset."""
+    d = os.getenv("CES_SEQ_EXTRA_VT", "").strip()
+    if not d:
+        return 0, (), None
+    d = Path(d)
+    meta_path = d / "feature_meta.json"
+    if not meta_path.exists():
+        raise SystemExit(f"FATAL: CES_SEQ_EXTRA_VT={d} has no feature_meta.json")
+    import json
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    return int(meta["k"]), tuple(int(i) for i in meta.get("z_exempt_channels", ())), d
+
+
+def _load_extra_vt(name, times, k, exempt, feat_dir):
+    """Aligned (len(times), K) extra channels for one shot file, per-shot z-scored.
+
+    Alignment is by grid time rounded to 0.1 ms. A row without a feature entry gets
+    zeros, but wholesale misalignment is loud: < 99% match aborts. Channels listed in
+    `z_exempt_channels` (flags, signs) are passed through unscaled; the rest are
+    z-scored within the shot (PREREGISTRATION_B6.md sec. 3.1 item 4).
+    """
+    shot = name[1:].split(".")[0]
+    path = feat_dir / f"mus_features_s{shot}.npz"
+    if not path.exists():
+        raise SystemExit(f"FATAL: CES_SEQ_EXTRA_VT set but {path} is missing")
+    z = np.load(path)
+    feat = np.asarray(z["feat"], dtype=np.float64)
+    if feat.shape[1] != k:
+        raise SystemExit(f"FATAL: {path} has {feat.shape[1]} channels, meta says {k}")
+    table = {round(float(t), 4): i for i, t in enumerate(np.asarray(z["time"], dtype=np.float64))}
+    out = np.zeros((len(times), k), dtype=np.float64)
+    hit = 0
+    for j, t in enumerate(times):
+        i = table.get(round(float(t), 4))
+        if i is not None:
+            out[j] = feat[i]
+            hit += 1
+    if hit < 0.99 * len(times):
+        raise SystemExit(f"FATAL: {path} matches only {hit}/{len(times)} grid rows of {name}")
+    scale = [c for c in range(k) if c not in exempt]
+    if scale:
+        mean = out[:, scale].mean(axis=0)
+        std = out[:, scale].std(axis=0)
+        std[std < 1e-6] = 1.0
+        out[:, scale] = (out[:, scale] - mean) / std
+    return out
+
+
 def infer_columns(csv_path):
     header = pd.read_csv(csv_path, nrows=0).columns.tolist()
     bes = [c for c in header if c.startswith("BES_")]
@@ -60,6 +119,7 @@ def load_grid_files(data_dir, drop_stuck_targets, ti_spike_cut_ev=None):
     files = sorted(data_dir.glob("s*.csv"))
     if not files:
         raise SystemExit(f"FATAL: no shot CSVs under {data_dir} -- real data required.")
+    extra_k, extra_exempt, extra_dir = extra_vt_meta()
     bes, ecei, mc = infer_columns(files[0])
     usecols = [TIME_COLUMN, *TARGET_COLUMNS, *bes, *ecei, *mc]
     n_fast = len(bes) + len(ecei) + len(mc)
@@ -82,10 +142,16 @@ def load_grid_files(data_dir, drop_stuck_targets, ti_spike_cut_ev=None):
                     if stuck.any():
                         vals[stuck] = np.nan
                         df[col] = vals
-        out[fp.name] = df.to_numpy(dtype=np.float32)
+        arr = df.to_numpy(dtype=np.float32)
+        if extra_k:
+            extra = _load_extra_vt(fp.name, arr[:, 0].astype(np.float64),
+                                   extra_k, extra_exempt, extra_dir)
+            arr = np.concatenate([arr, extra.astype(np.float32)], axis=1)
+        out[fp.name] = arr
     if not out:
         raise SystemExit("FATAL: no usable shot files after loading.")
-    return out, {"bes": len(bes), "ecei": len(ecei), "mc": len(mc), "n_fast": n_fast}
+    return out, {"bes": len(bes), "ecei": len(ecei), "mc": len(mc), "n_fast": n_fast,
+                 "extra_vt": extra_k}
 
 
 def fit_stats(grid, dims, train_names):
@@ -116,6 +182,9 @@ def build_blocks(arr, dims, stats, per_shot_norm=False):
     time = arr[:, 0].astype(np.float64)
     tgt = arr[:, 1:3].astype(np.float64)
     fast = arr[:, 3:3 + dims["n_fast"]].astype(np.float64)
+    extra_k = int(dims.get("extra_vt", 0) or 0)
+    extra = arr[:, 3 + dims["n_fast"]:3 + dims["n_fast"] + extra_k].astype(np.float64) \
+        if extra_k else None
 
     if per_shot_norm:
         mean = fast.mean(axis=0)
@@ -125,6 +194,12 @@ def build_blocks(arr, dims, stats, per_shot_norm=False):
         mean = np.concatenate([stats[g]["mean"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
         std = np.concatenate([stats[g]["std"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
     fast_z = (fast - mean) / std
+    # B.6 arm A2 (PREREGISTRATION_B6.md sec. 4.1): the mandated ablation removes the two
+    # decimated MC channels from the inputs. Zeroing after normalization is the project's
+    # ablation convention (CES_ABLATE); channel count and routing stay identical.
+    if os.getenv("CES_SEQ_ZERO_MC", "0") == "1":
+        n_mc = dims["mc"]
+        fast_z[:, dims["n_fast"] - n_mc:] = 0.0
     t_mean = stats["target"]["mean"].astype(np.float64)
     t_std = stats["target"]["std"].astype(np.float64)
     tgt_z = (tgt - t_mean) / t_std
@@ -141,8 +216,10 @@ def build_blocks(arr, dims, stats, per_shot_norm=False):
         L = b - a
         if L < 2:
             continue
-        x = np.zeros((L, N_FEATURES), dtype=np.float32)
+        x = np.zeros((L, N_FEATURES + extra_k), dtype=np.float32)
         x[:, :dims["n_fast"]] = fast_z[a:b]
+        if extra_k:
+            x[:, N_FEATURES:] = extra[a:b]
         dt_prev = np.zeros(L)
         dt_prev[1:] = time[a + 1:b] - time[a:b - 1]
         x[:, dims["n_fast"]] = np.log1p(dt_prev)

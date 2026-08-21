@@ -48,6 +48,7 @@ points **`CES_MODEL_FILE`** at its own file in the subprocess env (see
 | `b9_reach/` | — (pending) | what is full-block context worth once the model is TRAINED at each reach, not truncated after the fact? (§8ae) | **pending** — `seq_v2` at reach 2/7/15/31/63 via `CES_SEQ_TRAIN_CTX`, rows-per-batch held constant |
 | `b9_family/` | — (pending) | does the sequence-operator family matter once the reach is matched? (§8ac's named-but-untested TCN, plus causal attention) | **pending** — tcn15/tcn63/xfmr63, each paired against the axis A rung at its own reach |
 | `b9_latency/` | — (pending) | which arms clear a 10 ms budget, and which clear 1 ms? | **pending** — 5-session protocol, streaming step per family, boundary band instead of a coin-flip verdict |
+| `b6_mus/` | — (pending, PREREGISTRATION_B6.md) | does restoring the alias-destroyed Mirnov information from the raw μs stream improve `V_rot`? (H1; plus the H2/H3/H4 companion measurements) | **prebuilt 2026-08-21, awaiting raw data** — feature extractor (`mus_features.py`, unit-tested on synthetic signals), A1 plumbing (`CES_SEQ_EXTRA_VT` → V_rot branch only, routing unit-tested), fold runner (`run_b6.py`, TEST-once lock, plumbing smoke green), joint-rule verdict (`verdict_b6.py`), §1.4 positive controls (`raw_positive_controls.py`); the ONE unwritten piece is `raw_loader.py` (delivery-format slot) |
 | `quantum/` | — (`docs/ionq_qpu_실험기록.md`) | side track: variational quantum classifier / IonQ QPU inference | exploratory; not part of the thesis claim chain |
 
 ## Non-negotiables for any new batch

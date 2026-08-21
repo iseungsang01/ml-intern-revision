@@ -24,14 +24,23 @@ Parameter budget mirrors the project rule: hard < 1,000,000.
 import torch
 import torch.nn as nn
 
-from seq_data import N_FEATURES, N_FAST_CHANNELS
+from seq_data import N_FEATURES, N_FAST_CHANNELS, extra_vt_meta
 
 
 class SeqCESLSTMv2(nn.Module):
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS,
                  hidden_ti=160, layers_ti=2, hidden_vt=64, layers_vt=1,
-                 head=64, dropout=0.1):
+                 head=64, dropout=0.1, n_extra_vt=None):
         super().__init__()
+        # B.6 arm A1 (PREREGISTRATION_B6.md sec. 4.1): K extra channels appended after
+        # the slow tail feed the V_rot branch ONLY. `None` resolves K from the
+        # CES_SEQ_EXTRA_VT env (0 when unset), so every frozen checkpoint reloads with
+        # identical dimensions and the registry stays name -> architecture. train_seq
+        # records K in metrics.json and eval_seq refuses a mismatch.
+        if n_extra_vt is None:
+            n_extra_vt = extra_vt_meta()[0]
+        self.n_extra_vt = int(n_extra_vt)
+        self.n_base = int(n_in)                 # T_i encoder never sees the extras
         self.n_fast = int(n_fast)
         self.n_slow = int(n_in) - self.n_fast   # dt + per-target (carried, staleness, has)
         if self.n_slow <= 0:
@@ -42,7 +51,8 @@ class SeqCESLSTMv2(nn.Module):
         self.norm_ti = nn.LayerNorm(hidden_ti)
         self.head_ti = nn.Sequential(nn.Linear(hidden_ti, head), nn.GELU(), nn.Linear(head, 1))
 
-        self.lstm_vt = nn.LSTM(self.n_slow, hidden_vt, num_layers=layers_vt, batch_first=True,
+        self.lstm_vt = nn.LSTM(self.n_slow + self.n_extra_vt, hidden_vt,
+                               num_layers=layers_vt, batch_first=True,
                                dropout=dropout if layers_vt > 1 else 0.0)
         self.norm_vt = nn.LayerNorm(hidden_vt)
         self.head_vt = nn.Sequential(nn.Linear(hidden_vt, head), nn.GELU(), nn.Linear(head, 1))
@@ -64,12 +74,13 @@ class SeqCESLSTMv2(nn.Module):
         return norm(out)
 
     def forward(self, x, lengths=None):
-        """x (B, L, n_in) -> (B, L, 2) normalized [CES_TI, CES_VT].
+        """x (B, L, n_in [+ n_extra_vt]) -> (B, L, 2) normalized [CES_TI, CES_VT].
 
         The V_rot branch slices off the fast channels; `seq_data` lays the features out
-        as [fast | dt | TI(carried, stale, has) | VT(carried, stale, has)], so the slice
-        is exactly the non-fast tail.
+        as [fast | dt | TI(carried, stale, has) | VT(carried, stale, has) | extra_vt],
+        so the non-fast tail is exactly the slow state plus any B.6 extra channels,
+        while the T_i encoder is bounded at the base layout and never sees the extras.
         """
-        h_ti = self._run(self.lstm_ti, self.norm_ti, x, lengths)
+        h_ti = self._run(self.lstm_ti, self.norm_ti, x[..., :self.n_base], lengths)
         h_vt = self._run(self.lstm_vt, self.norm_vt, x[..., self.n_fast:], lengths)
         return torch.cat([self.head_ti(h_ti), self.head_vt(h_vt)], dim=-1)

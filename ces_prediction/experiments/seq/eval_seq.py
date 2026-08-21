@@ -148,6 +148,17 @@ def compare():
 
     metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
     my_stats = _load_stats(metrics)
+    # B.6 guard (mirrors the train_ctx guard): the extra-channel and MC-ablation
+    # treatment at eval must equal the one the checkpoint was trained with.
+    from seq_data import extra_vt_meta  # noqa: PLC0415 (env-dependent, resolve late)
+    env_extra = extra_vt_meta()[0]
+    run_extra = int(metrics.get("extra_vt_channels", 0) or 0)
+    if env_extra != run_extra:
+        raise SystemExit(f"FATAL: CES_SEQ_EXTRA_VT gives {env_extra} channels but this run "
+                         f"was trained with {run_extra} -- refusing to score a mismatched arm.")
+    env_zero_mc = os.getenv("CES_SEQ_ZERO_MC", "0") == "1"
+    if env_zero_mc != bool(metrics.get("zero_mc", False)):
+        raise SystemExit("FATAL: CES_SEQ_ZERO_MC does not match the training treatment.")
     # Harness stats come from the CONTROL run so the float32 normalize/denormalize
     # round-trip of targets, history and persistence is bit-identical to the control
     # npz (pairing requires bit-identical se_pchip; the round-trip depends on stats).
@@ -371,6 +382,10 @@ def compare():
             boot[f"{name}_se_gp_causal"] = (base_phys["gp_causal"][valid, t] - y) ** 2
         boot[f"{name}_y_true"] = y
         boot[f"{name}_is_peak"] = is_peak[valid]
+        # Additive key (2026-08-21, compare_baselines parity): the target's row index
+        # inside its own shot file, so downstream analyses (B.6 block bootstrap, the
+        # H1-m activity stratum) can address a row without re-deriving the population.
+        boot[f"{name}_row"] = row_ids[valid]
         if contexts:
             # Additive only: every key above is untouched, so the frozen-artifact
             # comparison stays bit-exact (experiments/README.md non-negotiable 3).

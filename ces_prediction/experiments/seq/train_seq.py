@@ -195,6 +195,9 @@ def main():
         "seq_model": variant,
         "train_ctx": train_ctx or None,
         "per_shot_input_norm": per_shot,
+        # B.6 provenance: the arm's input treatment must reload identically at eval.
+        "extra_vt_channels": int(dims.get("extra_vt", 0) or 0),
+        "zero_mc": os.getenv("CES_SEQ_ZERO_MC", "0") == "1",
         "normalization": {"stats": {g: {k: v.tolist() for k, v in gs.items()}
                                     for g, gs in stats.items()}},
         "feature_dims": dims,
