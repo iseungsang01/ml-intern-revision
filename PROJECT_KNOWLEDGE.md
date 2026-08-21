@@ -865,6 +865,43 @@ is why that table is **suspended rather than corrected**.
 4. The remaining lever on cost is the **runtime**, not the model: 1,808 parameters did not make the
    milliseconds follow, because ~111 dispatches did not become fewer.
 
+## The Shot Papers Anchor Our Settings (2026-08-21) — read before writing physics justifications
+
+The five papers behind the frozen twelve were read in full (`data/shot_papers/`; the
+setting-by-setting mapping lives on the Notion page "실험 설정의 물리적 근거"). The anchors
+that outlive this pass:
+
+- **CES missingness is operational, not random.** The I-mode/FIRE paper (NF 65 036003)
+  states ion temperatures are "only available between two sequential beam blips" — the
+  MNAR treatment, held-removal, and the beam-phase fetch windows all rest on this
+  published sentence, not on our inference.
+- **The T_i headline has a non-ML precedent in these very discharges**: the same paper
+  shows BES fluctuation spectra (10–30 kHz drop = WCM prominence) correlating with the
+  edge T_i pedestal height over 8 discharges × 672 time points. Fast diagnostics carrying
+  T_i information is measured physics there, learned physics here.
+- **The V_rot routing chain is published end-to-end**: rotation is NBI-torque-driven
+  (same paper), magnetic non-axisymmetry exerts NTV torque that shows up as CES rotation
+  braking (error-field paper, GPEC calculations), and the mode band that carries it is
+  kHz (EHO 4/8/12/16 kHz on Mirnov, NF 66 096006) — i.e. exactly what 100 Hz aliasing
+  destroys. B.6's H1 is the closure of this chain, not a hunch.
+- **Every B.6 band edge is a published structure in these discharges**: 0.1–3 (zonal
+  density tail), 3–10 (EHO n=1,2), 10–30 (I-mode intermediate band + EHO n=3,4),
+  30–70 (WCM ~50 kHz), 70–300 kHz (PanoMHD L/H cross-power). Feature methods too:
+  RMS-envelope amplitude (EHO paper), two-channel cross-power/cross-phase (PanoMHD,
+  NFFT 512; error-field paper's v⊥ from cross-phase slope). **Raw MC is sampled at
+  2 MHz** (PanoMHD, citing Bak & Lee 2001) — the expected value for the on-arrival slot.
+- **Shot-level held-out evaluation is the field's own convention**: PanoMHD freezes a
+  101-shot test set; ML runs at ms scale inside the KSTAR control loop (Nat. Commun. 15
+  3990). Our shot-clustered design and 10 ms budget framing match practice, not just taste.
+- **Three settings the literature does NOT back** (say so in the paper): per-shot input
+  standardization (our measurement only), the physical identity of the 50 ms saturation
+  (the EHO paper's 50 ms CES averaging is a suggestive coincidence, not causal evidence),
+  and the 0.5 coherence threshold (statistically justified, not literature-derived).
+- **Caution for the 3 keV cut's defense**: published core T_i reaches 5–10 keV in these
+  same discharges. The cut is a *distribution* statement about our edge-side channel
+  (p99 = 2,089 eV), never "3 keV is physically impossible" — phrase it that way or an
+  examiner armed with the FIRE papers will puncture it.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
