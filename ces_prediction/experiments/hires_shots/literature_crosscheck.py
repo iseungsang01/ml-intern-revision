@@ -127,6 +127,16 @@ CONFIRMED = {
     31888: [("Enhancing disruption prediction through Bayesian neural network in KSTAR",
              "10.48550/arXiv.2312.12979",
              "fig.15 / appendix B: continuous disruption-prediction example shot")],
+    # Hand-verified 2026-08-21 from the full PDF (승상님 fetched it through the IOP wall).
+    # The index hit was genuine: IOP typesets the number with a thin thousands space,
+    # "#32 092", which is why the bare-digit grep of the extracted text missed it.
+    32092: [("Spatiotemporal structure of edge harmonic oscillation and its role in "
+             "ELM-free QH-mode at KSTAR", "10.1088/1741-4326/ae8679",
+             "THE representative QH-mode discharge (6 mentions): fig.2 time evolution, "
+             "fig.3 kinetic profiles, fig.4 peeling-ballooning at t = 4.9 s (ELMy) vs "
+             "t = 7.6 s (ELM-free), table 1: EHO n = 1 (+harmonics 2,3,4) at ~4 kHz "
+             "(n=1) / ~8 kHz (n=2), measured on Mirnov coils + ECEI -- exactly the band "
+             "the 100 Hz grid aliases away")],
 }
 # Published shots that sit inside our shot-number range (30801-32751) but whose CSV we do
 # NOT hold. Recorded so nobody re-derives "the campaign has only eight published shots":

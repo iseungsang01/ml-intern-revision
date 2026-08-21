@@ -108,7 +108,9 @@ DROPPED_FOR_SESSION = {
            "fetched as a companion -- the paper's own ERMP ON/OFF controlled pair",
 }
 # Every dataset shot the literature cross-check confirmed (see literature_crosscheck.py).
-CONFIRMED_SHOTS = {31921, 31923, 31873, 31276, 31357, 31359, 32027, 31888}
+# 32092 joined 2026-08-21: the EHO paper's representative QH-mode discharge, hand-read
+# from the full PDF ("#32 092" -- IOP's thin thousands space hid it from the bare grep).
+CONFIRMED_SHOTS = {31921, 31923, 31873, 31276, 31357, 31359, 32027, 31888, 32092}
 # Published shots that did NOT make the list, and why (see SELECTION.md).
 REJECTED_PUBLISHED = {
     31276: "MC RMS 12.7 collapses to 32 % when the 5 largest samples are dropped "

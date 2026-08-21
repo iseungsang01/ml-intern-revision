@@ -3506,6 +3506,26 @@ slot goes to the next score_v2 candidate. And the k = 4 measured power is shot-c
 only; the block-bootstrap sweep has no k = 4 row (recorded as absent in `folds.py`, worth
 adding when `power_analysis.py` next runs).
 
+### Addendum (same day) — the named measurement ran, and #32092 is CONFIRMED
+
+승상님 fetched the full PDF through the IOP wall the same evening. The bare-digit grep
+still found nothing — because **IOP typesets the discharge number with a thin thousands
+space, "#32 092"**, which is also why the OpenAlex index (which normalizes it) hit while
+every readable-text check missed. Six mentions, all substantive: it is **the paper's
+representative QH-mode discharge** (fig. 2 time evolution, fig. 3 kinetic profiles,
+fig. 4 peeling–ballooning at t = 4.9 s ELMy vs t = 7.6 s ELM-free, and table 1: **EHO
+n = 1 with harmonics at ~4 kHz / ~8 kHz, measured on Mirnov coils + ECEI**). Ledger
+verdict upgraded kstar → confirmed; the list does not change — the slot it holds is now
+better justified, and the EHO frequencies become B.6 positive control #5
+(`PREREGISTRATION_B6.md` §1.4): the one discharge with a *published answer inside the
+3–10 kHz band H1 is trying to restore*. Two false-positive lessons sharpen: the AIP-id
+class stands (those numbers were absent from every version), but "absent from the
+extracted text" alone is not proof of absence — typographic variants (thin spaces) must
+be grepped before rejecting a hit on a paper that names KSTAR. A same-day UFCES sweep of
+all six readable papers (and OpenAlex full-text for the FIRE and edge-kink papers) found
+**no ultra-fast CES anywhere in the twelve's literature**; the EPJ NTM paper stays
+unchecked (unreadable + OpenAlex budget exhausted).
+
 ---
 
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
