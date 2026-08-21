@@ -3342,6 +3342,9 @@ effect is not shot-general: win rate ≤ 0.60 or −top10 ≤ 0). Every `V_rot` 
    70 ms to 630 ms — it does not convert extra context into skill, which is a sharper statement of
    its paired result (it loses to the same-reach LSTM by −0.022 at 7 and −0.044 at 63) and an
    independent reason not to adopt it here.
+   **[Corrected 2026-08-21 — addendum below. With rungs 2/3/5 bought, the six-rung trend RISES
+   (+0.0235 [+0.0102, +0.0372]): the 70–630 ms flatness was the saturated tail of a curve whose
+   rising region had simply never been measured.]**
 2. **`V_rot` gets *worse* with context for three of four families**, significantly. More context is
    not neutral for the target that rides carried values — it is harmful. This is consistent with
    §8ab's routing story (the `V_rot` branch reads a slowly-varying carried value; a longer window
@@ -3370,6 +3373,45 @@ a single trained model on a held-out campaign (§8's temporal split). And the mi
 (72 discharges in two test sets) is absorbed by the clustering but not removed: a fully clean design
 is **discharge-level k-fold**, where every discharge is tested exactly once, which would cost the
 same number of runs and remove the caveat entirely.
+
+### Addendum (2026-08-21) — the SSM's missing low rungs bought; "does not convert context" is corrected
+
+**Motivation (승상님: "지금 ssm 사다리 왜 안돌려").** The not-resolved SSM trend above was
+estimated on three rungs, 70–630 ms — every one of them PAST the region where the other three
+families turn. A trend test with no leverage where the action is cannot resolve anything, and this
+project's own rule (§8j) says the negative must name its measurement. The measurement was rungs
+2/3/5: 12 runs, `run_b9_reach.py --variant ssm`, the same frozen protocol as every other rung.
+
+**Pooled (301 discharges), the full six-rung SSM ladder, `CES_TI` vs the causal GP:**
+
+| context | skill [95% CI] | win rate | −top10 |
+|---:|---:|---:|---:|
+| 20 ms | +0.065 [+0.036, +0.092] | 0.49 | +0.033 |
+| 30 ms | +0.081 [+0.052, +0.106] | 0.57 | +0.052 |
+| 50 ms | +0.098 [+0.074, +0.121] | 0.58 | +0.071 |
+| 70 ms | +0.100 [+0.077, +0.124] | 0.60 | +0.074 |
+| 150 ms | +0.106 [+0.080, +0.133] | 0.58 | +0.077 |
+| 630 ms | +0.105 [+0.080, +0.131] | 0.58 | +0.076 |
+
+1. **The trend verdict flips: rises.** +0.004 [−0.007, +0.014] over three rungs becomes
+   **+0.0235 [+0.0102, +0.0372] per decade over six**. The sentence "it does not convert extra
+   context into skill" is withdrawn. The correct sentence: **the diagonal SSM converts context up
+   to ~70 ms and then stops, at a lower ceiling** — +0.105 against the recurrent +0.143 at 630 ms,
+   win rate capped at 0.58–0.60 against 0.66. Its deficiency is long-context exploitation, not
+   context conversion.
+2. **At 20 ms it is the best pooled point of any family** (+0.065 vs the recurrent +0.057) —
+   a same-rung pooled comparison, not a paired test, so it is reported and not promoted. If the
+   minimal-context regime ever matters (a 20 ms deployment), the named measurement is a paired
+   `ssmr2` vs `v2r2` comparison, which the existing artifacts already support.
+3. **The adoption verdict does not change.** The SSM still loses paired to the same-reach LSTM
+   at 7 (−0.022) and 63 (−0.044) and tops out lower. What changed is the *reason* on record —
+   and that the §3.4-style saturation read for this family lands at ~70 ms like the others.
+4. **`CES_VT` declines with context in this family too** (−0.0134 [−0.0319, −0.0037]), closing
+   statement 2 above from "three of four families" to **four of four**.
+
+Artifacts: `data/.b9_ssmr{2,3,5}_s*`, `data/.b9_reach_ladder_ssm.json`,
+`data/.b9_pooled_ladder.json` regenerated (the other three families' rows reproduce unchanged —
+their bootstrap draws precede the SSM's in seed order); the context-family figure regenerated.
 
 ---
 

@@ -47,7 +47,10 @@ FAMILIES = {
     "lstm": ("v2r{r}", [2, 3, 4, 5, 6, 7, 10, 15, 31, 63]),
     "tcn": ("tcn{r}", [3, 5, 7, 15, 63]),
     "xfmr": ("xfmr{r}", [5, 7, 15, 63]),
-    "ssm": ("ssmr{r}", [7, 15, 63]),
+    # 2/3/5 added 2026-08-21 (승상님): the "does not convert context" verdict was a 3-rung
+    # trend over 70-630 ms; the 20-50 ms region where the other families turn was never
+    # bought. These rungs give the trend test leverage where the action is.
+    "ssm": ("ssmr{r}", [2, 3, 5, 7, 15, 63]),
 }
 
 
