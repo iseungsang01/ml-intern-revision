@@ -902,6 +902,24 @@ that outlive this pass:
   (p99 = 2,089 eV), never "3 keV is physically impossible" — phrase it that way or an
   examiner armed with the FIRE papers will puncture it.
 
+**Second pass (same day): external anchors, all Crossref-verified, all in `refs.bib`.**
+The NN-CES lineage's origin is literally Christopher Bishop (Bishop/Roach/von Hellermann,
+PPCF 35, 1993; then Svensson 1999). The nearest living relative of our nowcaster is
+**RTCAKENN** (Shousha et al., NF 2023, 10.1088/1741-4326/ad142f): real-time NN
+reconstruction of DIII-D kinetic profiles *including carbon ion temperature and rotation*
+from real-time-available inputs. The mode-rotation-frequency feature's physics is standard
+theory (Fitzpatrick, NF 33 1049 (1993); La Haye, PoP 13 055501 (2006): modes co-rotate
+with the flow at their rational surface, the frequency lands on Mirnov), and KSTAR has
+dedicated NTV braking observations (Park et al., PRL 111 095002 (2013); Kim/Choe, NF 57
+126035 (2017)). The B.6 coherence-validity rule is exactly the textbook coherence
+significance level P(γ² > c) = (1 − c)^(n−1) (Bendat & Piersol) — that "honest gap" is
+closed; the two that remain open are per-shot input standardization and the physical
+identity of the 50 ms saturation. **UF-CES exists as KSTAR hardware since 2021** (Jang,
+Ko et al., RSI 92 053525: 10 µs Ti/rotation fluctuations, C VI 529.05 nm) — none of the
+twelve's papers use it, but the acquisition-email question "UF-CES 취득분 있으면" is
+grounded in real hardware; if such data ever arrives it is a NEW label channel and needs
+its own pre-registration (PREREGISTRATION_B6.md §5's stance).
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
