@@ -59,8 +59,13 @@ from ionq_hw_ladder import (  # noqa: E402
 ANGLE_LIMIT = np.pi / 2   # the box apply_pca's tanh squash maps into
 
 
-def solve_angles(target_z, weights, n_qubits, seed, iters=400):
-    """Find encoded angles inside the +-pi/2 box whose noiseless <Z_0> equals target_z."""
+def solve_angles(target_z, weights, n_qubits, seed, iters=200, tol=1e-3):
+    """Find encoded angles inside the +-pi/2 box whose noiseless <Z_0> equals target_z.
+
+    `tol` is deliberately loose. Shot noise at 400 shots is 0.05, so solving the placement to
+    1e-8 (which the optimizer will happily do given enough iterations) buys nothing and costs
+    minutes across 18 points. Stop as soon as the miss is negligible against the measurement.
+    """
     import pennylane as qml
     n_layers = weights.shape[0]
     dev = qml.device("default.qubit", wires=n_qubits)
@@ -74,13 +79,15 @@ def solve_angles(target_z, weights, n_qubits, seed, iters=400):
 
     w = torch.as_tensor(weights)
     best = None
-    for trial in range(4):
+    for trial in range(3):
         g = torch.Generator().manual_seed(seed * 100 + trial)
         raw = ((torch.rand(n_qubits, generator=g) * 2 - 1) * 0.8).requires_grad_(True)
-        opt = torch.optim.Adam([raw], lr=0.15)
+        opt = torch.optim.Adam([raw], lr=0.2)
         for _ in range(iters):
             ang = torch.tanh(raw) * ANGLE_LIMIT
             loss = (circuit(ang, w) - target_z) ** 2
+            if float(loss.detach()) < tol ** 2:
+                break
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -88,10 +95,17 @@ def solve_angles(target_z, weights, n_qubits, seed, iters=400):
         err = abs(float(circuit(ang, w)) - target_z)
         if best is None or err < best[0]:
             best = (err, ang.numpy().copy())
+        if best[0] < tol:
+            break
     return best[1], best[0]
 
 
-def build_points(n_points, weights, n_qubits, lo, hi):
+def build_points(n_points, weights, n_qubits, lo, hi, save=None):
+    """Solve the operating points, persisting after each one.
+
+    Solving all 18 before the first write meant a killed process lost every point; `save` is
+    called with the list so far after each solve.
+    """
     targets = np.linspace(lo, hi, n_points)
     pts = []
     for i, t in enumerate(targets):
@@ -99,6 +113,8 @@ def build_points(n_points, weights, n_qubits, lo, hi):
         got = exact_z0(ang, weights)
         pts.append({"index": i, "target_z": float(t), "exact_z0": float(got),
                     "solve_error": float(err), "angles": [float(a) for a in ang]})
+        if save is not None:
+            save(pts)
         print("  point %2d  target %+.4f -> exact %+.4f  (miss %.1e)" % (i, t, got, err))
     return pts
 
@@ -132,11 +148,18 @@ def main():
         return analyze(out_path, n_qubits)
 
     state = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
-    points = state.get("points")
-    if not points:
-        print("Solving %d operating points spanning <Z_0> in [%.2f, %.2f] ..."
-              % (args.points, args.lo, args.hi))
-        points = build_points(args.points, weights, n_qubits, args.lo, args.hi)
+    points = state.get("points") or []
+    if len(points) < args.points:
+        print("Solving operating points spanning <Z_0> in [%.2f, %.2f] (%d already solved) ..."
+              % (args.lo, args.hi, len(points)))
+
+        def save(pts):
+            out_path.write_text(json.dumps(
+                {"points": pts, "shots": args.shots, "backend": args.backend,
+                 "n_qubits": n_qubits, "measurements": state.get("measurements", {})},
+                indent=2), encoding="utf-8")
+
+        points = build_points(args.points, weights, n_qubits, args.lo, args.hi, save=save)
         state = {"points": points, "shots": args.shots, "backend": args.backend,
                  "n_qubits": n_qubits, "measurements": state.get("measurements", {})}
         out_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
