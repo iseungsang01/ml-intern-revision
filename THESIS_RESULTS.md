@@ -3602,6 +3602,123 @@ unchecked (unreadable + OpenAlex budget exhausted).
 
 ---
 
+## 8ap. The quantum arm reaches real hardware and comes back shot-limited (2026-08-23) — a QPU cannot fail this task interestingly, because the circuit fails it first
+
+**Status: closed, negative, and now hardware-verified.** The July attempt
+(`docs/ionq_qpu_실험기록.md`) could not reach a QPU at all — every Forte target was
+`unavailable` and jobs were silently downgraded to the ideal simulator. Both gates it left
+behind passed on 2026-08-23, so the measurement it asked for finally ran.
+
+### Design
+
+The July experiment already settled accuracy under a matched comparison: a variational quantum
+circuit (98 params, 8 qubits, 4 data-re-uploading layers on a train-only PCA 92→8 projection)
+lost to a classical MLP with 101 params on byte-identical reduced inputs, across an identical
+5-point lr sweep on both sides. Hardware can only add noise to that, so re-running for
+*performance* was never the point.
+
+What hardware can answer that a simulator cannot: **is the error that a QPU adds a shrinking
+sampling error, or a fixed floor?** A sampled circuit estimates `<Z>` with error ~1/√N, so the
+task's effect size sets a shot floor. Gate and readout error add a term more shots cannot
+remove. Which dominates decides whether a QPU could *ever* resolve this task.
+
+So: the trained circuit, evaluated on 12 real val operating points at three shot counts, with
+the deviation from the exact noiseless `<Z_0>` fitted to
+
+    rms(N)² = a²/N + b²
+
+`a` is the sampling coefficient (prediction ≈ 1); `b` is the irreducible floor. Runner
+`experiments/quantum/ionq_hw_ladder.py`, analysis `analyze_hw_ladder.py`, 36 measurements on
+`qpu.forte-1`, **$928.44** of the KISTI trial credit.
+
+The ladder stays at 100/200/400 shots because IonQ's billing is a two-tier flat fee that
+ignores circuit size — **$25.79 up to 400 shots, $168.20 from 500** (debiasing forced on, 32
+variants, not disableable), measured by free `dry_run` submissions. The low tier buys 7× more
+jobs per dollar, and one constant error-mitigation setting across the ladder.
+
+### Result
+
+| shots | n | rms deviation | ideal 1/√N | ratio | effective shots | rms in eV |
+|---|---|---|---|---|---|---|
+| 100 | 12 | 0.14899 | 0.10000 | 1.490 | 45% of nominal | 93.1 |
+| 200 | 12 | 0.08746 | 0.07071 | 1.237 | 65% of nominal | 54.6 |
+| 400 | 12 | 0.07011 | 0.05000 | 1.402 | 51% of nominal | 43.8 |
+
+Two things are true at once.
+
+**The hardware is measurably worse than an ideal sampler.** χ² = 68.59 on 36 dof
+(**χ²/dof = 1.905, p = 8.5e-4**) against the ideal-sampling null. Forte delivers roughly the
+precision of a perfect sampler given **half** the shots; matching an ideal sampler costs
+**2.39× the shots**. An independent distribution-level check agrees — total variation distance
+over all 256 basis states sits 1.5–2.0× further from ideal than a perfect sampler.
+
+**But no irreducible floor is resolved.** The fit returns `a = 1.546`, `b = 0.00000`, with a
+bootstrap 95% CI for the floor of **[0, 0.0934] = [0, 58.3] eV**, which reaches zero. The
+ratio column is flat across the ladder (1.49, 1.24, 1.40) rather than growing, which is the
+signature of *inflated sampling noise*, not a fixed offset. **Verdict: shot-limited over
+100–400 shots.**
+
+> An earlier read of the first four measurements suggested the opposite — a gate-error floor —
+> because the ratio appeared to grow with shots. It did not survive n = 12 per level. The
+> analysis script now refuses a verdict below 3 shot levels and 5 samples per level, because a
+> two-parameter quadrature fit to two levels is exactly determined and will report a confident
+> `a` and `b` from pure noise.
+
+### What this means for the thesis
+
+**Measurement precision was never the binding constraint.** The circuit's own output window is
+**361.3 eV** (p1–p99 of the noiseless `<Z_0>` over 1,500 val points, through `out_scale` and
+the `CES_TI` normalisation). Hardware rms at 400 shots is 43.8 eV — **12% of that window** —
+and the floor's upper bound is under 16% of it.
+
+The failure is upstream of the hardware entirely:
+
+| | RMSE (eV) |
+|---|---|
+| persistence baseline | 449.6 |
+| classical matched MLP | 378.0 |
+| **VQC, noiseless simulator, exact probabilities** | **471.5** |
+
+The VQC is worse than doing nothing **before any quantum hardware is involved**. It moves its
+output — ±72.5 eV at 1σ — but in the wrong direction. This is an expressivity result, not a
+noise result, and hardware access did not change it.
+
+With the latency arithmetic below, the arm is closed on two independent axes.
+
+### Latency — closed structurally, not marginally
+
+One prediction: classical matched MLP **35.3 µs** (measured, single thread) against Forte
+**7.4 s at 100 shots / 22.9 s at 400** (measured `execution_duration_ms`). The task is 10 ms
+nowcasting, so one QPU inference costs ~1,800× the entire control cycle. A 1000× faster gate
+set still overruns it. **The real-time path is structurally closed**; only an offline use
+survives, and offline is precisely where the classical baselines are strongest (§8-GP).
+
+### The measurement that would reopen it
+
+Per the standing rule that a negative result must name its own reversal: the 100–400 shot range
+cannot separate `a` from `b` well, because 1/√N is still large there and a floor hides under it.
+The discriminating measurement is **2000-shot debiased jobs** ($168.20 each; ~$540 of credit
+remains, so three are affordable), where ideal sampling would give 0.0224 and any floor above
+~0.02 would dominate instead of hiding.
+
+That test would sharpen *why* the QPU is limited. It would not change the verdict on this task,
+because the VQC already loses on the noiseless simulator by 21.9 eV against persistence. To
+reopen the arm on *performance* one would need a circuit family that beats a
+parameter-matched classical model in simulation first — and §8 has no evidence such a family
+exists here.
+
+### Provenance
+
+Checkpoint is the July `quantum_vqc_weights.pt` (`window_size = 4`, the pre-reset protocol).
+That is deliberate and does not contaminate the confirmed W = 2 results: the deviation physics
+measured here is a property of the circuit and the device, not of the data protocol, and no
+number in this section is quoted alongside the backbone's skill figures. The PCA basis is
+re-fit train-only and cross-checked against the checkpoint (drift **0.000e+00**).
+
+Bit ordering was validated before spending: IonQ's integer probability keys are **little-endian**
+(qubit 0 = least significant bit), matching the exact noiseless value 3/3 on the free cloud
+simulator where big-endian matched 0/3.
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over
