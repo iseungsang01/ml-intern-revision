@@ -164,9 +164,13 @@ class VQCRegressor(nn.Module):
         super().__init__()
         self.n_qubits = n_qubits
         self.n_layers = n_layers
-        dev = qml.device("default.qubit", wires=n_qubits)
+        # backprop on default.qubit stores every intermediate statevector, so memory grows as
+        # batch x 2^n_qubits x circuit depth -- it segfaults well before 16 qubits. lightning.qubit
+        # with adjoint differentiation is O(1) in depth and broadcasts over the batch, which is
+        # what makes the larger circuits trainable at all.
+        dev = qml.device(os.getenv("QVQC_DEVICE", "default.qubit"), wires=n_qubits)
 
-        @qml.qnode(dev, interface="torch", diff_method="backprop")
+        @qml.qnode(dev, interface="torch", diff_method=os.getenv("QVQC_DIFF", "backprop"))
         def circuit(inputs, weights):
             for layer in range(n_layers):
                 qml.AngleEmbedding(inputs, wires=range(n_qubits), rotation="Y")
@@ -228,11 +232,24 @@ def hidden_width_for_budget(n_inputs, budget):
 # Train / evaluate
 # --------------------------------------------------------------------------------------
 
-def train_model(model, xtr, ytr, mtr, epochs, lr, batch_size, label, log_every=5):
+def train_model(model, xtr, ytr, mtr, epochs, lr, batch_size, label, log_every=5, ckpt=None):
+    """Train with per-epoch checkpointing so an interrupted run resumes instead of restarting.
+
+    A 16-qubit circuit takes ~20 minutes per epoch on CPU, so a kill at epoch 24 of 25 used to
+    throw away eight hours. `ckpt` is a path; if it exists its epoch/model/optimizer state is
+    restored and training continues from there.
+    """
     opt = torch.optim.Adam(model.parameters(), lr=lr)
     n = xtr.shape[0]
     t0 = time.time()
-    for epoch in range(epochs):
+    start_epoch = 0
+    if ckpt is not None and Path(ckpt).exists():
+        state = torch.load(ckpt, map_location="cpu", weights_only=False)
+        model.load_state_dict(state["model"])
+        opt.load_state_dict(state["opt"])
+        start_epoch = int(state["epoch"]) + 1
+        print(f"  [{label}] resuming from epoch {start_epoch}/{epochs} ({ckpt})")
+    for epoch in range(start_epoch, epochs):
         perm = torch.randperm(n)
         total, seen = 0.0, 0
         for start in range(0, n, batch_size):
@@ -247,6 +264,9 @@ def train_model(model, xtr, ytr, mtr, epochs, lr, batch_size, label, log_every=5
             opt.step()
             total += float(loss.detach()) * int(mb.sum())
             seen += int(mb.sum())
+        if ckpt is not None:
+            torch.save({"epoch": epoch, "model": model.state_dict(),
+                        "opt": opt.state_dict(), "loss": total / max(seen, 1)}, ckpt)
         if epoch % log_every == 0 or epoch == epochs - 1:
             print(f"  [{label}] epoch {epoch + 1:3d}/{epochs}  masked MSE {total / max(seen, 1):.5f}"
                   f"  ({time.time() - t0:.1f}s)")
@@ -283,7 +303,10 @@ def score(pred_norm, val, t_idx, target_mean, target_std):
 
 
 def main():
-    root_dir = Path(__file__).resolve().parents[1]
+    # parents[2] is the repo root. This file lived at ces_prediction/quantum_vqc.py until the
+    # 2026-08-09 consolidation moved it two levels down; the index was never updated, so the
+    # defaults pointed at ces_prediction/data and every run had to pass paths explicitly.
+    root_dir = Path(__file__).resolve().parents[3]
     data_dir = Path(os.getenv("CES_DATA_DIR", root_dir / "data"))
     output_dir = Path(os.getenv("CES_OUTPUT_DIR", Path(__file__).resolve().parent))
     split_dir = Path(os.getenv("CES_SPLIT_DIR", root_dir / "data" / "splits"))
@@ -308,7 +331,10 @@ def main():
     torch.manual_seed(seed)
     np.random.seed(seed)
 
-    metrics_path = output_dir / "metrics.json"
+    # Read the normalization stats from the pipeline's own metrics.json; write results wherever
+    # CES_OUTPUT_DIR points. Conflating the two meant a throwaway output dir also had to contain
+    # a metrics.json, so variants could not be written anywhere but next to the source.
+    metrics_path = Path(os.getenv("CES_METRICS", root_dir / "ces_prediction" / "metrics.json"))
     manifest_path = split_dir / "split_manifest.json"
     for p in (metrics_path, manifest_path):
         if not p.exists():
@@ -352,11 +378,14 @@ def main():
 
     print(f"Training VQC (local state-vector simulator, backprop, lr={lr_vqc})...")
     t_vqc = time.time()
-    train_model(vqc, ztr, ytr, mtr, epochs, lr_vqc, batch_size, "VQC")
+    log_every = int(os.getenv("QVQC_LOG_EVERY", "5"))
+    train_model(vqc, ztr, ytr, mtr, epochs, lr_vqc, batch_size, "VQC",
+                log_every=log_every, ckpt=output_dir / "vqc_train.ckpt")
     t_vqc = time.time() - t_vqc
     print(f"Training matched classical MLP (lr={lr_mlp})...")
     t_mlp = time.time()
-    train_model(mlp, ztr, ytr, mtr, epochs, lr_mlp, batch_size, "MLP")
+    train_model(mlp, ztr, ytr, mtr, epochs, lr_mlp, batch_size, "MLP",
+                log_every=log_every, ckpt=output_dir / "mlp_train.ckpt")
     t_mlp = time.time() - t_mlp
 
     res_vqc = score(predict_batched(vqc, zval), val, t_idx, target_mean, target_std)
