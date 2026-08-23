@@ -269,6 +269,36 @@ def main():
 
     jobs = [(i, s, False) for s in ladder for i in range(args.samples)]
     jobs += [(args.samples + i, 2000, True) for i in range(args.mitigated)]
+
+    # A job that completed on the QPU but whose result never reached disk (process killed
+    # mid-run) is already paid for. Reclaim it from IonQ's history before spending again.
+    if args.hardware:
+        want = {"v%d_%dsh" % (int(idx[i]), s): (int(idx[i]), s) for i, s, _ in jobs}
+        _, hist = api.call("GET", "/jobs?limit=100")
+        for j in hist.get("jobs", []):
+            name = str(j.get("name") or "")
+            if (j.get("dry_run") or j.get("status") != "completed"
+                    or name not in want or want[name] in prior):
+                continue
+            full = api.call("GET", "/jobs/" + j["id"])[1]
+            if full.get("backend") != args.backend:
+                continue
+            probs = api.probabilities(full)
+            if not probs:
+                continue
+            vi, sh = want[name]
+            i = next(k for k, s2, _ in jobs if int(idx[k]) == vi and s2 == sh)
+            prior[(vi, sh)] = {
+                "sample": int(i), "val_index": vi, "shots": sh, "mitigated": False,
+                "job_id": j["id"], "backend": full.get("backend"),
+                "requested_backend": args.backend, "on_hardware": True,
+                "status": "completed", "exec_ms": full.get("execution_duration_ms"),
+                "exact_z0": float(exact[i]),
+                "z0_little_endian": expval_z0(probs, n_qubits, True),
+                "z0_big_endian": expval_z0(probs, n_qubits, False),
+                "cost_usd": api.cost(j["id"]), "recovered_from_history": True}
+            print("  reclaimed paid job %s (val %d, %d shots) from IonQ history" % (name, vi, sh))
+
     todo = [j for j in jobs if (int(idx[j[0]]), j[1]) not in prior]
     est = sum(PRICE_HIGH if m else PRICE_LOW for _, _, m in todo)
     print("\nPlan: %d measurements total, %d already paid for, %d to buy"
@@ -289,7 +319,9 @@ def main():
     records, spent, price_cache = [], 0.0, {}
 
     for n, (i, shots, mitigated) in enumerate(jobs, 1):
-        label = "s%02d_%dsh%s" % (i, shots, "_dbz" if mitigated else "")
+        # Label by val index, not by position: the position depends on --samples, so a
+        # position-named job cannot be matched back to its input after the plan changes.
+        label = "v%d_%dsh%s" % (int(idx[i]), shots, "_dbz" if mitigated else "")
         key = (int(idx[i]), shots)
         if key in prior:
             rec = dict(prior[key])
