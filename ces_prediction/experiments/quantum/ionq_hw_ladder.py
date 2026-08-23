@@ -178,11 +178,16 @@ def exact_z0(angles, weights):
     return float(circuit(torch.as_tensor(angles), torch.as_tensor(weights)))
 
 
-def load_operating_points(n_samples, seed):
+def load_operating_points(n_samples, seed, pin_indices=()):
     """Real val-set inputs projected onto the trained PCA basis -> embedding angles.
 
     Uses the same split manifest, stats and seed as quantum_vqc.py, so the operating points
     are ones the circuit was actually scored on rather than synthetic angles.
+
+    Selection is a seeded *permutation* prefix, not ``rng.choice(size=k)``: choice draws a
+    different set for every k, so growing --samples would discard already-paid measurements.
+    A permutation prefix is stable under growth. ``pin_indices`` (val indices already measured
+    on hardware) are placed first so a resumed run reuses them instead of re-buying them.
     """
     from evaluate import _load_stats
     from quantum_vqc import apply_pca, fit_pca, load_split_tensors
@@ -203,11 +208,20 @@ def load_operating_points(n_samples, seed):
     z = apply_pca(val["x"], mean, comps, scale).numpy()
 
     rng = np.random.default_rng(seed)
-    idx = rng.choice(len(z), size=min(n_samples, len(z)), replace=False)
+    pinned = [int(i) for i in pin_indices if 0 <= int(i) < len(z)]
+    seen = set(pinned)
+    order = [int(i) for i in rng.permutation(len(z)) if int(i) not in seen]
+    idx = np.array((pinned + order)[:min(n_samples, len(z))], dtype=int)
     return z[idx], idx, ckpt, drift
 
 
 def main():
+    # Jobs queue for minutes each; unbuffered output makes a backgrounded run followable.
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except AttributeError:
+        pass
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--hardware", action="store_true")
     ap.add_argument("--yes", action="store_true")
@@ -228,9 +242,21 @@ def main():
 
     api = IonQ(load_api_key())
     target = args.backend if args.hardware else "simulator"
+    out_path = Path(args.out)
+
+    # Resume: any (val_index, shots) already measured on hardware is reused, never re-bought.
+    prior = {}
+    if out_path.exists():
+        for r in json.loads(out_path.read_text(encoding="utf-8")).get("records", []):
+            if r.get("on_hardware") and r.get("status") == "completed":
+                prior[(int(r["val_index"]), int(r["shots"]))] = r
+    if prior:
+        print("Resuming: %d paid measurement(s) already on disk ($%.2f worth)"
+              % (len(prior), sum(float(r.get("cost_usd") or 0) for r in prior.values())))
 
     print("Loading real val operating points ...")
-    angles, idx, ckpt, drift = load_operating_points(args.samples + args.mitigated, args.seed)
+    angles, idx, ckpt, drift = load_operating_points(
+        args.samples + args.mitigated, args.seed, sorted({k[0] for k in prior}))
     weights = ckpt["weights"].numpy()
     n_qubits = int(ckpt["n_qubits"])
     print("  %d samples, %d qubits, %d layers, target %s (window=%s)"
@@ -241,10 +267,12 @@ def main():
     exact = np.array([exact_z0(a, weights) for a in angles])
     print("  <Z_0> range [%.4f, %.4f]" % (exact.min(), exact.max()))
 
-    n_low = len(ladder) * args.samples
-    est = n_low * PRICE_LOW + args.mitigated * PRICE_HIGH
-    print("\nPlan: %d ladder jobs (shots %s x %d samples) + %d mitigated jobs"
-          % (n_low, ladder, args.samples, args.mitigated))
+    jobs = [(i, s, False) for s in ladder for i in range(args.samples)]
+    jobs += [(args.samples + i, 2000, True) for i in range(args.mitigated)]
+    todo = [j for j in jobs if (int(idx[j[0]]), j[1]) not in prior]
+    est = sum(PRICE_HIGH if m else PRICE_LOW for _, _, m in todo)
+    print("\nPlan: %d measurements total, %d already paid for, %d to buy"
+          % (len(jobs), len(jobs) - len(todo), len(todo)))
     print("Backend: %s   Estimated: $%.2f   Budget cap: $%.2f" % (target, est, args.budget))
 
     if args.hardware:
@@ -258,19 +286,30 @@ def main():
         if not args.yes:
             raise SystemExit("Dry stop: re-run with --yes to spend.")
 
-    records, spent = [], 0.0
-    out_path = Path(args.out)
-    jobs = [(i, s, False) for s in ladder for i in range(args.samples)]
-    jobs += [(args.samples + i, 2000, True) for i in range(args.mitigated)]
+    records, spent, price_cache = [], 0.0, {}
 
     for n, (i, shots, mitigated) in enumerate(jobs, 1):
         label = "s%02d_%dsh%s" % (i, shots, "_dbz" if mitigated else "")
+        key = (int(idx[i]), shots)
+        if key in prior:
+            rec = dict(prior[key])
+            rec["sample"] = int(i)
+            records.append(rec)
+            print("[%2d/%2d] %-16s reused (val %d, $%.2f already paid)"
+                  % (n, len(jobs), label, key[0], float(rec.get("cost_usd") or 0)))
+            continue
         circ = build_circuit(angles[i], weights)
 
         if args.hardware:
-            price_id = api.submit(circ, n_qubits, shots, target, True, "price_" + label)
-            api.wait(price_id)
-            price = api.cost(price_id) or 0.0
+            # Price depends only on the shot count: gate counts are identical across samples
+            # (only the rotation angles differ), so one dry-run per shot tier is enough. Each
+            # dry-run queues like a real job, so caching halves the wall-clock of a long run.
+            if shots not in price_cache:
+                price_id = api.submit(circ, n_qubits, shots, target, True, "price_%dsh" % shots)
+                api.wait(price_id)
+                price_cache[shots] = api.cost(price_id) or 0.0
+                print("  priced %d shots at $%.2f (dry-run, free)" % (shots, price_cache[shots]))
+            price = price_cache[shots]
             if spent + price > args.budget:
                 print("STOP: next job $%.2f would exceed budget (spent $%.2f)" % (price, spent))
                 break
