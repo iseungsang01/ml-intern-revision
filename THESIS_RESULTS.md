@@ -3693,6 +3693,43 @@ nowcasting, so one QPU inference costs ~1,800× the entire control cycle. A 1000
 set still overruns it. **The real-time path is structurally closed**; only an offline use
 survives, and offline is precisely where the classical baselines are strongest (§8-GP).
 
+### Addendum (2026-08-24) — scaling the circuit is closed too, and it cost 8 seconds to find out
+
+The obvious objection to all of the above is that the circuit is a toy: 8 qubits, 4 layers, and
+a PCA that throws away 12% of the input variance. So scale it up. A 16-qubit / 12-layer circuit
+(578 params, PCA variance 0.956) was set up to train — ~20 min/epoch on CPU with
+`lightning.qubit` + adjoint, about 8 hours for 25 epochs.
+
+It was not run, because the premise can be tested on the classical control in seconds. If more
+input dimensions help at a fixed parameter budget, the classical model will show it first.
+
+At a matched ~578-parameter budget, on the same val samples:
+
+| PCA dim | variance kept | MLP hidden | RMSE (eV) | skill |
+|---|---|---|---|---|
+| **8** | 0.873 | 58 | **419.4** | **+0.3625** |
+| 12 | 0.922 | 41 | 432.9 | +0.3208 |
+| 16 | 0.956 | 32 | 437.8 | +0.3054 |
+| 20 | 0.981 | 26 | 453.9 | +0.2534 |
+| 24 | 0.991 | 22 | 455.1 | +0.2496 |
+| 32 | 0.997 | 17 | 452.4 | +0.2585 |
+| 92 (no PCA) | 1.000 | 6 | 431.2 | +0.3264 |
+
+**More input dimensions make it monotonically worse.** At a fixed budget the hidden width has to
+shrink to pay for the wider input (58 → 32 → 22 → 6), and training loss falls the whole way
+(0.774 → 0.636) while validation skill falls with it. Ordinary overfitting. **The PCA-8
+bottleneck does not bind** — 8 dimensions is the best choice at this budget, so a 16-qubit
+circuit would have been trained on a worse representation, not a richer one.
+
+The parameter axis is equally flat: the July 101-param MLP scored +0.3634 and this 578-param
+MLP scores +0.3625. **5.7× the parameters buys nothing.**
+
+So both axes along which a variational circuit could be "scaled up" — wider encoding (qubits)
+and more parameters (layers) — are already saturated or actively harmful for the *classical*
+model on this task. There is no headroom for a bigger circuit to exploit. This closes the
+scaling objection without spending either credit or a CPU night, and it is the cheapest result
+in this section by a wide margin.
+
 ### The measurement that would reopen it
 
 Per the standing rule that a negative result must name its own reversal: the 100–400 shot range
