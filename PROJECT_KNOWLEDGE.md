@@ -920,6 +920,53 @@ twelve's papers use it, but the acquisition-email question "UF-CES 취득분 있
 grounded in real hardware; if such data ever arrives it is a NEW label channel and needs
 its own pre-registration (PREREGISTRATION_B6.md §5's stance).
 
+## Measuring On Rented Hardware (2026-08-23) — three lessons that cost real money
+
+The IonQ branch (`docs/ionq_qpu_실험기록.md` §8–14) reached hardware for the first time. The
+physics verdict lives there; these are the lessons that generalize to any paid, queued,
+externally-metered measurement.
+
+**1. One observable near a noise fixed point tells you nothing about noise.** The deviation of
+the circuit's `<Z_0>` from its noiseless value came out *smaller* than the shot-noise
+prediction (χ²/dof ≈ 0.06 on the first four points), which reads as "the QPU is
+suspiciously good". Total variation distance over the full 256-state distribution said the
+opposite: hardware sits **1.5–2.0× further from ideal than a perfect sampler**, and the ratio
+grows with shots — a fixed error floor emerging as sampling noise shrinks. Depolarizing-type
+error pulls a distribution toward uniform, and uniform has `<Z_0>` **exactly 0**; our operating
+points already sit near 0 (1σ = 0.116), so error had almost nothing to move. Judge hardware at
+the distribution level, never from a single scalar whose ideal value sits at the noise fixed
+point.
+
+**2. A range measured on a handful of points is not a range.** The circuit's output window was
+first written up as 54.7 eV from **three** samples. Over 1,500 val points it is **361 eV**
+(p1–p99) — 7× larger. That flipped the conclusion: shot noise at 400 shots is 9% of the window,
+not 57%, so sampling precision was never the binding constraint and the VQC's loss is
+expressivity, not measurement. Any "span", "range", or "window" quoted for a paper must come
+from the population, and the analysis script now computes it that way rather than from whatever
+points happened to get measured. See also [Numbers Must Come From Artifacts].
+
+**3. Bill-by-job means a killed process burns money.** Two interruptions cost real charges
+because completed QPU jobs whose results never reached disk were simply re-bought, and one
+rerun truncated four already-paid records by reopening the result file. Fixes now in
+`ionq_hw_ladder.py`, and the pattern applies to any metered external service:
+
+- Name remote work by its **input identity** (`v1690_400sh`), never by position in the current
+  plan (`s03_400sh`) — a position is meaningless once the plan changes, and re-deriving the
+  mapping afterwards is manual archaeology.
+- **Reclaim before you buy**: on startup, scan the provider's job history for completed work
+  matching the plan and fold it into the resume set.
+- Write results **after every unit**, and treat the result file as append-only state, not as
+  something a rerun may truncate.
+- Reconcile against the provider's own ledger, not your own tally. `quotaUsage` is the truth;
+  ours disagreed by $51.58 until the stranded jobs were recovered.
+
+**4. Measure the price, do not assume it.** The billing model was assumed to be per-gate-shot
+from published rate cards; it is actually `2QGE_operations` with a per-job **minimum** that
+dominates for small circuits, producing a flat two-tier fee — $25.79 up to 400 shots, $168.20
+from 500 (debiasing forced on, not disableable) — **independent of circuit size**. Free
+`dry_run: true` submissions return an exact quote and charge nothing, so there was never a
+reason to guess. A 7× budget difference hung on one free API call.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
