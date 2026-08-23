@@ -229,6 +229,10 @@ def main():
     ap.add_argument("--ladder", type=str, default="100,200,400")
     ap.add_argument("--mitigated", type=int, default=0)
     ap.add_argument("--budget", type=float, default=1264.0)
+    ap.add_argument("--submit-only", dest="submit_only", action="store_true",
+                    help="queue every remaining job and exit; collect later with --collect")
+    ap.add_argument("--collect", action="store_true",
+                    help="reclaim finished jobs from IonQ history into the result file, submit nothing")
     ap.add_argument("--backend", type=str, default="qpu.forte-1")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", type=str, default=str(HERE / "ionq_hw_ladder_result.json"))
@@ -305,7 +309,9 @@ def main():
           % (len(jobs), len(jobs) - len(todo), len(todo)))
     print("Backend: %s   Estimated: $%.2f   Budget cap: $%.2f" % (target, est, args.budget))
 
-    if args.hardware:
+    if args.hardware and not args.collect:
+        # --collect spends nothing, so it skips these gates: it must keep working even when
+        # the backend has gone unavailable again, which is exactly when results are stranded.
         status, degraded = api.backend_status(args.backend)
         print("Backend status: %s (degraded=%s)" % (status, degraded))
         if status != "available":
@@ -317,6 +323,69 @@ def main():
             raise SystemExit("Dry stop: re-run with --yes to spend.")
 
     records, spent, price_cache = [], 0.0, {}
+
+    def save(recs):
+        """Merge into the file; never truncate it.
+
+        A partial run writes only the measurements it has reached so far. Overwriting with
+        that list silently deletes paid records from earlier runs that sit later in the job
+        order -- this destroyed the same two 400-shot measurements twice today. Records are
+        keyed by (val_index, shots), and anything already on disk under a key the current run
+        has not produced is carried forward untouched.
+        """
+        merged = {}
+        if out_path.exists():
+            for r in json.loads(out_path.read_text(encoding="utf-8")).get("records", []):
+                merged[(int(r["val_index"]), int(r["shots"]))] = r
+        for r in recs:
+            merged[(int(r["val_index"]), int(r["shots"]))] = r
+        out_path.write_text(json.dumps({
+            "backend": target, "ladder": ladder, "samples": args.samples,
+            "mitigated": args.mitigated, "pca_drift": drift,
+            "checkpoint": {k: v for k, v in ckpt.items() if not hasattr(v, "shape")},
+            "records": [merged[k] for k in sorted(merged)]}, indent=2), encoding="utf-8")
+
+    if args.collect:
+        # Reclaim-only: the history sweep above already folded every finished job into
+        # `prior`. Write what exists and report what the QPU still owes us.
+        for i, shots, _ in jobs:
+            k = (int(idx[i]), shots)
+            if k in prior:
+                r = dict(prior[k]); r["sample"] = int(i); records.append(r)
+        save(records)
+        print("\nCollected %d of %d measurements ($%.2f accounted). %d still pending on the QPU."
+              % (len(records), len(jobs),
+                 sum(float(r.get("cost_usd") or 0) for r in records), len(jobs) - len(records)))
+        return
+
+    if args.submit_only:
+        # Fire-and-forget: IonQ holds submitted jobs server-side, so everything can be queued
+        # now and collected from any later session with --collect. This is what lets the
+        # machine be shut down mid-experiment; the sequential path below cannot survive that.
+        for i, shots, mitigated in todo:
+            circ = build_circuit(angles[i], weights)
+            if shots not in price_cache:
+                pid = api.submit(circ, n_qubits, shots, target, True, "price_%dsh" % shots)
+                api.wait(pid)
+                price_cache[shots] = api.cost(pid) or 0.0
+                print("  priced %d shots at $%.2f (dry-run, free)" % (shots, price_cache[shots]))
+            if spent + price_cache[shots] > args.budget:
+                print("STOP: next job $%.2f would exceed budget (committed $%.2f)"
+                      % (price_cache[shots], spent))
+                break
+            label = "v%d_%dsh%s" % (int(idx[i]), shots, "_dbz" if mitigated else "")
+            jid = api.submit(circ, n_qubits, shots, target, False, label)
+            spent += price_cache[shots]
+            print("  queued %-16s %s  (committed $%.2f)" % (label, jid, spent))
+        for i, shots, _ in jobs:
+            k = (int(idx[i]), shots)
+            if k in prior:
+                r = dict(prior[k]); r["sample"] = int(i); records.append(r)
+        save(records)
+        print("\nQueued %d job(s), committing $%.2f. Nothing else needs to stay running --"
+              % (len(todo), spent))
+        print("collect them later with the same command plus --collect instead of --submit-only.")
+        return
 
     for n, (i, shots, mitigated) in enumerate(jobs, 1):
         # Label by val index, not by position: the position depends on --samples, so a
@@ -362,11 +431,7 @@ def main():
             "status": job.get("status"), "exec_ms": job.get("execution_duration_ms"),
             "exact_z0": float(exact[i]), "z0_little_endian": z_le, "z0_big_endian": z_be,
             "cost_usd": actual, "spent_cumulative": spent})
-        out_path.write_text(json.dumps({
-            "backend": target, "ladder": ladder, "samples": args.samples,
-            "mitigated": args.mitigated, "pca_drift": drift,
-            "checkpoint": {k: v for k, v in ckpt.items() if not hasattr(v, "shape")},
-            "records": records}, indent=2), encoding="utf-8")
+        save(records)
 
         print("[%2d/%2d] %-16s backend=%-14s <Z0> le=%+.4f be=%+.4f exact=%+.4f  $%.2f (tot $%.2f)"
               % (n, len(jobs), label, got_backend, z_le, z_be, exact[i], actual, spent))
