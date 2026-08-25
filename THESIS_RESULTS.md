@@ -3801,6 +3801,55 @@ reopen the arm on *performance* one would need a circuit family that beats a
 parameter-matched classical model in simulation first — and §8 has no evidence such a family
 exists here.
 
+### Addendum 3 (2026-08-24) — the pre-verification §8ap demanded, run for free before any spending
+
+§8ap set the condition for reopening the quantum arm on performance: *a circuit family must beat
+a parameter-matched classical model in simulation first.* Only one family had ever been tested —
+the variational circuit (VQC), where the circuit **is** the model and its parameters are trained.
+A second family exists and is a better structural fit, so it was checked before any credit moved.
+Runner `experiments/quantum/qfeature_probe.py`; cost **$0**.
+
+**Why a feature map is the better candidate.** §8z established that the backbone's `T_i` skill
+decomposes exactly as `anchor + Σ w_k z_k + b` with `z` bounded in [-1, 1] and K = 8. Quantum
+expectation values are natively bounded in [-1, 1], so they slot into that shape — and because
+the readout is linear it is fitted in closed form by ridge, which removes the parameter-shift
+wall that made VQC training impossible on hardware. The circuit is fixed, so nothing is trained
+on the device at all.
+
+**The control that decides it** is a classical *random* feature map of the same width on the
+same inputs through the same readout. Without it the experiment only measures "does having K
+features help". Same rows, same persistence anchor, same ridge sweep, same metric.
+
+| arm | K = 8, 2 layers | K = 12, 3 layers |
+|---|---|---|
+| persistence anchor alone | +0.0000 | +0.0000 |
+| **quantum feature map** | **+0.0029** | −0.0006 |
+| classical random map | +0.0095 | −0.0002 |
+| *trained* MLP, same inputs, W = 2 | **+0.126** | — |
+
+**Two findings, and the second is the important one.**
+
+The quantum map never leads: it loses to a classical random map of identical width at K = 8, and
+both collapse to the anchor by K = 12. §8ap's condition is not met by this family either.
+
+But the dominant effect is not quantum-vs-classical — it is **frozen-vs-trained**. The best fixed
+map recovers +0.0095 where a trained encoder on the same inputs reaches +0.126: **freezing the
+map costs ~92% of the achievable skill.** That is fatal to the whole appeal of this route, because
+"no gradients needed" was precisely its selling point over the VQC. The structural analogy to
+§8z was only half right — the shape (bounded latents into a linear readout) matches, but §8z's
+encoder is *learned*, and that turns out to be where the skill lives.
+
+**What this closes and what it leaves.** Two of the three QML families are now closed on this
+task: variational circuits (§8ap, hardware-verified) and fixed feature maps (here, free). The
+third — quantum reservoir computing over the sequence — differs only in that the fixed map
+carries memory across timesteps. It is *predicted* dead by the same measurement, since the
+useful state §8z identifies (carried `T_i` plus a `T_e`-like proxy) is already supplied by the
+anchor, but it has not been measured and should be labelled as untested rather than closed.
+
+**Method note.** This is what §8ap's reopening condition is for, and it cost nothing. The
+$1,418 already spent bought hardware characterisation, not a performance answer; the performance
+answer was always available in simulation for free. Run the free arm first.
+
 ### Provenance
 
 Checkpoint is the July `quantum_vqc_weights.pt` (`window_size = 4`, the pre-reset protocol).
