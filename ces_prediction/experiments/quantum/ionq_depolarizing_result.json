@@ -292,5 +292,132 @@
   "shots": 400,
   "backend": "qpu.forte-1",
   "n_qubits": 8,
-  "measurements": {}
+  "measurements": {
+    "17": {
+      "job_id": "01a030de-b414-77eb-8951-f26f78ba2d2b",
+      "backend": "qpu.forte-1",
+      "z0": 0.34500000000000103,
+      "exec_ms": 22070,
+      "cost_usd": 25.79
+    },
+    "16": {
+      "job_id": "01a030de-b177-73b9-8f52-e4787b226eeb",
+      "backend": "qpu.forte-1",
+      "z0": 0.23500000000000068,
+      "exec_ms": 22027,
+      "cost_usd": 25.79
+    },
+    "15": {
+      "job_id": "01a030de-aedc-7659-b4a3-12ce277332b6",
+      "backend": "qpu.forte-1",
+      "z0": 0.2400000000000005,
+      "exec_ms": 21970,
+      "cost_usd": 25.79
+    },
+    "14": {
+      "job_id": "01a030de-ac22-77cf-8941-2b1299d82b62",
+      "backend": "qpu.forte-1",
+      "z0": 0.26000000000000084,
+      "exec_ms": 22022,
+      "cost_usd": 25.79
+    },
+    "13": {
+      "job_id": "01a030de-a8df-724a-bdbb-072e61a5c047",
+      "backend": "qpu.forte-1",
+      "z0": 0.17500000000000046,
+      "exec_ms": 22071,
+      "cost_usd": 25.79
+    },
+    "12": {
+      "job_id": "01a030de-a665-75fa-a633-c53463dc1415",
+      "backend": "qpu.forte-1",
+      "z0": 0.1950000000000004,
+      "exec_ms": 22027,
+      "cost_usd": 25.79
+    },
+    "11": {
+      "job_id": "01a030de-a363-77ae-b299-b7ae7fc847e8",
+      "backend": "qpu.forte-1",
+      "z0": 0.07500000000000012,
+      "exec_ms": 22043,
+      "cost_usd": 25.79
+    },
+    "10": {
+      "job_id": "01a030de-a0e1-730e-8843-8b81a8aeb254",
+      "backend": "qpu.forte-1",
+      "z0": 0.11500000000000027,
+      "exec_ms": 22069,
+      "cost_usd": 25.79
+    },
+    "9": {
+      "job_id": "01a030de-9e34-700e-a306-d683c1dba856",
+      "backend": "qpu.forte-1",
+      "z0": 0.15000000000000027,
+      "exec_ms": 21987,
+      "cost_usd": 25.79
+    },
+    "8": {
+      "job_id": "01a030de-98e6-7532-a34a-2a18a876558b",
+      "backend": "qpu.forte-1",
+      "z0": 0.10500000000000027,
+      "exec_ms": 23136,
+      "cost_usd": 25.79
+    },
+    "7": {
+      "job_id": "01a030de-965b-70be-9f6f-a78d2dcf3a0d",
+      "backend": "qpu.forte-1",
+      "z0": -0.06500000000000017,
+      "exec_ms": 22142,
+      "cost_usd": 25.79
+    },
+    "6": {
+      "job_id": "01a030de-9395-76cb-966c-6786ecd7ae91",
+      "backend": "qpu.forte-1",
+      "z0": 0.08000000000000028,
+      "exec_ms": 22988,
+      "cost_usd": 25.79
+    },
+    "5": {
+      "job_id": "01a030de-90c2-74f1-9901-b4bc5d9babaa",
+      "backend": "qpu.forte-1",
+      "z0": -0.1400000000000003,
+      "exec_ms": 22965,
+      "cost_usd": 25.79
+    },
+    "4": {
+      "job_id": "01a030de-8cc9-724f-8e13-229c034b48d3",
+      "backend": "qpu.forte-1",
+      "z0": -0.1700000000000004,
+      "exec_ms": 22022,
+      "cost_usd": 25.79
+    },
+    "3": {
+      "job_id": "01a030de-894a-702b-bb27-793432070fa0",
+      "backend": "qpu.forte-1",
+      "z0": -0.025000000000000074,
+      "exec_ms": 22047,
+      "cost_usd": 25.79
+    },
+    "2": {
+      "job_id": "01a030de-85e2-70bd-a88f-0b01d969ad36",
+      "backend": "qpu.forte-1",
+      "z0": -0.10500000000000022,
+      "exec_ms": 22015,
+      "cost_usd": 25.79
+    },
+    "1": {
+      "job_id": "01a030de-8308-74d5-ae9c-ae7c1034e902",
+      "backend": "qpu.forte-1",
+      "z0": -0.07000000000000015,
+      "exec_ms": 22062,
+      "cost_usd": 25.79
+    },
+    "0": {
+      "job_id": "01a030de-7dc0-773b-90db-d199d322d9e4",
+      "backend": "qpu.forte-1",
+      "z0": -0.07000000000000006,
+      "exec_ms": 22060,
+      "cost_usd": 25.79
+    }
+  }
 }

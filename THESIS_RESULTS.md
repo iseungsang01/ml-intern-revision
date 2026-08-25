@@ -3656,7 +3656,8 @@ over all 256 basis states sits 1.5–2.0× further from ideal than a perfect sam
 bootstrap 95% CI for the floor of **[0, 0.0934] = [0, 58.3] eV**, which reaches zero. The
 ratio column is flat across the ladder (1.49, 1.24, 1.40) rather than growing, which is the
 signature of *inflated sampling noise*, not a fixed offset. **Verdict: shot-limited over
-100–400 shots.**
+100–400 shots** — **corrected by Addendum 2 below**, which resolves the floor this fit could
+not and shows the excess is a multiplicative contraction rather than inflated sampling.
 
 > An earlier read of the first four measurements suggested the opposite — a gate-error floor —
 > because the ratio appeared to grow with shots. It did not survive n = 12 per level. The
@@ -3729,6 +3730,62 @@ and more parameters (layers) — are already saturated or actively harmful for t
 model on this task. There is no headroom for a bigger circuit to exploit. This closes the
 scaling objection without spending either credit or a CPU night, and it is the cheapest result
 in this section by a wide margin.
+
+### Addendum 2 (2026-08-24) — the floor was real; the ladder just could not resolve it
+
+The ladder above reported `b = 0` with a bootstrap CI of [0, 0.0934] and absorbed the excess
+into `a = 1.546`, reading it as inflated sampling noise. A second experiment with 1.7× the
+`<Z_0>` span settles it, and the reading changes.
+
+**Design.** A depolarizing channel is a pure contraction, `<Z_0>_measured = (1 - λ)·<Z_0>_exact`,
+so the slope of measured against exact returns λ directly. Real val inputs span `<Z_0>` in only
+[-0.31, +0.48]; optimizing the encoded angles inside the same ±π/2 box the PCA squash produces
+reaches [-0.55, +0.77]. Same trained circuit, same depth, so the error budget matches the
+ladder. 18 points × 400 shots on `qpu.forte-1`, **$464.22**
+(`experiments/quantum/ionq_depolarizing.py`).
+
+**Result.**
+
+| quantity | value |
+|---|---|
+| slope (1 − λ) | **0.3386 ± 0.0396** |
+| **λ** | **0.6614 ± 0.0396**, confirmed at **16.7 σ** |
+| intercept | +0.0360 (depolarizing predicts 0) |
+| residual σ | 0.0672 against shot noise 0.0500 |
+
+**Forte returns 34% of the circuit's intended signal amplitude.** The §12.1 explanation in the
+experiment log — that depolarizing-type error pulls the state toward maximally mixed, whose
+`<Z_0>` is exactly 0, so operating points near 0 look unharmed — is confirmed, and it is large.
+
+**This closes the ladder's open question.** A contraction is shot-independent, so it belongs in
+`b`, not `a`. At the ladder's own operating points the fitted contraction produces a
+shot-independent deviation of rms **0.0689** — which sits at the 74% point of the ladder's own
+CI [0, 0.0934]. Refitting the ladder with `b` fixed there drops `a` from 1.546 to **1.202**,
+close to the 1.0 that pure sampling predicts. Predicted rms then tracks the observed values
+(ratios 1.23 / 0.89 / 0.82 across the three levels) where shot noise alone was short at every
+level (1.49 / 1.24 / 1.40).
+
+So the earlier verdict needs correcting: **"no floor resolved" was a power limitation, not
+evidence of absence.** The floor is real, it is `b ≈ 0.069`, and its mechanism is not random
+gate noise but a multiplicative amplitude loss.
+
+**What changes for the thesis.** The hardware's dominant effect is *multiplicative*, and that
+is worse than the additive picture given above. The circuit's 361.3 eV output window contracts
+to **122.3 eV** on hardware before any noise is added, so the 43.8 eV of additive noise at 400
+shots is **36% of the window that actually survives**, not the 12% computed against the ideal
+window. The contracted window is only 27% of the persistence RMSE it would have to beat.
+
+The top-line verdict is unchanged, because it never rested on hardware noise: the VQC loses on
+the *noiseless* simulator (471.5 eV against persistence at 449.6). Expressivity is still the
+binding failure. But the sentence "measurement precision was never the binding constraint"
+should now read: *precision was not the constraint; amplitude was, and neither matters while the
+circuit loses before hardware is involved.*
+
+**Method note.** This is the second time in this section that a two-parameter fit over a narrow
+range produced a confident wrong reading — first `a`/`b` from two shot levels on four points,
+then `a`/`b` from three levels over a `<Z_0>` span of 0.39. Both were fixed by widening the
+independent variable, not by adding samples at the same settings. When a fit has to separate a
+shot-dependent term from a shot-independent one, buy span before buying n.
 
 ### The measurement that would reopen it
 
