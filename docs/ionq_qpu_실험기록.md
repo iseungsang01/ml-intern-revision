@@ -443,3 +443,322 @@ persistence RMSE의 27%에 불과하다.
 (4점·2레벨에서 한 번, 18점·3레벨이지만 ⟨Z₀⟩ 폭 0.39에서 한 번). 두 번 다 같은 설정에서
 표본을 늘리는 게 아니라 **독립변수의 폭을 넓혀서** 풀렸다. 샷 의존 항과 샷 무관 항을 갈라야
 할 때는 n보다 **span을 먼저** 사라.
+
+## 17. 남은 QML 계열 전수 검사 (2026-08-24, 전부 무료)
+
+§8ap이 "성능 축에서 되살리려면 시뮬레이션에서 먼저 이겨야 한다"는 조건을 걸어놓고 변분 회로
+하나만 시험했으므로, 나머지 계열을 전부 돌렸다. 러너 `experiments/quantum/qfamilies_probe.py`,
+`qfeature_probe.py`. **비용 $0.** 모든 팔은 §8z 분해(`anchor + 보정`)에서 같은 val 행으로
+채점하고, **폭과 학습 예산이 같은 고전 대조군**과 짝지었다. 양자 팔은 *자기 대조군*을 이겨야
+의미가 있다.
+
+| 계열 | 양자 | 고전 대조군 | 판정 |
+|---|---|---|---|
+| 고정 특징맵 (K=8) | +0.0029 | 무작위 맵 +0.0095 | 닫힘 |
+| 저수지 (시간 기억) | +0.0002 | ESN +0.0099 | 닫힘 |
+| 커널 릿지 | +0.3279 | RBF **+0.3307** | 닫힘 (이점 없음) |
+| 학습된 인코더 | −0.0047 | +0.0261 | **미결** |
+
+**학습된 인코더 팔은 판정하지 않는다.** 대조군이 +0.0261인데 같은 입력에서 학습된 MLP는
++0.365를 낸다 — 자기 천장의 1/14이다. 설정(12 epoch·lr 0.02·잔차·zero-init·K=8 병목)이
+수렴하지 않았고, 두 약한 모델끼리의 비교라 검정력이 없다.
+
+### 17.1 왜 좁은 팔에서만 지는가 — 짝함수 진단
+
+기저를 짝/홀 성분으로 분해해 측정했다.
+
+```
+입력에 대해 EVEN(부호 무시)인 에너지     양자 1층 84.2% · 2층 52.2% · 4층 51.2%   고전 tanh 16.9%
+순수 ODD 타깃(sum z) 선형 프로브 R^2     양자 2층 0.2076                          고전 tanh 0.8780
+```
+
+`RY(θ)|0⟩`을 Z로 읽으면 `⟨Z⟩ = cos θ`이고 cos은 짝함수라, **부호 정보가 1차에서 사라진다.**
+우리 타깃은 `y − anchor`, 즉 부호가 본질인 보정이다. 층을 늘려도 51%에서 멈추므로 깊이로는
+못 고친다. 적도 시작(H 먼저)도 시험했으나 개선되지 않았다(1층 71.6% / 2층 61.3%) — 첫 얽힘
+층이 지나면 초기 상태의 이점이 씻긴다. **고칠 방법을 안다고 주장하지 않는다.**
+
+이 설명은 스스로 검증된다. **커널 팔만 비긴 이유**가 여기 있다 — 커널 릿지는 훈련점 900개를
+기저로 쓰므로 개별 기저 함수의 모양이 중요하지 않다. 반대로 K=8짜리 좁은 팔에서는 기저 모양이
+전부다. 즉 진 이유는 "양자라서"가 아니라 **"좁은 기저를 쓸 때 그 기저가 타깃과 안 맞아서"**다.
+기저를 넓히면 격차가 사라지지만, 그때는 하드웨어에서 O(N²) 회로가 필요해 회로당 $25.79로
+논외가 된다.
+
+### 17.2 순서를 거꾸로 밟았다
+
+$1,418은 **하드웨어 특성**을 샀지 성능 답을 사지 않았다. 성능 답은 처음부터 시뮬레이터에
+무료로 있었고, 이 절의 결과 전부가 $0이다. **무료 팔을 먼저 돌려라** — 같은 규칙이 이 세션에서
+두 번 값을 했다(16큐빗 8시간 학습을 고전 대조군으로 8초 만에 기각, 계열 둘을 돈 없이 폐쇄).
+
+> **본실험과의 분리.** 이 절의 어떤 수치도 본 파이프라인 주장에 인용되지 않는다. 다만 대조군
+> 쪽에서 관찰된 것 하나는 기록해 둔다 — `compare_baselines.py`의 팔(persistence · linear ·
+> pchip · ar_local · gp_causal)은 **전부 과거 CES만 본다**. 진단 신호를 입력으로 받는
+> 비신경망 팔이 없다. 여기서 잰 RBF 릿지(+0.3307, 900행)는 **다른 프로토콜**(W=4 평탄화 ·
+> val · PCA-8)이라 백본 수치와 비교할 수 없고, "이 팔이 약하지 않다"는 관찰까지만 유효하다.
+> 본실험에 반영할지는 별도 판단이며 이 문서는 아무것도 바꾸지 않는다.
+
+---
+
+# 부록 A — THESIS §8ap에서 옮겨온 상세 기록 (2026-08-24)
+
+본실험 기록(`THESIS_RESULTS.md`)에는 요약과 포인터만 남기고, 아래 상세를 이 문서로 옮겼다.
+양자 갈래는 본 파이프라인과 코드·데이터·프로토콜 어느 쪽으로도 연결되지 않는다.
+
+## 8ap. The quantum arm reaches real hardware and comes back shot-limited (2026-08-23) — a QPU cannot fail this task interestingly, because the circuit fails it first
+
+**Status: closed, negative, and now hardware-verified.** The July attempt
+(`docs/ionq_qpu_실험기록.md`) could not reach a QPU at all — every Forte target was
+`unavailable` and jobs were silently downgraded to the ideal simulator. Both gates it left
+behind passed on 2026-08-23, so the measurement it asked for finally ran.
+
+### Design
+
+The July experiment already settled accuracy under a matched comparison: a variational quantum
+circuit (98 params, 8 qubits, 4 data-re-uploading layers on a train-only PCA 92→8 projection)
+lost to a classical MLP with 101 params on byte-identical reduced inputs, across an identical
+5-point lr sweep on both sides. Hardware can only add noise to that, so re-running for
+*performance* was never the point.
+
+What hardware can answer that a simulator cannot: **is the error that a QPU adds a shrinking
+sampling error, or a fixed floor?** A sampled circuit estimates `<Z>` with error ~1/√N, so the
+task's effect size sets a shot floor. Gate and readout error add a term more shots cannot
+remove. Which dominates decides whether a QPU could *ever* resolve this task.
+
+So: the trained circuit, evaluated on 12 real val operating points at three shot counts, with
+the deviation from the exact noiseless `<Z_0>` fitted to
+
+    rms(N)² = a²/N + b²
+
+`a` is the sampling coefficient (prediction ≈ 1); `b` is the irreducible floor. Runner
+`experiments/quantum/ionq_hw_ladder.py`, analysis `analyze_hw_ladder.py`, 36 measurements on
+`qpu.forte-1`, **$928.44** of the KISTI trial credit.
+
+The ladder stays at 100/200/400 shots because IonQ's billing is a two-tier flat fee that
+ignores circuit size — **$25.79 up to 400 shots, $168.20 from 500** (debiasing forced on, 32
+variants, not disableable), measured by free `dry_run` submissions. The low tier buys 7× more
+jobs per dollar, and one constant error-mitigation setting across the ladder.
+
+### Result
+
+| shots | n | rms deviation | ideal 1/√N | ratio | effective shots | rms in eV |
+|---|---|---|---|---|---|---|
+| 100 | 12 | 0.14899 | 0.10000 | 1.490 | 45% of nominal | 93.1 |
+| 200 | 12 | 0.08746 | 0.07071 | 1.237 | 65% of nominal | 54.6 |
+| 400 | 12 | 0.07011 | 0.05000 | 1.402 | 51% of nominal | 43.8 |
+
+Two things are true at once.
+
+**The hardware is measurably worse than an ideal sampler.** χ² = 68.59 on 36 dof
+(**χ²/dof = 1.905, p = 8.5e-4**) against the ideal-sampling null. Forte delivers roughly the
+precision of a perfect sampler given **half** the shots; matching an ideal sampler costs
+**2.39× the shots**. An independent distribution-level check agrees — total variation distance
+over all 256 basis states sits 1.5–2.0× further from ideal than a perfect sampler.
+
+**But no irreducible floor is resolved.** The fit returns `a = 1.546`, `b = 0.00000`, with a
+bootstrap 95% CI for the floor of **[0, 0.0934] = [0, 58.3] eV**, which reaches zero. The
+ratio column is flat across the ladder (1.49, 1.24, 1.40) rather than growing, which is the
+signature of *inflated sampling noise*, not a fixed offset. **Verdict: shot-limited over
+100–400 shots** — **corrected by Addendum 2 below**, which resolves the floor this fit could
+not and shows the excess is a multiplicative contraction rather than inflated sampling.
+
+> An earlier read of the first four measurements suggested the opposite — a gate-error floor —
+> because the ratio appeared to grow with shots. It did not survive n = 12 per level. The
+> analysis script now refuses a verdict below 3 shot levels and 5 samples per level, because a
+> two-parameter quadrature fit to two levels is exactly determined and will report a confident
+> `a` and `b` from pure noise.
+
+### What this means for the thesis
+
+**Measurement precision was never the binding constraint.** The circuit's own output window is
+**361.3 eV** (p1–p99 of the noiseless `<Z_0>` over 1,500 val points, through `out_scale` and
+the `CES_TI` normalisation). Hardware rms at 400 shots is 43.8 eV — **12% of that window** —
+and the floor's upper bound is under 16% of it.
+
+The failure is upstream of the hardware entirely:
+
+| | RMSE (eV) |
+|---|---|
+| persistence baseline | 449.6 |
+| classical matched MLP | 378.0 |
+| **VQC, noiseless simulator, exact probabilities** | **471.5** |
+
+The VQC is worse than doing nothing **before any quantum hardware is involved**. It moves its
+output — ±72.5 eV at 1σ — but in the wrong direction. This is an expressivity result, not a
+noise result, and hardware access did not change it.
+
+With the latency arithmetic below, the arm is closed on two independent axes.
+
+### Latency — closed structurally, not marginally
+
+One prediction: classical matched MLP **35.3 µs** (measured, single thread) against Forte
+**7.4 s at 100 shots / 22.9 s at 400** (measured `execution_duration_ms`). The task is 10 ms
+nowcasting, so one QPU inference costs ~1,800× the entire control cycle. A 1000× faster gate
+set still overruns it. **The real-time path is structurally closed**; only an offline use
+survives, and offline is precisely where the classical baselines are strongest (§8-GP).
+
+### Addendum (2026-08-24) — scaling the circuit is closed too, and it cost 8 seconds to find out
+
+The obvious objection to all of the above is that the circuit is a toy: 8 qubits, 4 layers, and
+a PCA that throws away 12% of the input variance. So scale it up. A 16-qubit / 12-layer circuit
+(578 params, PCA variance 0.956) was set up to train — ~20 min/epoch on CPU with
+`lightning.qubit` + adjoint, about 8 hours for 25 epochs.
+
+It was not run, because the premise can be tested on the classical control in seconds. If more
+input dimensions help at a fixed parameter budget, the classical model will show it first.
+
+At a matched ~578-parameter budget, on the same val samples:
+
+| PCA dim | variance kept | MLP hidden | RMSE (eV) | skill |
+|---|---|---|---|---|
+| **8** | 0.873 | 58 | **419.4** | **+0.3625** |
+| 12 | 0.922 | 41 | 432.9 | +0.3208 |
+| 16 | 0.956 | 32 | 437.8 | +0.3054 |
+| 20 | 0.981 | 26 | 453.9 | +0.2534 |
+| 24 | 0.991 | 22 | 455.1 | +0.2496 |
+| 32 | 0.997 | 17 | 452.4 | +0.2585 |
+| 92 (no PCA) | 1.000 | 6 | 431.2 | +0.3264 |
+
+**More input dimensions make it monotonically worse.** At a fixed budget the hidden width has to
+shrink to pay for the wider input (58 → 32 → 22 → 6), and training loss falls the whole way
+(0.774 → 0.636) while validation skill falls with it. Ordinary overfitting. **The PCA-8
+bottleneck does not bind** — 8 dimensions is the best choice at this budget, so a 16-qubit
+circuit would have been trained on a worse representation, not a richer one.
+
+The parameter axis is equally flat: the July 101-param MLP scored +0.3634 and this 578-param
+MLP scores +0.3625. **5.7× the parameters buys nothing.**
+
+So both axes along which a variational circuit could be "scaled up" — wider encoding (qubits)
+and more parameters (layers) — are already saturated or actively harmful for the *classical*
+model on this task. There is no headroom for a bigger circuit to exploit. This closes the
+scaling objection without spending either credit or a CPU night, and it is the cheapest result
+in this section by a wide margin.
+
+### Addendum 2 (2026-08-24) — the floor was real; the ladder just could not resolve it
+
+The ladder above reported `b = 0` with a bootstrap CI of [0, 0.0934] and absorbed the excess
+into `a = 1.546`, reading it as inflated sampling noise. A second experiment with 1.7× the
+`<Z_0>` span settles it, and the reading changes.
+
+**Design.** A depolarizing channel is a pure contraction, `<Z_0>_measured = (1 - λ)·<Z_0>_exact`,
+so the slope of measured against exact returns λ directly. Real val inputs span `<Z_0>` in only
+[-0.31, +0.48]; optimizing the encoded angles inside the same ±π/2 box the PCA squash produces
+reaches [-0.55, +0.77]. Same trained circuit, same depth, so the error budget matches the
+ladder. 18 points × 400 shots on `qpu.forte-1`, **$464.22**
+(`experiments/quantum/ionq_depolarizing.py`).
+
+**Result.**
+
+| quantity | value |
+|---|---|
+| slope (1 − λ) | **0.3386 ± 0.0396** |
+| **λ** | **0.6614 ± 0.0396**, confirmed at **16.7 σ** |
+| intercept | +0.0360 (depolarizing predicts 0) |
+| residual σ | 0.0672 against shot noise 0.0500 |
+
+**Forte returns 34% of the circuit's intended signal amplitude.** The §12.1 explanation in the
+experiment log — that depolarizing-type error pulls the state toward maximally mixed, whose
+`<Z_0>` is exactly 0, so operating points near 0 look unharmed — is confirmed, and it is large.
+
+**This closes the ladder's open question.** A contraction is shot-independent, so it belongs in
+`b`, not `a`. At the ladder's own operating points the fitted contraction produces a
+shot-independent deviation of rms **0.0689** — which sits at the 74% point of the ladder's own
+CI [0, 0.0934]. Refitting the ladder with `b` fixed there drops `a` from 1.546 to **1.202**,
+close to the 1.0 that pure sampling predicts. Predicted rms then tracks the observed values
+(ratios 1.23 / 0.89 / 0.82 across the three levels) where shot noise alone was short at every
+level (1.49 / 1.24 / 1.40).
+
+So the earlier verdict needs correcting: **"no floor resolved" was a power limitation, not
+evidence of absence.** The floor is real, it is `b ≈ 0.069`, and its mechanism is not random
+gate noise but a multiplicative amplitude loss.
+
+**What changes for the thesis.** The hardware's dominant effect is *multiplicative*, and that
+is worse than the additive picture given above. The circuit's 361.3 eV output window contracts
+to **122.3 eV** on hardware before any noise is added, so the 43.8 eV of additive noise at 400
+shots is **36% of the window that actually survives**, not the 12% computed against the ideal
+window. The contracted window is only 27% of the persistence RMSE it would have to beat.
+
+The top-line verdict is unchanged, because it never rested on hardware noise: the VQC loses on
+the *noiseless* simulator (471.5 eV against persistence at 449.6). Expressivity is still the
+binding failure. But the sentence "measurement precision was never the binding constraint"
+should now read: *precision was not the constraint; amplitude was, and neither matters while the
+circuit loses before hardware is involved.*
+
+**Method note.** This is the second time in this section that a two-parameter fit over a narrow
+range produced a confident wrong reading — first `a`/`b` from two shot levels on four points,
+then `a`/`b` from three levels over a `<Z_0>` span of 0.39. Both were fixed by widening the
+independent variable, not by adding samples at the same settings. When a fit has to separate a
+shot-dependent term from a shot-independent one, buy span before buying n.
+
+### The measurement that would reopen it
+
+Per the standing rule that a negative result must name its own reversal: the 100–400 shot range
+cannot separate `a` from `b` well, because 1/√N is still large there and a floor hides under it.
+The discriminating measurement is **2000-shot debiased jobs** ($168.20 each; ~$540 of credit
+remains, so three are affordable), where ideal sampling would give 0.0224 and any floor above
+~0.02 would dominate instead of hiding.
+
+That test would sharpen *why* the QPU is limited. It would not change the verdict on this task,
+because the VQC already loses on the noiseless simulator by 21.9 eV against persistence. To
+reopen the arm on *performance* one would need a circuit family that beats a
+parameter-matched classical model in simulation first — and §8 has no evidence such a family
+exists here.
+
+### Addendum 3 (2026-08-24) — the pre-verification §8ap demanded, run for free before any spending
+
+§8ap set the condition for reopening the quantum arm on performance: *a circuit family must beat
+a parameter-matched classical model in simulation first.* Only one family had ever been tested —
+the variational circuit (VQC), where the circuit **is** the model and its parameters are trained.
+A second family exists and is a better structural fit, so it was checked before any credit moved.
+Runner `experiments/quantum/qfeature_probe.py`; cost **$0**.
+
+**Why a feature map is the better candidate.** §8z established that the backbone's `T_i` skill
+decomposes exactly as `anchor + Σ w_k z_k + b` with `z` bounded in [-1, 1] and K = 8. Quantum
+expectation values are natively bounded in [-1, 1], so they slot into that shape — and because
+the readout is linear it is fitted in closed form by ridge, which removes the parameter-shift
+wall that made VQC training impossible on hardware. The circuit is fixed, so nothing is trained
+on the device at all.
+
+**The control that decides it** is a classical *random* feature map of the same width on the
+same inputs through the same readout. Without it the experiment only measures "does having K
+features help". Same rows, same persistence anchor, same ridge sweep, same metric.
+
+| arm | K = 8, 2 layers | K = 12, 3 layers |
+|---|---|---|
+| persistence anchor alone | +0.0000 | +0.0000 |
+| **quantum feature map** | **+0.0029** | −0.0006 |
+| classical random map | +0.0095 | −0.0002 |
+| *trained* MLP, same inputs, W = 2 | **+0.126** | — |
+
+**Two findings, and the second is the important one.**
+
+The quantum map never leads: it loses to a classical random map of identical width at K = 8, and
+both collapse to the anchor by K = 12. §8ap's condition is not met by this family either.
+
+But the dominant effect is not quantum-vs-classical — it is **frozen-vs-trained**. The best fixed
+map recovers +0.0095 where a trained encoder on the same inputs reaches +0.126: **freezing the
+map costs ~92% of the achievable skill.** That is fatal to the whole appeal of this route, because
+"no gradients needed" was precisely its selling point over the VQC. The structural analogy to
+§8z was only half right — the shape (bounded latents into a linear readout) matches, but §8z's
+encoder is *learned*, and that turns out to be where the skill lives.
+
+**What this closes and what it leaves.** Two of the three QML families are now closed on this
+task: variational circuits (§8ap, hardware-verified) and fixed feature maps (here, free). The
+third — quantum reservoir computing over the sequence — differs only in that the fixed map
+carries memory across timesteps. It is *predicted* dead by the same measurement, since the
+useful state §8z identifies (carried `T_i` plus a `T_e`-like proxy) is already supplied by the
+anchor, but it has not been measured and should be labelled as untested rather than closed.
+
+**Method note.** This is what §8ap's reopening condition is for, and it cost nothing. The
+$1,418 already spent bought hardware characterisation, not a performance answer; the performance
+answer was always available in simulation for free. Run the free arm first.
+
+### Provenance
+
+Checkpoint is the July `quantum_vqc_weights.pt` (`window_size = 4`, the pre-reset protocol).
+That is deliberate and does not contaminate the confirmed W = 2 results: the deviation physics
+measured here is a property of the circuit and the device, not of the data protocol, and no
+number in this section is quoted alongside the backbone's skill figures. The PCA basis is
+re-fit train-only and cross-checked against the checkpoint (drift **0.000e+00**).
+
+Bit ordering was validated before spending: IonQ's integer probability keys are **little-endian**
+(qubit 0 = least significant bit), matching the exact noiseless value 3/3 on the free cloud
+simulator where big-endian matched 0/3.

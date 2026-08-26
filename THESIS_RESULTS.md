@@ -3602,265 +3602,33 @@ unchecked (unreadable + OpenAlex budget exhausted).
 
 ---
 
-## 8ap. The quantum arm reaches real hardware and comes back shot-limited (2026-08-23) — a QPU cannot fail this task interestingly, because the circuit fails it first
+## 8ap. The quantum arm is closed (2026-07-26 → 08-24) — full record lives outside this file
 
-**Status: closed, negative, and now hardware-verified.** The July attempt
-(`docs/ionq_qpu_실험기록.md`) could not reach a QPU at all — every Forte target was
-`unavailable` and jobs were silently downgraded to the ideal simulator. Both gates it left
-behind passed on 2026-08-23, so the measurement it asked for finally ran.
+**Verdict: closed, negative, hardware-verified. Nothing here feeds the main pipeline.**
 
-### Design
+A variational quantum circuit was compared against a parameter-matched classical MLP on
+PCA-reduced CES inputs, then evaluated on real IonQ Forte hardware (55 circuits, $1,418.44 of
+a K-Quantum Hub trial credit). Four independent axes are closed:
 
-The July experiment already settled accuracy under a matched comparison: a variational quantum
-circuit (98 params, 8 qubits, 4 data-re-uploading layers on a train-only PCA 92→8 projection)
-lost to a classical MLP with 101 params on byte-identical reduced inputs, across an identical
-5-point lr sweep on both sides. Hardware can only add noise to that, so re-running for
-*performance* was never the point.
-
-What hardware can answer that a simulator cannot: **is the error that a QPU adds a shrinking
-sampling error, or a fixed floor?** A sampled circuit estimates `<Z>` with error ~1/√N, so the
-task's effect size sets a shot floor. Gate and readout error add a term more shots cannot
-remove. Which dominates decides whether a QPU could *ever* resolve this task.
-
-So: the trained circuit, evaluated on 12 real val operating points at three shot counts, with
-the deviation from the exact noiseless `<Z_0>` fitted to
-
-    rms(N)² = a²/N + b²
-
-`a` is the sampling coefficient (prediction ≈ 1); `b` is the irreducible floor. Runner
-`experiments/quantum/ionq_hw_ladder.py`, analysis `analyze_hw_ladder.py`, 36 measurements on
-`qpu.forte-1`, **$928.44** of the KISTI trial credit.
-
-The ladder stays at 100/200/400 shots because IonQ's billing is a two-tier flat fee that
-ignores circuit size — **$25.79 up to 400 shots, $168.20 from 500** (debiasing forced on, 32
-variants, not disableable), measured by free `dry_run` submissions. The low tier buys 7× more
-jobs per dollar, and one constant error-mitigation setting across the ladder.
-
-### Result
-
-| shots | n | rms deviation | ideal 1/√N | ratio | effective shots | rms in eV |
-|---|---|---|---|---|---|---|
-| 100 | 12 | 0.14899 | 0.10000 | 1.490 | 45% of nominal | 93.1 |
-| 200 | 12 | 0.08746 | 0.07071 | 1.237 | 65% of nominal | 54.6 |
-| 400 | 12 | 0.07011 | 0.05000 | 1.402 | 51% of nominal | 43.8 |
-
-Two things are true at once.
-
-**The hardware is measurably worse than an ideal sampler.** χ² = 68.59 on 36 dof
-(**χ²/dof = 1.905, p = 8.5e-4**) against the ideal-sampling null. Forte delivers roughly the
-precision of a perfect sampler given **half** the shots; matching an ideal sampler costs
-**2.39× the shots**. An independent distribution-level check agrees — total variation distance
-over all 256 basis states sits 1.5–2.0× further from ideal than a perfect sampler.
-
-**But no irreducible floor is resolved.** The fit returns `a = 1.546`, `b = 0.00000`, with a
-bootstrap 95% CI for the floor of **[0, 0.0934] = [0, 58.3] eV**, which reaches zero. The
-ratio column is flat across the ladder (1.49, 1.24, 1.40) rather than growing, which is the
-signature of *inflated sampling noise*, not a fixed offset. **Verdict: shot-limited over
-100–400 shots** — **corrected by Addendum 2 below**, which resolves the floor this fit could
-not and shows the excess is a multiplicative contraction rather than inflated sampling.
-
-> An earlier read of the first four measurements suggested the opposite — a gate-error floor —
-> because the ratio appeared to grow with shots. It did not survive n = 12 per level. The
-> analysis script now refuses a verdict below 3 shot levels and 5 samples per level, because a
-> two-parameter quadrature fit to two levels is exactly determined and will report a confident
-> `a` and `b` from pure noise.
-
-### What this means for the thesis
-
-**Measurement precision was never the binding constraint.** The circuit's own output window is
-**361.3 eV** (p1–p99 of the noiseless `<Z_0>` over 1,500 val points, through `out_scale` and
-the `CES_TI` normalisation). Hardware rms at 400 shots is 43.8 eV — **12% of that window** —
-and the floor's upper bound is under 16% of it.
-
-The failure is upstream of the hardware entirely:
-
-| | RMSE (eV) |
+| axis | result |
 |---|---|
-| persistence baseline | 449.6 |
-| classical matched MLP | 378.0 |
-| **VQC, noiseless simulator, exact probabilities** | **471.5** |
+| accuracy | the circuit loses to persistence on a **noiseless** simulator (471.5 vs 449.6 eV) — before hardware is involved at all |
+| latency | 22.9 s per prediction against a 10 ms budget; ~1,800× over, and a 1000× faster gate set still overruns |
+| hardware damage | depolarizing coefficient **λ = 0.661 ± 0.040** (16.7σ): Forte returns 34% of the intended signal amplitude |
+| scaling | more input dimensions and more parameters both make the *classical* control worse, so there is no headroom a bigger circuit could exploit |
 
-The VQC is worse than doing nothing **before any quantum hardware is involved**. It moves its
-output — ±72.5 eV at 1σ — but in the wrong direction. This is an expressivity result, not a
-noise result, and hardware access did not change it.
+Three of the four QML families are closed (variational circuits, fixed feature maps, reservoirs);
+quantum kernels tie their classical control (+0.3279 vs RBF +0.3307) but need O(N²) circuits on
+hardware. A trained-quantum-encoder arm is **inconclusive** and labelled as such.
 
-With the latency arithmetic below, the arm is closed on two independent axes.
+**Why this does not contaminate the confirmed results.** The checkpoint is the July
+`quantum_vqc_weights.pt` at `window_size = 4`, the pre-reset protocol. No number from this arm is
+quoted alongside the backbone's skill figures, and no quantum code is imported anywhere in
+`ces_prediction/` outside `experiments/quantum/`.
 
-### Latency — closed structurally, not marginally
-
-One prediction: classical matched MLP **35.3 µs** (measured, single thread) against Forte
-**7.4 s at 100 shots / 22.9 s at 400** (measured `execution_duration_ms`). The task is 10 ms
-nowcasting, so one QPU inference costs ~1,800× the entire control cycle. A 1000× faster gate
-set still overruns it. **The real-time path is structurally closed**; only an offline use
-survives, and offline is precisely where the classical baselines are strongest (§8-GP).
-
-### Addendum (2026-08-24) — scaling the circuit is closed too, and it cost 8 seconds to find out
-
-The obvious objection to all of the above is that the circuit is a toy: 8 qubits, 4 layers, and
-a PCA that throws away 12% of the input variance. So scale it up. A 16-qubit / 12-layer circuit
-(578 params, PCA variance 0.956) was set up to train — ~20 min/epoch on CPU with
-`lightning.qubit` + adjoint, about 8 hours for 25 epochs.
-
-It was not run, because the premise can be tested on the classical control in seconds. If more
-input dimensions help at a fixed parameter budget, the classical model will show it first.
-
-At a matched ~578-parameter budget, on the same val samples:
-
-| PCA dim | variance kept | MLP hidden | RMSE (eV) | skill |
-|---|---|---|---|---|
-| **8** | 0.873 | 58 | **419.4** | **+0.3625** |
-| 12 | 0.922 | 41 | 432.9 | +0.3208 |
-| 16 | 0.956 | 32 | 437.8 | +0.3054 |
-| 20 | 0.981 | 26 | 453.9 | +0.2534 |
-| 24 | 0.991 | 22 | 455.1 | +0.2496 |
-| 32 | 0.997 | 17 | 452.4 | +0.2585 |
-| 92 (no PCA) | 1.000 | 6 | 431.2 | +0.3264 |
-
-**More input dimensions make it monotonically worse.** At a fixed budget the hidden width has to
-shrink to pay for the wider input (58 → 32 → 22 → 6), and training loss falls the whole way
-(0.774 → 0.636) while validation skill falls with it. Ordinary overfitting. **The PCA-8
-bottleneck does not bind** — 8 dimensions is the best choice at this budget, so a 16-qubit
-circuit would have been trained on a worse representation, not a richer one.
-
-The parameter axis is equally flat: the July 101-param MLP scored +0.3634 and this 578-param
-MLP scores +0.3625. **5.7× the parameters buys nothing.**
-
-So both axes along which a variational circuit could be "scaled up" — wider encoding (qubits)
-and more parameters (layers) — are already saturated or actively harmful for the *classical*
-model on this task. There is no headroom for a bigger circuit to exploit. This closes the
-scaling objection without spending either credit or a CPU night, and it is the cheapest result
-in this section by a wide margin.
-
-### Addendum 2 (2026-08-24) — the floor was real; the ladder just could not resolve it
-
-The ladder above reported `b = 0` with a bootstrap CI of [0, 0.0934] and absorbed the excess
-into `a = 1.546`, reading it as inflated sampling noise. A second experiment with 1.7× the
-`<Z_0>` span settles it, and the reading changes.
-
-**Design.** A depolarizing channel is a pure contraction, `<Z_0>_measured = (1 - λ)·<Z_0>_exact`,
-so the slope of measured against exact returns λ directly. Real val inputs span `<Z_0>` in only
-[-0.31, +0.48]; optimizing the encoded angles inside the same ±π/2 box the PCA squash produces
-reaches [-0.55, +0.77]. Same trained circuit, same depth, so the error budget matches the
-ladder. 18 points × 400 shots on `qpu.forte-1`, **$464.22**
-(`experiments/quantum/ionq_depolarizing.py`).
-
-**Result.**
-
-| quantity | value |
-|---|---|
-| slope (1 − λ) | **0.3386 ± 0.0396** |
-| **λ** | **0.6614 ± 0.0396**, confirmed at **16.7 σ** |
-| intercept | +0.0360 (depolarizing predicts 0) |
-| residual σ | 0.0672 against shot noise 0.0500 |
-
-**Forte returns 34% of the circuit's intended signal amplitude.** The §12.1 explanation in the
-experiment log — that depolarizing-type error pulls the state toward maximally mixed, whose
-`<Z_0>` is exactly 0, so operating points near 0 look unharmed — is confirmed, and it is large.
-
-**This closes the ladder's open question.** A contraction is shot-independent, so it belongs in
-`b`, not `a`. At the ladder's own operating points the fitted contraction produces a
-shot-independent deviation of rms **0.0689** — which sits at the 74% point of the ladder's own
-CI [0, 0.0934]. Refitting the ladder with `b` fixed there drops `a` from 1.546 to **1.202**,
-close to the 1.0 that pure sampling predicts. Predicted rms then tracks the observed values
-(ratios 1.23 / 0.89 / 0.82 across the three levels) where shot noise alone was short at every
-level (1.49 / 1.24 / 1.40).
-
-So the earlier verdict needs correcting: **"no floor resolved" was a power limitation, not
-evidence of absence.** The floor is real, it is `b ≈ 0.069`, and its mechanism is not random
-gate noise but a multiplicative amplitude loss.
-
-**What changes for the thesis.** The hardware's dominant effect is *multiplicative*, and that
-is worse than the additive picture given above. The circuit's 361.3 eV output window contracts
-to **122.3 eV** on hardware before any noise is added, so the 43.8 eV of additive noise at 400
-shots is **36% of the window that actually survives**, not the 12% computed against the ideal
-window. The contracted window is only 27% of the persistence RMSE it would have to beat.
-
-The top-line verdict is unchanged, because it never rested on hardware noise: the VQC loses on
-the *noiseless* simulator (471.5 eV against persistence at 449.6). Expressivity is still the
-binding failure. But the sentence "measurement precision was never the binding constraint"
-should now read: *precision was not the constraint; amplitude was, and neither matters while the
-circuit loses before hardware is involved.*
-
-**Method note.** This is the second time in this section that a two-parameter fit over a narrow
-range produced a confident wrong reading — first `a`/`b` from two shot levels on four points,
-then `a`/`b` from three levels over a `<Z_0>` span of 0.39. Both were fixed by widening the
-independent variable, not by adding samples at the same settings. When a fit has to separate a
-shot-dependent term from a shot-independent one, buy span before buying n.
-
-### The measurement that would reopen it
-
-Per the standing rule that a negative result must name its own reversal: the 100–400 shot range
-cannot separate `a` from `b` well, because 1/√N is still large there and a floor hides under it.
-The discriminating measurement is **2000-shot debiased jobs** ($168.20 each; ~$540 of credit
-remains, so three are affordable), where ideal sampling would give 0.0224 and any floor above
-~0.02 would dominate instead of hiding.
-
-That test would sharpen *why* the QPU is limited. It would not change the verdict on this task,
-because the VQC already loses on the noiseless simulator by 21.9 eV against persistence. To
-reopen the arm on *performance* one would need a circuit family that beats a
-parameter-matched classical model in simulation first — and §8 has no evidence such a family
-exists here.
-
-### Addendum 3 (2026-08-24) — the pre-verification §8ap demanded, run for free before any spending
-
-§8ap set the condition for reopening the quantum arm on performance: *a circuit family must beat
-a parameter-matched classical model in simulation first.* Only one family had ever been tested —
-the variational circuit (VQC), where the circuit **is** the model and its parameters are trained.
-A second family exists and is a better structural fit, so it was checked before any credit moved.
-Runner `experiments/quantum/qfeature_probe.py`; cost **$0**.
-
-**Why a feature map is the better candidate.** §8z established that the backbone's `T_i` skill
-decomposes exactly as `anchor + Σ w_k z_k + b` with `z` bounded in [-1, 1] and K = 8. Quantum
-expectation values are natively bounded in [-1, 1], so they slot into that shape — and because
-the readout is linear it is fitted in closed form by ridge, which removes the parameter-shift
-wall that made VQC training impossible on hardware. The circuit is fixed, so nothing is trained
-on the device at all.
-
-**The control that decides it** is a classical *random* feature map of the same width on the
-same inputs through the same readout. Without it the experiment only measures "does having K
-features help". Same rows, same persistence anchor, same ridge sweep, same metric.
-
-| arm | K = 8, 2 layers | K = 12, 3 layers |
-|---|---|---|
-| persistence anchor alone | +0.0000 | +0.0000 |
-| **quantum feature map** | **+0.0029** | −0.0006 |
-| classical random map | +0.0095 | −0.0002 |
-| *trained* MLP, same inputs, W = 2 | **+0.126** | — |
-
-**Two findings, and the second is the important one.**
-
-The quantum map never leads: it loses to a classical random map of identical width at K = 8, and
-both collapse to the anchor by K = 12. §8ap's condition is not met by this family either.
-
-But the dominant effect is not quantum-vs-classical — it is **frozen-vs-trained**. The best fixed
-map recovers +0.0095 where a trained encoder on the same inputs reaches +0.126: **freezing the
-map costs ~92% of the achievable skill.** That is fatal to the whole appeal of this route, because
-"no gradients needed" was precisely its selling point over the VQC. The structural analogy to
-§8z was only half right — the shape (bounded latents into a linear readout) matches, but §8z's
-encoder is *learned*, and that turns out to be where the skill lives.
-
-**What this closes and what it leaves.** Two of the three QML families are now closed on this
-task: variational circuits (§8ap, hardware-verified) and fixed feature maps (here, free). The
-third — quantum reservoir computing over the sequence — differs only in that the fixed map
-carries memory across timesteps. It is *predicted* dead by the same measurement, since the
-useful state §8z identifies (carried `T_i` plus a `T_e`-like proxy) is already supplied by the
-anchor, but it has not been measured and should be labelled as untested rather than closed.
-
-**Method note.** This is what §8ap's reopening condition is for, and it cost nothing. The
-$1,418 already spent bought hardware characterisation, not a performance answer; the performance
-answer was always available in simulation for free. Run the free arm first.
-
-### Provenance
-
-Checkpoint is the July `quantum_vqc_weights.pt` (`window_size = 4`, the pre-reset protocol).
-That is deliberate and does not contaminate the confirmed W = 2 results: the deviation physics
-measured here is a property of the circuit and the device, not of the data protocol, and no
-number in this section is quoted alongside the backbone's skill figures. The PCA basis is
-re-fit train-only and cross-checked against the checkpoint (drift **0.000e+00**).
-
-Bit ordering was validated before spending: IonQ's integer probability keys are **little-endian**
-(qubit 0 = least significant bit), matching the exact noiseless value 3/3 on the free cloud
-simulator where big-endian matched 0/3.
+**Full record** — design, billing model, the shot ladder, the λ measurement, the free family
+sweep, two corrected misreadings, and the method lessons — is in
+`docs/ionq_qpu_실험기록.md` (§8–17 and Appendix A). Code is `experiments/quantum/`.
 
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
