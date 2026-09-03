@@ -605,6 +605,50 @@ def s_idea():
 
 
 # --- 2-1. The hard bar ----------------------------------------------------
+# --- 1-6. Related work ----------------------------------------------------
+def s_related():
+    s = slide()
+    header(s, "1. 연구 배경", "선행 연구와의 위치: 계보를 잇고 세 축으로 확장한다")
+    text(s, Inches(0.55), Inches(1.30), Inches(12.25), Inches(0.30),
+         [[("교차 진단 재구성은 활발한 계열이며, 본 연구는 그 프로그램을 이어받아 세 축에서 확장한다.",
+            12.5, GRAY, False, False, None)]])
+    col_w = [Inches(3.05), Inches(4.55), Inches(4.61)]
+    table(s, Inches(0.55), Inches(1.66), col_w,
+          ["선행 연구", "무엇을 하는가", "본 연구가 다른 지점"],
+          [
+              [("Diag2Diag (Nat. Commun. 2025)", NAVY, True, None),
+               "동시각 진단들로부터 Thomson Tₑ·nₑ를 요동 진단 속도로 합성한다.",
+               "타깃이 전자 물리량이고 CES는 입력이며, 기억이 없다."],
+              [("COMPASS 시간 초해상 (PPCF 2026)", NAVY, True, None),
+               "고속 복사 진단으로 Thomson 프로파일을 시간 초해상한다.",
+               "전자 채널이고 비인과이며 보간을 기준선으로 두지 않는다."],
+              [("RTCAKENN (NF 2024, DIII-D)", NAVY, True, None),
+               "실시간 운동학 프로파일을 재구성하고 입력 소실을 견딘다.",
+               "결측이 입력의 강건성 조건이지 타깃의 희소성이 아니다."],
+              [("EAST XCS → Tᵢ·회전 (NF 2024)", NAVY, True, None),
+               "같은 두 물리량을 X선 결정 분광기로부터 추론한다.",
+               "입력이 또 다른 도플러 분광기이며 순간 매핑이다."],
+              [("FusionMAE (HL-3, 2026)", NAVY, True, None),
+               "마스킹된 채널을 가상 백업 진단으로 복원한다.",
+               "일반 채널 드롭아웃이고 윈도 내 재구성이다."],
+              [("KSTAR EPED 재구성 (JKPS 2026)", NAVY, True, None),
+               "CES를 입력으로 쓰는 고속 프로파일 재구성이다.",
+               "회전은 저자들이 명시한 향후 과제로 남아 있다."],
+          ], row_h=Inches(0.58), head_h=Inches(0.42), size=11.5, head_size=12.5)
+    axes = [
+        ("① 타깃 채널", ["전자 물리량의 재구성에서",
+                      "희소 이온 채널(Tᵢ · V_rot)의 복원으로."], TEAL),
+        ("② 인과성", ["동시각의 기억 없는 매핑에서",
+                    "불규칙한 과거에 조건화된 인과 추정으로."], BLUE),
+        ("③ 평가 기준", ["가정된 재구성 가능성에서",
+                      "사전등록 기준선에 대한 타깃별 검정으로."], ORANGE),
+    ]
+    for i, (title, lines, accent) in enumerate(axes):
+        card(s, Inches(0.55 + i * 4.13), Inches(5.62), Inches(3.95), Inches(1.30),
+             title, lines, accent=accent, title_size=13, body_size=11.5)
+    return s
+
+
 def s_bar():
     s = slide()
     header(s, "2. 접근법", "평가 기준선: 미래를 읽는 오프라인 보간과 배치 가능한 최강 인과 기준선을 함께 두었다")
@@ -1380,10 +1424,55 @@ def s_res_scaling():
     return s
 
 
-# --- 6-10. Peak -----------------------------------------------------------
+# --- 6-10. Reproducibility ceiling ---------------------------------------
+def s_noise_floor():
+    s = slide()
+    header(s, "6. 결과 ⑩", "재현성 상한: 모델 오차는 타깃 자신의 10 ms 재현성과 같은 크기이다")
+    text(s, Inches(0.55), Inches(1.34), Inches(12.25), Inches(0.34),
+         [[("타깃은 광자 적분 스펙트럼 피팅이므로 스스로 잡음을 지닌다. 차분 기반 추정기로 그 재현성을 재면 상한이 상대 비교가 아닌 절대 단위로 표현된다.",
+            12.5, GRAY, False, False, None)]])
+    col_w = [Inches(3.30), Inches(1.75), Inches(1.85)]
+    table(s, Inches(0.55), Inches(1.80), col_w,
+          ["재현성 추정기 (전부 상한)", "Tᵢ (eV)", "V_rot (km/s)"],
+          [
+              ["1차 차분 (Rice)", "151.8", "28.8"],
+              ["2차 차분 (GSJS)", "139.9", "22.8"],
+              ["3차 차분", "133.8", "19.5"],
+              ["4차 차분", ("129.9", NAVY, True, MONO), ("16.4", NAVY, True, MONO)],
+              ["4차 · 상위 5% 절사", "68.7", "6.8"],
+              ["1차 · MAD (본류)", ("46.4", TEAL, True, MONO), ("4.3", TEAL, True, MONO)],
+              [("백본 seq_v2의 RMSE", NAVY, True, None),
+               ("157.8", ORANGE, True, MONO), ("23.6", ORANGE, True, MONO)],
+          ], row_h=Inches(0.47), head_h=Inches(0.44), size=12, head_size=12,
+          emphasis={6}, emphasis_fill=LGRAY)
+    text(s, Inches(0.55), Inches(5.55), Inches(6.9), Inches(0.85),
+         [[("컷 모집단, 641파일 전수, held 제외·스파이크 컷 후 연속 관측 구간에서 측정하였다. 차수가 오를수록 신호 편향이 벗겨지며, 4차에서도 아직 하강 중이므로 129.9 eV는 수렴값이 아니라 상한이다.",
+            11, GRAY, False, False, None)]], line_spacing=1.12)
+    card(s, Inches(7.75), Inches(1.78), Inches(5.05), Inches(1.66),
+         "① 절대 기준이 생겼다", [
+             "백본은 Tᵢ를 157.8 eV로 복원하고, 타깃 자신의",
+             "10 ms 재현성은 46~130 eV이다. 같은 자릿수이며",
+             "skill 점수가 만들 수 없는 물리 단위의 문장이다.",
+         ], accent=NAVY, title_size=13.5, body_size=11.5)
+    card(s, Inches(7.75), Inches(3.53), Inches(5.05), Inches(1.66),
+         "② 상한은 꼬리에 있다", [
+             "4차 차분 제곱질량의 46.6%(V_rot 65.6%)가 상위",
+             "1%에 있다. 본류에서 모델은 타깃 산포의 2.3~3.4배로",
+             "MSE의 7~9%만 환원 불가능하며, 여지가 남아 있다.",
+         ], accent=TEAL, title_size=13.5, body_size=11.5)
+    card(s, Inches(7.75), Inches(5.28), Inches(5.05), Inches(1.66),
+         "③ 크기 축이 평평했던 이유", [
+             "폭 26배·계열 3종의 평평함은 정보 고갈이 아니라",
+             "지표가 꼬리 통계인 결과이다. 지목된 다음 측정은",
+             "강건 공동 지표의 재채점이며 사전등록 후 실행한다.",
+         ], accent=ORANGE, title_size=13.5, body_size=11.5)
+    return s
+
+
+# --- 6-11. Peak -----------------------------------------------------------
 def s_res_peak():
     s = slide()
-    header(s, "6. 결과 ⑩", "우위는 고변동(peak) 구간에 집중된다")
+    header(s, "6. 결과 ⑪", "우위는 고변동(peak) 구간에 집중된다")
     add_image_fit(s, os.path.join(FIG, "fig_peak.png"),
                   Inches(0.5), Inches(1.45), Inches(7.4), Inches(5.0))
     box(s, Inches(8.0), Inches(1.55), Inches(4.8), Inches(4.85), fill=CARDBG, round_=True)
@@ -1407,7 +1496,7 @@ def s_res_peak():
 # --- 6-11. Transient ------------------------------------------------------
 def s_res_transient():
     s = slide()
-    header(s, "6. 결과 ⑪", "급변 구간의 사례: held-out TEST shot #31815")
+    header(s, "6. 결과 ⑫", "급변 구간의 사례: held-out TEST shot #31815")
     add_image_fit(s, os.path.join(FIG, "fig_transient_seq_31815.png"),
                   Inches(0.45), Inches(1.40), Inches(7.15), Inches(5.4))
     box(s, Inches(7.75), Inches(1.55), Inches(5.05), Inches(4.85), fill=CARDBG, round_=True)
@@ -1431,7 +1520,7 @@ def s_res_transient():
 # --- 6-12. Deployment -----------------------------------------------------
 def s_deploy():
     s = slide()
-    header(s, "6. 결과 ⑫", "배치 가능성: 지연과 불확실성을 측정하였다")
+    header(s, "6. 결과 ⑬", "배치 가능성: 지연과 불확실성을 측정하였다")
     card(s, Inches(0.55), Inches(1.5), Inches(6.0), Inches(2.65),
          "지연 — 상태 유지 1-step은 CPU 10 ms 예산에 여유 있게 든다", [
              "온라인에서는 은닉 상태를 격자를 따라 이월하여 새 행마다 1-step만 계산한다.",
@@ -1710,8 +1799,8 @@ def s_conclusion():
          "20 ms에서도 인과 GP를 이기지만 승리 방전 비율은 0.52이며 50–70 ms에서 0.66으로 평평해진다. 세 계열은 같은 문맥에서 0.023 이내로 동률이므로 아키텍처는 비용(연산자 수: 순환 O(1), 합성곱 O(log R), attention 4.3배 상수)으로 선택한다."),
         ("4", "V_rot는 전역 동률이며, 우위는 회전이 실제로 변하는 방전에 집중된다", GRAY,
          "PCHIP 대비 1/4·2/4이나 > 15 ms 간극과 peak 층에서는 이겼다. 빠른 채널을 0으로 두어도 출력이 동일하고, 승률은 조용한 방전 34%·변동 방전 55%로 구동 변수(NBI 토크)의 부재를 가리킨다. 검정력 문제가 아니다."),
-        ("5", "상한은 추정기가 아니라 정보에 있으며, 남은 레버는 데이터이다", ORANGE,
-         "21,498 파라미터 b3k8이 컷에서 백본과 동급(+0.002)이고 폭 34k→879k는 평평하며, 1,808 파라미터 tcn2k도 인과 GP를 4/4로 이긴다. 남은 셋은 CES 피팅 품질 메타데이터, 원본 kHz Mirnov, NBI 토크 채널이다."),
+        ("5", "총합 손실의 상한은 추정기가 아니라 정보에 있으며, 남은 레버는 데이터이다", ORANGE,
+         "21,498 파라미터 b3k8이 컷에서 백본과 동급이고 폭 34k→879k는 평평하다. 다만 타깃 자신의 10 ms 재현성이 46~130 eV이므로 이 진술은 총합 MSE에 한정된다. 남은 레버는 CES 피팅 품질·원본 kHz Mirnov·NBI 토크이다."),
     ]
     yy = 1.45
     for num, t, col, body in items:
@@ -1941,6 +2030,7 @@ def build():
     s_missing_table()
     s_two_populations()
     s_idea()
+    s_related()
     divider("2", "접근법", "미래를 읽는 보간과 배치 가능한 최강 기준선(인과 GP)을 상대로 검증한다")
     s_bar()
     s_validation()
@@ -1969,6 +2059,7 @@ def build():
     s_res_asym()
     s_window_sweep()
     s_res_scaling()
+    s_noise_floor()
     s_res_peak()
     s_res_transient()
     s_deploy()

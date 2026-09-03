@@ -185,7 +185,7 @@ def f_title():
          [[("논문에 들어가는 것만:", 30, WHITE, True, False, None)],
           [("확정된 주장 · 인용할 수치 · 근거의 위치", 34, WHITE, True, False, None)]],
          line_spacing=1.12)
-    text(s, Inches(0.9), Inches(4.12), Inches(11.5), Inches(1.3),
+    text(s, Inches(0.9), Inches(4.06), Inches(11.5), Inches(1.72),
          [[("슬라이드 한 장은 ", 16, LGRAY, False, False, None),
            ("main_ko.tex의 한 절", 16, ORANGE, True, False, None),
            ("에 대응하며, 각 장의 노트에 그 절의 \\label과 인용 시 유의점이 적혀 있다.",

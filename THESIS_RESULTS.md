@@ -3630,6 +3630,96 @@ quoted alongside the backbone's skill figures, and no quantum code is imported a
 sweep, two corrected misreadings, and the method lessons — is in
 `docs/ionq_qpu_실험기록.md` (§8–17 and Appendix A). Code is `experiments/quantum/`.
 
+## 8aq. The target's own reproducibility (2026-09-03) — the ceiling claim gets an absolute anchor, and it is **tail-shaped**
+
+**Question.** Every ceiling statement so far is *relative*: a 21k-parameter rung matches the
+backbone (§8z), a 26× width sweep is flat (§8aa), three operator families tie within 0.023
+(§8ag). Together they say *a bigger estimator does not help*. None of them says **how much of
+the residual is even reducible**. The scored target is a photon-integrated spectral fit, so it
+carries its own measurement noise, and a perfect predictor of the true physical `T_i` would still
+score `RMSE² = σ_meas² + (physics error)²` against it. This section measures σ_meas from the
+observed series itself.
+
+**Design** (`ces_prediction/analyze_noise_floor.py` → `data/.noise_floor.json`, full 641-file
+census, no model involved). Difference-based estimators that are unbiased for white noise on a
+smooth signal and shed signal bias as the order rises — order 1 (Rice) `σ² = E[d²]/2`, order 2
+(GSJS) `/6`, order 3 `/20`, order 4 `/70` — plus a robust MAD variant of order 1, order-4
+estimates trimmed at the 95th/99th percentile, and the semivariogram. Data treatment is the
+confirmed protocol's: spikes cut **before** held detection, held repeats removed, and a difference
+is formed only across consecutive same-block grid steps. **Every estimate is an upper bound**: any
+real physics faster than the difference operator can annihilate is counted as noise, which is the
+correct bound for a 10 ms nowcaster but is *not* a statement about the diagnostic's calibration.
+
+### 1. What the target's own scatter is
+
+| population | target | order 1 | order 2 | order 3 | order 4 | trimmed 95% | MAD (bulk) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| cut | `CES_TI` (eV) | 151.8 | 139.9 | 133.8 | **129.9** | 68.7 | **46.4** |
+| cut | `CES_VT` (km/s) | 28.8 | 22.8 | 19.5 | **16.4** | 6.8 | **4.3** |
+| inclusive | `CES_TI` (eV) | 383.2 | 330.0 | 294.7 | **274.3** | — | 46.9 |
+
+Runs of consecutive observed samples: 5,987 runs / 222,882 rows (`T_i`, cut), 2,800 / 84,833
+(`V_rot`); longest run 463 / 149 steps. The order-1→order-4 sequence is **still falling at order 4**,
+so 129.9 eV has not converged and remains an upper bound.
+
+### 2. The estimate is tail-dominated — which is the actual finding
+
+| population | target | top 1% of 4th differences | top 5% |
+|---|---|---:|---:|
+| cut | `CES_TI` | **46.6%** of the squared mass | 73.4% |
+| cut | `CES_VT` | **65.6%** | 83.5% |
+
+So the population has two regimes, and they give opposite answers:
+
+- **In the bulk**, `CES_TI` is reproducible to **46–69 eV** against a backbone RMSE of 157.8 eV
+  — the model is 2.3–3.4× above the target's own scatter, i.e. only 7–9% of its MSE is
+  irreducible. **There is real headroom in the bulk.**
+- **In the tail**, the order-4 bound of 129.9 eV is 68% of the backbone's MSE. The remaining
+  error is concentrated where the target itself stops being reproducible.
+
+This does not contradict §8z/§8aa/§8ag — it **explains** them. Width and operator family are flat
+because the loss is a tail statistic: nearly half the squared mass sits in 1% of the one-step
+changes, and no amount of capacity fits a target whose tail is fit failure. It is the same fact
+§8ab found from the other side (≈ 1% of spike-anchor rows carrying 70–83% of every arm's squared
+error), now measured on the whole population rather than on the `V_rot` anchors.
+
+### 3. The semivariogram says the 10 ms grid is nearly pure nugget
+
+`γ(1) = 23{,}051` for cut `CES_TI` — **15.9%** of the population variance in a single 10 ms step
+— and `γ(1) > γ(2)` (23,051 vs 21,201), which is the signature of a dominant nugget rather than a
+smooth process sampled finely. Adjacent CES samples do not lie on a smooth curve at 10 ms. Two
+consequences: the power-law nugget fit (σ = 147.7 eV) is **not trustworthy** on a non-monotonic
+short-lag variogram and should not be quoted; and `√γ(1) = 151.8 eV` is within 4% of the
+backbone's 157.8 eV RMSE — the nowcaster errs by about what the diagnostic moves between
+consecutive samples.
+
+### 4. Verdict
+
+1. **The absolute-scale sentence now exists.** The nowcaster reconstructs `T_i` to 157.8 eV against
+   a target whose own 10 ms reproducibility is **46–130 eV** depending on how the tail is treated.
+   Same order of magnitude — which is the physics-facing statement a skill score cannot make. Quote
+   the range and the reason it is a range; never quote a single σ.
+2. **The ceiling claim is corrected, not overturned.** "The ceiling is information, not the
+   estimator" holds for the *aggregate* loss because the aggregate loss is a tail statistic. It does
+   **not** hold in the bulk, where the model is still 2–3× above the target's scatter. Write it that
+   way; the unqualified version overclaims.
+3. **The named next measurement** (§8j rule — a negative result must name the fix): re-score the
+   frozen artifacts under a **robust co-metric** (median absolute error, or a trimmed / Huber skill)
+   alongside MSE-skill. It needs no retraining, and it answers directly whether +0.236 is a bulk
+   effect or a tail effect. **It touches TEST, so it is pre-registered before it is run**, not after
+   — the rule and the promotion bar go in the pre-registration first.
+
+**What this section does not show.** No separation of measurement noise from genuine sub-10 ms
+physics — the estimators bound their sum, which is the right bound for this task and the wrong one
+for a statement about the instrument. No per-shot or per-regime breakdown. No model was scored,
+selected, or re-selected here.
+
+Artifacts: `data/.noise_floor.json`; script `ces_prediction/analyze_noise_floor.py`
+(the LADDER_RMSE constants it prints ratios against are quoted from `docs/paper/main_ko.tex`
+table `tab:ladder`, itself generated from the frozen artifacts).
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over

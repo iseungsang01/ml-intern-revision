@@ -967,6 +967,36 @@ from 500 (debiasing forced on, not disableable) — **independent of circuit siz
 `dry_run: true` submissions return an exact quote and charge nothing, so there was never a
 reason to guess. A 7× budget difference hung on one free API call.
 
+## The Loss Is A Tail Statistic — And That Is Why Capacity Never Helped (2026-09-03) — §8aq
+
+Three separate axes had already reported "a bigger estimator does not help": the 21k rung matching
+the backbone (§8z), the flat 26× width sweep (§8aa), the family tie within 0.023 (§8ag). All three
+were **relative** ceilings. Measuring the target's own reproducibility supplies the missing absolute
+one, and it changes what those three results mean.
+
+**The measurement.** Difference-based noise estimators (Rice / GSJS / order 3 / order 4 + a robust
+MAD variant) over the full 641-file census, under the confirmed data treatment. Cut-population
+`CES_TI`: order-4 bound **129.9 eV**, bulk (MAD) **46.4 eV**, against a backbone RMSE of 157.8 eV.
+
+**The lesson, and it is a correction.** The two numbers disagree because **46.6% of the squared
+mass sits in the top 1% of one-step changes** (65.6% for `V_rot`). So:
+
+- In the **bulk** the model is 2.3–3.4× above the target's own scatter — there *is* headroom, and
+  "the ceiling is information, not the estimator" **overclaims** if stated unqualified.
+- In the **aggregate** the tail dominates, which is exactly why width and family were flat: they
+  were being scored on a statistic that 1% of the rows decides.
+
+**How to apply.** (1) Never write the ceiling claim without the qualifier "for the aggregate
+MSE-based loss". (2) When a capacity or architecture axis comes back flat, check whether the metric
+is tail-dominated *before* concluding the information is exhausted. (3) The named repair is a robust
+co-metric (median absolute error / trimmed / Huber skill) re-scored from the frozen artifacts — no
+retraining — and because it touches TEST it is **pre-registered before it is run**. (4) `√γ(1) =
+151.8 eV` is within 4% of the backbone RMSE and `γ(1) > γ(2)`: the 10 ms grid is nearly pure nugget,
+so do **not** quote a variogram-fitted nugget — the fit is not identifiable there.
+
+See also [Numbers Must Come From Artifacts] and the §8ab spike-anchor audit, which is the same fact
+seen from the `V_rot` side.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
