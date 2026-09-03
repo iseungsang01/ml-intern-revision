@@ -15,16 +15,26 @@ McCandlish et al. (2018) define the *simple noise scale*
 where `G` is the true gradient and `Sigma` the per-example gradient covariance.  It is
 the batch size at which the gradient's signal and its noise are comparable: below it,
 doubling the batch roughly halves the number of steps needed; far above it, extra
-examples buy almost nothing.  Both quantities are estimated from gradients at two batch
-sizes, using the unbiased pair
+examples buy almost nothing.
 
-    |G|^2      ~ (B_big |G_big|^2 - B_small |G_small|^2) / (B_big - B_small)
-    tr(Sigma)  ~ (|G_small|^2 - |G_big|^2) / (1/B_small - 1/B_big)
+**The two-batch-size estimator does not work here, and the first attempt is kept on the
+record as a negative.**  Estimating `|G|^2` as the difference of two sampled gradient
+norms, `(B_big |g_big|^2 - B_small |g_small|^2) / (B_big - B_small)`, subtracts two noisy
+numbers that become nearly equal once the model has converged and `|G|^2` is small.  With
+40 small and 10 large draws per point it returned a **negative** `|G|^2` at two of thirteen
+points and a `B_simple` ranging over 0.8-110 blocks -- unusable.  See THESIS_RESULTS 8as.
 
-Each is noisy on its own, so the numerator and denominator are averaged separately over
-many draws before the ratio is taken, and the whole thing is repeated at every epoch
-boundary because `B_simple` grows as training proceeds -- that growth is the part of the
-McCandlish picture that matters for choosing a batch size.
+This version computes the quantity **exactly on the training set instead of sampling it**.
+The sampling unit is a block (one contiguous segment), which is what the training loop
+draws, so with `g_i` the gradient of block `i`'s own masked loss:
+
+    G          = mean_i g_i                       (accumulated as a running sum)
+    tr(Sigma)  = mean_i |g_i|^2 - |G|^2           (Cauchy-Schwarz keeps this >= 0)
+    B_simple   = tr(Sigma) / |G|^2
+
+Only a running gradient sum (one parameter-sized vector) and a running scalar are held, so
+the cost is one batch-1 backward pass per block per measurement point and the result is
+the empirical noise scale of that checkpoint rather than an estimate of it.
 
 Scope and protocol
 ------------------
@@ -88,10 +98,7 @@ from seq_data import load_grid_files, fit_stats, build_blocks  # noqa: E402
 from seq_models import SEQ_MODELS  # noqa: E402
 
 BATCH = 16          # the confirmed recipe's batch, in blocks
-B_SMALL = 2
-B_BIG = 32
-N_SMALL = 40        # draws per measurement point
-N_BIG = 10          # N_BIG * B_BIG ~= N_SMALL * B_SMALL * 4, so both are well averaged
+MEASURE_AT = {1, 2, 3, 6, 9}   # plus init and the final epoch
 
 
 def batch_tensors(blocks, idx, device):
@@ -135,30 +142,38 @@ def grad_sq_norm(model, blocks, idx, device, zero_ti):
     return s, n_lab
 
 
-def measure_noise_scale(model, blocks, device, zero_ti, rng):
-    """Unbiased |G|^2 and tr(Sigma) averaged separately, then the ratio."""
-    small, big, lab_small, lab_big = [], [], [], []
-    for _ in range(N_SMALL):
-        idx = rng.sample(range(len(blocks)), B_SMALL)
-        g, n = grad_sq_norm(model, blocks, idx, device, zero_ti)
-        small.append(g)
-        lab_small.append(n)
-    for _ in range(N_BIG):
-        idx = rng.sample(range(len(blocks)), B_BIG)
-        g, n = grad_sq_norm(model, blocks, idx, device, zero_ti)
-        big.append(g)
-        lab_big.append(n)
+def measure_noise_scale(model, blocks, device, zero_ti, _rng=None):
+    """Exact empirical noise scale over the training blocks at this checkpoint.
 
-    gs, gb = float(np.mean(small)), float(np.mean(big))
-    g2 = (B_BIG * gb - B_SMALL * gs) / (B_BIG - B_SMALL)
-    trs = (gs - gb) / (1.0 / B_SMALL - 1.0 / B_BIG)
-    labels_per_block = float(np.mean(lab_small) / B_SMALL)
+    One batch-1 backward per block; only a running gradient sum and a running scalar
+    are kept, so memory is one parameter vector regardless of how many blocks there are.
+    """
+    n = len(blocks)
+    acc = None
+    sq_sum = 0.0
+    lab = 0.0
+    for i in range(n):
+        model.zero_grad(set_to_none=True)
+        loss, n_lab = loss_on(model, blocks, [i], device, zero_ti)
+        loss.backward()
+        flat = torch.cat([p.grad.detach().reshape(-1) for p in model.parameters()
+                          if p.grad is not None])
+        sq_sum += float(flat.pow(2).sum())
+        acc = flat.clone() if acc is None else acc.add_(flat)
+        lab += n_lab
+    model.zero_grad(set_to_none=True)
+
+    g_mean = acc / n
+    g2 = float(g_mean.pow(2).sum())
+    mean_sq = sq_sum / n
+    trs = max(mean_sq - g2, 0.0)
     return {
-        "grad_sq_small": gs, "grad_sq_big": gb,
-        "G2": g2, "trSigma": trs,
+        "n_blocks": n,
+        "mean_grad_sq": mean_sq,
+        "G2": g2,
+        "trSigma": trs,
         "B_simple_blocks": (trs / g2) if g2 > 0 else float("nan"),
-        "B_simple_labels": (trs / g2 * labels_per_block) if g2 > 0 else float("nan"),
-        "labels_per_block": labels_per_block,
+        "labels_per_block": lab / n,
     }
 
 
@@ -194,16 +209,16 @@ def main():
           flush=True)
 
     model = SEQ_MODELS["v2"]().to(device)
-    print("[gns] params=%d  batch=%d blocks  B_small=%d B_big=%d"
-          % (model.n_params, BATCH, B_SMALL, B_BIG), flush=True)
+    print("[gns] params=%d  batch=%d blocks  estimator=exact-per-block"
+          % (model.n_params, BATCH), flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
     rng = random.Random(42)
     meas_rng = random.Random(1234)
 
     epochs = 2 if args.smoke else args.epochs
     out = {
-        "protocol": dict(PINNED, batch_blocks=BATCH, b_small=B_SMALL, b_big=B_BIG,
-                         n_small=N_SMALL, n_big=N_BIG, split=args.split,
+        "protocol": dict(PINNED, batch_blocks=BATCH,
+                         estimator="exact-per-block", split=args.split,
                          epochs=epochs, smoke=bool(args.smoke)),
         "n_params": int(model.n_params),
         "n_train_blocks": len(train_blocks),
@@ -216,9 +231,9 @@ def main():
         model.train()
         m["tag"], m["epoch"] = tag, epoch
         out["points"].append(m)
-        print("[gns] %-9s |G|^2=%.4g  trSigma=%.4g  B_simple=%.1f blocks "
-              "(%.0f labels)" % (tag, m["G2"], m["trSigma"],
-                                 m["B_simple_blocks"], m["B_simple_labels"]), flush=True)
+        print("[gns] %-9s |G|^2=%.4g  mean|g|^2=%.4g  trSigma=%.4g  B_simple=%.2f blocks"
+              % (tag, m["G2"], m["mean_grad_sq"], m["trSigma"],
+                 m["B_simple_blocks"]), flush=True)
 
     record("init", 0)
     for ep in range(epochs):
@@ -250,7 +265,8 @@ def main():
         print("[gns] epoch %02d/%d train=%.4f val=%.4f (%.0fs)"
               % (ep + 1, epochs, tot / max(nb, 1), v / max(vn, 1), time.time() - te),
               flush=True)
-        record("epoch%02d" % (ep + 1), ep + 1)
+        if (ep + 1) in MEASURE_AT or (ep + 1) == epochs:
+            record("epoch%02d" % (ep + 1), ep + 1)
 
     dest = REPO_ROOT / "data" / (".gns_smoke.json" if args.smoke else ".gns.json")
     dest.write_text(json.dumps(out, indent=2), encoding="utf-8")

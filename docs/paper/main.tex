@@ -94,7 +94,14 @@ PASS); calibrated conformal intervals beat both baselines' in every cell; a
 21k-parameter latent-bottleneck model with an exact persistence-plus-correction
 decomposition matches the backbone's \Ti{} skill under the spike cut, and widening
 the backbone from 34k to 879k parameters changes it by less than $\pm 0.01$---the
-information, not the estimator, is the ceiling. Input ablations show the
+information, not the estimator, is the ceiling of the aggregate loss (46.6\% of the
+squared error sits in the top 1\% of one-step changes, so that statement is about a
+tail statistic). Moving context and structure separately separates their roles:
+stretching contiguous causal context from 20 to 630\,ms raises skill from $+0.055$ to
+$+0.138$ and lifts the fraction of discharges beating the causal GP from 0.52 to 0.66
+before it flattens, whereas at matched reach recurrence, dilated convolution and
+attention tie within 0.023---so the architecture is chosen on cost (dispatched
+operator count), not on skill. Input ablations show the
 \Ti$\leftrightarrow$\Vrot{} asymmetry is physical: history alone falls below
 interpolation for \Ti{} in the cut population, while zeroing the fast diagnostics
 leaves \Vrot{} bit-identical (unobserved NBI torque; 100\,Hz-sampled Mirnov
@@ -212,8 +219,15 @@ GP arm and report the model against it separately.
         (paired mean $+0.002$)---and loses $-0.19$ without it, because a bounded
         correction cannot recover a spiked anchor---while widening the backbone
         from 34k to 879k parameters moves \Ti{} skill by less than $\pm0.01$.
-        The input set, not the estimator, is the ceiling; the levers that remain
-        are named (\S\ref{sec:headroom}).
+        The input set, not the estimator, is the ceiling of the aggregate loss;
+        the levers that remain are named (\S\ref{sec:headroom}).
+  \item \textbf{Context and structure, separated} (\S\ref{sec:context}): stretching
+        contiguous causal context from 20 to 630\,ms raises \Ti{} skill from $+0.055$
+        to $+0.138$ and the fraction of discharges beating the causal GP from 0.52 to
+        0.66, while at matched reach a 110$\times$ parameter range across recurrence,
+        dilated convolution and attention ties within 0.023. Context makes the win
+        typical; the operator family sets the price, and the price is dispatched
+        operator count.
   \item \textbf{Deployability, measured} (\S\ref{sec:deploy}): distribution-free
         conformal intervals that beat both baselines' intervals in all 32
         population--target--variant--split cells without touching the predictor,
