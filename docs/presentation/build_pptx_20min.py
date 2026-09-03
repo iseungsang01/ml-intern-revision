@@ -162,7 +162,7 @@ def t_title():
             13, MGRAY, False, False, None)]],
          line_spacing=1.25)
     return note(s, """
-⏱ 00:00–00:30  (30초)
+⏱ 00:00–00:35  (35초)
 
 본 발표는 KSTAR의 빠른 진단으로 CES 결측 구간을 채우는 연구를 20분간 보고한다.
 
@@ -180,32 +180,29 @@ def t_overview():
     header(s, "Overview", "결론을 먼저 제시한다 — 세 문장")
     msgs = [
         ("1", "빠른 진단은 Tᵢ 정보를 실제로 운반한다", GREEN,
-         ["과거만 읽는 인과 모델이 미래까지 읽는 오프라인 보간(PCHIP)을 Tᵢ에서 유의하게 능가하였다.",
-          "컷 +0.17~+0.26, 포함 +0.23~+0.32로 두 모집단 × 4개 독립 분할 전부 PASS(4/4 + 4/4)였다.",
-          "배치 가능한 최강 인과 기준선(인과 GP)도 8개 셀 전부에서 이겼고, 두 스트레스를 생존하였다."]),
+         ["과거만 읽는 인과 모델이 미래까지 읽는 오프라인 보간(PCHIP)을 Tᵢ에서 능가하였다(컷 +0.17~+0.26, 포함 +0.23~+0.32).",
+          "두 모집단 × 4개 독립 분할 전부 PASS이고, 인과 GP도 8/8에서 이겼으며 두 스트레스를 생존하였다."]),
         ("2", "V_rot는 전역 동률이며, 그 원인은 물리적으로 설명된다", ORANGE,
-         ["PR4 통과는 컷 1/4, 포함 2/4로 잡음 수준이므로 회전의 승리를 주장하지 않는다.",
-          "빠른 채널을 전부 0으로 두어도 출력이 bit-identical이므로 회전 정보는 입력에 없다.",
-          "우위는 회전이 실제로 변하는 방전에 집중되며(승률 34% → 55%), 구동 변수 NBI 토크가 미관측이다."]),
+         ["PR4 통과가 컷 1/4 · 포함 2/4이므로 회전의 승리를 주장하지 않는다.",
+          "우위는 회전이 변하는 방전에 집중되며(승률 34% → 55%), 구동 변수 NBI 토크가 미관측이다."]),
         ("3", "문맥이 우위를 전형적으로 만들고, 비용이 아키텍처를 정하며, 상한은 정보에 있다", BLUE,
-         ["연속 인과 문맥 약 50 ms에서 skill이 포화하고 승리 방전 비율이 0.52에서 0.66으로 올랐다.",
-          "순환·확장 합성곱·attention은 같은 문맥에서 0.023 이내로 동률이므로 비용(연산자 수)으로 선택한다.",
-          "21,498 파라미터 모델이 백본과 동급(컷)이고 폭 26배 스윕이 평평하므로, 남은 레버는 데이터이다."]),
+         ["약 50 ms의 연속 인과 문맥에서 skill이 포화하고 승리 방전 비율이 0.52에서 0.66으로 올랐다.",
+          "세 계열은 0.023 이내로 동률이므로 아키텍처는 비용으로 정하며, 남은 레버는 데이터이다."]),
     ]
-    yy = 1.5
+    yy = 1.42
     for num, t, col, body in msgs:
-        box(s, Inches(0.6), Inches(yy), Inches(12.2), Inches(1.66), fill=CARDBG, round_=True)
-        box(s, Inches(0.72), Inches(yy + 0.33), Inches(0.9), Inches(0.9), fill=col, round_=True)
-        text(s, Inches(0.72), Inches(yy + 0.33), Inches(0.9), Inches(0.9),
-             [[(num, 28, WHITE, True, False, None)]], align=PP_ALIGN.CENTER,
+        box(s, Inches(0.6), Inches(yy), Inches(12.2), Inches(1.72), fill=CARDBG, round_=True)
+        box(s, Inches(0.72), Inches(yy + 0.36), Inches(1.0), Inches(1.0), fill=col, round_=True)
+        text(s, Inches(0.72), Inches(yy + 0.36), Inches(1.0), Inches(1.0),
+             [[(num, 30, WHITE, True, False, None)]], align=PP_ALIGN.CENTER,
              anchor=MSO_ANCHOR.MIDDLE)
-        text(s, Inches(1.82), Inches(yy + 0.14), Inches(10.8), Inches(0.45),
-             [[(t, 16.5, NAVY, True, False, None)]])
-        text(s, Inches(1.82), Inches(yy + 0.60), Inches(10.8), Inches(1.0),
-             [[(line, 11.5, DARK, False, False, None)] for line in body], line_spacing=1.12)
-        yy += 1.78
+        text(s, Inches(1.95), Inches(yy + 0.16), Inches(10.7), Inches(0.48),
+             [[(t, 17.5, NAVY, True, False, None)]])
+        text(s, Inches(1.95), Inches(yy + 0.68), Inches(10.7), Inches(0.92),
+             [[(line, 13, DARK, False, False, None)] for line in body], line_spacing=1.18)
+        yy += 1.86
     return note(s, """
-⏱ 00:30–01:15  (45초)
+⏱ 00:35–01:20  (45초)
 
 이 슬라이드가 발표 전체의 요약이며, 결론을 먼저 제시한 뒤 근거로 들어간다.
 
@@ -232,12 +229,10 @@ def t_background():
     card(s, Inches(0.55), Inches(1.98), Inches(6.0), Inches(3.35),
          "진단 구성 — 같은 10 ms 격자", [
              "CES(타깃)는 Tᵢ · V_rot를 제공하며 느리고 자주 결측된다.",
-             "BES 9 ch는 밀도요동 nₑ의 공간 구조를 제공하여 Tᵢ의 단서가 된다.",
-             "ECEI 4 ch는 전자온도 Tₑ의 2D 영상을 제공하여 Tᵢ의 단서가 된다.",
-             "물리 경로는 충돌 e–i 결합이다.",
+             "BES 9 ch(밀도요동 nₑ)와 ECEI 4 ch(전자온도 Tₑ)는 충돌 e–i 결합을",
+             "통해 Tᵢ의 단서가 되며, 같은 격자에서 100% 측정된다.",
              "Mirnov 2 ch는 kHz dB/dt를 100 Hz로 데시메이트한 신호이며,",
-             "lag-1 자기상관이 -0.009(BES +0.568)로 이 격자에서 백색잡음이다.",
-             "빠른 진단은 격자에서 100% 측정된다.",
+             "lag-1 자기상관이 -0.009로 이 격자에서 백색잡음이다.",
          ], accent=BLUE, title_size=15, body_size=12.5)
     box(s, Inches(6.75), Inches(1.98), Inches(4.55), Inches(3.35), fill=NAVY, round_=True)
     text(s, Inches(7.0), Inches(2.10), Inches(4.1), Inches(0.4),
@@ -259,8 +254,8 @@ def t_background():
          [[("· 두 타깃은 ", 11, WHITE, False, False, None),
            ("독립적으로", 11, ORANGE, True, False, None),
            (" 결측된다(타깃별 처리).", 11, WHITE, False, False, None)],
-          [("· 결측은 저 SNR · ELM · 천이에 집중된다.", 11, WHITE, False, False, None)],
-          [("  MNAR이므로 관측점 skill은 낙관적 상한이다.", 11, LGRAY, False, False, None)]],
+          [("· 결측은 저 SNR · ELM · 천이에 집중되므로 MNAR이며,", 11, WHITE, False, False, None)],
+          [("  관측점 skill은 낙관적 상한이다.", 11, LGRAY, False, False, None)]],
          line_spacing=1.12, space_after=1)
     add_image_fit(s, os.path.join(FIG, "fig_raw_csv_missing.png"),
                   Inches(11.45), Inches(1.99), Inches(1.75), Inches(3.3))
@@ -268,11 +263,10 @@ def t_background():
     text(s, Inches(0.85), Inches(5.56), Inches(11.7), Inches(1.25),
          [[("연구 질문", 13, ORANGE, True, False, None)],
           [("CES가 결측된 10 ms 시점에서, 동시각 빠른 진단과 과거 CES 이력만으로 "
-            "CES 자체의 시간 보간이 복원할 수 없는 정보를 회복할 수 있는가를 묻는다.", 15, WHITE, True, False, None)],
-          [("핵심 비대칭의 예고: 빠른 진단은 Tᵢ 정보는 운반하지만 V_rot 정보는 거의 운반하지 않는다고 예측되었고, 결과에서 확인되었다.",
-            12, LGRAY, False, False, None)]], line_spacing=1.14, space_after=3)
+            "CES 자체의 시간 보간이 복원할 수 없는 정보를 회복할 수 있는가를 묻는다.", 15, WHITE, True, False, None)]],
+         line_spacing=1.14, space_after=3)
     return note(s, """
-⏱ 01:15–02:10  (55초)
+⏱ 01:20–02:15  (55초)
 
 CES는 이온온도와 토로이달 회전이라는 페데스탈 물리의 두 핵심량을 제공한다. 그러나 충분한
 신호대잡음비를 얻기 위해 광자를 오래 적분해야 하므로 느리고 자주 결측된다. 같은 10 ms 격자에서
@@ -295,39 +289,35 @@ def t_pipeline():
     s = slide()
     header(s, "3. 데이터 & 모델", "데이터 계약: No-Fake-Data · held 전면 제거 · 누수 삼중 차단")
     text(s, Inches(0.55), Inches(1.36), Inches(12.3), Inches(0.72),
-         [[("641 방전(shot 30801–32751), 10 ms 격자, 247,207행이다. 세그먼트는 0.5 s 이상의 간극에서 분리되고 "
-            "전형적 파일은 주 세그먼트 1개(중앙값 301행 ≈ 3.0 s)이며, 모델 입력도 보간도 이 경계를 넘지 않는다. ",
+         [[("641 방전 · 10 ms 격자 · 247,207행이며, 모델 입력도 보간도 세그먼트 경계를 넘지 않는다. ",
             12.5, DARK, False, False, None),
-           ("TEST(seed 42, 컷)는 Tᵢ 32,589행 / 96 방전, V_rot 10,463행 / 60 방전이며 선택이 끝날 때까지 봉인되었다.",
+           ("TEST(seed 42, 컷)는 Tᵢ 32,589행 / 96 방전이며 선택이 끝날 때까지 봉인되었다.",
             12.5, NAVY, True, False, None)]], line_spacing=1.12)
     cards = [
         ("① 가짜 라벨 금지 (No Fake Data)", ORANGE,
          ["학습 행을 만들기 위해 타깃을 대체(impute)하지 않았다.",
-          "윈도는 진단 입력이 완전하고 타깃이 1개 이상 관측된 행만 쓴다.",
-          "시퀀스는 라벨 없는 행을 맥락으로만 쓴다.",
-          "어느 프레이밍도 타깃 행 자신의 값을 읽지 않는다."]),
+          "윈도는 타깃이 1개 이상 관측된 행만, 시퀀스는 라벨 없는 행을",
+          "맥락으로만 쓴다. 어느 쪽도 타깃 행 자신의 값을 읽지 않는다."]),
         ("② 타깃별 masked loss", BLUE,
          ["L = Σ m·(예측 - 실측)² / Σ m 이며 m은 타깃별 관측 마스크이다.",
           "한쪽 타깃만 관측된 행도 그 타깃의 학습에 기여한다.",
-          "두 타깃 필수 필터는 라벨 행의 약 28%를 버렸었다.",
-          "이 필터의 제거는 순수한 데이터 이득이다."]),
+          "두 타깃 필수 필터는 라벨의 약 28%를 버렸었다."]),
         ("③ 누수 삼중 차단", TEAL,
          ["파일(shot) 단위로 분할하여 인접 행의 자기상관 누수를 막았다.",
-          "정규화 통계는 학습 파일에서만 추정하였다(희소 타깃은 NaN 인지).",
-          "시퀀스 모델은 shot별 입력 표준화를 추가로 적용하였다.",
+          "정규화 통계는 학습 파일에서만 추정하였다.",
           "타깃 시점의 값과 관측 flag는 입력에 들어가지 않는다."]),
         ("④ held 전면 제거", NAVY,
          ["관측 V_rot의 54%는 계측기 유지값이다(499/641 파일).",
-          "지도 타깃·이력 입력·정규화 통계·보간 앵커에서 동일하게 제거하였다.",
-          "대가는 PR2 폴백률 Tᵢ 0.3–0.4%, V_rot 40–44%이다.",
-          "따라서 어떤 arm도 forward-fill로 점수를 얻지 못한다."]),
+          "지도 타깃·이력·정규화·보간 앵커에서 동일하게 제거하였다.",
+          "대가는 PR2 폴백률 V_rot 40–44%이며, 어떤 arm도 forward-fill로",
+          "점수를 얻지 못한다."]),
     ]
     for i, (t, col, lines) in enumerate(cards):
         r, c = divmod(i, 2)
         card(s, Inches(0.55 + c * 6.2), Inches(2.20 + r * 2.35), Inches(6.0), Inches(2.2),
              t, lines, accent=col, title_size=14.5, body_size=12)
     return note(s, """
-⏱ 04:30–05:15  (45초)
+⏱ 04:50–05:40  (50초)
 
 데이터는 641개 방전, 10 ms 격자의 247,207행이다. 파일 하나는 대개 3초 길이의 측정 세그먼트
 하나이며, 모델도 보간도 그 경계를 넘지 않아 정보 조건이 양쪽에 동일하게 맞추어졌다.
@@ -350,13 +340,10 @@ def t_eval2():
     header(s, "4. 평가 방법론", "shot 군집 paired bootstrap · 두 모집단 규칙 · 모델 선택")
     bullets(s, Inches(0.55), Inches(1.5), Inches(6.5), Inches(3.0), [
         ("한 방전 안의 인접 CES 행은 강하게 상관된다.", 0),
-        ("개별 샘플을 독립으로 보면 불확실성이 크게 과소평가된다.", 1, RED, True),
-        ("PR4 검정은 샘플별 짝지은 오차 (SE_model - SE_pchip)를", 0),
-        ("shot 단위로 묶고 shot 전체를 복원추출한다(B = 10,000).", 1),
-        ("95% CI가 0을 제외하면 PASS이다.", 0, GREEN, True),
-        ("이 CI는 ‘새로운 방전에서도 이기는가’에 답한다.", 1),
-        ("유효 표본은 방전 수(Tᵢ ≈96 · V_rot 60–66)이며 검정력의 상한이다.", 0),
-        ("모델 대 모델 비교도 같은 행 위에서 같은 paired bootstrap으로 한다.", 0, NAVY, True),
+        ("샘플을 독립으로 보면 불확실성이 크게 과소평가된다.", 1, RED, True),
+        ("PR4는 짝지은 오차를 shot으로 묶어 재추출한다(B = 10,000).", 0),
+        ("95% CI가 0을 제외하면 PASS이며, 이는 ‘새로운 방전에서도 이기는가’에 답한다.", 0, GREEN, True),
+        ("유효 표본은 방전 수(Tᵢ ≈96)이며 검정력의 상한이다.", 0),
     ], size=13, gap=7)
     box(s, Inches(7.35), Inches(1.5), Inches(5.45), Inches(3.0), fill=NAVY, round_=True)
     text(s, Inches(7.6), Inches(1.62), Inches(5.0), Inches(1.35),
@@ -367,21 +354,19 @@ def t_eval2():
     box(s, Inches(7.6), Inches(3.02), Inches(4.95), Pt(2), fill=RGBColor(0x2A, 0x47, 0x6E))
     text(s, Inches(7.6), Inches(3.16), Inches(5.0), Inches(1.25),
          [[("두 공동 1차 모집단", 13.5, ORANGE, True, False, None)],
-          [("컷은 Tᵢ > 3 keV(피팅 실패)를 결측 처리한 모집단, 포함은 컷 없음이다. 전 arm에 동일 적용한다.",
+          [("컷은 Tᵢ > 3 keV(피팅 실패)를 결측 처리한 모집단, 포함은 컷 없음이며 전 arm에 동일 적용한다.",
             12, WHITE, False, False, None)],
           [("무조건부 주장은 두 모집단 모두에서 성립할 때만 한다.", 12.5, WHITE, True, False, None)]],
          line_spacing=1.2)
-    box(s, Inches(0.55), Inches(4.70), Inches(12.25), Inches(2.0), fill=CARDBG, round_=True)
+    box(s, Inches(0.55), Inches(4.70), Inches(12.25), Inches(1.78), fill=CARDBG, round_=True)
     text(s, Inches(0.85), Inches(4.82), Inches(11.7), Inches(0.45),
          [[("모델 선택 프로토콜 — 규칙을 수치보다 먼저 기록하였다", 14.5, NAVY, True, False, None)]])
-    bullets(s, Inches(0.85), Inches(5.30), Inches(11.7), Inches(1.35), [
-        ("백본 관문은 4조건(4 분할 부호 유지 · 통합 CI 0 제외 · 예산 균등화 · V_rot 손실 없음)을 먼저 고정하고 그다음 충족 여부를 판정하였다.", 0),
-        ("유일한 아키텍처 후보(seq_v2 + 관측마스킹 인과 attention)는 4/4 양수(+0.009/+0.013/+0.033/+0.020)였으나 유의 1/4로 승격되지 않았다.", 0),
-        ("val에서는 2/2 유의였으며, 이것이 승격 bar를 TEST에 두는 이유이다. 스윕 위에서 백본을 재선정하는 것은 구성상 금지된다.", 1, RED, True),
-        ("사다리 칸·폭 스윕의 판정 규칙도 TEST 채점 전에 문서화되었고, TEST는 결정마다 한 번만 채점되었다.", 0),
+    bullets(s, Inches(0.85), Inches(5.30), Inches(11.7), Inches(1.05), [
+        ("백본 관문의 4조건(부호 유지 · 통합 CI 0 제외 · 예산 균등화 · V_rot 손실 없음)을 먼저 고정한 뒤 충족 여부를 판정하였다.", 0),
+        ("유일한 후보는 4/4 양수였으나 유의 1/4로 승격되지 않았다. val에서는 2/2 유의였으며, 이것이 승격 bar를 TEST에 두는 이유이다.", 0),
     ], size=12.5, gap=6)
     return note(s, """
-⏱ 08:05–08:50  (45초)
+⏱ 08:35–09:30  (55초)
 
 신뢰구간은 행이 아니라 방전 단위로 계산하였다. 한 방전 안의 10 ms 간격 측정들은 거의 복사본이므로,
 이를 수만 개의 독립 증거로 세면 확신이 과장된다. 따라서 짝지은 오차를 shot으로 묶고 shot을 통째로
@@ -406,26 +391,21 @@ def t_stress():
     header(s, "5. 결과 ④", "스트레스 2종: 실제 결측점 재가중(MNAR)과 캠페인(시간) 분할을 모두 생존하였다",
            accent=ORANGE)
     text(s, Inches(0.55), Inches(1.36), Inches(12.3), Inches(0.5),
-         [[("관측점 skill은 낙관적 상한이고 무작위 분할은 시간 이동을 검사하지 않는다. "
-            "배치 주장을 가르는 두 스트레스를 사전에 정해 두고 통과 여부를 측정하였다.",
+         [[("배치 주장을 가르는 두 스트레스를 사전에 정해 두고 통과 여부를 측정하였다.",
             13, DARK, False, False, None)]], line_spacing=1.12)
     card(s, Inches(0.55), Inches(1.95), Inches(6.0), Inches(2.5),
          "① 실제 결측점으로 재가중 (MNAR)", [
-             "층은 Δt(15/25/45 ms) × 입력만의 활동 flag이며,",
-             "결측 행의 층 분포로 채점 지점을 재가중하였다.",
-             "도달: 결측 Tᵢ의 54–68%가 in-domain이고 V_rot은 4–6%이다.",
-             "따라서 재가중 V_rot은 결론을 내지 않는다(결측 질량의 1/20).",
-             "Tᵢ vs persistence: 컷 4/4 · 포함 4/4 (+0.28~+0.44)이다.",
-             "Tᵢ vs PCHIP: 컷 2/4 · 포함 4/4 (점추정 +0.14~+0.28)이다.",
+             "층은 Δt(15/25/45 ms) × 입력만의 활동 flag이며, 결측 행의",
+             "층 분포로 채점 지점을 재가중하였다.",
+             "도달은 결측 Tᵢ의 54–68%, V_rot은 4–6%(결측 질량의 1/20)이므로",
+             "재가중 V_rot은 결론을 내지 않는다.",
          ], accent=ORANGE, title_size=14.5, body_size=12)
     card(s, Inches(6.8), Inches(1.95), Inches(6.0), Inches(2.5),
          "② 캠페인(시간) 분할 — shot 번호로 자른다", [
-             "train 416 (30801–31991) / val 128 (32002–32310) /",
-             "test 97 (32312–32751)이며 초기화 seed 4개이다.",
+             "train 416 / val 128 / test 97(32312–32751)을 shot 번호로",
+             "자르고 초기화 seed 4개를 돌렸다.",
              "윈도 대조군은 컷 2/4 · 포함 0/4 · 인과 GP 0/4로 붕괴하였다.",
-             "seq_v2 컷은 +0.187/+0.174/+0.181/+0.177로 4/4이다.",
-             "seq_v2 포함은 +0.173/+0.202/+0.198/+0.184로 4/4이다.",
-             "원인은 측정되었다: 드리프트 BES 1.22σ·ECEI 0.53σ vs 타깃 0.115σ.",
+             "원인은 측정되었다: 드리프트 BES 1.22σ vs 타깃 0.115σ.",
          ], accent=BLUE, title_size=14.5, body_size=12)
     cw = [Inches(4.35), Inches(4.0), Inches(3.9)]
     rows = [
@@ -444,11 +424,10 @@ def t_stress():
           row_h=Inches(0.44), head_h=Inches(0.42), size=12, head_size=12)
     text(s, Inches(0.55), Inches(6.54), Inches(12.3), Inches(0.40),
          [[("진술: ", 12, NAVY, True, False, None),
-           ("실제 결측 시점에서 나우캐스터는 모든 인과 CES-only 방법보다 유의하게 낫고, "
-            "오프라인 보간보다는 모집단 조건부로 낫다.", 12, DARK, False, False, None)]],
-         line_spacing=1.12)
+           ("실제 결측 시점에서 모든 인과 방법보다 유의하게 낫고, 오프라인 보간보다는 모집단 조건부로 낫다.",
+            12, DARK, False, False, None)]], line_spacing=1.12)
     return note(s, """
-⏱ 11:15–12:20  (65초)  ★ 배치 주장을 가르는 슬라이드
+⏱ 11:35–12:40  (65초)  ★ 배치 주장을 가르는 슬라이드
 
 관측된 지점에서만 채점하면 낙관적이다. 결측은 어려운 순간에 집중되기 때문이다. 따라서 결측 행의
 층 분포로 채점 지점을 재가중하였다(왼쪽). 온라인 시스템이 실제로 경쟁하는 persistence 대비로는
@@ -495,7 +474,7 @@ def t_context():
              accent=col, title_size=12.5, body_size=10.5)
         yy += 1.86
     return note(s, """
-⏱ 15:15–16:45  (90초)  ★ 2026-08-16 이후 추가된 결과
+⏱ 15:25–16:40  (75초)  ★ 2026-08-16 이후 추가된 결과
 
 백본이 세그먼트 전체를 읽는 것이 정당한가라는 질문에서 출발하여 세 축을 측정하였다.
 
@@ -521,44 +500,39 @@ V_rot는 55%만 이기므로, 잔차는 회전의 구동 변수가 데이터에 
 def t_limits():
     s = slide()
     header(s, "7. 한계 & 향후", "무엇을 인정하고, 다음에 무엇을 측정하는가")
-    box(s, Inches(0.55), Inches(1.5), Inches(6.0), Inches(3.9), fill=CARDBG, round_=True)
-    box(s, Inches(0.55), Inches(1.5), Inches(0.12), Inches(3.9), fill=RED)
+    box(s, Inches(0.55), Inches(1.5), Inches(6.0), Inches(3.55), fill=CARDBG, round_=True)
+    box(s, Inches(0.55), Inches(1.5), Inches(0.12), Inches(3.55), fill=RED)
     text(s, Inches(0.8), Inches(1.62), Inches(5.5), Inches(0.45),
          [[("한계 — 논문이 먼저 인정하는 것", 15, RED, True, False, None)]])
-    bullets(s, Inches(0.8), Inches(2.12), Inches(5.55), Inches(3.1), [
-        ("검정력: test 방전 96(Tᵢ) / 60–66(V_rot)이 유의성의 구속조건이다.", 0),
-        ("포함 모집단에서는 ≈1% 행이 SSE의 70–83%를 차지한다.", 1),
+    bullets(s, Inches(0.8), Inches(2.12), Inches(5.55), Inches(2.8), [
+        ("검정력: test 방전 96(Tᵢ) · 60–66(V_rot)이 유의성을 구속한다.", 0),
+        ("≈1% 행이 SSE의 70–83%를 차지한다(손실은 꼬리 통계이다).", 1),
         ("MNAR 낙관: 재가중 도달은 Tᵢ 54–68%, V_rot 4–6%에 그친다.", 0),
         ("오프라인 주장의 상한은 GP 동률(1/8 유의)이다.", 0),
         ("값 컷은 일방향 프록시이며 V_rot 스파이크는 남는다.", 0),
-        ("캠페인은 한 시간 블록 위 초기화 4개이며 컷 run 2/4가 상한 종료였다.", 0),
-        ("통합 재채점은 방법의 기대 skill이며 단일 체크포인트의 주장이 아니다.", 0),
-        ("지연 절댓값은 기계 종속이며 1 ms 판정은 보류되었다.", 0),
-        ("단일 장치 · conformal은 marginal · 승패 공변량 분석은 탐색적이다.", 1),
-    ], size=11.5, gap=5)
-    box(s, Inches(6.8), Inches(1.5), Inches(6.0), Inches(3.9), fill=CARDBG, round_=True)
-    box(s, Inches(6.8), Inches(1.5), Inches(0.12), Inches(3.9), fill=TEAL)
+        ("단일 장치 · 캠페인은 한 시간 블록 · 1 ms 판정은 보류되었다.", 0),
+    ], size=12.5, gap=9)
+    box(s, Inches(6.8), Inches(1.5), Inches(6.0), Inches(3.55), fill=CARDBG, round_=True)
+    box(s, Inches(6.8), Inches(1.5), Inches(0.12), Inches(3.55), fill=TEAL)
     text(s, Inches(7.05), Inches(1.62), Inches(5.5), Inches(0.45),
          [[("향후 — 남은 레버는 전부 데이터이다", 15, TEAL, True, False, None)]])
-    bullets(s, Inches(7.05), Inches(2.12), Inches(5.55), Inches(3.1), [
-        ("음성 결과는 그것을 뒤집을 측정을 지목할 때만 결론으로 인정한다.", 0, NAVY, True),
+    bullets(s, Inches(7.05), Inches(2.12), Inches(5.55), Inches(2.8), [
+        ("음성 결과는 뒤집을 측정을 지목할 때만 결론으로 인정한다.", 0, NAVY, True),
         ("① CES 피팅 품질 메타데이터(χ² · 신호 수준)를 확보한다.", 0, ORANGE, True),
         ("값 컷을 품질 컷으로 대체하면 두 모집단이 하나로 합쳐진다.", 1),
         ("② 원본 kHz Mirnov 특징을 계산한다(V_rot 최상위 레버).", 0, ORANGE, True),
-        ("B.6 shot 집합(test 4 · pool 6 · companion 2)이 동결되어 있다.", 1),
-        ("예측: 변동 3분위의 V_rot 승률이 먼저 올라야 메커니즘이 맞다.", 1),
+        ("B.6 shot 집합이 동결되어 있으며, 변동 3분위의 승률이 먼저 올라야 한다.", 1),
         ("③ NBI 토크 채널을 확보한다(회전의 원인 변수).", 0, ORANGE, True),
         ("Tₑ~Tᵢ r = +0.353 vs Tₑ~V_rot r = +0.024이므로 power ≠ torque이다.", 1),
-        ("크기·문맥·계열 축은 닫혔다: 21k = 백본(컷), 폭 26배 평평, 계열 동률.", 0, GRAY, True),
-    ], size=12, gap=6)
-    box(s, Inches(0.55), Inches(5.56), Inches(12.25), Inches(0.94), fill=NAVY, round_=True)
-    text(s, Inches(0.85), Inches(5.65), Inches(11.7), Inches(0.82),
-         [[("결정 기록 (2026-08-16 · 08-21 · 08-24)", 12.5, ORANGE, True, False, None)],
-          [("① 두 모집단 공동 1차 유지 ② V_rot 프로토콜 불변(재학습 없음, anchored 비교엔 SSE 비중 병기) "
-            "③ B.6 μs shot 집합 동결(test 4 / pool 6 / companion 2) ④ 양자 가지는 하드웨어 검증 후 음성으로 종결.", 12.5, WHITE, False, False, None)]],
+    ], size=12.5, gap=9)
+    box(s, Inches(0.55), Inches(5.30), Inches(12.25), Inches(1.20), fill=NAVY, round_=True)
+    text(s, Inches(0.85), Inches(5.45), Inches(11.7), Inches(0.95),
+         [[("결정 기록 (2026-08-16 · 08-21 · 08-24)", 13.5, ORANGE, True, False, None)],
+          [("① 두 모집단 공동 1차 유지 ② V_rot 프로토콜 불변 ③ B.6 μs shot 집합 동결 "
+            "④ 양자 가지는 하드웨어 검증 후 음성으로 종결.", 13.5, WHITE, False, False, None)]],
          line_spacing=1.14, space_after=2)
     return note(s, """
-⏱ 17:55–18:50  (55초)
+⏱ 17:45–18:50  (65초)
 
 한계를 먼저 명시한다. 가장 큰 제약은 검정력이며, test 방전이 Tᵢ 96개, 회전 60~66개로 모든
 유의성 판정을 구속한다. 채점은 관측 지점에서 이루어지므로 낙관적 상한이고, 재가중이 닿는 범위도
@@ -589,8 +563,15 @@ def build():
 
     # ---- 1. 배경 & 문제 (3–5) -------------------------------------------
     t_background()
-    note(kicker(B.s_missing_table(), "1. 배경 & 문제"), """
-⏱ 02:10–02:45  (35초)
+    s_miss = kicker(B.s_missing_table(), "1. 배경 & 문제")
+    drop_para(s_miss, "판정 기준:")
+    set_para(s_miss, "확정 프로토콜: 지도 타깃",
+             "확정 프로토콜: 지도 타깃·이력 입력·정규화 통계·모든 보간 앵커에서 held를 제거하고 실제 측정만 채점하였다.")
+    set_para(s_miss, "‘V_rot 결측 24%",
+             "‘V_rot 결측 24%’는 NaN만 센 값이다. 직전 관측값을 그대로 복사한 held 행을 합치면 "
+             "실질 무정보 비율은 65.0%이다(641 shot 전수).")
+    note(s_miss, """
+⏱ 02:15–03:05  (50초)
 
 결측을 비율이 아니라 전수 집계로 제시한다(641 shot, 247,207행 전부).
 
@@ -604,8 +585,13 @@ held 행은 persistence나 보간이 오차 0에 가깝게 맞히는 행이므�
 
 이 슬라이드는 데이터 감사의 신뢰를 확보하는 지점이다. 발견하여 고쳤다는 사실을 명확히 전달한다.
 """)
-    note(kicker(B.s_two_populations(), "1. 배경 & 문제"), """
-⏱ 02:45–03:25  (40초)
+    s_pop = kicker(B.s_two_populations(), "1. 배경 & 문제")
+    drop_para(s_pop, "run 정점은 관측 이웃 평균의 13배")
+    drop_para(s_pop, "V_rot 스파이크(> 1,000 km/s")
+    set_para(s_pop, "값 컷은 일방향 프록시",
+             "●  값 컷은 일방향 프록시이며, V_rot 스파이크는 컷 없이 SSE 비중을 병기한다.")
+    note(s_pop, """
+⏱ 03:05–03:50  (45초)
 
 두 번째 감사이다. 관측 Tᵢ의 p99가 2,089 eV인 반면 최댓값은 14,984 eV이다. 이 먼 꼬리는
 플라즈마가 아니라 실패한 스펙트럼 피팅이다. 3 keV를 넘는 행은 1,197행(0.53%)이며 85%가 단일
@@ -622,7 +608,7 @@ held 행은 persistence나 보간이 오차 0에 가깝게 맞히는 행이므�
 
     # ---- 2. 접근법 (6) ---------------------------------------------------
     note(B.s_bar(), """
-⏱ 03:25–04:30  (65초)  ★ 이 발표에서 가장 중요한 슬라이드
+⏱ 03:50–04:50  (60초)  ★ 이 발표에서 가장 중요한 슬라이드
 
 평가 기준선의 설정이 이 연구의 핵심이다. 흔한 방식은 persistence(직전 값 유지)와의 비교이나
 이는 너무 쉬운 상대이므로, 의도적으로 훨씬 어려운 상대인 CES-only 오프라인 보간(선형·PCHIP·
@@ -642,8 +628,14 @@ persistence가 아니라 이 인과 GP로 판정한다.
 
     # ---- 3. 데이터 & 모델 (7–10) ----------------------------------------
     t_pipeline()
-    note(kicker(B.s_samples(), "3. 데이터 & 모델"), """
-⏱ 05:15–05:55  (40초)
+    s_smp = kicker(B.s_samples(), "3. 데이터 & 모델")
+    drop_para(s_smp, "파일당 샘플 상한은 500")
+    drop_para(s_smp, "log1p(Δt), 타깃별(이월값·신선도·flag)")
+    drop_para(s_smp, "과거 CES 값의 신뢰도는 10 ms 전인지")
+    drop_para(s_smp, "200 ms 전인지에 강하게 의존한다")
+    drop_para(s_smp, "라벨 유무와 무관하며 희소성은 loss가 처리한다")
+    note(s_smp, """
+⏱ 05:40–06:25  (45초)
 
 학습 예제를 만드는 방식은 두 가지이며, 이 대조가 결과 ③의 핵심이다.
 
@@ -659,7 +651,7 @@ persistence가 아니라 이 인과 GP로 판정한다.
 노출하기 위한 것이다. 과거 값의 신뢰도는 10 ms 전인지 200 ms 전인지에 의존한다.
 """)
     note(kicker(B.s_arch(), "3. 데이터 & 모델"), """
-⏱ 05:55–06:50  (55초)
+⏱ 06:25–07:05  (40초)
 
 주 모델은 22채널 격자 시퀀스 위의 독립적인 인과 LSTM 두 개이다.
 
@@ -676,7 +668,7 @@ V_rot 분기는 1층 64이며 빠른 진단이 아닌 7채널만 읽는다. 라�
 버리면 인과 문맥이 끊긴다.
 """)
     note(kicker(B.s_arch_window(), "3. 데이터 & 모델"), """
-⏱ 06:50–07:20  (30초)
+⏱ 07:05–07:45  (40초)
 
 짝지은 대조군은 옛 주 모델이다. 진단별 시간 인지 1D CNN, 양방향 GRU 이력 인코더, 그 위의 관측
 마스킹 attention pooling으로 구성된 201,258 파라미터 모델이다. attention은 해당 타깃이 실제
@@ -690,8 +682,18 @@ keep/discard 통제 실험의 산물이다.
 """)
 
     # ---- 4. 평가 방법론 (11–12) ------------------------------------------
-    note(kicker(B.s_methodology(), "4. 평가 방법론"), """
-⏱ 07:20–08:05  (45초)  ★ 통계 질문이 나오는 구간
+    s_meth = kicker(B.s_methodology(), "4. 평가 방법론")
+    drop_para(s_meth, "짝지은 비교 전에 모집단 키가 bit-identical")
+    drop_para(s_meth, "PR3: TEST 하한은 15 방전")
+    drop_para(s_meth, "TEST 채점 전 결정 규칙 커밋 · 문턱 민감도이다")
+    drop_para(s_meth, "전 arm이 동일한 (file, row) 집합과 마스크로 채점된다")
+    set_para(s_meth, "추가: held-free", "추가: held-free · W=2 · 파일당 500 · 두 모집단 · 규칙 선커밋이다.")
+    set_para(s_meth, "* PR1 headline",
+             "* PR1 headline. 보간도 모델도 세그먼트 경계를 넘지 않으며, 경계 밖 이웃이 필요하면 보간은 persistence로 후퇴한다.")
+    note(s_meth, """PR3(TEST 하한 15 방전·3,000 Tᵢ 샘플)와 모집단 키의 bit-identical 검증은
+슬라이드에서 내렸다. 둘 다 충족되었고, 물으면 답한다.
+
+⏱ 07:45–08:35  (50초)  ★ 통계 질문이 나오는 구간
 
 결과에 앞서 수치의 신뢰 근거를 제시한다.
 
@@ -713,7 +715,7 @@ persistence로 채점하되 폴백률을 보고하며, test 최소 규모를 두
 
     # ---- 5. 결과 ①~⑧ (13–20) -------------------------------------------
     note(kicker(B.s_res_ladder(), "5. 결과 ①"), """
-⏱ 08:50–09:25  (35초)
+⏱ 09:30–09:55  (25초)
 
 가장 단순한 결과인 RMSE 사다리이며 낮을수록 좋다.
 
@@ -730,7 +732,7 @@ GP와는 153.8 대 157.8로 동률이며, 이것이 오프라인 주장의 상�
     set_para(s_forest, "결과 ⑨에서 분해",
              "모든 arm이 PCHIP 대비 좋아 보이기 때문이며 결과 ⑥에서 분해한다.")
     note(s_forest, """
-⏱ 09:25–10:30  (65초)  ★ headline 결과
+⏱ 09:55–10:50  (55초)  ★ headline 결과
 
 forest plot이며 가로축이 PCHIP 대비 skill이다. 점이 추정치, 가로 막대가 shot 군집 95%
 신뢰구간이며, 막대가 0선을 넘지 않으면 통계적으로 유의하게 이긴 것이다.
@@ -746,7 +748,7 @@ Tᵢ는 4개의 독립 분할 전부에서 신뢰구간이 0을 제외한다. �
 오염시켜 모든 arm이 좋아 보이기 때문이며, 그 성분은 결과 ⑥에서 분해된다.
 """)
     note(kicker(B.s_res_gate(), "5. 결과 ③"), """
-⏱ 10:30–11:15  (45초)
+⏱ 10:50–11:35  (45초)
 
 주 모델을 바꾼 근거인 백본 관문이다.
 
@@ -761,7 +763,7 @@ Tᵢ는 4개의 독립 분할 전부에서 신뢰구간이 0을 제외한다. �
 """)
     t_stress()
     note(kicker(B.s_res_asym(), "5. 결과 ⑤"), """
-⏱ 12:20–13:15  (55초)  ★ 과학적 발견
+⏱ 12:40–13:25  (45초)  ★ 과학적 발견
 
 비대칭의 원인을 절제로 확인하였다. 평가 시점에 modality를 지우는 실험이다.
 
@@ -784,8 +786,20 @@ Mirnov -0.009).
 r = +0.353(p = 3e-17)로 경로가 실재하지만 Tₑ~V_rot는 r = +0.024(p = 0.58)이다. power와
 torque가 다르기 때문이다.
 """)
-    note(kicker(B.s_res_scaling(), "5. 결과 ⑥"), """
-⏱ 13:15–14:00  (45초)
+    s_scal = kicker(B.s_res_scaling(), "5. 결과 ⑥")
+    drop_para(s_scal, "probe 결과 latent은 직전 Tᵢ")
+    drop_para(s_scal, "분산 부호화하며 보정은 예측 분산의 25–39%이다")
+    drop_para(s_scal, "따라서 남은 분산은 모델 크기가 아니라 분할 분산이다")
+    set_run(s_scal, "복잡도 사다리와 크기 축: 상한은 추정기가 아니라 정보에 있다",
+            "복잡도 사다리와 크기 축: 총합 손실의 상한은 정보에 있다")
+    set_para(s_scal, "포함에서는 -0.194(4/4 유의)이다",
+             "포함에서는 -0.194(4/4 유의)이며, ≈1% 행이 모든 arm SSE의 70–83%를 차지한다.")
+    set_para(s_scal, "b3 - seq_v2 평균 +0.002",
+             "b3 - seq_v2 평균 +0.002(CI 전부 0 포함), PR4 4/4, 인과 GP 4/4이다. "
+             "다만 타깃 자신의 10 ms 재현성이 46~130 eV이므로 이 진술은 총합 MSE에 한정된다.")
+    drop_para(s_scal, "살리지 못하며, ≈1% 행이 모든 arm SSE의 70–83%를 차지한다.")
+    note(s_scal, """
+⏱ 13:25–14:15  (50초)
 
 모델을 더 키우면 되는가라는 질문을 두 실험으로 닫았다.
 
@@ -799,7 +813,7 @@ torque가 다르기 때문이다.
 skill이 +0.230에서 +0.236 사이에서 평평하다. 남은 분산은 모델 크기가 아니라 분할 분산이다.
 """)
     note(kicker(B.s_res_peak(), "5. 결과 ⑦"), """
-⏱ 14:00–14:40  (40초)
+⏱ 14:15–14:50  (35초)
 
 모델이 이득을 얻는 위치를 peak 분석으로 확인하였다.
 
@@ -817,7 +831,7 @@ Tᵢ는 peak 구간에서 컷 +0.45~+0.61, 포함 +0.62~+0.72로 8개 셀 전부
     # cross-reference fix: the 1-hour deck points at its 결과 ④(간극)·⑩(peak).
     set_para(s_tr, "결과 ④⑩", "●  우위는 gap·peak에 집중되며 결과 ⑦과 일관된다.")
     note(s_tr, """
-⏱ 14:40–15:15  (35초)
+⏱ 14:50–15:25  (35초)
 
 held-out TEST shot #31815의 사례이다.
 
@@ -837,8 +851,17 @@ held-out TEST shot #31815의 사례이다.
     t_context()
 
     # ---- 6~7. 결론 · 한계 · 요약 (22–24) --------------------------------
-    note(kicker(B.s_conclusion(), "6. 결론"), """
-⏱ 16:45–17:55  (70초)
+    s_conc = kicker(B.s_conclusion(), "6. 결론")
+    set_para(s_conc, "skill_vs_pchip 컷 +0.17~+0.26",
+             "컷 +0.17~+0.26, 포함 +0.23~+0.32로 4개 분할 전부 CI가 0을 제외하였다(4/4+4/4). 인과 GP는 8/8, 오프라인 GP와는 동률이다.")
+    set_para(s_conc, "실제 결측 in-domain 시점에서 인과 방법 대비 8/8",
+             "결측 재가중에서 인과 방법 대비 8/8, 캠페인 분할에서 PCHIP·인과 GP 대비 4/4+4/4이다. 윈도 대조군은 2/4·0/4로 붕괴하였다.")
+    set_para(s_conc, "20 ms에서도 인과 GP를 이기지만 승리 방전 비율은 0.52",
+             "20 ms에서도 인과 GP를 이기나 승리 방전 비율이 0.52이며 50–70 ms에서 0.66으로 평평해진다. 세 계열은 0.023 이내로 동률이다.")
+    set_para(s_conc, "PCHIP 대비 1/4·2/4이나 > 15 ms 간극과 peak 층에서는 이겼다",
+             "PCHIP 대비 1/4·2/4이나 > 15 ms 간극과 peak 층에서는 이겼다. 승률은 조용한 방전 34% · 변동 방전 55%로 구동 변수의 부재를 가리킨다.")
+    note(s_conc, """
+⏱ 16:40–17:45  (65초)
 
 결론은 다섯 가지이다.
 
