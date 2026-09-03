@@ -472,29 +472,202 @@ rows carry.
 
 The main model, \seqv{}, is a \textbf{357{,}570-parameter} causal sequence
 nowcaster; the windowed model it replaces is a 201{,}258-parameter late-fusion
-network and is retained as the paired control. The bottleneck in this problem is
-information, not capacity (\S\ref{sec:ladder}), and both models were reached
-under a test-frozen selection protocol (\S\ref{sec:selection}).
+network and is retained as the paired control. Before describing either, this
+section fixes three things: \emph{what is being estimated}, \emph{why those inputs
+are wired to that target}, and \emph{which time scales the model sits on}. None of
+the three is measured by the results section; they are what makes those
+measurements interpretable, and for the routing they make it a consequence of a
+conservation law rather than a modelling preference.
 
-\paragraph{Full-grid causal sequence backbone.}
+\subsection{The estimand, the loss, and an irreducible floor}
+\label{sec:model:target}
+
+At each grid time $t$ the model estimates the normalized target
+$y_t=[\Ti,\Vrot]_t$ from the observation history $x_{\le t}$. The loss is a masked
+mean squared error over per-target observation masks $m_{t,c}\in\{0,1\}$, plus a
+physical penalty discouraging \Ti{} predictions below the normalized zero $z_0$:
+%
+\begin{equation}
+  \mathcal{L}
+  = \frac{\sum_{t}\sum_{c\in\{\Ti,\Vrot\}} m_{t,c}\,\bigl(\hat y_{t,c}-y_{t,c}\bigr)^2}
+         {\sum_{t}\sum_{c} m_{t,c}}
+  \;+\; \lambda\,\overline{\mathrm{ReLU}\bigl(z_0-\hat y_{t,\Ti}\bigr)},
+  \qquad \lambda = 0.1 .
+  \label{eq:loss}
+\end{equation}
+%
+The minimizer of the first term of~\eqref{eq:loss} is the conditional expectation
+$\mathbb{E}[y_t\mid x_{\le t}]$, so what this work reports is the mean of the
+conditional distribution and not the distribution itself. Uncertainty is handled
+separately, by distribution-free intervals that leave the model untouched
+(\S\ref{sec:deploy}).
+
+This objective has a floor no estimator can remove. The target is the output of a
+photon-integrated spectral fit, so it carries its own measurement noise
+$\sigma_\mathrm{meas}$, and even a predictor that recovers the true physical
+quantity exactly would score
+%
+\begin{equation}
+  \mathrm{RMSE}^2 \;=\; \sigma_\mathrm{meas}^2 \;+\; b^2
+  \label{eq:floor}
+\end{equation}
+%
+against it, where $b$ is the physical error. Difference-based estimators applied to
+the observed series put $\sigma_\mathrm{meas}$ for \Ti{} in the cut population at
+\textbf{46.4--129.9\,eV} (fourth-difference bound 129.9, trimmed at the 95th
+percentile 68.7, robust MAD 46.4). The backbone's RMSE of 157.8\,eV is the same
+order as that range, and the reason its two ends differ by nearly a factor of three
+is what decides the character of the loss: \textbf{46.6\% of the fourth-difference
+squared mass (65.6\% for \Vrot{}) sits in the top 1\% of one-step changes.} The
+aggregate in~\eqref{eq:loss} is therefore a \emph{tail statistic}, and the later
+finding that width and operator family are flat (\S\ref{sec:ladder}) should be read
+as a consequence of that fact rather than as an exhaustion of information: in the
+bulk the model is still 2.3--3.4$\times$ above the target's own scatter.
+
+$\lambda=0.1$ is inherited from the windowed pipeline rather than derived here, and
+the way to turn it into a derivation is to fix a target violation rate and solve for
+the multiplier as a constrained optimization. This version instead reports only that
+the penalty does not manufacture the result: every arm on the ladder is trained with
+the same $\lambda$, and the interpretable rung \bthree{}, which starts at
+persistence by construction and therefore almost never activates the penalty, matches
+the backbone (\S\ref{sec:ladder}).
+
+\subsection{Two conservation laws fix the input routing}
+\label{sec:model:physics}
+
+The \Vrot{} branch of \seqv{} does not see the fast diagnostics. That is not a
+modelling preference; it is what reading the two transport equations term by term
+returns. Ion energy and toroidal angular momentum obey
+%
+\begin{align}
+  \frac{\partial}{\partial t}\Bigl(\tfrac{3}{2}n_i T_i\Bigr) + \nabla\!\cdot\!\mathbf{q}_i
+    &= Q_{ei}\,(T_e-T_i) + S_i,
+  \label{eq:energy}\\[2pt]
+  \frac{\partial}{\partial t}\bigl(n_i m_i \langle R^2\rangle \omega_\varphi\bigr)
+    + \nabla\!\cdot\!\Pi_\varphi
+    &= T_\mathrm{NBI} + T_\mathrm{NTV} + T_\mathrm{int} + \cdots
+  \label{eq:momentum}
+\end{align}
+%
+and both constrain a \emph{rate}, not a level. The question to ask about rotation is
+therefore not whether the fast diagnostics correlate with \Vrot{} but whether they
+correlate with $d\Vrot/dt$. Checking each term of~\eqref{eq:momentum} against the
+channels we hold gives Table~\ref{tab:torque}.
+
+\begin{table}[t]
+  \centering
+  \caption{Term-by-term audit of~\eqref{eq:momentum}. Full 641-shot census, confirmed
+  data treatment (spikes cut before held removal), 624 contiguous blocks. $r$ is the
+  lag-0 pooled Pearson correlation between a modality's standardized channel mean and
+  the target, or its one-step increment.}
+  \label{tab:torque}
+  \small
+  \begin{tabular}{llll}
+    \toprule
+    Term & Physics & In our data? & Disposition \\
+    \midrule
+    $\partial L/\partial t$ & rotation rate & difference of consecutive observed pairs & measured \\
+    $T_\mathrm{NBI}$ & beam torque & no 0-D channel exists & absent (\S\ref{sec:asym}) \\
+    $T_\mathrm{NTV}\sim\delta B^2$ & non-axisymmetric braking & Mirnov, decimated to 100\,Hz & closed negative \\
+    $\nabla\!\cdot\!\Pi_\varphi$ & turbulent momentum flux & BES sees the density fluctuation & \textbf{measured $\rightarrow$ null} \\
+    $T_\mathrm{int}$ & residual stress & needs $\nabla T_i$; we hold a scalar & not reachable \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+$T_\mathrm{NTV}$ is already closed: Mirnov is decimated to 100\,Hz, and amplitude
+proxies such as $|\mathrm{MC}|$ and a rolling RMS never helped (\S\ref{sec:asym}).
+The one term left was the turbulent momentum flux, reachable in principle because BES
+sees the density fluctuation it rides on. The measurement is null:
+%
+\[
+  \underbrace{r\bigl(\mathrm{BES},\,d\Vrot/dt\bigr) = -0.006,\qquad
+              r\bigl(\mathrm{ECEI},\,d\Vrot/dt\bigr) = -0.003}_{\text{momentum equation}}
+  \qquad\text{versus}\qquad
+  \underbrace{+0.070,\qquad +0.078}_{\text{energy equation}\,(d\Ti/dt)}
+\]
+%
+The same asymmetry appears at the level of the quantities themselves
+(BES$\rightarrow$\Ti{} $+0.341$, ECEI$\rightarrow$\Ti{} $+0.311$ against \Vrot{}
+$+0.027$ and $+0.005$). \emph{Because the same measurement finds a coupling for the
+energy equation, the rotation null is not a limitation of the method.} With
+$T_\mathrm{NBI}$ absent from the dataset, $T_\mathrm{NTV}$ closed and
+$T_\mathrm{int}$ unreachable, the last term is null as well, so no route exists by
+which our inputs reach \Vrot{} through~\eqref{eq:momentum}. Splitting the branches at
+the encoder is the implementation of that audit, and it is why perturbing all 15 fast
+channels leaves the \Vrot{} output bit-identical (\S\ref{sec:asym}). The remaining
+lever is acquisition, not modelling (\S\ref{sec:headroom}).
+
+\subsection{The time scales the model sits on}
+\label{sec:model:scales}
+
+Three times define this problem. First, the grid spacing is $\Delta t = 10$\,ms, so
+the Nyquist frequency is
+%
+\begin{equation}
+  f_\mathrm{Nyq} = \frac{1}{2\,\Delta t} = 50~\mathrm{Hz}.
+  \label{eq:nyquist}
+\end{equation}
+%
+The mode rotation Mirnov would have to carry is in the kHz band---EHO harmonics
+reported for discharges in this dataset are near 4 and 8\,kHz---and a $dB/dt$ stream
+decimated to 100\,Hz without an anti-aliasing filter cannot represent it, by the
+sampling theorem. The lag-1 autocorrelation of $-0.009$ against BES's $+0.568$
+(\S\ref{sec:asym}) is the \emph{confirmation} of that fact, not its basis.
+
+Second, the time that couples electrons to ions. From the Braginskii electron
+collision time $\tau_e = 3.44\times10^{5}\,T_e^{3/2}/(Z\,n_e\ln\Lambda)$ (seconds,
+$T_e$ in eV, $n_e$ in cm$^{-3}$), the temperature equilibration time is
+%
+\begin{equation}
+  \tau_\mathrm{eq} \simeq \frac{m_i}{2m_e}\,\tau_e .
+  \label{eq:taueq}
+\end{equation}
+%
+For deuterium with $\ln\Lambda=17$ and $Z=1$, $\tau_\mathrm{eq}$ spans 8.3--305\,ms
+over $T_e=0.5$--3\,keV and $n_e=2$--$5\times10^{19}$\,m$^{-3}$, and
+\textbf{8--59\,ms} in the corner corresponding to our observed \Ti{} median of
+593\,eV. The saturation point of contiguous causal context measured in this work is
+about 50\,ms, and the two numbers are the same order. This is an order-of-magnitude
+consistency statement and nothing more: the plasma parameters in~\eqref{eq:taueq} are
+quoted rather than measured here (BES and ECEI are in instrument units, so this work
+does not hold $n_e$ and $T_e$ in physical units), and the prefactor carries an
+order-unity convention.
+
+Third, the time over which a signal resembles itself. Autocorrelation $1/e$ times
+measured across the 641 files agree to within 10\%: \Ti{} 159\,ms, BES 161\,ms, ECEI
+147\,ms. \Vrot{} does not: 54\% of its observations are instrument repeats, so
+removing held values gives 16\,ms and keeping them gives more than 300\,ms, a factor
+of over 19. \textbf{The \Vrot{} relaxation time cannot be measured in this dataset.}
+\Ti{} does not suffer this, having one held row in 641 files. The held pathology costs
+not only 54\% of the values but the ability to characterize the quantity's own
+dynamics, which makes it a third acquisition task alongside NBI torque and the raw
+kHz Mirnov stream (\S\ref{sec:headroom}). These autocorrelations are computed without
+detrending and are dominated by the discharge envelope, so they are not quoted as
+transport times $\tau_E$ or $\tau_\varphi$.
+
+\subsection{Full-grid causal sequence backbone}
+\label{sec:model:backbone}
+
 \seqv{} runs two independent causal LSTMs over the 22-channel grid sequence of a
 segment (\S\ref{sec:framing}). The \Ti{} branch (2 layers, 160 units) reads the
 full state---fast diagnostics, both targets' carried values, staleness flags and
 $\Delta t$---and the \Vrot{} branch (1 layer, 64 units) reads \emph{only the seven
 non-fast channels}: $\Delta t$ and the per-target carried value, staleness and
-observation flag. Each branch ends in LayerNorm and a small GELU head; outputs are
-normalized $[\Ti, \Vrot]$ per row and the loss is the per-target masked MSE over
-every labelled row of the segment. Two consequences follow from the framing.
+observation flag. That wiring is the implementation of the audit in
+\S\ref{sec:model:physics}. Each branch ends in LayerNorm and a small GELU head;
+outputs are normalized $[\Ti, \Vrot]$ per row and the loss is~\eqref{eq:loss} applied
+over every labelled row of the segment. Two consequences follow from the framing.
 First, the model's \emph{reach} into the past is the whole segment rather than a
 fixed window---exactly the quantity that separates it from every windowed variant
 in \S\ref{sec:gate}. Second, the routing holds at the \emph{encoder}: a shared
 recurrent state would carry fast-diagnostic information into the \Vrot{} head no
 matter how the head is wired, whereas here perturbing all 15 fast channels leaves
-the \Vrot{} output bit-identical (\S\ref{sec:asym}). Training uses AdamW
-($10^{-3}$), batch 16 segments, early stopping on validation masked MSE
-(patience 6, cap 30 epochs; the confirmatory runs stopped at 14--25 epochs).
+the \Vrot{} output bit-identical (\S\ref{sec:asym}).
 
-\paragraph{The windowed control: observation-masked attention pooling.}
+\subsection{The windowed control: observation-masked attention pooling}
+\label{sec:model:window}
+
 The control encodes each modality (BES, ECEI, MC) with its own time-aware 1-D CNN
 over the $W{=}2$ window, reads the CES history with a bidirectional GRU (hidden 64)
 whose per-timestep outputs are pooled by two independent multi-head additive
@@ -506,13 +679,45 @@ parameter cost. Its \Ti{} head fuses fast diagnostics, time and history; its
 data contract, hold-free treatment, per-target masking, the split, the scored
 population---is pinned identically, so their comparison is row-for-row paired.
 
-\paragraph{The interpretable rung.}
+\subsection{The interpretable rung}
+\label{sec:model:rung}
+
 \bthree{} (\S\ref{sec:ladder}) keeps \seqv{}'s framing and routing but replaces
 each head by an \emph{exact} decomposition, $\hat y = \text{carried value} +
 \sum_k w_k z_k + b$, where $z\in[-1,1]^K$ is a tanh latent from a small causal GRU
 (64/32 units, $K{=}8$ for \Ti{}, 4 for \Vrot{}) and the readout is
 zero-initialized so training starts exactly at persistence. It has 21{,}498
 parameters, 6\% of the backbone.
+
+\subsection{The optimization setup, and the state of its justification}
+\label{sec:model:optim}
+
+Training uses AdamW ($\eta=10^{-3}$, weight decay $10^{-4}$), batch 16 segments,
+gradient norm clipping at 1.0, \texttt{ReduceLROnPlateau} on validation masked MSE
+(patience 2, factor 0.5) and early stopping (patience 6, cap 30 epochs; the
+confirmatory runs stopped at 14--25 epochs).
+
+These values are \emph{inherited} from the windowed pipeline rather than derived, and
+this work does not hide that. The data and structure axes were all closed by
+controlled experiments---window size (\S\ref{sec:window}), held treatment
+(\S\ref{sec:stuck}), the two populations (\S\ref{sec:spikes}), complexity and width
+(\S\ref{sec:ladder})---but the optimization axis never received one. A single, and
+indirect, piece of evidence defends the setting: the \emph{budget-equalization}
+condition of the backbone gate trains both models for a fixed 10 epochs with
+validation-based checkpoint selection forbidden, and even there the backbone's paired
+\Ti{} gain is positive on all four splits ($+0.063$, $+0.033$, $+0.045$, $+0.030$;
+\S\ref{sec:selection}). The conclusion is therefore not an artifact of the training
+schedule.
+
+"Why batch 16" nonetheless has no answer yet, and this work's own rule---that a
+negative or a gap must name the measurement that would close it
+(\S\ref{sec:headroom})---applies here too. Two measurements close it. Measuring the
+gradient noise scale once fixes the critical batch size for this problem, turning
+whether 16 sits below or above it into a result rather than a choice. And adopting a
+parameterization under which the optimal learning rate does not shift with width
+($\mu$P) makes the distinction between "capacity does not help" and "the learning
+rate did not match that width" unnecessary by construction for the width sweep of
+\S\ref{sec:ladder}. Both are small in training cost and neither touches test.
 
 \paragraph{What the search taught.}
 Across two rounds of controlled architecture iterations on the windowed family
@@ -521,8 +726,9 @@ that survived, and capacity scaling, skip topologies and extra extractors never
 helped. Under the confirmed protocol the same lesson recurs twice more:
 observation-masked causal attention added to \seqv{} is a small, consistently
 positive but non-significant gain (\S\ref{sec:selection}), and a five-point width
-sweep of \seqv{} is flat (\S\ref{sec:ladder}). That is why the model section is
-short and the evaluation section is not.
+sweep of \seqv{} is flat (\S\ref{sec:ladder}). The bottleneck in this problem is
+information, not capacity, and~\eqref{eq:floor} and Table~\ref{tab:torque} say where
+that bottleneck sits for each target.
 
 % =========================================================================
 \section{Evaluation methodology}

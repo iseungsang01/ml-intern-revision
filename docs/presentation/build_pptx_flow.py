@@ -476,7 +476,7 @@ main_ko.tex \\label{sec:stuck}(§3.4) · \\label{sec:spikes}(§3.5). THESIS_RESU
 # --- 6. Model (sec:model) -------------------------------------------------
 def f_model():
     s = slide()
-    header(s, "§4  sec:model", "모델 — 병목은 용량이 아니라 정보이다", accent=BLUE)
+    header(s, "§4  sec:model", "모델 — 라우팅은 설계 선택이 아니라 보존식의 결과이다", accent=BLUE)
 
     add_image_fit(s, os.path.join(FIG, "fig_architecture_seq.png"),
                   Inches(0.55), Inches(1.45), Inches(5.40), Inches(5.20))
@@ -495,17 +495,17 @@ def f_model():
           accent=BLUE, body_size=11)
 
     fcard(s, 6.10, 4.10, 6.68, 2.55,
-          "프레이밍의 두 함의 · 짝지은 대조군 · 사다리 칸",
-          ["① 도달 범위는 세그먼트 전체이다(고정 윈도가 아니다).",
-           "   §6.3에서 이 모델을 윈도 변형과 가르는 양이며, B.9는 그중",
-           "   약 50 ms가 실제로 쓰임을 측정하였다(§6.12 추가 예정).",
-           "② 라우팅이 인코더 수준에서 성립한다. 고속 15채널을 전부",
-           "   교란해도 V_rot 출력이 비트 단위로 동일하다(§6.7).",
-           "· 윈도 대조군(201,258): 시간 인지 1-D CNN(W=2) + 양방향",
-           "  GRU(64) + 타깃별 관측 마스킹 어텐션(파라미터 비용 0)이다.",
-           "· b3k8(21,498): 헤드를 정확 분해 ŷ = 이월값 + Σ wₖzₖ + b",
-           "  로 교체한다(readout 0 초기화 → persistence에서 출발)."],
-          accent=TEAL, body_size=11)
+          "§4의 골격 (2026-09-03 개정, 7개 소절 · 수식 5개)",
+          ["4.1 추정 대상·손실·하한: RMSE² = σ_meas² + b², σ_meas 46.4–129.9 eV.",
+           "     제곱질량의 46.6%가 상위 1%에 있어 손실은 꼬리 통계이다(§8aq).",
+           "4.2 두 보존식이 라우팅을 정한다: 각운동량 수지 항별 감사표.",
+           "     ∇·Π_turb만 미검정이었고 이번에 측정하여 널이다(§8ar).",
+           "4.3 시간 척도: Nyquist 50 Hz · τ_eq 8–59 ms ↔ 문맥 포화 약 50 ms.",
+           "     완화 시간 Tᵢ 159 / BES 161 / ECEI 147 ms, V_rot는 측정 불가.",
+           "4.4–4.6 백본 · 윈도 대조군(201,258) · b3k8(21,498) — 기존 유지.",
+           "4.7 최적화: 물려받은 값임을 명시하고 유도로 바꿀 측정을 지목한다",
+           "     (경사 잡음 척도 · μP)."],
+          accent=TEAL, body_size=10.5)
     return note(s, """
 main_ko.tex \\label{sec:model}(§4). 그림은 fig_architecture_seq.png(주 모델 seq_v2 도식)이다.
 윈도 대조군 도식은 fig_architecture.png이며 필요하면 §6.3 슬라이드에서 함께 쓴다.

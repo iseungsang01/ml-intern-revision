@@ -3847,6 +3847,15 @@ lead with the derivation and cite the statistic as its confirmation, not the oth
 
 Artifacts: `data/.physics_scales.json`; script `ces_prediction/analyze_physics_scales.py`.
 
+**Applied to the paper (same day).** `docs/paper/main_ko.tex` and `main.tex` §4 were rewritten from
+53 / 58 lines into **seven subsections** carrying the first displayed equations the paper has ever
+had (loss, noise floor, the two conservation laws, Nyquist, `τ_eq`) plus `tab:torque`. The
+model-to-results line ratio goes from **11.2 to 2.5** (ko) and 2.4 (en). §4.7 states plainly that
+the optimizer, batch and schedule were inherited rather than derived, records the one piece of
+evidence that defends them (B.1's budget-equalization arm, fixed 10 epochs, 4/4 positive), and names
+the two measurements that would close the gap — gradient noise scale for the batch, `μP` for the
+width sweep. Neither has been run; both are listed as pending, and neither touches TEST.
+
 ---
 
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
