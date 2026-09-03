@@ -1035,6 +1035,37 @@ observations are instrument repeats. `T_i` is clean (1 held row in 641 files) at
 BES 161 and ECEI 147. The held pathology costs not only 54% of the values but the ability to
 characterize the quantity at all. See also [Stated criteria must be investigated].
 
+## Estimate The Optimizer Exactly, Do Not Sample It (2026-09-03) - 8as
+
+The batch size was inherited, never derived, and closing that gap took two attempts.
+
+**The first attempt is the lesson.** McCandlish's two-batch-size estimator gets `|G|^2` by
+subtracting two sampled gradient norms. Once the model converges and `|G|^2` is small those
+two numbers are nearly equal, so the difference is all sampling noise: it returned a
+**negative** `|G|^2` at two of thirteen checkpoints and a `B_simple` spanning 0.8-110 blocks.
+More draws move the failure point; they do not remove it.
+
+**The fix was to stop sampling.** With the block as the sampling unit - which is what the
+training loop draws - `G = mean_i g_i` and `tr(Sigma) = mean_i |g_i|^2 - |G|^2` are computed
+exactly in one pass, holding only a running gradient sum and a running scalar, and
+Cauchy-Schwarz keeps `tr(Sigma) >= 0` by construction. Cost is one batch-1 backward per block
+per checkpoint.
+
+**Result.** `B_simple` post-init: median 33.6 blocks, geometric mean 28.4, range 6.0-61.4.
+Batch 16 sits at about half the noise scale, so it is inside the regime where batch and step
+count trade linearly - not wasteful, not obviously suboptimal, and doubling it would roughly
+halve the step count.
+
+**How to apply.** (1) When an estimator needs a difference of two noisy quantities, check
+whether the exact version is affordable before adding draws - here the exact computation was
+*cheaper* than the failed sampling. (2) Report the stable ratio, not just the headline one:
+`mean|g|^2` and `tr(Sigma)` fall smoothly while `|G|^2` swings tenfold, so `B_simple` is an
+order-of-magnitude statement and the durable finding is that **86-98% of a single block's
+gradient energy is noise**. (3) Measure with dropout off and say so - `B_simple` is about
+example-sampling noise, and the training loop's own scale is then a lower bound. (4) `muP`
+is still unrun; until it is, 8aa's flat width sweep cannot fully separate "capacity does not
+help" from "the learning rate did not match that width".
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

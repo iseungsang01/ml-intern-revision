@@ -3858,6 +3858,102 @@ width sweep. Neither has been run; both are listed as pending, and neither touch
 
 ---
 
+## 8as. The gradient noise scale (2026-09-03) — "why batch 16" gets a bounded answer, and the first estimator had to be thrown away
+
+**Question.** §4.7 of the paper now states plainly that the optimizer, batch size and schedule
+were inherited from the windowed pipeline rather than derived, and this project's rule (§8j) says a
+gap must name the measurement that closes it. It named two: the gradient noise scale for the batch,
+and `μP` for the width sweep. This section runs the first.
+
+**Design** (`ces_prediction/experiments/gns/run_gns.py` → `data/.gns.json`). CPU only — a CUDA
+device was present but already held by another job. The confirmed recipe exactly (`seq_v2`,
+AdamW 1e-3 / wd 1e-4, masked MSE + 0.1 ReLU penalty, clip 1.0, batch 16 blocks), the data treatment
+**pinned in the runner** (held-free, 3 keV cut, per-shot standardization), and the frozen B.1 seed-42
+manifest read for `train_files` / `val_files` only. **TEST is never loaded and no model is
+promoted**, so this needs no pre-registration entry — it measures the optimizer, not the claim.
+
+### 1. The two-batch-size estimator failed, and that is the first result
+
+McCandlish et al. (2018) estimate `B_simple = tr(Σ)/|G|²` from gradients at two batch sizes:
+
+    |G|²      ≈ (B_big·|g_big|² − B_small·|g_small|²) / (B_big − B_small)
+    tr(Σ)     ≈ (|g_small|² − |g_big|²) / (1/B_small − 1/B_big)
+
+With `B_small = 2`, `B_big = 32`, 40 and 10 draws per point, over 12 epochs:
+
+| | init | ep1 | ep2 | ep3 | **ep4** | ep5 | ep6 | ep7 | ep8 | ep9 | **ep10** | ep11 | ep12 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `B_simple` | 19.7 | 8.7 | 3.3 | 6.3 | **NaN** | 10.2 | 1.6 | 0.8 | 8.8 | 110.1 | **NaN** | 3.9 | 6.9 |
+
+**`|G|²` came out negative at epochs 4 and 10** (−0.043, −0.065). The estimator subtracts two
+sampled gradient norms that become nearly equal once the model has converged and `|G|²` is small,
+so the difference is dominated by sampling noise; more draws shift the failure point but do not
+remove it. The 0.8–110 range is not a measurement. **Do not report these numbers, and do not use
+this estimator on a converged model.**
+
+### 2. Computing it exactly instead of sampling it
+
+The sampling unit is a block (one contiguous segment) — that is what the training loop draws. With
+`g_i` the gradient of block `i`'s own masked loss, everything is available in one pass:
+
+    G = mean_i g_i,   tr(Σ) = mean_i |g_i|² − |G|²,   B_simple = tr(Σ)/|G|²
+
+Only a running gradient sum (one parameter-sized vector) and a running scalar are held, so memory is
+flat in the number of blocks, and Cauchy–Schwarz keeps `tr(Σ) ≥ 0` by construction. The cost is one
+batch-1 backward per block per measurement point (452 blocks), and the result is the **empirical**
+noise scale of that checkpoint rather than an estimate of it.
+
+| point | `|G|²` | `mean|g|²` | `tr(Σ)` | **`B_simple`** | noise share |
+|---|---:|---:|---:|---:|---:|
+| init | 6.481 | 86.46 | 79.98 | 12.34 | 92.5% |
+| epoch 1 | 0.2727 | 10.52 | 10.25 | 37.59 | 97.4% |
+| epoch 2 | 1.739 | 12.14 | 10.40 | 5.98 | 85.7% |
+| epoch 3 | 0.1513 | 9.445 | 9.293 | 61.42 | 98.4% |
+| epoch 6 | 0.2804 | 8.238 | 7.957 | 28.38 | 96.6% |
+| epoch 9 | 0.2592 | 7.942 | 7.683 | 29.64 | 96.7% |
+| epoch 12 | 0.1610 | 7.506 | 7.345 | 45.62 | 97.9% |
+
+Post-init: **median 33.6, geometric mean 28.4, range 6.0–61.4 blocks.**
+
+### 3. What is stable and what is not
+
+`mean|g|²` and `tr(Σ)` fall smoothly and monotonically after epoch 1 (10.5 → 7.5 and 10.3 → 7.3).
+**All of `B_simple`'s tenfold spread comes from `|G|²`**, which bounces between 0.15 and 1.74 — and
+`|G|²` is computed *exactly* over all 452 blocks, so that bounce is a real property of where the
+Adam trajectory happens to be at an epoch boundary, not measurement error. Any `B_simple` for this
+problem is therefore an order-of-magnitude statement.
+
+The stable statement is the noise share: after the first epoch, **86–98% of a single block's
+gradient energy is noise** and only 2–14% is signal.
+
+### 4. Verdict — the answer §4.7 was missing
+
+**Batch 16 sits at about half the measured noise scale (~30 blocks).** Below `B_simple`, batch size
+and step count trade roughly linearly, so:
+
+1. 16 is **neither wasteful nor obviously suboptimal** — it is inside the regime where every extra
+   example still buys step-efficiency.
+2. Doubling to ~32 would roughly halve the step count at the same data efficiency; going far above
+   ~60 would begin to waste examples. That is the bounded statement the paper can now make in place
+   of silence.
+3. The claim is order-of-magnitude, for the reason in §3.
+
+**What this does not show.** Dropout is off during the measurement, deliberately: `B_simple`
+describes the noise from *sampling examples*, and leaving dropout on would fold a second, unrelated
+source into `tr(Σ)`. The training loop's own gradient carries both, so the loop's effective noise
+scale is **at least** the number above. The per-block loss normalizes by each block's own label
+count while the training loop pools the denominator across a batch, so `G` here is the mean of
+per-block gradients rather than the label-weighted full-batch gradient — the standard per-example
+formulation, and the difference is small when label counts are similar. Nothing here says batch 16
+produces a *worse model*; `B_simple` is about the compute/step trade, not about final skill. And
+**`μP` remains unrun** — the second measurement §4.7 names, and the one that would settle whether
+§8aa's flat width sweep is a capacity statement or a learning-rate one.
+
+Artifacts: `data/.gns.json` (exact estimator), `data/.gns_run.log`; script
+`ces_prediction/experiments/gns/run_gns.py`.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over

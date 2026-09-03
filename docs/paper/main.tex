@@ -723,15 +723,42 @@ validation-based checkpoint selection forbidden, and even there the backbone's p
 \S\ref{sec:selection}). The conclusion is therefore not an artifact of the training
 schedule.
 
-"Why batch 16" nonetheless has no answer yet, and this work's own rule---that a
-negative or a gap must name the measurement that would close it
-(\S\ref{sec:headroom})---applies here too. Two measurements close it. Measuring the
-gradient noise scale once fixes the critical batch size for this problem, turning
-whether 16 sits below or above it into a result rather than a choice. And adopting a
-parameterization under which the optimal learning rate does not shift with width
-($\mu$P) makes the distinction between "capacity does not help" and "the learning
-rate did not match that width" unnecessary by construction for the width sweep of
-\S\ref{sec:ladder}. Both are small in training cost and neither touches test.
+"Why batch 16" now has a measured answer. The gradient noise scale
+$B_\mathrm{simple} = \operatorname{tr}\Sigma / \lVert G\rVert^2$ is the batch size at
+which a gradient's signal and its noise are comparable, and taking the sampling unit to
+be the block---what the training loop actually draws---it can be computed exactly on the
+training set rather than estimated. With $g_i$ the gradient of block $i$'s own masked
+loss,
+%
+\begin{equation}
+  G = \tfrac{1}{N}\sum_i g_i,\qquad
+  \operatorname{tr}\Sigma = \tfrac{1}{N}\sum_i \lVert g_i\rVert^2 - \lVert G\rVert^2,\qquad
+  B_\mathrm{simple} = \frac{\operatorname{tr}\Sigma}{\lVert G\rVert^2}.
+  \label{eq:bsimple}
+\end{equation}
+%
+Evaluated over all 452 training blocks at seven points during training, the post-initial
+median is \textbf{33.6 blocks} (geometric mean 28.4, range 6.0--61.4). \textbf{Batch 16
+sits at about half the measured noise scale.} Below $B_\mathrm{simple}$ batch size and
+step count trade roughly linearly, so 16 is neither wasteful nor obviously suboptimal;
+doubling it to 32 would roughly halve the step count at the same data efficiency, and
+going far above 60 would begin to waste examples.
+
+This is an order-of-magnitude statement. $\frac{1}{N}\sum_i\lVert g_i\rVert^2$ and
+$\operatorname{tr}\Sigma$ fall monotonically after the first epoch (10.5 $\rightarrow$ 7.5
+and 10.3 $\rightarrow$ 7.3), but $\lVert G\rVert^2$ moves between 0.15 and 1.74, and since
+it is computed exactly over all 452 blocks that motion is a real property of where the
+Adam trajectory sits at an epoch boundary rather than measurement error. What is stable is
+the noise share: after the first epoch \textbf{86--98\% of a single block's gradient energy
+is noise}, leaving 2--14\% of signal. The measurement is made with dropout disabled, so as
+to capture the noise from sampling examples alone; the training loop's own effective noise
+scale is therefore \emph{at least} the figure above, and the figure concerns the
+compute-versus-steps trade rather than final skill.
+
+The second measurement, $\mu$P---a parameterization under which the optimal learning rate
+does not shift with width---has not been run. Adopting it would make the distinction
+between "capacity does not help" and "the learning rate did not match that width"
+unnecessary by construction for the width sweep of \S\ref{sec:ladder}.
 
 \paragraph{What the search taught.}
 Across two rounds of controlled architecture iterations on the windowed family
