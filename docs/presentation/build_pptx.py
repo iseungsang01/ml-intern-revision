@@ -956,6 +956,52 @@ def s_arch_detail():
 
 
 # --- 4-3. Paired window control ------------------------------------------
+# --- 4-2b. Physical grounding ---------------------------------------------
+def s_physics():
+    s = slide()
+    header(s, "4. 모델", "물리적 근거: 두 갈래 라우팅은 설계 선택이 아니라 두 보존식의 결과이다")
+    box(s, Inches(0.55), Inches(1.32), Inches(12.25), Inches(1.16), fill=NAVY, round_=True)
+    text(s, Inches(0.85), Inches(1.42), Inches(11.7), Inches(1.00),
+         [[("d/dt ( 3/2 · n_i · T_i )  =  Q_ei · (T_e - T_i)  -  ∇·q_i  + ...", 14, WHITE, True, False, None)],
+          [("d/dt ( n_i · m_i · <R²> · ω_φ )  =  -∇·Π_φ  +  T_NBI  +  T_NTV  +  T_int  + ...", 14, ORANGE, True, False, None)],
+          [("보존식은 값이 아니라 변화율을 구속한다. 따라서 물어야 할 것은 V_rot과의 상관이 아니라 dV_rot/dt와의 상관이다.",
+            11, LGRAY, False, False, None)]], line_spacing=1.14, space_after=1)
+    table(s, Inches(0.55), Inches(2.62), [Inches(1.70), Inches(2.45), Inches(1.65)],
+          ["각운동량 수지의 항", "우리 데이터", "판정"],
+          [
+              ["LHS  dL/dt", "연속 관측쌍의 차분", ("측정됨", GREEN, True, None)],
+              ["T_NBI", "0D 채널 전무", ("부재 §8b.3", RED, True, None)],
+              ["T_NTV ~ δB²", "Mirnov 100 Hz 데시메이트", ("음성 §8b.2", RED, True, None)],
+              ["∇·Π_turb", "BES 밀도요동", ("측정 → 널", ORANGE, True, None)],
+              ["T_intrinsic", "∇T_i 필요, 스칼라뿐", ("도달 불가", GRAY, True, None)],
+          ], row_h=Inches(0.44), head_h=Inches(0.40), size=11, head_size=11)
+    text(s, Inches(0.60), Inches(5.36), Inches(5.70), Inches(1.55),
+         [[("V_rot의 완화 시간은 이 데이터로 잴 수 없다", 12, RED, True, False, None)],
+          [("관측의 54%가 계측기 유지값이라 held 제거 시 16 ms,", 10.5, DARK, False, False, None)],
+          [("유지 시 300 ms 초과로 19배 이상 벌어진다. Tᵢ는 held가", 10.5, DARK, False, False, None)],
+          [("641파일 중 1행뿐이라 159 ms가 깨끗하다. 유지값 병리는", 10.5, DARK, False, False, None)],
+          [("값의 54%뿐 아니라 그 동역학을 특징지을 능력까지 파괴하며,", 10.5, DARK, False, False, None)],
+          [("NBI 토크·원본 kHz Mirnov에 이은 세 번째 취득 과제이다.", 10.5, DARK, False, False, None)]],
+         line_spacing=1.12, space_after=1)
+    card(s, Inches(6.60), Inches(2.62), Inches(6.22), Inches(2.24),
+         "① BES·ECEI와의 결합 (624 블록, lag 0)", [
+             "→ Tᵢ   값 +0.341 / +0.311",
+             "         변화율 +0.070 / +0.078",
+             "→ V_rot   값 +0.027 / +0.005",
+             "         변화율 -0.006 / -0.003",
+             "에너지식에서는 신호를 잡으므로 널은 방법의 한계가 아니다.",
+         ], accent=TEAL, title_size=13, body_size=11)
+    card(s, Inches(6.60), Inches(4.96), Inches(6.22), Inches(1.94),
+         "② 시간 척도가 맞는다", [
+             "τ_eq = (mᵢ/2mₑ)·τ_e는 Tₑ 0.5–1 keV,",
+             "nₑ 2–5×10¹⁹ m⁻³에서 8–59 ms이다.",
+             "측정된 문맥 포화 약 50 ms와 같은 자릿수이다(§8al).",
+             "Tᵢ·BES·ECEI의 완화 시간은 147–161 ms이다.",
+             "주의: τ_eq 파라미터는 인용값이고 자기상관은 추세 미제거이다.",
+         ], accent=BLUE, title_size=13, body_size=11)
+    return s
+
+
 def s_arch_window():
     s = slide()
     header(s, "4. 모델", "짝지은 대조군: W=2 윈도 모델(관측 마스킹 attention pooling)")
@@ -2043,6 +2089,7 @@ def build():
     divider("4", "모델", "전체격자 인과 시퀀스 백본 seq_v2와 W=2 윈도 대조군")
     s_arch()
     s_arch_detail()
+    s_physics()
     s_arch_window()
     s_training()
     divider("5", "평가 방법론", "사전등록 · shot 군집 bootstrap · TEST 동결")

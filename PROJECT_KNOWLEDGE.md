@@ -997,6 +997,44 @@ so do **not** quote a variogram-fitted nugget — the fit is not identifiable th
 See also [Numbers Must Come From Artifacts] and the §8ab spike-anchor audit, which is the same fact
 seen from the `V_rot` side.
 
+## A Conservation Law Closes A Negative Better Than An Ablation Does (2026-09-03) - 8ar
+
+승상님's read was that the work is over-invested in validation and under-invested in the
+mathematical and physical grounding of the model itself. It is measurable: `main_ko.tex` runs 53
+lines of model against 596 of results, with nine tables, seven figures and **zero displayed
+equations**.
+
+**What fixed part of it, cheaply.** Writing the two transport equations down changes the question
+being asked. They constrain a *rate*, not a level, so the right question about rotation is not
+"do the fast diagnostics correlate with `V_rot`" - S8ab settled that with an ablation - but "do
+they correlate with `dV_rot/dt`". Asking it term by term turned an open assumption into a closed
+audit:
+
+| term | disposition |
+|---|---|
+| LHS `dL/dt` | measured (consecutive observed pairs) |
+| `T_NBI` | absent from the dataset (S8b.3) |
+| `T_NTV ~ dB^2` | closed negative already (S8b.2: `|MC|`, rolling RMS) |
+| `div(Pi_turb)` | **the one untested term** - measured null here (BES to `dV_rot/dt` r = -0.006) |
+| `T_intrinsic` | needs `grad T_i`; we hold a scalar |
+
+The internal control is what makes the null usable: the same measurement finds `+0.070 / +0.078`
+for `dT_i/dt`, so the method can see a rate coupling when one exists.
+
+**How to apply.** (1) Before running another architecture or ablation against a stubborn target,
+write the governing equation and check which terms your inputs can carry - it is cheaper than a
+batch and the negative it produces is stronger. (2) Report an empirical threshold with a physical
+scale beside it: the ~50 ms context saturation now sits next to `tau_eq` = 8-59 ms at CES-relevant
+`(n_e, T_e)`, as an order-of-magnitude consistency and nothing more. (3) Derive first, cite the
+statistic as confirmation: the Mirnov loss is the sampling theorem (10 ms grid, 50 Hz Nyquist, kHz
+modes), and S8b.2's lag-1 -0.009 is its consequence.
+
+**And one new acquisition item.** `V_rot`'s own relaxation scale is **unmeasurable** in this
+dataset - held-free gives 16 ms, held-kept gives >300 ms, a factor of 19 - because 54% of its
+observations are instrument repeats. `T_i` is clean (1 held row in 641 files) at 159 ms, matching
+BES 161 and ECEI 147. The held pathology costs not only 54% of the values but the ability to
+characterize the quantity at all. See also [Stated criteria must be investigated].
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

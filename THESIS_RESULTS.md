@@ -3720,6 +3720,135 @@ table `tab:ladder`, itself generated from the frozen artifacts).
 
 ---
 
+## 8ar. Physical time scales, and a term-by-term audit of the two transport equations (2026-09-03) — the torque balance is now closed by measurement, not by assertion
+
+**Question (승상님, 2026-09-03).** The thesis record is 47 sections of validation and the paper
+carries nine tables, seven figures and **zero displayed equations**; its model section is 53 lines
+against 596 for results. Every time scale in it is empirical and unanchored — the ~50 ms context
+saturation (§8al), the 10 ms grid, the aliased Mirnov stream (§8b.2). Two things were asked: put a
+physical scale beside each of those numbers, and **check whether the angular-momentum balance can
+still reach `V_rot` through some term we have not tried.**
+
+**Design** (`ces_prediction/analyze_physics_scales.py` → `data/.physics_scales.json`, full 641-file
+census, confirmed data treatment: spikes cut before held detection, held removed, contiguous blocks
+only). No model is trained, scored or selected; this is a data-and-theory audit in the class of
+`analyze_data_evidence.py` and `analyze_noise_floor.py`.
+
+### 1. The one term of the torque balance we had not tested — and it is null
+
+The conservation laws constrain a **rate**, not a level:
+
+- `d/dt (3/2 n_i T_i) = Q_ei (T_e − T_i) − ∇·q_i + …`
+- `d/dt (n_i m_i ⟨R²⟩ ω_φ) = −∇·Π_φ + T_NBI + T_NTV + T_intrinsic + …`
+
+So the honest question is not "do the fast diagnostics correlate with `V_rot`" — §8ab answered that
+with an ablation — but **"do they correlate with `dV_rot/dt`"**. Reading the torque balance term by
+term against what we hold:
+
+| term | in our data? | status |
+|---|---|---|
+| LHS `dL/dt` | yes, finite difference on consecutive observed pairs | measured here |
+| `T_NBI` | **no 0-D channel exists in the dataset** | absent (§8b.3) |
+| `T_NTV ~ δB²` | Mirnov, but decimated to 100 Hz | **closed negative** (§8b.2): `\|MC\|` and rolling RMS already tried, no help |
+| `∇·Π_turb` | BES sees the density fluctuation the turbulent flux rides on | **was never tested — tested here** |
+| `T_intrinsic` | needs `∇T_i`; we hold a scalar | not reachable |
+
+Pooled Pearson `r` over 624 blocks, fast-channel modality mean against the target, at lag 0
+(`level` = the target itself, `rate` = its one-step increment):
+
+| driver → target | level | **rate** |
+|---|---:|---:|
+| BES → `T_i` | **+0.341** | **+0.070** |
+| ECEI → `T_i` | **+0.311** | **+0.078** |
+| BES → `V_rot` | +0.027 | **−0.006** |
+| ECEI → `V_rot` | +0.005 | **−0.003** |
+| MC → `T_i` | −0.001 | +0.001 |
+| MC → `V_rot` | −0.001 | +0.007 |
+
+**The turbulent-flux term is null**, and the same measurement finds a signal for the energy
+equation (`+0.070 / +0.078`), so the method can detect a rate coupling where one exists. With
+`T_NBI` absent, `T_NTV` closed and `T_intrinsic` unreachable, **every term of the angular-momentum
+balance that our inputs could carry is now accounted for by measurement.** "The driver of rotation
+is unobserved" (§9.4) stops being a data-level remark and becomes a term-by-term audit of a
+conservation law. This is also the correct place to state that the fix is acquisition, not
+modelling — the paper's §8j rule.
+
+### 2. Relaxation scales — clean for `T_i`, and **unmeasurable** for `V_rot`
+
+Pooled autocorrelation, e-folding time (`1/e`):
+
+| channel | r(10 ms) | r(50 ms) | r(100 ms) | r(300 ms) | 1/e |
+|---|---:|---:|---:|---:|---:|
+| `CES_TI` | 0.652 | 0.529 | 0.436 | 0.226 | **159 ms** |
+| BES | 0.675 | 0.517 | 0.417 | 0.296 | 161 ms |
+| ECEI | 0.660 | 0.525 | 0.432 | 0.261 | 147 ms |
+| `CES_VT` (held-free) | 0.423 | 0.249 | 0.158 | 0.060 | 16 ms |
+| `CES_VT` (held-kept) | 0.803 | 0.720 | 0.654 | 0.476 | **> 300 ms** |
+| MC | −0.007 | −0.000 | −0.005 | −0.002 | (white noise) |
+
+`T_i`, BES and ECEI share a relaxation scale to within 10% (147–161 ms) — `T_i` is clean here
+because it carries **1 held row in 641 files**. `V_rot` is the opposite: 54% of its observations are
+instrument repeats, so held-free and held-kept bracket its scale between **16 ms and > 300 ms**, a
+factor of ≥ 19. **The `V_rot` relaxation scale cannot be measured from this dataset at all.** That is
+a finding, not a gap in the analysis: the held pathology destroys not only 54% of the values but also
+our ability to characterize the quantity's own dynamics — one more entry for the acquisition ledger.
+
+### 3. A physical scale beside the ~50 ms context, for the first time
+
+Electron-ion energy equipartition, `τ_eq = (m_i / 2 m_e) · τ_e` with the Braginskii/NRL electron
+collision time `τ_e = 3.44×10⁵ · T_e[eV]^1.5 / (Z · n_e[cm⁻³] · lnΛ)`, deuterium, lnΛ = 17, Z = 1:
+
+| `T_e` \ `n_e` | 2×10¹⁹ m⁻³ | 3×10¹⁹ m⁻³ | 5×10¹⁹ m⁻³ |
+|---|---:|---:|---:|
+| 500 eV | 20.8 ms | 13.8 ms | 8.3 ms |
+| 1000 eV | 58.7 ms | 39.2 ms | 23.5 ms |
+| 2000 eV | 166.1 ms | 110.8 ms | 66.5 ms |
+| 3000 eV | 305.2 ms | 203.5 ms | 122.1 ms |
+
+Our observed `CES_TI` median is 593 eV (p99 2,089 eV), so the CES-relevant corner of this table is
+**8–59 ms**, which brackets the measured saturation of ≈ 50 ms (§8al). **This is the first time an
+empirical threshold in this work has a physical scale beside it.** State it as an order-of-magnitude
+consistency and nothing more (below).
+
+### 4. The Mirnov loss as a derivation rather than a statistic
+
+The grid is 10 ms, so the Nyquist frequency is **50 Hz**. Mirnov mode rotation is kHz — the shot
+papers put KSTAR EHO harmonics at ~4 and ~8 kHz (§8ao). A 100 Hz decimation without an
+anti-aliasing filter therefore *cannot* represent the mode, by the sampling theorem. §8b.2's
+lag-1 autocorrelation of −0.009 (against BES +0.568) is the **consequence**, and the paper should
+lead with the derivation and cite the statistic as its confirmation, not the other way round.
+
+### 5. What this does not show
+
+- **The autocorrelations are not detrended.** Blocks are ≈ 3 s (median 301 rows), so these numbers
+  measure "how long a signal stays similar", dominated by the discharge envelope — they are **not**
+  transport relaxation times, and must not be quoted as `τ_E` or `τ_φ`.
+- **The lag profiles cannot resolve `τ_eq`.** Every `T_i` peak is at lag 0, not at the ~4 grid steps
+  a 39 ms coupling delay would produce. The shared slow envelope dominates; the informative part is
+  the *amplitude* (`r ≈ 0.3`), not the lag.
+- **`τ_eq` uses assumed plasma parameters.** `n_e` and `T_e` in physical units are not in our CSVs
+  (BES and ECEI are instrument units), so the table is quoted, not derived from our data, and the
+  order-unity convention in `τ_eq` is stated rather than hidden.
+- **The held-free `V_rot` autocorrelation is computed on a shifting subpopulation** (a lag-1 pair
+  only exists where the instrument updated within 10 ms), which is a second reason not to quote
+  16 ms as a physical time.
+- No model was scored. The `r` values are data-level associations, not skill.
+
+### 6. Verdict
+
+1. **The torque balance is closed by measurement.** Four terms, four dispositions: LHS measured,
+   `T_NBI` absent, `T_NTV` closed negative, `∇·Π_turb` null here, `T_intrinsic` unreachable. Write
+   §9.4 that way — it converts the paper's weakest-looking result into its most rigorous negative.
+2. **`T_i`'s predictability has a matching physical scale** (`τ_eq` 8–59 ms vs saturation ≈ 50 ms;
+   `T_i`/BES/ECEI relaxation 147–161 ms), reported as order-of-magnitude consistency.
+3. **`V_rot`'s own dynamics are unmeasurable in this dataset**, which is a third named entry for the
+   acquisition ledger alongside NBI torque and raw kHz Mirnov.
+4. The Mirnov statement becomes a sampling-theorem derivation with §8b.2 as its confirmation.
+
+Artifacts: `data/.physics_scales.json`; script `ces_prediction/analyze_physics_scales.py`.
+
+---
+
 ## 9. Recommended framings for the thesis (rewritten 2026-08-19 after B.9)
 
 **The claim to lead with.** *About 50 ms of contiguous causal context is what makes the win over
