@@ -1441,6 +1441,180 @@ threshold, and \Vrot{} $+0.252$ / $+0.253$ / $+0.257$. The threshold is
 immaterial across the range a physicist would defend; what matters is the two
 populations, not where inside the tail the cut falls.
 
+\subsection{Context, structure and cost: what sets skill and what sets the price}
+\label{sec:context}
+
+Everything above scores one architecture at one context length. This section moves the
+two separately and asks which one produces the result. They answer very differently:
+stretching \emph{context} from 20\,ms to 630\,ms raises \Ti{} skill from $+0.055$ to
+$+0.138$, while swapping the \emph{operator family} at matched context---recurrence for
+dilated convolution or for attention---never moves it by more than 0.023 anywhere. The
+architecture should therefore be chosen on cost rather than on skill, and that cost
+follows the number of dispatched operators rather than the parameter count.
+
+\paragraph{Reach must be measured by training, not by truncation.}
+Truncating a trained backbone's recurrent state to $r$ steps after the fact makes \Ti{}
+look as though it loses out to 500\,ms, but that reads \emph{unlearned state
+reconstruction} as missing information. Retraining on non-overlapping segments of length
+$r$ recovers at least 84\% of that deficit. Every reach number below is from a model
+trained at that context, not from a truncated one.
+
+\paragraph{Saturation is near 50\,ms, and what context buys is typicality rather than
+the average.}
+Applying the pre-registered rule---the smallest $r$ whose deficit against full context is
+under 0.02 with at most one significant deficit out of four splits---to a ladder densified
+to one-step spacing returns \textbf{5 steps $=$ 50\,ms}. That threshold must not be read
+as a crossing point. Pooling the four splits by discharge and rescoring over 301
+discharges gives Table~\ref{tab:pooled}, and \textbf{the model beats the causal GP at
+20\,ms as well} ($+0.057$, 95\% CI $[+0.027, +0.085]$).
+
+\begin{table}[t]
+  \centering
+  \caption{Recurrent family, pooled rescoring over 301 discharges. "Win rate" is the
+  fraction of discharges on which the model beats the causal GP; "$-$top10" is the pooled
+  skill after deleting the ten largest contributors. The trend is $+0.0497$ per decade of
+  context $[+0.0363, +0.0638]$---rising.}
+  \label{tab:pooled}
+  \small
+  \begin{tabular}{rccc}
+    \toprule
+    Context & \Ti{} skill vs causal GP [95\% CI] & Win rate & $-$top10 \\
+    \midrule
+    20\,ms  & $+0.057$ $[+0.027, +0.085]$ & \textbf{0.52} & $+0.028$ \\
+    30\,ms  & $+0.087$ $[+0.061, +0.111]$ & 0.60 & $+0.060$ \\
+    50\,ms  & $+0.104$ $[+0.079, +0.128]$ & 0.64 & $+0.077$ \\
+    70\,ms  & $+0.119$ $[+0.095, +0.142]$ & 0.66 & $+0.092$ \\
+    150\,ms & $+0.123$ $[+0.096, +0.148]$ & 0.66 & $+0.096$ \\
+    630\,ms & $+0.143$ $[+0.118, +0.168]$ & 0.67 & $+0.116$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The win-rate column is this section's conclusion: $0.52 \rightarrow 0.60 \rightarrow 0.64
+\rightarrow 0.66$, then flat from about 70\,ms. At 20\,ms the model wins on average but on
+barely half the discharges; by 70\,ms it wins on two thirds. \textbf{Context does not raise
+the average so much as it makes the win typical.} That is the statement a deployment
+audience needs, and the threshold must not be described as "the context needed to be
+useful": already at 20\,ms the model beats persistence---what a deployed system actually
+displaces---by $+0.356$.
+
+One methodological caution follows from this ladder. The per-split 4/4 count is not a
+monotone function of reach at one-step spacing ($2/4 \rightarrow 3/4 \rightarrow 4/4
+\rightarrow 3/4 \rightarrow 4/4 \rightarrow 4/4 \rightarrow 3/4 \rightarrow 4/4 \rightarrow
+4/4 \rightarrow 4/4$ from 20 to 630\,ms) while the point estimates underneath rise
+smoothly. That is what a five-level vote on four samples does, not a problem with the
+runs. Report the counts; decide on the deficit.
+
+\paragraph{At matched context the operator family does not set skill.}
+Holding reach fixed and comparing a recurrent LSTM (357{,}570 parameters), a dilated
+causal convolution (3{,}238) and banded attention (295{,}746), all three beat the causal
+GP 4/4 at $+0.113$, $+0.119$ and $+0.119$. A 110$\times$ parameter range and three of the
+most dissimilar sequence operators available produce no distinguishable difference. Read
+as ladders this is Table~\ref{tab:family}; paired at matched reach---the more robust
+contrast---the differences are quieter still: \texttt{tcn3/5/7} tie the same-reach LSTM
+($-0.004$, $+0.005$, $-0.004$, with no significant split either way) and only attention at
+the 70\,ms rung returns a difference under the pre-registered rule ($-0.023$, significant
+on 3/4). The largest family gap anywhere is 0.023 in \Ti{}, against $+0.060$ for moving
+reach from 20 to 70\,ms.
+
+\begin{table}[t]
+  \centering
+  \caption{Per-family reach ladders (\Ti{} skill vs the causal GP, mean of four splits
+  $\cdot$ number of splits whose CI clears zero). On this work's own promotion bar of
+  $\ge 3/4$ all three families are monotone. The convolutional arm's 30\,ms rung is its
+  structural minimum (one layer, receptive field 3), so its crossing is an upper bound.}
+  \label{tab:family}
+  \small
+  \begin{tabular}{rlll}
+    \toprule
+    Context & Recurrent (LSTM) & Dilated conv (TCN) & Banded attention \\
+    \midrule
+    20\,ms  & $+0.055$ $\cdot$ 2/4 & --- & --- \\
+    30\,ms  & $+0.083$ $\cdot$ 3/4 & $+0.079$ $\cdot$ 3/4 & --- \\
+    50\,ms  & $+0.098$ $\cdot$ 3/4 & $+0.103$ $\cdot$ 3/4 & $+0.090$ $\cdot$ 2/4 \\
+    70\,ms  & $+0.115$ $\cdot$ 4/4 & $+0.111$ $\cdot$ 4/4 & $+0.094$ $\cdot$ 3/4 \\
+    150\,ms & $+0.117$ $\cdot$ 4/4 & $+0.130$ $\cdot$ 4/4 & $+0.119$ $\cdot$ 4/4 \\
+    630\,ms & $+0.138$ $\cdot$ 4/4 & $+0.124$ $\cdot$ 4/4 & $+0.122$ $\cdot$ 4/4 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+A fourth family, a diagonal state-space model, behaves differently on the same ladder. It
+does convert context into skill ($+0.0235$ per decade $[+0.0102, +0.0372]$) but stops
+around 70\,ms at a lower ceiling: $+0.105$ at 630\,ms against the recurrent $+0.143$, with
+a win rate capped at 0.58--0.60 rather than 0.66. It is, however, the best pooled point of
+any family at 20\,ms ($+0.065$ against the recurrent $+0.057$)---a same-rung pooled
+comparison rather than a paired test, so it is reported and not promoted. \Vrot{} declines
+with context in \textbf{all four} families.
+
+\paragraph{So the architecture is chosen on cost, and cost is operator count.}
+Online single-step latency tracks the number of dispatched operators (about
+2--3\,$\mu$s each) rather than parameter count or arithmetic. Those counts are exact on
+any machine; this machine's absolute timings moved by 21.84$\times$ between sessions and
+are therefore not quoted.
+
+\begin{table}[t]
+  \centering
+  \caption{Online single-step cost by family. $R$ is reach and "ops" counts dispatched
+  \texttt{aten::} operators per step. Attention is also $O(1)$ in $R$ thanks to the KV
+  cache; it simply carries a 3.5--4.3$\times$ worse constant.}
+  \label{tab:cost}
+  \small
+  \begin{tabular}{llrr}
+    \toprule
+    Family & Cost in $R$ & $R=15$ & $R=63$ \\
+    \midrule
+    Recurrent (LSTM) & $O(1)$ --- the state carries it & 111 & 111 \\
+    Dilated causal conv & $O(\log R)$, $+48$ per layer & 209 & 305 \\
+    Banded attention & $O(1)$, constant 4.3$\times$ & 473 & 473 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+On this problem attention is \emph{strictly dominated}: \texttt{tcn3k} (3{,}238
+parameters) matches its skill ($+0.119$, 4/4) with 91$\times$ fewer parameters and
+2.3--2.7$\times$ fewer dispatched operators. Three operating points are worth naming:
+\texttt{tcn3k} matches the 357{,}570-parameter backbone on \Ti{} and beats the causal GP
+4/4, \texttt{v2m4k} (3{,}898) is the cheapest recurrent arm that still clears 4/4, and
+\texttt{tcn2k} (1{,}808) is the cheapest arm of any family. They are not "the small
+version of the model"; they are the answer to what this problem actually requires. The
+10\,ms budget binds no arm, and the 1\,ms verdict is \textbf{suspended} by the
+pre-registered rule because of the between-session spread above.
+
+\paragraph{Why the windowed family could not reach this axis.}
+\S\ref{sec:window} reports that one past \emph{observation} is enough and this section
+reports that about 50\,ms of \emph{contiguous context} is needed. They do not conflict,
+because they count different resources. The windowed family satisfied the first and could
+not reach the second at any $W$, by construction: average-pooling the window discards its
+ordering, the temporal-subset augmentation makes each window an arbitrary non-contiguous
+subset of past rows, and rows without an observed target were dropped before the model saw
+them. The numbers land exactly where that explanation predicts: the $W{=}2$ window model
+scores $+0.041$ (1/4) against the causal GP and \seqv{} truncated to the same two steps
+scores $+0.055$ (2/4). Different architectures, same starvation, same result. The
+full-grid reframing was not a modelling preference; it was the only way to make the
+resource that matters reachable.
+
+\paragraph{The model wins on discharges where the target moves.}
+Pooled rescoring produces a \Vrot{} result that would be badly misread on its own: every
+rung's pooled CI clears zero (at 70\,ms, $+0.123$ $[+0.036, +0.248]$). But the per-discharge
+win rate is 0.48, the median discharge's skill is about zero, and removing the top five of
+some 62 discharges takes the pooled advantage to zero or below on all four splits.
+\textbf{A tight interval is not the same as a general effect.} \Ti{} is the opposite: it
+wins on 70\% of discharges and its single largest contributor accounts for only 9--16\%.
+
+Of eleven covariates tested for predicting the win, one survives, and it is \emph{how much
+the target moves within a discharge}. Split into terciles of that spread, \Ti{} wins
+42\% / 83\% / 85\% and \Vrot{} wins 34\% / 48\% / 55\%. The mechanism is physical rather
+than statistical: where a discharge is flat the causal GP is already near-optimal, since
+interpolating a straight line is easy, and the model has nothing to add. That \Vrot{}
+reaches only 55\% even in the most variable tercile restates the term-by-term audit of
+\S\ref{sec:model:physics} from the other side---the driver of rotation is unobserved, so
+the model cannot track motion it has no input for. The family preferences point the same
+way: \Vrot{}'s best arm is the small \emph{recurrent} one and \Ti{}'s is the small
+\emph{convolutional} one, exactly as the routing predicts, because \Vrot{} rides a highly
+autocorrelated carried value where recurrence suffices while \Ti{} integrates
+fast-diagnostic history, where weight sharing across time pays.
+
 % =========================================================================
 \section{Model-selection protocol}
 \label{sec:selection}

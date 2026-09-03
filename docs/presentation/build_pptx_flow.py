@@ -19,7 +19,7 @@ Where the result decks answer "이 결과를 믿어도 되는가", this one answ
 서술문("~하지 않는다")으로 바꾸었다. (2) `main_ko.tex`는 2026-08-16 이후 개정되지 않았으므로
 §3–§11 슬라이드는 논문과 일치한다. 2026-08-16 이후의 기록(B.9 도달 범위·계열·비용·승패
 방전, §8ac–§8an; μs shot 동결 §8ao; 양자 가지 종결 §8ap; 프레이밍 §9)은 **논문에 추가할 절**로
-슬라이드 한 장(f_b9, "§6.12 (추가 예정)")에 정리하였고, §9 개선 여지·§10 한계 슬라이드에 그
+슬라이드 한 장(f_b9, "§6.12")에 정리하였고 (2026-09-03 본문에 반영 완료), §9 개선 여지·§10 한계 슬라이드에 그
 함의를 반영하였다.
 
 **Deliberately excluded**: 날짜 타임라인, 연구 질문이 바뀐 경위(초해상 → gap-filling),
@@ -197,7 +197,7 @@ def f_title():
          line_spacing=1.2)
     text(s, Inches(0.9), Inches(5.9), Inches(11.5), Inches(1.1),
          [[("이승상  (Seungsang Lee)", 17, WHITE, True, False, None)],
-          [("서울대학교 · 원자핵공학  |  2026-08-27 기준 (main_ko.tex 2026-08-16판 + B.9 추가 예정 절)",
+          [("서울대학교 · 원자핵공학  |  2026-09-03 기준 (main_ko.tex: §4 재구성 + §6.12 B.9 반영)",
             13, MGRAY, False, False, None)],
           [("출처: docs/paper/main_ko.tex · paper_numbers.json · THESIS_RESULTS.md §8v–§8ap · §9",
             11, MGRAY, False, False, None)]],
@@ -243,7 +243,7 @@ def f_map():
             "sec:asym · window · ladder", "14–16"],
            ["§6.10–6.11 · §7", "peak 집중 · 컷 문턱 무관 · TEST 전 결정 규칙",
             "sec:peak · cutsens · selection", "17–19"],
-           [("§6.12 (추가 예정) B.9", NAVY, True, None), "문맥 50 ms 포화 · 계열 동률 · 연산자 비용 · 승패 방전",
+           [("§6.12  sec:context", NAVY, True, None), "문맥 50 ms 포화 · 계열 동률 · 연산자 비용 · 승패 방전",
             ("THESIS §8ac–§8an · fig_context", NAVY, True, None), ("20", NAVY, True, None)],
            ["§8–§11", "배치(지연·conformal) · 레버 3종 · 한계 · 결론",
             "sec:deploy · headroom · limits", "21–23"]],
@@ -1336,8 +1336,8 @@ main_ko.tex \\label{sec:selection}(§7).
 # --- 20. §6.12 (to be added): B.9 context / family / cost / wins ----------
 def f_b9():
     s = slide()
-    header(s, "§6.12 (추가 예정)  B.9",
-           "문맥·구조·비용 — 논문에 추가할 절의 골격과 인용할 수치 (§8ac–§8an)", accent=TEAL)
+    header(s, "§6.12  sec:context",
+           "문맥·구조·비용 — 2026-09-03 본문 반영 완료 (§8ac–§8an)", accent=TEAL)
 
     add_image_fit(s, os.path.join(PAPERFIG, "fig_context_family_ladder.png"),
                   Inches(0.55), Inches(1.42), Inches(5.0), Inches(3.5))
@@ -1594,7 +1594,7 @@ def f_limits_conclusion():
            "  도메인 내에서 인과 대비 8/8 생존, 캠페인 경계 너머 PCHIP·",
            "  인과 GP 대비 4/4+4/4이다. 그 차이는 측정이다.",
            "③ 약 50 ms의 연속 인과 문맥이 우위를 전형적으로 만들며(승률",
-           "  0.52 → 0.66), 계열은 skill이 아니라 비용을 정한다(추가 예정).",
+           "  0.52 → 0.66), 계열은 skill이 아니라 비용을 정한다(§6.12).",
            "④ 작동하지 않는 곳과 그 이유도 함께 보고하며, 각각은 구체",
            "  적이고 검정 가능한 변경을 지목한다. 크기·문맥·계열 축은 닫혔다."],
           accent=GREEN, body_size=10.5)
@@ -1650,7 +1650,7 @@ def build():
     f_res_peak()         # 17  §6.10 sec:peak
     f_res_cutsens()      # 18  §6.11 sec:cutsens
     f_selection()        # 19  §7    sec:selection
-    f_b9()               # 20  §6.12 (추가 예정) B.9
+    f_b9()               # 20  §6.12 sec:context (B.9)
     f_deploy()           # 21  §8    sec:deploy
     f_headroom()         # 22  §9    sec:headroom
     f_limits_conclusion()  # 23  §10–11
