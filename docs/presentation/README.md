@@ -10,8 +10,24 @@
 | **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 24 슬라이드 (16:9) | **20분 내부 발표용** 덱 (2026-09-03 압축판 · 화면 글자 분당 674자 · 러닝 클록 19:20 재배분) |
 | **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 25 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-27 초록체 재작성) — 판정표(B.9 행 추가)·재실험 이유·B.1/B.2 모델 선택·novelty 검증·B.9 2장·예상질문 방어표 4장(16문항)·재현성·결정 4건 |
 | **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절(§3.1–§11) + **§6.12(추가 예정) B.9** 골격 1장, 노트에 `\label` (2026-08-27 초록체 재작성) |
+| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 50 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
+
+> **✅ 2026-09-04 제안 덱 형식의 논문 흐름 덱 신설 (승상님 지시: "docs\졸논 정리.pptx 형식에 맞춰서 저거 논문
+> 흐름대로 한번 작성해봐").** 다섯 번째 덱 `KSTAR_CES_졸논정리_논문흐름.pptx`(50장)를 `build_pptx_jolnon.py`가
+> 만든다. 앞의 네 덱이 카드·밴드를 직접 그리는 자체 레이아웃인 반면 이 덱은 **승상님이 5월에 쓰신 제안 단계 덱
+> `docs/졸논 정리.pptx`를 템플릿으로 열어 슬라이드만 비우고 다시 채운다** — 테마("분할"), 슬라이드 마스터,
+> 레이아웃, 표 스타일, 표지 배치, 그리고 제목 개체 틀을 (4.87, 1.65)로 옮겨 48 pt accent1로 한 단어만 적는 구역
+> 표지 관례까지 전부 원본에서 상속되므로, 형식 일치는 재현이 아니라 상속이다. 내용은 `docs/paper/main_ko.tex`의
+> 절 순서 그대로다(서론 → 관련 연구 → 데이터 → 모델 → 평가 → 결과 13장 → 선택 프로토콜 → 배치 → 개선 여지 →
+> 한계 → 결론). 구역 표지 8장, 논문의 표를 옮긴 표 슬라이드 11장, 논문 그림 5장(`fig_missing`·`fig_forest`·
+> `fig_campaign`·`fig_ablation`·`fig_peak`), 나머지는 제목+불릿이며 발표자 노트에 대응하는 `\label`을 적었다.
+> 문체는 초록체이고 모든 수치는 `main_ko.tex`에서 옮겼다. **한 가지만 바꾸었다**: 이 테마의 한글 테마 글꼴은
+> 휴먼매직체(H2MKPB)인데 본문 밀도가 제안 덱보다 훨씬 높아 모든 런의 동아시아 글꼴을 **맑은 고딕**으로
+> 지정하였다(원본 덱도 이미 맑은 고딕을 섞어 쓰고 있었다 — docProps/app.xml). 라틴 글꼴(Gill Sans MT)과 테마
+> 색은 그대로다. 표는 열 폭에 맞춰 폰트를 줄이고 행 높이를 실제 줄바꿈으로 계산하므로 PowerPoint가 행을 늘려
+> 넘치지 않는다. 빌드 로그 FIT WARNING 0, `preview_pptx.py` 경고 0, 기하 검사에서 도형 겹침 0.
 
 > **✅ 2026-09-03 물리적 근거 슬라이드 신설 (승상님 지시: "검증에 과투자, 모델의 수학적·물리적 근거에 과소투자 —
 > 밸런스를 맞춰라").** 진단이 수치로 확인되었다: `main_ko.tex`는 모델 절 53줄 대 결과 절 596줄이고, 표 9·그림 7·
@@ -144,6 +160,7 @@ py docs/presentation/build_pptx.py                     # 2) 1시간 덱 54장 (�
 py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 24장 (1시간 덱 슬라이드 재사용)
 py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱 23장 (§6.12 B.9 골격 포함)
 py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱 25장 (B.9 2장 + 예상 질문 ④)
+py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 50장 (docs/졸논 정리.pptx를 템플릿으로 연다)
 py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```
 
@@ -186,6 +203,11 @@ python docs/presentation/preview_pptx.py docs/presentation/KSTAR_CES_발표자�
 - `build_pptx_flow.py` — 논문 집필용 덱(18장). `build_pptx.py`의 팔레트·레이아웃 헬퍼와
   `figures/`를 재사용하지만 슬라이드는 전부 자체 정의이고, 카드는 `preview_pptx.py`와 같은 폰트
   메트릭으로 크기를 맞추는 `fcard()`로 그립니다. 논문 본문이 바뀌면 대응 슬라이드를 함께 고치세요.
+- `build_pptx_jolnon.py` — 졸논정리 형식의 논문 흐름 덱(50장). 다른 빌더와 달리 팔레트·헬퍼를
+  `build_pptx.py`에서 가져오지 않고, **`docs/졸논 정리.pptx`를 `Presentation()`으로 열어 슬라이드만
+  비운 뒤 다시 채웁니다** — 테마·마스터·레이아웃·표 스타일·구역 표지 관례가 전부 원본에서 상속됩니다.
+  내용은 `docs/paper/main_ko.tex`의 절 순서이고 노트에 각 절의 `\label`이 적혀 있으므로, 논문 본문이
+  바뀌면 대응 슬라이드를 함께 고치세요. 한글은 테마 글꼴(휴먼매직체) 대신 맑은 고딕으로 지정합니다.
 - `preview_pptx.py` — PPTX → PNG 근사 렌더러(레이아웃 QC 전용, PowerPoint/LibreOffice 불필요).
   실제 폰트·좌표로 그려서 텍스트 넘침과 도형 이탈을 잡아냅니다. 정밀 렌더러가 아니므로
   최종 확인은 PowerPoint에서 하세요.
