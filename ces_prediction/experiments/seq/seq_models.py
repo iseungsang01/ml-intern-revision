@@ -15,6 +15,7 @@ from model_seq import SeqCESLSTM
 from model_seq_v2 import SeqCESLSTMv2
 from model_seq_v3 import SeqCESLSTMv3
 from model_seq_b3 import SeqCESB3
+from model_seq_b3vq import SeqCESB3VQ
 from model_seq_tcn import SeqCESTCN
 from model_seq_xfmr import SeqCESXfmr
 from model_seq_ssm import SeqCESSSM
@@ -29,6 +30,12 @@ SEQ_MODELS = {
     "b3k4": functools.partial(SeqCESB3, latent_ti=4),
     "b3k6": functools.partial(SeqCESB3, latent_ti=6),
     "b3k8": functools.partial(SeqCESB3, latent_ti=8),
+
+    # B.11 (PREREGISTRATION_B11.md): b3k8 with the readout selected by a discrete
+    # code. The ONE controlled variable is the number of codes; K is fixed at 8.
+    "b3vq4": functools.partial(SeqCESB3VQ, latent_ti=8, n_codes=4),
+    "b3vq8": functools.partial(SeqCESB3VQ, latent_ti=8, n_codes=8),
+    "b3vq16": functools.partial(SeqCESB3VQ, latent_ti=8, n_codes=16),
 
     # B.4 width ladder: seq_v2 with ONLY the T_i encoder width varied (V_rot branch
     # and heads fixed). "v2" itself is the 160-unit point.
