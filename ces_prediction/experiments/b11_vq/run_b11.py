@@ -26,6 +26,7 @@ Run from the repo root:
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import os
 import random
@@ -68,6 +69,18 @@ N_SHUFFLE = 1000
 MOVE_BINS = 3                 # terciles of |delta CES_TI|, matching 8an's stratification
 
 
+def to_tensors(blocks):
+    """Convert once at load. Rebuilding these per batch per epoch was the epoch cost."""
+    out = []
+    for b in blocks:
+        out.append({
+            "x": torch.as_tensor(b["x"], dtype=torch.float32),
+            "y": torch.as_tensor(b["y"], dtype=torch.float32),
+            "mask": torch.as_tensor(b["mask"], dtype=torch.float32),
+        })
+    return out
+
+
 def batch_tensors(blocks, idx, device):
     lens = [blocks[i]["x"].shape[0] for i in idx]
     n, t = len(idx), max(lens)
@@ -79,9 +92,9 @@ def batch_tensors(blocks, idx, device):
     for r, i in enumerate(idx):
         b = blocks[i]
         L = b["x"].shape[0]
-        x[r, :L] = torch.as_tensor(b["x"], dtype=torch.float32)
-        y[r, :L] = torch.as_tensor(b["y"], dtype=torch.float32)
-        m[r, :L] = torch.as_tensor(b["mask"], dtype=torch.float32)
+        x[r, :L] = b["x"]
+        y[r, :L] = b["y"]
+        m[r, :L] = b["mask"]
         lengths[r] = L
     return x.to(device), y.to(device), m.to(device), lengths
 
@@ -200,18 +213,21 @@ def routing_ok(model, blocks, device):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke", action="store_true")
-    ap.add_argument("--epochs", type=int, default=25)
-    ap.add_argument("--patience", type=int, default=5)
+    ap.add_argument("--epochs", type=int, default=30)   # PREREGISTRATION_B11 sec.3
+    ap.add_argument("--patience", type=int, default=6)  # PREREGISTRATION_B11 sec.3
     ap.add_argument("--split", default="data/.b1_manifest_s42")
+    # One arm per process: the host is memory-bound, so each invocation loads, runs its
+    # three seeds, appends to the shared artifact and exits, releasing everything.
+    ap.add_argument("--arm", default=None, choices=ARMS)
     args = ap.parse_args()
 
     device = torch.device("cpu")
-    torch.set_num_threads(max(1, (os.cpu_count() or 4) // 2))
+    torch.set_num_threads(2)   # the host is memory-bound, not core-bound, here
 
     manifest = json.loads(
         (REPO_ROOT / args.split / "split_manifest.json").read_text(encoding="utf-8"))
     train_names, val_names = list(manifest["train_files"]), list(manifest["val_files"])
-    arms, seeds, epochs = ARMS, INIT_SEEDS, args.epochs
+    arms, seeds, epochs = ([args.arm] if args.arm else ARMS), INIT_SEEDS, args.epochs
     if args.smoke:
         train_names, val_names = train_names[:40], val_names[:12]
         arms, seeds, epochs = ["b3k8", "b3vq8"], [42], 3
@@ -221,20 +237,31 @@ def main():
     stats = fit_stats(grid, dims, [n for n in train_names if n in grid])
     make = lambda names: [b for n in names if n in grid
                           for b in build_blocks(grid[n], dims, stats, per_shot_norm=True)]
-    train_blocks, val_blocks = make(train_names), make(val_names)
+    train_blocks, val_blocks = to_tensors(make(train_names)), to_tensors(make(val_names))
     zero_ti = float((0.0 - stats["target"]["mean"][0]) / stats["target"]["std"][0])
+    del grid                      # 641 files' worth of arrays are no longer needed
+    gc.collect()
     print("[b11] blocks train=%d val=%d (%.0fs load) device=cpu"
           % (len(train_blocks), len(val_blocks), time.time() - t0), flush=True)
 
+    dest = REPO_ROOT / "data" / (".b11_smoke.json" if args.smoke else ".b11_screen.json")
     out = {"protocol": dict(PINNED, batch_blocks=BATCH, lr=LR, wd=WD, clip=CLIP,
                             epochs=epochs, patience=args.patience, split=args.split,
                             arms=arms, init_seeds=seeds, practical_eps=PRACTICAL_EPS,
                             n_shuffle=N_SHUFFLE, move_bins=MOVE_BINS,
                             smoke=bool(args.smoke)),
            "runs": []}
+    # Resume: a killed run must not cost the runs that already finished.
+    if dest.exists() and not args.smoke:
+        prior = json.loads(dest.read_text(encoding="utf-8"))
+        out["runs"] = prior.get("runs", [])
+        print("[b11] resuming with %d run(s) already on disk" % len(out["runs"]), flush=True)
+    done = {(r["arm"], r["init_seed"]) for r in out["runs"]}
 
     for arm in arms:
         for sd in seeds:
+            if (arm, sd) in done:
+                continue
             torch.manual_seed(sd)
             np.random.seed(sd)
             random.seed(sd)
@@ -255,6 +282,8 @@ def main():
                 if ep - best_ep >= args.patience:
                     break
             model.load_state_dict(best_state)
+            del best_state
+            gc.collect()
 
             rec = {"arm": arm, "init_seed": sd, "n_params": int(model.n_params),
                    "val_mse": best, "best_epoch": best_ep + 1, "epochs_run": ep + 1,
@@ -269,6 +298,9 @@ def main():
                 rec["S3"] = screen_codes(model, val_blocks, device,
                                          np.random.default_rng(sd))
             out["runs"].append(rec)
+            dest.write_text(json.dumps(out, indent=2), encoding="utf-8")
+            del model, opt
+            gc.collect()
             print("[b11] %-7s seed %3d  val_mse=%.4f  ep=%d/%d  %ds%s"
                   % (arm, sd, best, best_ep + 1, ep + 1, rec["seconds"],
                      ("  perp=%.2f live=%d S3=%s"
@@ -283,7 +315,8 @@ def main():
 
     ctrl = mean_val("b3k8")
     verdict = {"control_val_mse": ctrl, "arms": {}}
-    for a in arms:
+    present = [a for a in ARMS if any(r["arm"] == a for r in out["runs"])]
+    for a in present:
         if a == "b3k8":
             continue
         rs = [r for r in out["runs"] if r["arm"] == a]
@@ -304,7 +337,6 @@ def main():
     any_pass = any(v["promoted_to_stage2"] for v in verdict["arms"].values())
     out["stage1_result"] = "PROMOTE" if any_pass else "NEGATIVE -- do not open TEST"
 
-    dest = REPO_ROOT / "data" / (".b11_smoke.json" if args.smoke else ".b11_screen.json")
     dest.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("")
     print("[b11] control b3k8 val_mse=%.4f" % ctrl)
