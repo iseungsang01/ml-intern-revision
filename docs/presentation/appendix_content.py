@@ -202,6 +202,42 @@ FUSION_ROWS = [
      "토로이달 자장 코일 디지털 트윈 + 온라인 학습",
      "정적 모델 대비 오차 80 % 감소",
      "캠페인 드리프트(§8n)의 처방이 우리 shot별 표준화와 같은 방향"],
+    ["NN-CES (Fusion Eng. Des. 222:115518)", "KSTAR", "2025/26",
+     "CES 스펙트럼에서 Ti·회전을 직접 추출한다 (빔 변조 없이)",
+     "물리 제약을 넣은 신경망이 빔 변조 배경 차감을 대체한다",
+     "KSTAR 약 150,000 프레임, L·H·locked·RMP 모드",
+     "우리 장치·우리 진단의 가장 가까운 선행 연구. 다만 CES 측정이 있는 시각을 더 잘 읽는 것이고, "
+     "측정이 없는 시각을 채우는 우리 문제와 다르다. 빔 변조가 필요 없다는 점은 결측 자체를 줄일 수 "
+     "있어 CES 재분석 레버의 근거가 된다"],
+    ["SVMR + GPR 프로파일 추론 (NF 64:106052)", "KSTAR", "2024",
+     "CES 측정에서 Ti 프로파일을 추론하며 이상치를 걸러낸다",
+     "SVMR 이상치 분류기 + 비모수 GPR, 초매개변수는 MAP와 MCMC 두 방식",
+     "KSTAR CES 측정 자료",
+     "이상치를 자동으로 골라내는 절차가 우리 3 keV 값 컷의 원리적 대체물이다. 값이 아니라 측정 "
+     "품질로 거르면 두 공동 1차 모집단이 하나로 합쳐진다"],
+    ["이상치 강건 Bayesian mtanh 적합 (NF, arXiv 2607.14142)", "KSTAR", "2026",
+     "TS·TCI·CES에서 ne·Te·Ti·v_T 프로파일을 동시에 적합한다",
+     "수정 tanh 7모수 + good-and-bad 가우시안 혼합 우도, MAP 초기화 후 MCMC",
+     "248 시간 조각을 24코어에서 78초",
+     "CES 항을 NN-CES 산출로 바꿔 끼울 수 있게 설계되어 있다. 프로파일 단위 불확실성이 우리 타깃 "
+     "재현성 바닥(§8aq)의 독립 비교값이 된다"],
+    ["TSER 결측 Te 복원 (NF 65:076008)", "EAST", "2025",
+     "센서 고장·진단 부재로 빠진 전자온도를 복원한다",
+     "시계열 외재 회귀(TSER)가 여러 신호의 상호관계를 학습한다",
+     "방전 전 구간에서 2σ 이내 신뢰수준 95.9 % 이상",
+     "결측 타깃 복원이라는 우리 문제 정의와 가장 가까운 프레이밍이다. 다만 타깃이 전자온도이고 "
+     "인과성 제약도, 보간 기준선과의 비교도 없다"],
+    ["전 상태 복원 (arXiv 2607.04390)", "kinetic 시뮬레이션", "2026",
+     "희소한 밀도 프로브 몇 개로 전 영역 플라즈마 장을 복원한다",
+     "희소 센서 이력의 시간 인코딩 + 공간 디코딩",
+     "고정밀 kinetic 시뮬레이션 자료 (실험 데이터 아님)",
+     "센서 몇 개로 전체 상태를 세우는 구조는 우리와 같으나 실험이 아니라 시뮬레이션에서 검증되었다"],
+    ["평형 재구성 챌린지 (arXiv 2609.01750)", "DIII-D · MAST", "2026",
+     "자기 진단 없이 자기 기하를 추론하는 공개 벤치마크",
+     "PF 코일 전류 + Thomson으로 ψ(R,Z). 기준선 4종(PCA+Ridge / GBT / MLP / conv 디코더)",
+     "DIII-D 약 9,100 shot · MAST 약 2,400 shot",
+     "진단 하나가 없을 때 다른 진단으로 대신한다는 문제를 공개 벤치마크로 만든 사례. 이온 채널은 "
+     "다루지 않으며 shot 단위 분할과 교차 장치 일반화를 요구한다"],
 ]
 
 GENERAL_HEAD = ["방법군", "연도", "대표", "문헌의 주장", "우리 데이터 판정"]
@@ -292,12 +328,13 @@ PRIORITY_ROWS = [
      "RG-ResMoE", "b3k8 위 소형", "조용 3분위 승률 +0.05"],
     ["3", "KalmanNet 팔: 프로세스 = 인과 GP, 관측 = 고속 15채널, 이득 = 소형 GRU",
      "KalmanNet 계열", "신규 코드", "조용 3분위 승률 + 구간 보정"],
-    ["4", "V_rot 입력 확장: 원시 kHz Mirnov 특징(B.6 A1) · NBI 토크 채널 · CES 피팅 품질 "
-          "메타데이터 · 도플러 분광 입력",
+    ["4", "CES 재분석: NN-CES 산출과 적합 품질 메타데이터를 확보해 값 컷을 품질 컷으로 바꾼다",
+     "NN-CES · SVMR+GPR · mtanh 적합", "데이터 요청", "두 공동 1차 모집단이 하나로 합쳐질 것"],
+    ["5", "V_rot 입력 확장: 원시 kHz Mirnov 특징(B.6 A1) · NBI 토크 채널 · 도플러 분광 입력",
      "EAST XCS · PanoMHD · 합성 진단 증강", "데이터 획득", "변동 3분위 V_rot 승률이 먼저 오를 것"],
-    ["5", "제로샷 대조군: TabPFN-v2 회귀(행 특징) · TiRex-2 / Chronos-2(과거 공변량)",
+    ["6", "제로샷 대조군: TabPFN-v2 회귀(행 특징) · TiRex-2 / Chronos-2(과거 공변량)",
      "fev-bench · TSI-Bench", "학습 없음", "인과 GP 대비 4/4"],
-    ["6", "FusionMAE식 사전학습 후 미세조정",
+    ["7", "FusionMAE식 사전학습 후 미세조정",
      "FusionMAE · TokaMind", "GPU 필요", "기대 이득 ≈ 0, 순위 최하"],
 ]
 
@@ -333,6 +370,16 @@ SURVEY_SOURCES = [
     ("KSTAR EPED 재구성", "https://link.springer.com/article/10.1007/s40042-026-01580-1"),
     ("DIII-D 코일 shot-to-shot",
      "https://www.ans.org/news/2026-08-18/article-8302/new-ml-framework-predicts-shifts-between-shots-at-diiid/"),
+    ("NN-CES (KSTAR CES 신경망 분석)", "https://doi.org/10.1016/j.fusengdes.2025.115518"),
+    ("SVMR+GPR KSTAR Ti 프로파일", "https://doi.org/10.1088/1741-4326/ad7304"),
+    ("이상치 강건 Bayesian mtanh 적합", "https://arxiv.org/html/2607.14142"),
+    ("TSER 결측 Te 복원 (EAST)", "https://doi.org/10.1088/1741-4326/addb5f"),
+    ("전 상태 복원 (희소 센서)", "https://arxiv.org/abs/2607.04390"),
+    ("평형 재구성 챌린지", "https://arxiv.org/html/2609.01750"),
+    ("JET CXRS 신경망 (1993, 계보의 시작)",
+     "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-cxrs-ppcf-93.pdf"),
+    ("ST40 교차 진단 grey-box", "https://arxiv.org/abs/2407.18741"),
+    ("W7-X Bayesian Ti 추론", "https://doi.org/10.1088/1361-6587/ad3c1d"),
     ("TSI-Bench", "https://arxiv.org/abs/2406.12747"),
     ("STDiff", "https://arxiv.org/html/2508.19011v1"),
     ("iTimER", "https://arxiv.org/html/2511.06854"),

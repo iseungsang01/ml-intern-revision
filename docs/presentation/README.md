@@ -6,13 +6,27 @@
 
 | 파일 | 형식 | 용도 |
 |---|---|---|
-| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 65 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-05 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 + **부록 A 8장**) |
+| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 68 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-05 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 + **부록 A 8장**) |
 | **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 24 슬라이드 (16:9) | **20분 내부 발표용** 덱 (2026-09-03 압축판 · 화면 글자 분당 674자 · 러닝 클록 19:20 재배분) |
 | **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 25 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-27 초록체 재작성) — 판정표(B.9 행 추가)·재실험 이유·B.1/B.2 모델 선택·novelty 검증·B.9 2장·예상질문 방어표 4장(16문항)·재현성·결정 4건 |
 | **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절(§3.1–§11) + **§6.12(추가 예정) B.9** 골격 1장, 노트에 `\label` (2026-08-27 초록체 재작성) |
-| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 59 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
+| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 62 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
+
+> **⚠️ 2026-09-05 2차 조사 — 1차 조사가 여섯 편을 놓쳤다 (승상님 지적).** 1차 질의가 문제를
+> "예측 · 가상 진단 · 초해상"으로만 걸었는데, 핵융합 커뮤니티는 같은 일을 **"분석 · 추론 · 프로파일
+> 적합"**으로 부른다. arXiv API와 **OpenAlex API**로 다시 훑어 여섯 편을 찾아 넣었다(핵융합 표 12 → 18행).
+> 가장 중요한 것은 **NN-CES**(J.K. Lee 외, *Fusion Engineering and Design* 222:115518, 2025-11 게재) —
+> **KSTAR CES 스펙트럼에서 Tᵢ와 회전을 빔 변조 없이 직접 뽑는 물리 제약 신경망**이며 약 150,000 프레임
+> (L·H·locked·RMP)으로 학습되었다. 우리 장치·우리 진단의 가장 가까운 선행 연구이므로 1시간 덱의
+> **선행 연구 슬라이드(7행으로 확장)**에도 넣었다. 구분은 명확하다 — NN-CES는 **측정이 있는 시각을 더 잘
+> 읽고**, 우리는 **측정이 없는 시각을 채운다**. 다만 빔 변조가 필요 없다는 점은 결측 자체를 줄일 수 있어
+> 우선순위 표에 **CES 재분석**을 4번 팔로 신설하였다(V_rot는 5번으로 이동, 표는 7행).
+> 나머지 다섯은 SVMR+GPR KSTAR Tᵢ 프로파일 추론(NF 2024), 이상치 강건 Bayesian mtanh 적합(KSTAR, NF 2026),
+> TSER 결측 Tₑ 복원(EAST, NF 2025), 희소 센서 전 상태 복원(arXiv 2026), 평형 재구성 챌린지(DIII-D·MAST,
+> arXiv 2026)이다. 출처는 36 → 45건. **교훈: 핵융합 문헌은 WebSearch보다 OpenAlex API로 찾아야 한다**
+> (`literature-access-routes` 메모와 같은 결론).
 
 > **✅ 2026-09-05 참고용 웹 페이지 신설 (승상님 지시: "거리의 합 실험실처럼 아예 따로따로 보관해봐").**
 > `build_survey_artifact.py`가 `survey_artifact.html`을 만들고, 그것을 아티팩트로 게시한다
@@ -180,11 +194,11 @@ py ces_prediction/collect_paper_numbers.py            # 0) 얼린 산출물 -> d
 py docs/presentation/make_figures.py                   # 1) figures/*.png 8종 (paper_numbers.json 판독)
 py docs/presentation/make_figure_architecture_seq.py   # 1b) seq_v2 도식 · make_figure_architecture.py = W=2 대조군 도식
 py docs/presentation/make_figure_transient_seq.py      # 1c) seq_v2 트랜지언트 시연 (held-out TEST shot, B.1 s42 체크포인트)
-py docs/presentation/build_pptx.py                     # 2) 1시간 덱 65장(부록 A 8장 포함) (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
+py docs/presentation/build_pptx.py                     # 2) 1시간 덱 68장(부록 A 11장 포함) (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
 py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 24장 (1시간 덱 슬라이드 재사용)
 py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱 23장 (§6.12 B.9 골격 포함)
 py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱 25장 (B.9 2장 + 예상 질문 ④)
-py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 59장 (docs/졸논 정리.pptx를 템플릿으로 연다)
+py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 62장 (docs/졸논 정리.pptx를 템플릿으로 연다)
 py docs/presentation/build_survey_artifact.py          # 5c) 참고 웹 페이지 survey_artifact.html (판 6개)
 py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```

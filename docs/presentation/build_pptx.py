@@ -613,7 +613,7 @@ def s_related():
          [[("교차 진단 재구성은 활발한 계열이며, 본 연구는 그 프로그램을 이어받아 세 축에서 확장한다.",
             12.5, GRAY, False, False, None)]])
     col_w = [Inches(3.05), Inches(4.55), Inches(4.61)]
-    table(s, Inches(0.55), Inches(1.66), col_w,
+    table(s, Inches(0.55), Inches(1.58), col_w,
           ["선행 연구", "무엇을 하는가", "본 연구가 다른 지점"],
           [
               [("Diag2Diag (Nat. Commun. 2025)", NAVY, True, None),
@@ -634,7 +634,10 @@ def s_related():
               [("KSTAR EPED 재구성 (JKPS 2026)", NAVY, True, None),
                "CES를 입력으로 쓰는 고속 프로파일 재구성이다.",
                "회전은 저자들이 명시한 향후 과제로 남아 있다."],
-          ], row_h=Inches(0.58), head_h=Inches(0.42), size=11.5, head_size=12.5)
+              [("NN-CES (KSTAR, FED 2025/26)", NAVY, True, None),
+               "CES 스펙트럼에서 Tᵢ·회전을 빔 변조 없이 직접 추출한다.",
+               "측정이 있는 시각을 읽고, 우리는 없는 시각을 채운다."],
+          ], row_h=Inches(0.545), head_h=Inches(0.38), size=10.5, head_size=12)
     axes = [
         ("① 타깃 채널", ["전자 물리량의 재구성에서",
                       "희소 이온 채널(Tᵢ · V_rot)의 복원으로."], TEAL),
@@ -644,8 +647,8 @@ def s_related():
                       "사전등록 기준선에 대한 타깃별 검정으로."], ORANGE),
     ]
     for i, (title, lines, accent) in enumerate(axes):
-        card(s, Inches(0.55 + i * 4.13), Inches(5.62), Inches(3.95), Inches(1.30),
-             title, lines, accent=accent, title_size=13, body_size=11.5)
+        card(s, Inches(0.55 + i * 4.13), Inches(5.78), Inches(3.95), Inches(1.24),
+             title, lines, accent=accent, title_size=12.5, body_size=11)
     return s
 
 
@@ -2200,7 +2203,11 @@ def s_apx_lit_fusion_a():
 
 
 def s_apx_lit_fusion_b():
-    return _s_apx_lit_fusion(2, AP.FUSION_ROWS[6:])
+    return _s_apx_lit_fusion(2, AP.FUSION_ROWS[6:12])
+
+
+def s_apx_lit_fusion_c():
+    return _s_apx_lit_fusion(3, AP.FUSION_ROWS[12:])
 
 
 _GENERAL_W = [1.70, 0.95, 2.60, 3.95, 3.35]
@@ -2362,6 +2369,7 @@ def build():
     s_apx_tried_misc()
     s_apx_lit_fusion_a()
     s_apx_lit_fusion_b()
+    s_apx_lit_fusion_c()
     s_apx_lit_general_a()
     s_apx_lit_general_b()
     s_apx_lit_iso()

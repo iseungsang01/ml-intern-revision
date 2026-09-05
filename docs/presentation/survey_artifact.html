@@ -696,22 +696,29 @@ footer p{margin:0 0 6px;max-width:90ch}
           <td>신규 코드</td>
           <td>조용 3분위 승률 + 구간 보정</td>
         </tr>
-        <tr data-state="open" class="is-vrot">
+        <tr data-state="open">
           <td class="rank">4</td>
-          <td>V_rot 입력 확장: 원시 kHz Mirnov 특징(B.6 A1) · NBI 토크 채널 · CES 피팅 품질 메타데이터 · 도플러 분광 입력</td>
+          <td>CES 재분석: NN-CES 산출과 적합 품질 메타데이터를 확보해 값 컷을 품질 컷으로 바꾼다</td>
+          <td>NN-CES · SVMR+GPR · mtanh 적합</td>
+          <td>데이터 요청</td>
+          <td>두 공동 1차 모집단이 하나로 합쳐질 것</td>
+        </tr>
+        <tr data-state="open" class="is-vrot">
+          <td class="rank">5</td>
+          <td>V_rot 입력 확장: 원시 kHz Mirnov 특징(B.6 A1) · NBI 토크 채널 · 도플러 분광 입력</td>
           <td>EAST XCS · PanoMHD · 합성 진단 증강</td>
           <td>데이터 획득</td>
           <td>변동 3분위 V_rot 승률이 먼저 오를 것</td>
         </tr>
         <tr data-state="open">
-          <td class="rank">5</td>
+          <td class="rank">6</td>
           <td>제로샷 대조군: TabPFN-v2 회귀(행 특징) · TiRex-2 / Chronos-2(과거 공변량)</td>
           <td>fev-bench · TSI-Bench</td>
           <td>학습 없음</td>
           <td>인과 GP 대비 4/4</td>
         </tr>
         <tr data-state="open">
-          <td class="rank">6</td>
+          <td class="rank">7</td>
           <td>FusionMAE식 사전학습 후 미세조정</td>
           <td>FusionMAE · TokaMind</td>
           <td>GPU 필요</td>
@@ -770,12 +777,26 @@ footer p{margin:0 0 6px;max-width:90ch}
       <div class="srcgroup">
         <h3>시계열 <span>15</span></h3>
         <ul>
+          <li><a href="https://doi.org/10.1016/j.fusengdes.2025.115518" target="_blank" rel="noopener">NN-CES (KSTAR CES 신경망 분석)</a></li>
+          <li><a href="https://doi.org/10.1088/1741-4326/ad7304" target="_blank" rel="noopener">SVMR+GPR KSTAR Ti 프로파일</a></li>
+          <li><a href="https://arxiv.org/html/2607.14142" target="_blank" rel="noopener">이상치 강건 Bayesian mtanh 적합</a></li>
+          <li><a href="https://doi.org/10.1088/1741-4326/addb5f" target="_blank" rel="noopener">TSER 결측 Te 복원 (EAST)</a></li>
+          <li><a href="https://arxiv.org/abs/2607.04390" target="_blank" rel="noopener">전 상태 복원 (희소 센서)</a></li>
+          <li><a href="https://arxiv.org/html/2609.01750" target="_blank" rel="noopener">평형 재구성 챌린지</a></li>
+          <li><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-cxrs-ppcf-93.pdf" target="_blank" rel="noopener">JET CXRS 신경망 (1993, 계보의 시작)</a></li>
+          <li><a href="https://arxiv.org/abs/2407.18741" target="_blank" rel="noopener">ST40 교차 진단 grey-box</a></li>
+          <li><a href="https://doi.org/10.1088/1361-6587/ad3c1d" target="_blank" rel="noopener">W7-X Bayesian Ti 추론</a></li>
           <li><a href="https://arxiv.org/abs/2406.12747" target="_blank" rel="noopener">TSI-Bench</a></li>
           <li><a href="https://arxiv.org/html/2508.19011v1" target="_blank" rel="noopener">STDiff</a></li>
           <li><a href="https://arxiv.org/html/2511.06854" target="_blank" rel="noopener">iTimER</a></li>
           <li><a href="https://arxiv.org/html/2512.12116v3" target="_blank" rel="noopener">Neural CDE 보정기</a></li>
           <li><a href="https://github.com/thuml/TimeXer" target="_blank" rel="noopener">TimeXer</a></li>
           <li><a href="https://arxiv.org/html/2607.01204v1" target="_blank" rel="noopener">TiRex-2</a></li>
+        </ul>
+      </div>
+      <div class="srcgroup">
+        <h3>동형 <span>14</span></h3>
+        <ul>
           <li><a href="https://arxiv.org/abs/2501.02945" target="_blank" rel="noopener">TabPFN-TS</a></li>
           <li><a href="https://arxiv.org/html/2510.13654v1" target="_blank" rel="noopener">TSFM 벤치마크 경고</a></li>
           <li><a href="https://arxiv.org/html/2303.00320v4" target="_blank" rel="noopener">TimeMAE</a></li>
@@ -785,11 +806,6 @@ footer p{margin:0 0 6px;max-width:90ch}
           <li><a href="https://link.springer.com/article/10.1007/s10994-025-06824-y" target="_blank" rel="noopener">DLFM</a></li>
           <li><a href="https://arxiv.org/pdf/2306.16717" target="_blank" rel="noopener">이분산 회귀 병리</a></li>
           <li><a href="https://arxiv.org/pdf/2211.05979" target="_blank" rel="noopener">반지도 VAE 회귀</a></li>
-        </ul>
-      </div>
-      <div class="srcgroup">
-        <h3>동형 <span>5</span></h3>
-        <ul>
           <li><a href="https://arxiv.org/html/2402.10574v2" target="_blank" rel="noopener">GP-MIDAS</a></li>
           <li><a href="https://arxiv.org/html/2604.21527v1" target="_blank" rel="noopener">저가 센서 보정</a></li>
           <li><a href="https://arxiv.org/html/2602.04725v1" target="_blank" rel="noopener">커프리스 혈압 벤치마크</a></li>

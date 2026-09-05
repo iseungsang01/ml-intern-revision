@@ -1123,7 +1123,8 @@ table_slide(
 )
 
 _FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
-for _part, _rows in ((1, AP.FUSION_ROWS[:6]), (2, AP.FUSION_ROWS[6:])):
+for _part, _rows in ((1, AP.FUSION_ROWS[:6]), (2, AP.FUSION_ROWS[6:12]),
+                     (3, AP.FUSION_ROWS[12:])):
     table_slide(
         "문헌 조사 (1/4, %d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다" % _part,
         AP.FUSION_HEAD, _rows, widths=_FUSION_W,
