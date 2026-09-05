@@ -1066,6 +1066,35 @@ example-sampling noise, and the training loop's own scale is then a lower bound.
 is still unrun; until it is, 8aa's flat width sweep cannot fully separate "capacity does not
 help" from "the learning rate did not match that width".
 
+## The Closest Prior Work Is On Our Own Machine (2026-09-05) — §8at
+
+**NN-CES** (Lee et al., *Fusion Eng. Des.* 222:115518, 2025; KFE + UST + UNIST, W.H. Ko among the
+authors) trains a physics-constrained network on ~150,000 KSTAR frames and reads `T_i` and rotation
+directly from the CES **spectra**, with no beam modulation. It is the nearest published neighbour to
+this thesis, and the first literature sweep missed it.
+
+**Why it was missed, and the fix.** The sweep asked for "prediction", "virtual diagnostic" and
+"super-resolution". Fusion files this work under **analysis, inference, profile fitting**. Five more
+papers came with it once the vocabulary changed: SVMR+GPR `T_i` profiles on KSTAR (NF 2024),
+outlier-robust Bayesian mtanh fitting on KSTAR (NF 2026 — built so the CES term can be swapped for
+NN-CES output), TSER recovery of missing electron temperature on EAST (NF 2025), full-state
+reconstruction from sparse probes (arXiv 2026), and the DIII-D/MAST equilibrium challenge (arXiv
+2026). **Search fusion literature through the OpenAlex API, not a web search engine**, and put
+`analysis`, `inference`, `profile fitting` and `reconstruction` in the query.
+
+**The positioning sentence, fixed.** NN-CES reads the instants where CES measured; this work fills
+the instants where it did not. Its input is the CES spectrum itself, so it cannot run on a frame that
+does not exist. Say it that way — it concedes the neighbour and keeps the distinction.
+
+**And the discipline that followed.** The paper's "no modulation needed" invited an inference about
+*our* missingness, and it was written into the appendix before it was measured. The measurement
+(§8at) refused it: the two target masks agree only **72.8%** raw — our 3 keV cut moves that by 0.3
+points — and the mask autocorrelations decay smoothly with no periodic ripple, so there is **no
+shared shutter and no duty cycle** in the delivered 10 ms product. What survives is the *useful* half:
+per-frame fit quality would replace our value-based cut and merge the two co-primary populations.
+Same rule as always — a mechanism claim gets measured before it is published, even when the mechanism
+comes from a peer-reviewed paper about our own instrument.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

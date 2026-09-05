@@ -6,13 +6,25 @@
 
 | 파일 | 형식 | 용도 |
 |---|---|---|
-| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 68 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-05 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 + **부록 A 8장**) |
+| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 70 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-05 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 + **부록 A 8장**) |
 | **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 24 슬라이드 (16:9) | **20분 내부 발표용** 덱 (2026-09-03 압축판 · 화면 글자 분당 674자 · 러닝 클록 19:20 재배분) |
 | **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 25 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-27 초록체 재작성) — 판정표(B.9 행 추가)·재실험 이유·B.1/B.2 모델 선택·novelty 검증·B.9 2장·예상질문 방어표 4장(16문항)·재현성·결정 4건 |
 | **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절(§3.1–§11) + **§6.12(추가 예정) B.9** 골격 1장, 노트에 `\label` (2026-08-27 초록체 재작성) |
-| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 62 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
+| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 64 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
+
+> **✅ 2026-09-05 §8at — NN-CES가 부른 추론을 측정으로 철회하였다.** NN-CES의 초록이 밝힌 계측 사실
+> (KSTAR는 전용 진단빔이 아니라 **주 가열빔 변조**로 CES를 잰다)에서 "그렇다면 우리 결측은 그 변조
+> 주기이고 변조 없는 분석이 결측을 없앤다"는 추론이 곧바로 부록에 적혔다. 그 문장을 측정으로 검정하였다
+> (`ces_prediction/analyze_ces_duty_cycle.py` → `data/.ces_duty_cycle.json`, 641파일 전수 · 모델 없음).
+> **결과는 아니다** — 두 타깃 마스크의 일치는 **원본 72.8 %**이고 우리 3 keV 컷은 그것을 0.3 %p만
+>움직인다(공통 셔터라면 거의 100 %여야 한다). 마스크 자기상관은 잔물결 없이 매끄럽게 감쇠하고
+> (Tᵢ 0.327 → 0.123), 우세 주기는 1.48 s · 2.98 s로 듀티 사이클이 아니라 블록 포락선 규모이다.
+> Tᵢ 결측은 7,169회 중 4,028회가 **한 프레임(10 ms)짜리 고립 결측**이다. 우리가 받은 행은 이미 배경
+> 차감과 적합이 끝난 10 ms 산출물이므로 변조는 상류에서 접혀 들어갔다. 남는 이득은 **프레임별 적합
+> 품질**이고, 그것이 값 기준 3 keV 컷을 대체해 두 공동 1차 모집단을 하나로 합친다. 부록의 해당 문장과
+> 우선순위 4번 팔을 그렇게 고쳤고, 시도한 모델 표에 §8at 행을 더했다(20 → 21건).
 
 > **⚠️ 2026-09-05 2차 조사 — 1차 조사가 여섯 편을 놓쳤다 (승상님 지적).** 1차 질의가 문제를
 > "예측 · 가상 진단 · 초해상"으로만 걸었는데, 핵융합 커뮤니티는 같은 일을 **"분석 · 추론 · 프로파일
@@ -194,11 +206,11 @@ py ces_prediction/collect_paper_numbers.py            # 0) 얼린 산출물 -> d
 py docs/presentation/make_figures.py                   # 1) figures/*.png 8종 (paper_numbers.json 판독)
 py docs/presentation/make_figure_architecture_seq.py   # 1b) seq_v2 도식 · make_figure_architecture.py = W=2 대조군 도식
 py docs/presentation/make_figure_transient_seq.py      # 1c) seq_v2 트랜지언트 시연 (held-out TEST shot, B.1 s42 체크포인트)
-py docs/presentation/build_pptx.py                     # 2) 1시간 덱 68장(부록 A 11장 포함) (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
+py docs/presentation/build_pptx.py                     # 2) 1시간 덱 70장(부록 A 13장 포함) (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
 py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 24장 (1시간 덱 슬라이드 재사용)
 py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱 23장 (§6.12 B.9 골격 포함)
 py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱 25장 (B.9 2장 + 예상 질문 ④)
-py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 62장 (docs/졸논 정리.pptx를 템플릿으로 연다)
+py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 64장 (docs/졸논 정리.pptx를 템플릿으로 연다)
 py docs/presentation/build_survey_artifact.py          # 5c) 참고 웹 페이지 survey_artifact.html (판 6개)
 py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```

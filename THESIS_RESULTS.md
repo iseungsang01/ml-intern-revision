@@ -4110,6 +4110,88 @@ precise about what it can and cannot do:
 
 ---
 
+---
+
+## 8at. Is the CES missingness a beam-modulation duty cycle? (2026-09-05) — no, and that narrows a claim made the same day
+
+**Where the question came from.** A second literature sweep (prompted by 승상님: the first pass had
+asked only for "prediction / virtual diagnostic / super-resolution", which is not what the fusion
+community calls this work) found **NN-CES** — J.K. Lee, W.H. Ko, H.H. Lee, B. Kim, Y. Lee, G. Shin,
+J. Kim, J.M. Lee, *Neural network-based analysis of charge exchange spectra in KSTAR*, Fusion
+Engineering and Design **222**:115518 (2025), doi:10.1016/j.fusengdes.2025.115518, open access. It is
+the closest published work to this thesis: a physics-constrained network trained on ~150,000 KSTAR
+frames (L-mode, H-mode, locked mode, RMP) that reads `T_i` and toroidal rotation straight out of the
+CES spectra, with a loss combining parameter error and spectral-shape consistency.
+
+Its abstract states the instrument fact that matters here: **KSTAR runs CES off the main heating
+beam, modulated**, rather than off a dedicated diagnostic beam, and NN-CES removes the need for that
+modulation. The obvious inference — *then our gaps are the modulation duty cycle, and a
+modulation-free analysis would delete them at the source* — was written into the appendix within the
+hour. This section measures it instead of asserting it.
+
+**Design** (`ces_prediction/analyze_ces_duty_cycle.py` → `data/.ces_duty_cycle.json`, all 641 files,
+247,207 rows, 667 contiguous 10 ms blocks; descriptive only, no model, no split, no TEST).
+Four statistics, each chosen to separate *one shared shutter* from *per-channel outcome*:
+run lengths of observed and missing stretches per target; the dominant FFT period of each
+observation mask; the agreement between the `T_i` and `V_rot` masks, computed **twice** (raw NaN
+masks, and after the confirmed protocol's 3 keV cut); and the short-lag autocorrelation of each mask.
+
+### 1. Coverage and mask agreement
+
+| quantity | value |
+|---|---:|
+| both targets observed | 70.0% |
+| `T_i` only | 21.4% |
+| `V_rot` only | 6.1% |
+| neither | 2.5% |
+| **mask agreement, raw** | **72.8%** |
+| mask agreement, after the 3 keV cut | 72.5% |
+
+**This is the decisive row.** A single beam-modulation shutter gates the spectrometer, not one
+channel of it, so it would drive the two masks to agree essentially always. They agree
+**72.8%** of the time *before* our treatment touches anything, and our own 3 keV cut moves
+that by **0.3 percentage points** — nothing. So the disagreement is in the delivered
+data, and the two channels go missing largely independently, exactly as the data contract already
+assumed.
+
+### 2. Run lengths and periodicity
+
+| statistic | `T_i` | `V_rot` |
+|---|---:|---:|
+| missing runs, median / mean / p90 | 1 / 2.81 / 5 | 1 / 18.83 / 11 |
+| observed runs, median / mean | 2 / 29.75 | 3 / 55.67 |
+| dominant FFT period, median | 1480 ms | 2980 ms |
+| mask autocorrelation, lag 1 → 10 | 0.327 → 0.123 | 0.299 → 0.211 |
+
+`T_i` gaps are overwhelmingly **isolated single frames** — 4,028 of 7,169 missing runs are
+one 10 ms step. The dominant periods sit at the block-envelope scale (1.5 s, 3.0 s), not at any duty
+cycle, and the short-period modes (2–3 steps) appear in only ~20 of 667 blocks. The
+autocorrelations **decay smoothly with no ripple**; a fixed modulation period would oscillate.
+
+### 3. Verdict, and the claim it narrows
+
+**No duty cycle is visible in our data.** The rows we hold are already the background-subtracted,
+fitted 10 ms product, so whatever modulation KSTAR ran has been folded in upstream; what remains
+missing is a per-channel analysis outcome, not a beam gate we could see.
+
+The same-day appendix sentence "빔 변조가 필요 없다는 점은 결측 자체를 줄일 수 있다" is therefore
+**demoted from a mechanism to a request**. What NN-CES credibly offers this work is not fewer holes
+in the file we already have; it is (i) **per-frame fit quality**, which is the named replacement for
+our value-based 3 keV cut and would collapse the two co-primary populations into one (§8q, §8ab), and
+(ii) the possibility of a **denser CES product re-derived from the raw spectra**, which is a data
+request to KFE — W.H. Ko, a co-author, is the KSTAR CES diagnostic lead — and not something our masks
+can establish.
+
+**What would overturn this.** The raw CES frame timing, or the beam-modulation log for these 641
+discharges. If the modulation period is present upstream at a resolution finer than our 10 ms grid,
+this measurement cannot see it, and says so.
+
+**Positioning, stated once so it is not restated loosely.** NN-CES reads the instants where CES
+measured; this work fills the instants where it did not. Its inputs are the CES spectra themselves,
+so it cannot run where there is no frame. That distinction is now on the related-work slide.
+
+Artifacts: `data/.ces_duty_cycle.json`, `ces_prediction/analyze_ces_duty_cycle.py`.
+
 *All quantitative claims above were regenerated on 2026-07-14 from the checkpoints listed in the
 provenance table, using the repository's own harness (`compare_baselines.py`, `bootstrap_compare.py`,
 `peak_analysis.py`, `evaluate.py`) with the architecture pinned as described. The model neither

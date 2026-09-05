@@ -2169,17 +2169,27 @@ def s_apx_tried_seq():
                     "v3는 val에서 2/2 유의였으나 TEST에서 1/4에 그쳐 규칙대로 미승격하였다.")
 
 
-def s_apx_tried_misc():
+def _s_apx_tried_misc(part, rows, takeaway):
     s = slide()
-    header(s, "부록 A-1", "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
+    header(s, "부록 A-1",
+           "시도한 모델의 계보와 닫은 이유 (3/3, %d쪽): 계열 · 문맥 · 기준선 · 확장 가지" % part,
            accent=GRAY)
-    table_fit(s, _APX_X, Inches(1.44), _APX_W, Inches(4.95),
-              AP.TRIED_HEAD, AP.TRIED_MISC, _TRIED_W)
-    text(s, Inches(0.55), Inches(6.55), Inches(12.25), Inches(0.62),
-         [[(AP.TRIED_TAKEAWAY, 12, NAVY, True, False, None)]], line_spacing=1.10,
-         space_after=0)
-    return _note(s, "출처는 8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap이며, "
+    table_fit(s, _APX_X, Inches(1.44), _APX_W,
+              Inches(4.95 if takeaway else 5.45), AP.TRIED_HEAD, rows, _TRIED_W)
+    if takeaway:
+        text(s, Inches(0.55), Inches(6.55), Inches(12.25), Inches(0.62),
+             [[(AP.TRIED_TAKEAWAY, 12, NAVY, True, False, None)]], line_spacing=1.10,
+             space_after=0)
+    return _note(s, "출처는 8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap · 8at이며, "
                     "마지막 행은 진행 중인 B.11(PREREGISTRATION_B11.md)이다.")
+
+
+def s_apx_tried_misc_a():
+    return _s_apx_tried_misc(1, AP.TRIED_MISC[:5], False)
+
+
+def s_apx_tried_misc_b():
+    return _s_apx_tried_misc(2, AP.TRIED_MISC[5:], True)
 
 
 _FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
@@ -2198,16 +2208,24 @@ def _s_apx_lit_fusion(part, rows):
     return _note(s, AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."))
 
 
+_FUSION_PARTS = [AP.FUSION_ROWS[0:5], AP.FUSION_ROWS[5:10],
+                 AP.FUSION_ROWS[10:14], AP.FUSION_ROWS[14:]]
+
+
 def s_apx_lit_fusion_a():
-    return _s_apx_lit_fusion(1, AP.FUSION_ROWS[:6])
+    return _s_apx_lit_fusion(1, _FUSION_PARTS[0])
 
 
 def s_apx_lit_fusion_b():
-    return _s_apx_lit_fusion(2, AP.FUSION_ROWS[6:12])
+    return _s_apx_lit_fusion(2, _FUSION_PARTS[1])
 
 
 def s_apx_lit_fusion_c():
-    return _s_apx_lit_fusion(3, AP.FUSION_ROWS[12:])
+    return _s_apx_lit_fusion(3, _FUSION_PARTS[2])
+
+
+def s_apx_lit_fusion_d():
+    return _s_apx_lit_fusion(4, _FUSION_PARTS[3])
 
 
 _GENERAL_W = [1.70, 0.95, 2.60, 3.95, 3.35]
@@ -2366,10 +2384,12 @@ def build():
             "무엇을 시도하여 무엇을 닫았는가, 그리고 2026-09-05 문헌 조사가 지목하는 다음 팔")
     s_apx_tried_window()
     s_apx_tried_seq()
-    s_apx_tried_misc()
+    s_apx_tried_misc_a()
+    s_apx_tried_misc_b()
     s_apx_lit_fusion_a()
     s_apx_lit_fusion_b()
     s_apx_lit_fusion_c()
+    s_apx_lit_fusion_d()
     s_apx_lit_general_a()
     s_apx_lit_general_b()
     s_apx_lit_iso()

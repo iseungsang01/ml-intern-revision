@@ -1115,16 +1115,18 @@ table_slide(
     note_txt="8d / 8t / 8x / 8y / 8z / 8aa / 8ab / 8ai.",
 )
 
-table_slide(
-    "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
-    AP.TRIED_HEAD, AP.TRIED_MISC, widths=[2.7, 1.1, 3.1, 2.8, 2.4],
-    tail=AP.TRIED_TAKEAWAY,
-    note_txt="8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap, 그리고 진행 중인 B.11.",
-)
+for _part, _rows, _tail in ((1, AP.TRIED_MISC[:5], None),
+                            (2, AP.TRIED_MISC[5:], AP.TRIED_TAKEAWAY)):
+    table_slide(
+        "시도한 모델의 계보와 닫은 이유 (3/3, %d쪽): 계열 · 문맥 · 기준선 · 확장 가지" % _part,
+        AP.TRIED_HEAD, _rows, widths=[2.7, 1.1, 3.1, 2.8, 2.4],
+        tail=_tail,
+        note_txt="8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap · 8at, 그리고 B.11.",
+    )
 
 _FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
-for _part, _rows in ((1, AP.FUSION_ROWS[:6]), (2, AP.FUSION_ROWS[6:12]),
-                     (3, AP.FUSION_ROWS[12:])):
+for _part, _rows in ((1, AP.FUSION_ROWS[0:5]), (2, AP.FUSION_ROWS[5:10]),
+                     (3, AP.FUSION_ROWS[10:14]), (4, AP.FUSION_ROWS[14:])):
     table_slide(
         "문헌 조사 (1/4, %d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다" % _part,
         AP.FUSION_HEAD, _rows, widths=_FUSION_W,
