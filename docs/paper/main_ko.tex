@@ -1,119 +1,272 @@
 % =========================================================================
-% KSTAR CES 멀티모달 나우캐스팅 — 국문 논문 초안
-% 빌드: tectonic main_ko.tex  (XeTeX + xeCJK, Windows 맑은고딕 사용)
+% KSTAR CES 멀티모달 나우캐스팅 — 국문 논문
+%
+% 빌드:  lualatex main_ko  →  bibtex main_ko  →  lualatex main_ko ×2
+%        (목차 쪽번호가 맞으려면 마지막 두 패스가 모두 필요하다.)
+%
+% 조판 스타일은 preamble_ko.tex 한 곳에 모여 있다.
 % 영문판 main.tex 과 동일한 구조·그림·참고문헌(refs.bib)을 공유한다.
 % =========================================================================
-\documentclass[10pt]{article}
+\documentclass[10pt,a4paper]{article}
+\input{preamble_ko}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,bm}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{multirow}
-\usepackage{xeCJK}
-\xeCJKsetup{CJKspace=true}% 한국어: 단어 간 공백 보존 (기본값은 중일어용 공백 무시)
-\setCJKmainfont{Malgun Gothic}
-\setCJKsansfont{Malgun Gothic}
-\setCJKmonofont{Malgun Gothic}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
-% Set the PDF metadata explicitly rather than letting hyperref derive it from the
-% CJK \title (which contains \textbf and line breaks).
+% PDF 메타데이터는 CJK \title 에서 유도하지 않고 명시한다.
 \hypersetup{
   pdftitle={KSTAR 희소 전하교환분광(CES) 신호의 멀티모달 나우캐스팅},
   pdfauthor={이승상 (Seungsang Lee)},
-}
-\usepackage{xcolor}
-
-% Korean names for the structural labels the article class hard-codes in English.
-% Without these a Korean-language paper still prints "Abstract", "References",
-% "Figure 1", "Table 1" -- and \today renders as "August 9, 2026".
-\renewcommand{\abstractname}{초록}
-\renewcommand{\refname}{참고문헌}
-\renewcommand{\figurename}{그림}
-\renewcommand{\tablename}{표}
-\renewcommand{\contentsname}{목차}
-\renewcommand{\appendixname}{부록}
-\renewcommand{\today}{{\number\year}년 {\number\month}월 {\number\day}일}
-
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
-\newcommand{\Ti}{\ensuremath{T_i}}
-\newcommand{\Vrot}{\ensuremath{V_\mathrm{rot}}}
-\newcommand{\skillp}{\ensuremath{\mathrm{skill}_{\mathrm{PCHIP}}}}
-\newcommand{\seqv}{\texttt{seq\_v2}}
-\newcommand{\bthree}{\texttt{b3k8}}
-
-\graphicspath{{figures/}}
-
-\title{\textbf{KSTAR 희소 전하교환분광(CES) 신호의\\
-멀티모달 나우캐스팅:\\
-고속 진단은 미래를 보는 보간을 넘어\\
-이온온도를 복원하지만 토로이달 회전은 복원하지 못한다}}
-
-% article.cls typesets \@author inside a tabular, so each \\ is a row break whose
-% optional-argument lookahead expands the token that follows. A Hangul character
-% sitting directly before \\ makes that lookahead fail under xeCJK
-% ("! Improper alphabetic constant"), so the line ends with an empty group.
-\author{%
-  이승상 (Seungsang Lee)\\
-  서울대학교 원자핵공학과{}\\
-  \texttt{lss010330@snu.ac.kr}
+  pdfsubject={사전등록 프로토콜 아래의 인과적 결측 채움 — 이온온도는 복원되고 토로이달 회전은 복원되지 않는다},
+  bookmarksnumbered=true,
 }
 
-\date{국문 초안 --- \today}
+\title{\bfseries KSTAR 희소 전하교환분광(CES) 신호의\\
+멀티모달 나우캐스팅\\[2pt]
+\large 고속 진단은 미래를 보는 보간을 넘어 이온온도를 복원하지만\\
+토로이달 회전은 복원하지 못한다}
+
+\author{이승상 (Seungsang Lee)\\
+서울대학교 원자핵공학과\\
+\texttt{lss010330@snu.ac.kr}}
+
+\date{국문 원고 --- \today}
 
 \begin{document}
 \maketitle
 
 % =========================================================================
+% 구조화 초록 — 항목마다 그 값이 정의된 절을 괄호로 가리킨다.
+% =========================================================================
 \begin{abstract}
-전하교환분광(CES)은 토카막에서 이온온도(\Ti)와 토로이달 회전(\Vrot)을 측정하는
-핵심 진단이지만, 광자 수집 제약 때문에 느리고 간헐적으로 결측된다. 본 연구가
-다루는 KSTAR 10\,ms 격자에서는 \Ti{}의 8.2\%, \Vrot{}의 23.9\%가 결측되고 두
-타겟은 서로 독립적으로 빠지며, \Vrot{}은 여기에 더해 41.1\%가 계측기 유지값
-(held)이어서 격자의 65.0\%가 독립적인 \Vrot{} 정보를 갖지 않는다. 본 논문은
-항상 측정되는 고속 진단---빔방출분광(BES), 전자사이클로트론방출영상(ECEI),
-Mirnov 코일---과 불규칙한 과거 CES 이력을 결합하면, CES가 결측된 시점에서
-\emph{CES 자체의 시간 보간으로는 복원할 수 없는} 정보를 회복할 수 있는지를
-묻는다. 고속 진단은 10\,ms 격자 위에서 조밀하므로 우리는 문제를 \emph{인과적
-전체격자 시퀀스 추정}으로 프레이밍한다: 소형(0.36M 파라미터) 2분기 순환
+\begin{fielddesc}[5.4em]
+
+\item[배경] 전하교환분광(CES)은 토카막에서 이온온도(\Ti)와 토로이달 회전(\Vrot)을
+측정하는 핵심 진단이지만, 광자 수집 제약 때문에 느리고 간헐적으로 결측된다. 본
+연구의 KSTAR 10\,ms 격자에서 \Ti{}의 8.2\%, \Vrot{}의 23.9\%가 \emph{서로
+독립적으로} 결측되고, \Vrot{}은 여기에 더해 41.1\%가 계측기 유지값(held)이어서
+격자의 65.0\%가 독립적인 \Vrot{} 정보를 갖지 않는다(\S\ref{sec:data},
+\S\ref{sec:stuck}).
+
+\item[질문] CES가 결측된 시점에서, 항상 측정되는 고속 진단---빔방출분광(BES),
+전자사이클로트론방출영상(ECEI), Mirnov 코일---과 불규칙한 과거 CES 이력만으로,
+\emph{CES 자체의 시간 보간으로는 복원할 수 없는} \Ti{}·\Vrot{} 정보를 회복할 수
+있는가(\S\ref{sec:intro}).
+
+\item[설계] 고속 진단은 10\,ms 격자 위에서 조밀하므로 문제를 \emph{인과적
+전체격자 시퀀스 추정}으로 프레이밍한다. 소형(0.36M 파라미터) 2분기 순환
 나우캐스터가 격자의 모든 행을 맥락으로 소비하고, 희소한 타겟은 행을 버리는 대신
-타겟별 마스킹 손실로 처리하며, \Vrot{} 분기는 구조적으로 고속 진단에서 차단된다.
-관측 마스킹 풀링을 갖춘 윈도 기반 GRU--어텐션 모델이 짝지은 대조군이다. 평가는
-의도적으로 불리하게 설계했다: 오프라인 보간(선형, 단조 3차 PCHIP, 국소 AR,
-가우시안 과정)은 타겟 시점 \emph{양쪽의 과거와 미래} CES 이웃을 볼 수 있는 반면
-모델은 엄격히 인과적이며, \emph{인과} GP가 배치 가능한 가장 강한 기준선을
-대표한다. 사전등록된 프로토콜---plateau 최소 이력($W{=}2$), 유지값 제거 학습·채점,
-파일 단위 분할, 모델 선택이 전혀 건드리지 않는 test 셋, shot 군집 paired
+타겟별 마스킹 손실로 처리하며, \Vrot{} 분기는 구조적으로 고속 진단에서
+차단된다---이 라우팅은 두 보존식에서 나온 것이지 튜닝의 산물이 아니다.
+관측 마스킹 풀링을 갖춘 윈도 기반 GRU--어텐션 모델이 짝지은
+대조군이다(\S\ref{sec:model}).
+
+\item[기준선] 평가는 의도적으로 불리하게 설계했다. 오프라인 보간(선형, 단조 3차
+PCHIP, 국소 AR, 가우시안 과정)은 타겟 시점 \emph{양쪽의 과거와 미래} CES 이웃을
+볼 수 있는 반면 모델은 엄격히 인과적이며, 배치 가능한 가장 강한 기준선은
+\emph{인과} GP가 대표한다(\S\ref{sec:eval}).
+
+\item[프로토콜] 사전등록: plateau 최소 이력($W{=}2$), 유지값 제거 학습·채점, 파일
+단위 분할, 모델 선택이 전혀 건드리지 않는 test 셋, shot 군집 paired
 bootstrap(10{,}000회 재표본), 그리고 \Ti{} 스펙트럼 피팅 실패($>$3\,keV, 0.53\%)를
-결측으로 처리하거나 그대로 두는 \emph{두 개의 공동 1차 모집단}(무조건적 주장은
-둘 다에서 성립해야 한다)---하에서 나우캐스터는 \Ti{}에 대해 미래를 쓰는 PCHIP을
-skill $+0.17\sim+0.26$(스파이크 컷)과 $+0.23\sim+0.32$(스파이크 포함)로 이기며,
-\emph{두 모집단 각각의 독립적인 4개 held-out 분할 모두}에서 95\% 신뢰구간이 0을
-제외하고, 8개 셀 전부에서 인과 GP도 이긴다. \Vrot{}은 같은 관문을 4개 중 1개와
-2개 분할에서만 통과하므로 동률로 보고한다. 두 개의 스트레스 테스트가 오프라인
-주장과 배치 주장을 분리한다: 채점 지점을 \emph{진짜 결측} 지점의 공변량 분포로
-재가중해도 모든 인과 방법 대비 우위는 전 분할에서 유지되고 PCHIP 대비 우위는
-2/4(컷)와 4/4(포함)에서 유지된다. 캠페인을 가로질러 시간으로 엄격히 재분할하면
----이는 윈도 대조군의 보간 대비 우위를 제거한다---시퀀스 나우캐스터는 두 모집단
-모두에서 4/4 초기화에 대해 PCHIP과 인과 GP를 앞선다. 우위는 고변동 국소 구간에
-집중되며(peak 계층 \Ti{} skill $+0.45\sim+0.72$, 8/8 PASS), 보정된 conformal
-구간은 모든 셀에서 두 기준선의 구간을 이긴다. persistence+보정의 정확한 분해를
-갖는 21k 파라미터 잠재 병목 모델은 스파이크 컷에서 백본의 \Ti{} skill과 대등하고,
-백본을 34k에서 879k 파라미터로 넓혀도 그 값은 $\pm 0.01$ 미만으로 변한다---총합
-손실의 한계는 추정기가 아니라 정보다(제곱오차의 46.6\%가 상위 1\%의 한 스텝 변화에
-몰려 있어 이 진술은 꼬리 통계에 관한 것이다). 문맥과 구조를 따로 움직이면 역할이
-갈린다: 연속 인과 문맥을 20에서 630\,ms로 늘리면 skill이 $+0.055$에서 $+0.138$로
-오르고 인과 GP를 이기는 방전의 비율이 0.52에서 0.66으로 올라 평평해지는 반면, 같은
-도달 범위에서 순환·확장 합성곱·attention은 0.023 이내로 동률이다---아키텍처는
-skill이 아니라 비용(디스패치되는 연산자 수)으로 정해진다. 입력 절제(ablation) 실험은 \Ti$\leftrightarrow$\Vrot{}
-비대칭이 물리적임을 보인다: 컷 모집단에서 이력만 쓰는 모델은 \Ti{}에 대해 보간
-아래로 떨어지는 반면, 고속 진단을 0으로 만들어도 \Vrot{}은 비트 단위로
-동일하다(미관측 NBI 토크, 100\,Hz로 샘플된 Mirnov 신호가 kHz 모드 회전을
-앨리어싱으로 소실). 전체 파이프라인, 사전등록 문서, 평가 산출물을 공개한다.
+결측으로 처리하거나 그대로 두는 \emph{두 개의 공동 1차 모집단}---무조건적 주장은
+둘 다에서 성립해야 한다(\S\ref{sec:eval}, \S\ref{sec:selection}).
+
+\item[주 결과] 나우캐스터는 \Ti{}에 대해 미래를 쓰는 PCHIP을
+$\skillp = +0.17\sim+0.26$(스파이크 컷)과 $+0.23\sim+0.32$(스파이크 포함)로
+이기며, \emph{두 모집단 각각의 독립적인 4개 held-out 분할 모두}에서 95\%
+신뢰구간이 0을 제외하고, 8개 셀 전부에서 인과 GP도 이긴다. 가장 강한 미래 사용
+평활기인 오프라인 GP와는 동률이다(\S\ref{sec:results}).
+
+\item[부정 결과] \Vrot{}은 같은 관문을 4개 중 1개와 2개 분할에서만 통과하므로
+동률로 보고한다. 고속 진단을 0으로 만들어도 \Vrot{} 출력은 비트 단위로 동일하고
+이력을 0으로 만들면 붕괴하므로, 회전은 10\,ms에서 이력 자기상관의 한계에
+머문다(미관측 NBI 토크, 100\,Hz로 샘플된 Mirnov 신호의 kHz 모드 회전 앨리어싱).
+이를 \Ti$\leftrightarrow$\Vrot{} 정보 비대칭이라 부른다(\S\ref{sec:asym}).
+
+\item[스트레스] 두 개의 테스트가 오프라인 주장과 배치 주장을 분리한다. 채점 지점을
+\emph{진짜 결측} 지점의 공변량 분포로 재가중해도 모든 인과 방법 대비 우위는 전
+분할에서 유지되고 PCHIP 대비 우위는 2/4(컷)와 4/4(포함)에서 유지된다. 캠페인을
+가로질러 시간으로 엄격히 재분할하면---이는 윈도 대조군의 보간 대비 우위를
+제거한다---시퀀스 나우캐스터는 두 모집단 모두에서 4/4 초기화에 대해 PCHIP과 인과
+GP를 앞선다(\S\ref{sec:mnar}, \S\ref{sec:campaign}).
+
+\item[우위의 소재] 우위는 고변동 국소 구간에 집중되며(peak 계층 \Ti{} skill
+$+0.45\sim+0.72$, 8/8 PASS), 보정된 conformal 구간은 32개 모집단--타겟--변형--분할
+셀 전부에서 두 기준선의 구간을 이긴다(\S\ref{sec:peak}, \S\ref{sec:deploy}).
+
+\item[한계의 축] persistence$+$보정의 정확한 분해를 갖는 21k 파라미터 잠재 병목
+모델은 스파이크 컷에서 백본의 \Ti{} skill과 대등하고, 백본을 34k에서 879k
+파라미터로 넓혀도 그 값은 $\pm0.01$ 미만으로 변한다---총합 손실의 한계는 추정기가
+아니라 정보다(제곱오차의 46.6\%가 상위 1\%의 한 스텝 변화에 몰려 있어 이 진술은
+꼬리 통계에 관한 것이다, \S\ref{sec:ladder}).
+
+\item[문맥과 구조] 둘을 따로 움직이면 역할이 갈린다. 연속 인과 문맥을 20에서
+630\,ms로 늘리면 skill이 $+0.055$에서 $+0.138$로 오르고 인과 GP를 이기는 방전의
+비율이 0.52에서 0.66으로 오르는 반면, 같은 도달 범위에서 순환·확장
+합성곱·attention은 0.023 이내로 동률이다---아키텍처는 skill이 아니라 비용을
+정한다(\S\ref{sec:context}).
+
+\item[공개] 전체 파이프라인, 사전등록 문서, 평가 산출물을 공개한다.
+
+\end{fielddesc}
 \end{abstract}
 
+\begin{quote}
+\textbf{한 값은 한 자리에서만 정의된다.} 같은 수치를 여러 절에서 되풀이하면 그
+자체가 절 불일치의 자리가 되므로, 이 원고는 값마다 정의 절을 하나만 두고 다른
+절에서는 그 절을 가리킨다. 위 초록의 괄호가 그 자리다. 값이 어긋나 보이면 정의
+절이 옳다. 인용된 모든 수치는 동결된 평가 산출물에서 단일 수집
+스크립트(\texttt{collect\_paper\_numbers.py})가 읽어 온다.
+\end{quote}
+
+\clearpage
+\tableofcontents
+\clearpage
+
 % =========================================================================
+% 심사자용 한 쪽 요약
+% =========================================================================
+\section*{심사자용 한 쪽 요약 --- 이 논문이 답하는 것 전부}
+\addcontentsline{toc}{section}{심사자용 한 쪽 요약 --- 이 논문이 답하는 것 전부}
+\label{sec:onepager}
+
+이 쪽에만 있는 값은 없다. 아래 모든 수치는 본문의 정의 절에서 왔고, 괄호 안이 그
+자리다.
+
+\textbf{문제.} KSTAR의 10\,ms 격자에서 CES는 \Ti{}의 8.2\%, \Vrot{}의 23.9\%를
+비운다. 두 타겟은 \emph{서로 독립적으로} 빠지고(\S\ref{sec:data}), \Vrot{}은
+41.1\%가 계측기 유지값이어서 실제로 독립적인 회전 측정을 담은 행은 35.0\%뿐이다
+(\S\ref{sec:stuck}). 그리고 결측은 아무 데나 있지 않다---저신호 구간, ELM, 천이
+같은 물리적으로 흥미로운 순간에 몰린다. 즉 무작위적이지 않은 결측(MNAR)이다.
+같은 플라즈마를 BES·ECEI·Mirnov는 결측 없이 본다. 셋 중 어느 것도 \Ti{}나
+\Vrot{}을 직접 측정하지는 않는다.
+
+\textbf{지금 하는 일과 이 논문이 하는 일.} 결측 채움의 현직 방법은 CES 채널 자체의
+시간 보간이고, 그것은 타겟 시점 \emph{양쪽}의 이웃을 쓴다---즉 미래를 읽으므로
+온라인에서는 쓸 수 없다. 이 논문은 미래를 읽지 않는 모델이 미래를 읽는 그 방법을
+이기는지를 묻는다. 이겼다면 고속 진단이 CES의 시간 구조에 없는 CES 정보를
+운반한다는 뜻이고, 그 뜻은 CES 단독으로는 도달할 수 없다.
+
+\textbf{판정은 착수 전에 고정되었다.} 이력 길이 $W{=}2$는 24-run 스윕의 plateau
+최소 규칙으로, 계측기 유지값 제거는 학습과 채점 양쪽에, 분할은 파일 단위로,
+유의성은 shot 군집 paired bootstrap 10{,}000회로, 그리고 \Ti{} 스펙트럼 피팅
+실패 0.53\%는 \emph{두 개의 공동 1차 모집단}으로---모든 팔에서 결측 처리하거나,
+모든 곳에서 유지하거나---정해졌다. 무조건적 주장은 두 모집단 모두에서 성립해야
+한다. test 셋은 모델 선택이 한 번도 읽지 않았다(\S\ref{sec:eval},
+\S\ref{sec:selection}).
+
+\textbf{답 셋.} \emph{하나}, \Ti{}는 이긴다---미래를 쓰는 PCHIP 대비 skill
+$+0.17\sim+0.32$, 두 모집단의 4개 분할 여덟 셀 전부에서 신뢰구간이 0을 제외하고,
+배치 가능한 가장 강한 기준선인 인과 GP도 8/8로 이긴다(\S\ref{sec:results}).
+\emph{둘}, \Vrot{}은 이기지 못한다---같은 관문을 1/4·2/4만 통과하므로 동률로
+적는다. 이것은 튜닝 부족이 아니다. 고속 진단 입력을 전부 0으로 만들어도 \Vrot{}
+출력은 \emph{비트 단위로} 동일하다(\S\ref{sec:asym}). \emph{셋}, 남은 손실은
+추정기 문제가 아니다---21k 파라미터 모델이 백본과 대등하고 폭을 26$\times$ 넓혀도
+skill은 $\pm0.01$ 안에서 움직인다(\S\ref{sec:ladder}).
+
+\textbf{그리고 이 논문은 스스로 멈춘다.} 반증 지점 여섯을 착수 전에 적어 두었고
+(표~\ref{tab:falsify}), 그중 둘은 실제로 걸렸다---회전은 관문을 통과하지 못해
+동률로 강등되었고, 오프라인 GP와의 동률 때문에 ``미래를 쓰는 보간을 이긴다''는
+``모든 오프라인 방법을 이긴다''로 넓혀 적지 않는다. 걸린 것을 걸렸다고 적은
+자리가 이 원고에서 가장 정보가 많은 자리다.
+
+\begin{center}
+\begin{tikzpicture}[node distance=3.0mm]
+
+\node[argstep] (n1)
+  {\textbf{문제} \hfill \S\ref{sec:data}·\S\ref{sec:stuck}\\
+   10\,ms 격자에서 \Ti{} 8.2\%·\Vrot{} 23.9\% 결측(서로 독립), \Vrot{}은 41.1\%가
+   계측기 유지값 $\rightarrow$ 독립적인 회전 측정은 격자의 35.0\%. 결측은 저신호·ELM·천이에
+   몰린다(MNAR).};
+
+\node[argstep, below=of n1] (n2)
+  {\textbf{현직 방법} \hfill \S\ref{sec:eval}\\
+   CES 채널 자체의 시간 보간. 타겟 시점 \emph{양쪽}의 이웃을 쓴다 --- 오프라인에서만
+   가능하고 온라인에서는 쓸 수 없다.};
+
+\node[argkey, below=of n2] (n3)
+  {\textbf{질문} \hfill \S\ref{sec:intro}\\
+   동시각 고속 진단(BES·ECEI·Mirnov)과 불규칙한 과거 CES 이력만으로, CES 단독의
+   시간 보간이 복원할 수 없는 \Ti{}·\Vrot{} 정보를 회복할 수 있는가?};
+
+\node[argstep, below=of n3] (n4)
+  {\textbf{설계} \hfill \S\ref{sec:model}\\
+   인과적 전체격자 2분기 순환 나우캐스터(0.36M). 라벨 없는 행을 버리지 않고 희소성을
+   손실로 옮긴다. \Vrot{} 분기는 \emph{구조적으로} 고속 진단에서 차단 --- 라우팅은 두
+   보존식에서 나온다.};
+
+\node[argstep, below=of n4] (n5)
+  {\textbf{기준선 --- 의도적으로 불리하게} \hfill \S\ref{sec:eval}\\
+   보간(선형·PCHIP·국소 AR·GP)은 미래를 읽고 모델은 읽지 않는다. 배치 가능한 가장
+   강한 상대는 persistence 가 아니라 \emph{인과} GP 다.};
+
+\node[argkey, below=of n5] (n6)
+  {\textbf{결과} \hfill \S\ref{sec:results}·\S\ref{sec:asym}\\
+   \Ti: PCHIP 대비 $+0.17\sim+0.32$, 8개 모집단--분할 셀 전부에서 CI가 0을 제외,
+   인과 GP 8/8. \quad \Vrot: 1/4·2/4 --- \textbf{동률로 보고한다}.};
+
+\node[argstep, below=of n6] (n7)
+  {\textbf{이 사슬이 끊길 수 있는 자리} \hfill 표~\ref{tab:falsify}·\S\ref{sec:limits}\\
+   ① 관측 지점에서만 잰 skill(MNAR) ② 캠페인 이동 ③ 오프라인 GP 동률 ④ 추정기
+   크기 ⑤ 값 기준 컷의 대리성 ⑥ 단일 장치. 여섯 모두 착수 전에 적혔고, 그중 둘은
+   실제로 걸렸다.};
+
+\draw[argflow] (n1) -- (n2);
+\draw[argflow] (n2) -- (n3);
+\draw[argflow] (n3) -- (n4);
+\draw[argflow] (n4) -- (n5);
+\draw[argflow] (n5) -- (n6);
+\draw[argflow] (n6) -- (n7);
+
+\end{tikzpicture}
+\captionof{figure}{논증 사슬 --- 어느 마디가 무엇으로 지탱되는가. 굵은 테두리는 이
+논문이 직접 판정하는 두 마디다.}
+\label{fig:argchain}
+\end{center}
+
+\begin{table}[htbp]
+\footnotesize
+\caption{사전등록된 반증 지점 여섯. 각 행은 착수 전에 문서로 고정되었고, 마지막
+열이 실제로 관측된 것이다. 둘은 걸렸다.}
+\label{tab:falsify}
+\begin{tblr}{
+  width=\linewidth,
+  colspec={X[1.9,l]X[2.05,l]X[1.7,l]Q[l,1.35cm]X[2.0,l]},
+  row{1}={font=\bfseries},
+  hline{1,Z}={0.9pt}, hline{2}={0.5pt},
+}
+주장 & 틀렸다면 관측되는 것 & 그때 하는 일 & 미리 적힌 곳 & 실제로 관측된 것 \\
+\Ti{} 나우캐스팅이 미래를 쓰는 보간을 이긴다
+  & 8개 모집단--분할 셀 중 하나라도 95\% CI가 0을 포함
+  & 무조건적 주장을 철회하고 모집단 조건부로 강등한다
+  & \S\ref{sec:eval}
+  & \textbf{8/8 통과.} $\skillp=+0.17\sim+0.32$ \\
+\Vrot{} 도 같은 관문을 통과한다
+  & 4개 분할 중 통과가 3개 미만
+  & 동률로 보고하고 원인을 절제 실험으로 지목한다
+  & \S\ref{sec:eval}
+  & \textbf{걸렸다.} 1/4·2/4 $\rightarrow$ 동률. 고속 진단 0에도 출력 비트 동일 \\
+우위가 진짜 결측 지점에서도 남는다
+  & 결측 공변량으로 재가중하면 CI가 0을 포함
+  & 우위를 관측 지점 조건부로 한정한다
+  & \S\ref{sec:mnar}
+  & 인과 대비 8/8 유지, PCHIP 대비 2/4(컷)·4/4(포함) \\
+캠페인 경계를 넘어도 남는다
+  & 시간 분할에서 보간 대비 우위 소멸
+  & 우위를 캠페인 내부로 한정한다
+  & \S\ref{sec:campaign}
+  & 윈도 대조군은 \textbf{실제로 소멸}(2/4·0/4), 시퀀스 백본은 4/4 유지 \\
+모든 오프라인 방법을 이긴다
+  & 어떤 오프라인 평활기와 동률이거나 진다
+  & 주장을 ``사전등록된 보간들''로 좁힌다
+  & \S\ref{sec:limits}
+  & \textbf{걸렸다.} 오프라인 GP와 동률(8셀 중 1개 유의) $\rightarrow$ 주장 축소 \\
+남은 손실이 추정기 용량 때문이다
+  & 폭을 넓히면 skill이 오른다
+  & 크기 축을 열린 레버로 남긴다
+  & \S\ref{sec:ladder}
+  & 34k$\rightarrow$879k 에서 $\pm0.01$ 미만 $\rightarrow$ \textbf{크기 축은 닫혔다} \\
+\end{tblr}
+\end{table}
+
 \section{서론}
 \label{sec:intro}
 
@@ -320,6 +473,71 @@ $T_e$/$n_e$를 요동 진단 속도로 합성하고
 타겟별 검정}으로. 우리가 아는 한 이 세 확장의 결합---희소 CXRS 이온 측정의
 인과적 시간 결측 채움---은 아직 다뤄지지 않았으며, 우리는 이를 계열로부터의
 이탈이 아니라 그 자연스러운 다음 단계로 제시한다.
+
+\paragraph{차별점을 실명으로 대조한다.}
+위 세 단락의 대비를 표~\ref{tab:novelty}에 한자리로 모은다. 각 행은 인접 연구를
+실명으로 적고, 그 차이가 \emph{구조}(설계가 다른 것을 한다)인지
+\emph{배치}(같은 재료를 다르게 놓은 것)인지를 구분하며, 마지막 열에 그 판단을
+확정하는 근거---해당 논문이 명시한 범위---를 적는다. ``최초''라는 낱말은 이
+원고 어디에서도 주장으로 쓰지 않는다. 범위를 좁히는 것은 남는 주장을 약하게
+만들기 위해서가 아니라 반증 가능하게 만들기 위해서다.
+
+\begin{table}[htbp]
+\footnotesize
+\caption{실명 대조. 구조 = 대상·조건화·검정 대상 자체가 다름. 배치 = 같은 재료를
+다른 평가 규칙 아래 놓음.}
+\label{tab:novelty}
+\begin{tblr}{
+  width=\linewidth,
+  colspec={Q[c,0.35cm]X[1.5,l]X[1.5,l]Q[l,1.45cm]X[2.35,l]},
+  row{1}={font=\bfseries},
+  hline{1,Z}={0.9pt}, hline{2}={0.5pt},
+}
+\# & 차별점 & 실명 인접자 & 구조/배치 & 확정 근거 \\
+
+1 & 재구성 대상이 \emph{희소 이온} 채널이다(CES \Ti{}·\Vrot{})
+  & Diag2Diag~\citep{Jalalvand2025MultimodalSuperresolution}, COMPASS 시간
+    초해상~\citep{Imrek2026TemporalSuperresolution},
+    FusionMAE~\citep{Yang2026FusionmaeSelfsupervised}, EAST 결측
+    $T_e$~\citep{Wang2025TimeSeries}
+  & 구조
+  & 이 계열의 구성원은 전자 물리량 또는 일반 조밀 채널을 재구성한다. CER/CES가
+    등장하는 경우에도 어디까지나
+    \emph{입력}이며~\citep{Jalalvand2025MultimodalSuperresolution} 희소 타겟이 아니다 \\
+
+2 & 타겟 자신의 \emph{불규칙한 과거}에 조건화된 인과 추정이고, 미래를 절대 읽지 않는다
+  & Diag2Diag·COMPASS(동시각 무기억 매핑), FusionMAE(윈도 내 재구성),
+    PanoMHD~\citep{Noh2026PanomhdMultimodal}(인과이지만 결측 채움이 아님)
+  & 구조
+  & 우리 입력은 타겟별 관측 플래그와 경과시간(staleness)을 명시 채널로 나르고,
+    타겟 시점은 전부 마스킹되어 누수가 구조적으로 불가능하다(\S\ref{sec:framing}) \\
+
+3 & 이겨야 할 기준선을 \emph{타겟 채널의 미래 사용 보간}으로 세우고 그것을 착수 전에 등록한다
+  & 위 전부, 그리고 프로파일 GP·스플라인
+    문헌~\citep{chilenski2015,michoski2024,fritsch1980}
+  & 배치
+  & 어느 구성원도 결측 채움의 현직 방법(타겟 채널 자체의 양쪽 이웃 보간)을 넘어야 할
+    관문으로 두지 않는다. 이 배치가 ``고속 진단이 CES 밖 정보를 나르는가''를 답이
+    갈리는 물음으로 만든다(\S\ref{sec:eval}) \\
+
+4 & 재구성 가능성을 \emph{가정하지 않고 타겟별로 검정}한다
+  & RTCAKENN~\citep{Shousha2023MachineLearningbased}(결측은 입력 강건성 조건),
+    DIII-D 액추에이터 조건부 예보~\citep{Abbate2021DatadrivenProfile}(조밀 프로파일에서 미래 예보)
+  & 구조
+  & 같은 모델·같은 손실에서 \Ti{}는 통과하고 \Vrot{}은 통과하지 못한다. 고속 진단
+    절제에서 \Vrot{} 출력이 비트 단위로 동일하다는 것이 그 검정의
+    결과다(\S\ref{sec:asym}) \\
+
+5 & 계측기 유지값을 채점에서 제거하고, 스펙트럼 피팅 실패를 \emph{두 공동 1차 모집단}으로 괄호 친다
+  & 우리가 아는 범위에서 이 계열에 대조 사례 없음
+  & 배치
+  & \Vrot{}은 41.1\%가 직전 값의 반복이므로, 제거하지 않으면 채점이 모델의 예측이
+    아니라 계측기의 반복을 채점한다(\S\ref{sec:stuck}). 피팅 실패 0.53\%는 컷의
+    선택만으로 결론을 뒤집을 수 있어 두 모집단 모두에서 성립할 것을
+    요구한다(\S\ref{sec:spikes}) \\
+
+\end{tblr}
+\end{table}
 
 \paragraph{불규칙 시간·마스킹 멀티태스크 학습.}
 본 설계는 불규칙 시계열 문헌의 표준 재료---관측 마스크와 감쇠 인지 순환
@@ -1693,39 +1911,102 @@ $r = +0.024$($p = 0.58$)이고, shot 내부에서 \Ti{} 상관은 일관된 부�
 \section{한계}
 \label{sec:limits}
 
-\textbf{통계적 검정력.} 재현의 단위는 shot이며, 분할당 test shot이 96개(\Ti)
-/ 60--66개(\Vrot)이므로 검정력이 모든 유의성 판정을 제약하고, shot별 제곱오차
-차이는 두꺼운 꼬리를 갖는다(소수의 방전이 bootstrap 산포를 지배한다. 포함
-모집단에서는 행의 $\approx$1\%가 모든 팔의 \Ti{} 제곱오차의 70--83\%를 담는다).
-\textbf{MNAR 낙관.} skill은 관측 지점에서만 측정된다. \S\ref{sec:mnar}의 재가중은
-두 모집단 모두에서 인과 비교에 대한 낙관의 상한을, 오프라인 비교에 대해서는
-모집단 조건부 유의성으로 그 상한을 정하며, 결측 \Ti{} 행의 54--68\%와 결측
-\Vrot{} 행의 4--6\%를 포괄한다.
-\textbf{오프라인 주장의 상한은 GP 동률이다.} 오프라인 GP는 PCHIP을 이기고 모델은
-그것과 동률일 뿐이므로(8개 셀 중 1개 유의), ``미래를 쓰는 보간을 이긴다''는
-``사전등록된 보간들을 이긴다''를 뜻하며 모든 오프라인 방법으로 확장되지 않는다.
-다만 배치 가능한 가장 강한 방법인 인과 GP로는 확장된다.
-\textbf{값 기준 컷은 대리 지표다.} 두 모집단이 피팅 실패 문제를 괄호로 묶지만,
-이를 결말짓는 것은 피팅 품질 컷이며(\S\ref{sec:headroom}), \Vrot{}의 스파이크는
-컷되지 않은 채로 남는다.
-\textbf{캠페인 전이는 하나의 시간 블록에 기댄다}(\S\ref{sec:campaign}): 4개
-분할이 아니라 4개 초기화이며, 컷 모집단 실행 4개 중 2개는 epoch 상한에서 멈췄다.
-윈도 대조군을 전이시키는 수리인 shot별 표준화는 오프라인 형태이고, 실제로 출하될
-버전인 인과적 러닝(확장 윈도/EWMA) 추정기는 여기서 측정되지 않았다.
-\textbf{지표의 비대칭.} 보간은 shot 전체의 이웃을 쓰는 반면 윈도 대조군은 두 행을,
-백본은 세그먼트의 과거를 본다. 이는 인과 모델에 의도적으로 불리하지만 직접적인
-해석은 어렵게 만든다.
-\textbf{단일 장치, 단일 모델 계열.} 모든 것이 하나의 장치, 하나의 진단 집합,
-그리고 밀접하게 관련된 두 순환 계열에서 나왔다. 다른 토카막으로의 전이는 여기서
-아무것도 확립되지 않았다.
-\textbf{불확실성은 조건부가 아니라 주변적으로 보정된다}(\S\ref{sec:deploy}).
-\textbf{지연시간}은 노트북급 머신 한 대에서 네트워크만 잰 값이며 전원 상태에 따라
-실행 간 최대 2$\times$ 변동한다(\S\ref{sec:deploy}); 특징 조립과 획득 오버헤드는
-포함되지 않는다.
-\textbf{범위.} 페데스탈 상단 프레이밍은 데이터 선정(페데스탈 상단 CES 채널)에서
-물려받은 것이며, 반경 의존성 실험은 수행하지 않았고 사건 위상 분석(ELM 주기,
-L--H 천이)은 향후 과제다---\S\ref{sec:peak}의 고변동 분석은 사건에 무관한 대리
-지표다.
+\textbf{이 장의 결론.} 다른 장에 흩어 둔 한계를 한자리에 모아 열 항목으로 적는다.
+항목마다 이 논문이 그것을 어떻게 다루는지를 함께 적고, \emph{다루지 못하는 것은
+다루지 못한다고} 적는다. 그리고 마지막 열은 그 한계를 뒤집으려면 무엇을 재야
+하는지다---``정보가 부족하다''로 끝나는 줄은 이 표에 없다.
+
+\begin{table}[htbp]
+\footnotesize
+\caption{한계 열 항목. 마지막 열의 측정이 수행되고 그 결과가 반대로 나오면 해당
+행의 진술은 철회된다.}
+\label{tab:limits}
+\begin{tblr}{
+  width=\linewidth,
+  colspec={Q[c,0.35cm]X[1.55,l]Q[l,1.05cm]X[2.05,l]X[1.95,l]},
+  row{1}={font=\bfseries},
+  hline{1,Z}={0.9pt}, hline{2}={0.5pt},
+}
+\# & 한계 & 크기 & 이 논문이 하는 일 & 이것을 뒤집을 측정 \\
+
+1 & \Vrot{}에 대한 부정 결과는 방법의 한계가 아니라 \emph{입력의} 한계다
+  & 크다
+  & 실패가 아니라 발견으로 보고한다. 고속 진단을 0으로 만들어도 출력이 비트 단위로
+    동일함을 보여 원인을 입력 쪽으로 확정한다(\S\ref{sec:asym})
+  & 데이터셋에 없는 NBI 토크 채널, 그리고 100\,Hz 데시메이션이 모델이 보기도 전에
+    파괴한 kHz 모드 회전을 담은 \emph{원시} Mirnov 스트림에서 다시 계산한 특징
+    (\S\ref{sec:headroom}) \\
+
+2 & \textbf{통계적 검정력.} 재현의 단위는 shot이고 분할당 test shot이
+    96개(\Ti)·60--66개(\Vrot)다. shot별 제곱오차 차이는 꼬리가 두껍다(포함
+    모집단에서 행의 $\approx$1\%가 모든 팔의 \Ti{} 제곱오차의 70--83\%를 담는다)
+  & 크다
+  & 유의성 판정을 shot 군집 paired bootstrap으로 하고, 하나의 분할이 아니라 두
+    모집단 $\times$ 4개 독립 분할의 8개 셀 \emph{전부}를 관문으로 둔다
+  & 같은 프로토콜을 더 많은 shot---다음 캠페인---에서 반복. 표본이 커져도 8/8이
+    유지되는지가 이 주장의 재현 시험이다 \\
+
+3 & \textbf{MNAR 낙관.} skill은 관측 지점에서만 측정된다
+  & 중간
+  & \S\ref{sec:mnar}의 재가중이 두 모집단 모두에서 인과 비교에 대한 낙관의 상한을,
+    오프라인 비교에 대해서는 모집단 조건부 유의성으로 그 상한을 정한다
+  & 재가중은 결측 \Ti{} 행의 54--68\%에 닿지만 결측 \Vrot{} 행의 4--6\%에만 닿는다.
+    나머지에 닿으려면 \Vrot{} 결측을 예측하는 공변량이 더 있어야 한다 \\
+
+4 & \textbf{오프라인 주장의 상한은 GP 동률이다.} 오프라인 GP는 PCHIP을 이기고
+    모델은 그것과 동률일 뿐이다(8개 셀 중 1개 유의)
+  & 중간
+  & ``미래를 쓰는 보간을 이긴다''를 ``사전등록된 보간들을 이긴다''로 좁혀 적는다.
+    배치 가능한 최강인 인과 GP로는 확장된다
+  & 오프라인 GP를 넘으려면 CES의 시간 구조 밖에서 오는 정보가 더 필요하다---1행과
+    같은 두 레버가 그 후보다 \\
+
+5 & \textbf{값 기준 컷은 대리 지표다.} 두 공동 1차 모집단이 피팅 실패 문제를
+    괄호로 묶지만 \Vrot{}의 스파이크는 컷되지 않은 채 남는다
+  & 중간
+  & 무조건적 주장을 두 모집단 모두에서 요구해, 컷의 선택이 결론을 정하지 못하게
+    한다(\S\ref{sec:cutsens}의 임계값 민감도 포함)
+  & CES 피팅 품질 메타데이터($\chi^2$·신호세기)를 받아 값 기준 컷을 품질 기준 컷으로
+    바꾸는 것(\S\ref{sec:headroom}). 이것이 이 문제를 결말짓는다 \\
+
+6 & \textbf{캠페인 전이는 하나의 시간 블록에 기댄다}
+  & 중간
+  & 4개 분할이 아니라 4개 초기화로 보고하고 그렇게 적는다. 컷 모집단 실행 4개 중
+    2개는 epoch 상한에서 멈췄다(\S\ref{sec:campaign})
+  & 윈도 대조군을 전이시키는 수리인 shot별 표준화는 오프라인 형태다. 실제로 출하될
+    \emph{인과적 러닝}(확장 윈도·EWMA) 추정기는 여기서 측정되지 않았다 \\
+
+7 & \textbf{지표의 비대칭.} 보간은 shot 전체의 이웃을, 윈도 대조군은 두 행을, 백본은
+    세그먼트의 과거를 본다
+  & 중간
+  & 인과 모델에 의도적으로 불리한 설계이므로 우위 방향의 해석은 안전하다
+  & 도달 범위를 맞춘 계열 대조(\S\ref{sec:context})가 이 비대칭을 부분적으로만
+    걷어낸다. 완전히 걷어내려면 모든 팔의 문맥 길이를 동일하게 고정한 스윕이 필요하다 \\
+
+8 & \textbf{단일 장치, 단일 모델 계열.} 하나의 장치, 하나의 진단 집합, 밀접하게
+    관련된 두 순환 계열
+  & 크다
+  & 전이에 대해 아무것도 주장하지 않는다
+  & 다른 토카막의 CXRS 결측에 같은 프로토콜을 그대로 옮겨 재는 것. 그 전까지 이
+    결과의 범위는 KSTAR 2022 캠페인이다 \\
+
+9 & \textbf{불확실성은 주변적으로 보정된다.} 방전별 조건부가 아니다
+  & 작다
+  & 분포 무가정 conformal 구간이 32개 셀 전부에서 두 기준선의 구간을 이긴다는
+    사실만 주장한다(\S\ref{sec:deploy})
+  & 방전별 조건부 보정(Mondrian conformal)을 같은 셀에서 재는 것 \\
+
+10 & \textbf{지연시간과 범위.} 지연시간은 노트북급 머신 한 대에서 네트워크만 잰
+    값이고 전원 상태에 따라 실행 간 최대 2$\times$ 변동한다. 페데스탈 상단 프레이밍은
+    데이터 선정에서 물려받은 것이다
+  & 작다
+  & 특징 조립·획득 오버헤드가 빠졌음을 명시한다. \S\ref{sec:peak}의 고변동 분석은
+    사건에 무관한 대리 지표라고 적는다
+  & 실제 제어 계산기에서 획득$\rightarrow$특징$\rightarrow$추론 전 구간을 재는 것,
+    그리고 반경 스캔과 사건 위상(ELM 주기·L--H 천이) 정렬 분석 \\
+
+\end{tblr}
+\end{table}
 
 % =========================================================================
 \section{결론}
