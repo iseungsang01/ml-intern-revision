@@ -6,13 +6,27 @@
 
 | 파일 | 형식 | 용도 |
 |---|---|---|
-| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 57 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-03 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 포함) |
+| **`KSTAR_CES_발표자료.pptx`** | PowerPoint, 65 슬라이드 (16:9) | **약 1시간 학위논문 발표용** 덱 (2026-09-05 판 · 초록체 · §8ac–§8ar 반영 · 선행연구/재현성 상한/물리적 근거 슬라이드 + **부록 A 8장**) |
 | **`KSTAR_CES_발표자료_20분.pptx`** | PowerPoint, 24 슬라이드 (16:9) | **20분 내부 발표용** 덱 (2026-09-03 압축판 · 화면 글자 분당 674자 · 러닝 클록 19:20 재배분) |
 | **`KSTAR_CES_종합방어.pptx`** | PowerPoint, 25 슬라이드 (16:9) | **연구 종합 정리·방어** 덱 (2026-08-27 초록체 재작성) — 판정표(B.9 행 추가)·재실험 이유·B.1/B.2 모델 선택·novelty 검증·B.9 2장·예상질문 방어표 4장(16문항)·재현성·결정 4건 |
 | **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절(§3.1–§11) + **§6.12(추가 예정) B.9** 골격 1장, 노트에 `\label` (2026-08-27 초록체 재작성) |
-| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 50 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
+| **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 59 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
+
+> **✅ 2026-09-05 부록 A 신설 — 시도한 모델과 문헌 조사 (승상님 지시).** 두 덱(1시간 65장 · 졸논정리
+> 59장)에 **부록 A 8장**을 더했다. 앞의 셋은 **시도한 모델의 계보와 닫은 이유**를 한 표로 모은 것이고
+> (윈도 계열 6행 · 시퀀스 계열 6행 · 계열/문맥/기준선/확장 가지 8행, 각 행의 마지막 열이 §8의 판정과
+> 절 번호), 뒤의 넷은 **2026-09-05 문헌 조사**이다: 핵융합 9행(Diag2Diag · COMPASS · FusionMAE ·
+> TokaMind · PanoMHD · TokaFormer · WEST · EAST XCS · TCV VAE), 일반 시계열·센서 예측 9행, 구조 동형
+> 분야 6행, 그리고 다음 팔의 우선순위 6행이다. 조사의 결론은 **핵융합의 진단-대-진단 추정 주류가 여전히
+> 무기억 MLP 또는 마스크 오토인코더이고, 표현력 축은 이미 세 번 닫혔으므로(§8aa · §8ag · §8aq) 다음 팔은
+> 손실·게이팅·입력**이라는 것이다. **회전(V_rot)은 닫힌 결론이 아니라 열린 과제로 적었다** — 마지막
+> 슬라이드의 카드가 그것을 뒤집을 측정(원시 kHz Mirnov · NBI 토크 채널 · CES 피팅 품질 메타데이터 ·
+> 도플러 분광 입력)을 명시하고, 우선순위 표의 4번 행이 그 팔이다. 표의 문장은 두 덱이 공유하도록
+> `appendix_content.py` 한 곳에 두었고, 1시간 덱에는 행마다 높이를 재고 폰트를 줄이는 `table_fit()`을
+> 새로 두었다(기존 `table()`은 그대로이므로 다른 덱은 영향 없음). 발표자 노트에 조사 출처 32건의 URL이
+> 들어 있다. 빌드 로그 FIT WARNING 0 (다섯 덱 모두).
 
 > **✅ 2026-09-04 제안 덱 형식의 논문 흐름 덱 신설 (승상님 지시: "docs\졸논 정리.pptx 형식에 맞춰서 저거 논문
 > 흐름대로 한번 작성해봐").** 다섯 번째 덱 `KSTAR_CES_졸논정리_논문흐름.pptx`(50장)를 `build_pptx_jolnon.py`가
@@ -156,11 +170,11 @@ py ces_prediction/collect_paper_numbers.py            # 0) 얼린 산출물 -> d
 py docs/presentation/make_figures.py                   # 1) figures/*.png 8종 (paper_numbers.json 판독)
 py docs/presentation/make_figure_architecture_seq.py   # 1b) seq_v2 도식 · make_figure_architecture.py = W=2 대조군 도식
 py docs/presentation/make_figure_transient_seq.py      # 1c) seq_v2 트랜지언트 시연 (held-out TEST shot, B.1 s42 체크포인트)
-py docs/presentation/build_pptx.py                     # 2) 1시간 덱 54장 (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
+py docs/presentation/build_pptx.py                     # 2) 1시간 덱 65장(부록 A 8장 포함) (헬퍼는 다른 덱이 import; 7장은 docs/paper/figures/fig_context_family_ladder.png를 읽음)
 py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 24장 (1시간 덱 슬라이드 재사용)
 py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱 23장 (§6.12 B.9 골격 포함)
 py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱 25장 (B.9 2장 + 예상 질문 ④)
-py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 50장 (docs/졸논 정리.pptx를 템플릿으로 연다)
+py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 59장 (docs/졸논 정리.pptx를 템플릿으로 연다)
 py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```
 
@@ -192,6 +206,7 @@ python docs/presentation/preview_pptx.py docs/presentation/KSTAR_CES_발표자�
 `fig_raw_csv_missing.png` (원본 shot CSV 스크린샷 — CES_TI 빈칸·CES_VT held 반복·빠른 진단은
 전부 채워진 상태가 한눈에 보임), `fig_ar_formula.png` (local AR/선형 외삽 수식).
 - `build_pptx.py` — 1시간 발표 덱 (네이티브 도형 아키텍처 다이어그램 + 그림 임베드).
+- `appendix_content.py` — 부록 A의 표·문장. 1시간 덱과 졸논정리 덱이 함께 읽으므로 여기만 고친다.
 - `build_pptx_20min.py` — 20분 발표 덱(23장). `build_pptx.py`를 import해 팔레트·레이아웃 헬퍼와
   그대로 쓸 수 있는 슬라이드를 재사용하고, 나머지는 병합/압축 버전으로 대체합니다.
   **수치를 고칠 때는 `build_pptx.py`를 고치면 두 덱에 함께 반영됩니다** (재사용 슬라이드에 한해).

@@ -2025,6 +2025,211 @@ def s_closing():
     return s
 
 
+# ============================ APPENDIX ====================================
+# 부록 A - 시도한 모델과 닫은 이유, 그리고 2026-09-05 문헌 조사.
+# 표의 내용은 appendix_content.py 한 곳에 있으며 졸논정리 덱이 같은 것을 읽는다.
+import appendix_content as AP  # noqa: E402
+
+
+def _note(s, txt):
+    s.notes_slide.notes_text_frame.text = txt.strip("\n")
+    return s
+
+
+try:
+    from PIL import Image as _PILImage, ImageDraw as _PILDraw
+    _MEASURE = _PILDraw.Draw(_PILImage.new("RGB", (8, 8)))
+except Exception:      # pragma: no cover - QC only
+    _MEASURE = None
+
+
+def _wrapped_lines(txt, avail_in, size_pt, bold=False):
+    """Line count after wrapping, with preview_pptx's tokenizer and font metrics."""
+    fallback = max(1, int(len(txt) * size_pt / (avail_in * 72.0)) + 1)
+    if _MEASURE is None:
+        return fallback
+    try:
+        import preview_pptx as PV
+    except Exception:  # pragma: no cover
+        return fallback
+    font = PV.load_font(FONT, bold, size_pt)     # px == pt -> lengths in points
+    avail_px = max(avail_in, 0.1) * 72.0
+    n, cur = 1, 0.0
+    for tok in PV._TOKEN.findall(txt):
+        tw = _MEASURE.textlength(tok, font=font)
+        if tok.isspace():
+            if cur + tw > avail_px:
+                n, cur = n + 1, 0.0
+                continue
+            cur += tw
+            continue
+        if cur + tw > avail_px and cur > 0:
+            n, cur = n + 1, 0.0
+        cur += tw
+    return n
+
+
+def table_fit(s, x, y, w, avail_h, head, rows, weights, size=11.0, min_size=7.5,
+              head_fill=NAVY, head_color=WHITE, first_col_color=NAVY):
+    """Variable-row-height table that shrinks its font until it fits ``avail_h``.
+
+    ``table()`` above uses one fixed row height, which is right for short cells;
+    the appendix tables carry full sentences, so every row is measured and the
+    point size is reduced until the block fits. Same tokenizer and metrics as
+    preview_pptx, so a clean build implies a clean preview.
+    """
+    total_wt = float(sum(weights))
+    col_w_in = [w / 914400.0 * wt / total_wt for wt in weights]
+    pad_in = 0.16
+    # preview_pptx: line height = pt * 1.24 * line_spacing; text() adds 2 pt side
+    # margins. Cells are drawn with space_after 0 so a row is exactly its lines.
+    LS = 1.06
+    SLACK = 0.14        # 0.05 top offset + 0.08 box inset + a hair
+
+    def heights(sz):
+        line_h = sz * 1.24 * LS / 72.0
+        out = []
+        for r, row in enumerate([head] + rows):
+            n = 1
+            for j, cell in enumerate(row):
+                txt = cell if isinstance(cell, str) else cell[0]
+                avail = (col_w_in[j] - pad_in - 2 * (2.0 / 72.0)) * 0.98
+                n = max(n, _wrapped_lines(txt, avail, sz, r == 0 or j == 0))
+            out.append(max(0.30, n * line_h + SLACK))
+        return out
+
+    while size > min_size and sum(heights(size)) > avail_h / 914400.0:
+        size -= 0.5
+    hs = heights(size)
+
+    col_w = [Inches(c) for c in col_w_in]
+    yy = y
+    box(s, x, yy, w, Inches(hs[0]), fill=head_fill)
+    cx = x
+    for j, h in enumerate(head):
+        text(s, cx + Inches(0.08), yy + Inches(0.05), col_w[j] - Inches(pad_in),
+             Inches(hs[0]) - Inches(0.08),
+             [[(h, size, head_color, True, False, None)]],
+             align=PP_ALIGN.LEFT if j == 0 else PP_ALIGN.CENTER,
+             space_after=0, line_spacing=1.06)
+        cx += col_w[j]
+    yy += Inches(hs[0])
+    for i, row in enumerate(rows):
+        rh = Inches(hs[i + 1])
+        if i % 2 == 1:
+            box(s, x, yy, w, rh, fill=CARDBG)
+        cx = x
+        for j, cell in enumerate(row):
+            if isinstance(cell, str):
+                txt = cell
+                col = first_col_color if j == 0 else DARK
+                bold = (j == 0)
+            else:
+                txt, col, bold = (tuple(cell) + (None,) * 3)[:3]
+                col = col if col is not None else DARK
+            text(s, cx + Inches(0.08), yy + Inches(0.05), col_w[j] - Inches(pad_in),
+                 rh - Inches(0.08),
+                 [[(txt, size, col, bold, False, None)]], align=PP_ALIGN.LEFT,
+                 space_after=0, line_spacing=1.06)
+            cx += col_w[j]
+        box(s, x, yy + rh - Pt(0.75), w, Pt(0.75), fill=LGRAY)
+        yy += rh
+    return yy
+
+
+_TRIED_W = [2.75, 3.55, 3.05, 2.90]
+_APX_X, _APX_W = Inches(0.55), Inches(12.25)
+
+
+def s_apx_tried_window():
+    s = slide()
+    header(s, "부록 A-1", "시도한 모델의 계보와 닫은 이유 (1/3): 윈도 계열", accent=GRAY)
+    text(s, Inches(0.55), Inches(1.32), Inches(12.25), Inches(0.28),
+         [[("아래는 W = 4 시대의 잠정 수치이며 확정 프로토콜의 주장에는 쓰지 않는다(§8v).",
+            11.5, GRAY, False, False, None)]])
+    table_fit(s, _APX_X, Inches(1.68), _APX_W, Inches(5.10),
+              AP.TRIED_HEAD, AP.TRIED_WINDOW, _TRIED_W)
+    return _note(s, "출처는 THESIS_RESULTS.md 8e / 8b.2 / 8f / 8k / 8u / 8x / 8ad이다. "
+                    "연속시간 인코더는 코드가 2026-08-09에 제거되었고 판정만 남아 있다.")
+
+
+def s_apx_tried_seq():
+    s = slide()
+    header(s, "부록 A-1", "시도한 모델의 계보와 닫은 이유 (2/3): 시퀀스 계열", accent=GRAY)
+    text(s, Inches(0.55), Inches(1.32), Inches(12.25), Inches(0.28),
+         [[("확정 프로토콜(W = 2 · held-free · 두 공동 1차 모집단) 아래에서 짝지어 채점하였다.",
+            11.5, GRAY, False, False, None)]])
+    table_fit(s, _APX_X, Inches(1.68), _APX_W, Inches(5.10),
+              AP.TRIED_HEAD, AP.TRIED_SEQ, _TRIED_W)
+    return _note(s, "출처는 8d / 8t / 8x / 8y / 8z / 8aa / 8ab / 8ai이다. "
+                    "v3는 val에서 2/2 유의였으나 TEST에서 1/4에 그쳐 규칙대로 미승격하였다.")
+
+
+def s_apx_tried_misc():
+    s = slide()
+    header(s, "부록 A-1", "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
+           accent=GRAY)
+    table_fit(s, _APX_X, Inches(1.44), _APX_W, Inches(4.90),
+              AP.TRIED_HEAD, AP.TRIED_MISC, _TRIED_W)
+    text(s, Inches(0.55), Inches(6.52), Inches(12.25), Inches(0.55),
+         [[(AP.TRIED_TAKEAWAY, 12.5, NAVY, True, False, None)]], line_spacing=1.12)
+    return _note(s, "출처는 8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap이며, "
+                    "마지막 행은 진행 중인 B.11(PREREGISTRATION_B11.md)이다.")
+
+
+def s_apx_lit_fusion():
+    s = slide()
+    header(s, "부록 A-2",
+           "문헌 조사 (1/4): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다",
+           accent=TEAL)
+    table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(5.35),
+              AP.FUSION_HEAD, AP.FUSION_ROWS, [2.55, 3.60, 3.05, 3.05])
+    return _note(s, AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."))
+
+
+def s_apx_lit_general():
+    s = slide()
+    header(s, "부록 A-2",
+           "문헌 조사 (2/4): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정",
+           accent=TEAL)
+    table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(5.35),
+              AP.GENERAL_HEAD, AP.GENERAL_ROWS, [2.20, 3.05, 3.90, 3.10])
+    return _note(s, "마지막 열은 본 저장소의 통제 실험 판정이며, 새 계열을 도입하기 전에 "
+                    "이 열을 먼저 읽는다.")
+
+
+def s_apx_lit_iso():
+    s = slide()
+    header(s, "부록 A-2", "문헌 조사 (3/4): 구조적으로 동형인 분야에서 반복되는 교훈",
+           accent=TEAL)
+    table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(4.20),
+              AP.ISO_HEAD, AP.ISO_ROWS, [2.55, 2.70, 3.55, 3.45])
+    card(s, Inches(0.55), Inches(5.80), Inches(12.25), Inches(1.25),
+         "공통 교훈",
+         ["동형 분야가 반복해 말하는 것은 표현력이 아니라 개체별 보정과 상태추정 프레임이며, 이는 "
+          "본 연구의 shot별 표준화(§8s)와 전체격자 인과 프레이밍(§8t)이 이미 취한 선택이다."],
+         accent=TEAL, title_size=12.5, body_size=11.5)
+    return _note(s, "혼합주기 나우캐스팅 · 저가 센서 보정 · 커프리스 혈압 · 구조 가상 센싱 · "
+                    "합성 진단 증강의 다섯 계열에서 같은 결론이 반복된다.")
+
+
+def s_apx_next():
+    s = slide()
+    header(s, "부록 A-2",
+           "문헌 조사 (4/4): 문헌이 지목하는 다음 팔은 표현력이 아니라 손실 · 게이팅 · 입력이다",
+           accent=ORANGE)
+    table_fit(s, _APX_X, Inches(1.40), _APX_W, Inches(3.70),
+              AP.PRIORITY_HEAD, AP.PRIORITY_ROWS, [0.60, 4.40, 2.55, 1.85, 2.85])
+    card(s, Inches(0.55), Inches(5.28), Inches(6.00), Inches(1.80),
+         "권하지 않는 방향", AP.NOT_RECOMMENDED, accent=RED,
+         title_size=12.5, body_size=11)
+    card(s, Inches(6.80), Inches(5.28), Inches(6.00), Inches(1.80),
+         "V_rot는 열린 과제이다", AP.VROT_NOTE, accent=ORANGE,
+         title_size=12.5, body_size=11)
+    return _note(s, AP.sources_note(
+        "각 행은 통제 변수가 하나이며, TEST를 여는 팔은 사전등록 뒤에만 실행한다(§8j)."))
+
+
 # ======================= build ===========================================
 def _fit_report():
     """Re-run preview_pptx's layout math at build time — FIT WARNING must be 0.
@@ -2123,6 +2328,15 @@ def build():
     s_te_nbi()
     s_limits()
     s_closing()
+    divider("A", "부록: 시도한 모델과 문헌 조사",
+            "무엇을 시도하여 무엇을 닫았는가, 그리고 2026-09-05 문헌 조사가 지목하는 다음 팔")
+    s_apx_tried_window()
+    s_apx_tried_seq()
+    s_apx_tried_misc()
+    s_apx_lit_fusion()
+    s_apx_lit_general()
+    s_apx_lit_iso()
+    s_apx_next()
 
     warns = _fit_report()
     out = os.path.join(HERE, "KSTAR_CES_발표자료.pptx")

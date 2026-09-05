@@ -37,6 +37,7 @@ if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
 from preview_pptx import load_font, _TOKEN  # noqa: E402  (same metrics as the QC renderer)
+import appendix_content as AP  # noqa: E402  (shared with build_pptx.py's appendix)
 from PIL import Image, ImageDraw  # noqa: E402
 from pptx import Presentation  # noqa: E402
 from pptx.util import Inches, Pt, Emu  # noqa: E402
@@ -1092,6 +1093,70 @@ content(
      (0, "KSTAR 진단 데이터 641개 방전은 코드와 함께 재배포되지 않으며 운영 기관의 데이터 정책을 따른다. "
          "저장소에는 shot 파일이 갖춰진 뒤 분석을 재현하는 데 필요한 모든 것이 들어 있다.")],
     note_txt="sec:conclusion 뒤의 재현성·코드 가용성·데이터 가용성 소절.",
+)
+
+# =============================================================================
+# 부록 A. 시도한 모델과 문헌 조사
+# 표의 내용은 appendix_content.py 한 곳에 있으며 1시간 덱이 같은 것을 읽는다.
+# =============================================================================
+divider("Appendix", "부록 A. 시도한 모델의 계보와 닫은 이유, 그리고 2026-09-05 문헌 조사.")
+
+table_slide(
+    "시도한 모델의 계보와 닫은 이유 (1/3): 윈도 계열",
+    AP.TRIED_HEAD, AP.TRIED_WINDOW, widths=[2.9, 3.5, 3.0, 2.7],
+    lead="아래는 W = 4 시대의 잠정 수치이며 확정 프로토콜의 주장에는 쓰지 않는다.",
+    note_txt="THESIS_RESULTS.md 8e / 8b.2 / 8f / 8k / 8u / 8x / 8ad.",
+)
+
+table_slide(
+    "시도한 모델의 계보와 닫은 이유 (2/3): 시퀀스 계열",
+    AP.TRIED_HEAD, AP.TRIED_SEQ, widths=[2.9, 3.5, 3.0, 2.7],
+    lead="확정 프로토콜(W = 2 · held-free · 두 공동 1차 모집단) 아래에서 짝지어 채점하였다.",
+    note_txt="8d / 8t / 8x / 8y / 8z / 8aa / 8ab / 8ai.",
+)
+
+table_slide(
+    "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
+    AP.TRIED_HEAD, AP.TRIED_MISC, widths=[2.9, 3.5, 3.0, 2.7],
+    tail=AP.TRIED_TAKEAWAY,
+    note_txt="8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap, 그리고 진행 중인 B.11.",
+)
+
+table_slide(
+    "문헌 조사 (1/4): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다",
+    AP.FUSION_HEAD, AP.FUSION_ROWS, widths=[2.6, 3.6, 3.0, 3.0],
+    note_txt=AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."),
+)
+
+table_slide(
+    "문헌 조사 (2/4): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정",
+    AP.GENERAL_HEAD, AP.GENERAL_ROWS, widths=[2.2, 3.0, 3.9, 3.1],
+    note_txt="마지막 열은 본 저장소의 통제 실험 판정이며, 새 계열을 도입하기 전에 이 열을 먼저 읽는다.",
+)
+
+table_slide(
+    "문헌 조사 (3/4): 구조적으로 동형인 분야에서 반복되는 교훈",
+    AP.ISO_HEAD, AP.ISO_ROWS, widths=[2.6, 2.7, 3.5, 3.4],
+    tail="동형 분야가 반복해 말하는 것은 표현력이 아니라 개체별 보정과 상태추정 프레임이며, "
+         "이는 본 연구의 shot별 표준화와 전체격자 인과 프레이밍이 이미 취한 선택이다.",
+    note_txt="혼합주기 나우캐스팅 · 저가 센서 보정 · 커프리스 혈압 · 구조 가상 센싱 · "
+             "합성 진단 증강의 다섯 계열에서 같은 결론이 반복된다.",
+)
+
+table_slide(
+    "문헌 조사 (4/4): 문헌이 지목하는 다음 팔은 표현력이 아니라 손실 · 게이팅 · 입력이다",
+    AP.PRIORITY_HEAD, AP.PRIORITY_ROWS, widths=[0.7, 4.3, 2.6, 1.8, 2.8],
+    lead="각 행은 통제 변수가 하나이며, TEST를 여는 팔은 사전등록 뒤에만 실행한다.",
+    note_txt=AP.sources_note("우선순위는 비용 대비 정보량 순이다."),
+)
+
+content(
+    "권하지 않는 방향과, 열려 있는 V_rot",
+    [(0, "권하지 않는 방향은 다음 셋이다.")] +
+    [(1, t) for t in AP.NOT_RECOMMENDED] +
+    [(0, "회전은 닫힌 결론이 아니라 열린 과제이다.")] +
+    [(1, t) for t in AP.VROT_NOTE],
+    note_txt="음성 결과는 그것을 뒤집을 측정을 지목할 때만 결론으로 인정한다는 규칙을 따른다.",
 )
 
 # =============================================================================
