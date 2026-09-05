@@ -2084,7 +2084,8 @@ def table_fit(s, x, y, w, avail_h, head, rows, weights, size=11.0, min_size=7.5,
     # preview_pptx: line height = pt * 1.24 * line_spacing; text() adds 2 pt side
     # margins. Cells are drawn with space_after 0 so a row is exactly its lines.
     LS = 1.06
-    SLACK = 0.14        # 0.05 top offset + 0.08 box inset + a hair
+    SLACK = 0.17        # 0.05 top offset + 0.08 box inset + a hair
+    SAFE = 0.94         # measure narrower than the cell so a row is never short
 
     def heights(sz):
         line_h = sz * 1.24 * LS / 72.0
@@ -2093,7 +2094,7 @@ def table_fit(s, x, y, w, avail_h, head, rows, weights, size=11.0, min_size=7.5,
             n = 1
             for j, cell in enumerate(row):
                 txt = cell if isinstance(cell, str) else cell[0]
-                avail = (col_w_in[j] - pad_in - 2 * (2.0 / 72.0)) * 0.98
+                avail = (col_w_in[j] - pad_in - 2 * (2.0 / 72.0)) * SAFE
                 n = max(n, _wrapped_lines(txt, avail, sz, r == 0 or j == 0))
             out.append(max(0.30, n * line_h + SLACK))
         return out
@@ -2137,7 +2138,7 @@ def table_fit(s, x, y, w, avail_h, head, rows, weights, size=11.0, min_size=7.5,
     return yy
 
 
-_TRIED_W = [2.75, 3.55, 3.05, 2.90]
+_TRIED_W = [2.55, 1.10, 3.15, 2.80, 2.65]
 _APX_X, _APX_W = Inches(0.55), Inches(12.25)
 
 
@@ -2169,33 +2170,59 @@ def s_apx_tried_misc():
     s = slide()
     header(s, "부록 A-1", "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
            accent=GRAY)
-    table_fit(s, _APX_X, Inches(1.44), _APX_W, Inches(4.90),
+    table_fit(s, _APX_X, Inches(1.44), _APX_W, Inches(4.95),
               AP.TRIED_HEAD, AP.TRIED_MISC, _TRIED_W)
-    text(s, Inches(0.55), Inches(6.52), Inches(12.25), Inches(0.55),
-         [[(AP.TRIED_TAKEAWAY, 12.5, NAVY, True, False, None)]], line_spacing=1.12)
+    text(s, Inches(0.55), Inches(6.55), Inches(12.25), Inches(0.62),
+         [[(AP.TRIED_TAKEAWAY, 12, NAVY, True, False, None)]], line_spacing=1.10,
+         space_after=0)
     return _note(s, "출처는 8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap이며, "
                     "마지막 행은 진행 중인 B.11(PREREGISTRATION_B11.md)이다.")
 
 
-def s_apx_lit_fusion():
+_FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
+
+
+def _s_apx_lit_fusion(part, rows):
     s = slide()
     header(s, "부록 A-2",
-           "문헌 조사 (1/4): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다",
+           "문헌 조사 (1/4, %d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다" % part,
            accent=TEAL)
-    table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(5.35),
-              AP.FUSION_HEAD, AP.FUSION_ROWS, [2.55, 3.60, 3.05, 3.05])
+    text(s, Inches(0.55), Inches(1.32), Inches(12.25), Inches(0.28),
+         [[("장치와 연도를 따로 두었다. 2026-09-05 조사한 12편 중 %d쪽이다." % part,
+            11.5, GRAY, False, False, None)]])
+    table_fit(s, _APX_X, Inches(1.68), _APX_W, Inches(5.10),
+              AP.FUSION_HEAD, rows, _FUSION_W)
     return _note(s, AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."))
 
 
-def s_apx_lit_general():
+def s_apx_lit_fusion_a():
+    return _s_apx_lit_fusion(1, AP.FUSION_ROWS[:6])
+
+
+def s_apx_lit_fusion_b():
+    return _s_apx_lit_fusion(2, AP.FUSION_ROWS[6:])
+
+
+_GENERAL_W = [1.70, 0.95, 2.60, 3.95, 3.35]
+
+
+def _s_apx_lit_general(part, rows):
     s = slide()
     header(s, "부록 A-2",
-           "문헌 조사 (2/4): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정",
+           "문헌 조사 (2/4, %d쪽): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정" % part,
            accent=TEAL)
     table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(5.35),
-              AP.GENERAL_HEAD, AP.GENERAL_ROWS, [2.20, 3.05, 3.90, 3.10])
+              AP.GENERAL_HEAD, rows, _GENERAL_W)
     return _note(s, "마지막 열은 본 저장소의 통제 실험 판정이며, 새 계열을 도입하기 전에 "
                     "이 열을 먼저 읽는다.")
+
+
+def s_apx_lit_general_a():
+    return _s_apx_lit_general(1, AP.GENERAL_ROWS[:5])
+
+
+def s_apx_lit_general_b():
+    return _s_apx_lit_general(2, AP.GENERAL_ROWS[5:])
 
 
 def s_apx_lit_iso():
@@ -2203,7 +2230,7 @@ def s_apx_lit_iso():
     header(s, "부록 A-2", "문헌 조사 (3/4): 구조적으로 동형인 분야에서 반복되는 교훈",
            accent=TEAL)
     table_fit(s, _APX_X, Inches(1.42), _APX_W, Inches(4.20),
-              AP.ISO_HEAD, AP.ISO_ROWS, [2.55, 2.70, 3.55, 3.45])
+              AP.ISO_HEAD, AP.ISO_ROWS, [2.35, 0.95, 2.35, 3.25, 3.30])
     card(s, Inches(0.55), Inches(5.80), Inches(12.25), Inches(1.25),
          "공통 교훈",
          ["동형 분야가 반복해 말하는 것은 표현력이 아니라 개체별 보정과 상태추정 프레임이며, 이는 "
@@ -2218,14 +2245,14 @@ def s_apx_next():
     header(s, "부록 A-2",
            "문헌 조사 (4/4): 문헌이 지목하는 다음 팔은 표현력이 아니라 손실 · 게이팅 · 입력이다",
            accent=ORANGE)
-    table_fit(s, _APX_X, Inches(1.40), _APX_W, Inches(3.70),
+    table_fit(s, _APX_X, Inches(1.40), _APX_W, Inches(3.40),
               AP.PRIORITY_HEAD, AP.PRIORITY_ROWS, [0.60, 4.40, 2.55, 1.85, 2.85])
-    card(s, Inches(0.55), Inches(5.28), Inches(6.00), Inches(1.80),
+    card(s, Inches(0.55), Inches(4.98), Inches(6.00), Inches(2.10),
          "권하지 않는 방향", AP.NOT_RECOMMENDED, accent=RED,
-         title_size=12.5, body_size=11)
-    card(s, Inches(6.80), Inches(5.28), Inches(6.00), Inches(1.80),
+         title_size=12.5, body_size=10.5)
+    card(s, Inches(6.80), Inches(4.98), Inches(6.00), Inches(2.10),
          "V_rot는 열린 과제이다", AP.VROT_NOTE, accent=ORANGE,
-         title_size=12.5, body_size=11)
+         title_size=12.5, body_size=10.5)
     return _note(s, AP.sources_note(
         "각 행은 통제 변수가 하나이며, TEST를 여는 팔은 사전등록 뒤에만 실행한다(§8j)."))
 
@@ -2333,8 +2360,10 @@ def build():
     s_apx_tried_window()
     s_apx_tried_seq()
     s_apx_tried_misc()
-    s_apx_lit_fusion()
-    s_apx_lit_general()
+    s_apx_lit_fusion_a()
+    s_apx_lit_fusion_b()
+    s_apx_lit_general_a()
+    s_apx_lit_general_b()
     s_apx_lit_iso()
     s_apx_next()
 

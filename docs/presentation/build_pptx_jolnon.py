@@ -1103,40 +1103,45 @@ divider("Appendix", "부록 A. 시도한 모델의 계보와 닫은 이유, 그�
 
 table_slide(
     "시도한 모델의 계보와 닫은 이유 (1/3): 윈도 계열",
-    AP.TRIED_HEAD, AP.TRIED_WINDOW, widths=[2.9, 3.5, 3.0, 2.7],
+    AP.TRIED_HEAD, AP.TRIED_WINDOW, widths=[2.7, 1.1, 3.1, 2.8, 2.4],
     lead="아래는 W = 4 시대의 잠정 수치이며 확정 프로토콜의 주장에는 쓰지 않는다.",
     note_txt="THESIS_RESULTS.md 8e / 8b.2 / 8f / 8k / 8u / 8x / 8ad.",
 )
 
 table_slide(
     "시도한 모델의 계보와 닫은 이유 (2/3): 시퀀스 계열",
-    AP.TRIED_HEAD, AP.TRIED_SEQ, widths=[2.9, 3.5, 3.0, 2.7],
+    AP.TRIED_HEAD, AP.TRIED_SEQ, widths=[2.7, 1.1, 3.1, 2.8, 2.4],
     lead="확정 프로토콜(W = 2 · held-free · 두 공동 1차 모집단) 아래에서 짝지어 채점하였다.",
     note_txt="8d / 8t / 8x / 8y / 8z / 8aa / 8ab / 8ai.",
 )
 
 table_slide(
     "시도한 모델의 계보와 닫은 이유 (3/3): 계열 · 문맥 · 기준선 · 확장 가지",
-    AP.TRIED_HEAD, AP.TRIED_MISC, widths=[2.9, 3.5, 3.0, 2.7],
+    AP.TRIED_HEAD, AP.TRIED_MISC, widths=[2.7, 1.1, 3.1, 2.8, 2.4],
     tail=AP.TRIED_TAKEAWAY,
     note_txt="8ag / 8ai / 8ak / 8af / 8al / 8am 부록 / 8p / 8m / 8ap, 그리고 진행 중인 B.11.",
 )
 
-table_slide(
-    "문헌 조사 (1/4): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다",
-    AP.FUSION_HEAD, AP.FUSION_ROWS, widths=[2.6, 3.6, 3.0, 3.0],
-    note_txt=AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."),
-)
+_FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
+for _part, _rows in ((1, AP.FUSION_ROWS[:6]), (2, AP.FUSION_ROWS[6:])):
+    table_slide(
+        "문헌 조사 (1/4, %d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다" % _part,
+        AP.FUSION_HEAD, _rows, widths=_FUSION_W,
+        lead="장치와 연도를 따로 두었다.",
+        note_txt=AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."),
+    )
 
-table_slide(
-    "문헌 조사 (2/4): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정",
-    AP.GENERAL_HEAD, AP.GENERAL_ROWS, widths=[2.2, 3.0, 3.9, 3.1],
-    note_txt="마지막 열은 본 저장소의 통제 실험 판정이며, 새 계열을 도입하기 전에 이 열을 먼저 읽는다.",
-)
+_GENERAL_W = [1.70, 0.95, 2.60, 3.95, 3.35]
+for _part, _rows in ((1, AP.GENERAL_ROWS[:5]), (2, AP.GENERAL_ROWS[5:])):
+    table_slide(
+        "문헌 조사 (2/4, %d쪽): 일반 시계열 · 센서 예측의 주류와 본 데이터에 대한 판정" % _part,
+        AP.GENERAL_HEAD, _rows, widths=_GENERAL_W,
+        note_txt="마지막 열은 본 저장소의 통제 실험 판정이며, 새 계열을 도입하기 전에 이 열을 먼저 읽는다.",
+    )
 
 table_slide(
     "문헌 조사 (3/4): 구조적으로 동형인 분야에서 반복되는 교훈",
-    AP.ISO_HEAD, AP.ISO_ROWS, widths=[2.6, 2.7, 3.5, 3.4],
+    AP.ISO_HEAD, AP.ISO_ROWS, widths=[2.4, 0.95, 2.35, 3.2, 3.3],
     tail="동형 분야가 반복해 말하는 것은 표현력이 아니라 개체별 보정과 상태추정 프레임이며, "
          "이는 본 연구의 shot별 표준화와 전체격자 인과 프레이밍이 이미 취한 선택이다.",
     note_txt="혼합주기 나우캐스팅 · 저가 센서 보정 · 커프리스 혈압 · 구조 가상 센싱 · "
