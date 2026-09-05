@@ -14,6 +14,16 @@
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
 
+> **✅ 2026-09-05 참고용 웹 페이지 신설 (승상님 지시: "거리의 합 실험실처럼 아예 따로따로 보관해봐").**
+> `build_survey_artifact.py`가 `survey_artifact.html`을 만들고, 그것을 아티팩트로 게시한다
+> (`https://claude.ai/code/artifact/4fc2ea2b-3832-4f11-a2e4-bfbc6a1bac78`). **표 하나가 판(tab) 하나이고
+> 판 사이에 스크롤이 없다** — 시도한 모델 20 · 핵융합 12 · 시계열 10 · 동형 6 · 다음 팔 6 · 출처 36의 여섯 판이며,
+> 머리글은 각 판에서 한 번만 나온다. `docs/졸논 정리.pptx` 계열의 덱과 달리 이 페이지는 브라우저에서 읽는
+> 참고판이므로 검색(현재 판 안에서만), 열린 항목만 보기, 시도한 모델의 계열 하위 필터, 테마 전환을 갖췄고
+> 마지막 상태는 브라우저에 남는다. **모든 셀은 `appendix_content.py`에서 온다** — 부록 슬라이드와 이 페이지가
+> 같은 파일을 읽으므로 문장이 어긋날 수 없다. 내용을 고치면 `py docs/presentation/build_survey_artifact.py`를
+> 다시 돌리고 같은 URL로 재게시한다.
+
 > **✅ 2026-09-05 부록 A 신설 — 시도한 모델과 문헌 조사 (승상님 지시).** 두 덱(1시간 65장 · 졸논정리
 > 59장)에 **부록 A 8장**을 더했다. 앞의 셋은 **시도한 모델의 계보와 닫은 이유**를 한 표로 모은 것이고
 > (윈도 계열 6행 · 시퀀스 계열 6행 · 계열/문맥/기준선/확장 가지 8행, 각 행의 마지막 열이 §8의 판정과
@@ -175,6 +185,7 @@ py docs/presentation/build_pptx_20min.py               # 3) 20분 덱 24장 (1�
 py docs/presentation/build_pptx_flow.py                # 4) 연구흐름(논문 참조) 덱 23장 (§6.12 B.9 골격 포함)
 py docs/presentation/build_pptx_defense.py             # 5) 종합방어 덱 25장 (B.9 2장 + 예상 질문 ④)
 py docs/presentation/build_pptx_jolnon.py              # 5b) 졸논정리 형식의 논문 흐름 덱 59장 (docs/졸논 정리.pptx를 템플릿으로 연다)
+py docs/presentation/build_survey_artifact.py          # 5c) 참고 웹 페이지 survey_artifact.html (판 6개)
 py docs/presentation/build_1pager.py                   # 6) 1-pager .pdf/.png
 ```
 
@@ -206,7 +217,8 @@ python docs/presentation/preview_pptx.py docs/presentation/KSTAR_CES_발표자�
 `fig_raw_csv_missing.png` (원본 shot CSV 스크린샷 — CES_TI 빈칸·CES_VT held 반복·빠른 진단은
 전부 채워진 상태가 한눈에 보임), `fig_ar_formula.png` (local AR/선형 외삽 수식).
 - `build_pptx.py` — 1시간 발표 덱 (네이티브 도형 아키텍처 다이어그램 + 그림 임베드).
-- `appendix_content.py` — 부록 A의 표·문장. 1시간 덱과 졸논정리 덱이 함께 읽으므로 여기만 고친다.
+- `appendix_content.py` — 부록 A의 표·문장. 1시간 덱 · 졸논정리 덱 · 참고 웹 페이지가 함께 읽으므로 여기만 고친다.
+- `build_survey_artifact.py` → `survey_artifact.html` — 판별로 나눈 참고 웹 페이지(아티팩트로 게시).
 - `build_pptx_20min.py` — 20분 발표 덱(23장). `build_pptx.py`를 import해 팔레트·레이아웃 헬퍼와
   그대로 쓸 수 있는 슬라이드를 재사용하고, 나머지는 병합/압축 버전으로 대체합니다.
   **수치를 고칠 때는 `build_pptx.py`를 고치면 두 덱에 함께 반영됩니다** (재사용 슬라이드에 한해).
