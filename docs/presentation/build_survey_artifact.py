@@ -22,57 +22,70 @@ OUT = os.path.join(HERE, "survey_artifact.html")
 E = lambda t: html.escape(t, quote=False)
 
 # ---------------------------------------------------------------- row states
-TRIED_META = [
-    # (group, state, chip class, chip text) in TRIED_WINDOW + SEQ + MISC order
-    ("win", "closed", "hold", "대조군으로 강등"),
-    ("win", "closed", "closed", "닫힘"),
-    ("win", "closed", "closed", "닫힘"),
-    ("win", "closed", "closed", "닫힘"),
-    ("win", "closed", "hold", "조건부"),
-    ("win", "closed", "closed", "비채택"),
-    ("seq", "closed", "hold", "부분 성공"),
-    ("seq", "adopted", "adopt", "채택 · 백본"),
-    ("seq", "closed", "closed", "미승격"),
-    ("seq", "adopted", "adopt", "조건부 채택"),
-    ("seq", "closed", "closed", "축 닫힘"),
-    ("seq", "closed", "closed", "바닥 측정"),
-    ("ops", "closed", "closed", "동률"),
-    ("ops", "closed", "adopt", "우세"),
-    ("ops", "closed", "closed", "비채택"),
-    ("ops", "closed", "closed", "축 닫힘"),
-    ("ops", "closed", "hold", "상한 설정"),
-    ("ops", "closed", "adopt", "사후 보정 채택"),
-    ("ops", "closed", "closed", "종결"),
-    ("ops", "open", "open", "진행 중"),
-]
+# Badges are keyed by a prefix of the row's own name, never by position: a new row
+# without an entry raises at build time instead of silently vanishing.
+TRIED_BADGE = {
+    "AutoML": ("closed", "hold", "대조군으로 강등"),
+    "연속시간 인코더": ("closed", "closed", "닫힘"),
+    "파생 Mirnov": ("closed", "closed", "닫힘"),
+    "윈도 크기 스윕": ("closed", "closed", "닫힘"),
+    "명명항 anchor": ("closed", "hold", "조건부"),
+    "W-SLIM": ("closed", "closed", "비채택"),
+    "seq v1": ("closed", "hold", "부분 성공"),
+    "seq_v2": ("adopted", "adopt", "채택 · 백본"),
+    "seq v3": ("closed", "closed", "미승격"),
+    "b3k8": ("adopted", "adopt", "조건부 채택"),
+    "폭 스윕": ("closed", "closed", "축 닫힘"),
+    "최소 모델": ("closed", "closed", "바닥 측정"),
+    "계열 비교": ("closed", "closed", "동률"),
+    "소형 합성곱": ("closed", "adopt", "우세"),
+    "대각 SSM": ("closed", "closed", "비채택"),
+    "reach 사다리": ("closed", "closed", "축 닫힘"),
+    "오프라인 GP": ("closed", "hold", "상한 설정"),
+    "학습 분산 헤드": ("closed", "adopt", "사후 보정 채택"),
+    "양자 VQC": ("closed", "closed", "종결"),
+    "CES 결측이": ("closed", "closed", "듀티 사이클 아님"),
+    "B.11": ("open", "open", "진행 중"),
+}
 GROUP_LABEL = {"win": "윈도", "seq": "시퀀스", "ops": "연산자·문맥"}
-FUSION_STATE = ["closed", "open", "closed", "closed", "closed", "open",
-                "closed", "closed", "closed", "open", "closed", "closed"]
-GENERAL_STATE = ["closed", "closed", "closed", "open", "closed", "closed",
-                 "open", "open", "open", "open"]
-ISO_STATE = ["closed", "closed", "closed", "closed", "closed", "open"]
+
+FUSION_OPEN = {"COMPASS", "PanoMHD", "EAST XCS", "NN-CES", "XICS", "이분산 신경망"}
+GENERAL_OPEN = {"파운데이션 모델", "MoE", "학습 상태추정", "이분산", "표형 모델"}
+ISO_OPEN = {"붕괴 예측 합성 진단"}
+
+
+def badge(name):
+    for key, val in TRIED_BADGE.items():
+        if name.startswith(key):
+            return val
+    raise SystemExit("no badge for tried row %r -- add one to TRIED_BADGE" % name[:40])
+
+
+def state_of(name, open_keys):
+    return "open" if any(name.startswith(k) for k in open_keys) else "closed"
 
 
 def tried_rows():
-    rows = AP.TRIED_WINDOW + AP.TRIED_SEQ + AP.TRIED_MISC
+    groups = (("win", AP.TRIED_WINDOW), ("seq", AP.TRIED_SEQ), ("ops", AP.TRIED_MISC))
     out = []
-    for meta, r in zip(TRIED_META, rows):
-        grp, state, chip_cls, chip_txt = meta
-        out.append('        <tr data-state="%s" data-group="%s">' % (state, grp))
-        out.append('          <td class="grp">%s</td>' % E(GROUP_LABEL[grp]))
-        out.append('          <td class="name">%s<br><span class="chip chip--%s">%s</span></td>'
-                   % (E(r[0]), chip_cls, E(chip_txt)))
-        out.append('          <td class="year">%s</td>' % E(r[1]))
-        for cell in r[2:]:
-            out.append('          <td>%s</td>' % E(cell))
-        out.append('        </tr>')
+    for grp, rows in groups:
+        for r in rows:
+            state, chip_cls, chip_txt = badge(r[0])
+            out.append('        <tr data-state="%s" data-group="%s">' % (state, grp))
+            out.append('          <td class="grp">%s</td>' % E(GROUP_LABEL[grp]))
+            out.append('          <td class="name">%s<br><span class="chip chip--%s">%s</span></td>'
+                       % (E(r[0]), chip_cls, E(chip_txt)))
+            out.append('          <td class="year">%s</td>' % E(r[1]))
+            for cell in r[2:]:
+                out.append('          <td>%s</td>' % E(cell))
+            out.append('        </tr>')
     return "\n".join(out)
 
 
-def simple_rows(rows, states, device_col=None, year_col=None):
+def simple_rows(rows, open_keys, device_col=None, year_col=None):
     out = []
-    for st, r in zip(states, rows):
-        out.append('        <tr data-state="%s">' % st)
+    for r in rows:
+        out.append('        <tr data-state="%s">' % state_of(r[0], open_keys))
         for i, cell in enumerate(r):
             cls = ""
             if i == 0:
@@ -98,13 +111,27 @@ def priority_rows():
     return "\n".join(out)
 
 
+def n_tried():
+    return len(AP.TRIED_WINDOW) + len(AP.TRIED_SEQ) + len(AP.TRIED_MISC)
+
+
 def th(items):
     return "".join('<th style="width:%s">%s</th>' % (w, E(t)) for t, w in items)
 
 
-SRC_GROUPS = [("핵융합", AP.SURVEY_SOURCES[:16]),
-              ("시계열", AP.SURVEY_SOURCES[16:31]),
-              ("동형", AP.SURVEY_SOURCES[31:])]
+def _split_sources():
+    """Group the source list the way it is ordered: fusion, then time series, then
+    the isomorphic fields. The boundaries are named entries, not fixed indices, so
+    adding a source cannot silently land it in the wrong group."""
+    names = [n for n, _ in AP.SURVEY_SOURCES]
+    a = names.index("TSI-Bench")
+    b = names.index("GP-MIDAS")
+    return [("핵융합", AP.SURVEY_SOURCES[:a]),
+            ("시계열", AP.SURVEY_SOURCES[a:b]),
+            ("동형", AP.SURVEY_SOURCES[b:])]
+
+
+SRC_GROUPS = _split_sources()
 
 
 def source_lists():
@@ -302,12 +329,12 @@ footer p{margin:0 0 6px;max-width:90ch}
 </header>
 
 <nav role="tablist" aria-label="자료 판">
-  <button class="tab" role="tab" id="tab-tried" aria-controls="pane-tried" aria-selected="true">시도한 모델<b>20</b></button>
-  <button class="tab" role="tab" id="tab-fusion" aria-controls="pane-fusion" aria-selected="false">핵융합 문헌<b>12</b></button>
-  <button class="tab" role="tab" id="tab-general" aria-controls="pane-general" aria-selected="false">시계열 · 센서<b>10</b></button>
-  <button class="tab" role="tab" id="tab-iso" aria-controls="pane-iso" aria-selected="false">동형 분야<b>6</b></button>
-  <button class="tab" role="tab" id="tab-next" aria-controls="pane-next" aria-selected="false">다음 팔<b>6</b></button>
-  <button class="tab" role="tab" id="tab-src" aria-controls="pane-src" aria-selected="false">출처<b>36</b></button>
+  <button class="tab" role="tab" id="tab-tried" aria-controls="pane-tried" aria-selected="true">시도한 모델<b>{N_TRIED}</b></button>
+  <button class="tab" role="tab" id="tab-fusion" aria-controls="pane-fusion" aria-selected="false">핵융합 문헌<b>{N_FUSION}</b></button>
+  <button class="tab" role="tab" id="tab-general" aria-controls="pane-general" aria-selected="false">시계열 · 센서<b>{N_GENERAL}</b></button>
+  <button class="tab" role="tab" id="tab-iso" aria-controls="pane-iso" aria-selected="false">동형 분야<b>{N_ISO}</b></button>
+  <button class="tab" role="tab" id="tab-next" aria-controls="pane-next" aria-selected="false">다음 팔<b>{N_NEXT}</b></button>
+  <button class="tab" role="tab" id="tab-src" aria-controls="pane-src" aria-selected="false">출처<b>{N_SRC}</b></button>
 </nav>
 
 <div class="pane" id="pane-tried" role="tabpanel" aria-labelledby="tab-tried">
@@ -317,20 +344,20 @@ footer p{margin:0 0 6px;max-width:90ch}
       <p>각 행은 통제 변수가 하나이고, 마지막 열이 그것을 닫은 근거와 절 번호이다.
          음성 결과는 그것을 뒤집을 측정을 함께 지목할 때만 결론으로 인정한다(§8j).</p>
     </div>
-    <div class="n">THESIS_RESULTS.md §8 · 20건</div>
+    <div class="n">THESIS_RESULTS.md §8 · {N_TRIED}건</div>
   </div>
   <dl class="factstrip">
     <div class="fact"><dt>방전</dt><dd>641 <small>shot 30801–32751</small></dd></div>
     <div class="fact"><dt>격자</dt><dd>10 ms <small>공통 정렬</small></dd></div>
     <div class="fact"><dt>확정 프로토콜</dt><dd>W = 2 <small>held-free · 두 모집단</small></dd></div>
     <div class="fact"><dt>백본</dt><dd>seq_v2 <small>357,570 파라미터</small></dd></div>
-    <div class="fact"><dt>조사</dt><dd>36건 <small>핵융합 16 · 시계열 15 · 동형 5</small></dd></div>
+    <div class="fact"><dt>조사</dt><dd>{N_SRC}건 <small>핵융합 {N_SRC_F} · 시계열 {N_SRC_T} · 동형 {N_SRC_I}</small></dd></div>
   </dl>
   <div class="bar">
-    <button class="pill" data-group="all" aria-pressed="true">전체 20</button>
-    <button class="pill" data-group="win" aria-pressed="false">윈도 계열 6</button>
-    <button class="pill" data-group="seq" aria-pressed="false">시퀀스 계열 6</button>
-    <button class="pill" data-group="ops" aria-pressed="false">연산자 · 문맥 · 기준선 8</button>
+    <button class="pill" data-group="all" aria-pressed="true">전체 {N_TRIED}</button>
+    <button class="pill" data-group="win" aria-pressed="false">윈도 계열 {N_WIN}</button>
+    <button class="pill" data-group="seq" aria-pressed="false">시퀀스 계열 {N_SEQ}</button>
+    <button class="pill" data-group="ops" aria-pressed="false">연산자 · 문맥 · 기준선 {N_OPS}</button>
   </div>
   <p class="hint">윈도 계열의 수치는 W = 4 시대의 잠정값이고, 시퀀스 계열부터가 확정 프로토콜이다.</p>
   <div class="scroller">
@@ -351,7 +378,7 @@ footer p{margin:0 0 6px;max-width:90ch}
       <p>장치와 연도를 따로 두었다. 진단으로 다른 진단을 추정하는 계열은 활발하지만,
          우리 문제와 가장 가까운 두 편이 가장 단순한 모델을 쓴다는 것이 이 판의 요점이다.</p>
     </div>
-    <div class="n">12편</div>
+    <div class="n">{N_FUSION}편</div>
   </div>
   <div class="thesis">
     <div><h3>주류는 아직 기억 없는 구조다</h3>
@@ -378,7 +405,7 @@ footer p{margin:0 0 6px;max-width:90ch}
       <p>마지막 열은 문헌의 주장이 아니라 이 저장소의 통제 실험 판정이다.
          새 계열을 도입하기 전에 이 열을 먼저 읽는다.</p>
     </div>
-    <div class="n">10개 방법군</div>
+    <div class="n">{N_GENERAL}개 방법군</div>
   </div>
   <div class="scroller">
     <table class="t-general">
@@ -397,7 +424,7 @@ footer p{margin:0 0 6px;max-width:90ch}
       <p>문제의 골격이 같은 분야들이다. 서로 다른 어휘로 같은 결론에 도달한다.
          표현력이 아니라 개체별 보정과 상태추정 프레임이 값을 한다는 것이다.</p>
     </div>
-    <div class="n">6개 계열</div>
+    <div class="n">{N_ISO}개 계열</div>
   </div>
   <div class="scroller">
     <table class="t-iso">
@@ -416,7 +443,7 @@ footer p{margin:0 0 6px;max-width:90ch}
       <p>비용 대비 정보량 순이다. 각 행은 통제 변수가 하나이며,
          TEST를 여는 팔은 사전등록 뒤에만 실행한다.</p>
     </div>
-    <div class="n">6개 팔</div>
+    <div class="n">{N_NEXT}개 팔</div>
   </div>
   <div class="scroller">
     <table class="t-next">
@@ -447,9 +474,9 @@ footer p{margin:0 0 6px;max-width:90ch}
   <div class="lede">
     <div>
       <h2>출처</h2>
-      <p>2026-09-05에 원문을 확인한 36건이다. 분야별로 나누어 두었다.</p>
+      <p>2026-09-05에 원문을 확인한 {N_SRC}건이다. 분야별로 나누어 두었다.</p>
     </div>
-    <div class="n">36건</div>
+    <div class="n">{N_SRC}건</div>
   </div>
   <div class="srcwrap">
 {SOURCES}
@@ -569,6 +596,22 @@ footer p{margin:0 0 6px;max-width:90ch}
 """
 
 page = PAGE
+_counts = {
+    "{N_TRIED}": n_tried(),
+    "{N_WIN}": len(AP.TRIED_WINDOW),
+    "{N_SEQ}": len(AP.TRIED_SEQ),
+    "{N_OPS}": len(AP.TRIED_MISC),
+    "{N_FUSION}": len(AP.FUSION_ROWS),
+    "{N_GENERAL}": len(AP.GENERAL_ROWS),
+    "{N_ISO}": len(AP.ISO_ROWS),
+    "{N_NEXT}": len(AP.PRIORITY_ROWS),
+    "{N_SRC}": len(AP.SURVEY_SOURCES),
+    "{N_SRC_F}": len(SRC_GROUPS[0][1]),
+    "{N_SRC_T}": len(SRC_GROUPS[1][1]),
+    "{N_SRC_I}": len(SRC_GROUPS[2][1]),
+}
+for _k, _v in _counts.items():
+    page = page.replace(_k, str(_v))
 page = page.replace("{TRIED_TH}", th([("계열", "7%"), ("모델 · 시도", "17%"), ("시기", "8%"),
                                       ("무엇을 바꿨나 (통제 변수)", "21%"),
                                       ("결과", "23%"), ("닫은 이유 · 근거", "24%")]))
@@ -577,14 +620,14 @@ page = page.replace("{TAKEAWAY}", E(AP.TRIED_TAKEAWAY))
 page = page.replace("{FUSION_TH}", th([("논문", "13%"), ("장치", "7%"), ("연도", "6%"),
                                        ("문제", "14%"), ("구조", "22%"),
                                        ("데이터", "10%"), ("우리에게 의미", "28%")]))
-page = page.replace("{FUSION_ROWS}", simple_rows(AP.FUSION_ROWS, FUSION_STATE,
+page = page.replace("{FUSION_ROWS}", simple_rows(AP.FUSION_ROWS, FUSION_OPEN,
                                                  device_col=1, year_col=2))
 page = page.replace("{GENERAL_TH}", th([("방법군", "12%"), ("연도", "7%"), ("대표", "20%"),
                                         ("문헌의 주장", "33%"), ("우리 데이터 판정", "28%")]))
-page = page.replace("{GENERAL_ROWS}", simple_rows(AP.GENERAL_ROWS, GENERAL_STATE, year_col=1))
+page = page.replace("{GENERAL_ROWS}", simple_rows(AP.GENERAL_ROWS, GENERAL_OPEN, year_col=1))
 page = page.replace("{ISO_TH}", th([("분야", "16%"), ("연도", "8%"), ("동형 관계", "18%"),
                                     ("주류", "28%"), ("교훈", "30%")]))
-page = page.replace("{ISO_ROWS}", simple_rows(AP.ISO_ROWS, ISO_STATE, year_col=1))
+page = page.replace("{ISO_ROWS}", simple_rows(AP.ISO_ROWS, ISO_OPEN, year_col=1))
 page = page.replace("{PRIORITY_TH}", th([("순위", "5%"), ("실험 팔 (통제 변수 하나)", "33%"),
                                          ("출처", "20%"), ("비용", "14%"),
                                          ("사전등록 판정 지표", "28%")]))

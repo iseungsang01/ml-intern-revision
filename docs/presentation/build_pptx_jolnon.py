@@ -1125,10 +1125,18 @@ for _part, _rows, _tail in ((1, AP.TRIED_MISC[:5], None),
     )
 
 _FUSION_W = [1.95, 1.05, 0.85, 1.85, 3.05, 1.55, 3.55]
-for _part, _rows in ((1, AP.FUSION_ROWS[0:5]), (2, AP.FUSION_ROWS[5:10]),
-                     (3, AP.FUSION_ROWS[10:14]), (4, AP.FUSION_ROWS[14:])):
+def _chunk(rows, per=5):
+    n = len(rows)
+    parts = max(1, -(-n // per))
+    size = -(-n // parts)
+    return [rows[i:i + size] for i in range(0, n, size)]
+
+
+_FUSION_PARTS = _chunk(AP.FUSION_ROWS, 5)
+for _part, _rows in enumerate(_FUSION_PARTS, start=1):
     table_slide(
-        "문헌 조사 (1/4, %d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다" % _part,
+        "문헌 조사 (1/4, %d/%d쪽): 핵융합의 진단-대-진단 추정은 여전히 단순한 구조가 주류이다"
+        % (_part, len(_FUSION_PARTS)),
         AP.FUSION_HEAD, _rows, widths=_FUSION_W,
         lead="장치와 연도를 따로 두었다.",
         note_txt=AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."),

@@ -2208,24 +2208,15 @@ def _s_apx_lit_fusion(part, rows):
     return _note(s, AP.sources_note("2026-09-05 조사한 핵융합 12편의 요약이다."))
 
 
-_FUSION_PARTS = [AP.FUSION_ROWS[0:5], AP.FUSION_ROWS[5:10],
-                 AP.FUSION_ROWS[10:14], AP.FUSION_ROWS[14:]]
+def chunk(rows, per=5):
+    """Balanced slices of at most `per` rows, so no slide carries a lone row."""
+    n = len(rows)
+    parts = max(1, -(-n // per))
+    size = -(-n // parts)
+    return [rows[i:i + size] for i in range(0, n, size)]
 
 
-def s_apx_lit_fusion_a():
-    return _s_apx_lit_fusion(1, _FUSION_PARTS[0])
-
-
-def s_apx_lit_fusion_b():
-    return _s_apx_lit_fusion(2, _FUSION_PARTS[1])
-
-
-def s_apx_lit_fusion_c():
-    return _s_apx_lit_fusion(3, _FUSION_PARTS[2])
-
-
-def s_apx_lit_fusion_d():
-    return _s_apx_lit_fusion(4, _FUSION_PARTS[3])
+_FUSION_PARTS = chunk(AP.FUSION_ROWS, 5)
 
 
 _GENERAL_W = [1.70, 0.95, 2.60, 3.95, 3.35]
@@ -2386,10 +2377,8 @@ def build():
     s_apx_tried_seq()
     s_apx_tried_misc_a()
     s_apx_tried_misc_b()
-    s_apx_lit_fusion_a()
-    s_apx_lit_fusion_b()
-    s_apx_lit_fusion_c()
-    s_apx_lit_fusion_d()
+    for _i, _rows in enumerate(_FUSION_PARTS, start=1):
+        _s_apx_lit_fusion(_i, _rows)
     s_apx_lit_general_a()
     s_apx_lit_general_b()
     s_apx_lit_iso()
