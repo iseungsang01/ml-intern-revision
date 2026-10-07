@@ -4192,6 +4192,46 @@ so it cannot run where there is no frame. That distinction is now on the related
 
 Artifacts: `data/.ces_duty_cycle.json`, `ces_prediction/analyze_ces_duty_cycle.py`.
 
+## 8au. Which information routes are open to a `V_rot` imputer? (2026-10-07) — the cross-target route is closed, the shot-level and unlabeled-row routes are open
+
+**Where the question came from.** 승상님 asked to move the thesis's validation away from
+hypothesis-test framing toward a comparison of multimodal model families (diffusion imputation,
+shot encoders / neural processes, masked pretraining, cross-modal transformers), with `V_rot` as the
+motivation. Before building any of them, this section measures whether the information each family
+would lean on is present at all. Plan: `experiments/PREREGISTRATION_B12.md` (v0 proposal).
+
+**Design** (`ces_prediction/analyze_vrot_info_routes.py` → `data/.vrot_info_routes.json`, all 641
+files, held-free, both populations; descriptive only, no model, no split, no TEST).
+
+| route | statistic | cut 3 keV | inclusive |
+|---|---|---:|---:|
+| cross-target | `V_rot` gaps where `T_i` is observed at the same instant | 0.909 | 0.914 |
+| | Pearson / Spearman `T_i`–`V_rot` (co-observed rows) | 0.024 / 0.049 | 0.016 / 0.049 |
+| | η² of `V_rot` on 20 quantile bins of `T_i` (any function) | **0.0020** | **0.0019** |
+| | same, shot-demeaned | 0.0017 | 0.0013 |
+| shot level | share of `V_rot` variance that is between-shot | **0.281** | 0.281 |
+| | shots with 0 / 1–20 / > 20 `V_rot` labels | **65 / 202 / 374** | 65 / 202 / 374 |
+| label scarcity | rows with complete inputs but no `V_rot` label | **0.650** | 0.650 |
+
+**Verdict.**
+- **Cross-target: closed.** `T_i` is observed in 91% of the `V_rot` gaps, so a joint generative
+  imputer would have that input almost everywhere, but no function of `T_i` explains more than 0.2%
+  of `V_rot` variance, either pooled or within a shot. A diffusion model over `[T_i, V_rot]` can't
+  get `V_rot` skill out of `T_i`. B.12 therefore puts diffusion on the probabilistic axis, not on
+  `V_rot` point skill.
+- **Shot level: open.** 28% of `V_rot` variance is a per-shot offset, and 267 of 641 shots (42%)
+  have at most 20 `V_rot` labels, so same-shot interpolation has little to work from there. This is
+  the route a shot latent (neural process) could use, and it was never tested: every model so far
+  uses information step by step.
+- **Unlabeled rows: open.** 65% of input rows carry no `V_rot` label. That is what masked
+  pretraining would use.
+
+**What would overturn this.** η² measures dependence at the same instant only. A lagged dependence
+(`T_i` leading `V_rot` through the shared NBI drive) is not measured here; the `diff` arm's
+time-axis attention would pick it up, which is why the arm stays in B.12 on the probabilistic axis.
+
+Artifacts: `data/.vrot_info_routes.json`, `ces_prediction/analyze_vrot_info_routes.py`.
+
 *All quantitative claims above were regenerated on 2026-07-14 from the checkpoints listed in the
 provenance table, using the repository's own harness (`compare_baselines.py`, `bootstrap_compare.py`,
 `peak_analysis.py`, `evaluate.py`) with the architecture pinned as described. The model neither
