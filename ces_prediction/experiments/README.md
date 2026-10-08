@@ -52,7 +52,25 @@ points **`CES_MODEL_FILE`** at its own file in the subprocess env (see
 | `b12/` | **§8au, §8av** (+ pending) | which multimodal model family (shot-encoding neural process, TokaMind transplant, CSDI-type diffusion, masked pretraining, cross-modal transformer) helps, and on which axis? Offline gap-filling, multi-axis evaluation card instead of significance-first verdicts | **proposal v0** (`PREREGISTRATION_B12.md`). §8au: `T_i`→`V_rot` route closed, shot-level and unlabeled-row routes open. §8av (baselines only): GP > PCHIP on `T_i` 4/4; on `V_rot` gaps PCHIP cannot be told from the train mean. Arms `bilstm`/`np`/`tm_pre`/`tm_scratch` built and CPU-smoked; **GPU batch (`run_b12.py`) pending** |
 | `b13_robust/` | — (pending, `PREREGISTRATION_B13.md`, 2026-10-09) | is the headline skill a **bulk** effect or a **tail** effect? Re-score the frozen B.1 / B.5 TEST npz under robust co-metrics (median AE, Huber at the §8aq noise bound, symmetric 1 % trim, quantile ladder) — no retraining, no inference | **pending** — decision rules frozen before any number; CPU seconds; names the measurement that overturns `V_rot`'s "n.s." if it is a tail artifact |
 | `b14_loss/` | — (pending, `PREREGISTRATION_B14.md`, 2026-10-09) | does training seq_v2 on a robust loss whose scale is pinned to the target's own 10 ms reproducibility (`huber` / Student-t `tnll`, ν = 3) buy the bulk headroom §8aq measured, without losing aggregate skill? One variable: the loss's influence function | **pending** — 16 GPU runs (≈ 30 min); CPU substitution forbidden (승상님 2026-10-09); control = the existing B.1 / B.5 backbone runs |
+| `b15_ensemble/` | — (pending, `PREREGISTRATION_B15.md`, 2026-10-09) | the one lever on record with a measured positive sign: a 4-init deep ensemble, re-checked under the confirmed protocol from the existing B.1 16-run grid (stage 1, re-inference only) and the inclusive population (stage 2, 12 GPU runs) | **pending** — prior expectation written down as **+0.01…+0.02, at the tie rule**, because the backbone's init spread is 0.01–0.03 (10× smaller than where +0.048 was measured); deployment recommendation only, the headline stays single-run |
 | `quantum/` | — (`docs/ionq_qpu_실험기록.md`) | side track: variational quantum classifier / IonQ QPU inference | exploratory; not part of the thesis claim chain |
+
+## Pending order (frozen 2026-10-09)
+
+Four batches are registered and none has produced a number. They run in this order, each
+deciding something the next one needs; no batch trains while the GPU is on hold, and **CPU
+is never substituted for a GPU batch** (승상님 2026-10-09, power).
+
+| # | batch | what it costs | what it decides | what it cannot do |
+|---|---|---|---|---|
+| 1 | **B.13** robust co-metric | CPU seconds, frozen npz only | whether `T_i` +0.236 is a bulk or a tail effect, and whether `V_rot`'s n.s. is a tail artifact; its tail-SSE share (M4) sets the expectation for B.14 | raise any number |
+| 2 | **B.15** ensemble, stage 1 | CPU minutes, 16 checkpoints re-inferred | the deployment recommendation beside the headline; whether the 2026-07-27 +0.048 survives the confirmed protocol (prior: no, tie) | change the scientific claim |
+| 3 | **B.14** robust loss | 16 GPU runs ≈ 30 min | whether the bulk headroom §8aq measured opens from the loss side; `V_rot` spike contamination of training | create `V_rot` information |
+| 4 | **B.12** family card (+ B.15 stage 2) | hours of GPU | the last model-side `V_rot` route (shot-level latent) and the unlabeled-row route; if both tie, `V_rot` is an acquisition problem by every measurement on record | substitute for the NBI torque channel |
+
+What actually moves `V_rot` is outside this table: an NBI torque time series from KSTAR (§8ar), the
+raw kHz Mirnov stream (B.6), or more `V_rot` labels from an NN-CES re-analysis (§8at). Those are data
+requests, i.e. 승상님's decisions, not experiments this directory can run.
 
 ## Non-negotiables for any new batch
 
