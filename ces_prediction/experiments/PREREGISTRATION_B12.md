@@ -171,6 +171,12 @@ Chronos-2 / TiRex(타깃 시계열만 넣는 zero-shot)와 TabPFN-TS. 이 셋은
 | `run_b12.py` | 4 팔 × 4 split × 2 모집단 = 32 run | **GPU 대기** |
 | `diff` / `mae` / `xmod` | | 미착수 |
 
+**2026-10-09 실행 기록.** `run_b12.py` 전체 배치를 띄웠으나 첫 run(`bilstm` cut3000 s42)에서 승상님 지시로
+중단했다(GPU 사용 보류, CPU 대체 실행은 전력 때문에 금지). 산출물 없음(부분 dir 삭제). 재개는 `run_b12.py`
+그대로(완료 run은 건너뜀). **재개 전 확인 항목**: 부모 셸에서는 `torch.cuda.is_available()`이 True였는데
+서브프로세스 로그는 `device=cpu`로 찍혔다. 다음 실행 때는 `train_b12.py`에 `--device cuda`를 명시하고
+첫 로그 줄의 `device=`를 확인한 뒤 진행한다.
+
 TokaMind 가중치(`tokamind-base-v2`, `checkpoints/best`, OpenMDW-1.0)는 `data/.b12_tokamind/`(gitignore)에 둔다.
 SHA-256: `backbone.pt` = `f7d3897824176784c323c045d9c930349c6f47eb23e4ff7f02b59dbda14617dd`,
 `token_encoder.pt` = `9ff7d530f2809acf81069733dd3d8e49b2fd7d37c062416f1815c6e76c7deb7d`.
