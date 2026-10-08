@@ -49,6 +49,11 @@ gap-filling**에서 자연스러우므로 1차 설정을 오프라인으로 둔�
 - **평가 마스크**: 테스트 shot에서 **관측된** CES 점들 위에 인공 결측 구간을 씌우고 그 구간을 채점한다. 구간 길이는
   §8at의 실측 결측 run-length 분포(`data/.ces_duty_cycle.json`, `V_rot` median 1 / mean 18.8 / p90 11)에서 표본한다.
   마스크는 split별 고정 seed로 한 번 만들어 디스크에 고정하고, 모든 팔이 같은 행을 같은 순서로 채점한다.
+- **라벨 희소화 평가 세트(2026-10-08 추가, 수치 확인 전)**: 위 마스크로는 H-np의 핵심 층을 잴 수 없다는 것이 기준선
+  채점에서 드러났다. `V_rot` 라벨 1–20개 shot 층의 채점 점이 4 split을 합쳐 67–81개뿐이다. 그래서 `V_rot` 라벨이
+  50개 이상인 test shot에서 라벨을 k ∈ {0, 3, 10}개만 남기고 나머지를 전부 가린 세트(`test_sparse{k}`)를 고정 생성해,
+  "같은 shot 정보가 거의 없는 상황"을 점이 충분한 곳에서 재현한다. `T_i`는 건드리지 않는다. k = 0에서는 보간이 불가능하므로
+  **학습 데이터 평균(`mean`)**을 기준선으로 추가한다. 블록 안에 맥락 점이 하나도 없으면 모든 보간 기준선도 학습 평균으로 대체한다.
 - 인과 버전 이식은 2차이다. 오프라인에서 이긴 모델군만 인과 마스크로 옮긴다.
 
 ## 4. 팔(arm): 모델군마다 가설 하나
@@ -152,3 +157,20 @@ Chronos-2 / TiRex(타깃 시계열만 넣는 zero-shot)와 TabPFN-TS. 이 셋은
   NN-CES 재분석으로 늘린 `V_rot` 라벨(§8at) 셋이다. 4축 학습 곡선의 기울기가 세 번째 경로에 얼마나 기대할지를 정한다.
 - H-np가 라벨 적은 층에서도 동률이면: shot 수준 분산 28%는 진단 신호로 추론할 수 없는 운전 변수(빔 배치)가 결정한다는 뜻이다.
   이 경우 shot 메타데이터(빔 소스 on/off, `I_p`, `B_T`)를 조건으로 넣은 `np`를 한 번 더 돌려 그 변수를 지목한다.
+
+## 9. 구현 현황 (2026-10-08)
+
+코드는 `experiments/b12/`에 있다.
+
+| 파일 | 역할 | 상태 |
+|---|---|---|
+| `b12_data.py` | 오프라인 특징 32채널, 경험적 결측 길이 마스크, 고정 val/test/희소화 마스크 | 완료. 누설 검사(`tests/test_b12_data.py`: 가린 값을 바꿔도 특징이 비트 단위로 같음) 통과 |
+| `b12_models.py` | `bilstm`(대조군), `np`, `tm_pre`, `tm_scratch` | 완료. CPU 스모크(6 파일 × 1 epoch) 네 팔 모두 학습·저장 통과 |
+| `baselines_b12.py` | mean / linear / PCHIP / 비인과 GP | 완료. 4 split × 2 모집단 × 5 세트 채점 끝(§8av) |
+| `card_b12.py` | 1·3축 카드, shot 클러스터 bootstrap, §6 판정 | 완료 |
+| `run_b12.py` | 4 팔 × 4 split × 2 모집단 = 32 run | **GPU 대기** |
+| `diff` / `mae` / `xmod` | | 미착수 |
+
+TokaMind 가중치(`tokamind-base-v2`, `checkpoints/best`, OpenMDW-1.0)는 `data/.b12_tokamind/`(gitignore)에 둔다.
+SHA-256: `backbone.pt` = `f7d3897824176784c323c045d9c930349c6f47eb23e4ff7f02b59dbda14617dd`,
+`token_encoder.pt` = `9ff7d530f2809acf81069733dd3d8e49b2fd7d37c062416f1815c6e76c7deb7d`.

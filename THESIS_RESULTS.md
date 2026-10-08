@@ -4232,6 +4232,43 @@ time-axis attention would pick it up, which is why the arm stays in B.12 on the 
 
 Artifacts: `data/.vrot_info_routes.json`, `ces_prediction/analyze_vrot_info_routes.py`.
 
+## 8av. B.12 offline benchmark, baselines only (2026-10-08) — on `V_rot` gaps, same-shot interpolation cannot be told apart from the training mean
+
+**What this is.** The B.12 offline gap-filling benchmark (`experiments/PREREGISTRATION_B12.md`, v0) scored with
+its four model-free arms before any network trains. Observed CES rows of the test shots are hidden in spans
+drawn from the train files' own missing-run-length distribution (20% of each file's observed rows per target),
+and every arm fills the same fixed points. Context = the remaining observed rows of the same block. Split
+manifests are B.1's (`data/.b1_manifest_s{42,1,7,123}`), held-free, both populations. Shot-clustered bootstrap,
+pooled over the four splits. Code: `experiments/b12/{b12_data,baselines_b12,card_b12}.py`; artifacts
+`data/.b12_masks/`, `data/.b12_base_cut*_s*/`, `data/.b12_card.json`.
+
+Skill vs PCHIP (`1 − MSE/MSE_PCHIP`, pooled, 95% CI):
+
+| population / target | n | train mean | acausal GP | GP per split (42/1/7/123) |
+|---|---:|---|---|---|
+| cut `T_i` | 28,623 | −1.94 [−2.54, −1.47] | **+0.223** [+0.15, +0.30] | +0.29 / +0.17 / +0.09 / +0.32 |
+| incl. `T_i` | 28,743 | +0.05 [−0.15, +0.23] | **+0.330** [+0.22, +0.44] | |
+| cut `V_rot` | 18,297 | +0.02 [−0.59, +0.32] | +0.044 [−0.00, +0.12] | −0.01 / +0.09 / +0.02 / +0.17 |
+| incl. `V_rot` | 16,855 | +0.03 [−0.50, +0.31] | +0.049 [+0.01, +0.12] | +0.09 / +0.17 / −0.01 / +0.08 |
+
+Label-sparsified `V_rot` sets (dense test shots keeping only k labels; identical in both populations):
+k = 3 → GP +0.127 [+0.02, +0.30], mean −0.26 [−0.70, −0.02]; k = 10 → GP +0.079 [+0.01, +0.19], mean +0.03 [−0.66, +0.42].
+
+**Reading.**
+- `T_i` behaves as §8p said it would offline: GP beats PCHIP 4/4 in both populations, and the
+  ordering mean ≪ PCHIP < GP is clean.
+- **`V_rot` does not.** On hidden `V_rot` points, three quarters of which sit in gaps longer than 10 steps,
+  PCHIP's pooled MSE can't be separated from the global training mean, and the GP's margin over PCHIP is
+  +0.04–0.05 with the cut-population interval touching 0. Same-shot `V_rot` labels carry little that a
+  constant doesn't already carry once a gap is long. This is the room a shot-level model would have to fill (§8au): it can only
+  win where the same-shot route is weak.
+- **Design consequence, fixed before any arm is scored**: the real 1–20-label stratum has only 67–81 hidden
+  `V_rot` points pooled, so H-np is tested on the label-sparsified sets instead (PREREGISTRATION_B12.md §3).
+
+**What would overturn the `V_rot` reading.** The mean-vs-PCHIP interval is wide because a few shots dominate the
+squared error. A per-shot normalized score (each shot's MSE over its own `V_rot` variance) would show whether the
+tie is general or carried by those shots. The card's axis 3 adds it when the arms report.
+
 *All quantitative claims above were regenerated on 2026-07-14 from the checkpoints listed in the
 provenance table, using the repository's own harness (`compare_baselines.py`, `bootstrap_compare.py`,
 `peak_analysis.py`, `evaluate.py`) with the architecture pinned as described. The model neither
