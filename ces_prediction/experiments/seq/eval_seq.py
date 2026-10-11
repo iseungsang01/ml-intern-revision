@@ -87,16 +87,32 @@ def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=(), prima
     variant = os.getenv("CES_SEQ_MODEL", "v1")
     if variant not in SEQ_MODELS:
         raise SystemExit(f"CES_SEQ_MODEL must be one of {sorted(SEQ_MODELS)}, got {variant!r}")
-    model = SEQ_MODELS[variant]().to(device)
     out_dir = Path(os.environ["CES_OUTPUT_DIR"])
-    model.load_state_dict(torch.load(out_dir / "weights" / "seq_lstm.pth", map_location="cpu"))
-    model.eval()
+    # B.15 (PREREGISTRATION_B15.md sec. 2.1): CES_SEQ_ENSEMBLE_DIRS lists member run dirs
+    # (os.pathsep-separated); their NORMALIZED predictions are averaged. Unset -> the
+    # single checkpoint in CES_OUTPUT_DIR, bit-identical to every frozen artifact.
+    member_dirs = [Path(p) for p in os.getenv("CES_SEQ_ENSEMBLE_DIRS", "").split(os.pathsep) if p.strip()]
+    if not member_dirs:
+        member_dirs = [out_dir]
+    members = []
+    for d in member_dirs:
+        m = SEQ_MODELS[variant]().to(device)
+        m.load_state_dict(torch.load(d / "weights" / "seq_lstm.pth", map_location="cpu"))
+        m.eval()
+        members.append(m)
+    model = members[0]
 
     needs_obs = bool(getattr(model, "needs_obs", False))
     ladder = ["full", *contexts]
     if contexts and needs_obs:
         raise SystemExit("FATAL: the reach probe is defined for models taking (x, lengths); "
                          f"{variant!r} needs an observation mask.")
+    if len(members) > 1 and (contexts or primary_ctx):
+        raise SystemExit("FATAL: the ensemble path is defined for whole-block inference only.")
+
+    def ensemble(fn):
+        """Mean over members of fn(member) -> (L, 2) normalized."""
+        return torch.stack([fn(m) for m in members]).mean(0)
 
     my_mean = torch.as_tensor(my_stats["target"]["mean"], dtype=torch.float32)
     my_std = torch.as_tensor(my_stats["target"]["std"], dtype=torch.float32)
@@ -112,7 +128,9 @@ def build_pred_lookup(data_dir, eval_names, my_stats, device, contexts=(), prima
                 preds = {}
                 if needs_obs:
                     obs = torch.from_numpy(blk["mask"]).unsqueeze(0).to(device)
-                    preds["full"] = model(x, None, obs)[0]
+                    preds["full"] = ensemble(lambda m: m(x, None, obs)[0])
+                elif len(members) > 1:
+                    preds["full"] = ensemble(lambda m: m(x)[0])
                 elif primary_ctx:
                     # B.9 axis A: this arm was TRAINED at reach `primary_ctx`, so its
                     # primary inference path is the truncated one. The key stays "full"

@@ -84,10 +84,55 @@ def batched(blocks, batch_size, device, shuffle, rng):
         yield x.to(device), y.to(device), m.to(device), lengths
 
 
-def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip=1.0, rng=None):
+def robust_loss_config(stats):
+    """B.14 (PREREGISTRATION_B14.md sec. 2): the training loss's influence function.
+
+    CES_SEQ_LOSS = mse (default, the frozen backbone regime) | huber | tnll. The robust
+    losses need a scale per target, given in PHYSICAL units (CES_SEQ_LOSS_SIGMA_TI_EV,
+    CES_SEQ_LOSS_SIGMA_VT_KMS -- the sec. 8aq order-4 noise bounds) and normalized here
+    with the run's own target std, so the constant is a data-level quantity and never a
+    tuned hyperparameter. Missing scales abort loudly: a silent default is exactly the
+    failure mode experiments/README.md non-negotiable 1 exists to prevent.
+    """
+    kind = os.getenv("CES_SEQ_LOSS", "mse")
+    if kind not in ("mse", "huber", "tnll"):
+        raise SystemExit(f"CES_SEQ_LOSS must be mse|huber|tnll, got {kind!r}")
+    if kind == "mse":
+        return {"kind": "mse", "sigma_phys": None, "delta_norm": None, "nu": None}
+    try:
+        sigma = [float(os.environ["CES_SEQ_LOSS_SIGMA_TI_EV"]),
+                 float(os.environ["CES_SEQ_LOSS_SIGMA_VT_KMS"])]
+    except KeyError as e:
+        raise SystemExit(f"FATAL: CES_SEQ_LOSS={kind} needs {e.args[0]} (physical-unit scale).")
+    std = np.asarray(stats["target"]["std"], dtype=np.float64)
+    delta = [s / float(d) for s, d in zip(sigma, std)]
+    nu = float(os.getenv("CES_SEQ_LOSS_NU", "3")) if kind == "tnll" else None
+    return {"kind": kind, "sigma_phys": sigma, "delta_norm": delta, "nu": nu}
+
+
+def robust_residual_loss(r, cfg):
+    """Per-element loss of a normalized residual r (same shape in, same shape out)."""
+    kind = cfg["kind"]
+    if kind == "mse":
+        return r ** 2
+    # Both robust losses are normalized to coincide with r**2 inside the scale, so the
+    # bulk is fit exactly as the MSE control fits it (same curvature, same ratio to the
+    # 0.1 * relu T_i penalty); only the influence outside delta differs.
+    d = torch.as_tensor(cfg["delta_norm"], dtype=r.dtype, device=r.device)
+    if kind == "huber":
+        a = r.abs()
+        return torch.where(a <= d, r ** 2, 2.0 * d * a - d ** 2)   # grad bounded at 2*delta
+    nu = cfg["nu"]
+    s2 = nu * d ** 2
+    return s2 * torch.log1p(r ** 2 / s2)                           # grad 2r / (1 + r^2 / s2)
+
+
+def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip=1.0, rng=None,
+                loss_cfg=None):
     training = optimizer is not None
     model.train(training)
     se_sum, n_obs, pen_sum, n_batches = 0.0, 0.0, 0.0, 0
+    kind = (loss_cfg or {}).get("kind", "mse")
     for x, y, m, lengths in batched(blocks, batch_size, device, training, rng or random.Random(0)):
         with torch.set_grad_enabled(training):
             # v3-family models attend over past fresh-observation steps; the loss
@@ -97,7 +142,13 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
             se = ((out - y) ** 2) * m
             mse = se.sum() / m.sum().clamp(min=1.0)
             pen = (torch.relu(zero_ti - out[..., 0]) * m[..., 0]).sum() / m[..., 0].sum().clamp(min=1.0)
-            loss = mse + 0.1 * pen
+            if kind == "mse":
+                fit = mse  # the frozen backbone's exact code path
+            else:
+                # Reported se / val early stopping stay MSE (sec. 2); only the
+                # back-propagated fit term changes.
+                fit = (robust_residual_loss(out - y, loss_cfg) * m).sum() / m.sum().clamp(min=1.0)
+            loss = fit + 0.1 * pen
             if training:
                 optimizer.zero_grad()
                 loss.backward()
@@ -167,12 +218,16 @@ def main():
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min",
                                                            patience=2, factor=0.5)
     zero_ti = float((0.0 - stats["target"]["mean"][0]) / stats["target"]["std"][0])
+    loss_cfg = robust_loss_config(stats)
+    if loss_cfg["kind"] != "mse":
+        print(f"[seq] loss={loss_cfg['kind']} sigma_phys={loss_cfg['sigma_phys']} "
+              f"delta_norm={[round(d, 4) for d in loss_cfg['delta_norm']]} nu={loss_cfg['nu']}")
 
     rng = random.Random(seed)
     best_val, best_state, best_epoch, patience = float("inf"), None, -1, 6
     for epoch in range(epochs):
         tr_mse, tr_pen = masked_pass(model, train_blocks, batch_size, device, zero_ti,
-                                     optimizer=optimizer, rng=rng)
+                                     optimizer=optimizer, rng=rng, loss_cfg=loss_cfg)
         val_mse, _ = masked_pass(model, val_blocks, batch_size, device, zero_ti)
         scheduler.step(val_mse)
         star = ""
@@ -210,7 +265,13 @@ def main():
         "drop_stuck_targets": drop_stuck,
         "fixed_epochs": fixed_epochs,
         "seed": seed, "init_seed": init_seed,
-        "loss": "per-target masked MSE + 0.1*relu(zero_ti - pred_TI) (train.py parity)",
+        "loss": ("per-target masked MSE + 0.1*relu(zero_ti - pred_TI) (train.py parity)"
+                 if loss_cfg["kind"] == "mse" else
+                 f"per-target masked {loss_cfg['kind']} + 0.1*relu(zero_ti - pred_TI) (B.14)"),
+        "loss_kind": loss_cfg["kind"],
+        "loss_sigma_phys": loss_cfg["sigma_phys"],
+        "loss_delta_norm": loss_cfg["delta_norm"],
+        "loss_nu": loss_cfg["nu"],
     }
     (out_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     print(f"[seq] saved weights + metrics to {out_dir} (best val {best_val:.4f} @ {best_epoch + 1})",

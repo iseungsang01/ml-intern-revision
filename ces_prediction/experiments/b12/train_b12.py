@@ -198,3 +198,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # PyTorch CUDA teardown on Windows can fastfail (0xC0000409) after everything is
+    # saved (train_seq.py has the same guard); skip teardown so rc reflects the run.
+    import os
+    os._exit(0)
