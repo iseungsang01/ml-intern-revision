@@ -68,6 +68,17 @@ is never substituted for a GPU batch** (승상님 2026-10-09, power).
 | 3 | **B.14** robust loss | 16 GPU runs ≈ 30 min | whether the bulk headroom §8aq measured opens from the loss side; `V_rot` spike contamination of training | create `V_rot` information |
 | 4 | **B.12** family card (+ B.15 stage 2) | hours of GPU | the last model-side `V_rot` route (shot-level latent) and the unlabeled-row route; if both tie, `V_rot` is an acquisition problem by every measurement on record | substitute for the NBI torque channel |
 
+**State at the 2026-10-11 stop (승상님: 중단; every process killed, nothing to clean up — each runner
+resumes by skipping dirs whose final artifacts exist):**
+
+| batch | done | partial (resume recreates) | next command |
+|---|---|---|---|
+| B.13 | cut 4 splits + incl s42/s1 scored in memory only; **no `.b13_summary.json`** | — | `py ces_prediction/experiments/b13_robust/rescore_b13.py` (CPU, re-runs from scratch) |
+| B.15 stage 1 | **complete**: `.b15_ens4_cut_s*`, `.b15_summary.json` — paired `T_i` vs canonical +0.011/+0.010/+0.027/+0.030, 4/4 significant, mean **+0.0196 → tie by the ≤ 0.02 rule**, `V_rot` deficits 0/4 | — | record in §8 |
+| B.15 stage 2 | `.b15_member_incl_s42_i{1,7,123}` trained | `.b15_member_incl_s1_i42` (run.log only) | `py ces_prediction/experiments/b15_ensemble/run_b15.py --train-incl --pops incl` |
+| B.14 | `huber`/`tnll` cut s42, `huber` cut s1 (MSE paired vs control: huber −0.011 / tnll −0.003 on s42, CIs include 0) | `.b14_tnll_cut_s1` (run.log only) | `py ces_prediction/experiments/b14_loss/run_b14.py` |
+| B.12 | 4 arms × cut s42 (val hidden-MSE sum np 0.563 < bilstm 0.567 < tm_scratch 0.597 < tm_pre 0.603) | `.b12_bilstm_cut3000_s1` (empty) | `py ces_prediction/experiments/b12/run_b12.py --device cuda` |
+
 What actually moves `V_rot` is outside this table: an NBI torque time series from KSTAR (§8ar), the
 raw kHz Mirnov stream (B.6), or more `V_rot` labels from an NN-CES re-analysis (§8at). Those are data
 requests, i.e. 승상님's decisions, not experiments this directory can run.
