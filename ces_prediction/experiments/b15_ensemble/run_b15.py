@@ -104,8 +104,18 @@ def score_split(pop, s):
         (out / "metrics.json").write_text(json.dumps(m, indent=2), encoding="utf-8")
     env = base_env(pop)
     env.update({"CES_SEED": str(s), "CES_INIT_SEED": str(s), "CES_SPLIT_DIR": str(DATA / p["split"].format(s=s)),
-                "CES_OUTPUT_DIR": str(out), "CES_CONTROL_METRICS": str(DATA / p["control_metrics"].format(s=s) / "metrics.json"),
-                "CES_SEQ_ENSEMBLE_DIRS": os.pathsep.join(str(d) for d in members)})
+                "CES_CONTROL_METRICS": str(DATA / p["control_metrics"].format(s=s) / "metrics.json")})
+    # Stage-2 members were only trained; each needs its own TEST scoring before it can
+    # be a pairing partner (the stage-1 B.1 members already carried theirs).
+    for d in members:
+        if (d / "comparison_errors_test.npz").exists():
+            continue
+        env_m = dict(env)
+        env_m["CES_OUTPUT_DIR"] = str(d)
+        if not run_step([SEQ_DIR / "eval_seq.py"], env_m, d / "run.log", "eval(test, member)",
+                        artifacts=(d / "comparison_errors_test.npz", d / "comparison_metrics.json")):
+            raise SystemExit(f"FATAL: member eval failed for {d.name}")
+    env.update({"CES_OUTPUT_DIR": str(out), "CES_SEQ_ENSEMBLE_DIRS": os.pathsep.join(str(d) for d in members)})
     print(f"[b15] === {out.name} <- {[d.name for d in members]}", flush=True)
     if not (out / "comparison_errors_test.npz").exists():
         if not run_step([SEQ_DIR / "eval_seq.py"], env, log, "eval(test, ens4)",

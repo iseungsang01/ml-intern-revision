@@ -1095,6 +1095,31 @@ per-frame fit quality would replace our value-based cut and merge the two co-pri
 Same rule as always — a mechanism claim gets measured before it is published, even when the mechanism
 comes from a peer-reviewed paper about our own instrument.
 
+## The Headline Skill Is A Tail Effect — Read Every MSE Skill Beside Its Median (2026-10-12) — §8ax
+
+B.13 re-scored the frozen TEST artifacts under robust co-metrics, with the rules frozen first
+(`experiments/PREREGISTRATION_B13.md`). The MSE skill the thesis quotes (`T_i` +0.24 cut / +0.28
+incl vs PCHIP) is earned **above the 70th percentile of error**. In the median row the backbone is
+*worse* than PCHIP (median AE 47.2 vs 39.4 eV; `V_rot` 4.3 vs 2.9 km/s) and sits **with
+persistence** (46.1 eV) — i.e. at the target's own bulk scatter (§8aq MAD 46.4 eV). The bulk
+ordering is the ordering of noise averaging: acausal GP ≈ PCHIP (two neighbours) < causal GP
+(several past samples) < persistence ≈ **backbone** (one noisy anchor, carried). `V_rot`'s n.s. is
+not a tail artifact: it is a −49 % median loss offset by a tail win (peak-stratum MSE +0.5…+0.8).
+
+**How to apply.**
+- Never quote an MSE skill without the physical-unit median beside it. The paper's claim sentence
+  is now "`T_i` 우위는 꼬리에서 온다" (pre-registered wording, §8ax §3), and the PR4 headline stays MSE.
+- "Bulk headroom" (§8aq) now has a mechanism: an MSE loss dominated by rows the model cannot fit
+  teaches nothing about the rows it could, so the model carries its anchor. The interventions that
+  target this are the loss (B.14, running) and anchor denoising / shrinkage — not capacity (§8aa).
+- The inclusive population is worse in the **bulk** too (62 vs 47 eV median): the two-population
+  rule protects the typical row, not only the spike rows.
+- A tail-driven result is not a weaker result — the model's value is in transients (§8an) — but it
+  is a *different* result, and the deployment story must say "use the nowcaster where the quantity
+  moves; in the quiet bulk an interpolator or the causal GP is better".
+- Tooling: `experiments/b13_robust/rescore_b13.py --extra name=dir` scores any new arm the same way;
+  the weighted-median cluster bootstrap is the pattern for any future quantile statistic.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

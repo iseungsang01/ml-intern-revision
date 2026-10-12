@@ -4329,3 +4329,117 @@ Artifacts: `data/.b15_ens4_cut_s{42,1,7,123}/` (`comparison_errors_test.npz`,
 `data/.b15_summary.json`.
 
 ---
+
+## 8ax. B.13 robust co-metrics (2026-10-12) — the headline skill is a **tail** effect: in the median row the nowcaster is worse than PCHIP and no better than persistence
+
+**Question.** §8aq measured that 47–85 % of the target's own squared 10 ms scatter sits
+in 1 % of the rows and named this re-scoring as the next measurement: is the backbone's
+`T_i` +0.24 a bulk effect or a tail effect, and is `V_rot`'s "n.s. vs PCHIP" a tail
+artifact? Rules, metrics and the sentences each outcome would write were frozen in
+`experiments/PREREGISTRATION_B13.md` before any number existed.
+
+**Design** (`experiments/b13_robust/rescore_b13.py` → `data/.b13_summary.json`). The frozen
+TEST artifacts only — cut `.b1_seqv2_s{s}_i{s}` / `.b1_w2cut_s{s}`, inclusive `.b5i_seqv2_s{s}`
+/ `.b5i_w2_s{s}` — with `|e| = √se`; no training, no inference. Guards: the MSE skill vs PCHIP
+recomputed from every npz equals the recorded value (to 1e-5, float32 vs float64 reduction),
+and every shot id maps onto its split's test files. Metrics: M1 median-AE skill
+(weighted-median shot-cluster bootstrap, B = 10 000), M2 Huber skill at the §8aq order-4
+noise bound (129.9 / 274.3 eV, 16.4 km/s), M3 MSE skill after a symmetric 1 % trim on
+`max(se_a, se_b)`, M4 the trimmed rows' SSE share, M5 the `|e|` quantile ratio ladder.
+Pooled = 4 splits, cluster = physical shot (301 shots).
+
+### 1. The numbers that overturn the reading
+
+Pooled, backbone vs PCHIP (`*` = CI excludes 0):
+
+| population / target | MSE skill (headline) | **M1 median-AE skill** | M2 Huber | M3 trimmed 1 % | M4 tail SSE share model / PCHIP |
+|---|---|---|---|---|---|
+| cut `T_i` | +0.243* | **−0.198** [−0.259, −0.135] | +0.156* | +0.210* | 0.48 / 0.51 |
+| cut `V_rot` | +0.238* (per split 1/4) | **−0.488** [−0.604, −0.387] | −0.060 | −0.212 | 0.84 / 0.90 |
+| incl `T_i` | +0.278* | **−0.562** [−0.703, −0.432] | +0.130* | +0.057 | 0.83 / 0.87 |
+| incl `V_rot` | +0.238* (2/4) | **−0.518** [−0.630, −0.414] | −0.056 | −0.200 | 0.85 / 0.90 |
+
+Per split, M1 vs PCHIP is negative on **16/16** (population × target × split) cells, and
+significantly so on 16/16. In physical units, pooled median absolute error:
+
+| population / target | backbone | PCHIP | acausal GP | causal GP | persistence | window (W = 2) |
+|---|---:|---:|---:|---:|---:|---:|
+| cut `T_i` [eV] | **47.2** | 39.4 | 38.5 | 44.4 | 46.1 | 52.6 |
+| cut `V_rot` [km/s] | **4.3** | 2.9 | 2.9 | 3.8 | 3.7 | 4.9 |
+| incl `T_i` [eV] | **62.2** | 39.8 | 39.7 | 45.5 | 46.5 | 65.0 |
+| incl `V_rot` [km/s] | **4.4** | 2.9 | 2.9 | 3.8 | 3.7 | 5.6 |
+
+The quantile ladder says where the two readings cross (cut `T_i`, ratio model / PCHIP):
+q50 **1.20**, q60 1.11, q70 1.01, **q75 0.96**, q90 0.86, q99 0.78. Against persistence the
+crossover is q55 (1.00), against the causal GP q65 (0.99). The model beats PCHIP on
+**48 %** of `T_i` rows and **40 %** of `V_rot` rows (incl: 42 % / 39 %); it beats persistence
+on 53 % / 47 %.
+
+### 2. Reading
+
+1. **Q2 (`T_i`) = tail, by the pre-registered rule, in both populations.** The +0.24 /
+   +0.28 MSE skill is earned above the 70th percentile of error. In the median row the
+   backbone's error is 47 eV — **the target's own bulk scatter (§8aq MAD 46.4 eV)** — and
+   PCHIP's is 39 eV. The ordering of the bulk column is exactly the ordering of how much
+   *noise averaging* each predictor does: an interpolator averages two noisy neighbours
+   (GP 38.5 ≈ PCHIP 39.4), the causal GP averages several past samples (44.4), persistence
+   copies one noisy sample (46.1) — and the backbone sits **with persistence** (47.2). In
+   the bulk the nowcaster carries the last noisy value and adds nothing; it does not
+   denoise its own anchor. Huber (M2) and the 1 % trim (M3) stay positive because the
+   model's advantage begins well inside the 1 % tail (q75 onward), so "tail" here means
+   "the upper quarter of errors", not "a handful of spikes".
+2. **Q1 (`V_rot`) is not satisfied — and the sign is the opposite of the hypothesis.** The
+   aggregate near-tie vs PCHIP is not a tail artifact hiding a bulk win; it is a bulk
+   *loss* (median 4.3 vs 2.9 km/s, −49 %) offset by a tail win (q99 ratio 0.98, peak-stratum
+   MSE skill +0.54…+0.79 on 8/8 cells). In the median row the backbone is worse than
+   **persistence** (3.7 km/s) and worse than the causal GP (3.8). For a quantity whose
+   inputs carry no information (§8ar), the MSE-trained head hedges, and hedging costs the
+   median. This is the measurement §8ab's "unresolved" needed: `V_rot` is **resolved
+   negative in the bulk** and positive only where the target moves (§8an's covariate).
+3. **The inclusive population is worse in the bulk, not just in the tail.** Incl `T_i`
+   median 62 eV vs 47 cut: training on uncut spikes degrades the typical row by 15 eV
+   while the MSE skill rises (+0.278 vs +0.243). The two-population rule (§1.1) was adopted
+   for the tail; it turns out to matter for the bulk too.
+4. **The sequence backbone's margin over the window model is a bulk effect** (model vs
+   window M1 +0.104* / +0.133* cut, +0.044 / +0.224* incl) — the reach narrative of §8ac
+   is about the typical row, which the W = 2 control gets wrong by 5–6 eV more.
+5. **The strongest offline arm is unchanged**: the acausal GP has the lowest median in
+   every cell and the backbone's M1 vs GP is −0.23 / −0.46 (cut). §8p's "the model ties the
+   GP" was an MSE statement; in the median the GP is clearly better.
+
+### 3. What this changes, and what it does not
+
+- **The claim stays; its sentence changes** (pre-registered §5, Q2 tail): "`T_i` 우위는 꼬리에서
+  온다. 오차 상위 사분위에서 모델이 PCHIP를 이기고, 중앙값 행에서는 PCHIP가 20 %, persistence가
+  2 % 더 낫다." The PR4 headline is unchanged (it was always the MSE); B.13 is the
+  co-metric beside it, and the paper's model section gets the physical-unit median table.
+- **Headroom is now located.** §8aq said the bulk had 2–3× headroom; B.13 says what the
+  model does there — behaves as persistence — and names the mechanism: an MSE loss
+  dominated by rows it cannot fit teaches nothing about the rows it could. **B.14 (robust
+  loss, already running) is the direct test**, and its M1 column is now the primary
+  readout, not a co-metric.
+- **A model-side `V_rot` fix is named for the first time.** The bulk loss vs persistence
+  (−17 % median) is a hedging cost, so shrinking the `V_rot` head toward its carried anchor
+  (the lit-survey axis "soft gate + persistence shrinkage") would recover the bulk without
+  new information; the tail win would have to survive. That is a controlled experiment,
+  not a claim.
+- **Not changed**: PR4 verdicts, populations, the backbone, the causal-GP comparison in
+  MSE (4/4), and the §8ar conclusion that `V_rot`'s information is absent. The median
+  result is *consistent* with absence: a head without information should not beat
+  persistence in the typical row, and it does not.
+
+**Strata (M1 vs PCHIP, per split).** Peak rows: `T_i` −0.02…−0.10 (MSE +0.45…+0.61), `V_rot`
+−0.24…−0.58 (MSE +0.54…+0.79) — even where the model wins the MSE by half, its *median*
+error is not below PCHIP's. Non-peak: `T_i` −0.16…−0.25, `V_rot` −0.36…−0.73. The win is
+concentrated in the large-error rows *within* the peak stratum, not in typical peak rows.
+
+**What would overturn this.** A robust-loss or anchor-shrunk arm whose M1 vs PCHIP is ≥ 0
+on 3/4 splits while its MSE skill stays within `PRACTICAL_EPS` of the backbone (B.14's
+rule 1). If no training change moves the median below persistence's, the bulk is the
+measurement noise of the carried anchor and the fix is denoising the history, not the
+head.
+
+Artifacts: `data/.b13_summary.json`, `data/.b13_rescore.log`;
+script `experiments/b13_robust/rescore_b13.py` (takes `--extra name=dir` for B.14 / B.15 arms).
+
+---
