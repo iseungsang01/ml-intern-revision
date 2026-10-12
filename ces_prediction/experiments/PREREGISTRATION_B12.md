@@ -168,7 +168,7 @@ Chronos-2 / TiRex(타깃 시계열만 넣는 zero-shot)와 TabPFN-TS. 이 셋은
 | `b12_models.py` | `bilstm`(대조군), `np`, `tm_pre`, `tm_scratch` | 완료. CPU 스모크(6 파일 × 1 epoch) 네 팔 모두 학습·저장 통과 |
 | `baselines_b12.py` | mean / linear / PCHIP / 비인과 GP | 완료. 4 split × 2 모집단 × 5 세트 채점 끝(§8av) |
 | `card_b12.py` | 1·3축 카드, shot 클러스터 bootstrap, §6 판정 | 완료 |
-| `run_b12.py` | 4 팔 × 4 split × 2 모집단 = 32 run | **GPU 대기** |
+| `run_b12.py` | 4 팔 × 4 split × 2 모집단 = 32 run | **완료 2026-10-12** (§8az) |
 | `diff` / `mae` / `xmod` | | 미착수 |
 
 **2026-10-09 실행 기록.** `run_b12.py` 전체 배치를 띄웠으나 첫 run(`bilstm` cut3000 s42)에서 승상님 지시로
@@ -180,3 +180,19 @@ Chronos-2 / TiRex(타깃 시계열만 넣는 zero-shot)와 TabPFN-TS. 이 셋은
 TokaMind 가중치(`tokamind-base-v2`, `checkpoints/best`, OpenMDW-1.0)는 `data/.b12_tokamind/`(gitignore)에 둔다.
 SHA-256: `backbone.pt` = `f7d3897824176784c323c045d9c930349c6f47eb23e4ff7f02b59dbda14617dd`,
 `token_encoder.pt` = `9ff7d530f2809acf81069733dd3d8e49b2fd7d37c062416f1815c6e76c7deb7d`.
+
+## 10. 집행 결과 (2026-10-12, §8az) — 팔 `np` / `tm_pre` / `tm_scratch`
+
+- **`V_rot` 개선(1차 질문): 모델군 전체 동률.** 컷에서 `np`·`tm_scratch`가 δ +0.021로 §6 규칙을
+  CI 하한 +0.000 / +0.001로 통과하는 경계 칸 2개(층별 재현 없음), `tm_pre` 동률; 포함 모집단은 세 팔
+  모두 동률(−0.009 / −0.016 / −0.003). "무조건부" 성립 없음.
+- **H-np 미지지.** 라벨 0개 세트에서 어떤 팔도 학습 평균을 못 이기고 `np`가 최하(−0.040, CI가 0 제외);
+  k = 3·10에서 네 팔 동률(δ ±0.004); 실측 1–20 라벨 층 δ +0.001(81점). §8의 두 번째 사전 지목 해석이
+  적용된다: shot 간 분산 28 %는 진단 신호에 없는 운전 변수가 정한다 → 다음 측정 = shot 메타데이터 조건부 `np`.
+- **H-tm 미지지.** 사전학습/무작위 backbone 차이 0.004–0.013(모든 셀). TokaMind 자체 결과(−0.005)와 같은 부호·크기.
+  Transformer는 `T_i`에서 BiLSTM보다 열세(컷 −0.09, 포함 −0.03~−0.04).
+- `T_i`(질문 밖): `np` 컷 +0.026 [+0.004, +0.049] IMPROVE, 포함 −0.006 동률 → 컷 조건부·주변 효과.
+- 갭 길이 프로파일(양성): 1 step에서는 모든 팔이 PCHIP에 지고(−0.25), 2 step 이상에서 +0.4–0.6으로 이긴다.
+  `V_rot`은 100 ms 척도에서 진단 신호로 복원되며, §8ab의 n.s.는 10 ms 척도의 이야기다.
+- 선택 규칙 함정 재현: `np` 포함 s123이 val hidden-MSE 기준 epoch 3에서 멈춤(§8ay와 같은 함정).
+- `diff` / `mae` / `xmod`는 미착수. 이 카드가 세 팔의 점 skill 기대치를 "동률"로 정한다.

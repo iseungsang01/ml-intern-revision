@@ -1149,6 +1149,31 @@ identically — picked a nearly untrained model. The arm's median still improved
    and median error (the bulk). Huber keeps the first and buys the second; a result that
    quotes one without the other is reading only one half of §8ax.
 
+## The Model-Family Axis Closes Like The Estimator Axis Did — Context Carries The Shot, Not The Encoder (2026-10-12) — §8az
+
+**What happened.** Three inductive biases (shot-latent neural process, MAST-pretrained TokaMind
+transformer, the same transformer from scratch) were carded against a bidirectional LSTM control
+on the offline gap-filling benchmark, 32 GPU runs, two populations. `V_rot` tied for the family;
+the neural process was *worst* in the one regime it was built for (zero same-shot labels, where
+no arm beats the training mean); the pretrained and random transformer backbones agreed to
+0.004–0.013 on every cell.
+
+**Rules.**
+1. **Cross-device pretraining transfers nothing to CES gap-filling at this scale.** Do not
+   re-try a foundation-model transplant without a new reason; the controlled pair
+   (`tm_pre` vs `tm_scratch`) is the cleanest null in the project and matches TokaMind's own
+   −0.005.
+2. **The shot's regime is carried by its context labels, not by an encoder.** k = 3 → 10 labels
+   lifts every family by the same +0.25; k = 0 sinks every family to the mean. A shot-level
+   prior that beats this must be *conditioned on something the diagnostics do not contain*
+   (beam sources, `I_p`, `B_T`) — that is the named next measurement, not another encoder.
+3. **Read gap length before reading the verdict.** Every learned arm loses to PCHIP in one-step
+   gaps and wins +0.4–0.6 beyond; the causal 10 ms `V_rot` n.s. and the offline 100 ms `V_rot`
+   win are the same model seen at two scales. State which scale a `V_rot` claim is about.
+4. **The val-MSE early-stop trap of §8ay is not loss-specific**: an `np` run stopped at epoch 3
+   and lost 0.12 on one split. Any arm whose training signal is not the selection metric needs
+   its epoch trace read before its number is believed.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

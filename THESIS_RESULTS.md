@@ -4577,3 +4577,127 @@ Artifacts: `data/.b14_*`, `data/.b14_summary.json`, `data/.b13_arms_cut.json`,
 `data/.b13_arms_incl.json`, logs `data/.b14_batch.log`.
 
 ---
+
+## 8az. B.12 model-family card, first three arms (2026-10-12) — the shot-encoding neural process ties the bidirectional control everywhere H-np said it would win, and the MAST transplant brings nothing a random init does not
+
+**Question.** §8au left two information routes open to a `V_rot` imputer: shot-level prior
+information (28 % of `V_rot` variance is between shots; 42 % of shots have ≤ 20 labels) and the
+unlabeled rows. B.12 asks which inductive bias reaches them, by carding model families against
+one offline control that differs from the backbone only in direction (`seq_v2_bi`, here `bilstm`).
+This section records the first three arms — `np` (shot latent + cross-attention neural process,
+H-np), `tm_pre` / `tm_scratch` (TokaMind transformer with MAST-pretrained vs random backbone,
+H-tm) — on card axes 1, 3 and 6 (`PREREGISTRATION_B12.md` §5–§6). `diff`, `mae`, `xmod` are not
+started.
+
+**Design** (`experiments/b12/{run_b12,train_b12,b12_models,card_b12}.py`). 4 arms × 4 splits × 2
+populations = 32 GPU runs (RTX 5060 Laptop), identical masks, splits, budget (cap 60, patience on
+val hidden-MSE), held-free, B.1 manifests; TEST hidden points fixed by §8av and scored once per arm.
+Statistic: skill vs PCHIP = `1 − MSE/MSE_PCHIP`; δ vs control = `(MSE_bilstm − MSE_arm)/MSE_PCHIP`;
+shot-clustered bootstrap (B = 2000), pooled over 4 splits. §6 rule: δ > 0.02, CI low > 0, same sign
+≥ 3/4, *and* the same against the acausal GP. Artifacts `data/.b12_{arm}_cut{3000,0}_s{s}/`,
+`data/.b12_card.json`, log `data/.b12_batch.log`.
+
+### 1. Axis 1 — point accuracy, pooled over 4 splits (skill vs PCHIP; δ vs `bilstm` with verdict)
+
+| population / target | `bilstm` (control) | acausal GP | `np` | `tm_pre` | `tm_scratch` |
+|---|---|---|---|---|---|
+| cut `T_i` | +0.274 [+0.22, +0.33] | +0.223 | **+0.300** [+0.24, +0.36] · δ **+0.026** [+0.004, +0.049] · signs 3/4 · **IMPROVE** | +0.179 · δ −0.094 [−0.13, −0.06] · 4/4 · WORSE | +0.184 · δ −0.090 [−0.12, −0.06] · 4/4 · WORSE |
+| cut `V_rot` | +0.364 [+0.08, +0.53] | +0.044 | +0.384 · δ +0.021 [+0.000, +0.050] · 3/4 · IMPROVE (edge) | +0.376 · δ +0.012 [−0.007, +0.035] · TIE | +0.384 · δ +0.021 [+0.001, +0.044] · 3/4 · IMPROVE (edge) |
+| incl `T_i` | +0.410 [+0.29, +0.53] | +0.330 | +0.403 · δ −0.006 [−0.017, +0.002] · TIE | +0.371 · δ −0.039 [−0.062, −0.019] · 3/4 · WORSE | +0.378 · δ −0.032 [−0.055, −0.012] · 3/4 · WORSE |
+| incl `V_rot` | +0.336 [+0.07, +0.55] | +0.049 | +0.327 · δ −0.009 [−0.042, +0.013] · TIE | +0.321 · δ −0.016 [−0.043, +0.004] · TIE | +0.333 · δ −0.003 [−0.018, +0.012] · TIE |
+
+Per split, δ `np` vs control — cut: `T_i` −0.019 / +0.009 / +0.034 / +0.054, `V_rot` +0.050 / +0.032 /
++0.014 / −0.053; inclusive: `T_i` −0.015 / +0.010 / −0.003 / −0.020, `V_rot` +0.040 / +0.013 / +0.001 /
+−0.120 (the s123 `np` run early-stopped at epoch 3 on val hidden-MSE, the same selection trap as
+§8ay's inclusive arms; its `V_rot` skill vs PCHIP is +0.009 against the control's +0.128). `tm_pre` vs `tm_scratch`, the one controlled pair inside the card: `T_i` −0.094 vs
+−0.090, `V_rot` +0.012 vs +0.021 — the MAST-pretrained backbone is indistinguishable from a random
+initialization of the same architecture on every cell.
+
+### 2. Axis 3 — where the arms win (cut population)
+
+**Gap length** (hidden-run length the point sits in), `V_rot`, skill vs PCHIP:
+
+| stratum | n | `bilstm` | `np` | `tm_scratch` | GP |
+|---|---:|---|---|---|---|
+| 1 step | 1,236 | −0.258 [−1.22, +0.10] | −0.233 | −0.253 | +0.012 |
+| 2–10 steps | 3,260 | **+0.629** [+0.07, +0.85] | +0.646 | +0.633 | +0.082 |
+| > 10 steps | 13,801 | **+0.386** [+0.04, +0.63] | +0.409 | +0.435 | +0.016 |
+
+Inclusive, same strata, `bilstm`: −0.246 / +0.441 / +0.439 (GP +0.063 / +0.046 / +0.048); the arms tie
+the control in every inclusive stratum except `tm_pre` > 10 steps (−0.043, WORSE).
+
+Every learned arm loses to PCHIP in one-step gaps and beats it by +0.4–0.6 once the gap is longer
+than the anchor's reach — the same shape §8al measured causally (saturation at 50 ms). Offline,
+with the diagnostics inside the gap, `V_rot` *is* recoverable from the fast channels at the
+100 ms scale; it is the 10 ms scale, where the adjacent CES sample is a better estimator than
+anything the diagnostics say, that §8ab's `V_rot` n.s. lives in. The arms do not differ from
+each other in any stratum (δ within ±0.05, CIs include 0 except `tm_scratch` > 10 steps +0.049
+[+0.001, +0.079]).
+
+**Label-sparsified sets** (dense test shots keeping k `V_rot` labels; the H-np test bed, §3):
+
+| k | `bilstm` | `np` | `tm_pre` | `tm_scratch` | GP | δ `np` vs control |
+|---:|---|---|---|---|---|---|
+| 0 (ref = train mean) | −0.025 [−0.06, +0.01] | −0.040 [−0.07, −0.02] | −0.016 | −0.003 | 0 | −0.015 [−0.055, +0.022] TIE |
+| 3 | +0.146 | +0.148 | +0.132 | +0.137 | +0.127 | +0.002 TIE |
+| 10 | +0.407 | +0.403 | +0.392 | +0.398 | +0.079 | −0.003 TIE |
+
+With **zero** same-shot labels no arm beats the training mean — the `np` arm, whose whole
+hypothesis is a shot latent that carries the regime, is the worst of the four there (−0.040,
+CI excludes 0). With 3 labels all arms sit on the GP (+0.13–0.15); with 10, all arms are +0.40
+and the GP +0.08. The gain from 3 → 10 labels is the same for every family: it is the context,
+not the encoder, that carries the shot. The inclusive population repeats all nine cells (every
+`np` δ within ±0.004, TIE; `tm_pre` WORSE at k = 3 and 10).
+
+### 3. Axis 6 — cost
+
+| arm | params | GPU minutes / run (cut, 4 splits) | best epoch |
+|---|---:|---|---|
+| `bilstm` | 255,938 | 7–14 | 12–32 |
+| `np` | 309,794 | 3–20 | 3–36 |
+| `tm_pre` / `tm_scratch` | 1,823,490 | 1.5–6 | 5–39 |
+
+### 4. Verdicts (pre-registered §6, unchanged)
+
+- **`V_rot` (the first question): no arm improves on the control.** In the cut population `np`
+  and `tm_scratch` pass the §6 rule by a CI low of +0.000 and +0.001 (δ +0.021 each; the `np` cell
+  read INCONCLUSIVE at a different bootstrap seed, which is what a CI low of 0.000 means), `tm_pre`
+  ties, and no stratum reproduces either cell. In the inclusive population all three arms are
+  TIE (δ −0.009 / −0.016 / −0.003), so neither cell is unconditional. Recorded as **TIE for the
+  family**, with the two cut-population edge cells named.
+- **H-np is not supported**: the shot latent buys nothing in the label-poor regime it was built
+  for (k = 0 TIE and below the mean; k = 3, 10 TIE), and nothing in the real 1–20-label stratum
+  (δ +0.001 on 81 points). §8's second pre-named reading applies: the 28 % between-shot `V_rot`
+  variance is set by operating variables the diagnostics do not encode. The named next
+  measurement is `np` conditioned on shot metadata (beam sources, `I_p`, `B_T`).
+- **H-tm is not supported, in the cleanest possible form**: pretrained and random backbones agree
+  to 0.004 / 0.007 on `T_i` and 0.009 / 0.013 on `V_rot` (cut / inclusive). Cross-device pretraining on MAST transfers no CES
+  gap-filling knowledge to KSTAR — the same sign and size as TokaMind's own profile-group result
+  (−0.005). The transformer family is also *worse* than the BiLSTM on `T_i` (cut −0.09, inclusive
+  −0.03 to −0.04, WORSE in both) at 7× the parameters, consistent with §8ag's operator-family tie
+  at this data scale.
+- **`T_i`, not asked but measured**: `np` is +0.026 [+0.004, +0.049] over the control, signs 3/4,
+  IMPROVE by the rule in the cut population, and a TIE (−0.006) in the inclusive one — cut-
+  conditional, like B.14's rung. It is the same size as the B.15 ensemble's +0.02 and sits at the
+  tie threshold; it is reported as a real but marginal effect of cross-attention over the
+  same-shot context, not as a family win.
+
+### 5. What this settles, and what it names
+
+1. The model-family axis closes the way the estimator axis did (§8ag, §8aa, §8e): three
+   inductive biases, one tie on the primary target. The diffusion / MAE / cross-modal arms keep
+   their pre-registered hypotheses (distributional axis; label-count bottleneck; modality
+   contribution) but the point-skill expectation for them is now set by this card: tie.
+2. The k = 0 row is the sharpest statement of §8ar yet: with no same-shot label, *no* learned
+   arm recovers `V_rot` above the training mean from BES + ECEI + MC alone. The information is
+   not in the inputs; §8's first pre-named path — NBI torque, µs Mirnov, re-analysed labels — is
+   the only one left, and the k = 3 → 10 curve (+0.15 → +0.40 for every arm) prices the third.
+3. The gap-length profile is a positive result for the offline product: at the 100 ms scale the
+   diagnostics recover `V_rot` at +0.4–0.6 over interpolation, which the causal 10 ms setting
+   cannot show. The offline gap-filler and the causal nowcaster answer different questions and
+   the paper should say so with this table.
+
+Artifacts: `data/.b12_card.json`, `data/.b12_{bilstm,np,tm_pre,tm_scratch}_cut{3000,0}_s{42,1,7,123}/`,
+`data/.b12_batch.log`, `data/.b12_runner_stdout.log`.
+
+---
