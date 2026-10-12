@@ -4324,9 +4324,19 @@ splits and loses to it by 0.006 on s123 — so the winner's-curse argument of 20
 (the ensemble is the best choice *without* reading TEST) still holds, but the margin it
 protects is now 0.00–0.03 rather than 0.05.
 
-Artifacts: `data/.b15_ens4_cut_s{42,1,7,123}/` (`comparison_errors_test.npz`,
+**Stage 2 — inclusive population (2026-10-12).** Three new inits per split were trained
+under the B.5 inclusive env (`.b15_member_incl_s{s}_i{i}`, 12 GPU runs, each TEST-scored
+once) and averaged with `.b5i_seqv2_s{s}`. Member `T_i` skill vs PCHIP spreads 0.007–0.020
+per split (42: 0.218–0.225, 1: 0.219–0.238, 7: 0.291–0.306, 123: 0.313–0.318). Paired
+`T_i` (ens4 − canonical) **+0.005 / +0.003 / +0.014 / +0.005**, mean **+0.007**, run-cluster
+CI [+0.004, +0.012], 2/4 individually significant; `V_rot` deficits 0/4 (s42 +0.009*).
+**Tie**, by the same rule, with a smaller margin than the cut population — the inclusive
+members disagree even less. Both populations say the same thing: the ensemble buys
++0.01…+0.02 and the headline run is the deployment number.
+
+Artifacts: `data/.b15_ens4_{cut,incl}_s{42,1,7,123}/` (`comparison_errors_test.npz`,
 `bootstrap_summary.json`, `paired_vs_canonical.json`, `paired_vs_member_i*.json`),
-`data/.b15_summary.json`.
+`data/.b15_member_incl_s*_i*/`, `data/.b15_summary.json`.
 
 ---
 
