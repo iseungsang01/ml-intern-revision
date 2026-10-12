@@ -4273,3 +4273,59 @@ tie is general or carried by those shots. The card's axis 3 adds it when the arm
 provenance table, using the repository's own harness (`compare_baselines.py`, `bootstrap_compare.py`,
 `peak_analysis.py`, `evaluate.py`) with the architecture pinned as described. The model neither
 denormalizes internally nor was tuned for this report.*
+
+## 8aw. B.15 deep ensemble, stage 1 (2026-10-11) — the 4-init ensemble is +0.02 on `T_i`, 4/4 significant, and lands exactly on the tie rule
+
+**Question.** The only lever on record with a measured positive sign was a 4-member
+init-seed ensemble (+0.048 `T_i`, 2026-07-27, W = 4, reduced config). It had never been
+re-checked under the confirmed protocol, and the paper's headline is a single run. Rules
+were frozen before any number in `experiments/PREREGISTRATION_B15.md`, with the prior
+expectation written down as "+0.01…+0.02, at the tie rule", because the B.1 grid's init
+spread (0.009–0.027 per split) is a tenth of the spread where +0.048 was measured.
+
+**Design** (`experiments/b15_ensemble/run_b15.py`; artifacts `data/.b15_ens4_cut_s*`,
+verdict `data/.b15_summary.json`). Members = the frozen B.1 grid `.b1_seqv2_s{s}_i{42,1,7,123}`
+(val-only early stopping, no TEST peeking); predictions averaged in normalized space
+(the members share the split's train files, hence its stats — asserted before scoring);
+`eval_seq.py`'s new `CES_SEQ_ENSEMBLE_DIRS` path, unset → bit-identical to every frozen
+artifact. Paired against the canonical run (init = split seed, the headline run) and
+against each member; PR4 ladder from `bootstrap_compare.py`. **No training.** Cut
+population; the inclusive population is stage 2 (12 new inits, below when it finishes).
+
+| split | paired `T_i` (ens4 − canonical) | vs each member (min) | `T_i` vs PCHIP ens4 / canonical | `T_i` vs causal GP ens4 / canonical | paired `V_rot` |
+|---|---|---|---|---|---|
+| 42 | **+0.011** [+0.004, +0.019] | +0.004 | +0.183 / +0.174 | +0.088 / +0.078 | +0.005 [−0.005, +0.014] |
+| 1 | **+0.010** [+0.003, +0.021] | +0.001 | +0.256 / +0.248 | +0.142 / +0.133 | +0.005 [+0.000, +0.013] |
+| 7 | **+0.027** [+0.020, +0.036] | +0.000 | +0.277 / +0.257 | +0.161 / +0.138 | +0.000 [−0.007, +0.005] |
+| 123 | **+0.030** [+0.009, +0.060] | −0.006 | +0.287 / +0.264 | +0.132 / +0.105 | +0.002 [−0.008, +0.005] |
+
+Mean paired `T_i` **+0.0196**, run-cluster bootstrap CI [+0.010, +0.029], **4/4
+individually significant**; `V_rot` significant deficits **0/4** (and no significant
+gain either). Every PR4 and causal-GP verdict of the canonical runs is unchanged by
+ensembling (`T_i` 4/4 + 4/4, `V_rot` vs PCHIP still 1/4).
+
+**Verdict (pre-registered §4).** The pooled mean is 0.0196 ≤ `PRACTICAL_EPS` = 0.02, so
+by the rule written before the number this is a **tie**, and the deployment
+recommendation is **not** granted. Read it exactly: the effect is real (4/4 significant,
+CI excludes zero) and consistently positive, but it is smaller than the smallest
+difference this project has agreed to act on. Two things follow.
+
+1. **The 2026-07-27 +0.048 was init noise, not model gain.** The ensemble gains
+   roughly what the members disagree by; under the confirmed protocol they disagree by
+   0.01–0.03 and the ensemble buys ≈ +0.02. The memory note that quoted +0.048 as a
+   standing lever is corrected to that reading.
+2. **The single-run headline is the deployment number.** The paper's `T_i` skill does
+   not need a footnote saying "an ensemble would do better": it would do better by
+   +0.02 at 4× the inference cost (≈ 6 ms stateful step from §8ac's 1.49 ms, still inside
+   the 10 ms budget, outside 1 ms).
+
+**Observation (reported, not a verdict).** The ensemble beats the *best* member on three
+splits and loses to it by 0.006 on s123 — so the winner's-curse argument of 2026-07-27
+(the ensemble is the best choice *without* reading TEST) still holds, but the margin it
+protects is now 0.00–0.03 rather than 0.05.
+
+Artifacts: `data/.b15_ens4_cut_s{42,1,7,123}/` (`comparison_errors_test.npz`,
+`bootstrap_summary.json`, `paired_vs_canonical.json`, `paired_vs_member_i*.json`),
+`data/.b15_summary.json`.
+
+---
