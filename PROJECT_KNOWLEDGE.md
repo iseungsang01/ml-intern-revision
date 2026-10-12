@@ -1120,6 +1120,35 @@ not a tail artifact: it is a −49 % median loss offset by a tail win (peak-stra
 - Tooling: `experiments/b13_robust/rescore_b13.py --extra name=dir` scores any new arm the same way;
   the weighted-median cluster bootstrap is the pattern for any future quantile statistic.
 
+## The Objective Moved The Median When Capacity Never Did — And The Checkpoint Rule Must Match The Loss (2026-10-12) — §8ay
+
+**What happened.** B.14 changed one thing — the loss's influence function, with the Huber /
+Student-t scale pinned to the target's own 10 ms reproducibility (§8aq) — and the typical
+`T_i` row improved 8 % (47.2 → 43.4 eV, M1 +0.081, 4/4 splits) and `V_rot` 10 %, at zero
+MSE cost in the cut population. Three capacity axes (§8z, §8aa, §8ag) had moved nothing.
+The reason is §8ax: an MSE loss that 1 % of the rows decides teaches nothing about the other
+99 %, so the bulk headroom was an *objective* problem, not a *model* problem.
+
+**The trap.** In the inclusive population the same arms came out *worse* on MSE, and the
+log said why before any analysis did: 7 of 8 runs stopped at epoch 8–10 with the best
+**val MSE** at epoch 2–4. A loss that ignores residuals beyond 274 eV has no reason to
+lower a validation MSE that those residuals dominate (85 % of the inclusive squared mass
+in 1 % of rows), so the MSE-based checkpoint rule — kept so that all arms were *selected*
+identically — picked a nearly untrained model. The arm's median still improved (+0.157).
+
+**Rules.**
+1. When an arm changes the training objective, the checkpoint-selection criterion is a
+   *second* variable whether you like it or not. Either select on the arm's own objective
+   (and say so), or fix the epoch count, or report both. Selecting a robust arm on val MSE
+   is not "fair", it is a handicap in exactly the population where the tail dominates.
+2. Read a robust arm's MSE deficit beside its epoch trace. A flat trace at epoch 2–4 is a
+   selection failure, not a loss failure, and the record must say which.
+3. Redescending influence (Student-t, ν = 3) gave up useful tail signal: tnll was behind
+   huber on every metric in both populations. The scale-pinned Huber is the arm to carry.
+4. The deployment statement now has two numbers, by design: aggregate skill (MSE, the tail)
+   and median error (the bulk). Huber keeps the first and buys the second; a result that
+   quotes one without the other is reading only one half of §8ax.
+
 ## Useful Reference
 
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled

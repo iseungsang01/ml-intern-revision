@@ -4453,3 +4453,127 @@ Artifacts: `data/.b13_summary.json`, `data/.b13_rescore.log`;
 script `experiments/b13_robust/rescore_b13.py` (takes `--extra name=dir` for B.14 / B.15 arms).
 
 ---
+
+## 8ay. B.14 noise-floor-pinned robust loss (2026-10-12) — Huber moves the median 8–10 % at zero MSE cost in the cut population, and the MSE early-stop criterion strands it in the inclusive one
+
+**Question.** §8ax located the bulk headroom: the MSE-trained backbone carries its noisy
+anchor in the typical row (median 47 eV = persistence's 46 eV), because a loss that 1 %
+of the rows decides teaches nothing about the other 99 %. B.14 changes one thing, the
+loss's influence function, with the scale pinned to the target's own 10 ms reproducibility
+(§8aq order-4 bound: 129.9 / 274.3 eV, 16.4 km/s), and asks whether the median moves
+without the aggregate paying. Rules in `experiments/PREREGISTRATION_B14.md`, frozen before
+any number; the one amendment (normalizing both losses to coincide with `r²` inside the
+scale, so the three arms share the bulk curvature and the penalty ratio) was committed
+before the first run, with the reason.
+
+**Design** (`experiments/b14_loss/run_b14.py`; `train_seq.py` `CES_SEQ_LOSS` ∈ {mse, huber,
+tnll}; arms `data/.b14_{huber,tnll}_{cut,incl}_s{s}`, MSE summary `data/.b14_summary.json`,
+co-metrics `data/.b13_arms_{cut,incl}.json`). seq_v2, split {42, 1, 7, 123} × init = seed,
+both populations, everything else the B.1 / B.5 backbone env (per-shot ON, held-free, AdamW
+1e-3, batch 16, patience 6 on **val MSE**, cap 60). Controls = the frozen backbone runs, no
+retraining. `huber`: `r²` inside δ, `2δ|r| − δ²` outside (gradient capped at the MSE's at δ);
+`tnll`: `νδ² log(1 + r²/νδ²)`, ν = 3 (redescending). Normalized δ = 0.33 / 0.22 (cut), 0.43 /
+0.22 (incl). Unit tests `tests/test_robust_loss.py`.
+
+### 1. Cut population — the primary readout is the median (§8ax), the guard is the MSE
+
+Pooled over 4 splits, arm vs the MSE control (paired, shot-cluster bootstrap; `*` = CI excludes 0):
+
+| arm / target | MSE paired (guard) | **M1 median-AE** | M2 Huber | M3 trimmed | per-split M1 CI > 0 | MSE significant deficits |
+|---|---|---|---|---|---|---|
+| huber `T_i` | −0.004 [−0.017, +0.012] | **+0.081*** [+0.068, +0.094] | +0.043* | +0.053* | **4/4** | 0/4 |
+| huber `V_rot` | −0.007 [−0.047, +0.017] | **+0.104*** [+0.078, +0.134] | +0.058* | +0.064* | **3/4** | 0/4 |
+| tnll `T_i` | −0.018 [−0.033, −0.001] | +0.071* [+0.056, +0.086] | +0.025* | +0.021* | 3/4 | 1/4 |
+| tnll `V_rot` | −0.014 [−0.058, +0.012] | +0.074* [+0.037, +0.112] | +0.053* | +0.054* | 3/4 | 0/4 |
+
+Physical units, pooled (cut):
+
+| `T_i` [eV] | median | q75 | q90 | RMSE |
+|---|---:|---:|---:|---:|
+| backbone (MSE) | 47.2 | 101.0 | 202.4 | 182.6 |
+| **huber** | **43.4** | **93.8** | **193.3** | 183.0 |
+| tnll | 43.8 | 94.6 | 196.8 | 184.3 |
+| causal GP | 44.4 | 106.7 | 219.8 | 194.3 |
+| persistence | 46.1 | 116.6 | 262.7 | 235.9 |
+| PCHIP (acausal) | 39.4 | 105.4 | 236.6 | 209.9 |
+
+| `V_rot` [km/s] | median | q75 | q90 | RMSE |
+|---|---:|---:|---:|---:|
+| backbone (MSE) | 4.3 | 10.0 | 21.4 | 33.8 |
+| **huber** | **3.8** | **9.2** | **19.8** | 34.0 |
+| tnll | 4.0 | 9.3 | 19.7 | 34.1 |
+| causal GP | 3.8 | 9.3 | 20.0 | 36.1 |
+| persistence | 3.7 | 9.3 | 20.9 | 43.1 |
+| PCHIP (acausal) | 2.9 | 7.8 | 18.3 | 38.8 |
+
+Against the ladder (cut, pooled M1): huber vs persistence **+0.058*** (`T_i`, 3/4 significant —
+the first arm of this project whose *median* beats persistence), vs the causal GP **+0.023**
+[−0.009, +0.055] (tie in the median; the MSE control was −0.063 there), vs PCHIP −0.101 (the
+gap to the acausal interpolator is halved from −0.198). `V_rot`: vs persistence −0.047, vs
+causal GP −0.018 (both near tie; the control was −0.168 / −0.136), vs PCHIP −0.333.
+
+### 2. Inclusive population — the selection rule strands the robust arms
+
+| arm / target | MSE paired (guard) | MSE significant deficits | epochs run / best (per split) | M1 median-AE |
+|---|---|---|---|---|
+| huber `T_i` | −0.028 / −0.022 / −0.035 / −0.032 | **2/4** | 10/4, 8/2, 8/2, 23/17 | **+0.157*** [+0.120, +0.196] (3/4) |
+| huber `V_rot` | −0.014 / −0.009 / −0.041 / −0.018 | 1/4 | | −0.034 [−0.106, +0.027] (1/4) |
+| tnll `T_i` | −0.052 / −0.030 / −0.040 / −0.059 | **3/4** | 10/4, 8/2, 8/2, 8/2 | +0.084* [+0.049, +0.118] (1/4) |
+| tnll `V_rot` | −0.019 / −0.012 / −0.044 / −0.066 | 2/4 | | −0.150 [−0.233, −0.077] (0/4) |
+
+Seven of the eight inclusive runs stopped at **epoch 8–10 with the best val MSE at epoch 2–4**
+(the cut runs trained 20–46 epochs). The trace is flat, not noisy: huber s1 val MSE
+0.490 → 0.470 at epoch 2, then 0.47–0.48 for six epochs. A loss that ignores > 274 eV
+residuals has no reason to lower a val MSE that those residuals dominate (§8aq: 85 % of the
+inclusive `T_i` squared mass in 1 % of the rows), so the MSE-based checkpoint rule — kept
+on purpose so that all three arms were *selected* identically — picked a nearly untrained
+model. Even so, the median improved: huber `T_i` 52.4 eV vs the control's 62.2, `V_rot` 4.5
+vs 4.4; the MSE cost is the spikes the robust arm declines to fit. Physical medians:
+`T_i` huber 52.4 / tnll 56.9 / control 62.2 / causal GP 45.5 / PCHIP 39.8; `V_rot` 4.5 / 5.0 / 4.4.
+Pooled, the `T_i` median gain is *larger* than in the cut population (+0.157 vs +0.081: the
+inclusive control's median is the worst of all arms, 62 eV, because the spike rows it is
+trained to chase pull its typical row off the anchor), while the `V_rot` median is a tie
+(−0.034) and tnll's `V_rot` median is significantly worse (−0.150). So in the inclusive
+population huber improves the typical `T_i` row by 16 % and pays 0.03 of MSE skill for it;
+the pre-registered rule does not trade one for the other, and neither do we here.
+(For the record, the same scoring puts the B.15 inclusive ensemble at M1 +0.040* `T_i` /
++0.061* `V_rot` — the ensemble's small MSE gain is also a bulk gain.)
+
+### 3. Verdict (pre-registered §4, unchanged)
+
+- **Rule 1 (robust rung) holds in the cut population only** — huber: H14-a 4/4 + 3/4, MSE
+  deficits 0/4 on both targets. The inclusive population fails the MSE guard (2/4 `T_i`
+  deficits, pooled −0.030 [−0.046, −0.013]) and H14-a on `V_rot` (M1 1/4), so the rung is
+  **conditional on the cut population** and is recorded that way. tnll satisfies
+  H14-a but loses the `T_i` MSE guard once (1/4) and is strictly behind huber on every
+  metric: **H14-d's ordering is reversed** — redescending influence gives up useful tail
+  signal.
+- **Rule 2 (replace the backbone's loss) is not met**: `T_i` MSE paired sign is 2/4, not 4/4.
+  The backbone keeps the MSE loss; huber is the reported robust rung.
+- **H14-c (`V_rot` spikes contaminate training) is not supported**: `V_rot` MSE skill is
+  unchanged (−0.007), with 1/4 significant gains and 1/4 deficits across the arms. The
+  `V_rot` median improvement (+0.10, 3.8 vs 4.3 km/s) is a hedging correction, not new
+  information — the huber `V_rot` median equals the causal GP's and persistence's.
+
+### 4. What this settles, and the measurement it names
+
+1. **The bulk headroom is real and the loss reaches part of it.** 47.2 → 43.4 eV at zero
+   aggregate cost; the remaining 4 eV to PCHIP's 39.4 is the noise-averaging advantage of
+   seeing the future neighbour, which no causal method can take. In the median the huber
+   backbone now ties the causal GP (44.4) and beats persistence; in the aggregate it keeps
+   the +0.24. That is the deployable operating point, stated with both numbers.
+2. **The inclusive failure is a selection-rule interaction, not a loss failure.** The
+   pre-registered fix is a sensitivity row, not a verdict change: re-run the inclusive arms
+   with the checkpoint chosen on **val Huber** (the arm's own objective) or at a fixed epoch
+   count, and report MSE and M1 both. If the median gain survives and the MSE deficit
+   shrinks to the tie band, the rung becomes unconditional; if the MSE deficit persists, the
+   inclusive population's spike rows are genuinely fit by the MSE model and the two
+   populations disagree about what "better" means — which is the two-population rule's
+   whole purpose (§1.1).
+3. **Capacity was never the lever; the objective was.** Three flat axes (§8z, §8aa, §8ag)
+   and one loss change that moves the median 8 % on every split.
+
+Artifacts: `data/.b14_*`, `data/.b14_summary.json`, `data/.b13_arms_cut.json`,
+`data/.b13_arms_incl.json`, logs `data/.b14_batch.log`.
+
+---
