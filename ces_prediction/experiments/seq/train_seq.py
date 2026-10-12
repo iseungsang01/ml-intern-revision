@@ -129,9 +129,12 @@ def robust_residual_loss(r, cfg):
 
 def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip=1.0, rng=None,
                 loss_cfg=None):
+    """Returns (masked MSE, mean penalty, masked robust fit). The third value equals the
+    first when loss_cfg is mse; for a robust loss it is the arm's own objective, which
+    B.14's sensitivity row (CES_SEQ_SELECT=loss) uses for checkpoint selection."""
     training = optimizer is not None
     model.train(training)
-    se_sum, n_obs, pen_sum, n_batches = 0.0, 0.0, 0.0, 0
+    se_sum, n_obs, pen_sum, n_batches, fit_sum = 0.0, 0.0, 0.0, 0, 0.0
     kind = (loss_cfg or {}).get("kind", "mse")
     for x, y, m, lengths in batched(blocks, batch_size, device, training, rng or random.Random(0)):
         with torch.set_grad_enabled(training):
@@ -147,7 +150,8 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
             else:
                 # Reported se / val early stopping stay MSE (sec. 2); only the
                 # back-propagated fit term changes.
-                fit = (robust_residual_loss(out - y, loss_cfg) * m).sum() / m.sum().clamp(min=1.0)
+                fit_el = (robust_residual_loss(out - y, loss_cfg) * m).sum()
+                fit = fit_el / m.sum().clamp(min=1.0)
             loss = fit + 0.1 * pen
             if training:
                 optimizer.zero_grad()
@@ -155,10 +159,11 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
                 nn.utils.clip_grad_norm_(model.parameters(), clip)
                 optimizer.step()
         se_sum += float(se.detach().sum())
+        fit_sum += float(se.detach().sum()) if kind == "mse" else float(fit_el.detach())
         n_obs += float(m.sum())
         pen_sum += float(pen.detach())
         n_batches += 1
-    return se_sum / max(n_obs, 1.0), pen_sum / max(n_batches, 1)
+    return se_sum / max(n_obs, 1.0), pen_sum / max(n_batches, 1), fit_sum / max(n_obs, 1.0)
 
 
 def main():
@@ -223,20 +228,29 @@ def main():
         print(f"[seq] loss={loss_cfg['kind']} sigma_phys={loss_cfg['sigma_phys']} "
               f"delta_norm={[round(d, 4) for d in loss_cfg['delta_norm']]} nu={loss_cfg['nu']}")
 
+    # B.14 sensitivity row (PREREGISTRATION_B14.md sec. 9): CES_SEQ_SELECT = mse (default,
+    # the frozen regime: early stop, checkpoint and LR plateau all on val MSE) | loss (all
+    # three on the arm's own val objective). Identical for an mse arm.
+    select = os.getenv("CES_SEQ_SELECT", "mse")
+    if select not in ("mse", "loss"):
+        raise SystemExit(f"CES_SEQ_SELECT must be mse|loss, got {select!r}")
     rng = random.Random(seed)
-    best_val, best_state, best_epoch, patience = float("inf"), None, -1, 6
+    best_val, best_key, best_state, best_epoch, patience = float("inf"), float("inf"), None, -1, 6
     for epoch in range(epochs):
-        tr_mse, tr_pen = masked_pass(model, train_blocks, batch_size, device, zero_ti,
-                                     optimizer=optimizer, rng=rng, loss_cfg=loss_cfg)
-        val_mse, _ = masked_pass(model, val_blocks, batch_size, device, zero_ti)
-        scheduler.step(val_mse)
+        tr_mse, tr_pen, _ = masked_pass(model, train_blocks, batch_size, device, zero_ti,
+                                        optimizer=optimizer, rng=rng, loss_cfg=loss_cfg)
+        val_mse, _, val_fit = masked_pass(model, val_blocks, batch_size, device, zero_ti,
+                                          loss_cfg=loss_cfg)
+        val_key = val_fit if select == "loss" else val_mse
+        scheduler.step(val_key)
         star = ""
-        if val_mse < best_val:
-            best_val, best_epoch = val_mse, epoch
+        if val_key < best_key:
+            best_key, best_val, best_epoch = val_key, val_mse, epoch
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
             star = " *"
+        extra = f" val_{loss_cfg['kind']}={val_fit:.4f}" if loss_cfg["kind"] != "mse" else ""
         print(f"[seq] epoch {epoch + 1:02d}/{epochs} train_mse={tr_mse:.4f} "
-              f"pen={tr_pen:.4f} val_mse={val_mse:.4f}{star}", flush=True)
+              f"pen={tr_pen:.4f} val_mse={val_mse:.4f}{extra}{star}", flush=True)
         if not fixed_epochs and epoch - best_epoch >= patience:
             print(f"[seq] early stop (no val improvement for {patience} epochs)")
             break
@@ -272,6 +286,8 @@ def main():
         "loss_sigma_phys": loss_cfg["sigma_phys"],
         "loss_delta_norm": loss_cfg["delta_norm"],
         "loss_nu": loss_cfg["nu"],
+        "select_metric": select,
+        "best_val_select": best_key,
     }
     (out_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     print(f"[seq] saved weights + metrics to {out_dir} (best val {best_val:.4f} @ {best_epoch + 1})",

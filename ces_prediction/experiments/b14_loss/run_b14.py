@@ -46,8 +46,14 @@ POPS = {
 }
 
 
+# Sensitivity row (PREREGISTRATION_B14.md sec. 9): --select loss re-runs the arms with
+# early stop / checkpoint / LR plateau on the arm's own val objective; dirs `.b14s_*`.
+SELECT = "mse"
+
+
 def arm_dir(arm, pop, s, smoke=False):
-    return DATA / (f".b14_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
+    prefix = ".b14s" if SELECT == "loss" else ".b14"
+    return DATA / (f"{prefix}_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
 
 
 def base_env(pop, arm, smoke):
@@ -61,6 +67,7 @@ def base_env(pop, arm, smoke):
     env.update({
         "CES_TI_SPIKE_CUT_EV": p["cut"],
         "CES_SEQ_LOSS": arm,
+        "CES_SEQ_SELECT": SELECT,
         "CES_SEQ_LOSS_SIGMA_TI_EV": p["sigma_ti"],
         "CES_SEQ_LOSS_SIGMA_VT_KMS": p["sigma_vt"],
         "CES_SEQ_LOSS_NU": "3",
@@ -124,7 +131,7 @@ def one_run(arm, pop, s, smoke):
 
 def summarize(arms):
     """Per-arm, per-population table of paired MSE skill vs the control (sec. 4 inputs)."""
-    summary = {"epoch_cap": int(EPOCH_CAP), "arms": {}}
+    summary = {"epoch_cap": int(EPOCH_CAP), "select": SELECT, "arms": {}}
     for arm in arms:
         for pop in POPS:
             rows = {}
@@ -144,7 +151,8 @@ def summarize(arms):
                     for t in ("CES_TI", "CES_VT")}
                 rows[str(s)]["epochs"] = [m["epochs_run"], m["best_epoch"]]
             summary["arms"].setdefault(arm, {})[pop] = rows
-    (DATA / ".b14_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    name = ".b14s_summary.json" if SELECT == "loss" else ".b14_summary.json"
+    (DATA / name).write_text(json.dumps(summary, indent=2), encoding="utf-8")
     for arm, pops in summary["arms"].items():
         for pop, rows in pops.items():
             for t in ("CES_TI", "CES_VT"):
@@ -162,7 +170,10 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
     ap.add_argument("--pops", nargs="*", default=list(POPS))
+    ap.add_argument("--select", choices=("mse", "loss"), default="mse")
     args = ap.parse_args()
+    global SELECT
+    SELECT = args.select
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required.")
     recs = []
