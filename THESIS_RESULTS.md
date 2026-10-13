@@ -4701,3 +4701,74 @@ Artifacts: `data/.b12_card.json`, `data/.b12_{bilstm,np,tm_pre,tm_scratch}_cut{3
 `data/.b12_batch.log`, `data/.b12_runner_stdout.log`.
 
 ---
+
+## 8ba. The derivation audit (2026-10-13) — every design choice and headline derived from first principles, and each derivation checked against the frozen record
+
+**Question (승상님).** "우리의 연구를 뒷받침할 물리학적·수학적 근거 전부 유도" — assume both are
+derivable, and keep going until each is proven. §8ar put the two conservation laws and three time
+scales beside the results; this closes the rest: the measurement physics of CES, the estimation
+theory the framing rests on, and the statistics of every evaluation device.
+
+**Design** (`docs/theory_foundations.md`, 17 sections; `ces_prediction/analyze_foundations.py` →
+`data/.foundations.json`, log `data/.foundations.log`). No model trained, scored, selected or
+re-selected. Data: the 641-file census under the confirmed treatment (held-free, 3 keV cut) and the
+frozen TEST npz of `.b1_seqv2_s42_i{42,1,7,123}`, `.b5i_seqv2_s42`, `.b15_ens4_cut_s42`. Each
+derivation ends with one of three kinds of check — an **identity** that must hold on the frozen
+artifacts, a **prediction** compared with an independently measured number, or a **Monte Carlo**
+against the closed form.
+
+### 1. What the derivations predict, and what the record says
+
+| derivation | predicted | measured | status |
+|---|---|---|---|
+| CRB of a Gaussian line fit: `σ_v = v_th/√N`, `σ_T/T = √(2/N)` — the two noise floors are one photon budget | `N_T = 326`, `N_V = 258` | MAD 46.4 eV / 4.3 km/s (§8aq) | same order, ratio 1.27 (≤ 2 with finite-N width inefficiency) |
+| Fisher `I_μσ = 0` for a symmetric line → shift and width estimates orthogonal | corr 0 | MC +0.04; masks agree 72.8 % (§8at) | consistent with independent missingness |
+| `τ_eq = (m_i/2m_e) τ_e` is the Spitzer result, not a convention | NRL exact / convention | ratio 1.03 everywhere | confirmed |
+| first-order relaxation driven by `T_e` ⇒ corr(level) > corr(rate) > 0 | 0.42 > 0.02 (sim) | 0.31 > 0.078 (§8ar) | ordering confirmed |
+| NBI torque `T/P = 2 R_tan / v_b ∝ R_tan E_b^{-1/2}`; radial force balance terms 12 vs 30 kV/m | — | `T_e`~`V_rot` null (§8b.3) | power ≠ torque, derived |
+| decimated kHz mode: `r_1 = cos(2πf_0Δ)·exp[−(σ_f/22.5 Hz)²]` | ≈ 0 for σ_f ≥ 50 Hz | −0.009 (§8b.2); MC −0.03…+0.03 | confirmed |
+| one decimated sample carries amplitude at relative error `1/√2` | 0.707 | MC 0.70–0.72 | confirmed; data-processing inequality closes derived MC features |
+| noisy OU fitted to the 641 files (robust `T_i`: σ_n 39 eV, σ_s 69 eV, τ 81 ms): one-step RMSE ratio vs persistence | interp 0.81, filter 0.88, last-1 0.91 | median ratios s42: PCHIP 0.85, linear 0.83, GP 0.84, causal GP 0.96, **model 1.03** | within 10 %; the MSE backbone carries its anchor, bound 0.875 |
+| Markov + noise: value of history beyond one observation | K=2 +6.8 %, K≥5 +8.1 % (saturates) | W = 2 plateau (§8f), reach deficit −0.065 @ 20 ms (§8af), saturation 50 ms (§8al) | consistent; 5 steps = 50 ms |
+| filter memory `1/−ln(ρ(1−K))` | 1.2–1.8 steps | 50 ms ≈ 3–4 memory lengths | consistent |
+| history-only causal vs two-sided interpolation by gap | −0.21 (10 ms) … −0.80 (200 ms) | causal GP median ratio 1.12–1.25 at every gap; model +0.17…+0.39 MSE | sign confirmed, monotone growth unresolved (120–600 rows/bin, no future-anchor key) |
+| causal skill vs persistence = noise averaging + `Δ/2τ` dynamics | 0.331 (classical fit), dynamics ≤ 0.067 | causal GP +0.310, model +0.358 (s42, Δt ≤ 15 ms) | within 0.02; fast diagnostics add ≈ +0.05 at one step |
+| PCHIP amplifies anchor noise through its slope terms | 1.027 (MC on fitted OU) | 1.022 (`T_i`), 1.043 (`V_rot`) | confirmed |
+| spike dilution `skill' = 1 − (1−f_m)SSE_m / ((1−f_b)SSE_b)` | +0.589 | +0.225 → +0.589 after the 3 keV cut (incl s42, 110 rows) | identity; spikes carry 54 % of PCHIP SSE, 75 % of the model's |
+| MSE = ∫Q²dp ⇒ skill is quantile-weighted | running contribution | top 1 % of rows (by `se_m+se_b`) carry 62 % of `T_i` skill, 100 % of `V_rot`'s; q75 crossover | identity; the §8ax tail reading, as algebra |
+| cluster design effect `1 + (m−1)ρ` | — | 3.1 (`T_i`), 1.4 (`V_rot`): naive CI 1.8× / 1.2× too narrow | measured |
+| bounded loss sees only the bulk share of val MSE | 10 % (cut), 5.9 % (incl) | epoch 2–4 early stop (§8ay) | mechanism quantified |
+| ensemble gain = mean member disagreement variance / MSE_b (exact) | +0.0097 | +0.0090 vs canonical (B.15 s42) | identity; Jensen holds on 100 % of rows; the +0.02 tie is structural |
+
+### 2. Verdict
+
+1. **Nothing in the record is contradicted by a derivation**, and three results that were empirical
+   get a mechanism with a number: the 50 ms saturation (two independent scales now — `τ_eq` 8–59 ms
+   and the noisy-Markov memory of 1–2 steps saturating at 5), the W = 2 plateau (Markov property; the
+   residual +8 % of MSE is what the paired reach ladder saw and the unpaired sweep could not), and the
+   bulk ordering GP ≈ PCHIP < causal GP < persistence ≈ backbone (noise-averaging arithmetic, 7.3).
+2. **Two numbers the derivations add that the record did not have.** The deployable causal bound in
+   the bulk is 0.875× persistence's median error; the MSE backbone sits at 1.03× and the Huber rung at
+   0.94× — so B.14 recovered half the headroom the OU model says exists. And at one-step gaps the fast
+   diagnostics are worth ≈ +0.05 of MSE skill over the best history-only filter: small in aggregate,
+   which is the §8ax tail concentration seen from the theory side.
+3. **The causal GP is not the optimal causal baseline.** It lands at 0.96× persistence in the median
+   where the one-observation optimal shrinkage alone gives 0.91× and the full filter 0.875×. A
+   Kalman/OU arm is a better deployable control than the 16-neighbour local GP, and is named below.
+
+### 3. What this does not show, and the measurements it names (§8j rule)
+
+- The OU fit is a Gaussian, stationary, single-scale model of a target whose aggregate is tail-shaped;
+  its bulk (robust) and aggregate (classical) fits differ by 3.6× in σ_n and are used only for the
+  statistic each describes. The plasma parameters behind `τ_eq`, the NBI geometry and the pedestal
+  force-balance magnitudes are quoted assumptions (appendix A of the document).
+- Named next measurements, none of which retrain anything: (i) score an exact OU/Kalman causal arm
+  on the frozen rows so `skill_model − skill_filter` isolates the fast-diagnostic information per gap
+  and stratum; (ii) add a future-anchor-distance key to the npz (additive, §5.8-C5) to resolve the
+  bridge-vs-extrapolation curve of 7.7; (iii) an anchor-denoising input arm against the 0.875 bound;
+  (iv) when CES per-frame fit quality arrives, read `N` directly and replace the value cut.
+
+Artifacts: `docs/theory_foundations.md`, `ces_prediction/analyze_foundations.py`,
+`data/.foundations.json`, `data/.foundations.log`.
+
+---

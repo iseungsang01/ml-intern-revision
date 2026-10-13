@@ -20,6 +20,7 @@ python ces_prediction/train.py       # full training run
 python ces_prediction/evaluate.py    # clean eval: model vs persistence/mean, physical units, per target
 python ces_prediction/inspect_split.py        # validate fixed split / manifest
 python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
+python ces_prediction/analyze_foundations.py    # checks every derivation in docs/theory_foundations.md (data + frozen npz)
 ```
 
 Controlled experiment batches live under `ces_prediction/experiments/` — 19 directories, each with

@@ -1208,3 +1208,29 @@ what the current paper needs; `THESIS_RESULTS.md` §8 carries what we learned*:
   §8 now records as outcomes. `.omc/` is gitignored in full.
 - LaTeX build artifacts (`.aux/.bbl/.blg/.log/.out`), now gitignored. `main.pdf` / `main_ko.pdf`
   stay tracked: they are the deliverable, not a build product.
+
+## Derive, Then Check Each Derivation Against The Frozen Record (2026-10-13) — §8ba
+
+`docs/theory_foundations.md` derives the measurement physics (CES Doppler line, Cramér–Rao,
+photon budget), the transport physics (equipartition, torque, force balance, Nyquist), the
+estimation theory (filtering ⇔ recurrence, sufficient statistics of the carried/staleness features,
+masked-loss minimizer, held shrinkage, noisy-OU closed forms for every baseline) and the evaluation
+statistics (skill dilution, quantile integral, design effect, conformal, Huber influence, ensemble
+identity). `ces_prediction/analyze_foundations.py` checks each one.
+
+**Lessons that are new, not restated.**
+- **Fit a noisy OU to the target before arguing about baselines.** Three numbers (σ_n, σ_s, τ) from
+  the robust semivariogram predict the whole one-step ladder to within 10 % and give a *bound* for the
+  deployable causal median (0.875× persistence). Any arm's bulk behaviour can be read against it:
+  the MSE backbone 1.03×, Huber 0.94×, causal GP 0.96×.
+- **The causal GP is a weak optimum.** The one-observation optimal shrinkage alone beats it in the
+  median. If a "strongest deployable baseline" is needed, use an exact OU/Kalman arm.
+- **Two derived scales now sit beside 50 ms**: `τ_eq` (8–59 ms) and the noisy-Markov filter memory
+  (1–2 steps, saturating at 5). Quote both, each as order-of-magnitude.
+- **Every evaluation device is an identity on the npz.** Spike dilution, quantile-weighted skill,
+  ensemble disagreement, cluster design effect — check them with
+  `analyze_foundations.py` Part E before interpreting a new arm's number.
+- **How to apply.** When a result looks empirical and unanchored, write the governing equation or
+  the generative model first (§8ar's rule), then compute what it *predicts* and compare; the
+  comparison either confirms the mechanism or names the missing key (here: a future-anchor-distance
+  key and an OU causal arm).
