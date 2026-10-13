@@ -7,7 +7,8 @@
 `py ces_prediction/analyze_foundations.py`). 모델은 학습·채점·선택하지 않았고 TEST는 이미 원장에
 인용된 얼린 npz를 통해서만 읽었다. 이 문서는 어떤 판정도 바꾸지 않는다.
 플라즈마 자체의 거동 물리(평형·수송·난류·H-mode·회전·MHD·소스·전역 스케일링)와 "CES를 예측하는 물리"의 데이터
-검증은 자매 문서 `docs/theory_plasma_physics.md`(검산 Part F)에 있다.
+검증은 자매 문서 `docs/theory_plasma_physics.md`(검산 Part F)에 있고, 연구의 **결과** 하나하나를 시간 $t$의 식으로
+유도해 얼린 산출물로 검산한 열 개의 증명과 그 종합은 `docs/theory_results_physics.md`에 있다.
 
 **표기.** 격자 간격 $\Delta = 10$ ms. 타깃 $y\in\{T_i, V_\varphi\}$, 관측값 $\tilde y = y + n$
 ($n$은 측정 잡음, 분산 $\sigma_n^2$). 빠른 진단 $z$ (BES 9, ECEI 4, MC 2). 관측 지시자 $m_t\in\{0,1\}$.

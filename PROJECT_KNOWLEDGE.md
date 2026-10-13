@@ -1247,3 +1247,40 @@ identity). `ces_prediction/analyze_foundations.py` checks each one.
   acquisition item is one calibrated `T_e` on the CES flux surface.
 - Quote the assumed plasma parameters (document appendix A) whenever a Part F number is used; none of
   them is in the CSVs.
+
+## Explain A Result By Deriving It In Time t, Then Check The Derivation On The Frozen Rows (2026-10-13) — §8bb
+
+Ten parallel proof agents each took one thesis result, derived it as explicit equations in time
+(ODE solutions, impulse responses, convolution integrals, decay laws) from the plasma's
+conservation laws, and checked the derivation on the 641-file census and the frozen TEST npz.
+Synthesis: `docs/theory_results_physics.md` (one generative model M1–M7, ten proofs, relevance).
+
+**Lessons.**
+- **One equation, two coefficient sets.** `dy/dt = −(y−m)/τ + noise + Σ A_k ḣ(t−t_k)` describes
+  both targets; `T_i`'s `m` and `A_k` are set by `(T_e, n_e)` the fast diagnostics see at the same
+  instant, `V_rot`'s by torque nothing sees. Every headline follows: write the paired MSE
+  difference as `D = p_obs r E_imp − c_b` (P08) or the skill as `f_I r_I − (1−f_I) ℓ_B` (P01)
+  before arguing about architecture.
+- **The `T_i` headline is 90–114 % transient term** (P01). Quote it with its decomposition:
+  the model loses to the acausal GP in the quiet half of rows on 4/4 splits and wins on the top
+  5 % jump rows on 4/4.
+- **Condition on the innovation, not on level or rate** (P06). The fast-diagnostic bound is
+  `Δskill = r²_{yz·h} MSE_h/MSE_pers`; the history-conditional partial r is 0.26, the §8ar rate
+  correlation 0.07 is not the input. Measured +0.048 sits inside the linear bound +0.047–0.056:
+  the backbone extracts what a linear reader extracts, no more.
+- **Two corrections to the ledger, both annotated in place.** §8ab's "43 % PR2 fallback" counts
+  unscored rows (`eval_seq.py` `n_total`); the scored-row fallback is 0.3–0.5 %. §8az's "`V_rot`
+  recoverable from the fast channels at 100 ms" cannot be: the `bilstm` control's `V_rot` branch
+  never sees them; it is the two-sided label context.
+- **Campaign drift is `x = g(D) s(t) + c(D)`** (P04): between-shot variance share 0.84/0.91 for
+  BES/ECEI vs 0.49/0.28 for the targets; per-shot z-score cancels `g, c` exactly; the online
+  EWMA version has bias `−b τ_w` (measured 0.29–0.33 σ at τ_w = 1 s).
+- **Missingness is photon-budget physics** (P07): missing rate rises 5.8× across target-jump
+  quintiles, 19.9 % vs 3.7 % across BES level quintiles, and relaxes after an event with
+  τ_B ≈ 26–35 ms — write MNAR as `P(obs | N(t), B(t))`, not as a label.
+- **Real-time classes come from the plasma** (P10): the nowcaster serves transport control
+  (class A) only; ELM triggering and mode control are excluded by the 10 ms label integration,
+  not by inference latency, so the 1 ms verdict does not change the class.
+- Ask a sub-agent for a proof the way these were asked: one result, one derivation ending in a
+  number, one check on data, a "limits / what would overturn this" section, and deliver by file
+  (message relays truncate at ~8 kB).

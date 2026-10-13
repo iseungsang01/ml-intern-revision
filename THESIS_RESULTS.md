@@ -1985,6 +1985,16 @@ persistence, so "vs PCHIP" for `V_rot` is 40% "vs persistence" — one more reas
 comparison to offline interpolation carries little information at W = 2 (block 9 gives the
 MNAR side of the same fact).
 
+> **Correction (2026-10-13, §8bb P02).** The 40–44 % figure is a counting artifact: `eval_seq.py`
+> increments `n_total` for *every* sample and both targets before the per-target keep mask is
+> applied, so `future_neighbor_fraction` for `V_rot` is dominated by rows where `V_rot` is not
+> scored at all. Measured on the frozen npz over scored rows (all three two-sided arms equal to
+> persistence), the PR2 fallback share is **0.3–0.5 % of scored `V_rot` rows** (0.47 / 0.35 /
+> 0.35 / 0.34 %) and 0.2 % of `T_i` rows, on all four splits. The sentence "vs PCHIP for `V_rot`
+> is 40 % vs persistence" does **not** hold for the scored population and should not be quoted;
+> the `V_rot` tie with interpolation is explained by P02 (unobserved torque ⇒ history-only
+> optimum, bridge variance in the bulk, tail-only aggregate gain), not by fallback.
+
 ### 3. Interpretability ladder in both populations — §8z is a cut-population statement
 
 TEST `T_i` skill vs PCHIP (4-seed mean) and the paired verdicts of the §8z rule:
@@ -4634,6 +4644,17 @@ anything the diagnostics say, that §8ab's `V_rot` n.s. lives in. The arms do no
 each other in any stratum (δ within ±0.05, CIs include 0 except `tm_scratch` > 10 steps +0.049
 [+0.001, +0.079]).
 
+> **Correction (2026-10-13, §8bb P02).** "Recoverable from the fast channels" cannot be what the
+> `bilstm` control shows: `b12_models.py::BiLSTMRouted` keeps seq_v2's routing, so its `V_rot`
+> branch reads `x[..., N_FAST:]` and never sees BES/ECEI/MC. The +0.39…+0.63 in the > 1-step
+> strata is therefore the **two-sided label context** (the learned bridge, `Var_bridge(g_p, g_f)`
+> of P02) and not diagnostic information; the only arm whose `V_rot` path sees the fast channels is
+> the transformer, and its excess over the routed control, +0.049 [+0.001, +0.079], is the upper
+> bound on what the diagnostics add inside a long gap. Consistent with P02's raw-CSV test: the
+> `V_rot` increment is uncorrelated with BES/ECEI/MC activity at every window from 10 to 200 ms
+> (|r| ≤ 0.014) while `T_i` shows +0.15…+0.28. Read "offline gap-filling recovers `V_rot` at the
+> 100 ms scale" as a statement about having a future anchor, not about the diagnostics.
+
 **Label-sparsified sets** (dense test shots keeping k `V_rot` labels; the H-np test bed, §3):
 
 | k | `bilstm` | `np` | `tm_pre` | `tm_scratch` | GP | δ `np` vs control |
@@ -4810,3 +4831,55 @@ calibrated `T_e(ψ_CES, t)`; kHz Mirnov mode frequency / mode number (→ `v_φ`
 NBI and RMP coil waveforms (→ torque); a `D_α` / ELM indicator (→ the impulse term).
 
 ---
+
+## 8bb. Ten parallel proofs: each headline result derived from the plasma's time-domain equations and checked against the record (2026-10-13)
+
+**Question (승상님).** "많은 sub들의 증명을 통해서 우리의 결과의 관련성을 어떻게 설명할지 구상하고 이를
+물리로 표현 — 특히 t에 관한 수식으로." Ten independent proof agents each took one result of the
+thesis, derived it from first principles as explicit equations in time t, and checked the
+derivation on the 641-file census and/or the frozen TEST artifacts. The synthesis is
+`docs/theory_results_physics.md`: chapter 0 states one time-domain generative model (M1–M7) that all
+ten results fall out of; chapter 1 holds the ten proofs verbatim; chapter 2 the relevance narrative
+and the measurements the proofs name. No model was trained, scored or selected. Scripts live in the
+session scratchpad (`p01/`–`p10/`); every number below is transcribed into the document.
+
+### 1. The one model
+
+`dy/dt = −(y − m)/τ + sqrt(2σ_s²/τ) ξ(t) + Σ_k A_k ḣ(t − t_k)`, `h(s) = Θ(s) e^{−s/τ_rec}`,
+observed at `t_j = jΔ` with photon noise `n_j` and an acceptance indicator `m_j = 1[N(t_j) > N_c,
+B(t_j) < B_c]`. The two targets share the form; what differs is where the coefficients come
+from — `T_i`'s equilibrium and impulses are set by `(T_e, n_e, P_NBI,i)` that ECEI/BES observe at
+the same instant, `V_rot`'s by torque that nothing in the dataset observes. The paired difference
+of any two estimators integrates to `D = p_obs · r · N_e κ A²/n − c_b` (P08) and the MSE skill is
+exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
+
+### 2. What each proof established
+
+| proof | result explained | derivation → number | check |
+|---|---|---|---|
+| P01 `T_i` headline is transient physics | +0.24 vs PCHIP 4/4 (§8ab) | identity `skill = f_I r_I − (1−f_I) ℓ_B`; the transient term alone gives **90–114 %** of the headline on 4/4 splits (+0.199/+0.223/+0.244/+0.265 vs +0.174/+0.248/+0.257/+0.264) | quiet half: model loses to the acausal GP 4/4; top-5 % rows: beats the GP 4/4 (+0.05…+0.09); `ΔT_i`–`ΔECEI` corr 0.142 → **0.238** conditional on top-5 % jumps, lag 0 only |
+| P02 `V_rot` tie from momentum balance | 1/4 vs PCHIP, 3/4 vs pers, median −49 % (§8ab, §8ax) | unobserved torque ⇒ Bayes-optimal causal = history-only OU filter; median bound 0.921× persistence; aggregate > 0 iff tail gain `G_T` > bulk deficit `D_B` | s42: model median 1.14×, `G_T − D_B = 0.414 − 0.024 = 0.390` = skill; top-1 % (105 rows) carries all of it; `ΔV`–`ΔBES/ECEI/MC` = 0 at every lag and 10–200 ms window (`T_i` control +0.15…+0.28); **§8ab block 2's 43 % PR2 fallback is a counting artifact — 0.3–0.5 % of scored rows** (corrected in place) |
+| P03 50 ms saturation | §8al | cold-start Kalman from `P_0 = σ_s²` reproduces `MSE_K` exactly and saturates (2 %) at **2–3 steps, not 5**; the measured per-step decay 0.559 (memory 3.4 steps) would need K = 0.155 | the OU cold start explains **26–43 % of the 20 ms deficit** (RMS vs the 8al curve 0.021–0.026, curve RMS 0.032) — rejected as the main cause; the rest sits with the ELM-recovery scale: 16,703 ≥ 25 % one-step drops (7.7/s, 26 % single-point dips), cleanest recovering class n = 2,783 with **τ_rec = 60 ms** (55–64 ms across definitions), `τ_eq` 18–39 ms; a 3-parameter recovery fit clears the noise floor only at `t_ctx ≈ 1.5 τ_rec`; 50 ms is defended as order-of-magnitude only |
+| P04 campaign drift is instrument physics | §8n, §8s | `x_f(t) = g(D_f) s_f(t) + c(D_f)`; within-shot z-score cancels `g, c` exactly; EWMA bias on a trend = `−b τ_w` | between-shot variance share BES 0.84 / ECEI 0.91 vs `T_i` 0.49 / `V_rot` 0.28; §8n's 1.218/0.529/0.115 σ reproduced to 3 decimals; ECEI mean ratio ≈ std ratio (multiplicative gain); absolute level adds 1.4–2.6 % R² to the per-shot gain; EWMA τ_w = 1 s measured 0.29–0.33 σ vs derived `b τ_w` 0.31/0.27 |
+| P05 3 keV cut is a pressure limit | §8ab spike audit, §8q | [P05] | [P05] |
+| P06 fast-diagnostic information bound | ≈ +0.05 at one step (§8ba) | `Δskill = r²_{yz·h} · MSE_h/MSE_pers`; the right conditioning variable is the filter innovation, and the channel is denoising of the noisy anchor, not the rate | history-conditional linear bound **+0.047–0.056** vs measured **+0.048**; implied partial r 0.26, I = 0.036 nat; §8ar's rate correlation (0.07) gives +0.003 — not the right input; MC = 0 in every conditioning; 81–83 % of the gain in the top-10 % innovation rows; per-step information `I_step = ½ ln(1 + tanh(Δ/2τ_eq) S_z)` compatible with the measurement only for τ_eq ≲ 30–60 ms |
+| P07 MNAR is photon-budget physics | §8i, §8ab 9, §8at | `ln N(t) = … − σ_s n̄_e(t) L`, `B(t) = B_0 + B_1 e^{−(t−t_0)/τ_B}`, CRB with background `σ² ∝ (1/N)(1 + c B/N)`, width 2–3× more background-sensitive than centre | missing rate vs neighbour-jump quintile 0.77 → 4.45 % (×5.8, both targets); BES lowest quintile 19.9 % vs top 3.7 %; `τ_B` ≈ 25–35 ms measured after BES drops; mask agreement 72.77 % (§8at 72.8), φ = 0.041; ECEI increments do **not** predict missingness (recorded as a failed prediction) |
+| P08 win-rate asymmetry | 70 % vs 48 %, terciles 85 vs 55 % (§8al, §8an) | `D = p_obs r E_imp − c_b`; `κ_T ≈ 1.03` (step) vs `κ_V = Δ/2τ_φ = 0.056` (ramp) | terciles 43/85/86 vs 36/45/59 reproduced; quiet-tercile loss −0.072 = −0.073 (= `−c_b`, driver-independent as predicted); impulse rows win 0.744 (`T_i`) vs lose 0.425 (`V_rot`); `p_obs` proxy enrichment 1.27–1.34× for `T_i`, 0.99× for `V_rot`; logit `p_obs` +1.92 ± 0.53 (`T_i`) vs −0.55 ± 0.44 |
+| P09 MAST transfer null by similarity | §8az | only the form of (M1) is device-independent; all 7 coefficients device/instrument-specific; `SE(ρ̂) = sqrt((1−ρ²)Δ/T)`, 10 % precision at `T ≈ 200 τ` | β 7×, ε 2.75×, ρ* 1.6–2×; pretrained weights = 98.2 % of 1,823,490 and explain a one-line equation; one median shot (3.98 s) pins ρ to 2.4 SE of the MAST prior's bias; k 3→10 lift spread 0.006 across four families |
+| P10 real-time classes from plasma time scales | §8ac, §8aj, §8l | `MSE(ℓ) − MSE(0) ≈ (ℓ/Δ)[MSE(Δ) − MSE(0)]`; three latency classes A/B/C | latency cost −0.023/ms (robust) / −0.009/ms (classical) in skill, 1.5 eV at 1.5 ms; nowcaster (p99 1.5–9 ms) is class A only, classes B/C excluded by the 10 ms label integration, not by inference; 353,920 MAC/step reproduces §8ac; 39-op theoretical floor vs 111 shipped; recovery-type events τ_rec 25–37 ms |
+
+### 3. Verdict
+
+1. **Every headline number has a physical cause written as an equation in t**, and the causes are
+   the two sides of one fact: the energy equation's right-hand side is observed by the fast
+   diagnostics at the same instant, the momentum equation's is not.
+2. **Two corrections to the record.** The §8ab "43 % PR2 fallback" is a counting artifact (P02;
+   annotated in place). §8ar's rate correlation (+0.07) is not the measure of the `T_i` coupling
+   the nowcaster uses; the history-conditional partial correlation (0.26) is (P06).
+3. **Named measurements** (each proof's §4): `D_α`/ELM indicator (P01, P07, P08); kHz Mirnov mode
+   frequency as the `V_rot` input and the test that `V_rot` impulse-row win rate inverts (P08, P02);
+   per-frame CES fit quality to replace the value cut (P05, P07); a calibrated `T_e` at the CES flux
+   surface (P06, P03); an exact OU/Kalman causal arm scored on the frozen rows (P02, P06); a
+   same-estimator online standardization arm (P04).
+
+Artifacts: `docs/theory_results_physics.md`; session scratchpad `p01/`–`p10/` (scripts + JSON).
