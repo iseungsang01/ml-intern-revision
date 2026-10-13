@@ -4883,3 +4883,47 @@ exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
    same-estimator online standardization arm (P04).
 
 Artifacts: `docs/theory_results_physics.md`; `ces_prediction/experiments/proofs/p01`–`p10` (scripts + JSON).
+
+## 8bc. B.16 registered: the physics-structured nowcaster (2026-10-13) — built and unit-tested, not run
+
+**Question (승상님).** "구한 물리적 지식을 기반으로 더 나은 모델을 설계하고 만들어줄 수 있어?" The
+derivation audit (§8ba, §8bb) located two things the MSE backbone does wrong and where: in the
+quiet bulk it carries the noisy anchor (median 1.03× persistence) while the noisy-OU optimal
+causal filter sits at 0.875× (foundations §7.4; Huber reached 0.94×, §8ay); and its gain over
+interpolation lives only in rows where a pedestal event is visible in the fast channels at the
+same instant (P01: the transient term is 90–114 % of the headline; P08: quiet discharges lose by
+`−c_b`). Both point at the **output structure**, not at capacity or the loss.
+
+**Design** (`experiments/PREREGISTRATION_B16.md`, committed before any number;
+`experiments/seq/model_seq_v4k.py`, registry names `v4k` / `v4kng`; runner
+`experiments/b16_physics/run_b16.py`). The output is `ŷ(t) = a(t) + g(t)·r(t)`:
+
+- `a(t)` — a **learnable scalar OU–Kalman cell** per target in normalized units (state `x, P, m`:
+  update with the one-step-lagged observation read from the carried feature and the shifted loss
+  mask, then propagate `x ← m + ρ(x−m)`, `P ← ρ²P + σ_s²(1−ρ²)`; `m` is a slowly adapting shot
+  level). Parameters `(ρ, σ_s², σ_n², α)` are learnable and initialised from the §8 OU fits; the
+  learned values are written back in physical units (`physics_params.json`) as an interpretability
+  check (H16-f).
+- `r(t)` — the seq_v2 LSTM residual, with the anchor and its predictive sd appended to the LSTM
+  inputs. Head zero-initialised → **training starts exactly at the Kalman filter** (B.3's
+  persistence start, one rung up).
+- `g(t)` — an event gate: for `T_i` from the LSTM state, the fast-channel increment energy
+  `log1p(mean Δz²)` (the P08 `p_obs` proxy) and the anchor sd; for `V_rot` from the slow state
+  only. Bias −2 at init. `v4kng` pins `g ≡ 1` and isolates what the gate buys.
+- Routing is seq_v2's at the encoder; nothing on the `V_rot` path reads the 15 fast channels.
+
+**Unit tests** (`tests/test_seq_v4k.py`, 6 pass, CPU seconds): registry and shapes; `V_rot` output
+bit-identical under fast-channel perturbation while `T_i` responds; causality (rows > t do not
+change the prediction at ≤ t); the model at init equals its Kalman anchor; the cell's predictive
+variance converges to the Riccati fixed point of foundations §7.4 and decays by `ρ` per step with
+no observations; the physical readout recovers the initial `τ, σ_n, σ_s`.
+
+**Pre-registered predictions** (§3 of the document): cut `T_i` median 0.875–0.94× persistence
+(M1 vs backbone +0.05…+0.12); quiet-tercile discharge win rate vs the causal GP ≥ 0.50 for `v4k`
+(backbone 0.43); aggregate MSE skill vs PCHIP a tie (±0.02); cut `V_rot` median 0.92–1.01×;
+learned `τ` 40–300 ms. Rules H16-a…f and the adoption / replacement thresholds are fixed in §4.
+
+**Status.** 승상님 (2026-10-13): no GPU batch today, documents only; the batch runs the next day
+(`run_b16.py --smoke`, then 16 runs ≈ 30–50 min on the RTX 5060, then
+`rescore_b13.py --extra v4k=.b16_v4k_{pop}_s{s} v4kng=.b16_v4kng_{pop}_s{s}`). Nothing here
+touches TEST; no number exists.

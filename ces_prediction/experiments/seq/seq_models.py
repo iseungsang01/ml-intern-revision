@@ -19,8 +19,15 @@ from model_seq_b3vq import SeqCESB3VQ
 from model_seq_tcn import SeqCESTCN
 from model_seq_xfmr import SeqCESXfmr
 from model_seq_ssm import SeqCESSSM
+from model_seq_v4k import SeqCESV4K
 
 SEQ_MODELS = {
+    # B.16 (PREREGISTRATION_B16.md): physics-structured output y = Kalman anchor + gate *
+    # residual. `v4kng` pins the gate to 1 (anchor + ungated residual); the ONE controlled
+    # variable against the backbone is the output structure.
+    "v4k": SeqCESV4K,
+    "v4kng": functools.partial(SeqCESV4K, gated=False),
+
     "v1": SeqCESLSTM,
     "v2": SeqCESLSTMv2,
     "v3": SeqCESLSTMv3,
