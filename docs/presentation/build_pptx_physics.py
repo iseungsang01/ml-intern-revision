@@ -404,10 +404,10 @@ def s07():
           [2.30, 5.00, 4.99],
           ["계수", "Tᵢ (에너지 보존)", "V_rot (각운동량 보존)"],
           [
-              ["완화 τ", "τ_eq ∥ τ_E; 데이터 103~140 ms, IPB98 77 ms", "τ_φ ≈ τ_E; 데이터 89 ms → Pr ≈ 1"],
+              ["완화 τ", "τ_eq ∥ τ_E; 데이터 103~140 ms, IPB98 77 ms", "τ_φ ~ τ_E; 데이터 89 ms → Pr ~ 1"],
               ["평형 m", ("Tₑ·nₑ·P_NBI의 함수 — ECEI·BES가 본다", GREEN, True, None),
                ("토크의 함수 — 데이터에 없다", RED, True, None)],
-              ["충격 A_k h", "ELM 붕괴: ms 이하 계단, κ_T ≈ 1.03", "토크 램프: κ_V = Δ/2τ_φ = 0.056"],
+              ["충격 A_k h", "ELM 붕괴: ms 이하 계단, κ_T ~ 1.03", "토크 램프: κ_V = Δ/2τ_φ = 0.056"],
               ["사건 가시성 p_obs", ("ECEI 급변 동반 농축 1.27~1.34배", GREEN, True, None),
                ("0.99배 = 우연", RED, True, None)],
               ["잡음 σ_n", "39~46 eV, 광자 약 300개", "3~4 km/s, 같은 광자 예산"],
@@ -428,7 +428,7 @@ def s08():
          "본류 비용 c_b를 넘을 때만 이긴다.", accent=TEAL)
     band(s, Y0 + 2 * (KIT["BAND_H"] + 0.18), "(M7) skill의 정확한 분해",
          "skill = f_I · r_I - (1-f_I) · ℓ_B   — 천이 행의 기준선 SSE 비중 × 그 행의 회수율, 빼기 본류 손실. "
-         "4분할에서 10⁻¹⁶ 정확도로 성립.", accent=ORANGE)
+         "4분할에서 1e-16 정확도로 성립.", accent=ORANGE)
     y = Y0 + 3 * (KIT["BAND_H"] + 0.18)
     card(s, X2[0], y, COL2, "이 두 식이 설명하는 것", [
         "헤드라인(P01) · 승률 비대칭(P08) · V_rot 꼬리 부등식(P02)",
@@ -454,7 +454,7 @@ def s09():
                ("주원인 기각", RED, True, None)],
               ["전자–이온 평형화 τ_eq", "18~39 ms (CES 구석)", "같은 자릿수", ("정합", GREEN, True, None)],
               ["ELM 회복 τ_rec (2,783건)", "60 ms (정의별 55~64)", "같은 자릿수", ("정합", GREEN, True, None)],
-              ["회복 형태 식별 (CRLB)", "문맥 ≈ 1.5 τ_rec 필요", "정보 논증", ("정합", TEAL, True, None)],
+              ["회복 형태 식별 (CRLB)", "문맥 ~ 1.5 τ_rec 필요", "정보 논증", ("정합", TEAL, True, None)],
           ], row_h=0.45)
     band(s, after_table(4, 0.45), "판정",
          "50 ms는 τ_eq와 τ_rec 사이에 놓이며 같은 pedestal 물리라는 진술은 자릿수 수준으로만 방어한다. "
@@ -545,13 +545,13 @@ def s13():
                "본류 비용 -c_b가 구동원과 무관"],
               ["충격행 승률 / 본류행 승률", ("0.744 / 0.594", GREEN, True, MONO),
                ("0.425 / 0.530", RED, True, MONO), "V_rot는 충격행에서 진다 (r ≤ 0)"],
-              ["p_obs 대리: 충격행 ECEI 급변 농축", ("1.27배", GREEN, True, MONO), ("0.99배", RED, True, MONO),
+              ["p_obs 대리: 충격행 ECEI 급변 농축", ("1.27배", GREEN, True, None), ("0.99배", RED, True, None),
                "사건 가시성의 직접 측정"],
               ["logit(승) ~ 산포 + p_obs 계수", ("+1.92 ± 0.53", GREEN, True, MONO),
                ("-0.55 ± 0.44", GRAY, False, MONO), "산포를 통제해도 Tᵢ만 가른다"],
           ], size=11.5, head_size=11.5, row_h=0.45)
     band(s, after_table(5, 0.45), "따름정리",
-         "Tᵢ의 ELM 붕괴는 계단이라 κ_T ≈ 1.03인데 V_rot의 토크 변화는 램프라 κ_V = Δ/2τ_φ = 0.056이다. "
+         "Tᵢ의 ELM 붕괴는 계단이라 κ_T ~ 1.03인데 V_rot의 토크 변화는 램프라 κ_V = Δ/2τ_φ = 0.056이다. "
          "같은 진폭이라도 회수 가능한 에너지가 18분의 1이다.", accent=TEAL)
     return note(s, "§8an이 '절반의 이유'로 남긴 잔여를 p_obs·r·κ의 곱으로 메운 장이다.")
 
@@ -602,7 +602,7 @@ def s15():
           [
               ["온라인 EWMA 표준화의 편향 (τ_w = 1 s)", ("0.29~0.33 σ", DARK, False, MONO),
                "유도값 b·τ_w = 0.31 / 0.27 σ와 일치 — 배치형의 가격"],
-              ["스파이크 행의 V_rot 점프 (Tᵢ 대비)", ("0.05배 vs 5.8배", DARK, False, MONO),
+              ["스파이크 행의 V_rot 점프 (Tᵢ 대비)", ("0.05배 vs 5.8배", DARK, False, None),
                "폭 전용 적합 실패의 지문 (p = 0.75)"],
               ["컷 문턱 2.5 → 4 keV에서 이동하는 행", ("0.15~0.19 %", DARK, False, MONO),
                "물리 상한이 2.5 keV 아래라 문턱이 둔감"],
@@ -650,7 +650,7 @@ def s17():
               ["β", ("0.45 %", DARK, False, MONO), ("3.2 %", ORANGE, True, MONO), "7배 — 전자기 난류 영역"],
               ["ρ*", ("0.0056", DARK, False, MONO), ("0.0099", DARK, False, MONO), "1.6~2.0배"],
               ["IPB98 τ_E", ("77 ms", DARK, False, MONO), ("48 ms", DARK, False, MONO), "10 ms AR(1) 계수 0.878 vs 0.813"],
-              ["전이 가중치 비중", ("1,823,490의 98.2 %", DARK, False, MONO), "—", "설명할 구조는 식 한 줄(계수 7개)"],
+              ["전이 가중치 비중", ("1,823,490의 98.2 %", DARK, False, None), "—", "설명할 구조는 식 한 줄(계수 7개)"],
               ["한 중앙 shot (3.98 s)의 SE(ρ)", ("0.027", GREEN, True, MONO), "—", "MAST prior 편향 0.064 = 2.4 SE"],
           ], row_h=0.45)
     band(s, after_table(6, 0.45), "§8az 재현",
@@ -730,7 +730,7 @@ def s21():
               [("docs/theory_foundations.md", NAVY, True, MONO),
                "측정 물리 · 추정 이론 · 평가 통계의 유도 17절과 검산"],
               [("docs/theory_plasma_physics.md", NAVY, True, MONO),
-               "플라즈마 거동 물리 12장 · CES를 예측하는 두 경로 · Pr ≈ 1 · EHO Doppler"],
+               "플라즈마 거동 물리 12장 · CES를 예측하는 두 경로 · Pr ~ 1 · EHO Doppler"],
               [("ces_prediction/experiments/proofs/p01~p10", NAVY, True, MONO),
                "증명 스크립트와 JSON 출력, README"],
               [("ces_prediction/analyze_foundations.py", NAVY, True, MONO),
