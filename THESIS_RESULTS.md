@@ -4771,4 +4771,42 @@ against the closed form.
 Artifacts: `docs/theory_foundations.md`, `ces_prediction/analyze_foundations.py`,
 `data/.foundations.json`, `data/.foundations.log`.
 
+### Addendum (same day) — the plasma-behaviour physics, and the two routes that predict CES without CES
+
+**Question (승상님).** "CES 자체를 예상하는 물리는 설계된 건 없어?" — not the logic by which CES arises, the
+behaviour physics of the plasma. `docs/theory_plasma_physics.md` (12 chapters: single-particle motion,
+equilibrium, kinetic → two-fluid, collisional and neoclassical transport, turbulence and stiffness, H-mode /
+pedestal / ELM / RMP suppression, rotation, ion power balance, MHD modes, sources, global scaling,
+synthesis) and `analyze_foundations.py` **Part F**.
+
+**The two routes.** `T_i` is the low-pass of `(T_e, n_e, P_NBI,i)` through the ion power balance with
+`τ_eq ∥ τ_E,i`; `V_rot` is the low-pass of torque through `τ_φ ≈ τ_E`, **and an MHD mode's lab-frame
+frequency is a Doppler measurement of it**: `v_φ = 2πR f / n`. The dataset's EHO harmonics (~4 / ~8 kHz,
+§8ao) read as n = 1 / n = 2 at R = 2.1 m give **53 km/s** against the CES `V_rot` median of 69 km/s —
+self-consistent harmonics and the same order. That route lives only in the kHz Mirnov stream (B.6).
+
+**Measured on the 641 files (per-block 2SLS with `y_{t−1}` as the instrument, held-free, 3 keV cut).**
+
+| fit | blocks | τ_eff median (IQR) | note |
+|---|---:|---:|---|
+| `T_i`, no driver | 598 | **140 ms** (52–307) | OLS gives 36 ms: the noise-attenuation bias foundations §7 predicts |
+| `T_i` + ECEI driver | 598 | 103 ms (44–263) | driver sign positive in **46 %** of blocks — not identified |
+| `V_rot`, no driver | 342 | **89 ms** (38–252) | OLS 32 ms; held removal biases low |
+| IPB98(y,2) τ_E, KSTAR-like | — | 77 ms | assumed I_p 0.6 MA, B 1.8 T, P 3 MW, n 3e19, R 1.8, a 0.5, κ 1.8 |
+
+So the energy and momentum relaxation times of the CES series are both ~100 ms, equal to the global
+confinement scaling and to the OU τ of 81 ms fitted in Part D — **an effective Prandtl number of
+0.6–1.4 read from the targets' own dynamics.** Other numbers: pedestal ρ* 0.0055, ν*_i 0.24 (banana),
+β 0.45 %, χ_neo 1.0 m²/s, χ_gB 0.12, E×B shearing 8×10⁵ s⁻¹ vs ITG growth 7×10⁵ (H-mode condition met at
+the assumed E_r), NBI critical energy 18.6 keV at T_e 1 keV so a 100 keV beam heats electrons 71 % (ion
+heating arrives through `Q_ei`, which is why `T_i` follows `T_e`).
+
+**Verdict.** The physics that predicts the targets exists and is written down as two boxed generative
+models (document §12). What the data confirms: the relaxation times and Pr ~ 1, the Doppler reading of
+the EHO, the OLS bias. What it refuses: the e–i coupling term cannot be identified from the uncalibrated
+four-channel ECEI mean (sign random across blocks), so the physics-based `T_i` predictor needs one
+calibrated `T_e` at the CES flux surface. Named measurements, in the order of the equations they close:
+calibrated `T_e(ψ_CES, t)`; kHz Mirnov mode frequency / mode number (→ `v_φ`) and band power (→ NTV);
+NBI and RMP coil waveforms (→ torque); a `D_α` / ELM indicator (→ the impulse term).
+
 ---

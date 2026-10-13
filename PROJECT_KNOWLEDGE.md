@@ -1234,3 +1234,16 @@ identity). `ces_prediction/analyze_foundations.py` checks each one.
   the generative model first (§8ar's rule), then compute what it *predicts* and compare; the
   comparison either confirms the mechanism or names the missing key (here: a future-anchor-distance
   key and an OU causal arm).
+
+**Addendum (same day) — the plasma-behaviour physics (`docs/theory_plasma_physics.md`, Part F).**
+- **Pr ~ 1 is readable from the CES series themselves**: 2SLS relaxation times `T_i` 103–140 ms,
+  `V_rot` 89 ms, IPB98 τ_E 77 ms. Use 2SLS (instrument `y_{t−1}`), never OLS, on a noisy series —
+  OLS returns 32–36 ms, which is the noise attenuation bias, not physics.
+- **The non-CES route to `V_rot` is the mode Doppler** `v_φ = 2πR f / n` (EHO 4 / 8 kHz → 53 km/s vs
+  CES median 69). It is the physical content of B.6's "mode rotation frequency" feature; frame it as a
+  measurement of rotation, not as a correlate.
+- **The physics-based `T_i` predictor is blocked by calibration, not by physics**: the coupling term's
+  sign is random across blocks when the driver is the uncalibrated ECEI mean (46 % positive). The
+  acquisition item is one calibrated `T_e` on the CES flux surface.
+- Quote the assumed plasma parameters (document appendix A) whenever a Part F number is used; none of
+  them is in the CSVs.

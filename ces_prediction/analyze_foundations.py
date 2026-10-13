@@ -617,6 +617,195 @@ def part_e():
         E[f"by_gap_{tgt}"] = bg
     OUT["E"] = E
 
+# =============================================================================
+# PART F -- plasma-behaviour physics: scalings, dimensionless numbers, and the
+#           first-order relaxation model fitted to the real series by 2SLS
+# =============================================================================
+MU0 = 4e-7 * np.pi
+
+
+def ipb98y2_tau_e(ip_ma, bt_t, p_mw, n19, m_amu, r_m, eps, kappa):
+    """ITER IPB98(y,2) thermal confinement scaling [s]."""
+    return (0.0562 * ip_ma ** 0.93 * bt_t ** 0.15 * p_mw ** -0.69 * n19 ** 0.41
+            * m_amu ** 0.19 * r_m ** 1.97 * eps ** 0.58 * kappa ** 0.78)
+
+
+def nbi_ion_fraction(eb_over_ec):
+    """Fraction of beam energy going to ions for a slowing-down ion injected at
+    E_b = x * E_c (Stix): G(x) = (1/x) int_0^x dy / (1 + y^{3/2})."""
+    x = float(eb_over_ec)
+    y = np.linspace(0.0, x, 20001)
+    return float(np.trapezoid(1.0 / (1.0 + y ** 1.5), y) / x)
+
+
+def modality_mean_z(df, cols):
+    a = df[cols].to_numpy(dtype=float)
+    mu = np.nanmean(a, axis=0, keepdims=True)
+    sd = np.nanstd(a, axis=0, keepdims=True)
+    sd[sd == 0] = 1.0
+    return np.nanmean((a - mu) / sd, axis=1)
+
+
+def tsls_relaxation(y, drv, block, time, min_n=40):
+    """Per-block two-stage least squares of the first-order relaxation
+        y[t+1] - y[t] = a + b * drv[t] + c * y[t] + w,   c = -(dt / tau_eff)
+    with y[t-1] as the instrument for the noisy regressor y[t] (consistent under
+    white measurement noise, unlike OLS whose c is pulled negative by the noise).
+    Returns a list of (c, b, n) per block."""
+    per_block = []
+    for b in np.unique(block):
+        sel = np.flatnonzero(block == b)
+        if sel.size < min_n + 2:
+            continue
+        yy = y[sel]
+        dd = drv[sel] if drv is not None else None
+        tt = time[sel]
+        ok = np.isfinite(yy[:-2]) & np.isfinite(yy[1:-1]) & np.isfinite(yy[2:])
+        ok &= np.abs((tt[2:] - tt[:-2]) - 2 * DT) < 0.5 * DT
+        if dd is not None:
+            ok &= np.isfinite(dd[1:-1])
+        if ok.sum() < min_n:
+            continue
+        y_prev, y_now, y_next = yy[:-2][ok], yy[1:-1][ok], yy[2:][ok]
+        dy = y_next - y_now
+        if dd is None:
+            X = np.vstack([np.ones_like(y_now), y_now]).T
+            Z = np.vstack([np.ones_like(y_now), y_prev]).T
+        else:
+            d_now = dd[1:-1][ok]
+            X = np.vstack([np.ones_like(y_now), d_now, y_now]).T
+            Z = np.vstack([np.ones_like(y_now), d_now, y_prev]).T
+        try:
+            pz = Z @ np.linalg.solve(Z.T @ Z, Z.T @ X)
+            beta = np.linalg.solve(pz.T @ X, pz.T @ dy)
+        except np.linalg.LinAlgError:
+            continue
+        c = float(beta[-1])
+        bcoef = float(beta[1]) if dd is not None else float("nan")
+        per_block.append((c, bcoef, int(ok.sum())))
+    return per_block
+
+
+def ols_relaxation(y, block, time, min_n=40):
+    """Same regression by plain OLS (no instrument) -- shows the noise attenuation bias."""
+    per_block = []
+    for b in np.unique(block):
+        sel = np.flatnonzero(block == b)
+        yy, tt = y[sel], time[sel]
+        if yy.size < min_n + 1:
+            continue
+        ok = np.isfinite(yy[:-1]) & np.isfinite(yy[1:]) & (np.abs((tt[1:] - tt[:-1]) - DT) < 0.5 * DT)
+        if ok.sum() < min_n:
+            continue
+        y_now, dy = yy[:-1][ok], (yy[1:] - yy[:-1])[ok]
+        X = np.vstack([np.ones_like(y_now), y_now]).T
+        beta, *_ = np.linalg.lstsq(X, dy, rcond=None)
+        per_block.append((float(beta[1]), float("nan"), int(ok.sum())))
+    return per_block
+
+
+def part_f():
+    hr("PART F -- plasma-behaviour physics: scalings, dimensionless numbers, relaxation fits")
+    F = {}
+    # --- F1 global confinement scaling for KSTAR-like parameters (ASSUMED)
+    ip, bt, pin, n19, mamu, rr, aa, kappa = 0.6, 1.8, 3.0, 3.0, 2.0, 1.8, 0.5, 1.8
+    tau_e = ipb98y2_tau_e(ip, bt, pin, n19, mamu, rr, aa / rr, kappa)
+    print("IPB98(y,2) tau_E for I_p %.1f MA, B %.1f T, P %.0f MW, n %.0fe19, R %.1f m, a %.1f m, kappa %.1f: %.0f ms"
+          % (ip, bt, pin, n19, rr, aa, kappa, tau_e * 1e3))
+    print("  Prandtl ~ 1 -> tau_phi ~ tau_E; fitted OU tau (Part D) = 81 ms (T_i), 81 / 144 ms (V_rot)")
+    F["ipb98_tau_e_ms"] = tau_e * 1e3
+    # --- F2 NBI slowing-down: critical energy and ion heating fraction
+    te_ev, eb_kev = 1000.0, 100.0
+    e_c_kev = 14.8 * te_ev * 2.0 * (0.5) ** (2.0 / 3.0) / 1e3   # D beam in pure D: sum n_i Z^2/(n_e A_i) = 1/2
+    gi = nbi_ion_fraction(eb_kev / e_c_kev)
+    print("NBI slowing down at T_e = %.0f eV: E_c = %.1f keV, E_b/E_c = %.1f -> ion fraction G_i = %.2f (electrons %.2f)"
+          % (te_ev, e_c_kev, eb_kev / e_c_kev, gi, 1 - gi))
+    F["nbi"] = {"te_ev": te_ev, "eb_kev": eb_kev, "e_c_kev": e_c_kev, "ion_fraction": gi}
+    # --- F3 dimensionless numbers at the pedestal (ASSUMED)
+    m_i = 2.0 * AMU
+    t_ev, b_t, q95, eps_ped, n_e = 600.0, 1.8, 4.0, 0.28, 3e19
+    vth_i = np.sqrt(2 * t_ev * E_CHARGE / m_i)
+    omega_i = E_CHARGE * b_t / m_i
+    rho_i = vth_i / omega_i
+    rho_star = rho_i / aa
+    nu_ii = 4.80e-8 * (2.0) ** -0.5 * (n_e * 1e-6) * 17.0 * t_ev ** -1.5   # NRL, s^-1
+    nu_star_i = nu_ii * q95 * rr / (eps_ped ** 1.5 * vth_i)
+    beta = 2 * n_e * t_ev * E_CHARGE / (b_t ** 2 / (2 * MU0))
+    chi_neo = q95 ** 2 * rho_i ** 2 * nu_ii / eps_ped ** 1.5
+    chi_bohm = t_ev / (16 * b_t)
+    chi_gb = rho_star * chi_bohm
+    tau_a = rr / (b_t / np.sqrt(MU0 * n_e * m_i))
+    cs = np.sqrt(t_ev * E_CHARGE / m_i)
+    print("pedestal dimensionless (n %.0e, T %.0f eV, B %.1f T, q %.0f, eps %.2f): rho_i %.2f mm, rho* %.4f, nu*_i %.2f, beta %.4f"
+          % (n_e, t_ev, b_t, q95, eps_ped, rho_i * 1e3, rho_star, nu_star_i, beta))
+    print("  chi_neo(banana) %.2f m^2/s | chi_Bohm %.1f | chi_gyroBohm %.3f m^2/s ; tau_Alfven %.2f us, c_s %.0f km/s"
+          % (chi_neo, chi_bohm, chi_gb, tau_a * 1e6, cs / 1e3))
+    print("  diffusive time a^2/chi: neo %.0f ms, gyroBohm %.0f ms, Bohm %.1f ms"
+          % (aa ** 2 / chi_neo * 1e3, aa ** 2 / chi_gb * 1e3, aa ** 2 / chi_bohm * 1e3))
+    F["pedestal"] = {"rho_i_mm": rho_i * 1e3, "rho_star": rho_star, "nu_star_i": nu_star_i, "beta": beta,
+                     "chi_neo": chi_neo, "chi_bohm": chi_bohm, "chi_gyrobohm": chi_gb,
+                     "tau_alfven_us": tau_a * 1e6, "c_s_km_s": cs / 1e3, "nu_ii_per_s": nu_ii}
+    # --- F4 mode rotation as a Doppler measurement of V_phi: f_lab = n v_phi / (2 pi R)
+    for f_hz, n_mode in ((4000.0, 1), (8000.0, 2), (8000.0, 1)):
+        v = 2 * np.pi * 2.1 * f_hz / n_mode
+        print("EHO harmonic %.0f kHz as n = %d at R = 2.1 m -> v_phi = %.0f km/s  (CES V_rot median 69 km/s)"
+              % (f_hz / 1e3, n_mode, v / 1e3))
+    F["eho_doppler_km_s"] = {"4kHz_n1": 2 * np.pi * 2.1 * 4000 / 1e3, "8kHz_n2": 2 * np.pi * 2.1 * 8000 / 2 / 1e3}
+    # --- F5 E x B shearing rate vs ITG growth
+    e_r, l_er, b_tot = 30e3, 0.02, 1.8
+    omega_exb = e_r / (b_tot * l_er)
+    gamma_itg = cs / np.sqrt(rr * 0.03)
+    print("E x B shearing rate with E_r %.0f kV/m over %.0f cm: %.1e /s vs ITG growth ~ c_s/sqrt(R L_T) %.1e /s"
+          % (e_r / 1e3, l_er * 1e2, omega_exb, gamma_itg))
+    F["exb"] = {"omega_exb_per_s": omega_exb, "gamma_itg_per_s": gamma_itg}
+    # --- F6 relaxation fits on the real series (per block, held-free, cut)
+    files = sorted(data_dir().glob("*.csv"))
+    head = pd.read_csv(files[0], nrows=1)
+    ecei_cols = [c for c in head.columns if c.startswith("ECEI_")]
+    bes_cols = [c for c in head.columns if c.startswith("BES_")]
+    acc = {k: [] for k in ("ti_ecei", "ti_bes", "ti_none", "ti_none_OLS", "vt_none", "vt_none_OLS", "vt_ecei")}
+    for path in files:
+        df = pd.read_csv(path)
+        time = df["time"].to_numpy(dtype=float)
+        block = np.concatenate(([0], np.cumsum(np.diff(time) >= STUCK_GAP_SECONDS)))
+        ti = df["CES_TI"].to_numpy(dtype=float).copy()
+        ti[ti > CUT_EV] = np.nan
+        ti[_stuck_mask(ti, block)] = np.nan
+        vt = df["CES_VT"].to_numpy(dtype=float).copy()
+        vt[_stuck_mask(vt, block)] = np.nan
+        ecei = modality_mean_z(df, ecei_cols)
+        bes = modality_mean_z(df, bes_cols)
+        acc["ti_ecei"].extend(tsls_relaxation(ti, ecei, block, time))
+        acc["ti_bes"].extend(tsls_relaxation(ti, bes, block, time))
+        acc["ti_none"].extend(tsls_relaxation(ti, None, block, time))
+        acc["ti_none_OLS"].extend(ols_relaxation(ti, block, time))
+        acc["vt_none"].extend(tsls_relaxation(vt, None, block, time))
+        acc["vt_none_OLS"].extend(ols_relaxation(vt, block, time))
+        acc["vt_ecei"].extend(tsls_relaxation(vt, ecei, block, time))
+    print("first-order relaxation  dy = a + b*driver + c*y_t   (2SLS with instrument y_{t-1}; OLS rows for contrast)")
+    print("  tau_eff = -dt/c, per block; tau quoted over blocks with -1 < c < 0")
+    print("%-12s %7s %10s %12s %13s %10s" % ("fit", "blocks", "median c", "tau_eff med", "tau IQR", "b>0 share"))
+    F["relaxation"] = {}
+    for key, pb in acc.items():
+        if not pb:
+            continue
+        c = np.array([p[0] for p in pb])
+        bco = np.array([p[1] for p in pb])
+        n = np.array([p[2] for p in pb])
+        ok = (c < 0) & (c > -1)
+        tau = -DT / c[ok] * 1e3
+        q = np.percentile(tau, [25, 50, 75])
+        fin = np.isfinite(bco)
+        share_b = float(np.mean(bco[fin] > 0)) if fin.any() else float("nan")
+        print("%-12s %7d %10.4f %9.0f ms %6.0f-%-5.0f %10s   (stable %.0f%%, rows %d)"
+              % (key, len(pb), np.median(c), q[1], q[0], q[2],
+                 ("%.2f" % share_b) if np.isfinite(share_b) else "-", 100 * ok.mean(), n.sum()))
+        F["relaxation"][key] = {"blocks": int(len(pb)), "median_c": float(np.median(c)),
+                                "tau_eff_ms_q25_50_75": [float(x) for x in q],
+                                "share_b_positive": share_b, "share_c_stable": float(ok.mean()),
+                                "rows": int(n.sum())}
+    OUT["F"] = F
+
 
 def main():
     part_a()
@@ -624,6 +813,7 @@ def main():
     part_c()
     part_d()
     part_e()
+    part_f()
     Path("data").mkdir(exist_ok=True)
     Path("data/.foundations.json").write_text(json.dumps(OUT, indent=2, default=float), encoding="utf-8")
     print("")
