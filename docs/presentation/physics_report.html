@@ -1,0 +1,280 @@
+<title>결과를 받치는 물리</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+/* layout: a lab report — one reading column, a quiet left rail for the table of contents on wide screens */
+:root {
+  --bg: #fbfaf7; --fg: #1d2430; --muted: #5a6474; --line: #d9d4c7;
+  --paper: #ffffff; --ink: #13335f; --accent: #b4532a; --accent-soft: #f6e6dc;
+  --ok: #2e7d4f; --ok-soft: #e3f1e8; --warn: #b7791f; --warn-soft: #f8efd8; --bad: #b33a3a; --bad-soft: #f6e1e1;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+  --sans: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15191f; --fg: #e8e6df; --muted: #a2a8b3; --line: #343b46;
+  --paper: #1c2129; --ink: #9fc0ea; --accent: #e3906a; --accent-soft: #3a2a22;
+  --ok: #7cc79a; --ok-soft: #1f3328; --warn: #e0b35a; --warn-soft: #3a3120; --bad: #e58585; --bad-soft: #3b2323;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15191f; --fg: #e8e6df; --muted: #a2a8b3; --line: #343b46;
+  --paper: #1c2129; --ink: #9fc0ea; --accent: #e3906a; --accent-soft: #3a2a22;
+  --ok: #7cc79a; --ok-soft: #1f3328; --warn: #e0b35a; --warn-soft: #3a3120; --bad: #e58585; --bad-soft: #3b2323;
+  color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.65; padding-block: 0 48px; padding-inline: 16px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); } nav.toc { display: none; } }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 13px; padding-top: 48px; }
+nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 4px 0 4px 10px; border-left: 2px solid var(--line); }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-left-color: var(--accent); outline: none; }
+main { min-width: 0; }
+header { padding-block: 48px 24px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.2; margin: 8px 0 12px; color: var(--ink); text-wrap: balance; font-weight: 700; }
+h2 { font-size: 22px; margin: 48px 0 12px; color: var(--ink); text-wrap: balance; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 16px; margin: 24px 0 8px; color: var(--fg); }
+p { max-width: 70ch; margin: 0 0 12px; }
+.lede { font-size: 17px; color: var(--fg); max-width: 72ch; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.badge { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 3px; color: var(--muted); background: var(--paper); }
+.claim { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 14px 18px; margin: 20px 0; max-width: none; }
+.claim p { max-width: none; margin: 0; font-size: 16px; }
+.eq { background: var(--paper); border: 1px solid var(--line); padding: 10px 16px; margin: 14px 0; overflow-x: auto; font-size: 15px; }
+.eq .cap { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 12px 0 20px; }
+.tbl { overflow-x: auto; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink); font-weight: 600; background: var(--paper); font-size: 13px; }
+td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip { display: inline-block; font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); } .chip.warn { background: var(--warn-soft); color: var(--warn); } .chip.bad { background: var(--bad-soft); color: var(--bad); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 16px 0; }
+.card { background: var(--paper); border: 1px solid var(--line); padding: 14px 16px; min-width: 0; }
+.card .id { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.card h3 { margin: 4px 0 6px; font-size: 15.5px; line-height: 1.35; }
+.card .res { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.card ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.card li { margin-bottom: 3px; }
+.card .foot { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+details { border: 1px solid var(--line); background: var(--paper); padding: 8px 14px; margin: 8px 0; }
+summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+details p { margin: 8px 0 4px; max-width: none; font-size: 14px; }
+dl.terms { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; font-size: 14px; }
+dl.terms dt { font-weight: 600; color: var(--ink); } dl.terms dd { margin: 0; }
+@media (max-width: 600px) { dl.terms { grid-template-columns: minmax(0, 1fr); } }
+code { font-family: var(--mono); font-size: 0.92em; background: var(--paper); border: 1px solid var(--line); padding: 0 4px; border-radius: 2px; }
+.note { font-size: 13px; color: var(--muted); }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 12px 0; }
+.step { background: var(--paper); border-top: 3px solid var(--ink); padding: 10px 12px; font-size: 13.5px; }
+.step b { display: block; color: var(--ink); margin-bottom: 4px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="목차">
+  <a href="#sum">한 문장 요약</a>
+  <a href="#terms">용어 풀이</a>
+  <a href="#model">하나의 모형</a>
+  <a href="#ident">두 항등식</a>
+  <a href="#proofs">열 개의 증명</a>
+  <a href="#map">결과 지도</a>
+  <a href="#fifty">50 ms의 세 척도</a>
+  <a href="#fix">기록 정정</a>
+  <a href="#next">지목된 측정</a>
+  <a href="#files">산출물과 읽는 순서</a>
+  <a href="#limits">한계</a>
+</nav>
+<main>
+<header>
+  <div class="eyebrow">KSTAR CES nowcasting · 2026-10-13 · THESIS_RESULTS §8ba · §8bb</div>
+  <h1>결과를 받치는 물리: 열 개의 증명과 하나의 시간영역 모형</h1>
+  <p class="lede">이온 온도와 토로이달 회전의 10 ms 격자 공백을 빠른 진단으로 채우는 연구의 모든 수치 결과를, 플라즈마의 보존식에서 시간 $t$의 식으로 유도하고 641개 방전과 얼린 TEST 산출물로 검산한 보고다. 모델은 학습·채점·선택하지 않았다.</p>
+  <div class="badges"><span class="badge">문서 3편</span><span class="badge">증명 10</span><span class="badge">검산 스크립트 10폴더 + 1</span><span class="badge">기록 정정 2</span><span class="badge">테스트 52 통과</span></div>
+</header>
+
+<h2 id="sum">한 문장 요약</h2>
+<div class="claim"><p>두 타깃은 같은 1차 완화 방정식을 따르되 우변이 다르다. 이온 온도의 우변(전자–이온 결합, 밀도 요동)은 ECEI와 BES가 같은 시각에 보므로 나우캐스터는 pedestal 사건 행에서 미래를 읽는 보간을 이기고(헤드라인 +0.24의 90 % 이상), 회전의 우변(토크)은 데이터에 없으므로 최선은 이력의 잡음 필터이며 측정된 모든 회전 판정이 그 필터의 닫힌 식에서 나온다. 모델의 차이가 아니라 보존식 우변에 관측 가능한 항이 있는가의 차이다.</p></div>
+<div class="steps">
+  <div class="step"><b>왜 이기는가</b>ELM·천이에서 $T_i$, $T_e$, $n_e$가 동시에 떨어진다. 보간은 점프를 가로질러 틀리고, 동시 관측을 보는 모델은 그만큼 덜 틀린다.</div>
+  <div class="step"><b>왜 지는가</b>조용한 구간에서 두 이웃을 평균하는 보간의 잡음은 $\tfrac32\sigma_n^2$, 하나를 옮기는 persistence는 $2\sigma_n^2$다. 인과 모델은 이 산수를 넘지 못한다.</div>
+  <div class="step"><b>왜 회전은 다른가</b>토크 항(NBI·NTV·잔여응력)이 입력에 없다. 회전 증분과 빠른 채널의 상관은 10–200 ms 모든 창에서 0이다.</div>
+  <div class="step"><b>무엇을 재야 하나</b>ELM 지시자, kHz Mirnov 모드 주파수(회전의 Doppler), NBI·RMP 파형, 프레임별 적합 품질, 보정 $T_e$. 식의 항별로 지목된다.</div>
+</div>
+
+<h2 id="terms">용어 풀이</h2>
+<p>이 보고를 읽는 데 필요한 말을 먼저 푼다. 전공자는 건너뛰어도 된다.</p>
+<details open><summary>진단과 타깃</summary>
+<dl class="terms">
+  <dt>CES</dt><dd>전하교환 분광. 탄소 이온이 내는 529 nm 빛의 선폭에서 이온 온도 $T_i$를, 선의 이동에서 토로이달 회전 $V_\varphi$(데이터 이름 V_rot)를 읽는다. 광자를 10 ms 모아야 해서 느리고 자주 빈다.</dd>
+  <dt>BES · ECEI · Mirnov</dt><dd>항상 켜져 있는 빠른 진단. BES는 밀도 요동($n_e$ 계열), ECEI는 전자 온도 $T_e$ 영상, Mirnov는 자기 요동 $dB/dt$. 셋 다 $T_i$나 $V_\varphi$를 직접 재지 않는다.</dd>
+  <dt>나우캐스팅</dt><dd>지금 비어 있는 값을 같은 시각의 빠른 진단과 과거 CES 이력만으로 채우는 것. 미래를 보지 않는다(인과적).</dd>
+  <dt>pedestal · ELM</dt><dd>H-mode 플라즈마 가장자리의 가파른 압력 턱과 그것이 주기적으로 무너지는 사건. CES 채널이 놓인 자리이며 10 ms 격자에서는 한 점의 급락과 수 점의 회복으로 보인다.</dd>
+</dl></details>
+<details><summary>기준선과 지표</summary>
+<dl class="terms">
+  <dt>persistence</dt><dd>마지막 관측값을 그대로 옮기는 예측. 배치 시스템의 실제 경쟁자.</dd>
+  <dt>PCHIP · GP (양측 보간)</dt><dd>타깃 시각의 과거와 미래 이웃을 모두 보고 그 사이를 잇는 오프라인 방법. 일부러 모델에 불리하게 둔 잣대.</dd>
+  <dt>skill</dt><dd>$1-\mathrm{MSE}_{\text{모델}}/\mathrm{MSE}_{\text{기준선}}$. 양수면 모델이 낫다. 제곱오차 기반이라 큰 오차 행이 좌우한다(꼬리 통계).</dd>
+  <dt>PR4</dt><dd>사전등록한 유의성 규칙. shot 단위로 복원추출한 paired bootstrap의 95 % 구간이 0을 배제해야 통과. 4분할 × 2모집단.</dd>
+  <dt>MNAR</dt><dd>결측이 값 자체와 관련된 상태. CES는 플라즈마가 바뀌는 순간에 비므로 관측 행만의 점수는 낙관적이다.</dd>
+</dl></details>
+<details><summary>모형의 말</summary>
+<dl class="terms">
+  <dt>OU 과정</dt><dd>평균으로 되돌아가는 잡음 있는 완화 과정 $dy=-(y-m)/\tau\,dt+$잡음. 1차 완화계가 백색 구동을 받으면 정확히 이것이다.</dd>
+  <dt>Kalman 필터</dt><dd>잡음 있는 관측에서 상태를 최적으로 추정하는 재귀. 이력만 보는 인과 예측의 하한을 준다.</dd>
+  <dt>$\tau_{\rm eq}$</dt><dd>전자와 이온의 온도가 충돌로 같아지는 시간. CES 영역에서 8–59 ms.</dd>
+  <dt>$p_{\rm obs}$</dt><dd>타깃의 사건이 같은 행의 빠른 채널에 보일 확률. $T_i$는 높고 $V_\varphi$는 우연 수준이다.</dd>
+</dl></details>
+
+<h2 id="model">하나의 모형</h2>
+<p>pedestal 한 자속면의 CES 타깃 $y\in\{T_i,V_\varphi\}$는 보존식을 선형화한 1차 완화에 확률 구동과 사건 충격을 더한 것이다.</p>
+<div class="eq"><div class="cap">(M1) 생성 모형 · (M2) 해와 관측</div>
+$$\frac{dy}{dt}=-\frac{y(t)-m}{\tau}+\sqrt{\frac{2\sigma_s^2}{\tau}}\,\xi(t)+\sum_k A_k\,\dot h(t-t_k),\qquad h(s)=\Theta(s)\,e^{-s/\tau_{\rm rec}}$$
+$$y(t)=m+\int_{-\infty}^{t}e^{-(t-s)/\tau}\sqrt{\tfrac{2\sigma_s^2}{\tau}}\,\xi(s)\,ds+\sum_kA_k\,h(t-t_k),\qquad \tilde y(t_j)=y(t_j)+n_j,\ \ t_j=j\Delta,\ \Delta=10\ \mathrm{ms}$$
+</div>
+<p>식의 형태는 두 타깃이 같다. 다른 것은 계수가 어디서 오는가다.</p>
+<div class="tbl"><table>
+<tr><th>계수</th><th>$T_i$ (에너지 보존)</th><th>$V_\varphi$ (각운동량 보존)</th></tr>
+<tr><td>완화 $\tau$</td><td>$\tau_{\rm eq}\parallel\tau_{E,i}$; 데이터 103–140 ms, IPB98 77 ms</td><td>$\tau_\varphi\approx\tau_E$; 데이터 89 ms → Prandtl 수 ≈ 1</td></tr>
+<tr><td>평형 $m$</td><td><span class="chip ok">관측됨</span> $T_e$·$n_e$·$P_{\rm NBI,i}$의 함수. ECEI·BES가 본다</td><td><span class="chip bad">없음</span> 토크 $T_{\rm NBI}+T_{\rm NTV}+T_{\rm int}$의 함수</td></tr>
+<tr><td>충격 $A_k h$</td><td>ELM 붕괴: ms 이하 계단, 회수 가능 에너지 $\kappa_T\approx1.03$</td><td>토크 변화: 램프 $1-e^{-s/\tau_\varphi}$, $\kappa_V=\Delta/2\tau_\varphi=0.056$</td></tr>
+<tr><td>사건 가시성 $p_{\rm obs}$</td><td>$T_i$ 급변 중 ECEI 급변 동반 농축 1.27–1.34배</td><td>0.99배 = 우연</td></tr>
+<tr><td>잡음 $\sigma_n$</td><td>39–46 eV, 광자 약 300개/프레임</td><td>3–4 km/s, 같은 광자 예산</td></tr>
+</table></div>
+<p class="note">관측 모형은 세 층이다. 타깃은 절대 단위($T_i\propto(\sigma_\lambda/\lambda_0)^2$, 날짜 무관), 빠른 진단은 $x_f(t)=g(D_f)s_f(t)+c(D_f)$(날짜 $D$의 계측 이득 × 플라즈마 상태), 관측 지시자는 $m_j=\mathbf 1[N(t_j)>N_c,\ B(t_j)<B_c]$로 광자 예산 $N(t)$와 배경 $B(t)=B_0+B_1e^{-(t-t_0)/\tau_B}$의 함수다.</p>
+
+<h2 id="ident">두 항등식</h2>
+<p>사건 시각 $t_k$를 기준으로 이력 필터, 양측 보간, 나우캐스터의 오차를 시간의 식으로 쓰고 짝지은 차이를 적분하면 방전별 승패 식이 나오고, 제곱오차 비중으로 쓰면 skill의 정확한 분해가 나온다.</p>
+<div class="eq"><div class="cap">(M3) 이력 필터의 오차 분산, 간극 $g=t-t_{\rm last}$</div>
+$$E[e^2](g)=e^{-2g/\tau}P+\sigma_s^2\bigl(1-e^{-2g/\tau}\bigr)+\sigma_n^2,\qquad \text{양측 교량: 조용한 구간 }\approx\tfrac32\sigma_n^2,\ \text{사건 행 }\approx A_k/2$$
+</div>
+<div class="eq"><div class="cap">(M6) 방전별 짝 MSE 차 · (M7) skill의 정확한 분해</div>
+$$D=\frac1T\!\int_0^T\!E[e_b^2-e_m^2]\,dt=p_{\rm obs}\,r\,\frac{N_e\kappa A^2}{n}-c_b,\qquad\qquad \mathrm{skill}=f_I\,r_I-(1-f_I)\,\ell_B$$
+</div>
+<p>$D$는 사건이 보이고($p_{\rm obs}$) 크기가 회수되며($r$) 충격 에너지가 본류 비용 $c_b$를 넘을 때만 양수다. 본류 비용은 정보 없는 입력이 더하는 추정 분산이라 구동원과 무관하고, 데이터에서 조용 방전 삼분위 손실이 $T_i$ −0.072, $V_\varphi$ −0.073으로 같다. skill 분해는 천이 행의 기준선 제곱오차 비중 $f_I$ × 그 행의 회수율 $r_I$에서 본류 손실을 뺀 것으로, 4분할에서 $10^{-16}$ 정확도로 성립한다.</p>
+
+<h2 id="proofs">열 개의 증명</h2>
+<p>각 증명은 독립 에이전트가 같은 형식으로 썼다. 명제 → 유도 → 시간 $t$의 식 → 데이터 검산 → 기록과의 연결 → 한계와 반증 조건. 전문은 <code>docs/theory_results_physics.md</code> 1장에 있다.</p>
+<div class="grid">
+<div class="card"><div class="id">P01</div><h3>$T_i$ 헤드라인 +0.24는 천이 물리다</h3><div class="res">결과: PCHIP 대비 +0.24, 4/4 분할 통과</div><ul>
+<li>천이 항 $f_Ir_I$만으로 헤드라인의 90–114 % (+0.199/+0.223/+0.244/+0.265 vs +0.174/+0.248/+0.257/+0.264)</li>
+<li>조용한 절반: 비인과 GP에 4/4 패(−0.09…−0.31). 상위 5 % 천이 행: 4/4 승(+0.05…+0.09)</li>
+<li>$\Delta T_i$–$\Delta$ECEI 상관 0.142 → 큰 점프 조건부 0.238, lag 0에서만</li></ul>
+<div class="foot"><span class="chip ok">항등식</span><span class="chip ok">4/4</span></div></div>
+
+<div class="card"><div class="id">P02</div><h3>$V_\varphi$ 판정은 운동량 균형의 귀결이다</h3><div class="res">결과: 보간과 동률, persistence 우위, 중앙값 −49 %</div><ul>
+<li>토크 비관측 ⇒ 최적 인과 = 이력 OU 필터. 중앙값 하한 0.921×pers vs 모델 1.14, 인과 GP 1.01; 교량 하한 0.798 vs PCHIP 0.791</li>
+<li>집계 양수는 꼬리 부등식 $G_T>D_B$: 상위 1 %(105행)가 +0.414, 본류 −0.024 → 0.390</li>
+<li>$\Delta V$ vs $\Delta$BES/ECEI/MC: lag ±2, 창 10–200 ms 전부 |r| ≤ 0.014 ($T_i$ 대조 +0.15…+0.28)</li></ul>
+<div class="foot"><span class="chip ok">정합</span><span class="chip bad">기록 정정 2건 발견</span></div></div>
+
+<div class="card"><div class="id">P03</div><h3>50 ms 포화: 필터 수렴은 기각, ELM 척도가 남는다</h3><div class="res">결과: 인과 문맥 50 ms에서 포화</div><ul>
+<li>냉시동 Kalman 수렴은 2–3 스텝에서 끝남 → 20 ms 결손의 26–43 %만 설명</li>
+<li>$\tau_{\rm eq}$ 18–39 ms; 회복형 ELM 2,783건의 $\tau_{\rm rec}$ 60 ms; 회복 형태 식별에 문맥 ≈ 1.5 $\tau_{\rm rec}$ 필요</li>
+<li>50 ms는 두 척도 사이. 자릿수 정합까지만 주장</li></ul>
+<div class="foot"><span class="chip warn">가설 일부 기각</span><span class="chip ok">자릿수 정합</span></div></div>
+
+<div class="card"><div class="id">P04</div><h3>캠페인 드리프트는 계측·기하 물리다</h3><div class="res">결과: 빠른 진단 1.22σ 이동 vs 타깃 0.115σ, shot별 표준화 무비용</div><ul>
+<li>$x_f=g(D)s_f(t)+c(D)$; shot 내 z-score가 $g,c$를 정확히 소거</li>
+<li>shot 간 분산 몫 BES 0.84 / ECEI 0.91 vs $T_i$ 0.49 / $V_\varphi$ 0.28; §8n 수치 소수 셋째 자리 재현</li>
+<li>절대 수준의 추가 정보 R² 1.4–2.6 %; 온라인 EWMA 편향 $-b\tau_w$ 실측 0.29–0.33 σ</li></ul>
+<div class="foot"><span class="chip ok">재현</span></div></div>
+
+<div class="card"><div class="id">P05</div><h3>3 keV 컷은 pedestal 압력 한계다</h3><div class="res">결과: 사전등록 값 컷, 문턱 2.5–4 keV 둔감</div><ul>
+<li>PB 자기일관 상한 $p_{\rm ped}$ 4.3–9.6 kPa → $T_{i,\rm ped,max}$ 1.0–1.8 keV; 스파이크 5.3 keV = PB의 3.06배</li>
+<li>런 통계 1,197행 / 951런 / 85.5 % 단일행 / 13.2배 재현</li>
+<li>스파이크 행의 $V_\varphi$ 점프 0.05배(p 0.75): 폭 전용 적합 실패의 지문</li></ul>
+<div class="foot"><span class="chip ok">재현</span></div></div>
+
+<div class="card"><div class="id">P06</div><h3>빠른 진단의 이득은 상호정보로 유계다</h3><div class="res">결과: 1-step 집계 이득 ≈ +0.05</div><ul>
+<li>$\Delta\mathrm{skill}=r^2_{yz\cdot h}\,\mathrm{MSE}_h/\mathrm{MSE}_{\rm pers}$; 조건부 변수는 필터 혁신</li>
+<li>선형 한계 +0.047–0.056 vs 측정 +0.048; 함의 partial r 0.26</li>
+<li>§8ar의 rate 상관 0.07은 +0.003만 줌(올바른 입력 아님); MC 기여 0; 이득의 81–83 %는 상위 10 % 혁신 행</li></ul>
+<div class="foot"><span class="chip ok">한계 안</span><span class="chip warn">§8ar 고쳐 읽기</span></div></div>
+
+<div class="card"><div class="id">P07</div><h3>MNAR은 광자 예산의 상태 의존이다</h3><div class="res">결과: 결측이 사건에 몰림, 두 타깃 독립 결측</div><ul>
+<li>$\ln N(t)=\dots-\sigma_s\bar n_e(t)L$, $B(t)=B_0+B_1e^{-(t-t_0)/\tau_B}$, 폭 추정은 배경에 2–3배 더 민감</li>
+<li>타깃 점프 5분위 결측률 0.77 → 4.45 % (×5.8); BES 최하/최상 5분위 19.9 / 3.7 %; $\tau_B$ 26–35 ms</li>
+<li>마스크 일치 72.77 %(§8at 재현), φ 0.041. ECEI 증분은 결측을 예측하지 못함(예측 실패 기록)</li></ul>
+<div class="foot"><span class="chip ok">정합</span><span class="chip warn">예측 1건 실패</span></div></div>
+
+<div class="card"><div class="id">P08</div><h3>승률 비대칭은 사건 가시성에서 나온다</h3><div class="res">결과: 방전별 승률 $T_i$ 70 % vs $V_\varphi$ 48 %</div><ul>
+<li>$D=p_{\rm obs}rE_{\rm imp}-c_b$; 삼분위 승률 43/85/86 % vs 36/45/59 % (§8an 재현)</li>
+<li>충격행 승률 0.744 vs 0.425; $p_{\rm obs}$ 농축 1.27배 vs 0.99배; logit +1.92 ± 0.53 vs −0.55 ± 0.44</li>
+<li>따름정리: 계단($\kappa_T$ 1.03) 대 램프($\kappa_V$ 0.056), 회수 가능 에너지 18분의 1</li></ul>
+<div class="foot"><span class="chip ok">재현</span></div></div>
+
+<div class="card"><div class="id">P09</div><h3>MAST 전이 null은 무차원 상사의 결과다</h3><div class="res">결과: 사전학습 = 무작위 초기화(0.004–0.013)</div><ul>
+<li>β 7배, ε 2.75배, ρ* 1.6–2배; 식 (M1)의 형태만 장치 무관, 계수 7개는 전부 장치·계기 고유</li>
+<li>전이 가중치 98.2 %가 설명할 구조는 식 한 줄; 한 중앙 shot(3.98 s)이 ρ를 2.4 SE로 고정</li>
+<li>같은 shot 라벨 3→10에서 네 모델군이 똑같이 +0.26 상승(퍼짐 0.006)</li></ul>
+<div class="foot"><span class="chip ok">재현</span></div></div>
+
+<div class="card"><div class="id">P10</div><h3>실시간 등급은 플라즈마 척도가 정한다</h3><div class="res">결과: 10 ms 비구속, 1 ms 판정 보류</div><ul>
+<li>$\mathrm{MSE}(\ell)-\mathrm{MSE}(0)\approx(\ell/\Delta)[\mathrm{MSE}(\Delta)-\mathrm{MSE}(0)]$; skill −0.023/ms(강건), eV로는 1.5 ms에 +1.5 eV</li>
+<li>등급 A(수송 제어)만 해당; B(ELM 트리거)·C(모드 제어)는 라벨의 10 ms 적분이 배제</li>
+<li>seq_v2 한 스텝 353,920 MAC, 111 디스패치 → 바닥 0.22–0.33 ms(측정 0.352)</li></ul>
+<div class="foot"><span class="chip ok">정합</span></div></div>
+</div>
+
+<h2 id="map">결과 지도</h2>
+<p>연구의 결과가 (M1)의 어느 항에서 나오는지 한 표로 모았다.</p>
+<div class="tbl"><table>
+<tr><th>연구 결과 (원장 §)</th><th>물리적 원인</th><th class="num">핵심 수치</th><th>증명</th></tr>
+<tr><td>$T_i$ 헤드라인 +0.24 (§8ab)</td><td>사건 행에서 동시 관측이 교량 오차 $A/2$를 $(1-\kappa)A$로 줄임</td><td class="num">90–114 %</td><td>P01</td></tr>
+<tr><td>$V_\varphi$ 동률·중앙값 −49 % (§8ab, §8ax)</td><td>토크 비관측 ⇒ 이력 OU 필터가 최적</td><td class="num">0.921 vs 1.14</td><td>P02</td></tr>
+<tr><td>문맥 포화 50 ms (§8al)</td><td>ELM 회복·결합 척도; 필터 수렴은 26–43 %만</td><td class="num">60 / 18–39 ms</td><td>P03</td></tr>
+<tr><td>캠페인 이동, shot별 표준화 (§8n, §8s)</td><td>계측 이득 $g(D)$의 날짜 의존</td><td class="num">0.84 / 0.91 vs 0.49</td><td>P04</td></tr>
+<tr><td>3 keV 컷 (§8ab)</td><td>PB 압력 한계 1.0–1.8 keV</td><td class="num">3.06× PB</td><td>P05</td></tr>
+<tr><td>빠른 진단 이득 +0.05 (§8ba)</td><td>혁신 조건부 상호정보 한계</td><td class="num">+0.047–0.056</td><td>P06</td></tr>
+<tr><td>MNAR, 독립 결측 (§8i, §8at)</td><td>$P(\mathrm{obs}\mid N(t),B(t))$</td><td class="num">×5.8, φ 0.041</td><td>P07</td></tr>
+<tr><td>승률 70 % vs 48 % (§8al, §8an)</td><td>$p_{\rm obs}$와 계단/램프 응답</td><td class="num">1.27 vs 0.99</td><td>P08</td></tr>
+<tr><td>MAST 전이 null (§8az)</td><td>계수 7개 전부 장치 고유</td><td class="num">β 7×</td><td>P09</td></tr>
+<tr><td>실시간 10 ms 비구속 (§8ac, §8aj)</td><td>세 지연 등급</td><td class="num">−0.023/ms</td><td>P10</td></tr>
+</table></div>
+
+<h2 id="fifty">50 ms의 세 척도</h2>
+<p>P03은 세 후보를 따로 재었다. 잡음 Markov 필터의 냉시동 수렴은 2 % 포화가 2 스텝(강건 적합)/3 스텝(고전 적합)에서 와서 측정된 5 스텝이 아니고, 8al 곡선과의 RMS 차 0.021–0.026은 곡선 자체의 RMS 0.032와 같은 자릿수다. 측정 감쇠율 0.559/스텝을 내려면 Kalman 이득 0.155가 필요하다. 따라서 OU 냉시동은 20 ms 결손의 26–43 %만 설명하고 주원인으로는 기각된다. 남는 두 척도는 전자–이온 평형화 18–39 ms와 ELM 회복 60 ms(회복형 2,783건, 정의별 55–64 ms)이며, 3모수 회복 적합이 잡음 바닥을 넘는 문맥 길이는 약 1.5 $\tau_{\rm rec}$다. P10의 물리 크기 충격 $\tau_{\rm rec}$ 25–37 ms, P07의 배경 완화 $\tau_B$ 26–35 ms, P06의 걸음당 정보 양립 조건 $\tau_{\rm eq}\lesssim30$–60 ms가 모두 같은 자릿수에 모인다.</p>
+
+<h2 id="fix">기록 정정</h2>
+<div class="tbl"><table>
+<tr><th>자리</th><th>원래 문장</th><th>확인된 사실</th></tr>
+<tr><td>§8ab 블록 2</td><td>$V_\varphi$ 채점 행의 40–44 %가 PR2 폴백</td><td><code>eval_seq.py</code>의 <code>n_total</code>이 비채점 행까지 셈. 채점 행 기준 0.3–0.5 %(4분할 전부). 원장에 주석.</td></tr>
+<tr><td>§8az</td><td>긴 간극 안에서 빠른 채널이 $V_\varphi$를 회복</td><td>대조군 bilstm의 $V_\varphi$ 분기는 빠른 채널을 보지 않음. 양측 라벨 문맥 효과이며 빠른 채널의 몫은 +0.049가 상한. 원장에 주석.</td></tr>
+<tr><td>§8ar</td><td>$T_i$ 결합 크기 = rate 상관 +0.07</td><td>한계의 올바른 입력은 이력 조건부 partial r 0.26. 고쳐 읽기.</td></tr>
+</table></div>
+<p class="note">바뀌지 않는 것: $T_i$ 4/4+4/4, 캠페인 4/4, 인과 GP 대비 4/4, $V_\varphi$ 동률 판정, 백본 seq_v2, 두 모집단 규칙. 정정은 해석 문장에 한정된다.</p>
+
+<h2 id="next">지목된 측정</h2>
+<div class="tbl"><table>
+<tr><th>측정</th><th>닫는 항</th><th>지목</th><th>뒤집힐 결과</th></tr>
+<tr><td>$D_\alpha$ / ELM 지시자</td><td>(M1)의 $t_k$</td><td>P01, P03, P07, P08</td><td>사건 행 분류가 날카로워지고 $p_{\rm obs}\to1$</td></tr>
+<tr><td>kHz Mirnov 모드 주파수·모드수</td><td>$V_\varphi$의 Doppler $v=2\pi Rf/n$</td><td>P02, P08, P10</td><td>$V_\varphi$ 충격행 승률 역전, $p_{\rm obs}$ 농축 > 1</td></tr>
+<tr><td>Mirnov 대역 파워</td><td>$T_{\rm NTV}\propto\delta B^2$</td><td>P02</td><td>간극 안 토크의 일부 관측</td></tr>
+<tr><td>NBI·RMP 파형</td><td>$T_{\rm NBI}$, $T_{\rm NTV}$</td><td>P02, P08, P09</td><td>운동량식 우변이 채워짐</td></tr>
+<tr><td>CES 프레임별 적합 품질</td><td>채택 지시자 $m_j$</td><td>P05, P07</td><td>값 컷 → 품질 컷, 두 모집단 병합</td></tr>
+<tr><td>CES 자속면의 보정 $T_e$</td><td>$Q_{ei}$ 항</td><td>P06, P03</td><td>결합항 부호 0.46 → 일관 양수</td></tr>
+<tr><td>OU/Kalman 인과 팔 채점</td><td>최적 이력 기준</td><td>P02, P06</td><td>빠른 진단 귀속분 +0.027–0.048 확정</td></tr>
+<tr><td>같은 추정기 EWMA 표준화 팔</td><td>$g(D),c(D)$ 온라인 소거</td><td>P04</td><td>첫 1–2 s 워밍업만 남는지</td></tr>
+</table></div>
+
+<h2 id="files">산출물과 읽는 순서</h2>
+<div class="tbl"><table>
+<tr><th>파일 · 절</th><th>내용</th></tr>
+<tr><td><code>docs/theory_results_physics.md</code></td><td>0장 하나의 모형과 결과 지도 → 1장 증명 P01–P10 전문 → 2장 종합(관련성 서사·정정·지목 측정). 0장만 읽어도 결론은 닫힌다.</td></tr>
+<tr><td><code>docs/theory_foundations.md</code></td><td>측정 물리(Doppler·Cramér–Rao·광자 예산), 추정 이론(필터링 ⇔ 재귀, OU 닫힌 식), 평가 통계(희석 공식·분위 적분·설계효과·conformal·Huber·앙상블)의 유도 17절과 검산</td></tr>
+<tr><td><code>docs/theory_plasma_physics.md</code></td><td>단일 입자 운동부터 전역 스케일링까지 12장; CES를 예측하는 두 경로; 데이터에서 읽은 Pr ≈ 1, EHO Doppler 53 km/s</td></tr>
+<tr><td><code>ces_prediction/experiments/proofs/p01–p10</code></td><td>증명 스크립트와 JSON 출력, README</td></tr>
+<tr><td><code>ces_prediction/analyze_foundations.py</code></td><td>유도 검산 Part A–F → <code>data/.foundations.json</code></td></tr>
+<tr><td><code>docs/presentation/KSTAR_CES_물리근거.pptx</code></td><td>이 보고의 21장 덱(의사결정 덱과 같은 도형 세트, 15규칙 검사 통과)</td></tr>
+<tr><td><code>THESIS_RESULTS.md</code> §8ba · §8bb</td><td>원장 기록과 §8ab·§8az 정정 주석; <code>PROJECT_KNOWLEDGE.md</code> 교훈</td></tr>
+</table></div>
+<p class="note">커밋: 7012f48 · 052f937(근거 문서) → 51f72ae · 78d72dc · ad4c803 · 0d66804(열 증명과 정정). 테스트 52개 통과. 논문 tex·pdf와 기존 발표 덱은 건드리지 않았다.</p>
+
+<h2 id="limits">한계</h2>
+<p>플라즈마 파라미터($n_e$, $T_e$, $B$, $I_p$, NBI 기하, pedestal 폭)는 KSTAR 2022 캠페인의 전형값으로 가정한 것이며 CSV에는 없다. 그래서 $\tau_{\rm eq}$, PB 압력 한계, 무차원수, 토크 크기는 자릿수 진술이다. OU 모형은 Gaussian·정상·단일 척도의 근사이고, 본류(강건 적합)와 집계(고전 적합)에서 잡음 계수가 3.6배 다르므로 각 통계에 맞는 적합만 쓴다. 증명의 검산은 상관과 항등식이지 개입 실험이 아니다. 가설 일부가 기각된 곳(P03의 필터 수렴, P07의 ECEI 증분, P05의 핫픽셀 가설)은 그대로 기록했다.</p>
+</main>
+</div>
