@@ -1,0 +1,39 @@
+C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p03\p03_proof.py:329: RuntimeWarning: All-NaN slice encountered
+  late = np.nanmedian(curves[:, 10:post + 1], axis=1)
+A. cold-start Kalman (CES_TI)
+  robust    sn=39.0 ss=68.7 tau=81 ms rho=0.884 K=0.520 memory=1.17 steps ratio=0.180 mse_inf=3170 mse0=6237 delta0=3067
+    check vs json mse_filter_K: {'1': (3450.66, 3450.66), '2': (3216.28, 3216.28), '3': (3178.05, 3178.05), '5': (3170.06, 3170.06), '10': (3169.8, 3169.8)}
+    transient K_k: [0.756, 0.559, 0.527, 0.521, 0.52, 0.52]  exact contraction: [0.092, 0.166, 0.178, 0.18, 0.18, 0.18]
+    ref=pchip_opt   (2734) sat_rung=2 closed_form=2.35 rms_diff_vs_8al=0.0259 (k3-7 0.0181) deficits: {1: -0.1027, 2: -0.017, 3: -0.003, 4: -0.0005, 5: -0.0001, 6: -0.0, 7: -0.0, 10: -0.0, 15: -0.0}
+    ref=filter_inf  (3170) sat_rung=2 closed_form=2.26 rms_diff_vs_8al=0.0268 (k3-7 0.0182) deficits: {1: -0.0886, 2: -0.0147, 3: -0.0026, 4: -0.0005, 5: -0.0001, 6: -0.0, 7: -0.0, 10: -0.0, 15: -0.0}
+    ref=persistence (4137) sat_rung=2 closed_form=2.11 rms_diff_vs_8al=0.0280 (k3-7 0.0185) deficits: {1: -0.0679, 2: -0.0112, 3: -0.002, 4: -0.0004, 5: -0.0001, 6: -0.0, 7: -0.0, 10: -0.0, 15: -0.0}
+  classical sn=139.9 ss=147.1 tau=74 ms rho=0.874 K=0.343 memory=1.80 steps ratio=0.330 mse_inf=29817 mse0=41226 delta0=11409
+    check vs json mse_filter_K: {'1': (32536.55, 32536.55), '2': (30638.37, 30638.37), '3': (30080.41, 30080.41), '5': (29845.21, 29845.21), '10': (29817.03, 29817.03)}
+    transient K_k: [0.525, 0.398, 0.361, 0.349, 0.345, 0.344]  exact contraction: [0.238, 0.302, 0.321, 0.327, 0.329, 0.329]
+    ref=pchip_opt   (28825) sat_rung=3 closed_form=2.69 rms_diff_vs_8al=0.0207 (k3-7 0.0153) deficits: {1: -0.0943, 2: -0.0285, 3: -0.0091, 4: -0.003, 5: -0.001, 6: -0.0003, 7: -0.0001, 10: -0.0, 15: -0.0}
+    ref=filter_inf  (29817) sat_rung=3 closed_form=2.66 rms_diff_vs_8al=0.0211 (k3-7 0.0155) deficits: {1: -0.0912, 2: -0.0275, 3: -0.0088, 4: -0.0029, 5: -0.0009, 6: -0.0003, 7: -0.0001, 10: -0.0, 15: -0.0}
+    ref=persistence (44598) sat_rung=2 closed_form=2.30 rms_diff_vs_8al=0.0247 (k3-7 0.0167) deficits: {1: -0.061, 2: -0.0184, 3: -0.0059, 4: -0.0019, 5: -0.0006, 6: -0.0002, 7: -0.0001, 10: -0.0, 15: -0.0}
+  measured 8al curve: ratio/step=0.559 memory=3.43 steps amp=0.214; needs K=0.155 (sn/ss=1.88) at robust rho; steps to eps=2.50
+    geometric fit of measured: {2: -0.0666, 3: -0.0372, 4: -0.0208, 5: -0.0116, 6: -0.0065, 7: -0.0036, 10: -0.0006}
+B. pedestal: V_shell=1.43 m3  V_plasma=16.0 m3
+  ne=2e+19 te= 500 ti= 593 tau_eq= 20.8 ms | shell W=  7.5 kJ tau_build=  3.8 ms | plasma W=  84.0 kJ tau_build=  42.0 ms
+  ne=3e+19 te= 600 ti= 593 tau_eq= 18.2 ms | shell W= 12.3 kJ tau_build=  6.2 ms | plasma W= 137.5 kJ tau_build=  68.8 ms
+  ne=3e+19 te=1000 ti=1000 tau_eq= 39.2 ms | shell W= 20.6 kJ tau_build= 10.3 ms | plasma W= 230.6 kJ tau_build= 115.3 ms
+  ne=5e+19 te=1000 ti=1000 tau_eq= 23.5 ms | shell W= 34.4 kJ tau_build= 17.2 ms | plasma W= 384.3 kJ tau_build= 192.1 ms
+  CRLB pred var / sn2 at tau_rec=30.0 ms: {3: 9.97, 4: 3.89, 5: 2.19, 6: 1.44, 7: 1.03, 10: 0.48, 15: 0.21, 30: 0.06}
+  CRLB pred var / sn2 at tau_rec=50.0 ms: {3: 12.73, 4: 5.05, 5: 2.9, 6: 1.94, 7: 1.42, 10: 0.72, 15: 0.33, 30: 0.08}
+  CRLB pred var / sn2 at tau_rec=80.0 ms: {3: 14.72, 4: 5.9, 5: 3.43, 6: 2.33, 7: 1.72, 10: 0.91, 15: 0.46, 30: 0.13}
+C. ELM-like events: files=641 (with event 594) blocks=1972 obs_rows=225793 consecutive_pairs=216895 (2169 s of grid)
+  events(drop>25%)=16703  rate=7.701 /s  sustained=10843 single_point=4303 next_missing=1557  pre_median=554 eV drop_median=0.42
+  [all] n=16703 tau_rec(median curve)=15.7 ms y_inf=0.794 | per-event tau n=13699 q25/50/75=[13.7, 55.3, 2000.0] share<50=0.482 share<100=0.591
+    median curve k=0..10: [0.579, 0.744, 0.734, 0.744, 0.759, 0.76, 0.774, 0.782, 0.78, 0.786, 0.789]  k=15,20,30: [0.796, 0.798, 0.813]
+  [sustained] n=10843 tau_rec(median curve)=28.8 ms y_inf=0.750 | per-event tau n=9117 q25/50/75=[16.7, 59.0, 2000.0] share<50=0.471 share<100=0.582
+    median curve k=0..10: [0.596, 0.655, 0.704, 0.695, 0.713, 0.716, 0.726, 0.738, 0.732, 0.738, 0.746]  k=15,20,30: [0.749, 0.75, 0.761]
+  [single_point] n=4303 tau_rec(median curve)=3.0 ms y_inf=0.962 | per-event tau n=3688 q25/50/75=[3.0, 39.0, 2000.0] share<50=0.534 share<100=0.632
+    median curve k=0..10: [0.593, 1.084, 0.886, 0.953, 0.955, 0.959, 0.966, 0.946, 0.947, 0.956, 0.941]  k=15,20,30: [0.957, 0.968, 0.976]
+  [C2 sustained] n=7691 tau_rec(median curve)=43.5 ms y_inf=0.836 | per-event n=6387 q25/50/75=[20.3, 64.4, 2000.0] share<50=0.451 share<100=0.573
+    median curve k=0..10: [0.587, 0.64, 0.7, 0.695, 0.736, 0.746, 0.775, 0.786, 0.798, 0.811, 0.817]  k=15,20,30: [0.833, 0.821, 0.85]
+  [C2 recovering] n=2783 tau_rec(median curve)=60.3 ms y_inf=1.162 | per-event n=2545 q25/50/75=[23.2, 59.0, 802.3] share<50=0.462 share<100=0.606
+    median curve k=0..10: [0.598, 0.665, 0.793, 0.818, 0.88, 0.915, 0.953, 0.982, 1.017, 1.03, 1.062]  k=15,20,30: [1.111, 1.115, 1.18]
+C2. pre=median of 3: events=12606 sustained=7691 recovering=2783
+wrote C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p03\p03_results.json
