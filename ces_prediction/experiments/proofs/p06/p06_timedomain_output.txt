@@ -1,0 +1,31 @@
+empirical partial R2 given 50 ms history: 0.0664 (t,t-1) / 0.0793 (50 ms fast context)
+
+[classical] sigma_n=139.9 sigma_s=147.1  Var(nu)=29817  P^-=10238  P=6723  share of process noise in nu = 0.171, prior-error share = 0.172, meas-noise share = 0.657
+  (A) driver route: y_t = rho y_{t-1} + (1-rho) zbar_t + eps_t ; required sd of (zbar_t - E[zbar_t|h]) in eV for R2=0.066
+      tau_eq[ms]   rho    (1-rho)/(1+rho)  Delta/(2tau)   I_step/nat at S_z=1  required sd_zbar|h [eV]  info rate I/Delta at S_z=1 [nat/s]
+         8.0     0.287     0.5546          0.6250        0.2206                62                 22.06
+        20.0     0.607     0.2449          0.2500        0.1095               113                 10.95
+        30.0     0.717     0.1651          0.1667        0.0764               157                 7.64
+        59.0     0.844     0.0845          0.0847        0.0406               285                 4.06
+        81.2     0.884     0.0615          0.0616        0.0298               384                 2.98
+  (B) de-noising route, r_L=0.341, history=steady filter: r2(prior err, z|h)=0.0393 -> contribution to partial R2 of nu = 0.0068
+  (B) de-noising route, r_L=0.341, history=one obs      : r2(prior err, z|h)=0.0588 -> contribution to partial R2 of nu = 0.0142
+  (B) de-noising route, r_L=0.311, history=steady filter: r2(prior err, z|h)=0.0322 -> contribution to partial R2 of nu = 0.0055
+  (B) de-noising route, r_L=0.311, history=one obs      : r2(prior err, z|h)=0.0484 -> contribution to partial R2 of nu = 0.0117
+  (C) rate route via S8ar r=0.070: explains 219 eV^2 of the increment (var 44598) -> share of nu 0.0073
+  (C) rate route via S8ar r=0.078: explains 271 eV^2 of the increment (var 44598) -> share of nu 0.0091
+
+[robust] sigma_n=39.0 sigma_s=68.7  Var(nu)=3170  P^-=1648  P=791  share of process noise in nu = 0.325, prior-error share = 0.195, meas-noise share = 0.480
+  (A) driver route: y_t = rho y_{t-1} + (1-rho) zbar_t + eps_t ; required sd of (zbar_t - E[zbar_t|h]) in eV for R2=0.066
+      tau_eq[ms]   rho    (1-rho)/(1+rho)  Delta/(2tau)   I_step/nat at S_z=1  required sd_zbar|h [eV]  info rate I/Delta at S_z=1 [nat/s]
+         8.0     0.287     0.5546          0.6250        0.2206                20                 22.06
+        20.0     0.607     0.2449          0.2500        0.1095                37                 10.95
+        30.0     0.717     0.1651          0.1667        0.0764                51                 7.64
+        59.0     0.844     0.0845          0.0847        0.0406                93                 4.06
+        81.2     0.884     0.0615          0.0616        0.0298               125                 2.98
+  (B) de-noising route, r_L=0.341, history=steady filter: r2(prior err, z|h)=0.0216 -> contribution to partial R2 of nu = 0.0042
+  (B) de-noising route, r_L=0.341, history=one obs      : r2(prior err, z|h)=0.0311 -> contribution to partial R2 of nu = 0.0081
+  (B) de-noising route, r_L=0.311, history=steady filter: r2(prior err, z|h)=0.0177 -> contribution to partial R2 of nu = 0.0034
+  (B) de-noising route, r_L=0.311, history=one obs      : r2(prior err, z|h)=0.0255 -> contribution to partial R2 of nu = 0.0066
+  (C) rate route via S8ar r=0.070: explains 20 eV^2 of the increment (var 4137) -> share of nu 0.0064
+  (C) rate route via S8ar r=0.078: explains 25 eV^2 of the increment (var 4137) -> share of nu 0.0079

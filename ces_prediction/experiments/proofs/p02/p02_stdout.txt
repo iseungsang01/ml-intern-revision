@@ -1,0 +1,118 @@
+=== PART A: frozen TEST npz s42 cut ===
+[CES_VT] n=10463  median |e| model/PCHIP=1.442  model/pers=1.141  gpc/pers=1.010  pchip/pers=0.791
+   MSE skill vs PCHIP=+0.3900 vs pers=+0.5008 vs gpc=+0.3305  gpc vs PCHIP=+0.0889  winrate vs PCHIP=0.399 vs pers=0.469
+   one-step (dt<=15, n=10372): median/pers model=1.140  pchip=0.791  linear=0.781  gp=0.815  gp_causal=1.009  persistence=1.000
+   one-step skill vs pers: model=+0.505  pchip=+0.177  linear=+0.244  gp=+0.454  gp_causal=+0.247  persistence=+0.000
+   top  1.0% (105 rows): share_pchip=0.829 share_model=0.681 r_tail=0.501 r_bulk=1.142 skill_recon=+0.3900 tail_gain=+0.4143 bulk_deficit=+0.0243 holds=True median_ratio_bulk=1.448
+   top  5.0% (524 rows): share_pchip=0.921 share_model=0.837 r_tail=0.554 r_bulk=1.256 skill_recon=+0.3900 tail_gain=+0.4103 bulk_deficit=+0.0203 holds=True median_ratio_bulk=1.474
+   top 10.0% (1047 rows): share_pchip=0.953 share_model=0.896 r_tail=0.574 r_bulk=1.337 skill_recon=+0.3900 tail_gain=+0.4060 bulk_deficit=+0.0160 holds=True median_ratio_bulk=1.472
+   top 25.0% (2616 rows): share_pchip=0.986 share_model=0.965 r_tail=0.598 r_bulk=1.468 skill_recon=+0.3900 tail_gain=+0.3967 bulk_deficit=+0.0067 holds=True median_ratio_bulk=1.519
+   running contribution: q0.5=-0.0017  q0.75=-0.0067  q0.9=-0.0160  q0.99=-0.0243  q1.0=+0.3900
+   quantile ratio m/p: q0.5=1.442  q0.75=1.214  q0.9=1.070  q0.95=1.011  q0.99=0.878
+   tail1% anatomy: {"rows": 105, "frac_rows_pchip_worse_than_pers": 0.381, "frac_pchip_sse_in_those_rows": 0.2753, "median_abs_y_true_jump_proxy_pers_ae": 172.7858, "median_pers_ae_all": 3.9485, "model_vs_pers_skill_in_tail": 0.5767, "model_vs_pchip_skill_in_tail": 0.4994}
+   peak: {"peak": {"n": 2433, "skill_vs_pchip": 0.7874388110290552, "median_ratio": 1.3326376169487815}, "nonpeak": {"n": 8030, "skill_vs_pchip": 0.05740427672223836, "median_ratio": 1.4987538660394502}}
+   gap (0,15]: n=10372 skill m/p=+0.398 m/pers=+0.505 med m/p=1.442 med m/pers=1.140 med gpc/p=1.276
+   gap (15,25]: n=78 skill m/p=-0.034 m/pers=-0.040 med m/p=1.251 med m/pers=1.193 med gpc/p=1.047
+   gap (25,45]: n=10 skill m/p=+0.462 m/pers=+0.788 med m/p=1.393 med m/pers=0.780 med gpc/p=1.114
+[CES_TI] n=32589  median |e| model/PCHIP=1.222  model/pers=1.035  gpc/pers=0.964  pchip/pers=0.847
+   MSE skill vs PCHIP=+0.1737 vs pers=+0.3596 vs gpc=+0.0775  gpc vs PCHIP=+0.1042  winrate vs PCHIP=0.474 vs pers=0.523
+   one-step (dt<=15, n=31986): median/pers model=1.032  pchip=0.848  linear=0.827  gp=0.841  gp_causal=0.959  persistence=1.000
+   one-step skill vs pers: model=+0.358  pchip=+0.226  linear=+0.256  gp=+0.390  gp_causal=+0.310  persistence=+0.000
+   top  1.0% (326 rows): share_pchip=0.529 share_model=0.511 r_tail=0.797 r_bulk=0.859 skill_recon=+0.1737 tail_gain=+0.1073 bulk_deficit=-0.0663 holds=True median_ratio_bulk=1.226
+   top  5.0% (1630 rows): share_pchip=0.749 share_model=0.721 r_tail=0.796 r_bulk=0.918 skill_recon=+0.1737 tail_gain=+0.1531 bulk_deficit=-0.0206 holds=True median_ratio_bulk=1.239
+   top 10.0% (3259 rows): share_pchip=0.843 share_model=0.818 r_tail=0.802 r_bulk=0.957 skill_recon=+0.1737 tail_gain=+0.1670 bulk_deficit=-0.0067 holds=True median_ratio_bulk=1.261
+   top 25.0% (8148 rows): share_pchip=0.947 share_model=0.924 r_tail=0.806 r_bulk=1.195 skill_recon=+0.1737 tail_gain=+0.1840 bulk_deficit=+0.0103 holds=True median_ratio_bulk=1.299
+   running contribution: q0.5=-0.0042  q0.75=-0.0103  q0.9=+0.0067  q0.99=+0.0663  q1.0=+0.1737
+   quantile ratio m/p: q0.5=1.222  q0.75=0.986  q0.9=0.882  q0.95=0.893  q0.99=0.854
+   tail1% anatomy: {"rows": 326, "frac_rows_pchip_worse_than_pers": 0.4172, "frac_pchip_sse_in_those_rows": 0.4745, "median_abs_y_true_jump_proxy_pers_ae": 1073.9219, "median_pers_ae_all": 43.7944, "model_vs_pers_skill_in_tail": 0.3227, "model_vs_pchip_skill_in_tail": 0.2028}
+   peak: {"peak": {"n": 4141, "skill_vs_pchip": 0.45040354456904386, "median_ratio": 1.0486639349921894}, "nonpeak": {"n": 28448, "skill_vs_pchip": 0.08792406054120538, "median_ratio": 1.2463621356871926}}
+   gap (0,15]: n=31986 skill m/p=+0.171 m/pers=+0.358 med m/p=1.218 med m/pers=1.032 med gpc/p=1.131
+   gap (15,25]: n=359 skill m/p=-0.042 m/pers=+0.257 med m/p=1.261 med m/pers=0.990 med gpc/p=1.246
+   gap (25,45]: n=124 skill m/p=+0.252 m/pers=+0.471 med m/p=1.314 med m/pers=1.447 med gpc/p=1.186
+   gap (45,1000000000.0]: n=120 skill m/p=+0.349 m/pers=+0.399 med m/p=1.679 med m/pers=1.664 med gpc/p=1.791
+=== PART B: noisy-OU closed forms (robust fit, foundations D) ===
+[CES_VT] sn=3.10 ss=8.43 tau=81.2 rho=0.8841 P=6.545 K=0.683 filt/pers RMSE=0.921 bridge/pers RMSE=0.798 dyn-only skill=0.058
+   g= 10 ms: Var_causal=30.22 Var_pers=35.64 Var_bridge(g,10)=22.68 Var_bridge(g,g)=22.68 (noise-free 8.71) skill c/pers=+0.152 c/bridge=-0.332
+   g= 20 ms: Var_causal=41.24 Var_pers=50.21 Var_bridge(g,10)=25.81 Var_bridge(g,g)=30.91 (noise-free 17.17) skill c/pers=+0.179 c/bridge=-0.597
+   g= 30 ms: Var_causal=49.85 Var_pers=63.09 Var_bridge(g,10)=27.63 Var_bridge(g,g)=38.56 (noise-free 25.13) skill c/pers=+0.210 c/bridge=-0.804
+   g= 50 ms: Var_causal=61.84 Var_pers=84.54 Var_bridge(g,10)=29.56 Var_bridge(g,g)=51.59 (noise-free 38.97) skill c/pers=+0.269 c/bridge=-1.092
+   g= 80 ms: Var_causal=71.68 Var_pers=108.27 Var_bridge(g,10)=30.78 Var_bridge(g,g)=65.12 (noise-free 53.70) skill c/pers=+0.338 c/bridge=-1.328
+   g=100 ms: Var_causal=75.18 Var_pers=119.86 Var_bridge(g,10)=31.16 Var_bridge(g,g)=70.75 (noise-free 59.93) skill c/pers=+0.373 c/bridge=-1.412
+   g=200 ms: Var_causal=80.20 Var_pers=149.24 Var_bridge(g,10)=31.66 Var_bridge(g,g)=79.77 (noise-free 70.07) skill c/pers=+0.463 c/bridge=-1.533
+[CES_TI] sn=39.01 ss=68.67 tau=81.2 rho=0.8841 P=791.196 K=0.520 filt/pers RMSE=0.875 bridge/pers RMSE=0.813 dyn-only skill=0.058
+   g= 10 ms: Var_causal=3169.80 Var_pers=4136.55 Var_bridge(g,10)=2734.25 Var_bridge(g,g)=2734.25 (noise-free 577.82) skill c/pers=+0.234 c/bridge=-0.159
+   g= 20 ms: Var_causal=3839.45 Var_pers=5102.70 Var_bridge(g,10)=2949.40 Var_bridge(g,g)=3257.38 (noise-free 1138.53) skill c/pers=+0.248 c/bridge=-0.302
+   g= 30 ms: Var_causal=4362.90 Var_pers=5956.89 Var_bridge(g,10)=3088.53 Var_bridge(g,g)=3735.35 (noise-free 1667.02) skill c/pers=+0.268 c/bridge=-0.413
+   g= 50 ms: Var_causal=5091.87 Var_pers=7379.77 Var_bridge(g,10)=3250.52 Var_bridge(g,g)=4532.58 (noise-free 2584.86) skill c/pers=+0.310 c/bridge=-0.566
+   g= 80 ms: Var_causal=5690.00 Var_pers=8953.39 Var_bridge(g,10)=3362.02 Var_bridge(g,g)=5338.04 (noise-free 3561.53) skill c/pers=+0.364 c/bridge=-0.692
+   g=100 ms: Var_causal=5902.71 Var_pers=9722.00 Var_bridge(g,10)=3397.87 Var_bridge(g,g)=5666.52 (noise-free 3975.01) skill c/pers=+0.393 c/bridge=-0.737
+   g=200 ms: Var_causal=6208.35 Var_pers=11670.69 Var_bridge(g,10)=3446.32 Var_bridge(g,g)=6185.40 (noise-free 4647.05) skill c/pers=+0.468 c/bridge=-0.801
+=== PART C: raw CSV, held-free increments, pooled Pearson (blocks >= 40 pairs) ===
+files=641 blocks=624 held={'CES_VT': {'obs': 188100, 'held': 101590}, 'CES_TI': {'obs': 225794, 'held': 1}}
+  CES_TI|BES|lag-2|abs_rate          r=+0.0291 se_block=0.0046 n= 216941 blocks= 608 blockmed=+0.0292 fracpos=0.640
+  CES_TI|BES|lag-2|rate              r=-0.0042 se_block=0.0045 n= 216941 blocks= 608 blockmed=+0.0058 fracpos=0.536
+  CES_TI|BES|lag-1|abs_rate          r=+0.0735 se_block=0.0054 n= 217420 blocks= 608 blockmed=+0.0692 fracpos=0.747
+  CES_TI|BES|lag-1|rate              r=-0.0291 se_block=0.0054 n= 217420 blocks= 608 blockmed=-0.0129 fracpos=0.438
+  CES_TI|BES|lag+0|abs_rate          r=+0.1474 se_block=0.0069 n= 217447 blocks= 608 blockmed=+0.1848 fracpos=0.890
+  CES_TI|BES|lag+0|level             r=+0.3437 se_block=0.0124 n= 225154 blocks= 618 blockmed=+0.3978 fracpos=0.858
+  CES_TI|BES|lag+0|rate              r=+0.1532 se_block=0.0085 n= 217447 blocks= 608 blockmed=+0.2096 fracpos=0.840
+  CES_TI|BES|lag+1|abs_rate          r=+0.0887 se_block=0.0059 n= 216972 blocks= 608 blockmed=+0.1118 fracpos=0.829
+  CES_TI|BES|lag+1|rate              r=-0.0675 se_block=0.0068 n= 216972 blocks= 608 blockmed=-0.0650 fracpos=0.298
+  CES_TI|BES|lag+2|abs_rate          r=+0.0328 se_block=0.0048 n= 216440 blocks= 607 blockmed=+0.0394 fracpos=0.687
+  CES_TI|BES|lag+2|rate              r=+0.0154 se_block=0.0048 n= 216440 blocks= 607 blockmed=+0.0120 fracpos=0.547
+  CES_TI|ECEI|lag-2|abs_rate         r=+0.0124 se_block=0.0048 n= 216941 blocks= 608 blockmed=+0.0117 fracpos=0.550
+  CES_TI|ECEI|lag-2|rate             r=-0.0074 se_block=0.0044 n= 216941 blocks= 608 blockmed=+0.0055 fracpos=0.530
+  CES_TI|ECEI|lag-1|abs_rate         r=+0.0273 se_block=0.0054 n= 217420 blocks= 608 blockmed=+0.0289 fracpos=0.619
+  CES_TI|ECEI|lag-1|rate             r=-0.0307 se_block=0.0053 n= 217420 blocks= 608 blockmed=-0.0193 fracpos=0.431
+  CES_TI|ECEI|lag+0|abs_rate         r=+0.0867 se_block=0.0068 n= 217447 blocks= 608 blockmed=+0.0987 fracpos=0.759
+  CES_TI|ECEI|lag+0|level            r=+0.3125 se_block=0.0119 n= 225154 blocks= 618 blockmed=+0.2873 fracpos=0.856
+  CES_TI|ECEI|lag+0|rate             r=+0.1463 se_block=0.0080 n= 217447 blocks= 608 blockmed=+0.1661 fracpos=0.815
+  CES_TI|ECEI|lag+1|abs_rate         r=+0.0406 se_block=0.0054 n= 216972 blocks= 608 blockmed=+0.0408 fracpos=0.662
+  CES_TI|ECEI|lag+1|rate             r=-0.0989 se_block=0.0064 n= 216972 blocks= 608 blockmed=-0.0703 fracpos=0.259
+  CES_TI|ECEI|lag+2|abs_rate         r=+0.0138 se_block=0.0050 n= 216440 blocks= 607 blockmed=+0.0167 fracpos=0.567
+  CES_TI|ECEI|lag+2|rate             r=+0.0268 se_block=0.0045 n= 216440 blocks= 607 blockmed=+0.0205 fracpos=0.595
+  CES_TI|MC|lag-2|abs_rate           r=+0.0161 se_block=0.0046 n= 216941 blocks= 608 blockmed=+0.0062 fracpos=0.530
+  CES_TI|MC|lag-2|rate               r=+0.0002 se_block=0.0039 n= 216941 blocks= 608 blockmed=-0.0003 fracpos=0.498
+  CES_TI|MC|lag-1|abs_rate           r=+0.0218 se_block=0.0050 n= 217420 blocks= 608 blockmed=+0.0130 fracpos=0.584
+  CES_TI|MC|lag-1|rate               r=-0.0001 se_block=0.0040 n= 217420 blocks= 608 blockmed=+0.0027 fracpos=0.526
+  CES_TI|MC|lag+0|abs_rate           r=+0.0214 se_block=0.0051 n= 217447 blocks= 608 blockmed=+0.0199 fracpos=0.589
+  CES_TI|MC|lag+0|level              r=-0.0011 se_block=0.0032 n= 225154 blocks= 618 blockmed=+0.0017 fracpos=0.511
+  CES_TI|MC|lag+0|rate               r=+0.0007 se_block=0.0041 n= 217447 blocks= 608 blockmed=-0.0006 fracpos=0.498
+  CES_TI|MC|lag+1|abs_rate           r=+0.0080 se_block=0.0048 n= 216972 blocks= 608 blockmed=+0.0042 fracpos=0.521
+  CES_TI|MC|lag+1|rate               r=-0.0010 se_block=0.0041 n= 216972 blocks= 608 blockmed=-0.0032 fracpos=0.470
+  CES_TI|MC|lag+2|abs_rate           r=+0.0063 se_block=0.0048 n= 216440 blocks= 607 blockmed=-0.0034 fracpos=0.481
+  CES_TI|MC|lag+2|rate               r=+0.0019 se_block=0.0038 n= 216440 blocks= 607 blockmed=+0.0023 fracpos=0.527
+  CES_VT|BES|lag-2|abs_rate          r=+0.0103 se_block=0.0059 n=  81172 blocks= 346 blockmed=-0.0049 fracpos=0.474
+  CES_VT|BES|lag-2|rate              r=-0.0010 se_block=0.0052 n=  81172 blocks= 346 blockmed=+0.0084 fracpos=0.552
+  CES_VT|BES|lag-1|abs_rate          r=+0.0196 se_block=0.0060 n=  81389 blocks= 347 blockmed=-0.0059 fracpos=0.476
+  CES_VT|BES|lag-1|rate              r=+0.0199 se_block=0.0052 n=  81389 blocks= 347 blockmed=+0.0084 fracpos=0.553
+  CES_VT|BES|lag+0|abs_rate          r=+0.0038 se_block=0.0062 n=  81395 blocks= 347 blockmed=-0.0092 fracpos=0.470
+  CES_VT|BES|lag+0|level             r=+0.0280 se_block=0.0115 n=  85313 blocks= 360 blockmed=+0.0309 fracpos=0.619
+  CES_VT|BES|lag+0|rate              r=-0.0038 se_block=0.0054 n=  81395 blocks= 347 blockmed=+0.0100 fracpos=0.530
+  CES_VT|BES|lag+1|abs_rate          r=-0.0018 se_block=0.0052 n=  81229 blocks= 347 blockmed=-0.0051 fracpos=0.464
+  CES_VT|BES|lag+1|rate              r=+0.0033 se_block=0.0048 n=  81229 blocks= 347 blockmed=+0.0000 fracpos=0.501
+  CES_VT|BES|lag+2|abs_rate          r=-0.0044 se_block=0.0045 n=  81060 blocks= 347 blockmed=-0.0121 fracpos=0.415
+  CES_VT|BES|lag+2|rate              r=-0.0029 se_block=0.0046 n=  81060 blocks= 347 blockmed=-0.0012 fracpos=0.490
+  CES_VT|ECEI|lag-2|abs_rate         r=+0.0003 se_block=0.0054 n=  81172 blocks= 346 blockmed=-0.0032 fracpos=0.483
+  CES_VT|ECEI|lag-2|rate             r=-0.0032 se_block=0.0051 n=  81172 blocks= 346 blockmed=+0.0005 fracpos=0.503
+  CES_VT|ECEI|lag-1|abs_rate         r=+0.0258 se_block=0.0059 n=  81389 blocks= 347 blockmed=-0.0059 fracpos=0.449
+  CES_VT|ECEI|lag-1|rate             r=+0.0202 se_block=0.0053 n=  81389 blocks= 347 blockmed=+0.0033 fracpos=0.522
+  CES_VT|ECEI|lag+0|abs_rate         r=-0.0007 se_block=0.0058 n=  81395 blocks= 347 blockmed=-0.0136 fracpos=0.446
+  CES_VT|ECEI|lag+0|level            r=+0.0054 se_block=0.0102 n=  85313 blocks= 360 blockmed=+0.0176 fracpos=0.558
+  CES_VT|ECEI|lag+0|rate             r=-0.0016 se_block=0.0053 n=  81395 blocks= 347 blockmed=+0.0084 fracpos=0.539
+  CES_VT|ECEI|lag+1|abs_rate         r=-0.0002 se_block=0.0055 n=  81229 blocks= 347 blockmed=-0.0080 fracpos=0.467
+  CES_VT|ECEI|lag+1|rate             r=+0.0020 se_block=0.0055 n=  81229 blocks= 347 blockmed=-0.0044 fracpos=0.475
+  CES_VT|ECEI|lag+2|abs_rate         r=-0.0008 se_block=0.0053 n=  81060 blocks= 347 blockmed=+0.0010 fracpos=0.513
+  CES_VT|ECEI|lag+2|rate             r=-0.0012 se_block=0.0052 n=  81060 blocks= 347 blockmed=+0.0083 fracpos=0.533
+  CES_VT|MC|lag-2|abs_rate           r=+0.0005 se_block=0.0054 n=  81172 blocks= 346 blockmed=-0.0099 fracpos=0.480
+  CES_VT|MC|lag-2|rate               r=-0.0004 se_block=0.0049 n=  81172 blocks= 346 blockmed=-0.0059 fracpos=0.483
+  CES_VT|MC|lag-1|abs_rate           r=+0.0036 se_block=0.0055 n=  81389 blocks= 347 blockmed=-0.0012 fracpos=0.487
+  CES_VT|MC|lag-1|rate               r=-0.0009 se_block=0.0049 n=  81389 blocks= 347 blockmed=-0.0025 fracpos=0.487
+  CES_VT|MC|lag+0|abs_rate           r=+0.0055 se_block=0.0055 n=  81395 blocks= 347 blockmed=-0.0081 fracpos=0.452
+  CES_VT|MC|lag+0|level              r=-0.0011 se_block=0.0049 n=  85313 blocks= 360 blockmed=+0.0013 fracpos=0.508
+  CES_VT|MC|lag+0|rate               r=+0.0043 se_block=0.0050 n=  81395 blocks= 347 blockmed=+0.0087 fracpos=0.556
+  CES_VT|MC|lag+1|abs_rate           r=+0.0025 se_block=0.0055 n=  81229 blocks= 347 blockmed=-0.0110 fracpos=0.438
+  CES_VT|MC|lag+1|rate               r=-0.0083 se_block=0.0046 n=  81229 blocks= 347 blockmed=-0.0069 fracpos=0.452
+  CES_VT|MC|lag+2|abs_rate           r=-0.0016 se_block=0.0053 n=  81060 blocks= 347 blockmed=-0.0098 fracpos=0.450
+  CES_VT|MC|lag+2|rate               r=+0.0054 se_block=0.0045 n=  81060 blocks= 347 blockmed=+0.0038 fracpos=0.542
+json -> C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p02\p02_results.json

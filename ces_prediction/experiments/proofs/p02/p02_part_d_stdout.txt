@@ -1,0 +1,99 @@
+=== D.i multi-scale: k-step target change vs driver (held-free, blocks>=40) ===
+  CES_TI|BES|k=1|abs_net                   r=+0.1474 se_block=0.0069 n= 217420 blocks= 608 fracpos=0.891
+  CES_TI|BES|k=1|abs_vs_activity           r=+0.1474 se_block=0.0069 n= 217420 blocks= 608 fracpos=0.891
+  CES_TI|BES|k=1|signed_net                r=+0.1531 se_block=0.0085 n= 217420 blocks= 608 fracpos=0.840
+  CES_TI|BES|k=2|abs_net                   r=+0.1617 se_block=0.0065 n= 216588 blocks= 608 fracpos=0.926
+  CES_TI|BES|k=2|abs_vs_activity           r=+0.1352 se_block=0.0067 n= 216588 blocks= 608 fracpos=0.880
+  CES_TI|BES|k=2|signed_net                r=+0.1755 se_block=0.0085 n= 216588 blocks= 608 fracpos=0.855
+  CES_TI|BES|k=5|abs_net                   r=+0.2107 se_block=0.0076 n= 213504 blocks= 602 fracpos=0.935
+  CES_TI|BES|k=5|abs_vs_activity           r=+0.1275 se_block=0.0070 n= 213504 blocks= 602 fracpos=0.887
+  CES_TI|BES|k=5|signed_net                r=+0.2452 se_block=0.0100 n= 213504 blocks= 602 fracpos=0.894
+  CES_TI|BES|k=10|abs_net                  r=+0.2340 se_block=0.0082 n= 209804 blocks= 601 fracpos=0.932
+  CES_TI|BES|k=10|abs_vs_activity          r=+0.1138 se_block=0.0071 n= 209804 blocks= 601 fracpos=0.855
+  CES_TI|BES|k=10|signed_net               r=+0.2810 se_block=0.0104 n= 209804 blocks= 601 fracpos=0.907
+  CES_TI|BES|k=20|abs_net                  r=+0.2402 se_block=0.0087 n= 203445 blocks= 594 fracpos=0.923
+  CES_TI|BES|k=20|abs_vs_activity          r=+0.0965 se_block=0.0083 n= 203445 blocks= 594 fracpos=0.781
+  CES_TI|BES|k=20|signed_net               r=+0.2767 se_block=0.0103 n= 203445 blocks= 594 fracpos=0.906
+  CES_TI|ECEI|k=1|abs_net                  r=+0.0865 se_block=0.0068 n= 217420 blocks= 606 fracpos=0.759
+  CES_TI|ECEI|k=1|abs_vs_activity          r=+0.0865 se_block=0.0068 n= 217420 blocks= 606 fracpos=0.759
+  CES_TI|ECEI|k=1|signed_net               r=+0.1460 se_block=0.0080 n= 217420 blocks= 606 fracpos=0.814
+  CES_TI|ECEI|k=2|abs_net                  r=+0.0919 se_block=0.0070 n= 216588 blocks= 606 fracpos=0.795
+  CES_TI|ECEI|k=2|abs_vs_activity          r=+0.0549 se_block=0.0065 n= 216588 blocks= 606 fracpos=0.718
+  CES_TI|ECEI|k=2|signed_net               r=+0.1510 se_block=0.0081 n= 216588 blocks= 606 fracpos=0.842
+  CES_TI|ECEI|k=5|abs_net                  r=+0.1349 se_block=0.0075 n= 213504 blocks= 601 fracpos=0.847
+  CES_TI|ECEI|k=5|abs_vs_activity          r=+0.0491 se_block=0.0070 n= 213504 blocks= 601 fracpos=0.669
+  CES_TI|ECEI|k=5|signed_net               r=+0.1840 se_block=0.0095 n= 213504 blocks= 601 fracpos=0.829
+  CES_TI|ECEI|k=10|abs_net                 r=+0.1606 se_block=0.0083 n= 209804 blocks= 600 fracpos=0.867
+  CES_TI|ECEI|k=10|abs_vs_activity         r=+0.0391 se_block=0.0079 n= 209804 blocks= 600 fracpos=0.607
+  CES_TI|ECEI|k=10|signed_net              r=+0.2083 se_block=0.0103 n= 209804 blocks= 600 fracpos=0.827
+  CES_TI|ECEI|k=20|abs_net                 r=+0.1961 se_block=0.0094 n= 203445 blocks= 593 fracpos=0.867
+  CES_TI|ECEI|k=20|abs_vs_activity         r=+0.0268 se_block=0.0092 n= 203445 blocks= 593 fracpos=0.572
+  CES_TI|ECEI|k=20|signed_net              r=+0.2484 se_block=0.0109 n= 203445 blocks= 593 fracpos=0.845
+  CES_TI|MC|k=1|abs_net                    r=+0.0215 se_block=0.0051 n= 217420 blocks= 608 fracpos=0.590
+  CES_TI|MC|k=1|abs_vs_activity            r=+0.0215 se_block=0.0051 n= 217420 blocks= 608 fracpos=0.590
+  CES_TI|MC|k=1|signed_net                 r=+0.0006 se_block=0.0041 n= 217420 blocks= 608 fracpos=0.500
+  CES_TI|MC|k=2|abs_net                    r=+0.0254 se_block=0.0054 n= 216588 blocks= 608 fracpos=0.594
+  CES_TI|MC|k=2|abs_vs_activity            r=+0.0210 se_block=0.0054 n= 216588 blocks= 608 fracpos=0.566
+  CES_TI|MC|k=2|signed_net                 r=-0.0004 se_block=0.0042 n= 216588 blocks= 608 fracpos=0.515
+  CES_TI|MC|k=5|abs_net                    r=+0.0290 se_block=0.0052 n= 213504 blocks= 602 fracpos=0.601
+  CES_TI|MC|k=5|abs_vs_activity            r=+0.0344 se_block=0.0062 n= 213504 blocks= 602 fracpos=0.591
+  CES_TI|MC|k=5|signed_net                 r=+0.0005 se_block=0.0041 n= 213504 blocks= 602 fracpos=0.510
+  CES_TI|MC|k=10|abs_net                   r=+0.0357 se_block=0.0053 n= 209804 blocks= 601 fracpos=0.616
+  CES_TI|MC|k=10|abs_vs_activity           r=+0.0456 se_block=0.0072 n= 209804 blocks= 601 fracpos=0.602
+  CES_TI|MC|k=10|signed_net                r=+0.0014 se_block=0.0039 n= 209804 blocks= 601 fracpos=0.514
+  CES_TI|MC|k=20|abs_net                   r=+0.0322 se_block=0.0054 n= 203445 blocks= 594 fracpos=0.559
+  CES_TI|MC|k=20|abs_vs_activity           r=+0.0572 se_block=0.0085 n= 203445 blocks= 594 fracpos=0.545
+  CES_TI|MC|k=20|signed_net                r=+0.0010 se_block=0.0036 n= 203445 blocks= 594 fracpos=0.487
+  CES_VT|BES|k=1|abs_net                   r=+0.0036 se_block=0.0059 n=  81389 blocks= 347 fracpos=0.470
+  CES_VT|BES|k=1|abs_vs_activity           r=+0.0036 se_block=0.0059 n=  81389 blocks= 347 fracpos=0.470
+  CES_VT|BES|k=1|signed_net                r=-0.0036 se_block=0.0052 n=  81389 blocks= 347 fracpos=0.533
+  CES_VT|BES|k=2|abs_net                   r=+0.0009 se_block=0.0059 n=  80931 blocks= 345 fracpos=0.507
+  CES_VT|BES|k=2|abs_vs_activity           r=+0.0070 se_block=0.0062 n=  80931 blocks= 345 fracpos=0.507
+  CES_VT|BES|k=2|signed_net                r=+0.0041 se_block=0.0052 n=  80931 blocks= 345 fracpos=0.542
+  CES_VT|BES|k=5|abs_net                   r=+0.0031 se_block=0.0061 n=  79444 blocks= 341 fracpos=0.525
+  CES_VT|BES|k=5|abs_vs_activity           r=+0.0058 se_block=0.0075 n=  79444 blocks= 341 fracpos=0.522
+  CES_VT|BES|k=5|signed_net                r=+0.0083 se_block=0.0067 n=  79444 blocks= 341 fracpos=0.601
+  CES_VT|BES|k=10|abs_net                  r=+0.0044 se_block=0.0075 n=  77403 blocks= 336 fracpos=0.551
+  CES_VT|BES|k=10|abs_vs_activity          r=+0.0031 se_block=0.0096 n=  77403 blocks= 336 fracpos=0.512
+  CES_VT|BES|k=10|signed_net               r=+0.0117 se_block=0.0080 n=  77403 blocks= 336 fracpos=0.583
+  CES_VT|BES|k=20|abs_net                  r=+0.0046 se_block=0.0078 n=  73827 blocks= 329 fracpos=0.502
+  CES_VT|BES|k=20|abs_vs_activity          r=+0.0011 se_block=0.0110 n=  73827 blocks= 329 fracpos=0.471
+  CES_VT|BES|k=20|signed_net               r=+0.0143 se_block=0.0090 n=  73827 blocks= 329 fracpos=0.559
+  CES_VT|ECEI|k=1|abs_net                  r=-0.0008 se_block=0.0058 n=  81389 blocks= 345 fracpos=0.446
+  CES_VT|ECEI|k=1|abs_vs_activity          r=-0.0008 se_block=0.0058 n=  81389 blocks= 345 fracpos=0.446
+  CES_VT|ECEI|k=1|signed_net               r=-0.0015 se_block=0.0053 n=  81389 blocks= 345 fracpos=0.542
+  CES_VT|ECEI|k=2|abs_net                  r=-0.0046 se_block=0.0062 n=  80931 blocks= 343 fracpos=0.484
+  CES_VT|ECEI|k=2|abs_vs_activity          r=-0.0016 se_block=0.0061 n=  80931 blocks= 343 fracpos=0.493
+  CES_VT|ECEI|k=2|signed_net               r=+0.0005 se_block=0.0056 n=  80931 blocks= 343 fracpos=0.493
+  CES_VT|ECEI|k=5|abs_net                  r=+0.0003 se_block=0.0059 n=  79444 blocks= 340 fracpos=0.526
+  CES_VT|ECEI|k=5|abs_vs_activity          r=+0.0008 se_block=0.0070 n=  79444 blocks= 340 fracpos=0.479
+  CES_VT|ECEI|k=5|signed_net               r=+0.0034 se_block=0.0063 n=  79444 blocks= 340 fracpos=0.547
+  CES_VT|ECEI|k=10|abs_net                 r=+0.0024 se_block=0.0066 n=  77403 blocks= 335 fracpos=0.516
+  CES_VT|ECEI|k=10|abs_vs_activity         r=+0.0000 se_block=0.0084 n=  77403 blocks= 335 fracpos=0.463
+  CES_VT|ECEI|k=10|signed_net              r=+0.0071 se_block=0.0073 n=  77403 blocks= 335 fracpos=0.531
+  CES_VT|ECEI|k=20|abs_net                 r=-0.0021 se_block=0.0074 n=  73827 blocks= 328 fracpos=0.494
+  CES_VT|ECEI|k=20|abs_vs_activity         r=-0.0136 se_block=0.0113 n=  73827 blocks= 328 fracpos=0.457
+  CES_VT|ECEI|k=20|signed_net              r=+0.0085 se_block=0.0088 n=  73827 blocks= 328 fracpos=0.564
+  CES_VT|MC|k=1|abs_net                    r=+0.0055 se_block=0.0055 n=  81389 blocks= 347 fracpos=0.450
+  CES_VT|MC|k=1|abs_vs_activity            r=+0.0055 se_block=0.0055 n=  81389 blocks= 347 fracpos=0.450
+  CES_VT|MC|k=1|signed_net                 r=+0.0043 se_block=0.0050 n=  81389 blocks= 347 fracpos=0.556
+  CES_VT|MC|k=2|abs_net                    r=-0.0010 se_block=0.0057 n=  80931 blocks= 345 fracpos=0.472
+  CES_VT|MC|k=2|abs_vs_activity            r=+0.0022 se_block=0.0058 n=  80931 blocks= 345 fracpos=0.441
+  CES_VT|MC|k=2|signed_net                 r=+0.0048 se_block=0.0051 n=  80931 blocks= 345 fracpos=0.551
+  CES_VT|MC|k=5|abs_net                    r=+0.0054 se_block=0.0058 n=  79444 blocks= 341 fracpos=0.466
+  CES_VT|MC|k=5|abs_vs_activity            r=+0.0005 se_block=0.0072 n=  79444 blocks= 341 fracpos=0.443
+  CES_VT|MC|k=5|signed_net                 r=-0.0000 se_block=0.0053 n=  79444 blocks= 341 fracpos=0.537
+  CES_VT|MC|k=10|abs_net                   r=+0.0016 se_block=0.0058 n=  77403 blocks= 336 fracpos=0.479
+  CES_VT|MC|k=10|abs_vs_activity           r=-0.0038 se_block=0.0085 n=  77403 blocks= 336 fracpos=0.443
+  CES_VT|MC|k=10|signed_net                r=-0.0001 se_block=0.0052 n=  77403 blocks= 336 fracpos=0.545
+  CES_VT|MC|k=20|abs_net                   r=+0.0022 se_block=0.0063 n=  73827 blocks= 329 fracpos=0.483
+  CES_VT|MC|k=20|abs_vs_activity           r=-0.0054 se_block=0.0098 n=  73827 blocks= 329 fracpos=0.486
+  CES_VT|MC|k=20|signed_net                r=-0.0013 se_block=0.0057 n=  73827 blocks= 329 fracpos=0.541
+=== D.ii PCHIP fallback rows in the s42 cut npz ===
+[CES_VT] n=10463 fallback_frac=0.005
+   fallback  n=    49 skill m/p=+0.264 med m/p=1.022 med p/pers=1.000 share_pchip_sse=0.002 share_model_sse=0.002
+   bridged   n= 10414 skill m/p=+0.390 med m/p=1.444 med p/pers=0.791 share_pchip_sse=0.998 share_model_sse=0.998
+[CES_TI] n=32589 fallback_frac=0.002
+   fallback  n=    70 skill m/p=+0.636 med m/p=1.108 med p/pers=1.000 share_pchip_sse=0.012 share_model_sse=0.005
+   bridged   n= 32519 skill m/p=+0.168 med m/p=1.223 med p/pers=0.847 share_pchip_sse=0.988 share_model_sse=0.995
+json -> C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p02\p02_part_d.json

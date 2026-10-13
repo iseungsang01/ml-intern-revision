@@ -1,0 +1,68 @@
+{
+ "CES_VT": {
+  "n": 10463,
+  "frac_pchip_eq_linear_eq_gp": 0.005543343209404568,
+  "frac_pchip_eq_persistence": 0.004683169263117653,
+  "frac_fb_and_eq_pers": 0.004587594380196884,
+  "nofuture": {
+   "n": 58,
+   "skill_m_vs_p": 0.17361927333497962,
+   "skill_m_vs_pers": 0.1736192805744311,
+   "med_m_over_p": 1.1261972131229157,
+   "med_p_over_pers": 1.0000001571646986,
+   "med_m_over_pers": 1.1261973901213613,
+   "share_p_sse": 0.0017488618366524444,
+   "share_m_sse": 0.002369197323653402,
+   "med_ae_p": 4.550995588302612,
+   "med_ae_pers": 4.550994873046875,
+   "med_ae_m": 5.125318548481086
+  },
+  "bridged": {
+   "n": 10405,
+   "skill_m_vs_p": 0.3903725934741836,
+   "skill_m_vs_pers": 0.5013161018955488,
+   "med_m_over_p": 1.4446352625130217,
+   "med_p_over_pers": 0.7905064435427005,
+   "med_m_over_pers": 1.141993483585544,
+   "share_p_sse": 0.9982511381633477,
+   "share_m_sse": 0.9976308026763466,
+   "med_ae_p": 3.1180229740907883,
+   "med_ae_pers": 3.9443359375,
+   "med_ae_m": 4.504405937697278
+  },
+  "nofuture_pchip_vs_pers_abs_diff_median": 0.0
+ },
+ "CES_TI": {
+  "n": 32589,
+  "frac_pchip_eq_linear_eq_gp": 0.003068520052778545,
+  "frac_pchip_eq_persistence": 0.0021479640369449814,
+  "frac_fb_and_eq_pers": 0.002117278836417196,
+  "nofuture": {
+   "n": 100,
+   "skill_m_vs_p": 0.4520865377130848,
+   "skill_m_vs_pers": 0.4520865441759825,
+   "med_m_over_p": 1.3053047967312614,
+   "med_p_over_pers": 1.0,
+   "med_m_over_pers": 1.3053047967312614,
+   "share_p_sse": 0.01491786290343251,
+   "share_m_sse": 0.009891768724298401,
+   "med_ae_p": 56.041107177734375,
+   "med_ae_pers": 56.041107177734375,
+   "med_ae_m": 73.1507260132274
+  },
+  "bridged": {
+   "n": 32489,
+   "skill_m_vs_p": 0.16947089534580095,
+   "skill_m_vs_pers": 0.35856465416403405,
+   "med_m_over_p": 1.2226640349214617,
+   "med_p_over_pers": 0.846798063544872,
+   "med_m_over_pers": 1.0353495371374535,
+   "share_p_sse": 0.9850821370965674,
+   "share_m_sse": 0.9901082312757016,
+   "med_ae_p": 37.06126671325649,
+   "med_ae_pers": 43.766357421875,
+   "med_ae_m": 45.313477898930635
+  },
+  "nofuture_pchip_vs_pers_abs_diff_median": 0.0
+ }
+}

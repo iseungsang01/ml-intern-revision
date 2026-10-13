@@ -1,0 +1,78 @@
+files 641 rows 247207 blocks 1972
+missing raw  T=0.0818 V=0.2391 | held rows T=0.0000 V=0.4110 (of observed T=0.0000 V=0.5401) | genuine-missing T=0.0818 V=0.6501
+
+(a) T_i missing rate per activity quintile
+  J_Ti (raw mask)              n= 235224 cov=0.952  rates=0.0201 0.0200 0.0258 0.0428 0.1230  Q5-Q1=+0.1029 [+0.0884,+0.1171] ratio=6.12 mono=False
+  |dECEI| (raw mask)           n= 244542 cov=0.989  rates=0.1075 0.0742 0.0661 0.0683 0.0663  Q5-Q1=-0.0412 [-0.0601,-0.0232] ratio=0.62 mono=False
+  |dBES| (raw mask)            n= 244542 cov=0.989  rates=0.0834 0.0686 0.0606 0.0645 0.1054  Q5-Q1=+0.0221 [+0.0062,+0.0399] ratio=1.26 mono=False
+  BES level (raw mask)         n= 247207 cov=1.000  rates=0.1985 0.0811 0.0539 0.0381 0.0373  Q5-Q1=-0.1611 [-0.1820,-0.1423] ratio=0.19 mono=False
+  ECEI level (raw mask)        n= 247207 cov=1.000  rates=0.1463 0.0864 0.0663 0.0614 0.0484  Q5-Q1=-0.0979 [-0.1157,-0.0818] ratio=0.33 mono=False
+  J_Ti (genuine mask)          n= 235224 cov=0.952  rates=0.0201 0.0200 0.0258 0.0428 0.1230  Q5-Q1=+0.1029 [+0.0900,+0.1179] ratio=6.12 mono=False
+  |dECEI| (genuine mask)       n= 244542 cov=0.989  rates=0.1075 0.0742 0.0661 0.0683 0.0663  Q5-Q1=-0.0412 [-0.0604,-0.0231] ratio=0.62 mono=False
+  |dBES| (genuine mask)        n= 244542 cov=0.989  rates=0.0834 0.0686 0.0606 0.0645 0.1054  Q5-Q1=+0.0221 [+0.0065,+0.0397] ratio=1.26 mono=False
+  BES level (genuine mask)     n= 247207 cov=1.000  rates=0.1985 0.0811 0.0539 0.0381 0.0373  Q5-Q1=-0.1611 [-0.1804,-0.1412] ratio=0.19 mono=False
+
+(b) V_rot missing rate per activity quintile
+  J_Vrot (raw mask)            n= 190911 cov=0.772  rates=nan nan 0.0019 0.0287 0.0838  Q5-Q1=+nan [+nan,+nan] ratio=nan mono=False
+  J_Ti (raw V mask)            n= 235224 cov=0.952  rates=0.2684 0.2533 0.2357 0.2068 0.1950  Q5-Q1=-0.0734 [-0.1174,-0.0277] ratio=0.73 mono=False
+  |dECEI| (raw mask)           n= 244542 cov=0.989  rates=0.2743 0.2296 0.2282 0.2289 0.2139  Q5-Q1=-0.0605 [-0.1008,-0.0192] ratio=0.78 mono=False
+  |dBES| (raw mask)            n= 244542 cov=0.989  rates=0.2650 0.2504 0.2362 0.2176 0.2057  Q5-Q1=-0.0592 [-0.0982,-0.0257] ratio=0.78 mono=False
+  BES level (raw mask)         n= 247207 cov=1.000  rates=0.2976 0.2199 0.2315 0.2295 0.2170  Q5-Q1=-0.0806 [-0.1100,-0.0520] ratio=0.73 mono=False
+  J_Vrot (genuine mask)        n=  89766 cov=0.363  rates=0.0180 0.0271 0.0408 0.0554 0.1361  Q5-Q1=+0.1181 [+0.0949,+0.1425] ratio=7.57 mono=True
+  J_Ti (genuine V mask)        n= 235224 cov=0.952  rates=0.6704 0.6627 0.6475 0.6306 0.6292  Q5-Q1=-0.0412 [-0.0864,+0.0057] ratio=0.94 mono=False
+  |dECEI| (genuine mask)       n= 244542 cov=0.989  rates=0.6915 0.6452 0.6409 0.6357 0.6316  Q5-Q1=-0.0599 [-0.1003,-0.0214] ratio=0.91 mono=False
+  |dBES| (genuine mask)        n= 244542 cov=0.989  rates=0.6514 0.6545 0.6527 0.6443 0.6422  Q5-Q1=-0.0093 [-0.0488,+0.0279] ratio=0.99 mono=False
+  BES level (genuine mask)     n= 247207 cov=1.000  rates=0.6880 0.6418 0.6499 0.6325 0.6380  Q5-Q1=-0.0500 [-0.0866,-0.0170] ratio=0.93 mono=False
+
+(b2) stratified: missing rate by BES-level quintile (rows) x activity quintile (cols), genuine masks
+  dECEI  BESq1  T: 0.2453 0.1804 0.1581 0.1540 0.1340   V: 0.7352 0.6619 0.6656 0.6736 0.6692   n:  13846   9530   9018   8307   8208
+  dECEI  BESq2  T: 0.0873 0.0738 0.0704 0.0729 0.0861   V: 0.6684 0.6536 0.6263 0.6280 0.6300   n:   9309   9891   9855   9960   9893
+  dECEI  BESq3  T: 0.0545 0.0509 0.0487 0.0510 0.0550   V: 0.6813 0.6415 0.6475 0.6434 0.6387   n:   8545   9810  10068  10353  10132
+  dECEI  BESq4  T: 0.0366 0.0359 0.0300 0.0397 0.0392   V: 0.6645 0.6209 0.6341 0.6253 0.6174   n:   8525   9940  10093  10501   9849
+  dECEI  BESq5  T: 0.0314 0.0335 0.0323 0.0400 0.0323   V: 0.6832 0.6488 0.6334 0.6145 0.6110   n:   8684   9737   9874   9787  10827
+  J_Ti   BESq1  T: 0.0405 0.0333 0.0496 0.0855 0.2490   V: 0.7043 0.6918 0.6729 0.6548 0.6633   n:   9541   9245   9030   8796  10433
+  J_Ti   BESq2  T: 0.0213 0.0262 0.0322 0.0522 0.1456   V: 0.6704 0.6545 0.6393 0.6154 0.6302   n:   9784   9773   9557   8851   9080
+  J_Ti   BESq3  T: 0.0167 0.0159 0.0207 0.0347 0.0888   V: 0.6800 0.6676 0.6492 0.6322 0.6242   n:   9943   9937   9639   8921   8604
+  J_Ti   BESq4  T: 0.0096 0.0112 0.0141 0.0268 0.0607   V: 0.6421 0.6447 0.6347 0.6253 0.6133   n:   9443   9547   9590   9597   8868
+  J_Ti   BESq5  T: 0.0113 0.0130 0.0132 0.0214 0.0563   V: 0.6523 0.6551 0.6427 0.6267 0.6112   n:   8334   8541   9230  10880  10060
+  dBES   BESq1  T: 0.2330 0.1871 0.1502 0.1459 0.1825   V: 0.7019 0.7011 0.6967 0.6718 0.6622   n:  10712   9774   8815   8409  11199
+  dBES   BESq2  T: 0.0661 0.0590 0.0646 0.0751 0.1293   V: 0.6323 0.6434 0.6455 0.6412 0.6426   n:  10102  10070   9851   9688   9197
+  dBES   BESq3  T: 0.0401 0.0410 0.0419 0.0529 0.0884   V: 0.6500 0.6547 0.6476 0.6472 0.6478   n:  10303   9945   9881  10002   8777
+  dBES   BESq4  T: 0.0261 0.0300 0.0297 0.0345 0.0642   V: 0.6109 0.6233 0.6365 0.6459 0.6388   n:   9267   9749  10550  10577   8765
+  dBES   BESq5  T: 0.0304 0.0247 0.0282 0.0300 0.0533   V: 0.6564 0.6497 0.6428 0.6202 0.6195   n:   8525   9370   9811  10232  10971
+
+(c) mask agreement
+  raw      P(T)=0.0818 P(V)=0.2391 P(both)=0.0243 P(T)P(V)=0.0196 agree=0.7277 indep_agree=0.7182 phi=0.0406  P(V|Tmiss)=0.2972 P(V|Tobs)=0.2339
+  genuine  P(T)=0.0818 P(V)=0.6501 P(both)=0.0561 P(T)P(V)=0.0532 agree=0.3803 indep_agree=0.3745 phi=0.0223  P(V|Tmiss)=0.6857 P(V|Tobs)=0.6469
+  raw      phi within |dECEI| quintiles: Q1=0.052 Q2=0.007 Q3=0.003 Q4=-0.011 Q5=-0.030
+  raw      P(both) within |dECEI| quintiles: Q1=0.0367 Q2=0.0178 Q3=0.0154 Q4=0.0145 Q5=0.0111
+  genuine  phi within |dECEI| quintiles: Q1=0.003 Q2=0.009 Q3=0.006 Q4=0.005 Q5=0.020
+  genuine  P(both) within |dECEI| quintiles: Q1=0.0747 Q2=0.0490 Q3=0.0431 Q4=0.0440 Q5=0.0443
+
+(d) missing-run lengths
+  T raw      runs=  8233 median=1 mean=2.46 p90=4 len1=0.637 rows_in_runs<=2=0.390 inW2=0.482 inW4=0.614
+  T genuine  runs=  8234 median=1 mean=2.46 p90=4 len1=0.637 rows_in_runs<=2=0.390 inW2=0.482 inW4=0.614
+  V raw      runs=  4351 median=1 mean=13.58 p90=6 len1=0.669 rows_in_runs<=2=0.068 inW2=0.069 inW4=0.088
+  V genuine  runs=  5295 median=1 mean=30.35 p90=91 len1=0.620 rows_in_runs<=2=0.028 inW2=0.035 inW4=0.049
+
+(e) extra: missing rate vs T_i neighbour mean level (genuine mask)
+  Ti neighbour level (gen)     n= 235224 cov=0.952  rates=0.1118 0.0382 0.0158 0.0164 0.0495  Q5-Q1=-0.0622 [-0.0789,-0.0454] ratio=0.44 mono=False
+  Vrot miss vs Ti level (gen)  n= 235224 cov=0.952  rates=0.6463 0.6582 0.6713 0.6347 0.6300  Q5-Q1=-0.0163 [-0.0810,+0.0524] ratio=0.97 mono=False
+
+(f) span-matched J2 (both immediate neighbours observed) and 3 keV cut variant
+  J2_Ti (genuine)              n= 218700 cov=0.885  rates=0.0077 0.0081 0.0107 0.0174 0.0445  Q5-Q1=+0.0368 [+0.0307,+0.0429] ratio=5.81 mono=True
+  J2_Ti (3keV cut)             n= 217304 cov=0.879  rates=0.0083 0.0085 0.0114 0.0187 0.0434  Q5-Q1=+0.0351 [+0.0295,+0.0418] ratio=5.25 mono=True
+  J2_Vrot (genuine)            n=  82108 cov=0.332  rates=0.0091 0.0106 0.0188 0.0286 0.0527  Q5-Q1=+0.0436 [+0.0353,+0.0527] ratio=5.81 mono=True
+  J2_Vrot (raw)                n= 184044 cov=0.744  rates=nan nan 0.0006 0.0109 0.0312  Q5-Q1=+nan [+nan,+nan] ratio=nan mono=False
+  J_Ti (3keV cut, k=5)         n= 234328 cov=0.948  rates=0.0214 0.0220 0.0289 0.0472 0.1215  Q5-Q1=+0.1001 [+0.0851,+0.1142] ratio=5.69 mono=True
+  BES level (3keV cut)         n= 247207 cov=1.000  rates=0.2087 0.0869 0.0575 0.0398 0.0402  Q5-Q1=-0.1684 [-0.1869,-0.1480] ratio=0.19 mono=False
+  |dBES| (3keV cut)            n= 244542 cov=0.989  rates=0.0877 0.0728 0.0642 0.0689 0.1131  Q5-Q1=+0.0254 [+0.0084,+0.0430] ratio=1.29 mono=False
+  T_i missing after 3 keV cut = 0.0866  (spike rows 1197)
+  J2_Ti x BES level (genuine):
+  J2_Ti  BESq1  T: 0.0120 0.0120 0.0165 0.0307 0.0939   V: 0.7053 0.6935 0.6744 0.6541 0.6586   n:   9171   8936   8704   8314   8615
+  J2_Ti  BESq2  T: 0.0088 0.0092 0.0118 0.0207 0.0587   V: 0.6657 0.6554 0.6378 0.6166 0.6171   n:   9216   9116   8896   8299   8213
+  J2_Ti  BESq3  T: 0.0064 0.0055 0.0083 0.0135 0.0320   V: 0.6855 0.6657 0.6522 0.6255 0.6249   n:   9096   9129   8902   8340   8273
+  J2_Ti  BESq4  T: 0.0050 0.0061 0.0077 0.0118 0.0217   V: 0.6395 0.6422 0.6365 0.6250 0.6143   n:   8621   8716   8789   8875   8739
+  J2_Ti  BESq5  T: 0.0056 0.0075 0.0089 0.0117 0.0201   V: 0.6505 0.6537 0.6446 0.6339 0.6057   n:   7636   7843   8449   9912   9900
+
+wrote C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p07\p07_results.json

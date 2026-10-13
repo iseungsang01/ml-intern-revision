@@ -1,0 +1,185 @@
+C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p10\p10_latency_classes.py:413: SyntaxWarning: "\g" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\g"? A raw string is also an option.
+  print("  %8s" % "ell\g[ms]" + "".join("%10d" % g for g in (10, 20, 50, 100)))
+
+==============================================================================
+PART 1 -- OU latency-cost table (skill vs latency ell)
+==============================================================================
+
+CES_TI [eV] robust fit: sigma_n=39.01 sigma_s=68.67 tau=81.2 ms rho(10ms)=0.8841 P=791.2 K=0.520
+  MSE_pers=4136.6 (RMSE 64.32)  MSE_interp_opt=2734.2  (units eV^2)
+  equivalent age of the measured model skill (+0.358 vs pers): (0.4408 - 0.358) / 0.02337 per ms = 3.5 ms
+   ell[ms] rho^2(ell)   MSE(ell)     RMSE skill_pers  skill_int    d_skill   retain
+       0.0     1.0000     2313.1    48.09    +0.4408    +0.1540    +0.0000    1.000
+       1.0     0.9757     2408.6    49.08    +0.4177    +0.1191    -0.0231    0.948
+       1.5     0.9637     2455.4    49.55    +0.4064    +0.1020    -0.0344    0.922
+       2.0     0.9519     2501.7    50.02    +0.3952    +0.0850    -0.0456    0.897
+       5.0     0.8841     2767.8    52.61    +0.3309    -0.0123    -0.1099    0.751
+       6.0     0.8626     2852.2    53.41    +0.3105    -0.0431    -0.1303    0.704
+       9.0     0.8012     3093.3    55.62    +0.2522    -0.1313    -0.1886    0.572
+      10.0     0.7817     3169.8    56.30    +0.2337    -0.1593    -0.2071    0.530
+      20.0     0.6110     3839.5    61.96    +0.0718    -0.4042    -0.3690    0.163
+      50.0     0.2918     5091.9    71.36    -0.2309    -0.8623    -0.6718   -0.524
+  linear slope d(MSE)/d(ell) at 0 = 96.66 eV^2 per ms -> d(skill)/d(ell) = -0.02337 per ms
+  latency costing 0.01 skill: 0.4 ms ; 0.05 skill: 2.2 ms
+
+CES_TI [eV] classical fit: sigma_n=139.92 sigma_s=147.13 tau=74.5 ms rho(10ms)=0.8743 P=6722.8 K=0.343
+  MSE_pers=44598.3 (RMSE 211.18)  MSE_interp_opt=28825.1  (units eV^2)
+  equivalent age of the measured model skill (+0.358 vs pers): (0.4103 - 0.358) / 0.00899 per ms = 5.8 ms
+   ell[ms] rho^2(ell)   MSE(ell)     RMSE skill_pers  skill_int    d_skill   retain
+       0.0     1.0000    26301.4   162.18    +0.4103    +0.0876    +0.0000    1.000
+       1.0     0.9735    26696.9   163.39    +0.4014    +0.0738    -0.0089    0.978
+       1.5     0.9605    26890.7   163.98    +0.3970    +0.0671    -0.0132    0.968
+       2.0     0.9477    27082.0   164.57    +0.3928    +0.0605    -0.0175    0.957
+       5.0     0.8743    28177.0   167.86    +0.3682    +0.0225    -0.0421    0.897
+       6.0     0.8511    28522.8   168.89    +0.3605    +0.0105    -0.0498    0.879
+       9.0     0.7853    29506.3   171.77    +0.3384    -0.0236    -0.0719    0.825
+      10.0     0.7644    29816.9   172.68    +0.3314    -0.0344    -0.0788    0.808
+      20.0     0.5844    32504.3   180.29    +0.2712    -0.1276    -0.1391    0.661
+      50.0     0.2610    37329.7   193.21    +0.1630    -0.2950    -0.2473    0.397
+  linear slope d(MSE)/d(ell) at 0 = 400.88 eV^2 per ms -> d(skill)/d(ell) = -0.00899 per ms
+  latency costing 0.01 skill: 1.1 ms ; 0.05 skill: 6.0 ms
+
+CES_VT [km/s] robust fit: sigma_n=3.10 sigma_s=8.43 tau=81.2 ms rho(10ms)=0.8841 P=6.5 K=0.683
+  MSE_pers=35.6 (RMSE 5.97)  MSE_interp_opt=22.7  (units km/s^2)
+   ell[ms] rho^2(ell)   MSE(ell)     RMSE skill_pers  skill_int    d_skill   retain
+       0.0     1.0000       16.1     4.02    +0.5475    +0.2890    +0.0000    1.000
+       1.0     0.9757       17.7     4.21    +0.5035    +0.2198    -0.0441    0.920
+       1.5     0.9637       18.5     4.30    +0.4818    +0.1858    -0.0657    0.880
+       2.0     0.9519       19.2     4.39    +0.4605    +0.1522    -0.0871    0.841
+       5.0     0.8841       23.6     4.86    +0.3377    -0.0408    -0.2098    0.617
+       6.0     0.8626       25.0     5.00    +0.2987    -0.1020    -0.2488    0.546
+       9.0     0.8012       29.0     5.38    +0.1874    -0.2768    -0.3601    0.342
+      10.0     0.7817       30.2     5.50    +0.1521    -0.3323    -0.3954    0.278
+      20.0     0.6110       41.2     6.42    -0.1569    -0.8179    -0.7044   -0.287
+      50.0     0.2918       61.8     7.86    -0.7349    -1.7261    -1.2824   -1.342
+  linear slope d(MSE)/d(ell) at 0 = 1.59 km/s^2 per ms -> d(skill)/d(ell) = -0.04461 per ms
+  latency costing 0.01 skill: 0.2 ms ; 0.05 skill: 1.1 ms
+
+CES_VT [km/s] classical fit: sigma_n=28.41 sigma_s=46.28 tau=143.8 ms rho(10ms)=0.9328 P=333.5 K=0.413
+  MSE_pers=1901.6 (RMSE 43.61)  MSE_interp_opt=1289.8  (units km/s^2)
+   ell[ms] rho^2(ell)   MSE(ell)     RMSE skill_pers  skill_int    d_skill   retain
+       0.0     1.0000     1140.3    33.77    +0.4003    +0.1159    +0.0000    1.000
+       1.0     0.9862     1165.3    34.14    +0.3872    +0.0965    -0.0131    0.967
+       1.5     0.9793     1177.7    34.32    +0.3807    +0.0869    -0.0196    0.951
+       2.0     0.9726     1189.9    34.50    +0.3742    +0.0774    -0.0261    0.935
+       5.0     0.9328     1261.8    35.52    +0.3364    +0.0217    -0.0639    0.840
+       6.0     0.9199     1285.1    35.85    +0.3242    +0.0036    -0.0762    0.810
+       9.0     0.8823     1353.1    36.79    +0.2884    -0.0491    -0.1119    0.720
+      10.0     0.8701     1375.2    37.08    +0.2768    -0.0662    -0.1235    0.691
+      20.0     0.7571     1579.6    39.74    +0.1693    -0.2247    -0.2310    0.423
+      50.0     0.4988     2046.7    45.24    -0.0763    -0.5869    -0.4767   -0.191
+  linear slope d(MSE)/d(ell) at 0 = 25.16 km/s^2 per ms -> d(skill)/d(ell) = -0.01323 per ms
+  latency costing 0.01 skill: 0.8 ms ; 0.05 skill: 3.9 ms
+
+==============================================================================
+PART 2 -- top 1 % one-step CES_TI drops (held-free, 3 keV cut) and their recovery
+==============================================================================
+files: 641
+consecutive same-block 10 ms pairs: 216895 ; negative increments: 100544 (46.4%)
+top-1% threshold of negative increments: drop >= 973.2 eV ; n_events = 1006
+  drop amplitude [eV]: median 1453.9  p90 2276.5  max 2964.9
+  pre-drop level [eV]: median 1946.2
+  drop / pre-drop:     median 0.816  p90 0.950
+  bulk |increment| median 44.3 eV, p99 of |increment| 876.5 eV
+  provenance: (pre - median of <=5 previous obs)/drop: median 0.93 ; share > 0.5 (pre-drop value was itself an excursion): 80.1%
+              (post - median of <=5 previous obs)/drop: median -0.07 (0 = the drop merely returns to the recent level)
+  class spike_descent  n= 806 (80.1%)  drop median 1509 eV p90 2356 eV ; drop/pre median 0.82 p90 0.95 ; rec(a) median 16 steps (n=528)
+  class recovering     n= 147 (14.6%)  drop median 1198 eV p90 1767 eV ; drop/pre median 0.79 p90 0.97 ; rec(a) median 6 steps (n=147)
+  class step_down      n=  53 (5.3%)  drop median 1607 eV p90 2186 eV ; drop/pre median 0.80 p90 0.95 ; rec(a) median 68 steps (n=8)
+  ELM-like (recovering) census: n=147, rate 0.065 /s, drop median 1198 eV (79% of level), recovery median 6 steps -> tau_rec 37 ms
+    continuous-use latency charge r*ell*A^2 at ell=1.5 ms: 172 eV^2 (4.2% of robust MSE_pers)
+    continuous-use latency charge r*ell*A^2 at ell=9.0 ms: 1033 eV^2 (25.0% of robust MSE_pers)
+  recovery (a) 80% of the drop regained: median 12 steps (120 ms), p90 60 steps; recovered 683/1006, not within 100 steps or block end 323
+  recovery (b) value >= 0.8 * pre-drop:   median 11 steps, p90 58 steps; recovered 711/1006; events whose drop < 20% of level (b trivially met at k=1): 0
+  next grid row after the drop is missing (fit rejected / MNAR candidate): 183/1006 (18.2%)
+  observed T_i rows: 225793 (2258 s) -> impulse rate 0.446 /s (one per 2.24 s)
+  mean A^2 over events = 2696564 eV^2 ; latency MSE charge r*ell*A^2:
+    ell= 1.0 ms: 1201.43 eV^2  (robust bulk MSE_pers 4136.6 -> 29.044% ; classical 44598 -> 2.6939%)
+    ell= 1.5 ms: 1802.14 eV^2  (robust bulk MSE_pers 4136.6 -> 43.566% ; classical 44598 -> 4.0408%)
+    ell= 5.0 ms: 6007.15 eV^2  (robust bulk MSE_pers 4136.6 -> 145.221% ; classical 44598 -> 13.4695%)
+    ell= 9.0 ms: 10812.86 eV^2  (robust bulk MSE_pers 4136.6 -> 261.398% ; classical 44598 -> 24.2450%)
+    ell=10.0 ms: 12014.29 eV^2  (robust bulk MSE_pers 4136.6 -> 290.442% ; classical 44598 -> 26.9389%)
+  exponential recovery time constant from median (a): tau_rec = 74.6 ms
+    delayed-sensor peak relative error during recovery ~ 1-exp(-ell/tau_rec) = 0.013 at ell=1.0 ms
+    delayed-sensor peak relative error during recovery ~ 1-exp(-ell/tau_rec) = 0.020 at ell=1.5 ms
+    delayed-sensor peak relative error during recovery ~ 1-exp(-ell/tau_rec) = 0.065 at ell=5.0 ms
+    delayed-sensor peak relative error during recovery ~ 1-exp(-ell/tau_rec) = 0.114 at ell=9.0 ms
+    delayed-sensor peak relative error during recovery ~ 1-exp(-ell/tau_rec) = 0.126 at ell=10.0 ms
+  moderate ELM-sized census (10-50% of level, >=150 eV, no pre-excursion): candidates 4472, recovering within 50 steps 4139 (rate 1.833 /s)
+    drop median 221 eV p90 403 eV ; drop/pre median 0.25 p90 0.43 ; recovery median 3 steps p90 12 steps -> tau_rec 19 ms
+    continuous-use latency charge at ell=1.5 ms: 217 eV^2 (5.3% of robust MSE_pers)
+    continuous-use latency charge at ell=9.0 ms: 1305 eV^2 (31.5% of robust MSE_pers)
+  moderate ELM-sized census (10-50% of level, >=420 eV, no pre-excursion): candidates 412, recovering within 50 steps 369 (rate 0.163 /s)
+    drop median 509 eV p90 663 eV ; drop/pre median 0.41 p90 0.48 ; recovery median 4 steps p90 15 steps -> tau_rec 25 ms
+    continuous-use latency charge at ell=1.5 ms: 73 eV^2 (1.8% of robust MSE_pers)
+    continuous-use latency charge at ell=9.0 ms: 441 eV^2 (10.7% of robust MSE_pers)
+
+==============================================================================
+PART 3 -- one seq_v2 stateful step: MACs, dispatches, cost floor
+==============================================================================
+LSTM_ti: in 22 hidden 160 layers 2 -> 321280 MAC ; LSTM_vt: in 7 hidden 64 -> 18176 MAC ; heads 14464 MAC ; total 353920 MAC
+  arithmetic at 5 GFLOP/s (2 FLOP/MAC): 0.142 ms
+  arithmetic at 20 GFLOP/s (2 FLOP/MAC): 0.035 ms
+  per-layer dispatches in a fused LSTM step: 14 ; layers executed per step: 2 ; tail: 11 ; minimal count: 39
+  seq_v2        aten_ops= 118  min_median=0.793 ms  min_p99=1.667 ms  max_p99=15.130 ms  spread=9.1x
+  seq_v2_lean   aten_ops= 161  min_median=0.378 ms  min_p99=0.834 ms  max_p99=7.072 ms  spread=8.5x
+  seq_v2_tight  aten_ops= 111  min_median=0.352 ms  min_p99=0.751 ms  max_p99=1.914 ms  spread=2.6x
+  persistence   aten_ops=None  min_median=0.010 ms  min_p99=0.022 ms  max_p99=0.295 ms  spread=13.4x
+  gp_causal     aten_ops=None  min_median=1.148 ms  min_p99=2.522 ms  max_p99=16.713 ms  spread=6.6x
+  window_w2     aten_ops=None  min_median=2.418 ms  min_p99=4.370 ms  max_p99=30.640 ms  spread=7.0x
+  cost-model floor for seq_v2_tight: 111 ops x 2-3 us = 0.22-0.33 ms ; measured min median 0.352 ms (3.17 us/op)
+  cost-model floor for seq_v2_lean: 161 ops x 2-3 us = 0.32-0.48 ms ; measured min median 0.378 ms (2.35 us/op)
+  minimal-count floor: 39 ops x 2-3 us = 0.08-0.12 ms
+  8l artifact (re-measured 2026-08-17): window_iter009   W=2 median 2.854 ms p99 4.455 ms (44.5% of 10 ms)
+  8l artifact (re-measured 2026-08-17): window_iter009   W=4 median 3.121 ms p99 5.053 ms (50.5% of 10 ms)
+  8l artifact (re-measured 2026-08-17): seq_v2_step      W=None median 0.966 ms p99 1.494 ms (14.9% of 10 ms)
+  8l artifact (re-measured 2026-08-17): seq_v2_block100  W=None median 2.642 ms p99 4.089 ms (40.9% of 10 ms)
+  8l artifact (re-measured 2026-08-17): seq_v2_block300  W=None median 6.137 ms p99 9.555 ms (95.5% of 10 ms)
+
+==============================================================================
+PART 4 -- time-domain forms: skill(ell, g) and the delayed-sensor error through an ELM
+==============================================================================
+
+CES_TI robust fit: skill(ell, g) = 1 - MSE_now(ell) / MSE_pers(g); nowcaster depends on ell only, persistence on g only
+  ell\g[ms]        10        20        50       100
+       0.0    +0.441    +0.547    +0.687    +0.762
+       1.5    +0.406    +0.519    +0.667    +0.747
+       6.0    +0.310    +0.441    +0.614    +0.707
+       9.0    +0.252    +0.394    +0.581    +0.682
+  CES-only causal filter, last observation g old (latency irrelevant once ell <= g):
+    g= 10 ms: MSE 3169.8 (stored by_gap 3169.8)
+    g= 20 ms: MSE 3839.5 (stored by_gap 3839.5)
+    g= 50 ms: MSE 5091.9 (stored by_gap 5091.9)
+
+CES_TI classical fit: skill(ell, g) = 1 - MSE_now(ell) / MSE_pers(g); nowcaster depends on ell only, persistence on g only
+  ell\g[ms]        10        20        50       100
+       0.0    +0.410    +0.467    +0.564    +0.630
+       1.5    +0.397    +0.455    +0.554    +0.622
+       6.0    +0.360    +0.422    +0.527    +0.599
+       9.0    +0.338    +0.402    +0.511    +0.585
+  CES-only causal filter, last observation g old (latency irrelevant once ell <= g):
+    g= 10 ms: MSE 29816.9 (stored by_gap 29816.9)
+    g= 20 ms: MSE 32504.3 (stored by_gap 32504.3)
+    g= 50 ms: MSE 37329.7 (stored by_gap 37329.7)
+
+ELM: 3sigma census: A=509 eV, tau_rec=25 ms ; tau_crash=0.3 ms, t_c=1.0 ms -> y_min = y0 - 490.8 eV ; excursion energy int (y-y0)^2 dt = 3159.6 eV^2 s
+     ell   peak|e| eV   peak at ms     int e^2 dt  frac of event  e at t1+ell
+     0.0          0.0        -2.00           0.00          0.000          0.0
+     1.0        490.8         1.00         185.39          0.059         19.2
+     1.5        490.8         1.00         306.84          0.097         28.6
+     6.0        490.8         1.00        1297.24          0.411        104.7
+     9.0        490.8         1.00        1865.12          0.590        148.4
+    10.0        490.8         1.00        2039.76          0.646        161.8
+  10 ms label integration: first grid row after onset shows (y0 - ybar)/(y0 - ymin) = 0.00 (min) .. 0.82 (max), mean 0.56 over onset phase
+
+ELM: recovering top-1%: A=1198 eV, tau_rec=37 ms ; tau_crash=0.3 ms, t_c=1.0 ms -> y_min = y0 - 1155.3 eV ; excursion energy int (y-y0)^2 dt = 25510.5 eV^2 s
+     ell   peak|e| eV   peak at ms     int e^2 dt  frac of event  e at t1+ell
+     0.0          0.0        -2.00           0.00          0.000          0.0
+     1.0       1155.3         1.00        1020.56          0.040         30.8
+     1.5       1155.3         1.00        1691.69          0.066         45.9
+     6.0       1155.3         1.00        7340.72          0.288        172.9
+     9.0       1155.3         1.00       10742.59          0.421        249.4
+    10.0       1155.3         1.00       11816.61          0.463        273.6
+  10 ms label integration: first grid row after onset shows (y0 - ybar)/(y0 - ymin) = 0.00 (min) .. 0.86 (max), mean 0.57 over onset phase
+
+wrote C:\Users\lss\AppData\Local\Temp\claude\C--Users-lss-Documents-GitHub-ml-intern-revision\37a50297-1e19-458e-9590-7936dea04198\scratchpad\p10\p10_results.json
