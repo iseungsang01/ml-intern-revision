@@ -4840,8 +4840,8 @@ thesis, derived it from first principles as explicit equations in time t, and ch
 derivation on the 641-file census and/or the frozen TEST artifacts. The synthesis is
 `docs/theory_results_physics.md`: chapter 0 states one time-domain generative model (M1–M7) that all
 ten results fall out of; chapter 1 holds the ten proofs verbatim; chapter 2 the relevance narrative
-and the measurements the proofs name. No model was trained, scored or selected. Scripts live in the
-session scratchpad (`p01/`–`p10/`); every number below is transcribed into the document.
+and the measurements the proofs name. No model was trained, scored or selected. Scripts and their JSON outputs live in
+`ces_prediction/experiments/proofs/p01`–`p10`; every number below is transcribed into the document.
 
 ### 1. The one model
 
@@ -4882,4 +4882,4 @@ exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
    surface (P06, P03); an exact OU/Kalman causal arm scored on the frozen rows (P02, P06); a
    same-estimator online standardization arm (P04).
 
-Artifacts: `docs/theory_results_physics.md`; session scratchpad `p01/`–`p10/` (scripts + JSON).
+Artifacts: `docs/theory_results_physics.md`; `ces_prediction/experiments/proofs/p01`–`p10` (scripts + JSON).

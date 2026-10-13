@@ -5,7 +5,7 @@
 모형** 아래 묶고, "이 연구의 결과가 왜 그런 값이며 무엇에 관련되는가"를 물리의 언어로 적는다.
 앞선 두 문서(`theory_foundations.md`: 측정·추정·통계, `theory_plasma_physics.md`: 플라즈마 거동)가
 도구를 만들었다면, 이 문서는 그 도구로 **결과를 설명**한다. 어떤 모델도 학습·채점·선택하지 않았다.
-각 증명의 스크립트와 출력은 세션 scratchpad `pNN/`에 있고 핵심 수치는 본문 표에 전사했다.
+각 증명의 스크립트와 출력은 `ces_prediction/experiments/proofs/pNN/`에 있고 핵심 수치는 본문 표에 전사했다.
 
 **읽는 순서.** 0장(통일 모형과 결과 지도) → 1장(증명 P01–P10 전문) → 2장(종합: 관련성의 서사와
 남은 측정). 0장만 읽어도 결론은 닫힌다.
@@ -105,14 +105,14 @@ kHz Mirnov 모드 주파수(=회전의 Doppler), NBI·RMP 파형, ELM 지시자.
 
 ## 1. 열 개의 증명 (P01–P10)
 
-각 증명은 독립 에이전트가 작성했고 형식은 같다: 명제 → 유도 → 시간 $t$의 식 → 데이터 검산 → 기록과의 연결 → 한계와 반증 조건. 스크립트 경로의 `scratchpad/`는 작성 세션의 임시 폴더이며, 수치는 본문에 전사되어 있다.
+각 증명은 독립 에이전트가 작성했고 형식은 같다: 명제 → 유도 → 시간 $t$의 식 → 데이터 검산 → 기록과의 연결 → 한계와 반증 조건. 스크립트와 산출 JSON은 `ces_prediction/experiments/proofs/pNN/`에 있고, 수치는 본문에 전사되어 있다.
 
 
 ### P01 — $T_i$ 헤드라인(+0.24 vs PCHIP, 4/4)은 천이 물리다: 유도, 시간 영역의 식, 항등식, 측정
 
 **한 줄 결론.** 타깃을 "OU 배경 + 희소 충격"으로 쓰면 MSE skill은 정확히 $\mathrm{skill}=f_I\,r_I-(1-f_I)\,\ell_B$ 로 분해되고, 얼린 TEST 4분할에서 천이 항 $f_I r_I$ 만으로 헤드라인의 90–114 %가 나온다($+0.199/+0.223/+0.244/+0.265$ 대 헤드라인 $+0.174/+0.248/+0.257/+0.264$). 조용한 절반의 행에서는 모델이 4/4 분할 모두 비인과 GP에 지고($-0.09\ldots-0.31$), 상위 5 % 천이 행에서는 4/4 모두 이긴다($+0.05\ldots+0.09$). $f_I$(천이 행의 PCHIP SSE 비중, 0.72–0.78)는 타깃 자신의 제곱 변동 중 천이 행 비중(0.71–0.77)과 같다. 원시 641파일에서 $\Delta T_i$와 $\Delta(\text{ECEI})$의 Pearson 상관은 전체 $+0.142$에서 $|\Delta T_i|\ge q_{95}$ 조건부 $+0.238$로 오르고(CI 분리), lag 0에서만 산다.
 
-**스크립트.** `scratchpad/p01\p01_transient_proof.py`(npz `is_peak`·후방 점프 층화, shot별, 원시 증분 상관)와 같은 폴더의 `p01_part2.py`(양방향 점프 $J$ 층화, GP 교량 검정, lag 구조). 출력은 `p01_run.log`, `p01_part2_run.log`, `p01_results.json`, `p01_part2_results.json`. 추적 파일은 수정하지 않았고 모델은 학습·채점하지 않았다. 아래의 모든 수치는 이 두 로그 또는 인용한 파일(`docs/theory_foundations.md`, `docs/theory_plasma_physics.md`, `THESIS_RESULTS.md`)에서 왔다.
+**스크립트.** `ces_prediction/experiments/proofs/p01/p01_transient_proof.py`(npz `is_peak`·후방 점프 층화, shot별, 원시 증분 상관)와 같은 폴더의 `p01_part2.py`(양방향 점프 $J$ 층화, GP 교량 검정, lag 구조). 출력은 `p01_run.log`, `p01_part2_run.log`, `p01_results.json`, `p01_part2_results.json`. 추적 파일은 수정하지 않았고 모델은 학습·채점하지 않았다. 아래의 모든 수치는 이 두 로그 또는 인용한 파일(`docs/theory_foundations.md`, `docs/theory_plasma_physics.md`, `THESIS_RESULTS.md`)에서 왔다.
 
 #### 1. 유도
 
@@ -241,7 +241,7 @@ ECEI는 예측대로 조건부가 1.7배 크고 CI가 분리된다(Spearman 0.23
 ### P02 — $V_\varphi$ 판정(양측 보간과 동률·persistence보다 우위·중앙값에서는 보간보다 열세·집계 우위는 꼬리에서만)은 "모든 토크 항이 비관측인 토로이달 운동량 균형"의 유일한 귀결이다
 
 **스크립트** (읽기 전용, 학습·채점 없음):
-`scratchpad/p02\p02_vrot_momentum.py` (Part A npz·Part B OU 닫힌 형식·Part C 원시 CSV 증분 교차상관) 및 같은 폴더의 `p02_part_d.py` (다중 척도 사건 검정·PCHIP 폴백 행), 출력 `p02_stdout.txt`, `p02_part_d_stdout.txt`, `p02_results.json`, `p02_part_d.json`, `p02_fallback.json`. 입력: `data/.b1_seqv2_s42_i42/comparison_errors_test.npz`(s42 컷), `data/.foundations.json`(D 강건 OU 적합, E 사다리), `data/*.csv` 641파일.
+`ces_prediction/experiments/proofs/p02/p02_vrot_momentum.py` (Part A npz·Part B OU 닫힌 형식·Part C 원시 CSV 증분 교차상관) 및 같은 폴더의 `p02_part_d.py` (다중 척도 사건 검정·PCHIP 폴백 행), 출력 `p02_stdout.txt`, `p02_part_d_stdout.txt`, `p02_results.json`, `p02_part_d.json`, `p02_fallback.json`. 입력: `data/.b1_seqv2_s42_i42/comparison_errors_test.npz`(s42 컷), `data/.foundations.json`(D 강건 OU 적합, E 사다리), `data/*.csv` 641파일.
 
 #### 0. 명제
 
@@ -432,7 +432,7 @@ $$
 
 **판정 요약.** (A)는 **수치로는 기각, 형태로는 지지**: 적합된 OU 모수로 cold-start Kalman 재귀를 풀면 2 % 문턱 도달은 **2 스텝(강건)·3 스텝(고전)**이지 5가 아니며, §8al 곡선과의 RMS 차는 0.021–0.026(측정 곡선 자체의 RMS 0.032)이다. 측정 곡선의 감쇠비 0.56/스텝(유효 기억 3.4 스텝)은 OU가 주는 0.18–0.33보다 느리고, 이를 OU 안에서 재현하려면 Kalman 이득 0.155($\sigma_n/\sigma_s=1.88$)가 필요한데 어느 적합도 그런 잡음비를 주지 않는다. 따라서 **CES 이력 채널의 잡음 평균화만으로는 50 ms의 절반도 설명되지 않고**, 나머지는 OU가 담지 않는 두 번째 척도 — 데이터에서 직접 잰 ELM형 회복 $\tau_{\rm rec}\approx55$–64 ms — 와 빠른 진단의 블록별 수준 보정이 운반한다. (B)는 자릿수로 성립: $\tau_{\rm eq}$ 18–39 ms(CES 구석), $\tau_{\rm build}$ 4–17 ms(껍질 체적) / 42–192 ms(플라즈마 체적), $\tau_{\rm rec}$ 55–64 ms가 모두 50 ms의 한 자릿수 안에 있다. (C)는 "같은 자릿수의 pedestal 척도"로만 주장하고, "동일한 물리"로는 주장하지 않는다.
 
-스크립트: `scratchpad/p03\p03_proof.py` → 같은 폴더의 `p03_results.json`, `p03_stdout.txt`. 입력: `data/.foundations.json` 키 D(OU 적합)·641개 shot CSV(held-free, 3 keV 컷, ≥ 0.5 s 간극에서 블록 분할 — `analyze_foundations.py`와 동일 처리). 모델 학습·채점 없음.
+스크립트: `ces_prediction/experiments/proofs/p03/p03_proof.py` → 같은 폴더의 `p03_results.json`, `p03_stdout.txt`. 입력: `data/.foundations.json` 키 D(OU 적합)·641개 shot CSV(held-free, 3 keV 컷, ≥ 0.5 s 간극에서 블록 분할 — `analyze_foundations.py`와 동일 처리). 모델 학습·채점 없음.
 
 ---
 
@@ -639,7 +639,7 @@ $$
 ### P04 캠페인 드리프트는 계측·기하 물리이고, shot별 표준화는 올바른 관측 모형이다
 
 **스크립트**
-- `scratchpad/p04\p04_campaign_drift.py` (per-file 통계·R²·η²·편상관·§8n 재현·EWMA 실측 → `p04_per_file_stats.csv`, `p04_results.json`)
+- `ces_prediction/experiments/proofs/p04/p04_campaign_drift.py` (per-file 통계·R²·η²·편상관·§8n 재현·EWMA 실측 → `p04_per_file_stats.csv`, `p04_results.json`)
 - 같은 폴더의 `p04_extra.py` (§8n 정확 재현·run-day 묶음 R²·"공짜 손실" 검정 → `p04_extra_results.json`)
 - 입력: `data/s*.csv` 641개, held-free(`STUCK_GAP` 0.5 s 블록 내 반복값 제거), `CES_TI > 3000 eV` 컷, 파이프라인과 같이 타깃이 하나라도 관측된 행만 사용. 모델 학습·채점 없음, 추적 파일 수정 없음.
 
@@ -811,8 +811,8 @@ $\tau_w=1$ s의 정상 구간(2–8 s) 실측 0.29–0.33 σ는 유도값 $b\tau
 **명제.** KSTAR pedestal에서 $T_i>3$ keV는 peeling–ballooning(PB) 압력 한계가 배제한다. 따라서 사전등록된 값 컷 `CES_TI_SPIKE_CUT_EV = 3000`(§8ab)은 사후 행 수술이 아니라 물리 제약이며, 컷이 제거하는 행의 통계(1,197행 · 951런 · 85 % 단일행 · 이웃의 13배)는 플라즈마 사건이 아니라 스펙트럼 적합 실패의 통계다.
 
 **스크립트.**
-- `scratchpad/p05\p05_pressure_limit.py` → `out.json` (A 압력 한계, B 파워, D 641파일 검열; `py <file>` 또는 `--skip-mc`)
-- `…\scratchpad/p05\p05_fit_mc.py` → `mc.json` (C Gaussian 적합 오염 몬테카를로)
+- `ces_prediction/experiments/proofs/p05/p05_pressure_limit.py` → `out.json` (A 압력 한계, B 파워, D 641파일 검열; `py <file>` 또는 `--skip-mc`)
+- `…\ces_prediction/experiments/proofs/p05/p05_fit_mc.py` → `mc.json` (C Gaussian 적합 오염 몬테카를로)
 
 가정값(부록 A, `docs/theory_plasma_physics.md`): $I_p=0.6$ MA, $B_T=1.8$ T, $a=0.5$ m, $R=1.8$ m, $\kappa=1.8$, $q_{95}=4$, $n_e=3\times10^{19}$ m$^{-3}$, 흡수 가열 $P=3$ MW. 본 CSV에는 $n_e, T_e, P$가 물리 단위로 없으므로 이 절의 한계값은 "자릿수 경계"이지 shot별 수치가 아니다.
 
@@ -1020,7 +1020,7 @@ $|\Delta$ECEI$|$ 구간별 스파이크 발생률: 하위 10 % **0.70 %**, 중�
 
 ### P06 빠른 진단이 더하는 정보는 혁신과의 상호정보로 유계이고, 측정된 +0.05는 그 한계 안에 있다
 
-스크립트: `scratchpad/p06\p06_mi_bound.py` (출력 `p06_output.txt`, `p06_results.json`) 및 시간 영역 보조 계산 `p06_timedomain.py` (출력 `p06_timedomain_output.txt`), 모두 같은 폴더. 모델 학습·채점 없음, 추적 파일 수정 없음. 인용 파일: `docs/theory_foundations.md` §3.2·§3.3·§7.4·§7.8·§8, `data/.foundations.json` D·E, `THESIS_RESULTS.md` §8ar·§8ab 8절.
+스크립트: `ces_prediction/experiments/proofs/p06/p06_mi_bound.py` (출력 `p06_output.txt`, `p06_results.json`) 및 시간 영역 보조 계산 `p06_timedomain.py` (출력 `p06_timedomain_output.txt`), 모두 같은 폴더. 모델 학습·채점 없음, 추적 파일 수정 없음. 인용 파일: `docs/theory_foundations.md` §3.2·§3.3·§7.4·§7.8·§8, `data/.foundations.json` D·E, `THESIS_RESULTS.md` §8ar·§8ab 8절.
 
 #### 1. 유도
 
@@ -1413,7 +1413,7 @@ BES 수준(×ECEI 활동 교란 제거)으로 층화한 $J_2$와 $|dB|$ (genuine
 
 #### 스크립트와 산출물
 
-- `scratchpad/p07\p07_mnar_check.py` → `p07_results.json`, `p07_output.txt` (2.1–2.4 표 전체)
+- `ces_prediction/experiments/proofs/p07/p07_mnar_check.py` → `p07_results.json`, `p07_output.txt` (2.1–2.4 표 전체)
 - 같은 폴더의 `p07_crb_background.py` (1.3 표), `p07_event_study.py` → `p07_event_p1.json`, `p07_event_p05.json` (2.4 사건 정렬)
 - 인용 파일: `docs/theory_foundations.md` §1.2–1.6, 6.3–6.4, 12; `docs/theory_plasma_physics.md` §6.3–6.4, 8.3; `THESIS_RESULTS.md` §8i, §8ab 9절, §8at, §8r; held 규칙 `ces_prediction/dataset.py::_stuck_repeat_mask`
 
@@ -1579,7 +1579,7 @@ $$
 4. $V_\varphi$에서 $p_{\rm obs}$, $r$, $\kappa_V$는 분리되지 않는다 — 측정되는 것은 곱이다. 충격행 패배(0.425)는 $r\le0$과 양립하지만 단독 증명은 아니다.
 5. 상관이지 인과가 아니다: 가시성 대리는 "ELMy H-mode 체제"의 대리일 수 있다. **뒤집을 측정**: B.6의 kHz Mirnov 모드 주파수(또는 NBI/RMP 파형)를 입력으로 넣으면 (i) $V_\varphi$ 충격행의 $p_{\rm obs}$ 농축이 1을 넘고, (ii) $V_\varphi$ 충격행 승률이 본류행 승률(0.530)을 **역전**하며, (iii) §8an의 예측대로 변동 삼분위 승률이 먼저 오른다. 셋 중 하나라도 안 일어나면 이 기제는 틀렸다.
 
-**스크립트·출력.** `scratchpad/p08\p08_winrate_asymmetry.py` → 같은 폴더의 `p08_results.json`(방전별 전체 표 포함). 입력: 위 네 npz + `data/s*.csv`(641). 쌍 차 CI는 같은 JSON에서 부트스트랩(5000)으로, §1′의 $\kappa$ 상수는 닫힌 식과 이산 합을 따로 계산해 대조했다. 추적 파일 수정 없음, 모델 학습·채점 없음.
+**스크립트·출력.** `ces_prediction/experiments/proofs/p08/p08_winrate_asymmetry.py` → 같은 폴더의 `p08_results.json`(방전별 전체 표 포함). 입력: 위 네 npz + `data/s*.csv`(641). 쌍 차 CI는 같은 JSON에서 부트스트랩(5000)으로, §1′의 $\kappa$ 상수는 닫힌 식과 이산 합을 따로 계산해 대조했다. 추적 파일 수정 없음, 모델 학습·채점 없음.
 
 
 ### P09 — 장치 간 사전학습(MAST → KSTAR)은 CES 갭 메우기 지식을 옮길 수 없다: 무차원 유사성과 계기 단위 논증
@@ -1691,7 +1691,7 @@ $$\frac{\mathrm{SE}(\hat\tau)}{\tau}\approx\sqrt{\frac{2\tau}{T}},\qquad \frac{\
 - 식 (1)은 선형화이고 $A_k$를 충격으로 둔 근사다. ELM 붕괴 자체(0.1–1 ms)는 10 ms 격자 아래라 한 점으로만 보이므로(§1.4), 격자 위에서는 (2)의 톱니 형태가 전부다.
 - 이 증명이 닫는 것은 "같은 구조의 다른 장치 가중치"다. 같은 장치의 라벨 없는 행을 쓰는 `mae` 팔(§8au가 연 경로)은 계기 사상을 KSTAR에서 배우므로 여기서 배제되지 않는다 — 그것이 다음 측정이다.
 
-**스크립트.** `scratchpad/p09/p09_check.py` → `p09_out.json` (§1–§5 출력). 입력: `docs/theory_plasma_physics.md` §1·§5·§6·§11 가정값, `data/.foundations.json` D.CES_TI.fits.robust, `ces_prediction/experiments/b12/b12_models.py` 구조 상수, `THESIS_RESULTS.md` §8az 표, 641 shot CSV의 `time`·`CES_TI`·`CES_VT` 열.
+**스크립트.** `ces_prediction/experiments/proofs/p09/p09_check.py` → `p09_out.json` (§1–§5 출력). 입력: `docs/theory_plasma_physics.md` §1·§5·§6·§11 가정값, `data/.foundations.json` D.CES_TI.fits.robust, `ces_prediction/experiments/b12/b12_models.py` 구조 상수, `THESIS_RESULTS.md` §8az 표, 641 shot CSV의 `time`·`CES_TI`·`CES_VT` 열.
 
 **출처(웹).** MAST-U 기하·자장·전류: [arXiv 2407.07784](https://arxiv.org/pdf/2407.07784), [Wikipedia MAST](https://en.wikipedia.org/wiki/Mega_Ampere_Spherical_Tokamak); TokaMind: [arXiv 2602.15084](https://arxiv.org/abs/2602.15084v1); MAST pedestal 충돌도 0.6–1.4: [EPS 2012 O4.111](https://lac913.epfl.ch/epsppd3/2012/pdf/O4.111.pdf); MAST RMP n=4,6: [arXiv 1305.3061](https://arxiv.org/pdf/1305.3061).
 
@@ -1702,7 +1702,7 @@ $$\frac{\mathrm{SE}(\hat\tau)}{\tau}\approx\sqrt{\frac{2\tau}{T}},\qquad \frac{\
 
 **결론 한 줄.** 등급 A(수송 제어, $\tau_E\sim$ 80–140 ms)에는 측정된 모든 인과 팔이 들어가고, 등급 B(ELM 트리거, < 1 ms)와 C(MHD 모드·회전 피드백, 0.1–1 ms)는 추론 지연이 아니라 **라벨의 10 ms 적분**이 배제한다. 따라서 §8aj가 1 ms 판정을 보류했어도 등급 배정은 흔들리지 않는다. 단, "지연 1–10 ms의 skill 비용은 $\tau\approx80$ ms라 미미하다"는 기대는 **eV 단위에서만** 맞고 skill 단위에서는 틀리다(§1(a)).
 
-스크립트: `scratchpad/p10\p10_latency_classes.py` (출력 `p10_output.txt`, 수치 `p10_results.json`, 같은 폴더). 입력: `data/.foundations.json`(D.CES_TI.fits), `data/.b9_op_counts.json`, `data/.b9_latency_min.json`, `data/.latency_benchmark.json`, `data/*.csv` 641파일. 추적 파일 변경 없음, 학습·채점 없음.
+스크립트: `ces_prediction/experiments/proofs/p10/p10_latency_classes.py` (출력 `p10_output.txt`, 수치 `p10_results.json`, 같은 폴더). 입력: `data/.foundations.json`(D.CES_TI.fits), `data/.b9_op_counts.json`, `data/.b9_latency_min.json`, `data/.latency_benchmark.json`, `data/*.csv` 641파일. 추적 파일 변경 없음, 학습·채점 없음.
 
 #### 1. 유도
 
