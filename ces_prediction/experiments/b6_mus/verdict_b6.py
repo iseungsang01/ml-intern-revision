@@ -108,18 +108,25 @@ def local_vt_activity(shots, rows, shot_index_to_name, data_dir):
     return out
 
 
-def analyze(prefix, pop, split, target, rng):
+def analyze(prefix, pop, split, target, rng, exclude_shots=(), arm1="a1"):
     a0 = [load_arm(prefix, pop, "a0", s, split) for s in SEEDS]
-    a1 = [load_arm(prefix, pop, "a1", s, split) for s in SEEDS]
+    a1 = [load_arm(prefix, pop, arm1, s, split) for s in SEEDS]
     pairing_check(a0 + a1, target)
     ref = a0[0]
-    shots = ref[f"{target}_shot"]
-    rows = ref[f"{target}_row"]
-    y = ref[f"{target}_y_true"]
-
     data_dir = DATA / ".b6_data"
     names = sorted(p.name for p in data_dir.glob("s*.csv"))
     idx_to_name = dict(enumerate(names))
+    if exclude_shots:
+        # sensitivity row only (sec. 1.4 channel-exclusion rule): drop whole discharges
+        drop = {i for i, n in idx_to_name.items() if int(n[1:].split(".")[0]) in exclude_shots}
+        keep = ~np.isin(ref[f"{target}_shot"], list(drop))
+        for r in a0 + a1:
+            for key in list(r.keys()):
+                if key.startswith(target + "_") and len(r[key]) == len(keep):
+                    r[key] = r[key][keep]
+    shots = ref[f"{target}_shot"]
+    rows = ref[f"{target}_row"]
+    y = ref[f"{target}_y_true"]
     cache = {}
     times = row_times(idx_to_name, shots, rows, data_dir, cache)
 
@@ -198,15 +205,25 @@ def main():
     ap.add_argument("--prefix", default=str(DATA / ".b6"))
     ap.add_argument("--split", default="test")
     ap.add_argument("--pops", nargs="*", default=["cut", "incl"])
+    ap.add_argument("--exclude-shots", nargs="*", type=int, default=[],
+                    help="sensitivity row only: drop these test discharges (sec. 1.4 rule)")
+    ap.add_argument("--arm1", default="a1",
+                    help="a1 (H1 primary) or a2 (the mandatory ablation, reported not judged)")
     args = ap.parse_args()
     rng = np.random.default_rng(BOOT_SEED)
+    sensitivity = bool(args.exclude_shots) or args.arm1 != "a1"
 
-    out = {"split": args.split, "test_shots": list(TEST), "targets": {}}
+    out = {"split": args.split, "test_shots": list(TEST), "targets": {},
+           "arm1": args.arm1, "exclude_shots": list(args.exclude_shots),
+           "sensitivity_row": sensitivity}
     for target in ("CES_VT", "CES_TI"):
         role = "confirmatory (H1)" if target == "CES_VT" else "descriptive only (sec. 5)"
+        if sensitivity:
+            role += " -- SENSITIVITY ROW, not the pre-registered verdict"
         node = {"role": role, "populations": {}}
         for pop in args.pops:
-            r = analyze(args.prefix, pop, args.split, target, rng)
+            r = analyze(args.prefix, pop, args.split, target, rng,
+                        exclude_shots=tuple(args.exclude_shots), arm1=args.arm1)
             node["populations"][pop] = r
             print(a(f"\n== {target} [{pop}] ({role}) =="))
             print(a(f"  pooled A1-A0 skill {r['pooled']['skill']:+.4f} "
@@ -223,7 +240,10 @@ def main():
             print(a(f"\nH1 ({'+'.join(args.pops)}): {node['h1']}"))
         out["targets"][target] = node
 
-    dst = DATA / (".b6_verdict.json" if args.split == "test" else ".b6_verdict_val.json")
+    tag = "" if not sensitivity else (
+        f"_{args.arm1}" + ("".join(f"_x{s}" for s in args.exclude_shots)))
+    dst = DATA / (f".b6_verdict{tag}.json" if args.split == "test"
+                  else f".b6_verdict_val{tag}.json")
     dst.write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(a(f"\n[b6v] wrote {dst}"))
 
