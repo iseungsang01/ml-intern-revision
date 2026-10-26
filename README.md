@@ -128,6 +128,15 @@ Every training/data/model change must preserve this contract unless the change i
 
 ## Dataset Flow
 
+**Provenance (provider's note, 2026-10-26).** The 641 shot CSVs come from the lab server
+`/home/huiwon/KSTAR/data_set_2022/s{shot}.csv` (KSTAR 2022 campaign, discharges 30801–32751 minus
+data-poor ones). `CES_TI` / `CES_VT` are the 2022 channel `CES_TI18` / `CES_VT18` at **R = 2.198 m**;
+the BES and ECEI channels sit within ~1.5 cm of that chord (approximate positions, uncorrected for
+equilibrium motion); `MC1T03` / `MC1T16` are two coils of one poloidal Mirnov array. The provider
+says to ignore each file's first and last row (t = 0 and t ≈ 30 s); they carry no label and never
+become a sample here, see PROJECT_KNOWLEDGE.md "Useful Reference". The 12-shot raw microsecond
+delivery lives in `data/raw_mus/` (gitignored), read by `experiments/b6_mus/raw_loader.py`.
+
 ```text
 data/*.csv
    |

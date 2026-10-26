@@ -1176,6 +1176,27 @@ no arm beats the training mean); the pretrained and random transformer backbones
 
 ## Useful Reference
 
+**Dataset provenance and geometry (provider's note, relayed by 승상님 2026-10-26).** The 641 shot
+CSVs are `/home/huiwon/KSTAR/data_set_2022/s{shot}.csv` on the lab server: discharges 30801–32751
+(the 2022 campaign) minus those with insufficient data. The provider says to **ignore the first
+and last row of every file** — measured here: those rows sit at t = 0.0 s and t ≈ 30 s, 11–30 s
+away from the data block, carry no CES label in any of the 641 files and have complete inputs, so
+they never become a scored sample or a sequence block (`build_blocks` drops 1-row blocks); their
+only footprint is 2 of ~500 rows in each shot's per-shot input statistics, which is noise-level.
+Recorded as a known deviation, not fixed, because dropping them changes cache signatures and the
+frozen pairing. **`CES_TI18` / `CES_VT18` are the 2022 CES channel at R = 2.198 m** (the
+labelled chord; our `CES_TI` / `CES_VT`). Fast-channel positions (approximate — exact positions
+need per-time-step `syndia` equilibrium correction, which the provider considers impractical at
+this volume, so "nearby" is the intended use): BES `0105–0107` at R ≈ 2.184 / 2.195 / 2.207 m,
+z ≈ −0.011 m; `0205–0207` at R ≈ 2.182 / 2.194 / 2.205 m, z ≈ +0.002 m; `0305–0307` at R ≈ 2.181 /
+2.192 / 2.203 m, z ≈ +0.017 m; ECEI `GT1103 / 1203 / 1303 / 1403` at R ≈ 2.193 m, z ≈ −0.025 /
+−0.008 / +0.008 / +0.025 m — i.e. **every fast channel is within ~1.5 cm of the CES chord**, which
+is the geometric basis for the T_i transient chain (same flux-surface neighbourhood). The Mirnov
+coils are two positions (3 and 16) of a **poloidal array at one toroidal location**, so the two-coil
+cross-phase measures poloidal wavenumber, not toroidal rotation — part of why the §8bd "mode
+rotation" feature was never a rotation readout. Open question for the provider: the note names
+`MC1T06`, the CSV header says `MC1T16`.
+
 `THESIS_RESULTS.md` §8 is the per-experiment record — add a section there after every controlled
 round, and summarize lasting lessons into this file.
 `docs/presentation/make_figure_transient.py` wires up the pinned architecture + trustworthy

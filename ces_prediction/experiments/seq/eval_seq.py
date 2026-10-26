@@ -168,12 +168,17 @@ def compare():
     my_stats = _load_stats(metrics)
     # B.6 guard (mirrors the train_ctx guard): the extra-channel and MC-ablation
     # treatment at eval must equal the one the checkpoint was trained with.
-    from seq_data import extra_vt_meta  # noqa: PLC0415 (env-dependent, resolve late)
+    from seq_data import extra_vt_meta, extra_ti_meta  # noqa: PLC0415 (env-dependent, resolve late)
     env_extra = extra_vt_meta()[0]
     run_extra = int(metrics.get("extra_vt_channels", 0) or 0)
     if env_extra != run_extra:
         raise SystemExit(f"FATAL: CES_SEQ_EXTRA_VT gives {env_extra} channels but this run "
                          f"was trained with {run_extra} -- refusing to score a mismatched arm.")
+    env_ti = extra_ti_meta()[0]
+    run_ti = int(metrics.get("extra_ti_channels", 0) or 0)
+    if env_ti != run_ti:
+        raise SystemExit(f"FATAL: CES_SEQ_EXTRA_TI gives {env_ti} channels but this run "
+                         f"was trained with {run_ti} -- refusing to score a mismatched arm.")
     env_zero_mc = os.getenv("CES_SEQ_ZERO_MC", "0") == "1"
     if env_zero_mc != bool(metrics.get("zero_mc", False)):
         raise SystemExit("FATAL: CES_SEQ_ZERO_MC does not match the training treatment.")

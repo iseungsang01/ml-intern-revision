@@ -116,6 +116,36 @@ def test_v2_routing_extras_reach_vrot_only():
     assert not torch.allclose(out_a[..., 1], out_b[..., 1])   # V_rot sees them
 
 
+def test_v2_routing_ti_extras_reach_ti_only():
+    """B.6-T: K_ti channels laid out after the V_rot extras feed the T_i encoder only."""
+    import torch
+    from model_seq_v2 import SeqCESLSTMv2
+    model = SeqCESLSTMv2(n_extra_vt=0, n_extra_ti=27)
+    model.eval()
+    x = torch.randn(1, 40, 22 + 27)
+    with torch.no_grad():
+        out_a = model(x)
+        x2 = x.clone()
+        x2[..., 22:] = torch.randn_like(x2[..., 22:])
+        out_b = model(x2)
+    assert torch.equal(out_a[..., 1], out_b[..., 1])          # V_rot blind to the T_i extras
+    assert not torch.allclose(out_a[..., 0], out_b[..., 0])   # T_i sees them
+    both = SeqCESLSTMv2(n_extra_vt=15, n_extra_ti=27)
+    both.eval()
+    x = torch.randn(1, 40, 22 + 15 + 27)
+    with torch.no_grad():
+        o = both(x)
+        x3 = x.clone()
+        x3[..., 22:37] = torch.randn_like(x3[..., 22:37])     # perturb V_rot extras only
+        o3 = both(x3)
+        x4 = x.clone()
+        x4[..., 37:] = torch.randn_like(x4[..., 37:])         # perturb T_i extras only
+        o4 = both(x4)
+    assert torch.equal(o[..., 0], o3[..., 0]) and not torch.allclose(o[..., 1], o3[..., 1])
+    assert torch.equal(o[..., 1], o4[..., 1]) and not torch.allclose(o[..., 0], o4[..., 0])
+    assert SeqCESLSTMv2(n_extra_vt=0, n_extra_ti=0).n_params == 357_570   # frozen checkpoints
+
+
 def test_positive_control_detectors_fire_and_stay_quiet():
     from raw_positive_controls import mc_envelope_jump, wcm_peak_present
     t = np.arange(0, 8.0, 1 / 100_000.0)

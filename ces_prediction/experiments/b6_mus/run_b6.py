@@ -54,9 +54,11 @@ DATA = REPO_ROOT / "data"
 SEQ = HERE.parents[0] / "seq"
 STAGE_DATA = DATA / ".b6_data"
 FEATURE_DIR = DATA / ".b6_features"
+FEATURE_TI_DIR = DATA / ".b6_features_ti"      # B.6-T (PREREGISTRATION_B6T.md): arm t1
 REFIT_SEEDS = (42, 1, 7, 123)
 FOLD_EPOCH_CAP = "100"
 ARMS = ("a0", "a1", "a2")
+EXTRA_ARMS = ("t1",)                            # exploratory T_i path, run by --arms t1
 POPULATIONS = {"cut": "3000", "incl": "0"}
 
 
@@ -94,11 +96,14 @@ def base_env(arm, cut_ev, feature_dir):
         "CES_LR": "1e-3",
     })
     env.pop("CES_SEQ_EXTRA_VT", None)
+    env.pop("CES_SEQ_EXTRA_TI", None)
     env.pop("CES_SEQ_ZERO_MC", None)
     if arm in ("a1", "a2"):
         env["CES_SEQ_EXTRA_VT"] = str(feature_dir)
     if arm == "a2":
         env["CES_SEQ_ZERO_MC"] = "1"
+    if arm == "t1":
+        env["CES_SEQ_EXTRA_TI"] = str(FEATURE_TI_DIR)
     return env
 
 
@@ -194,6 +199,9 @@ def main():
             args.arms = ["a1"]      # a1 exercises every new path: features, dims, guard
     else:
         feature_dir = FEATURE_DIR
+        if "t1" in args.arms and not (FEATURE_TI_DIR / "feature_meta.json").exists():
+            raise SystemExit(f"FATAL: no T_i raw features under {FEATURE_TI_DIR} -- run "
+                             "ti_raw_features.py first (real data only).")
         if any(a in args.arms for a in ("a1", "a2")):
             if not (feature_dir / "feature_meta.json").exists():
                 raise SystemExit("FATAL: no extracted features under "

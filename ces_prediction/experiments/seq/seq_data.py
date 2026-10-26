@@ -46,9 +46,22 @@ N_FAST_CHANNELS = 15
 # the A1 arm's "features enter the V_rot branch only" is enforced by construction.
 # Unset (the default, and every frozen run) => K = 0 and nothing changes.
 
+def extra_ti_meta():
+    """(K, exempt_indices, dir) for the CES_SEQ_EXTRA_TI feature dir; (0, (), None) if unset.
+
+    B.6-T (PREREGISTRATION_B6T.md): the same per-shot feature-table mechanism as the V_rot
+    extras, routed to the T_i encoder ONLY (model_seq_v2). Laid out after the V_rot extras.
+    """
+    return _extra_meta("CES_SEQ_EXTRA_TI")
+
+
 def extra_vt_meta():
     """(K, exempt_indices, dir) for the CES_SEQ_EXTRA_VT feature dir; (0, (), None) if unset."""
-    d = os.getenv("CES_SEQ_EXTRA_VT", "").strip()
+    return _extra_meta("CES_SEQ_EXTRA_VT")
+
+
+def _extra_meta(var):
+    d = os.getenv(var, "").strip()
     if not d:
         return 0, (), None
     d = Path(d)
@@ -120,6 +133,7 @@ def load_grid_files(data_dir, drop_stuck_targets, ti_spike_cut_ev=None):
     if not files:
         raise SystemExit(f"FATAL: no shot CSVs under {data_dir} -- real data required.")
     extra_k, extra_exempt, extra_dir = extra_vt_meta()
+    ti_k, ti_exempt, ti_dir = extra_ti_meta()
     bes, ecei, mc = infer_columns(files[0])
     usecols = [TIME_COLUMN, *TARGET_COLUMNS, *bes, *ecei, *mc]
     n_fast = len(bes) + len(ecei) + len(mc)
@@ -147,11 +161,15 @@ def load_grid_files(data_dir, drop_stuck_targets, ti_spike_cut_ev=None):
             extra = _load_extra_vt(fp.name, arr[:, 0].astype(np.float64),
                                    extra_k, extra_exempt, extra_dir)
             arr = np.concatenate([arr, extra.astype(np.float32)], axis=1)
+        if ti_k:
+            extra_ti = _load_extra_vt(fp.name, arr[:, 0].astype(np.float64),
+                                      ti_k, ti_exempt, ti_dir)
+            arr = np.concatenate([arr, extra_ti.astype(np.float32)], axis=1)
         out[fp.name] = arr
     if not out:
         raise SystemExit("FATAL: no usable shot files after loading.")
     return out, {"bes": len(bes), "ecei": len(ecei), "mc": len(mc), "n_fast": n_fast,
-                 "extra_vt": extra_k}
+                 "extra_vt": extra_k, "extra_ti": ti_k}
 
 
 def fit_stats(grid, dims, train_names):
@@ -182,9 +200,9 @@ def build_blocks(arr, dims, stats, per_shot_norm=False):
     time = arr[:, 0].astype(np.float64)
     tgt = arr[:, 1:3].astype(np.float64)
     fast = arr[:, 3:3 + dims["n_fast"]].astype(np.float64)
-    extra_k = int(dims.get("extra_vt", 0) or 0)
+    extra_k = int(dims.get("extra_vt", 0) or 0) + int(dims.get("extra_ti", 0) or 0)
     extra = arr[:, 3 + dims["n_fast"]:3 + dims["n_fast"] + extra_k].astype(np.float64) \
-        if extra_k else None
+        if extra_k else None     # [extra_vt | extra_ti], appended after the base layout
 
     if per_shot_norm:
         mean = fast.mean(axis=0)
