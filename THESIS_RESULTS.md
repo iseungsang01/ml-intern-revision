@@ -5026,4 +5026,55 @@ requires); a different feature family (e.g. the cross-phase *slope* across many 
 error-field paper's v⊥ method, which needs more than two coils) is a new pre-registration, not a
 re-tune of this one.
 
-**Companion measurements (H3, §4.5, H4)** are recorded in the addendum below once their runs finish.
+### Addendum (same day) — H3 leakage, the §4.5 time-ordered re-split, and the H4 figures
+
+**H3 — session leakage measured directly** (`run_b6_leak.py`, run after the verdict was locked,
+outputs under `data/.b6_leak_*`, `data/.b6_leak.json`; 500 ms block bootstrap because each
+measurement is one discharge). L1a adds companion #31923 to every A0 training set (folds and
+refits) and reads the paired skill change on its test partner #31921; L1b adds #31357 to the
+fold whose val shot is its partner #31359.
+
+| | `T_i` cut | `T_i` incl | `V_rot` cut | `V_rot` incl |
+|---|---|---|---|---|
+| L1a 31923 → 31921 (n = 437 / 258 rows, 10 / 9 blocks) | **+0.154** [+0.026, +0.236] | +0.023 [−0.012, +0.054] | +0.059 [−0.067, +0.438] | +0.006 [+0.001, +0.089] |
+| L1b 31357 → 31359 (n = 215 / 244, 6 / 5 blocks) | **+0.024** [+0.012, +0.086] | −0.012 [−0.077, +0.013] | −0.084 [−0.383, +0.053] | +0.109 [−0.037, +0.178] |
+
+The same-session partner is worth **+0.15 of `T_i` skill on #31921 in the cut population** (ten
+blocks, CI clear of zero) and +0.02 on #31359; in the inclusive population and for `V_rot` the
+effect is inside the noise. Two cautions written with the number: L1a also changes the training
+set from six to seven discharges, so the measured Δ is "one more shot that happens to be the
+partner", the quantity §6 registered; and one L1a cut fold stopped at the 100-epoch cap (fold 2,
+best epoch 100 — the B.3 lesson), so the cut refit epoch 29 is an upper-bounded median. Against the
+100 Hz summary distance that put the two pairs at the 0.03rd percentile, the leakage is real and
+`T_i`-sided — the companion rule in `folds.py` (never train on a partner across the test boundary)
+is vindicated at the gate scale.
+
+**§4.5 time-ordered re-split** (`run_b6_timesplit.py`, train = #31097 / #31359 / #31747, val =
+#32027 / #32092 / #32097, `data/.b6_timesplit.json`): A1 − A0 on `V_rot` −0.025 (cut) / −0.102
+(inclusive) with shot-clustered CIs spanning [−2.0, +1.0] — three validation discharges, one of
+them with eight `V_rot` rows, decide nothing. Three training discharges do not learn `T_i` at all
+(A0 vs PCHIP −0.61 / −1.17), so the row is reported as uninformative, as the pre-registration
+allowed ("보고만").
+
+**H4 — published transitions, three tiers** (`h4_figure.py`, `data/.b6_h4/h4_s{shot}_cut_s42.png`;
+raw 2 MHz Mirnov spectrogram 0–50 kHz / `T_i` / `V_rot`, CES observations with the A0 and A1 cut
+refits, never-trained discharges only). Qualitative, as registered:
+
+- **#31921**: in L-mode the coil shows two stationary lines (~10 kHz and ~35 kHz) with the
+  published FIRE marker (5.40 s) passing without a visible spectral change; at 7.3 s the broadband
+  burst activity begins, `T_i` rises from 0.4 to 1–2 keV and both refits track it with the same
+  shape; the H-mode marker (8.05 s) sits inside the bursty phase. A0 and A1 are nearly
+  indistinguishable on `T_i` and differ on `V_rot` only in the bursty phase, where A1 runs a few
+  km/s high.
+- **#31923** (companion, `V_rot` held for the whole discharge): the L → FIRE transition at 6.1 s is
+  the sharpest feature in the raw stream — the two L-mode lines end and burst activity starts
+  within one window — and `T_i` jumps from 0.3 to 1.5 keV at the same instant, tracked by both
+  refits. The `V_rot` panel shows the H1 mechanism in one picture: **A1's `V_rot` prediction spikes
+  to 60–85 km/s on every Mirnov burst after 6.1 s while A0 stays at 10–40 km/s** — the restored
+  features inject burst amplitude into the rotation estimate. The discharge has no genuine `V_rot`
+  row to adjudicate, which is exactly why it is a companion and not a test shot.
+- #31873 and #31357 figures are in the same folder (ELM-suppression trigger 4.5 s; ETB 5.5 s).
+
+**H2** (attention vs recurrence on the non-uniform input) was not run in this batch; with H1
+rejected its premise (a feature set worth re-encoding) is gone, and it stays open only as a
+method question for a later session.

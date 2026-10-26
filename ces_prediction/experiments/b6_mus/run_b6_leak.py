@@ -166,7 +166,7 @@ def analyze():
                    "block_ci": [lo, hi], "n_blocks": nb}
             node[pop] = {"L1a": l1a, "L1b": l1b}
             print(f"{target} [{pop}]  L1a(31923->31921) dSkill {l1a['delta_skill']:+.4f} "
-                  f"CI [{lo:+.4f},{hi:+.4f}] n={l1a['n_rows']}   "
+                  f"CI [{l1a['block_ci'][0]:+.4f},{l1a['block_ci'][1]:+.4f}] n={l1a['n_rows']}   "
                   f"L1b(31357->31359) dSkill {l1b['delta_skill']:+.4f} CI [{l1b['block_ci'][0]:+.4f},"
                   f"{l1b['block_ci'][1]:+.4f}] n={l1b['n_rows']}")
         out[target] = node
