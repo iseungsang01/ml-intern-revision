@@ -5078,3 +5078,57 @@ refits, never-trained discharges only). Qualitative, as registered:
 **H2** (attention vs recurrence on the non-uniform input) was not run in this batch; with H1
 rejected its premise (a feature set worth re-encoding) is gone, and it stays open only as a
 method question for a later session.
+
+## 8be. B.6-T (2026-10-26): the raw burst energy that explains `T_i` increments inside a discharge does not transfer across six — exploratory, no gain, and the one artifact to fix first
+
+**Question (승상님: "이 데이터로 최대한 가능성 있게").** `PREREGISTRATION_B6T.md`, written the same
+day after two measurements pointed at the `T_i` side of the raw delivery. (i) The frozen B.1
+backbone's TEST rows on the four raw test discharges, stratified by time since the last
+raw-detected burst (`BES_0206` 1 ms energy, robust z ≥ 8): its gain over PCHIP sits in the
+10–50 ms-after-burst stratum (+0.32 cut / +0.44 inclusive) while **rows with a burst inside the
+causal 10 ms window show no gain (+0.01 / −0.13) and carry 51 % / 26 % of the model SSE**
+(`data/.b6_burst_strata.json`). (ii) Within-discharge block-CV ceiling: adding raw 10 ms window
+features (13 channels × {log1p max z, log1p mean z} + time since burst) to the 100 Hz snapshot
+increments the backbone already sees raises `T_i`-increment skill vs persistence in **10 / 12
+discharges** (median +0.04, best +0.25; `data/.b6_ti_raw_ceiling.json`). The same ceiling for
+`V_rot` was empty (§8bd). So the registered arm T1 = A0 + 27 such channels into the `T_i` encoder
+only (`CES_SEQ_EXTRA_TI`; routing unit-tested; frozen checkpoints reload unchanged), B.6's fold
+protocol, A0's existing runs as the control, effect sizes only (`T_i` has no confirmatory rule at
+twelve discharges, B.6 §1.3 / §5).
+
+**Result** (`b6t_strata.py` → `data/.b6t_report.json`; refit epochs 15 cut / 11 inclusive vs A0's
+14 / 19; the batch was interrupted once by the host's memory guard and resumed with zero re-runs).
+
+| `T_i`, T1 − A0 paired | pooled (shot CI) | per seed | per discharge |
+|---|---|---|---|
+| cut | **−0.048** [−0.371, +0.067] | −0.020 / −0.062 / −0.062 / −0.049 (0/4 CI clear) | 31114 +0.02 · 31921 +0.09 · 31902 −0.19 · 31873 −0.61 |
+| inclusive | **−0.061** [−0.814, +0.078] | −0.004 / −0.134 / −0.047 / −0.059 (0/4) | 31114 +0.06 · 31921 +0.08 · 31902 −0.86 · 31873 −0.73 |
+
+No gain: two discharges up by a few hundredths, two down by a lot, every CI through zero. The
+strata say where: in the **no-raw-cover rows** (307 rows, all #31902 before 1.75 s, where the
+feature table is all zeros) T1 − A0 is **−0.23 cut / −2.03 inclusive** — the loader's per-shot
+z-scoring turns a block of zeros into a constant far from the covered rows' distribution, so the
+`T_i` encoder sees an input it never met in training (no pool discharge has an uncovered labelled
+stretch of that length). Inside covered rows the picture is flat: burst-in-window −0.03 / −0.06,
+10–50 ms −0.10 / +0.01, > 200 ms +0.08 / +0.14. #31873 (ELM-suppressed, 122 bursts, fully covered)
+loses −0.6 / −0.7 on its own — the one discharge where the features are most active is the one
+they hurt most. `V_rot` moves by −0.009 / −0.039 although the branch is blind to the extras by
+construction (test green): the refit epoch count differs (15 vs 14, 11 vs 19) and the larger
+`T_i` LSTM shifts the init RNG stream, so the `V_rot` branch is a different draw, not a leak.
+
+**Reading.** The in-discharge ceiling was real and the cross-discharge transfer failed, for the
+same reason §8bd gave for `V_rot`: 27 per-shot-z-scored channels on six training discharges learn
+the pool's burst statistics, not a law. The raw stream does carry `T_i`-increment information
+(ceiling 10/12) that the 100 Hz snapshot destroys; the delivered twelve cannot teach a model to
+use it. Pre-registered expectation (+0.00 … +0.05, gain in the burst-in-window stratum) **not
+met**.
+
+**What it does not show, and the named next measurements** (§8j rule). (1) The no-cover artifact
+is an implementation fact, not physics: a coverage flag or leaving uncovered rows at the covered
+mean would remove the −0.23 / −2.03 stratum — a one-line fix that must be a new registration, not
+a re-run. (2) The variance problem is the channel count: a 3-channel physical version (burst in
+window, its energy, time since burst) is the natural next registration if more raw discharges
+are ever delivered. (3) The decisive lever is the number of discharges, not the feature: the
+641-shot grid cannot supply burst energy (snapshots), so a raw-stream `T_i` arm needs a raw
+delivery of tens of discharges — the §8j "next measurement" for the `T_i` path, alongside B.16's
+event gate, which is the 641-shot proxy for exactly this quantity.
