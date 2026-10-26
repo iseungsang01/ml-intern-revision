@@ -4927,3 +4927,103 @@ learned `τ` 40–300 ms. Rules H16-a…f and the adoption / replacement thresho
 (`run_b16.py --smoke`, then 16 runs ≈ 30–50 min on the RTX 5060, then
 `rescore_b13.py --extra v4k=.b16_v4k_{pop}_s{s} v4kng=.b16_v4kng_{pop}_s{s}`). Nothing here
 touches TEST; no number exists.
+
+## 8bd. B.6 executed (2026-10-26): the raw microsecond stream arrives, the Mirnov physics is real, and the restored features make `V_rot` worse — H1 rejected in both populations
+
+**Question.** `PREREGISTRATION_B6.md` (frozen 2026-08-21, §8ao) asked one confirmatory question:
+does restoring the alias-destroyed kHz Mirnov information — causal 10 ms window features from the
+2 MHz coil stream, fed to the `V_rot` branch only — improve `V_rot` nowcasting over the same model
+without them (H1)? Everything else in the batch is measurement: the §1.4 positive controls, the
+H3 companion-leakage pairs, the §4.5 time-ordered re-split and the H4 transition figures.
+
+**Delivery (the ⟦on-arrival⟧ slots, filled in commit `7d42c48` before any TEST number).** 승상님
+placed 36 CSV files (12 frozen discharges × BES / ECEI / MC, 7.4 GB) in the thesis `data/` folder;
+they now live under `data/raw_mus/` (gitignored) with an npz cache and `delivery_manifest.json`
+written by `b6_mus/raw_loader.py`. No metadata came with the files, so the sampling rates are
+**measured** from row count and span and verified sample by sample against the delivered `time`
+column (36/36 uniform clocks): **BES 500 kHz (#31747 alone 1 MHz), ECEI 500 kHz, MC 2 MHz** — the
+PanoMHD-quoted 2 MHz for Mirnov, exactly as PROJECT_KNOWLEDGE expected. The `time` column is
+quantised (1 µs; 10 µs for #31873 and #31921), so timestamps repeat and the loader returns the
+reconstructed uniform clock. Two coverage defects: **#31873's MC file holds 2.0 s of the 7.67 s
+requested** (5.41–7.41 s; BES / ECEI are complete), and #31902's raw window starts at 1.75 s so a
+third of its labelled `T_i` rows fall outside it (every `V_rot` row is inside). Zero NaN.
+
+**§1.4 positive controls** (`raw_positive_controls.py` → `data/.b6_positive_controls.json`; the
+criteria are the registered ones, the channel names and windows are slot fills):
+
+| # | control | result |
+|---|---|---|
+| 5 | #32092 Mirnov EHO 4 / 8 kHz, 7.3–7.9 s | **PASS** — Welch peaks at **4.39 kHz** (prominence 6.8 × 10⁴ on both coils) and **8.91 kHz** (60× / 213×); the extractor's own mode channel reads the 60 rows of that window as 100 % valid, modal frequency 4 kHz, median 4.8 kHz |
+| 3 | #31921 MC envelope at 7.3 s | **PASS** — RMS ratio 7.88 (≥ 3) |
+| 4 | every channel, snapshot² vs windowed raw mean square | **176 / 180 in band**; the four misses are MC coils (0.36–0.47) on bursty, kurtosis-12-to-17 signals where a few hundred windows cannot pin a second moment (all-row ratios 0.29–1.14, bootstrap CIs ±0.2–0.5). The stronger identity holds everywhere: **on 24 / 24 coils the 100 Hz MC value equals a raw sample at the grid time** (lag 0, error 0 or within the print quantum) — the §8b.3 "random-phase snapshot" premise is now a measured fact, not an inference. No acquisition fault; the four coils stay in the arm (a sensitivity row without #31902 is below) |
+| 1 | #31923 `BES_0206` 3–6 s, 30–70 kHz WCM | **FAIL at the registered window** — band ratio 2.07 (< 3). In 3–6 s the BES spectrum is a white floor above 10 kHz and adjacent-channel coherence is ≈ 0. After the published L → FIRE transition at 6.1 s a broad coherent band appears at 60–130 kHz (coherence 0.6–0.75, three channel pairs) with partial 30–70 kHz coherence (0.3–0.5); the MC spectrogram shows a 30 → 45 kHz chirping mode and a 10 kHz line in L-mode. The registered "3–6 s" was transcribed from the 100 Hz file's quiet stretch (`SELECTION.md`), not read off the paper's figure, and the paper is behind the IOP wall — so the control is recorded as failed, not re-windowed |
+| 2 | #32027 BES pair, 100–300 kHz cross-power | **FAIL** — delivered BES has only 0105–0307, so the poloidal pair (0106, 0206) around the literature channel was used; windows with a valid coherent peak in 100–250 kHz = 1.8 % (slot threshold 5 %). Long-window coherence is ≈ 0 above 100 kHz throughout (10–100 kHz turbulence is alive). The BES 70–300 kHz band is unusable on these channels |
+
+By the registered rule a failed control excludes its channel: BES is excluded, and BES was never in
+any arm (§3.2 was exploratory and is not extracted). The MC confirmatory path is clear.
+
+**Features** (`mus_features.py` → `data/.b6_features/`, K = 15, all five bands under the 1 MHz
+Nyquist): per 10 ms grid row, RMS envelope × 2, log1p band power in 0.1–3 / 3–10 / 10–30 / 30–70 /
+70–300 kHz × 2, and the two-coil cross-spectrum's dominant peak (log1p frequency, cross-phase sign,
+validity under the coherence floor). Validity is 95–99.7 % of covered rows in every discharge;
+median dominant frequencies run 6 kHz (#32092, the EHO) to 40 kHz.
+
+**Design** (unchanged from the pre-registration, `run_b6.py`): A0 = seq_v2 on the six pool
+discharges with the 100 Hz inputs; A1 = A0 + the 15 features into the `V_rot` branch; A2 = A1 minus
+the two decimated MC channels. For every (arm × population): six leave-one-out folds (init 42,
+cap 100, patience 6), median best epoch, four refits (inits 42 / 1 / 7 / 123) at that epoch on all
+six, TEST scored once. Fold best epochs 4–46, cap never binding; refit epochs 14 / 18 / 16 (cut) and
+19 / 18 / 19 (inclusive). 66 GPU runs, ~2 h on the RTX 5060 (every training subprocess exits with
+the known Windows CUDA-teardown code after saving; the runner accepts artifacts on disk).
+
+**Result — H1 (`V_rot`, A1 − A0 paired on identical TEST rows, n = 917 × 4 seeds; `verdict_b6.py`
+→ `data/.b6_verdict.json`).**
+
+| population | pooled skill (shot-clustered CI) | per-seed | test discharges improved | −top1 | block CI | verdict |
+|---|---|---|---|---|---|---|
+| cut 3 keV | **−0.128** [−0.544, −0.105] | −0.111* / −0.212* / −0.130* / −0.062* (4/4 negative) | **0 / 3** (31114 −0.11, 31902 −0.54, 31921 −0.11) | −0.136 | [−0.249, −0.033] | **REJECT** |
+| inclusive | **−0.164** [−0.473, −0.133] | −0.174* / −0.192* / −0.192* / −0.099 (3/4 negative) | **0 / 3** (−0.13, −0.47, −0.20) | −0.234 | [−0.314, −0.076] | **REJECT** |
+
+**H1: REJECT in both populations** — not undecided: the pooled CI excludes zero on the *wrong* side,
+≥ 3/4 seeds are significantly negative, and the block bootstrap agrees. The features do not merely
+fail to help; they cost a tenth to a sixth of the control's error budget. Sensitivity rows: A2
+(decimated channels removed, so the model's only Mirnov view is the restored one) −0.172 / −0.156,
+also 0 / 3; dropping #31902 (the coil that failed control 4) −0.110 / −0.150, 0 / 2 — the rejection
+is not one discharge. H1-m is moot but reported: the loss concentrates in the middle and active
+`V_rot` terciles (cut −0.46 / −0.12 vs quiet +0.04; inclusive all negative), i.e. the features hurt
+exactly where the hypothesis said they would help. `V_rot` spike-row SSE share is 0 on this test set
+(no |V_rot| > 1000 rows). `T_i` (descriptive, §5): −0.000 / +0.001, every CI covering zero — the
+`T_i` branch is blind to the extras by construction and the batch confirms it.
+
+**Context (reported, not judged).** A0 itself on these three `V_rot`-carrying test discharges, with
+six training shots: `V_rot` vs PCHIP **+0.175** (cut) / **+0.206** (inclusive), 4/4 seeds positive;
+A1 +0.070 / +0.076; A2 +0.034 / +0.083. The fold val MSE did not foresee the loss (A1 within ±0.07
+of A0 on every fold, better on two) — six validation discharges of one shot each are too weak a
+selection signal to catch a feature set that generalises worse than it fits.
+
+**Why it hurts — the premise measured directly** (no model; `data/.b6_features` against genuine
+`V_rot` rows of the same grid). Within-discharge Spearman correlation of the extracted **dominant
+mode frequency** with CES `V_rot`: 31921 +0.08, 31114 −0.09, 31902 +0.05, 31747 +0.04, 32092
+−0.11, 32097 −0.10 — six of seven discharges with ≥ 30 rows show |ρ| ≤ 0.11; only #31359 (ERMP
+on, ETB) shows +0.51. The RMS envelope correlates weakly positively (+0.07 … +0.45) and the 3–10 kHz
+band not at all. The physics chain behind H1 (modes co-rotate with the flow at their rational
+surface → the Mirnov frequency is a Doppler readout of rotation, PROJECT_KNOWLEDGE "V_rot routing
+chain") is correct about the *coil* — control 5 shows the EHO exactly where the paper put it — but
+the coil's dominant frequency in a 10 ms window is not a row-by-row function of the CES edge
+rotation in these discharges: it jumps between modes, carries the mode number as much as the flow,
+and most of the time it is simply a different quantity. Fifteen such channels, per-shot z-scored,
+on six training discharges, give the `V_rot` branch a high-variance input that fits the pool and
+does not transfer; the result is the measured loss.
+
+**Verdict.** The pre-registered falsification table (§8) applies verbatim: *"H1 미정/기각 → 100 Hz
+파생 무효(기존, §8b.3 4-seed paired) + 원시도 무효 ⇒ Mirnov 경로 소진. '정보 부족'이 아니라 '이 채널에
+없음'."* The Mirnov route to `V_rot` is closed at every rate on record — 100 Hz snapshots, 100 Hz
+derived envelopes (§8b.3), and now the raw 2 MHz stream through the registered feature set.
+**The named next measurement is unchanged and is now the only one left: the NBI torque channel**
+(§8b.3 r = +0.024, §8an `T_e`-level null, §8az family tie). What this does **not** show: that no
+function of the raw stream carries rotation (only the registered one was tested, as the rule
+requires); a different feature family (e.g. the cross-phase *slope* across many coils, the
+error-field paper's v⊥ method, which needs more than two coils) is a new pre-registration, not a
+re-tune of this one.
+
+**Companion measurements (H3, §4.5, H4)** are recorded in the addendum below once their runs finish.

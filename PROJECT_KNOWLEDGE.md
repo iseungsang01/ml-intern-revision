@@ -1284,3 +1284,36 @@ Synthesis: `docs/theory_results_physics.md` (one generative model M1–M7, ten p
 - Ask a sub-agent for a proof the way these were asked: one result, one derivation ending in a
   number, one check on data, a "limits / what would overturn this" section, and deliver by file
   (message relays truncate at ~8 kB).
+
+## The Coil Is Right And The Feature Is Wrong — The Mirnov Route Is Closed At Every Rate (2026-10-26) — §8bd
+
+The μs raw data (12 frozen discharges, 36 CSV, 7.4 GB, `data/raw_mus/`) arrived and B.6 ran the
+same day under the 2026-08-21 pre-registration. H1 — restored kHz Mirnov features into the `V_rot`
+branch — is **rejected in both populations**: paired `V_rot` −0.128 (cut) / −0.164 (inclusive),
+0/3 test discharges improved, 4/4 and 3/4 seeds significantly negative, block bootstrap agreeing.
+
+- **The positive controls are the lasting part.** The 2 MHz Mirnov stream shows the published
+  #32092 EHO at 4.39 / 8.91 kHz with prominence 10⁴, the extractor's mode channel reads it as
+  100 % valid at 4 kHz, and **the 100 Hz MC values are bit-exact raw samples on 24/24 coils** —
+  the "random-phase snapshot" premise (§8b.3) is now measured, not inferred. The BES controls
+  failed at the registered windows (the 3–6 s WCM window had been transcribed from the 100 Hz
+  file, not the paper; the 100–300 kHz band is a noise floor on the delivered channels) — record
+  a control's *source* (figure vs. our own file) when you register it.
+- **Why a physically right chain still fails as a feature**: the coil's dominant 10 ms frequency
+  is not a row-by-row function of CES edge rotation here — within-discharge Spearman |ρ| ≤ 0.11
+  in 6 of 7 discharges (only the ERMP shot #31359 reaches +0.51). It jumps between modes and
+  carries mode number as much as flow. Fifteen such per-shot-z-scored channels on six training
+  discharges are a high-variance input that fits the pool and does not transfer; the loss sits
+  in the middle/active `V_rot` terciles, where H1 expected the gain. Six one-shot validation
+  folds did not foresee it (A1 within ±0.07 of A0 on val) — at this scale val is not a guard.
+- **Delivery lessons**: no metadata came, so rates are measured (BES/ECEI 500 kHz, #31747 BES
+  1 MHz, MC 2 MHz) and verified sample-by-sample; timestamps are quantised (1 / 10 µs) and must
+  be reconstructed; #31873's MC is 2 s of 7.67 s; #31902's raw window misses a third of its
+  `T_i` rows. A ratio test of a second moment on a kurtosis-15 signal needs thousands of
+  windows, not hundreds — prefer an identity test when one exists.
+- **How to apply:** the Mirnov route to `V_rot` is closed at 100 Hz snapshots, 100 Hz derived
+  envelopes and the raw 2 MHz stream through the registered feature set; the only remaining
+  named lever is the **NBI torque channel**. A different raw-feature family (multi-coil
+  cross-phase slope → v⊥) is a new pre-registration, not a re-tune. Never quote A0's +0.18 /
+  +0.21 `V_rot` skill on the three test discharges as a `V_rot` result — six training shots,
+  three test shots, context only.
