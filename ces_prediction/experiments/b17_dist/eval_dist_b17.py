@@ -124,7 +124,11 @@ def main():
     for ti, t in enumerate(TARGETS):
         shot, row = z_arm[f"{t}_shot"], z_arm[f"{t}_row"]
         y = z_arm[f"{t}_y_true"].astype(np.float64)
-        same_rows = np.array_equal(shot, z_ctrl[f"{t}_shot"]) and np.array_equal(row, z_ctrl[f"{t}_row"])
+        # the frozen B.1 / B.5 control npz predate the `_row` key (2026-08-21): rows are
+        # pinned by (shot, dt, y_true), the same identity rescore_b13 relies on
+        same_rows = (np.array_equal(shot, z_ctrl[f"{t}_shot"])
+                     and np.array_equal(z_arm[f"{t}_dt_ms"], z_ctrl[f"{t}_dt_ms"], equal_nan=True)
+                     and np.array_equal(y, z_ctrl[f"{t}_y_true"].astype(np.float64)))
         if not same_rows:
             if not os.getenv("CES_SEQ_MAX_FILES"):
                 raise SystemExit(f"FATAL: {t}: arm and control npz are not the same rows")
