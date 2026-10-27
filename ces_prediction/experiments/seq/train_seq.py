@@ -241,7 +241,9 @@ def main():
     if loss_cfg["kind"] == "nll" and os.getenv("CES_SEQ_SELECT", "mse") != "loss":
         raise SystemExit("FATAL: CES_SEQ_LOSS=nll requires CES_SEQ_SELECT=loss "
                          "(objective and selection metric are one pair, B.14 rule).")
-    if loss_cfg["kind"] != "mse":
+    if loss_cfg["kind"] == "nll":
+        print(f"[seq] loss=nll dist={model.dist} (val NLL selects the checkpoint)")
+    elif loss_cfg["kind"] != "mse":
         print(f"[seq] loss={loss_cfg['kind']} sigma_phys={loss_cfg['sigma_phys']} "
               f"delta_norm={[round(d, 4) for d in loss_cfg['delta_norm']]} nu={loss_cfg['nu']}")
 

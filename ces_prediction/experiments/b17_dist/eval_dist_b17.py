@@ -124,8 +124,13 @@ def main():
     for ti, t in enumerate(TARGETS):
         shot, row = z_arm[f"{t}_shot"], z_arm[f"{t}_row"]
         y = z_arm[f"{t}_y_true"].astype(np.float64)
-        if not (np.array_equal(shot, z_ctrl[f"{t}_shot"]) and np.array_equal(row, z_ctrl[f"{t}_row"])):
-            raise SystemExit(f"FATAL: {t}: arm and control npz are not the same rows")
+        same_rows = np.array_equal(shot, z_ctrl[f"{t}_shot"]) and np.array_equal(row, z_ctrl[f"{t}_row"])
+        if not same_rows:
+            if not os.getenv("CES_SEQ_MAX_FILES"):
+                raise SystemExit(f"FATAL: {t}: arm and control npz are not the same rows")
+            # smoke only: the arm scored the SMOKE_OVERRIDES population, the frozen control
+            # the full one -- pairing with the control npz is impossible by construction
+            print(f"[b17] {t}: smoke population differs from the control npz; control guard skipped")
         n = len(y)
         pi = np.zeros((n, K)); mu = np.zeros((n, K)); sg = np.zeros((n, K))
         bb = np.zeros(n); en = np.zeros(n)
@@ -137,7 +142,8 @@ def main():
             m_c = tab_ctrl[name][key][0]
             pi[i], mu[i], sg[i], en[i], bb[i] = p_a[ti], mu_a[ti], sg_a[ti], e_a, m_c[ti]
             max_dev_arm = max(max_dev_arm, abs((m_a[ti] - y[i]) ** 2 - float(z_arm[f"{t}_se_model"][i])))
-            max_dev_ctrl = max(max_dev_ctrl, abs((m_c[ti] - y[i]) ** 2 - float(z_ctrl[f"{t}_se_model"][i])))
+            if same_rows:
+                max_dev_ctrl = max(max_dev_ctrl, abs((m_c[ti] - y[i]) ** 2 - float(z_ctrl[f"{t}_se_model"][i])))
         scale = float(np.mean(z_arm[f"{t}_se_model"]))
         # float32 lookup vs float64 here: agree to ~1e-4 relative of the mean SE
         for lbl, dev in (("arm", max_dev_arm), ("control", max_dev_ctrl)):
@@ -148,7 +154,7 @@ def main():
         out.update({f"{t}_pi": pi, f"{t}_mu": mu, f"{t}_sigma": sg, f"{t}_y": y, f"{t}_backbone_pred": bb,
                     f"{t}_energy": en, f"{t}_dt_ms": z_arm[f"{t}_dt_ms"], f"{t}_shot": shot, f"{t}_row": row,
                     f"{t}_is_peak": z_arm[f"{t}_is_peak"], f"{t}_se_model": z_arm[f"{t}_se_model"],
-                    f"{t}_se_control": z_ctrl[f"{t}_se_model"]})
+                    f"{t}_se_control": z_ctrl[f"{t}_se_model"] if same_rows else (bb - y) ** 2})
     np.savez(out_dir / "dist_test.npz", **out)
     print(f"[b17] wrote {out_dir / 'dist_test.npz'}", flush=True)
 
