@@ -95,10 +95,11 @@ def robust_loss_config(stats):
     failure mode experiments/README.md non-negotiable 1 exists to prevent.
     """
     kind = os.getenv("CES_SEQ_LOSS", "mse")
-    if kind not in ("mse", "huber", "tnll"):
-        raise SystemExit(f"CES_SEQ_LOSS must be mse|huber|tnll, got {kind!r}")
-    if kind == "mse":
-        return {"kind": "mse", "sigma_phys": None, "delta_norm": None, "nu": None}
+    if kind not in ("mse", "huber", "tnll", "nll"):
+        raise SystemExit(f"CES_SEQ_LOSS must be mse|huber|tnll|nll, got {kind!r}")
+    if kind in ("mse", "nll"):
+        # nll (B.17): the model's own predictive-distribution likelihood; no scale constant.
+        return {"kind": kind, "sigma_phys": None, "delta_norm": None, "nu": None}
     try:
         sigma = [float(os.environ["CES_SEQ_LOSS_SIGMA_TI_EV"]),
                  float(os.environ["CES_SEQ_LOSS_SIGMA_VT_KMS"])]
@@ -141,12 +142,21 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
             # v3-family models attend over past fresh-observation steps; the loss
             # mask m IS the per-step observation indicator, used strictly causally
             # (shifted + lower-triangular inside the model).
-            out = model(x, lengths, m) if getattr(model, "needs_obs", False) else model(x, lengths)
+            if kind == "nll":
+                # B.17: the head emits distribution parameters; the reported se / val MSE
+                # are those of the posterior mean, the back-propagated fit is the NLL.
+                params = model(x, lengths, return_dist=True)
+                out = model.mean(params)
+            else:
+                out = model(x, lengths, m) if getattr(model, "needs_obs", False) else model(x, lengths)
             se = ((out - y) ** 2) * m
             mse = se.sum() / m.sum().clamp(min=1.0)
             pen = (torch.relu(zero_ti - out[..., 0]) * m[..., 0]).sum() / m[..., 0].sum().clamp(min=1.0)
             if kind == "mse":
                 fit = mse  # the frozen backbone's exact code path
+            elif kind == "nll":
+                fit_el = (model.nll(params, y) * m).sum()
+                fit = fit_el / m.sum().clamp(min=1.0)
             else:
                 # Reported se / val early stopping stay MSE (sec. 2); only the
                 # back-propagated fit term changes.
@@ -224,6 +234,13 @@ def main():
                                                            patience=2, factor=0.5)
     zero_ti = float((0.0 - stats["target"]["mean"][0]) / stats["target"]["std"][0])
     loss_cfg = robust_loss_config(stats)
+    # B.17: a distribution head and the NLL are one pair -- neither without the other.
+    if (loss_cfg["kind"] == "nll") != hasattr(model, "dist"):
+        raise SystemExit(f"FATAL: CES_SEQ_LOSS={loss_cfg['kind']} with model {variant!r}: "
+                         "nll needs a distribution-head model (v2g/v2m2) and vice versa.")
+    if loss_cfg["kind"] == "nll" and os.getenv("CES_SEQ_SELECT", "mse") != "loss":
+        raise SystemExit("FATAL: CES_SEQ_LOSS=nll requires CES_SEQ_SELECT=loss "
+                         "(objective and selection metric are one pair, B.14 rule).")
     if loss_cfg["kind"] != "mse":
         print(f"[seq] loss={loss_cfg['kind']} sigma_phys={loss_cfg['sigma_phys']} "
               f"delta_norm={[round(d, 4) for d in loss_cfg['delta_norm']]} nu={loss_cfg['nu']}")
@@ -262,6 +279,7 @@ def main():
     metrics = {
         "experiment": "seq_lstm_full_grid_masked_loss",
         "seq_model": variant,
+        "dist": getattr(model, "dist", None),
         "train_ctx": train_ctx or None,
         "per_shot_input_norm": per_shot,
         # B.6 provenance: the arm's input treatment must reload identically at eval.
@@ -282,6 +300,8 @@ def main():
         "seed": seed, "init_seed": init_seed,
         "loss": ("per-target masked MSE + 0.1*relu(zero_ti - pred_TI) (train.py parity)"
                  if loss_cfg["kind"] == "mse" else
+                 "per-target masked NLL of the predictive distribution + 0.1*relu(zero_ti - mean_TI) (B.17)"
+                 if loss_cfg["kind"] == "nll" else
                  f"per-target masked {loss_cfg['kind']} + 0.1*relu(zero_ti - pred_TI) (B.14)"),
         "loss_kind": loss_cfg["kind"],
         "loss_sigma_phys": loss_cfg["sigma_phys"],

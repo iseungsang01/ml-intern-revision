@@ -20,8 +20,15 @@ from model_seq_tcn import SeqCESTCN
 from model_seq_xfmr import SeqCESXfmr
 from model_seq_ssm import SeqCESSSM
 from model_seq_v4k import SeqCESV4K
+from model_seq_v2d import SeqCESLSTMv2Dist
 
 SEQ_MODELS = {
+    # B.17 (PREREGISTRATION_B17.md): seq_v2 with a predictive-distribution head trained by
+    # NLL. `v2g` = heteroscedastic Gaussian, `v2m2` = two-component mixture. forward()
+    # returns the posterior mean so every point-scoring harness runs unchanged.
+    "v2g": functools.partial(SeqCESLSTMv2Dist, dist="gauss"),
+    "v2m2": functools.partial(SeqCESLSTMv2Dist, dist="mix2"),
+
     # B.16 (PREREGISTRATION_B16.md): physics-structured output y = Kalman anchor + gate *
     # residual. `v4kng` pins the gate to 1 (anchor + ungated residual); the ONE controlled
     # variable against the backbone is the output structure.
