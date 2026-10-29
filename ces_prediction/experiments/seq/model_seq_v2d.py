@@ -8,6 +8,7 @@ p(y_t | h_t) and the model is trained by its negative log-likelihood.
 
   dist = "gauss":  (mu, sigma)                          heteroscedastic Gaussian
   dist = "mix2" :  (pi_1, mu_1, mu_2, sigma_1, sigma_2)  two-component Gaussian mixture
+  dist = "t"    :  (mu, sigma, nu)                      Student-t, nu > 2 learnable (B.17b)
 
 Why these two and nothing else (sec. 8bb): the event physics says the one-step
 conditional of T_i at a pedestal event is TWO-valued (crash / no crash) while the quiet
@@ -34,16 +35,18 @@ SIGMA_FLOOR = 1e-3
 # softplus(b) = 1 -> the predictive sd starts at one normalized unit (the target's own
 # train std), i.e. maximally uninformative, and shrinks only where the likelihood pays.
 SIGMA_RAW_INIT = math.log(math.e - 1.0)
+NU_FLOOR = 2.05                      # nu > 2 keeps the predictive variance finite
+NU_RAW_INIT = math.log(math.exp(5.0 - NU_FLOOR) - 1.0)   # softplus(NU_RAW_INIT) + NU_FLOOR = 5
 
 
 class SeqCESLSTMv2Dist(SeqCESLSTMv2):
     def __init__(self, dist="gauss", **kw):
         super().__init__(**kw)
-        if dist not in ("gauss", "mix2"):
-            raise ValueError(f"dist must be gauss|mix2, got {dist!r}")
+        if dist not in ("gauss", "mix2", "t"):
+            raise ValueError(f"dist must be gauss|mix2|t, got {dist!r}")
         self.dist = dist
-        self.n_comp = 1 if dist == "gauss" else 2
-        self.n_param = 2 if dist == "gauss" else 5
+        self.n_comp = 2 if dist == "mix2" else 1
+        self.n_param = {"gauss": 2, "mix2": 5, "t": 3}[dist]
         # Replace the scalar output layer of each head by a P-way one; the hidden layer
         # (Linear -> GELU) is the backbone's.
         for name in ("head_ti", "head_vt"):
@@ -53,6 +56,9 @@ class SeqCESLSTMv2Dist(SeqCESLSTMv2):
                 # sigma raw channels start at sd = 1; mixture logit starts at pi = 1/2
                 if dist == "gauss":
                     last.bias[1] = SIGMA_RAW_INIT
+                elif dist == "t":
+                    last.bias[1] = SIGMA_RAW_INIT
+                    last.bias[2] = NU_RAW_INIT   # nu starts at ~5 (finite variance, clearly heavy-tailed)
                 else:
                     last.bias[0] = 0.0
                     last.bias[3] = SIGMA_RAW_INIT
@@ -66,7 +72,7 @@ class SeqCESLSTMv2Dist(SeqCESLSTMv2):
     # ---- parametrisation ---------------------------------------------------------
     def decode(self, params):
         """(..., P) -> (pi (..., K), mu (..., K), sigma (..., K)) in normalized units."""
-        if self.dist == "gauss":
+        if self.dist in ("gauss", "t"):
             mu = params[..., 0:1]
             sigma = nn.functional.softplus(params[..., 1:2]) + SIGMA_FLOOR
             pi = torch.ones_like(mu)
@@ -77,6 +83,10 @@ class SeqCESLSTMv2Dist(SeqCESLSTMv2):
             sigma = nn.functional.softplus(params[..., 3:5]) + SIGMA_FLOOR
         return pi, mu, sigma
 
+    def nu(self, params):
+        """Student-t degrees of freedom (..., 1); only defined for dist == "t"."""
+        return nn.functional.softplus(params[..., 2:3]) + NU_FLOOR
+
     def mean(self, params):
         pi, mu, _ = self.decode(params)
         return (pi * mu).sum(dim=-1)
@@ -86,12 +96,20 @@ class SeqCESLSTMv2Dist(SeqCESLSTMv2):
         pi, mu, sigma = self.decode(params)
         m = (pi * mu).sum(dim=-1, keepdim=True)
         var = (pi * (sigma ** 2 + (mu - m) ** 2)).sum(dim=-1)
+        if self.dist == "t":
+            nu = self.nu(params).squeeze(-1)
+            var = var * nu / (nu - 2.0)
         return m.squeeze(-1), torch.sqrt(var)
 
     def nll(self, params, y):
         """Per-element negative log-likelihood of y under the predictive distribution."""
         pi, mu, sigma = self.decode(params)
         z = (y.unsqueeze(-1) - mu) / sigma
+        if self.dist == "t":
+            nu = self.nu(params)
+            logp = (torch.lgamma((nu + 1) / 2) - torch.lgamma(nu / 2) - 0.5 * torch.log(nu * math.pi)
+                    - torch.log(sigma) - (nu + 1) / 2 * torch.log1p(z ** 2 / nu))
+            return -logp.squeeze(-1)
         logp = torch.log(pi) - 0.5 * z ** 2 - torch.log(sigma) - 0.5 * LOG_2PI
         return -torch.logsumexp(logp, dim=-1)
 

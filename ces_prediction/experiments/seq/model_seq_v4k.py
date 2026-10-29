@@ -65,8 +65,12 @@ class KalmanAnchor(nn.Module):
     therefore uses observations strictly before t.
     """
 
-    def __init__(self, rho0, sigma_s0, sigma_n0, alpha0=0.02):
+    def __init__(self, rho0, sigma_s0, sigma_n0, alpha0=0.02, hold_level=False):
         super().__init__()
+        # B.16b (PREREGISTRATION_B16.md sec. 10): hold_level keeps the filtered value on
+        # unobserved steps instead of relaxing it toward the slow level m (the variance still
+        # grows by the OU law). sec. 8bg: the OU relaxation costs the median on stale rows.
+        self.hold_level = bool(hold_level)
         self.rho_logit = nn.Parameter(torch.tensor(_inv_sigmoid(rho0)))
         self.q_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_s0 ** 2)))
         self.r_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_n0 ** 2)))
@@ -101,7 +105,12 @@ class KalmanAnchor(nn.Module):
                 x = x + o * K * (v - x)
                 P = P - o * K * P
                 m = m + o * alpha * (v - m)
-            x = m + rho * (x - m)
+            if self.hold_level:
+                # relax toward the level only on the step after an observation; hold otherwise
+                o_now = obs_prev[:, t] if t > 0 else torch.zeros_like(x)
+                x = x + o_now * (m + rho * (x - m) - x)
+            else:
+                x = m + rho * (x - m)
             P = rho * rho * P + q * (1.0 - rho * rho)
             anchors.append(x)
             sds.append(torch.sqrt(P))
@@ -113,9 +122,14 @@ class SeqCESV4K(nn.Module):
 
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS,
                  hidden_ti=160, layers_ti=2, hidden_vt=64, layers_vt=1,
-                 head=64, dropout=0.1, gated=True,
+                 head=64, dropout=0.1, gated=True, gate_bias=-2.0, hold_level=False,
                  init_ti=(0.88, 0.35, 0.30), init_vt=(0.90, 0.60, 0.40)):
         super().__init__()
+        # sec. 10 sensitivity rows: gate_bias (+2 = gate initialised open), hold_level (B.16b).
+        # CES_SEQ_ANCHOR_ONLY=1 makes forward() return the bare anchors (r = 0): the pure
+        # learned OU-Kalman filter of a trained checkpoint, inference-only readout.
+        self.gate_bias = float(gate_bias)
+        self.anchor_only = os.getenv("CES_SEQ_ANCHOR_ONLY", "0") == "1"
         self.n_fast = int(n_fast)
         self.n_in = int(n_in)
         self.n_slow = self.n_in - self.n_fast
@@ -125,8 +139,8 @@ class SeqCESV4K(nn.Module):
         # seq_data layout: [fast | dt | TI(carried, stale, has) | VT(carried, stale, has)]
         self.col_carried = (self.n_fast + 1, self.n_fast + 4)
 
-        self.kalman_ti = KalmanAnchor(*init_ti)
-        self.kalman_vt = KalmanAnchor(*init_vt)
+        self.kalman_ti = KalmanAnchor(*init_ti, hold_level=hold_level)
+        self.kalman_vt = KalmanAnchor(*init_vt, hold_level=hold_level)
 
         # T_i branch: full state + both anchors and sds (4 extra channels)
         self.lstm_ti = nn.LSTM(self.n_in + 4, hidden_ti, num_layers=layers_ti, batch_first=True,
@@ -149,7 +163,7 @@ class SeqCESV4K(nn.Module):
             nn.init.zeros_(h[-1].bias)
         for g in (self.gate_ti, self.gate_vt):
             nn.init.zeros_(g.weight)
-            nn.init.constant_(g.bias, -2.0)
+            nn.init.constant_(g.bias, self.gate_bias)
 
         n_params = sum(p.numel() for p in self.parameters())
         if n_params >= 1_000_000:
@@ -184,6 +198,9 @@ class SeqCESV4K(nn.Module):
 
         a_ti, s_ti = self.kalman_ti(x[..., self.col_carried[0]], obs_prev[..., 0])
         a_vt, s_vt = self.kalman_vt(x[..., self.col_carried[1]], obs_prev[..., 1])
+        if self.anchor_only:
+            self.last_gate = (torch.zeros_like(a_ti), torch.zeros_like(a_vt))
+            return torch.stack([a_ti, a_vt], dim=-1)
 
         # fast-channel increment energy (strictly causal: uses rows t and t-1)
         fast = x[..., :self.n_fast]

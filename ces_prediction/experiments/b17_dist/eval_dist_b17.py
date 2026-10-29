@@ -57,12 +57,13 @@ def lookup_tables(model, grid, dims, stats, names, per_shot, device, want_dist):
                     params = model(x, None, return_dist=True)[0]        # (L, 2, P)
                     pi, mu, sigma = model.decode(params)
                     mean = model.mean(params).cpu().numpy().astype(np.float64)
+                    nu = model.nu(params).cpu().numpy().astype(np.float64) if model.dist == "t" else None
                     pi, mu, sigma = (v.cpu().numpy().astype(np.float64) for v in (pi, mu, sigma))
                     mu_phys = mu * t_std[None, :, None] + t_mean[None, :, None]
                     sigma_phys = sigma * t_std[None, :, None]
                 else:
                     mean = model(x)[0].cpu().numpy().astype(np.float64)
-                    pi = mu_phys = sigma_phys = None
+                    pi = mu_phys = sigma_phys = nu = None
                 mean_phys = mean * t_std + t_mean
                 for i, t in enumerate(blk["time"]):
                     key = float(t)
@@ -72,7 +73,8 @@ def lookup_tables(model, grid, dims, stats, names, per_shot, device, want_dist):
                                   None if pi is None else pi[i],
                                   None if pi is None else mu_phys[i],
                                   None if pi is None else sigma_phys[i],
-                                  float(energy[i]))
+                                  float(energy[i]),
+                                  None if nu is None else nu[i])
             out[name] = table
     return out
 
@@ -89,7 +91,7 @@ def main():
     device = torch.device(os.getenv("CES_SEQ_DEVICE", "cuda" if torch.cuda.is_available() else "cpu"))
 
     arm_metrics = json.loads((out_dir / "metrics.json").read_text(encoding="utf-8"))
-    if arm_metrics.get("dist") not in ("gauss", "mix2"):
+    if arm_metrics.get("dist") not in ("gauss", "mix2", "t"):
         raise SystemExit(f"FATAL: {out_dir} is not a distribution-head run")
     ctrl_metrics = json.loads((control_dir / "metrics.json").read_text(encoding="utf-8"))
     if ctrl_metrics.get("seq_model") != "v2" or bool(ctrl_metrics.get("per_shot_input_norm")) != per_shot:
@@ -137,14 +139,16 @@ def main():
             print(f"[b17] {t}: smoke population differs from the control npz; control guard skipped")
         n = len(y)
         pi = np.zeros((n, K)); mu = np.zeros((n, K)); sg = np.zeros((n, K))
-        bb = np.zeros(n); en = np.zeros(n)
+        bb = np.zeros(n); en = np.zeros(n); nu_out = np.zeros((n, K)) if arm.dist == "t" else None
         max_dev_arm = max_dev_ctrl = 0.0
         for i in range(n):
             name = files[int(shot[i])]
             key = float(dataset.file_arrays[int(shot[i])][int(row[i]), time_col])
-            m_a, p_a, mu_a, sg_a, e_a = tab_arm[name][key]
+            m_a, p_a, mu_a, sg_a, e_a, nu_a = tab_arm[name][key]
             m_c = tab_ctrl[name][key][0]
             pi[i], mu[i], sg[i], en[i], bb[i] = p_a[ti], mu_a[ti], sg_a[ti], e_a, m_c[ti]
+            if nu_out is not None:
+                nu_out[i] = nu_a[ti]
             max_dev_arm = max(max_dev_arm, abs((m_a[ti] - y[i]) ** 2 - float(z_arm[f"{t}_se_model"][i])))
             if same_rows:
                 max_dev_ctrl = max(max_dev_ctrl, abs((m_c[ti] - y[i]) ** 2 - float(z_ctrl[f"{t}_se_model"][i])))
@@ -159,6 +163,8 @@ def main():
                     f"{t}_energy": en, f"{t}_dt_ms": z_arm[f"{t}_dt_ms"], f"{t}_shot": shot, f"{t}_row": row,
                     f"{t}_is_peak": z_arm[f"{t}_is_peak"], f"{t}_se_model": z_arm[f"{t}_se_model"],
                     f"{t}_se_control": z_ctrl[f"{t}_se_model"] if same_rows else (bb - y) ** 2})
+        if nu_out is not None:
+            out[f"{t}_nu"] = nu_out
     np.savez(out_dir / "dist_test.npz", **out)
     print(f"[b17] wrote {out_dir / 'dist_test.npz'}", flush=True)
 

@@ -34,6 +34,11 @@ SEQ_MODELS = {
     # variable against the backbone is the output structure.
     "v4k": SeqCESV4K,
     "v4kng": functools.partial(SeqCESV4K, gated=False),
+    # sec. 10 rows (registered 2026-10-29 after sec. 8bg): gate initialised open; level-holding anchor
+    "v4ko": functools.partial(SeqCESV4K, gate_bias=2.0),
+    "v4kngh": functools.partial(SeqCESV4K, gated=False, hold_level=True),
+    # B.17b (PREREGISTRATION_B17B.md): Student-t head with learnable nu
+    "v2t": functools.partial(SeqCESLSTMv2Dist, dist="t"),
 
     "v1": SeqCESLSTM,
     "v2": SeqCESLSTMv2,

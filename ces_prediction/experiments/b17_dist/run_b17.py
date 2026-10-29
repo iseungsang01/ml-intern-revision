@@ -35,6 +35,7 @@ from run_b1_gate import GATE_ENV, AMBIENT_VARS, SMOKE_OVERRIDES, run_step  # noq
 SEEDS = (42, 1, 7, 123)
 ARMS = ("v2g", "v2m2")
 EPOCH_CAP = "60"
+PREFIX = ".b17"   # B.17b (PREREGISTRATION_B17B.md) runs with --prefix .b17b --cap 100
 POPS = {
     "cut": {"cut": "3000", "control": ".b1_seqv2_s{s}_i{s}", "control_metrics": ".b1_w2cut_s{s}",
             "split": ".b1_w2cut_split_s{s}"},
@@ -44,7 +45,7 @@ POPS = {
 
 
 def arm_dir(arm, pop, s, smoke=False):
-    return DATA / (f".b17_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
+    return DATA / (f"{PREFIX}_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
 
 
 def base_env(pop, arm, smoke):
@@ -145,7 +146,7 @@ def summarize(arms):
                 rows[str(s)]["epochs"] = [m["epochs_run"], m["best_epoch"]]
                 rows[str(s)]["best_val_nll"] = m.get("best_val_select")
             summary["arms"].setdefault(arm, {})[pop] = rows
-    (DATA / ".b17_runner_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (DATA / f"{PREFIX}_runner_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     for arm, pops in summary["arms"].items():
         for pop, rows in pops.items():
             for t in ("CES_TI", "CES_VT"):
@@ -163,7 +164,11 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
     ap.add_argument("--pops", nargs="*", default=list(POPS))
+    ap.add_argument("--prefix", default=PREFIX, help="artifact dir prefix (.b17 | .b17b)")
+    ap.add_argument("--cap", default=EPOCH_CAP, help="epoch cap (60 for B.17, 100 for B.17b)")
     args = ap.parse_args()
+    global PREFIX, EPOCH_CAP
+    PREFIX, EPOCH_CAP = args.prefix, str(args.cap)
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required.")
     recs = []

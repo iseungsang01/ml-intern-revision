@@ -170,6 +170,9 @@ def one_run(arm, pop, s, smoke):
     return rec
 
 
+SUMMARY_NAME = ".b16_summary.json"
+
+
 def summarize(arms):
     summary = {"epoch_cap": int(EPOCH_CAP), "arms": {}}
     for arm in arms:
@@ -194,7 +197,7 @@ def summarize(arms):
                 rows[str(s)]["physics"] = json.loads(need[3].read_text(encoding="utf-8"))
                 rows[str(s)]["shot_winrate"] = json.loads(need[4].read_text(encoding="utf-8"))
             summary["arms"].setdefault(arm, {})[pop] = rows
-    (DATA / ".b16_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (DATA / SUMMARY_NAME).write_text(json.dumps(summary, indent=2), encoding="utf-8")
     for arm, pops in summary["arms"].items():
         for pop, rows in pops.items():
             for t in ("CES_TI", "CES_VT"):
@@ -213,8 +216,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
+    ap.add_argument("--summary-name", default=SUMMARY_NAME,
+                    help="sec. 10 sensitivity rows write .b16s_summary.json, never the frozen .b16_summary.json")
     ap.add_argument("--pops", nargs="*", default=list(POPS))
     args = ap.parse_args()
+    global SUMMARY_NAME
+    SUMMARY_NAME = args.summary_name
+    if set(args.arms) - set(ARMS) and SUMMARY_NAME == ".b16_summary.json":
+        raise SystemExit("FATAL: sensitivity arms must use --summary-name .b16s_summary.json (the frozen B.16 summary is not overwritten)")
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required.")
     recs = []

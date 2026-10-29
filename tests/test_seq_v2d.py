@@ -131,3 +131,73 @@ def test_crps_closed_form_matches_monte_carlo():
     from scipy.stats import norm
     g = sigma[1, 0] * (z * (2 * norm.cdf(z) - 1) + 2 * norm.pdf(z) - 1 / math.sqrt(math.pi))
     assert abs(closed[1] - g) < 1e-9
+
+
+def test_t_head_nll_and_moments_match_scipy():
+    from scipy.stats import t as st
+    m = _perturbed("v2t", 9)
+    y = torch.randn(2, 30, 2)
+    with torch.no_grad():
+        params = m(_batch(seed=9), None, return_dist=True)
+        _, mu, sigma = m.decode(params)
+        nu = m.nu(params)
+        nll = m.nll(params, y).numpy()
+        mean, sd = m.moments(params)
+    z = ((y.unsqueeze(-1) - mu) / sigma).numpy()[..., 0]
+    ref = -(st.logpdf(z, nu.numpy()[..., 0]) - np.log(sigma.numpy()[..., 0]))
+    assert np.allclose(nll, ref, atol=1e-5)
+    assert (nu > 2.0).all()
+    assert np.allclose(sd.numpy(), (sigma[..., 0] * torch.sqrt(nu[..., 0] / (nu[..., 0] - 2))).numpy(), atol=1e-6)
+    assert torch.allclose(mean, mu[..., 0])
+
+
+def test_t_crps_closed_form_matches_monte_carlo():
+    from score_b17b import crps_t
+    rng = np.random.default_rng(1)
+    mu, sigma, nu, y = np.array([0.5, -1.0]), np.array([0.8, 2.0]), np.array([3.0, 6.5]), np.array([1.2, -0.3])
+    closed = crps_t(y, mu, sigma, nu)
+    n = 400_000
+    for i in range(2):
+        s = mu[i] + sigma[i] * rng.standard_t(nu[i], size=n)
+        s2 = mu[i] + sigma[i] * rng.standard_t(nu[i], size=n)
+        mc = np.abs(s - y[i]).mean() - 0.5 * np.abs(s - s2).mean()
+        assert abs(closed[i] - mc) < 0.02, (i, closed[i], mc)
+
+
+def test_v4k_sensitivity_arms():
+    """sec. 10 rows: gate initialised open, level-holding anchor, anchor-only readout."""
+    import os as _os
+    from model_seq_v4k import KalmanAnchor
+    torch.manual_seed(0)
+    g = torch.Generator().manual_seed(0)
+    x = torch.randn(2, 40, N_FEATURES, generator=g)
+    obs = (torch.rand(2, 40, 2, generator=g) < 0.7).float()
+    m_open = SEQ_MODELS["v4ko"]()
+    assert float(m_open.gate_ti.bias) == 2.0 and float(m_open.gate_vt.bias) == 2.0
+    # hold_level: with no observations after the first, the anchor stays put instead of relaxing
+    cell = KalmanAnchor(0.88, 0.35, 0.30, hold_level=True)
+    L = 50
+    carried = torch.ones(1, L)
+    obs_prev = torch.zeros(1, L)
+    obs_prev[0, 1] = 1.0
+    with torch.no_grad():
+        a, s = cell(carried, obs_prev)
+    assert torch.allclose(a[0, 2:], a[0, 2].expand(L - 2), atol=1e-6), "level not held on unobserved steps"
+    assert (s[0, 3:] > s[0, 2]).all() or torch.allclose(s[0, 3:], s[0, 2]), "variance must not shrink without observations"
+    m_hold = SEQ_MODELS["v4kngh"]()
+    assert m_hold.kalman_ti.hold_level and not m_hold.gated
+    # anchor-only readout returns exactly the anchors
+    _os.environ["CES_SEQ_ANCHOR_ONLY"] = "1"
+    try:
+        m = SEQ_MODELS["v4kng"]()
+        for p in m.parameters():
+            p.data.add_(0.05 * torch.randn_like(p))
+        m.eval()
+        obs_prev2 = torch.zeros_like(obs)
+        obs_prev2[:, 1:] = obs[:, :-1]
+        with torch.no_grad():
+            y = m(x, None, obs)
+            a_ti, _ = m.kalman_ti(x[..., m.col_carried[0]], obs_prev2[..., 0])
+        assert torch.allclose(y[..., 0], a_ti, atol=1e-6)
+    finally:
+        _os.environ.pop("CES_SEQ_ANCHOR_ONLY", None)
