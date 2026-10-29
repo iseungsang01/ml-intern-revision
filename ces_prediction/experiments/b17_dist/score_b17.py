@@ -131,8 +131,11 @@ def score_target(z, t, rng):
         sep = np.abs(mu[:, 0] - mu[:, 1]) / sg.max(axis=1)
         bim = (pi.min(axis=1) >= BIMODAL_MIN_PI) & (sep >= BIMODAL_SEP)
         fp, fn = float(bim[peak].mean()) if peak.any() else float("nan"), float(bim[~peak].mean()) if (~peak).any() else float("nan")
+        # the enrichment ratio is undefined without a population of bimodal rows (0/0 is not >= 2);
+        # it needs at least 50 such rows and a non-empty nonpeak denominator
+        enr = (fp / fn) if (bim.sum() >= 50 and fn > 0) else float("nan")
         res["bimodal"] = {"fraction": float(bim.mean()), "fraction_peak": fp, "fraction_nonpeak": fn,
-                          "enrichment_peak": (fp / fn) if fn > 0 else float("inf"), "n_rows": int(bim.sum())}
+                          "enrichment_peak": enr, "n_rows": int(bim.sum())}
         res["_bim_mask"] = bim
     res["_rows"] = {"shot": shot, "crps": c_arm, "crps_r0": c_r0, "crps_r1": c_r1}
     return res
@@ -209,7 +212,7 @@ def main():
         h["H17-c"] = {"pass": c_ok >= 3, "splits_ok": c_ok, "coverage": cov}
         bim = [ti["v2m2"]["per_seed"][str(s)]["bimodal"] for s in SEEDS]
         enr = [b["enrichment_peak"] for b in bim]
-        h["H17-d"] = {"pass": ti["v2m2"]["pooled"]["crps_skill_vs_v2g"]["pass"] and sum(1 for e in enr if e >= 2.0) >= 3,
+        h["H17-d"] = {"pass": ti["v2m2"]["pooled"]["crps_skill_vs_v2g"]["pass"] and sum(1 for e in enr if np.isfinite(e) and e >= 2.0) >= 3,
                       "pooled_v2m2_vs_v2g": ti["v2m2"]["pooled"]["crps_skill_vs_v2g"],
                       "bimodal_fraction": [b["fraction"] for b in bim], "enrichment_peak": enr}
         h["H17-e"] = {arm: {t: node["targets"][t][arm]["mse_guard"] for t in TARGETS} for arm in ARMS}

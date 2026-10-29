@@ -5132,3 +5132,174 @@ are ever delivered. (3) The decisive lever is the number of discharges, not the 
 641-shot grid cannot supply burst energy (snapshots), so a raw-stream `T_i` arm needs a raw
 delivery of tens of discharges — the §8j "next measurement" for the `T_i` path, alongside B.16's
 event gate, which is the 641-shot proxy for exactly this quantity.
+
+### Addendum to §8bd (2026-10-29) — the NBI torque is a step input, and a step input cannot move a 10 ms increment
+
+§8bd closed with "NBI torque is the one named lever for `V_rot`". 승상님 asked what an NBI channel
+would actually add once one notices that KSTAR NBI power is **piecewise constant**: an ion source is
+switched on at a programmed time and held at fixed voltage and current through the flat-top, and
+the power changes only at a handful of source on/off steps per discharge (the diagnostic beam
+notches are 10–50 ms dips). The literature says the same (Ahn 2012 NF, duty-cycle step 1.5 → 1.1 MW;
+the EPS 2018 beam-blip study; arXiv 2207.06610 "total NBI power constant except short blips").
+Three measurements settle what that implies for this dataset.
+
+1. **Our discharges run the CES beam continuously.** On 55 random shots the `T_i` label fills 94 %
+   of a 10 ms grid over a median 4.0 s span, the longest unbroken 10 ms run is 1.3 s (max 6.1 s)
+   and gaps > 100 ms are essentially absent — i.e. 2022 H-mode heating operation with NB1A on
+   throughout the labelled window, not blip mode (where labels would come in 20 ms bursts every
+   0.5 s).
+2. **The slow band carries 0.3 % of the 10 ms increment variance.** On 120 random shots (held rows
+   removed, contiguous 10 ms runs ≥ 0.6 s), the share of the increment variance `Var(Δy)` carried
+   by a 300 ms moving average of the series is `V_rot` **0.34 %** (IQR 0.21–0.94 %, max 2.7 %,
+   20 shots with enough genuine rows) and `T_i` 0.25 % (63 shots). Everything a step-held input
+   can act on lives in that band; a perfect NBI channel therefore bounds the removable 10 ms
+   increment variance at ~1 %. The remaining 99.7 % is intrinsic torque, ELM momentum loss and
+   measurement noise, which no 0D channel carries.
+3. **One published trace over our own labels** (`experiments/b6_mus/nbi_step_overlay.py`,
+   `docs/paper/figures/fig_nbi_step_31359.png`; `P_tot` digitised from Kim et al. 2024 Nat. Commun.
+   Fig. 6a, CC BY, PMC10858871, 12.9 ms / 0.08 MW per pixel, NBI + ECH total). #31359 has one
+   heating step, 3.5 → 4.0 MW at 4.52 s, and 50 ms notches every 0.5 s. The edge `V_rot` level
+   rises from ~107 to a median 143 km/s within 0.2–0.7 s of the step (the momentum confinement
+   time scale; the "before" side has one genuine row), then falls from ~150 to ~60 km/s after
+   5.5 s **with the heating constant** — the paper's ETB formation and density rise, i.e. even the
+   macro level has non-NBI drivers. The 10 ms increments (sd 13 km/s) have the same width before
+   and after the step and across every notch.
+
+**Corrected statement.** `V_rot` has two scales. The **macro level** (hundreds of ms, between
+discharges) is set by the torque balance — co-NBI torque plus intrinsic torques over density and
+momentum loss (Shi et al. 2016 NF 56 016014; Yang et al. 2018 NF 58 066008) — and in a nowcaster
+that level is already in the input: the carried observation 10 ms earlier *is* the level. The
+**10 ms increment** is set by unobserved intrinsic torque and ELM losses (99.7 % of its variance is
+outside the slow band). So the NBI channel would not change the 10 ms `V_rot` result, and the P02
+conclusion is final rather than provisional: at 10 ms `V_rot` converges to the history-only OU
+filter *even with the driver observed*. The channel matters only if the thesis scope changes to
+≥ 100 ms forecasting after power steps or to the cold start before the first CES row; the data
+request is deferred on that basis (승상님, 2026-10-29). A transcribed-trace pilot was considered
+and not run: with a 0.3 % bound and one discharge, its paired CI (±5–10 %) cannot show anything
+either way.
+
+## 8bf. B.17 (2026-10-29): the predictive-distribution head — a two-component mixture is calibrated, beats the oracle-scale Gaussian by +0.2 … +0.44 CRPS and lifts the posterior mean, but by heavy tails rather than two peaks; the Gaussian head is rejected on `V_rot`
+
+**Question and design** (`experiments/PREREGISTRATION_B17.md`, committed 73aa71b before any number;
+`experiments/seq/model_seq_v2d.py`, registry `v2g` / `v2m2`; runner `experiments/b17_dist/run_b17.py`;
+distribution dump `eval_dist_b17.py`; scoring `score_b17.py`). seq_v2 unchanged up to the heads; the
+head emits a conditional distribution — `v2g` a heteroscedastic Gaussian (μ, σ), `v2m2` a
+two-component Gaussian mixture (π, μ₁, μ₂, σ₁, σ₂) — trained by the NLL with val-NLL checkpoint
+selection. `forward()` returns the posterior mean, so the point harness (eval_seq, paired vs the
+frozen backbone, PR4 ladder) scores the arm with zero changes; the distribution is dumped on the
+same frozen TEST rows (two pairing guards: the arm's mean and the backbone's point prediction must
+both reproduce their npz `se_model`; all 16 runs passed, max deviation 0.87 eV² on a mean SE of
+~1.5 × 10⁴). References need no training: **R0** = N(backbone point, σ₀) with σ₀ the backbone's own
+TEST RMSE (oracle scale, conservative for us), **R1** = N(arm mean, σ₁) with σ₁ the arm's TEST RMSE
+(the heteroscedastic part alone). CRPS closed form (Grimit 2006), shot-cluster paired bootstrap
+B = 10⁴ seed 12345, PIT coverage, Spearman(σ, event energy / staleness), and the bimodality test
+(min π ≥ 0.1 ∧ |μ₁ − μ₂| ≥ 2 max σ). Unit tests `tests/test_seq_v2d.py` (6: mean path = decoded
+mean, NLL = closed forms, `V_rot` parameters bit-identical under fast-channel perturbation,
+causality, init σ = 1, CRPS closed form = Monte Carlo).
+
+**Batch log.** 16 runs (2 arms × 2 populations × splits 42/1/7/123), epoch cap 60; **7/16 runs
+hit the cap** (`v2m2` 6/8: cut s42/s1/s123, incl s42/s1/s123; `v2g` incl s1) — the mixture NLL
+is still improving on val at 60 epochs, so its numbers below are a lower bound on what the arm
+does (recorded as §2 of the registration requires; the cap is a registered constant and was not
+raised). ~10 min per run (train 2.5–7 min + TEST eval 3.5–4.6 min + dump 0.4 min). The batch
+was interrupted twice: once by 승상님 at 3/16 and once at 12/16 by the host memory guard (another
+project's 8 GB process); resumed from the artifacts both times. One implementation fact learned
+the hard way: the frozen B.1/B.5 control npz predate the `_row` key, so the dump pins control rows
+by (shot, dt, y_true). The Claude Code tool sandbox hides the GPU (`torch.cuda.is_available()`
+False while the device is idle); GPU jobs run with the sandbox off.
+
+**Results — `T_i`** (CRPS skill = 1 − ΣCRPS_arm/ΣCRPS_ref; `*` = CI excludes 0; cov = central
+50 % / 90 % PIT coverage; MSE guard = posterior-mean paired MSE skill vs the backbone, `arm sig /
+control sig` out of 4):
+
+| pop | arm | CRPS vs R0 per split | pooled vs R0 | pooled vs R1 | cov 50 % | cov 90 % | MSE guard (4 splits) |
+|---|---|---|---|---|---|---|---|
+| cut | `v2g` | +0.147\* +0.154\* +0.042\* +0.144\* | **+0.122** [+0.097, +0.149]\* | +0.138\* | 0.62–0.66 | 0.93–0.94 | +0.019 +0.029 **−0.088\*** +0.001 (2/1) |
+| cut | `v2m2` | +0.212\* +0.202\* +0.216\* +0.228\* | **+0.215** [+0.189, +0.242]\* | +0.197\* | **0.51–0.56** | **0.90–0.92** | **+0.022 +0.015 +0.051\* +0.026** (1/0) |
+| incl | `v2g` | +0.247\* +0.192\* +0.215\* +0.218\* | +0.216 [+0.174, +0.259]\* | +0.234\* | 0.74–0.80 | 0.95–0.97 | +0.006 −0.011 −0.032\* −0.054\* (0/2) |
+| incl | `v2m2` | +0.431\* +0.408\* +0.457\* +0.452\* | **+0.438** [+0.404, +0.474]\* | +0.428\* | 0.53–0.56 | 0.89–0.92 | +0.014 +0.012 +0.017\* −0.003 (1/0) |
+
+`v2m2 − v2g` paired CRPS, pooled: cut **+0.106** [+0.093, +0.119]\*, incl **+0.283** [+0.261, +0.305]\*.
+Absolute CRPS (cut s42): `v2m2` 54.8 eV, `v2g` 59.4, R0 69.6, R1 69.0; NLL 5.68 / 6.05 / 6.48 / 6.47.
+By stratum (cut s42): `v2m2` CRPS vs R0 +0.18 on peak rows and +0.22 on non-peak rows; its
+posterior-mean MSE vs backbone +0.01 / +0.02.
+
+**Results — `V_rot`:**
+
+| pop | arm | CRPS vs R0 per split | pooled vs R0 | pooled vs R1 | cov 50 % | cov 90 % | MSE guard (4 splits) |
+|---|---|---|---|---|---|---|---|
+| cut | `v2g` | **−0.293** +0.078 +0.180\* +0.203\* | +0.084 [+0.015, +0.149]\* | +0.120\* | 0.79–0.90 | 0.97–0.99 | **−0.093\* −0.030\* −0.054\*** −0.057 (0/**3**) |
+| cut | `v2m2` | +0.191\* +0.268\* +0.438\* +0.391\* | **+0.342** [+0.290, +0.394]\* | +0.339\* | 0.57–0.63 | 0.91–0.96 | −0.004 +0.029 −0.011 −0.009 (0/0) |
+| incl | `v2g` | −0.444 +0.019 +0.115\* +0.149\* | +0.009 [−0.091, +0.083] | +0.053 | 0.83–0.89 | 0.96–0.98 | −0.083\* −0.031 −0.071\* −0.030 (0/2) |
+| incl | `v2m2` | +0.218\* +0.241\* +0.437\* +0.410\* | **+0.345** [+0.295, +0.396]\* | +0.342\* | 0.60–0.62 | 0.91–0.96 | +0.020 +0.009 −0.015 −0.005 (0/0) |
+
+`v2m2 − v2g` paired CRPS, pooled: cut +0.282\*, incl +0.340\*.
+
+**Physics readout (H17-b, `v2g`).** `T_i`: Spearman(σ, fast-channel increment energy)
++0.16 / +0.17 / +0.20 / +0.16 (cut), +0.10 … +0.17 (incl); σ on event rows / non-event rows
+1.16–1.22 (cut), 1.20–1.31 (incl). The sign and the ordering are the registered ones but the bars
+(+0.2 and 1.3 on 4/4) are missed. `V_rot`: Spearman(σ, staleness) **+0.00 … +0.01 on 8/8** — the
+learned `V_rot` σ does not grow with the time since the last observation at all; Spearman(σ, energy)
+−0.15 … +0.05 (the `V_rot` branch cannot see the energy; the residual correlation runs through
+shot level). Median predictive sd (physical): `T_i` 83–107 eV cut (`v2g`), 97–120 eV (`v2m2`) against
+an oracle homoscedastic 156–202 eV; `V_rot` 14–23 km/s (`v2g`) against 25–41 km/s.
+
+**What the mixture actually learned (the finding the registration did not anticipate).** The
+bimodality test fires on **0 rows** (cut `T_i`: 1 row in 32,589 on s42; `V_rot` 29–62 rows,
+≤ 0.6 %). The second component is a *wide* one with small weight — min π median 0.07 (`T_i`),
+0.10 (`V_rot`); σ₂ 90th percentile 545 eV / 221 km/s against a first-component median of 34–138 eV;
+|μ₁ − μ₂| / max σ median 0.48 — i.e. `v2m2` is a **scale mixture**, a heavy-tailed one-peak
+distribution, not two peaks. That is why it is calibrated where the Gaussian is not: `v2g` covers
+62–66 % of rows with its central 50 % interval (too wide in the bulk) while hitting 93 % at 90 %,
+exactly the signature of a Gaussian whose σ is inflated by tails it cannot shape; `v2m2` sits at
+51–56 % / 90–92 %. It is also why `v2g` loses on `V_rot` MSE (3/4 significant, −0.03 … −0.09): the
+Gaussian NLL's 1/σ² weighting collapses on the |v| > 1000 km/s rows (§8ab) and drags the mean,
+whereas the mixture parks those rows in the wide component at ~10 % weight and leaves the mean
+alone (0/4 significant on either side, a tie). The same mechanism lifts the `T_i` posterior mean
+above the MSE-trained backbone on 4/4 cut splits (+0.015 … +0.051) — the mixture NLL is, in effect,
+the robust loss B.14 looked for (§8ay: Huber moved the median; here the heavy-tail likelihood moves
+the mean and the calibration together).
+
+**Hypotheses (§4, verbatim).** H17-a (`v2g` `T_i` CRPS vs R0 on ≥ 3/4 splits, pooled vs R0 and vs R1):
+**PASS** in both populations (4/4, pooled +0.122\* / +0.216\*, vs R1 +0.138\* / +0.234\*). H17-b
+(σ physics): **FAIL** on the bars for both targets (`T_i` ρ 0.16–0.20 < 0.2 on 3/4, ratio < 1.3 on
+3/4; `V_rot` ρ(σ, staleness) ≈ 0). H17-c (`v2g` calibration, 90 % ∈ [0.85, 0.95] ∧ 50 % ∈ [0.45, 0.55]
+on ≥ 3/4): **FAIL** 0/4 in both populations — the 50 % band is 0.62–0.80. H17-d (`v2m2 − v2g` CRPS
+pooled CI > 0 ∧ bimodal-row enrichment ≥ 2 on ≥ 3/4): **FAIL** — the CRPS half passes (+0.106\*,
++0.283\*), the enrichment is undefined (no bimodal population). H17-e (MSE guard): `v2m2` **PASS**
+on both targets and both populations (0/4 significant losses, pooled means +0.028 / +0.010 `T_i`,
++0.001 / +0.002 `V_rot`); `v2g` **FAIL** — `V_rot` 3/4 (cut) and 2/4 (incl) significant losses,
+and incl `T_i` 2/4 (cut `T_i` alone would pass: 1/4, mean −0.010).
+
+**Rules (§4, verbatim).** 1. "Calibrated nowcaster" claim (H17-a ∧ H17-c ∧ H17-e on `v2g`): **not
+supported** in either population, because H17-c fails and `v2g` is rejected. 2. Reported arm: H17-d
+fails → `v2g` by the letter, which rule 4 then rejects. 3. σ narrative: "σ is unexplained
+heteroscedasticity" by the letter; measured, it rises 1.2× on event rows and with the event energy
+(ρ ≈ +0.17) and does not rise with staleness. 4. `v2g` is **rejected** in both populations on the
+`V_rot` guard, cause recorded above (NLL weighting on the `V_rot` tail rows; cut s42 non-peak
+stratum paired MSE −0.098, peak −0.064).
+
+**Verdict and what the record says beyond the rules.** The registration tied the claim to the
+Gaussian arm and the mixture to a bimodality test, and the data answered a different question:
+the error of the nowcast is **one-peaked and heavy-tailed**, not two-valued, and a two-component
+scale mixture is the arm that is calibrated on `T_i` (50 % / 90 % coverage 0.51–0.56 / 0.89–0.92 on
+8/8; on `V_rot` 90 % is in range 8/8 and the 50 % band is slightly wide, 0.57–0.63), beats the
+oracle-scale homoscedastic reference by **+0.215 / +0.438** (`T_i`) and **+0.34 / +0.35** (`V_rot`)
+in CRPS with 16/16 splits individually significant, and improves the posterior mean on `T_i`
+(cut 4/4 positive, pooled +0.028; H16-c-style guard passed) while tying on `V_rot`. By the
+pre-registered letter this is **exploratory**: the rules name no arm and the claim is not made.
+The physics reading of the fail on H17-b is informative in itself: the `T_i` predictive sd carries
+the event signal at the size the §8bb p_obs proxy predicted (1.2–1.3×, enrichment 1.27–1.34× in
+§8bb) but not more, and the `V_rot` sd ignores staleness — the learned uncertainty is a per-shot
+scale, not the OU variance growth the Kalman cell encodes (B.16's σ_n / σ_s), which is a second
+sense in which the `V_rot` path is history-only.
+
+**Named next measurement** (§8j rule). The mechanism is heavy tails; the parametric form that
+states that hypothesis directly is a **Student-t head with learnable ν** per target (one variable:
+the likelihood family; mixture → t). B.17b registers `v2t` against `v2m2` as the control, with the
+H17-c/H17-e bars as written here, a ν readout (ν ≈ 2–4 expected from B.14's ν = 3 and the §8aq
+tail share), and the "calibrated nowcaster" claim bound to whichever arm the registration names
+*before* numbers. Its passing would make today's result confirmatory; its failing would say the
+mixture's gain is specific to a free second scale, which the thesis can still report as the
+calibrated arm of record under the exploratory label. Artifacts: `data/.b17_{v2g,v2m2}_{cut,incl}_s{42,1,7,123}/`
+(point artifacts + `dist_test.npz`), `data/.b17_runner_summary.json`, `data/.b17_summary.json`.

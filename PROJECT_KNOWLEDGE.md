@@ -1333,8 +1333,65 @@ branch — is **rejected in both populations**: paired `V_rot` −0.128 (cut) / 
   `T_i` rows. A ratio test of a second moment on a kurtosis-15 signal needs thousands of
   windows, not hundreds — prefer an identity test when one exists.
 - **How to apply:** the Mirnov route to `V_rot` is closed at 100 Hz snapshots, 100 Hz derived
-  envelopes and the raw 2 MHz stream through the registered feature set; the only remaining
-  named lever is the **NBI torque channel**. A different raw-feature family (multi-coil
-  cross-phase slope → v⊥) is a new pre-registration, not a re-tune. Never quote A0's +0.18 /
-  +0.21 `V_rot` skill on the three test discharges as a `V_rot` result — six training shots,
-  three test shots, context only.
+  envelopes and the raw 2 MHz stream through the registered feature set; a different raw-feature
+  family (multi-coil cross-phase slope → v⊥) is a new pre-registration, not a re-tune. Never quote
+  A0's +0.18 / +0.21 `V_rot` skill on the three test discharges as a `V_rot` result — six training
+  shots, three test shots, context only. (The "NBI torque channel is the remaining lever" sentence
+  that stood here was corrected on 2026-10-29 — next section.)
+
+## A Step-Held Driver Cannot Move A 10 ms Increment — The `V_rot` Result Is Final, Not Provisional (2026-10-29) — §8bd addendum
+
+Every `V_rot` record since §8b.3 ended with "the torque driver (NBI) is unobserved", read as a
+provisional result waiting for a channel. 승상님 asked the question that closes it: KSTAR NBI power
+is **piecewise constant** (ion sources switched at a few programmed times, held at fixed voltage
+and current in between; the literature's modulation experiments are the exception), so what would
+the channel add at 10 ms?
+
+- **Measured on our own labels**: the CES beam was on continuously in the 2022 discharges (label
+  fill 94 % of the 10 ms grid, longest unbroken run 1.3 s median), and the > 300 ms band carries
+  **0.3 %** of the 10 ms `V_rot` increment variance (IQR 0.2–0.9 %, 20 shots; `T_i` 0.25 %). A
+  step-held input can act only in that band, so a perfect NBI channel bounds the removable 10 ms
+  increment variance at ~1 %. The one published trace we could overlay (#31359, Kim et al. 2024
+  Fig. 6a) shows it: the single 3.5 → 4.0 MW step moves the `V_rot` level by ~40 km/s within
+  0.2–0.7 s, a later 150 → 60 km/s drop happens with the heating constant (ETB formation), and the
+  10 ms increments are the same width before, after and through every beam notch.
+- **The two-scale sentence for the thesis**: the *macro level* of `V_rot` is set by the torque
+  balance (co-NBI + intrinsic torques over density and momentum loss; Shi 2016, Yang 2018) and is
+  already in the nowcaster's input as the carried observation; the *10 ms increment* is intrinsic
+  torque, ELM momentum loss and noise, which no 0D channel carries. So P02's "history-only OU
+  filter" is the result *with or without* the driver observed. The NBI data request is deferred;
+  it matters only for ≥ 100 ms forecasting after power steps or for the cold start.
+- **How to apply**: before calling an unobserved driver "the lever", measure how much of the
+  target's increment variance sits in the band that driver can occupy. A driver that is constant
+  on the prediction horizon explains levels, not increments. Do not run a transcribed-trace pilot
+  to "check": with a 0.3 % bound and one discharge its CI cannot show anything either way.
+
+## The Nowcast Error Is Heavy-Tailed, Not Two-Valued — A Scale Mixture Is Calibrated Where The Gaussian Is Not (2026-10-29) — §8bf
+
+B.17 put a predictive distribution on the unchanged seq_v2 (NLL-trained Gaussian `v2g` vs
+two-component mixture `v2m2`) expecting, from §8bb, a *two-valued* conditional at pedestal events.
+The data said otherwise, and the registered rules, bound to the Gaussian arm and to a bimodality
+test, could not name the arm that worked — the result is exploratory by the letter and the
+strongest distributional finding on record by the numbers.
+
+- **What was found**: `v2m2` beats the oracle-scale homoscedastic Gaussian by +0.215 / +0.438
+  CRPS (`T_i`, cut / incl) and +0.34 / +0.35 (`V_rot`), 16/16 splits significant; it is calibrated
+  on `T_i` (50 % / 90 % coverage 0.51–0.56 / 0.89–0.92); and its posterior mean beats the
+  MSE-trained backbone on cut `T_i` 4/4 (pooled +0.028) while tying on `V_rot`. The mixture fires
+  the bimodality test on **zero** rows: its second component is wide (σ₂ 90th pct 545 eV) with
+  7–10 % weight — a **scale mixture**, i.e. a heavy-tailed one-peak error. The Gaussian head covers
+  62–80 % of rows with its central 50 % interval (σ inflated by tails it cannot shape) and is
+  rejected on `V_rot` MSE (3/4 significant losses): the 1/σ² NLL weight collapses on the
+  |v| > 1000 km/s rows and drags the mean, which the mixture parks in its wide component.
+- **The physics readouts**: `T_i` σ rises 1.2× on event rows and ρ(σ, event energy) ≈ +0.17 — the
+  §8bb p_obs signal at the predicted size, not more; `V_rot` σ has **no** staleness dependence
+  (ρ ≈ 0.00), so the learned uncertainty is a per-shot scale, not the OU variance growth the
+  Kalman cell encodes — a second sense in which the `V_rot` path is history-only.
+- **How to apply**: this is the same tail fact as §8ax/§8ay seen from the likelihood side — the
+  mixture NLL is the robust loss B.14 was looking for, and it buys calibration for free. Report
+  `v2m2` as the calibrated arm under the exploratory label; the confirmatory registration is a
+  Student-t head (`v2t`, learnable ν) against `v2m2`, with the claim bound to a named arm *before*
+  numbers. Registration lesson: never tie a claim to one arm and a mechanism test to another —
+  write the claim over "the arm that passes the guards", with the guards fixed in advance. Seven
+  of 16 runs hit the 60-epoch cap (`v2m2` 6/8); treat the mixture's numbers as a lower bound and
+  register a higher cap next time.
