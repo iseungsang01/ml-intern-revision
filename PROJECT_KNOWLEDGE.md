@@ -1395,3 +1395,34 @@ strongest distributional finding on record by the numbers.
   write the claim over "the arm that passes the guards", with the guards fixed in advance. Seven
   of 16 runs hit the 60-epoch cap (`v2m2` 6/8); treat the mixture's numbers as a lower bound and
   register a higher cap next time.
+
+## The Structure The Derivation Asked For Buys A Third Of What It Promised — And The Gate Is Negative (2026-10-29) — §8bg
+
+B.16 built the output the derivation audit located (§8ba/§8bb): a learnable OU–Kalman anchor with
+the seq_v2 LSTM as residual and an event gate on the fast-channel increment energy. The anchor is
+real: the `T_i` median crosses below persistence for the first time (cut 1.024× → 0.978×,
+inclusive 1.337× → 1.089× where K < 1 shrinks the spike anchors exactly as §3 predicted), the
+quiet-discharge win rate vs the causal GP reaches the predicted 0.50, aggregate skill is a tie,
+and the cell's τ / σ stay at their physical values. It also lands at 0.98×, not the 0.875–0.94×
+promised, so the structural route recovers about 30 % of the headroom and less than the Huber loss
+did (§8ay). Rule 1 fails by 0.01 in the cut population and passes 4/4 in the inclusive one — an
+inclusive-conditional rung, the mirror of B.5's cut-conditional one.
+
+- **The gate is negative** (`v4k − v4kng` −0.008 cut, −0.045\* inclusive; quiet win 0.50 vs 0.54).
+  The ungated residual already suppresses itself where it should; a gate initialised at σ(−2) =
+  0.12 throttles the residual's gradient under patience-6 early stopping and leaves `v4k` as an
+  under-trained `v4kng`. Candidate mechanism, one-line test: initialise the gate open.
+- **Where the bulk headroom actually is**: rows with stale history (Δt > 15 ms) lose M1 by
+  0.11–0.28 on 8/8 cells. The OU propagation relaxes the anchor toward the slow level at rate ρ
+  while the truth, whose increments are bursty (§8ar), does not. The long-gap regime wants a
+  level-holding prior, not an OU prior — that is the next structural registration, and it is one
+  parameter.
+- **`V_rot` is untouched** (median 1.16× vs 1.17×, aggregate slightly worse): the residual head
+  re-introduces in the bulk what the anchor removes, and a gate that sees only the slow state has
+  nothing to close on. Same fact as §8bf's "the `V_rot` uncertainty ignores staleness". Whether the
+  P02 bound of 0.921× is reachable by the pure filter is a named inference-only readout (`r ≡ 0`
+  on the `v4kng` checkpoints), registered before it is run.
+- **How to apply**: a Kalman cell written as a per-step Python loop costs 10× the registered
+  estimate (20–25 min per run); register cost from a smoke timing, not from the backbone's.
+  When a registration defines adoption on one population and the other one passes, say so with the
+  mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.

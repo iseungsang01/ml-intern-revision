@@ -5303,3 +5303,109 @@ tail share), and the "calibrated nowcaster" claim bound to whichever arm the reg
 mixture's gain is specific to a free second scale, which the thesis can still report as the
 calibrated arm of record under the exploratory label. Artifacts: `data/.b17_{v2g,v2m2}_{cut,incl}_s{42,1,7,123}/`
 (point artifacts + `dist_test.npz`), `data/.b17_runner_summary.json`, `data/.b17_summary.json`.
+
+## 8bg. B.16 executed (2026-10-27 … 29): the Kalman anchor moves the `T_i` median below persistence for the first time (1.02× → 0.98× cut, 1.34× → 1.09× inclusive) and lifts the quiet-discharge win rate to the predicted 0.50, but it reaches +0.04 of the +0.05 bar in the cut population, the event gate is negative, and `V_rot` is untouched
+
+**Question and design** — §8bc and `experiments/PREREGISTRATION_B16.md` (committed 2026-10-13 before
+any number). Output `ŷ = a + g·r`: a learnable scalar OU–Kalman cell per target as the anchor `a`
+(initialised at the §8 OU fits, `(ρ, σ_s, σ_n, α)` learnable), the seq_v2 LSTM as the residual `r`
+(head zero-initialised, so training starts exactly at the Kalman filter), and an event gate `g` on
+the fast-channel increment energy (`v4k`) or `g ≡ 1` (`v4kng`). Control = the frozen B.1 / B.5
+backbone runs. Readouts: paired MSE vs the backbone (runner), M1–M5 via `rescore_b13.py --extra`
+(`data/.b16_rescore.json`), the §8an quiet-tercile discharge win rate vs the causal GP pooled over
+the four splits, `v4k − v4kng` paired M1, the learned physics parameters. Verdict script
+`experiments/b16_physics/verdict_b16.py` → `data/.b16_verdict.json`.
+
+**Batch log.** 16 runs, epoch cap 60, none bound (max 30; best epochs 4–24). **~20–25 min per
+run** (12–19 min training + 3–5 min TEST eval): the Kalman cell is a per-step Python loop, and the
+registration's 1.5–3 min estimate was wrong by 10×. The batch was interrupted four times —
+once by 승상님 for a mid-check at 3/16, three times by the host memory guard (other projects'
+processes, not this batch) — and resumed from the artifacts each time; the CPU rescore (~2.5 h)
+was killed three times before it completed. Total wall ≈ 5 h GPU + 2.5 h CPU.
+
+**Results — `T_i`** (M1 = median-AE skill vs the backbone, `*` CI excludes 0; medAE/pers = the
+arm's median |e| over persistence's, pooled 4 splits; quiet = win rate vs the causal GP in the
+quiet tercile of discharges, pooled; MSE paired = runner, `+`/`−` significant):
+
+| pop | arm | M1 vs backbone per split | M1 pooled | medAE / pers (backbone) | quiet / mid / variable win (backbone) | MSE paired vs backbone |
+|---|---|---|---|---|---|---|
+| cut | `v4k` | +0.041\* +0.043 +0.022 +0.042\* | **+0.038** [+0.019, +0.057] | **0.985** (1.024) | **0.50** / 0.84 / 0.87 (0.43 / 0.85 / 0.86) | −0.000 −0.008 +0.033⁺ +0.030, mean +0.013 |
+| cut | `v4kng` | +0.015 +0.073\* +0.058\* +0.033\* | **+0.045** [+0.030, +0.062] | **0.978** | **0.54** / 0.77 / 0.86 | −0.010 +0.013 +0.038⁺ +0.042⁺, mean +0.021 |
+| incl | `v4k` | +0.079\* +0.212\* +0.087\* +0.185\* | **+0.149** [+0.097, +0.197] | **1.138** (1.337) | **0.26** / 0.55 / 0.81 (0.13 / 0.56 / 0.79) | +0.013 +0.023 +0.010 −0.016⁻, mean +0.008 |
+| incl | `v4kng` | +0.166\* +0.262\* +0.066\* +0.222\* | **+0.186** [+0.138, +0.233] | **1.089** | **0.35** / 0.56 / 0.79 | −0.002 +0.004 +0.004 −0.003, mean +0.001 |
+
+Aggregate skill vs PCHIP (the registered "tie ±0.02"): cut backbone +0.243 pooled, `v4k` +0.254,
+`v4kng` +0.261; inclusive +0.278 / +0.281 / +0.278 — a tie as predicted. Overall discharge win rate
+vs the causal GP: cut 0.714 → 0.736 / 0.725; inclusive 0.495 → 0.543 / 0.568. Quantile ladder
+`v4kng` vs backbone (cut): q50 0.955, q90 1.002, q99 0.968 — the gain is the bulk, the tail is
+untouched (tail share 0.54 / 0.54). By stratum (M1 vs backbone, 4 splits): event rows +0.04 …
++0.12, non-event rows +0.01 … +0.07, **rows with stale history (Δt > 15 ms) −0.11 … −0.28 on 8/8
+cells** — the anchor's propagation toward the slow level `m` costs the median exactly where the
+last observation is old (the MSE on those rows is +0.03, the tail is helped, the bulk is not).
+`v4k − v4kng` paired M1: cut −0.008 [−0.019, +0.003], inclusive **−0.045** [−0.059, −0.033]; quiet
+win rate `v4k − v4kng` −0.04 / −0.09.
+
+**Results — `V_rot`:** M1 vs backbone `v4k` cut −0.043 +0.124\* −0.040 −0.038 (pooled +0.005
+[−0.029, +0.038]), inclusive −0.066 −0.017 +0.066\* +0.079\* (pooled +0.028 [−0.011, +0.064]);
+`v4kng` pooled −0.008 / +0.034, CIs through 0. medAE / persistence **1.162 / 1.177** (backbone
+1.168) in cut, 1.159 / 1.151 (1.191) in inclusive — the predicted 0.92–1.01 was **not reached**.
+MSE paired vs backbone negative in all four arm × population cells (−0.044 … −0.063 pooled; s42
+−0.14 … −0.16, 1/4 significant loss each; the s42 loss is the peak stratum, paired MSE −0.83 on
+event rows vs −0.03 on the rest). Quiet win rate 0.36 → 0.41 / 0.26 (cut), 0.29 → 0.30 / 0.33
+(inclusive); overall 0.466 → 0.452 / 0.411.
+
+**Physics parameters (H16-f).** Learned τ: `T_i` 83–94 ms (cut) / 80–85 ms (incl), `V_rot` 85–93 ms;
+σ_n and σ_s within 0.92–1.09× their OU-fit initial values on 16/16 — the cell stayed a physical OU
+filter (σ_n ≈ 110 eV cut / 190 eV incl, 30 km/s), and it also barely moved: with the residual
+absorbing the gradient, the cell is the §8 fit it was initialised at.
+
+**Hypotheses (§4, verbatim).** H16-a (`v4k` `T_i` M1 ≥ +0.05 ∧ CI > 0 on ≥ 3/4): **cut FAIL** (0/4;
++0.041 +0.043 +0.022 +0.042), **inclusive PASS** (4/4). H16-b (quiet win rate ≥ backbone + 0.05):
+**PASS** both (cut 0.43 → 0.50, Δ +0.07; incl 0.13 → 0.26, Δ +0.13). H16-c (guard): **PASS** for
+both arms in both populations (significant losses 0/4, 0/4, 1/4, 0/4; pooled means +0.013,
++0.021, +0.008, +0.001). H16-d (`V_rot`): **FAIL** both (1/4 and 2/4 splits at the M1 bar, 1/4
+significant MSE loss each). H16-e (gate buys ≥ +0.02 M1 or +0.05 quiet): **FAIL** both — the gate
+is **negative** (−0.008 n.s. cut, −0.045\* inclusive; quiet −0.04 / −0.09). H16-f: **PASS**.
+
+**Rules (§4, verbatim).** 1. Physics rung adopted = H16-a ∧ H16-c in the **cut** population: **not
+adopted** (H16-a fails by 0.01 in cut). The rule defines adoption on cut and names "unconditional"
+only when the inclusive population also passes; it has no label for "inclusive passes, cut does
+not", which is what happened — recorded here as an **inclusive-conditional rung** by analogy with
+B.5's "cut-conditional", with the asymmetry noted as a registration gap. 2. Backbone replacement:
+**no** (H16-d fails; `T_i` MSE sign 4/4 positive in neither population). 3. H16-e fails → **`v4kng`
+is the reported arm and the gate is recorded negative.** 4. No arm is rejected (no cell with ≥ 2/4
+significant losses).
+
+**Verdict.** The derivation's structural prediction was half right and precisely measurable.
+*Right*: putting the OU–Kalman anchor under the output moves the `T_i` median across the
+persistence line for the first time on record (cut 1.024× → 0.978×; inclusive 1.337× → 1.089×, where
+the K < 1 shrinkage of spike anchors predicted in §3 is exactly what happens), lifts the
+quiet-discharge win rate to the predicted ≥ 0.50 (0.43 → 0.50 / 0.54), does so at zero aggregate
+cost (`T_i` MSE +0.01 … +0.02, PCHIP skill tie), and keeps physical parameters. *Short*: the cut
+median lands at 0.98×, not the 0.875–0.94× the filter bound and the Huber loss (§8ay, 0.94×)
+promised, so the structural route recovers **~30 % of the predicted headroom** and less than the
+loss route did (M1 +0.04 vs Huber's +0.08 … +0.10). *Wrong*: the event gate — the (M6) prediction
+that opening the residual only on events removes the quiet-row variance cost — is negative in both
+populations; the ungated residual is better everywhere, including on quiet discharges (0.54 vs
+0.50). The likely mechanism, not proven here: the gate starts at σ(−2) = 0.12 and throttles the
+residual's gradient while early stopping (patience 6, best epochs 5–24) ends training before it
+opens, so `v4k` is `v4kng` under-trained; a gate initialised open (bias +2) is the one-line test.
+`V_rot` is untouched in the median (1.16× vs 1.17×) and slightly worse in aggregate: the residual
+head re-introduces in the bulk what the anchor removes, and the `V_rot` gate, seeing only the slow
+state, has nothing to close on — consistent with §8bf's finding that the learned `V_rot`
+uncertainty carries no staleness dependence either.
+
+**What the record says beyond the rules, and the named next measurements** (§8j rule). (1) The
+stale-row stratum (Δt > 15 ms, M1 −0.11 … −0.28 on 8/8) is where the remaining bulk headroom sits:
+the anchor relaxes toward the slow level `m` at rate ρ while the truth does not, which is the
+OU model's own failure on long gaps (§8ar: the increment distribution is bursty, not diffusive).
+A level-holding anchor (ρ → 1 on the propagate step when unobserved, i.e. persistence of the
+filtered value) is the one-parameter variant to register. (2) The pure learned anchor with the
+residual removed is the P02 estimator itself; scoring it from the `v4kng` checkpoints with `r ≡ 0`
+(inference only, 8 evals) would say whether the 0.921× `V_rot` bound is reachable by the filter
+alone or whether the bound is wrong — a new registration, because it is a new TEST readout. (3)
+The gate re-run with an open initialisation is a B.16 sensitivity row, 8 runs, not a new
+hypothesis. (4) For the thesis the sentence is: *the structure the derivation asked for exists,
+is physical, and buys a third of what the derivation promised; the rest of the bulk headroom is
+the long-gap regime, where the OU prior is the wrong prior.* Artifacts: `data/.b16_{v4k,v4kng}_{cut,incl}_s{seed}/`,
+`.b16_summary.json`, `.b16_rescore.json`, `.b16_verdict.json`.
