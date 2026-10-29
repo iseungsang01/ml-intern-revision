@@ -5409,3 +5409,54 @@ hypothesis. (4) For the thesis the sentence is: *the structure the derivation as
 is physical, and buys a third of what the derivation promised; the rest of the bulk headroom is
 the long-gap regime, where the OU prior is the wrong prior.* Artifacts: `data/.b16_{v4k,v4kng}_{cut,incl}_s{seed}/`,
 `.b16_summary.json`, `.b16_rescore.json`, `.b16_verdict.json`.
+
+## 8bh. B.14 sensitivity row (2026-10-29): with the checkpoint chosen on the arm's own objective, the inclusive robust arms train 30–60 epochs instead of 8–23 and the median gain doubles — but one split keeps a significant `T_i` MSE deficit, so by the registered letter the rung stays cut-conditional
+
+**Design** (`experiments/PREREGISTRATION_B14.md` §9, registered 2026-10-12 before any number).
+One variable against §8ay's inclusive runs: early stopping, checkpoint and LR plateau read the
+arm's own val objective (`CES_SEQ_SELECT=loss`) instead of val MSE. Inclusive population only,
+huber / tnll × 4 splits = 8 runs (`data/.b14s_{arm}_incl_s{s}`, summary `.b14s_summary.json`),
+co-metrics `rescore_b13.py --pops incl --extra huber_s=… tnll_s=… --out data/.b14s_rescore.json`.
+(The runner was briefly started without `--pops incl` and had begun one cut run; it was stopped
+and that partial directory deleted, so the row is exactly the registered 8 runs. The rescore was
+killed twice by the host memory guard and completed on the third start.)
+
+**Training.** huber epochs run / best 55/49, 31/25, 30/24, 60/59; tnll 36/30, 60/60, 60/60, 60/59
+(§8ay with MSE selection: 8–23 / 2–17). Four of eight runs reach or nearly reach the 60-epoch
+cap — the robust objective is still improving there.
+
+| arm / target | M1 vs MSE backbone (per split) | M1 pooled | MSE paired vs backbone (sig. worse / better) | median AE / persistence (backbone) |
+|---|---|---|---|---|
+| huber `T_i` | +0.224\* +0.361\* +0.214\* +0.319\* | **+0.285** [+0.250, +0.322] | −0.009 −0.003 −0.014 **−0.040\*** (1 / 0), pooled −0.019 [−0.037, 0.000] | **0.956** (1.337) |
+| huber `V_rot` | +0.101\* +0.051\* +0.140\* +0.246\* | **+0.145** [+0.108, +0.181] | +0.030\* +0.028 −0.022 −0.014 (0 / 1), pooled −0.005 | **1.019** (1.191) |
+| tnll `T_i` | +0.261\* +0.376\* +0.244\* +0.328\* | +0.308 [+0.272, +0.343] | −0.044 −0.026 −0.027 −0.076\* (1 / 0), pooled −0.046 | 0.926 |
+| tnll `V_rot` | +0.100\* +0.058\* +0.157\* +0.247\* | +0.151 [+0.119, +0.189] | +0.013 +0.026 −0.025 −0.022 (0 / 0), pooled −0.011 | 1.011 |
+
+Against §8ay's MSE-selected inclusive runs the `T_i` M1 rises from +0.157 to **+0.285** (huber) and
+from +0.084 to +0.308 (tnll), the `V_rot` M1 turns from −0.034 / −0.150 to **+0.145 / +0.151**
+(4/4 significant), and the `T_i` MSE deficit shrinks from −0.030 pooled (2/4 significant) to −0.019
+(1/4, CI touching 0). Medians: huber puts the inclusive `T_i` median at 0.956× persistence (the
+backbone sits at 1.337×; B.16's anchor reached 1.089× in this population, §8bg), ties the causal GP
+in the median (+0.023 [−0.012, +0.057]; the backbone is −0.367 there), and keeps the PCHIP MSE skill
+at +0.218 … +0.289 (backbone +0.225 … +0.316). `V_rot` median 1.02× persistence — inside the
+0.92–1.01 band P02 calls the optimal causal filter, the first arm on record to reach it, and a tie
+with the causal GP (+0.010).
+
+**Reading (§9, verbatim).** Case 1 requires huber MSE significant deficits 0/4 **and** M1 ≥ 3/4.
+M1 is 4/4 on both targets; the MSE guard has one significant `T_i` deficit (s123, −0.040). By the
+letter this is **case 2: the rung stays conditional on the cut population** (§8ay unchanged), with
+the note that the case-2 sentence ("the spike rows are information the MSE model actually fits")
+now rests on a pooled deficit of −0.019 — inside the project's ±0.02 tie width — carried by one
+split. Case 3 is excluded outright: the inclusive median gain was not an under-training artifact;
+it grew when training lengthened.
+
+**What the row says beyond the rule.** The inclusive failure of §8ay was mostly the selection
+rule, as §9 suspected: under a matched rule the robust arm improves the typical row of both
+targets in the population with the fit-failure spikes left in, and gives up at most 0.02–0.04 of
+aggregate skill on one split for it. For the thesis, the honest sentence is: *the noise-floor
+Huber loss with its own checkpoint rule is the arm that reaches the P02 median band for `V_rot`
+and the persistence line for inclusive `T_i`; whether that is a rung in both populations is
+decided by one split's MSE guard and is recorded as cut-conditional.* Named next measurement: the
+same row with the epoch cap at 100 (four of eight runs are cap-bound), and the cut-population
+counterpart with `--select loss`, so that both populations use the same rule — one 16-run batch,
+to be registered before it is run.
