@@ -1,0 +1,20 @@
+{
+ "shot": 31359,
+ "t_step_s": 4.518041852364655,
+ "ptot_before_mw": 3.4851485148514856,
+ "ptot_after_mw": 4.03960396039604,
+ "CES_VT_before_median": 106.72432,
+ "CES_VT_after_median": 142.92522,
+ "CES_VT_n_before_after": [
+  1,
+  49
+ ],
+ "CES_VT_increment_sd": 13.292356653676602,
+ "CES_TI_before_median": 355.12604,
+ "CES_TI_after_median": 371.55347,
+ "CES_TI_n_before_after": [
+  41,
+  49
+ ],
+ "CES_TI_increment_sd": 672.8624602982435
+}
