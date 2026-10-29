@@ -5460,3 +5460,55 @@ decided by one split's MSE guard and is recorded as cut-conditional.* Named next
 same row with the epoch cap at 100 (four of eight runs are cap-bound), and the cut-population
 counterpart with `--select loss`, so that both populations use the same rule — one 16-run batch,
 to be registered before it is run.
+
+## 8bi. B.16 §10 follow-up rows (2026-10-29 … 30, post-hoc, §4 verdict unchanged): the gate is neutral when it starts open, the level-holding anchor recovers the stale rows exactly as predicted but pays it back in the bulk, and the learned OU filter alone sits at 1.19× persistence in the `V_rot` median — the P02 bound is not reachable under the OU prior
+
+**Design** (`PREREGISTRATION_B16.md` §10, registered after §8bg's numbers and before these; reading
+rules fixed there). (a) `v4ko` = `v4k` with the gate bias initialised at +2; (c) `v4kngh` = `v4kng`
+whose cell relaxes toward the slow level only on the step after an observation and holds the
+filtered value otherwise; both 16 runs. (b) the pure learned anchor of the frozen `v4kng`
+checkpoints (`CES_SEQ_ANCHOR_ONLY=1`, residual removed), 8 TEST evals, inference only. Scoring
+`rescore_b13.py` (`.b16s_rescore.json`, `.b16_anchor_rescore.json`) and
+`experiments/b16_physics/verdict_b16s.py` (arm-vs-arm M1 with the same cluster bootstrap →
+`.b16s_verdict.json`). Batch log: GPU chain interrupted by the memory guard twice, by 승상님 twice
+and by a ~1-minute laptop-GPU dropout at 01:0x on 10-30 (runs that started in that minute died in
+0.1 min with "No CUDA GPUs", left no artifacts and were redone; the chain now waits for CUDA and
+retries a stage). All 16 + 8 completed on the GPU; the four runs trained across interruptions were
+audited (device cuda, early stop, rows paired with the backbone, finite errors, distinct weights).
+
+**(a) Gate initialised open — reading: "gate neutral".** `v4ko − v4kng` paired M1, `T_i`:
+cut −0.000 [−0.010, +0.007] (per split +0.008 −0.008 −0.010 +0.008), inclusive −0.019 [−0.029, −0.006]
+(within the ±0.02 band). The open gate learns to stay open (bias 2.0 → 2.02) and the arm
+reproduces `v4kng`: cut `T_i` median 0.978× persistence for both. §8bg's mechanism candidate is
+therefore confirmed in the weak sense — the closed initialisation was what made `v4k` worse — and
+the gate itself carries nothing: the residual already suppresses itself on quiet rows.
+
+**(c) Level-holding anchor — reading: not passed, and the failure is informative.** On the stale
+stratum (Δt > 15 ms), `v4kngh − v4kng` M1 `T_i`: cut +0.063 +0.075\* +0.047 +0.098\* (pooled
+**+0.076** [+0.043, +0.106]), inclusive +0.078 +0.118\* +0.074\* +0.160\* (pooled **+0.102** [+0.061,
++0.161]) — inside the predicted +0.05…+0.15, i.e. the OU relaxation was the stale-row loss. But
+the overall M1 is −0.014 [−0.023, −0.004] (cut) and −0.043 [−0.056, −0.028] (inclusive), and the
+registered rule needs ≥ 3/4 splits at ≥ +0.05 with CI > 0 (cut 2/4, inclusive 3/4) **and** overall
+≥ −0.02 (inclusive fails) → **not passed**. Mechanism: holding the level helps the 2.5 % of rows
+that are stale and costs the 97.5 % that are one step from an observation, where the single
+relaxation step now carries the whole shrinkage. `T_i` median: cut 0.992× (vs 0.978× for
+`v4kng`), inclusive 1.135× (vs 1.089×). `V_rot` stale M1 is a tie (n ≈ 460 rows, CIs ±0.1).
+
+**(b) Pure learned anchor — reading: "the learned OU filter cannot reach the P02 bound".**
+`V_rot` median AE / persistence **1.189** (cut; per split 1.23 / 1.20 / 1.12 / 1.21) and **1.183**
+(inclusive) against the 1.05 threshold; `T_i` 1.060 / 1.115. M1 vs persistence: `V_rot` −0.189 /
+−0.183, `T_i` −0.060 / −0.115 — the filter is worse than carrying the last value in the median. In
+aggregate MSE the same filter beats PCHIP (`T_i` cut +0.07…+0.18, inclusive +0.18…+0.26; `V_rot`
++0.07…+0.28) and ties the causal GP; the LSTM residual adds +0.11…+0.19 (`T_i` cut) on top — the
+event term measured from the other side.
+
+**What the three rows say together.** The OU prior is right for the tail and wrong for the bulk of
+these data. A filter that relaxes toward a slow level wins the rows where something happened
+(aggregate MSE) and loses the rows where nothing did (median), because the increments are bursty
+(§8ar), not diffusive: most of the time the best guess is the last value, and occasionally it
+jumps. P02's 0.921× median bound was derived under the OU model and is therefore an OU-specific
+number, not a property of the data; §8bb P02 gets that footnote. The arm on record that does put
+`V_rot` into the 0.92–1.01 band is §8bh's Huber with its own checkpoint rule (1.02×) — the loss,
+not the structure. Named next measurement: a jump-diffusion (or two-state "hold / jump") anchor —
+persistence with a learned jump probability and jump-size distribution — which is the prior the
+median and the stale rows both point to; one new registration, the same 16-run design.
