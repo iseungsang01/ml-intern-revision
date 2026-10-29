@@ -213,6 +213,7 @@ def summarize(arms):
 
 
 def main():
+    global SUMMARY_NAME
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
@@ -220,7 +221,6 @@ def main():
                     help="sec. 10 sensitivity rows write .b16s_summary.json, never the frozen .b16_summary.json")
     ap.add_argument("--pops", nargs="*", default=list(POPS))
     args = ap.parse_args()
-    global SUMMARY_NAME
     SUMMARY_NAME = args.summary_name
     if set(args.arms) - set(ARMS) and SUMMARY_NAME == ".b16_summary.json":
         raise SystemExit("FATAL: sensitivity arms must use --summary-name .b16s_summary.json (the frozen B.16 summary is not overwritten)")

@@ -160,6 +160,7 @@ def summarize(arms):
 
 
 def main():
+    global PREFIX, EPOCH_CAP
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
@@ -167,7 +168,6 @@ def main():
     ap.add_argument("--prefix", default=PREFIX, help="artifact dir prefix (.b17 | .b17b)")
     ap.add_argument("--cap", default=EPOCH_CAP, help="epoch cap (60 for B.17, 100 for B.17b)")
     args = ap.parse_args()
-    global PREFIX, EPOCH_CAP
     PREFIX, EPOCH_CAP = args.prefix, str(args.cap)
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required.")
