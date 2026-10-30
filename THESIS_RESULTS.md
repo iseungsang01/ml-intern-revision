@@ -5728,9 +5728,12 @@ Rice RMS, and the median AE / persistence of two simple causal predictors — ex
    closed by measurement.
 2. *`V_rot`: the 1.18× is the price of over-shrinking, not of the prior.* The best fixed-gain
    smoother on TRAIN is persistence itself (k = 0.7 → 0.996–0.999×), and heavier smoothing costs
-   exactly what the anchors pay (k = 0.3 → 1.11×). Both anchors learned σ_n ≈ 25–33 km/s — the
-   tail-dominated Rice value — while the bulk scatter is 4 km/s; a Gaussian measurement model has
-   one σ for both and the MSE objective sets it from the tail. Consequence for P02: at the median
+   exactly what the anchors pay (k = 0.3 → 1.11×). Both anchors carry σ_n ≈ 25–33 km/s — the
+   tail-dominated scale — while the bulk scatter is 4 km/s; a Gaussian measurement model has one σ
+   for both. *(Corrected the same evening, before any B.19 number: σ_n was not set by training. In
+   target-sd units the trained anchors sit within 7 % of their initialisation — `v4kj` T_i 0.310 vs
+   0.30, V_rot 0.426 vs 0.40, and λ, σ_J likewise — so the 1.18× is the cost of the registered
+   initial noise scale, which end-to-end MSE training does not move.)* Consequence for P02: at the median
    row no causal filter of this history beats persistence by more than ≈ 0.5 %, so the 0.921×
    bound is an OU-model artifact and the attainable `V_rot` median is ≈ 1.00× — reached on record
    only by §8bh's self-selected Huber (1.02×).

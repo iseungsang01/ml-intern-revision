@@ -1465,3 +1465,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   attainable median is ≈ 1.00×; the anchors' 1.18× is shrinkage by σ_n 25–33 km/s vs a 4 km/s bulk
   scatter. `T_i`: a k = 0.5–0.7 smoother gives 0.95–0.96× with σ_n 3–4× the bulk scatter (44 eV).
   Common cause: Gaussian measurement noise on a heavy-tailed fit error. Next cell: Student-t noise.
+- **End-to-end MSE training does not move the anchor's physical parameters.** Every trained B.16 /
+  B.18 cell sits within ~7 % of its initial σ_n, λ, σ_J (target-sd units). The anchor's measurement
+  model is therefore whatever the registration initialises — choose the init from data (TRAIN
+  bulk scale) and do not report learned anchor parameters as measured plasma quantities.
