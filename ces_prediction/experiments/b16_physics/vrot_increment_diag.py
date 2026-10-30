@@ -1,6 +1,7 @@
 """Why do two level priors stall at 1.18x persistence in the V_rot median? (sec. 8bk, named next)
 
-TRAIN shots only (the four frozen split manifests), no model, no TEST row. Data treatment is the
+TRAIN shots only, each split on its own TRAIN list (the union of the four would contain other
+splits' TEST shots), no model, no TEST row. Data treatment is the
 confirmed protocol's: held repeats NaN'd (held-free), T_i spikes > CES_TI_SPIKE_CUT_EV cut first;
 increments only across consecutive 10 ms grid steps inside one contiguous block.
 
@@ -46,12 +47,9 @@ LEARNED_SIGMA_N = {"CES_TI": {"ou_or_jump_cut": "118-124 eV", "jump_incl": "191-
                    "CES_VT": {"jump": "25-33 km/s"}}
 
 
-def train_names():
-    names = set()
-    for s in SEEDS:
-        m = json.loads((SPLIT_SRC[s] / "split_manifest.json").read_text(encoding="utf-8"))
-        names.update(m["train_files"])
-    return names
+def train_names(seed):
+    m = json.loads((SPLIT_SRC[seed] / "split_manifest.json").read_text(encoding="utf-8"))
+    return set(m["train_files"])
 
 
 def triples(t, y):
@@ -131,20 +129,22 @@ def reading(r):
 
 
 def main():
-    names = train_names()
-    out = {"train_files": len(names), "learned_sigma_n": LEARNED_SIGMA_N}
+    out = {"learned_sigma_n": LEARNED_SIGMA_N}
     for pop, cut in (("cut", 3000.0), ("incl", 0.0)):
-        grid, _ = load_grid_files(DATA, drop_stuck_targets=True, ti_spike_cut_ev=cut)
-        grid = {k: v for k, v in grid.items() if k in names}
+        full, _ = load_grid_files(DATA, drop_stuck_targets=True, ti_spike_cut_ev=cut)
         out[pop] = {}
-        for col, tgt in ((1, "CES_TI"), (2, "CES_VT")):
-            r = analyse(grid, col)
-            r["reading"] = reading(r)
-            out[pop][tgt] = r
-            print(f"[diag] {pop} {tgt}: n={r['n_triples']} rho1 P {r['rho1_pearson']:+.3f} S {r['rho1_spearman']:+.3f}"
-                  f" bulk-sign {r['bulk_sign_concordance']:.3f} | robust sigma {r['robust_noise_scale']:.2f}"
-                  f" rice {r['rms_noise_scale_rice']:.2f} | " + " ".join(f"{k} {v:.3f}" for k, v in r["median_ae_over_persistence"].items())
-                  + f" | {r['reading']}", flush=True)
+        for seed in SEEDS:
+            names = train_names(seed)
+            grid = {k: v for k, v in full.items() if k in names}
+            out[pop][str(seed)] = {"train_files": len(grid)}
+            for col, tgt in ((1, "CES_TI"), (2, "CES_VT")):
+              r = analyse(grid, col)
+              r["reading"] = reading(r)
+              out[pop][str(seed)][tgt] = r
+              print(f"[diag] {pop} s{seed} {tgt}: n={r['n_triples']} rho1 P {r['rho1_pearson']:+.3f} S {r['rho1_spearman']:+.3f}"
+                    f" bulk-sign {r['bulk_sign_concordance']:.3f} | robust sigma {r['robust_noise_scale']:.2f}"
+                    f" rice {r['rms_noise_scale_rice']:.2f} | " + " ".join(f"{k} {v:.3f}" for k, v in r["median_ae_over_persistence"].items())
+                    + f" | {r['reading']}", flush=True)
     (DATA / ".b19_vrot_diag.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {DATA / '.b19_vrot_diag.json'}")
 
