@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi, §8bk
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1448,6 +1448,15 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   predicted +0.08 / +0.10 and loses the other 97.5 %; the pure learned OU filter sits at 1.19×
   persistence in the `V_rot` median. Increments are bursty (hold, then jump), so the OU filter wins
   aggregate MSE and loses the median; the 0.921× bound of §8bb P02 holds only under the OU prior.
-- **How to apply**: the next structural prior is a jump-diffusion / two-state "hold or jump" anchor
-  (persistence + learned jump probability and jump-size law), one new registration on the 16-run
-  design. Do not re-try OU variants (gate, hold-level, init) — all three were measured.
+- **The hold-or-jump anchor was measured (B.18, §8bk)**: alone it fixes the `T_i` median (0.979× /
+  1.001× persistence vs OU 1.060× / 1.115×; inclusive +0.25 M1 over the backbone) and loses aggregate
+  MSE to PCHIP — the mirror image of OU. With the MSE-trained residual on top the median gain is
+  spent (cut ties `v4kng`, inclusive −0.134), so it did not replace the OU anchor. The learned jump
+  rate stays within 3 Hz of its 5.1 Hz init: end-to-end MSE does not identify it.
+- **`V_rot` sits at 1.18× persistence under both level priors** (OU 1.189 / jump 1.181): the prior's
+  form is not the cause. Either the median rows trend (a level prior lacks a slope term) or σ_n
+  learned end-to-end shrinks real signal.
+- **How to apply**: do not re-try level priors (OU variants or hold-or-jump) for `V_rot`. First measure
+  the lag-1 autocorrelation of observed `V_rot` increments on TRAIN; positive → local-linear-trend
+  cell, ≈ 0 → σ_n fitted by the anchor's own innovation likelihood. For `T_i`, the open row is a
+  residual trained/selected on the median objective (§8bh rule) on top of the jump anchor.

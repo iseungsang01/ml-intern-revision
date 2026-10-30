@@ -4868,6 +4868,12 @@ exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
 | P09 MAST transfer null by similarity | §8az | only the form of (M1) is device-independent; all 7 coefficients device/instrument-specific; `SE(ρ̂) = sqrt((1−ρ²)Δ/T)`, 10 % precision at `T ≈ 200 τ` | β 7×, ε 2.75×, ρ* 1.6–2×; pretrained weights = 98.2 % of 1,823,490 and explain a one-line equation; one median shot (3.98 s) pins ρ to 2.4 SE of the MAST prior's bias; k 3→10 lift spread 0.006 across four families |
 | P10 real-time classes from plasma time scales | §8ac, §8aj, §8l | `MSE(ℓ) − MSE(0) ≈ (ℓ/Δ)[MSE(Δ) − MSE(0)]`; three latency classes A/B/C | latency cost −0.023/ms (robust) / −0.009/ms (classical) in skill, 1.5 eV at 1.5 ms; nowcaster (p99 1.5–9 ms) is class A only, classes B/C excluded by the 10 ms label integration, not by inference; 353,920 MAC/step reproduces §8ac; 39-op theoretical floor vs 111 shipped; recovery-type events τ_rec 25–37 ms |
 
+> **Footnote to P02 (2026-10-30, §8bi, §8bk).** The 0.921× `V_rot` median bound is derived under the OU
+> model. Learned causal filters do not reach it under either prior tested: the pure OU anchor sits at
+> 1.189× / 1.183× persistence (§8bi), the pure hold-or-jump anchor at 1.181× / 1.183× (§8bk). The bound
+> is an OU-model number, not a measured property of the data; the measurement that decides why both
+> stall (`V_rot` increment autocorrelation vs end-to-end σ_n) is named in §8bk.
+
 ### 3. Verdict
 
 1. **Every headline number has a physical cause written as an equation in t**, and the causes are
@@ -5599,3 +5605,96 @@ posterior mean honest. `V_rot`'s ν on the floor is the third independent sign (
 staleness-blind σ and §8bi's OU bound) that `V_rot` increments are jump-like, which the
 jump-diffusion anchor named in §8bi is built to test. Artifacts: `data/.b17b_{v2t,v2m2}_{cut,incl}_s{42,1,7,123}/`,
 `data/.b17b_runner_summary.json`, `data/.b17b_summary.json`.
+
+## 8bk. B.18 (2026-10-30): the hold-or-jump anchor fixes the anchor's `T_i` median and gives up its aggregate — the pure filter now ties persistence where the OU filter lost to it, but trained with the residual it adds nothing in the cut population and loses the bulk in the inclusive one; `V_rot` sits at 1.18× persistence under both priors, so the prior's form is not what keeps it there
+
+**Design** (`PREREGISTRATION_B18.md`, committed with code and verdict script before any number,
+624fae0; the implementation change below was noted there before any TEST number, 5faaa38). One
+controlled variable against the frozen `v4kng` runs: the anchor cell's prior, OU → hold-or-jump
+(`y_t = y_{t-1} + w + J`, `J = 0` w.p. 1 − λ else `N(0, σ_J²)`, GPB1 two-hypothesis update,
+learnable λ, σ_J, σ_d, σ_n; initialised λ = 0.05/step ≈ 5.1 Hz, σ_J = 1, σ_d = 0.05, σ_n as B.16).
+`v4kj` = this cell + the ungated LSTM residual, 8 runs (split {42, 1, 7, 123} × two populations,
+env as B.16), then the pure anchor (`CES_SEQ_ANCHOR_ONLY=1`) on the same checkpoints, 8 TEST evals.
+Scoring `rescore_b13.py --extra v4kj=… anchorj=…` → `.b18_rescore.json`, verdict
+`experiments/b16_physics/verdict_b18.py` → `.b18_verdict.json`.
+
+**Batch log.** The first launch ran the 1500-step recursion on the GPU at 3.5+ min/epoch (≈ 40 small
+kernels per step, launch-bound); it was killed in epoch 2 of the first run, the scan moved to a CPU
+TorchScript function (same arithmetic: forward difference 0, gradient ≤ 1.2e-4), partial artifacts
+deleted, and all 8 runs trained from scratch: 14:51 → 16:55, ≈ 15 min/run. The runner's summary
+print then crashed on the OU-only key `tau_ms` after the summary JSON was written (fixed, a6c240d;
+the 5 chain retries re-skipped the finished runs). The pure-anchor readout was cut by a session end
+after 4/8 and resumed (the runner skips finished evals); done 18:20. Epochs run / best: cut 35/29,
+38/32, 40/34, 24/18; inclusive 23/17, 24/18, 21/15, 15/9.
+
+**Verdict (registered rules): OU anchor replacement not supported; B.16 rule 1 not met; H18-c "the
+hold-or-jump prior cannot reach the P02 band either" in both populations; H18-d fails.**
+
+| `T_i` | cut | inclusive |
+|---|---|---|
+| H18-a `v4kj − v4kng` pooled M1 | +0.001 [−0.015, +0.014] ✗ | **−0.134** [−0.185, −0.084] ✗ |
+| `v4kj` M1 vs backbone, per split | +0.069\* +0.004 +0.073\* +0.036\* (pooled +0.046; 2/4 ≥ +0.05) | +0.118\* +0.133\* +0.016 +0.028 (pooled +0.076; 2/4) |
+| H18-b stale (Δt > 15 ms) `v4kj − v4kng` M1 | pooled +0.089 [+0.043, +0.135], 2/4 splits ✗ | pooled +0.208 [+0.133, +0.290], 3/4 splits, but overall −0.134 ✗ |
+| MSE paired vs backbone | −0.012 +0.008 +0.006 −0.018, sig worse 0/4 ✓ | +0.010 −0.039 −0.003 −0.030, sig worse 1/4 ✓ |
+| median AE / persistence: `v4kj` · pure jump anchor · (`v4kng` · pure OU anchor, §8bg/§8bi) | 0.977 · **0.979** · (0.978 · 1.060) | 1.235 · **1.001** · (1.089 · 1.115) |
+| pure jump anchor M1 vs backbone (readout, not a hypothesis) | +0.044 [+0.008, +0.079] | **+0.251** [+0.198, +0.305] |
+| pure jump anchor aggregate MSE vs PCHIP | −0.07 … −0.12 | −0.09 … −0.23 |
+
+| `V_rot` | cut | inclusive |
+|---|---|---|
+| median AE / persistence: `v4kj` · pure jump anchor · (pure OU anchor) | 1.221 · **1.181** · (1.189) | 1.247 · **1.183** · (1.183) |
+| pure jump anchor M1 vs persistence, per split | −0.127 −0.194 −0.158 −0.238 | −0.129 −0.192 −0.156 −0.237 |
+| `v4kj` M1 vs backbone | −0.051 +0.083\* −0.225 +0.020 → H18-d 1/4 ✗ | +0.006 −0.045 −0.164 +0.032 → 0/4 ✗ |
+| MSE paired vs backbone | −0.253 +0.026 −0.208 −0.020, sig worse 1/4 | −0.172 −0.006 −0.205 −0.105, sig worse 2/4 |
+
+**H18-e (learned parameters, physical units).** Jump rate `T_i` 6.2–8.1 Hz (cut) / 5.6–6.1 Hz
+(inclusive), `V_rot` 5.6–6.5 Hz — inside the predicted 2–30 / 1–20 Hz, but within 0.5–3 Hz of the
+5.1 Hz initialisation in every run: end-to-end MSE training with a residual on top barely moves λ,
+so the rate is weakly identified here and is not reported as a measured plasma rate. σ_J `T_i`
+356–371 eV (cut) / 606–634 eV (inclusive — the spikes are absorbed as jumps), σ_n 118–124 / 191–201
+eV, σ_d 22–28 / 34–37 eV per step; `V_rot` σ_J 55–74, σ_n 25–33, σ_d 2.8–3.9 km/s.
+
+**Prediction check** (registered table). Pure anchor `T_i` 0.93–1.00: ✓ cut 0.979, inclusive 1.001
+(edge). Pure anchor `V_rot` 0.95–1.03: ✗ 1.18. `v4kj` cut `T_i` median 0.93–0.97: ✗ 0.977.
+`v4kj − v4kng` +0.01…+0.05: ✗ +0.001 / −0.134. Stale +0.05…+0.15: ✓ cut +0.089, inclusive +0.208
+(above). M1 vs backbone cut +0.05…+0.09: ✗ +0.046. Aggregate MSE tie: ✓ `T_i` both. `v4kj` `V_rot`
+median 1.05–1.15: ✗ 1.22 / 1.25. Jump rates: ✓ (with the identifiability caveat above).
+
+**What the rows say.**
+1. *The prior does what it was built to do — on the anchor alone.* The pure `T_i` filter moves from
+   1.060× / 1.115× persistence (OU) to 0.979× / 1.001×: with the jump hypothesis available it stops
+   shrinking every small innovation toward a slow level. In the inclusive population the anchor by
+   itself beats the backbone's median by a quarter (+0.251). The price is the mirror of §8bi: in
+   aggregate MSE the jump filter loses to PCHIP (−0.07…−0.23) where the OU filter beat it
+   (+0.07…+0.26) — it waits for evidence of a jump before following, and the event rows pay.
+2. *Once the residual is trained on MSE, the anchor's median gain does not survive.* Cut: `v4kj`
+   lands where `v4kng` already was (0.977 vs 0.978, M1 difference +0.001) — the residual buys back
+   the aggregate the anchor gave away and spends the median the anchor gained. Inclusive: the
+   residual moves the median from 1.001× to 1.235× persistence, worse than `v4kng` (1.089×).
+   Mechanism candidate (not measured): with σ_J ≈ 620 eV the anchor already follows the spikes, and
+   an MSE-trained residual on the spike-laden population learns an offset it also applies on quiet
+   rows — §8bj's t-location tension read in reverse. The inclusive runs also stop early (best epoch 9–18).
+3. *The stale rows are the cell's, as predicted* (+0.089 / +0.208 pooled, CI > 0), but 2/4 cut
+   splits and the overall inclusive loss fail the registered bar.
+4. *`V_rot`: two different level priors give the same 1.18×.* Holding with learned jumps (1.181 /
+   1.183) and relaxing to a slow mean (1.189 / 1.183) are indistinguishable split by split, so the
+   `V_rot` median gap is not about OU vs hold-or-jump. Both cells average a fresh observation with
+   history whenever the innovation is small relative to σ_n; carrying the last value beats any such
+   average on the median row only if consecutive small `V_rot` increments are not noise around a
+   level but systematic motion (a drift that continues). H18-c is read as the registered rule says,
+   and §8bb P02 gets the footnote.
+
+**Named next measurement (rule 3).** Before any new cell: the lag-1 autocorrelation of observed
+10 ms `V_rot` increments (and of observation-to-observation differences at 20–50 ms) on TRAIN
+shots. Positive ⇒ the median rows trend, and the next anchor is a local-linear-trend (level +
+velocity) cell — persistence plus last slope is the term both level priors lack; ≈ 0 ⇒ the 1.18×
+comes from σ_n being learned end-to-end (shrinking real signal), and the test is the same cell with
+σ_n fitted by the anchor's own innovation likelihood instead of the residual's MSE. For `T_i` the
+open question is point 2: a residual trained without spending the anchor's median (e.g. §8bh's rule,
+checkpoint chosen on the arm's own median objective) is the controlled row that shows whether the
+inclusive +0.25 survives with the residual on.
+
+**Status.** Confirmatory batch, negative on its registered rules: the B.16 rung and its OU anchor
+stand as recorded in §8bg; P02's 0.921× bound is footnoted as unreached under both priors tested.
+Artifacts: `data/.b16_v4kj_{cut,incl}_s{42,1,7,123}/`, `data/.b18_anchor_{cut,incl}_s{…}/`,
+`data/.b18_summary.json`, `data/.b18_rescore.json`, `data/.b18_verdict.json`.
