@@ -207,8 +207,9 @@ def summarize(arms):
                 print(f"[b16] {arm:6s} {pop:4s} {t}: paired MSE vs control "
                       + " ".join(f"{v:+.3f}" for v in vals)
                       + f"  (arm sig {sig_up}/{len(vals)}, control sig {sig_dn}/{len(vals)})")
-            taus = [rows[s]["physics"]["CES_TI"]["tau_ms"] for s in rows]
-            print(f"[b16] {arm:6s} {pop:4s} learned T_i tau [ms]: " + " ".join(f"{v:.0f}" for v in taus))
+            key, unit = ("tau_ms", "tau [ms]") if "tau_ms" in rows[next(iter(rows))]["physics"]["CES_TI"] else ("jump_rate_hz", "jump rate [Hz]")
+            vals = [rows[s]["physics"]["CES_TI"][key] for s in rows]
+            print(f"[b16] {arm:6s} {pop:4s} learned T_i {unit}: " + " ".join(f"{v:.1f}" for v in vals))
     return summary
 
 
