@@ -30,6 +30,7 @@ what the gate buys.
 
 import math
 import os
+from typing import List, Tuple
 
 import torch
 import torch.nn as nn
@@ -117,6 +118,46 @@ class KalmanAnchor(nn.Module):
         return torch.stack(anchors, dim=1), torch.stack(sds, dim=1)
 
 
+@torch.jit.script
+def _jump_scan(carried: torch.Tensor, obs_prev: torch.Tensor, lam: torch.Tensor, j: torch.Tensor,
+               d: torch.Tensor, r: torch.Tensor, p0: float) -> Tuple[torch.Tensor, torch.Tensor]:
+    """JumpAnchor recursion (see its docstring). Returns anchor and predictive sd, (B, L) each."""
+    B, L = carried.shape[0], carried.shape[1]
+    x = torch.zeros([B], dtype=carried.dtype, device=carried.device)
+    P = torch.full([B], p0, dtype=carried.dtype, device=carried.device)
+    h = torch.zeros([B], dtype=carried.dtype, device=carried.device)
+    anchors: List[torch.Tensor] = []
+    sds: List[torch.Tensor] = []
+    for t in range(L):
+        if t > 0:
+            o = obs_prev[:, t]
+            e = carried[:, t] - x
+            S0 = P + r
+            S1 = P + j + r
+            hh = h.clamp(1e-6, 1 - 1e-6)
+            logit = (torch.log(hh) - torch.log1p(-hh) - 0.5 * torch.log(S1 / S0)
+                     - 0.5 * e * e * (1.0 / S1 - 1.0 / S0))
+            w1 = torch.sigmoid(logit)
+            K0 = P / S0
+            K1 = (P + j) / S1
+            x0 = x + K0 * e
+            x1 = x + K1 * e
+            xm = (1 - w1) * x0 + w1 * x1
+            # (1 - K) P written as P r / S: exact when P >> r (diffuse prior)
+            Pm = ((1 - w1) * (P * r / S0 + (x0 - xm) ** 2)
+                  + w1 * ((P + j) * r / S1 + (x1 - xm) ** 2))
+            # select, not blend: P + o (Pm - P) cancels catastrophically when P >> Pm
+            upd = o > 0.5
+            x = torch.where(upd, xm, x)
+            P = torch.where(upd, Pm, P)
+            h = torch.where(upd, torch.zeros_like(h), h)
+        P = P + d
+        h = 1 - (1 - h) * (1 - lam)
+        anchors.append(x)
+        sds.append(torch.sqrt(P + h * j))
+    return torch.stack(anchors, dim=1), torch.stack(sds, dim=1)
+
+
 class JumpAnchor(nn.Module):
     """B.18 (PREREGISTRATION_B18.md): hold-or-jump anchor, per target, normalized units.
 
@@ -157,38 +198,13 @@ class JumpAnchor(nn.Module):
                 "sigma_n": math.sqrt(r) * target_std}
 
     def forward(self, carried, obs_prev):
+        # The scan runs on the CPU as TorchScript: ~40 tiny ops per step are kernel-launch bound
+        # on the GPU (7.3 s vs 1.0 s per 16 x 1500 forward+backward). Same arithmetic.
         lam, j, d, r = self.params()
-        B, L = carried.shape
-        x = torch.zeros(B, dtype=carried.dtype, device=carried.device)
-        P = torch.full((B,), self.p0, dtype=carried.dtype, device=carried.device)
-        h = torch.zeros(B, dtype=carried.dtype, device=carried.device)
-        anchors, sds = [], []
-        for t in range(L):
-            if t > 0:
-                o = obs_prev[:, t]
-                v = carried[:, t]
-                e = v - x
-                S0, S1 = P + r, P + j + r
-                hh = h.clamp(1e-6, 1 - 1e-6)
-                logit = (torch.log(hh) - torch.log1p(-hh) - 0.5 * torch.log(S1 / S0)
-                         - 0.5 * e * e * (1.0 / S1 - 1.0 / S0))
-                w1 = torch.sigmoid(logit)
-                K0, K1 = P / S0, (P + j) / S1
-                x0, x1 = x + K0 * e, x + K1 * e
-                xm = (1 - w1) * x0 + w1 * x1
-                # (1 - K) P written as P r / S: exact when P >> r (diffuse prior)
-                Pm = ((1 - w1) * (P * r / S0 + (x0 - xm) ** 2)
-                      + w1 * ((P + j) * r / S1 + (x1 - xm) ** 2))
-                # select, not blend: P + o (Pm - P) cancels catastrophically when P >> Pm
-                upd = o > 0.5
-                x = torch.where(upd, xm, x)
-                P = torch.where(upd, Pm, P)
-                h = torch.where(upd, torch.zeros_like(h), h)
-            P = P + d
-            h = 1 - (1 - h) * (1 - lam)
-            anchors.append(x)
-            sds.append(torch.sqrt(P + h * j))
-        return torch.stack(anchors, dim=1), torch.stack(sds, dim=1)
+        dev = carried.device
+        a, s = _jump_scan(carried.cpu(),
+                          obs_prev.cpu(), lam.cpu(), j.cpu(), d.cpu(), r.cpu(), self.p0)
+        return a.to(dev), s.to(dev)
 
 
 class SeqCESV4K(nn.Module):
