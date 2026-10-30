@@ -1395,6 +1395,15 @@ strongest distributional finding on record by the numbers.
   write the claim over "the arm that passes the guards", with the guards fixed in advance. Seven
   of 16 runs hit the 60-epoch cap (`v2m2` 6/8); treat the mixture's numbers as a lower bound and
   register a higher cap next time.
+- **Confirmed by B.17b (2026-10-30, §8bj)**: with the claim bound to "the arm that passes four fixed
+  guards", it is supported in both populations. Cut: Student-t (`v2t`, ν ≈ 3) ties the mixture and
+  is named (fewer parameters) — the one-peak heavy tail is now measured. Inclusive: only the
+  mixture passes; the t head's posterior mean loses −0.13 MSE on spike rows because the t location
+  is redescending and ignores > 3 keV fit failures that MSE still scores. Lesson: a redescending
+  likelihood's mean is a robust location, not a conditional mean — wherever the scored population
+  keeps outliers, use a scale mixture (or report the median, not the MSE). `V_rot` ν sits on the
+  2.05 floor: its increments are jump-like, a third sign after §8bf and §8bi. Cap 100 vs 60 moved
+  the mixture only +0.01.
 
 ## The Structure The Derivation Asked For Buys A Third Of What It Promised — And The Gate Is Negative (2026-10-29) — §8bg
 
@@ -1426,3 +1435,19 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   estimate (20–25 min per run); register cost from a smoke timing, not from the backbone's.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
+
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi
+
+- **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
+  its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
+  +0.285, `V_rot` +0.145, `V_rot` median 1.02× persistence — the first arm inside the P02 band),
+  at a pooled `T_i` MSE cost of −0.019 with one significant split, so the rung stays
+  cut-conditional by the letter. A robust loss early-stopped on val MSE is not a test of the loss.
+- **Three B.16 follow-ups** (§8bi): an open-initialised gate learns to stay open and reproduces the
+  ungated arm (the gate carries nothing); a level-holding anchor wins the 2.5 % stale rows by the
+  predicted +0.08 / +0.10 and loses the other 97.5 %; the pure learned OU filter sits at 1.19×
+  persistence in the `V_rot` median. Increments are bursty (hold, then jump), so the OU filter wins
+  aggregate MSE and loses the median; the 0.921× bound of §8bb P02 holds only under the OU prior.
+- **How to apply**: the next structural prior is a jump-diffusion / two-state "hold or jump" anchor
+  (persistence + learned jump probability and jump-size law), one new registration on the 16-run
+  design. Do not re-try OU variants (gate, hold-level, init) — all three were measured.

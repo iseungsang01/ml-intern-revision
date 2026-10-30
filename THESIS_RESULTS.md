@@ -5304,6 +5304,11 @@ mixture's gain is specific to a free second scale, which the thesis can still re
 calibrated arm of record under the exploratory label. Artifacts: `data/.b17_{v2g,v2m2}_{cut,incl}_s{42,1,7,123}/`
 (point artifacts + `dist_test.npz`), `data/.b17_runner_summary.json`, `data/.b17_summary.json`.
 
+**Status after B.17b (2026-10-30, §8bj):** the registered confirmatory row passed — `v2m2` passes all
+four fixed guards in both populations, so the mixture result above is confirmatory, not exploratory;
+the cap-100 re-train moves the `T_i` CRPS by only +0.009 / +0.011 (< 0.02), so these numbers stand
+without a lower-bound footnote.
+
 ## 8bg. B.16 executed (2026-10-27 … 29): the Kalman anchor moves the `T_i` median below persistence for the first time (1.02× → 0.98× cut, 1.34× → 1.09× inclusive) and lifts the quiet-discharge win rate to the predicted 0.50, but it reaches +0.04 of the +0.05 bar in the cut population, the event gate is negative, and `V_rot` is untouched
 
 **Question and design** — §8bc and `experiments/PREREGISTRATION_B16.md` (committed 2026-10-13 before
@@ -5512,3 +5517,85 @@ number, not a property of the data; §8bb P02 gets that footnote. The arm on rec
 not the structure. Named next measurement: a jump-diffusion (or two-state "hold / jump") anchor —
 persistence with a learned jump probability and jump-size distribution — which is the prior the
 median and the stale rows both point to; one new registration, the same 16-run design.
+
+## 8bj. B.17b (2026-10-29 … 30): the calibrated-nowcaster claim is supported in both populations — the Student-t head ties the mixture in the cut population and is the named arm there, the mixture alone passes the guards in the inclusive one because the t location sheds the spike rows' mean
+
+**Design** (`PREREGISTRATION_B17B.md`, committed before any B.17b number). One variable: the
+likelihood family of the seq_v2 distribution head — Student-t `v2t` (μ, σ, ν per target, ν = 2.05 +
+softplus, init 5) against the two-component mixture `v2m2` re-trained at the same epoch cap 100.
+Everything else is B.17 (NLL loss, val-NLL checkpoint selection, held-free, per-shot norm, W = 2,
+splits {42, 1, 7, 123} × init = split seed, both populations, frozen backbones as control).
+16 runs (`data/.b17b_{v2t,v2m2}_{cut,incl}_s*`), scored by `experiments/b17_dist/score_b17b.py`
+→ `data/.b17b_summary.json` (stdout `data/.b17b_score_stdout.log`). Batch log: the chain was
+paused at 11/16 by 승상님 (2026-10-30 11:58; `v2m2_incl_s1` had only just started and was re-run
+from scratch) and resumed 13:1x; all 16 trained on the GPU, last finished 14:16.
+
+**Scoring fix before recording.** `score_b17b.py` first read Hb-1's significance from the
+bootstrap's one-sided `pass` flag (lower CI > 0), so a significant *negative* difference fell
+through to "tie". The registration says "≤ −0.02 significant → mixture better" (two-sided); the
+script now tests "CI excludes 0" in both directions. The fix changes one reading (inclusive Hb-1,
+below) and no named arm, because only `v2m2` passes the inclusive guards.
+
+**Numbers (`T_i` unless stated; CRPS skill vs R0 = backbone point + backbone TEST RMSE; pooled CI
+95 % shot-cluster bootstrap).**
+
+| | `v2t` cut | `v2m2` cut | `v2t` incl | `v2m2` incl |
+|---|---|---|---|---|
+| CRPS vs R0, per split | +0.215\* +0.218\* +0.240\* +0.241\* | +0.227\* +0.211\* +0.216\* +0.234\* | +0.427\* +0.407\* +0.442\* +0.448\* | +0.436\* +0.408\* +0.457\* +0.470\* |
+| CRPS vs R0 / R1, pooled | +0.229 / +0.196 | +0.222 / +0.199 | +0.431 / +0.414 | +0.444 / +0.433 |
+| 50 % / 90 % coverage (range) | 0.48–0.51 / 0.91–0.92 | 0.51–0.55 / 0.90–0.91 | 0.48–0.53 / 0.91–0.92 | 0.53–0.554 / 0.90–0.91 |
+| calibrated splits (guard iii) | 4/4 | 4/4 | 4/4 | 3/4 (s123 50 % = 0.554) |
+| posterior-mean MSE vs backbone, `T_i` | +0.018 +0.009 +0.049\* +0.004 | +0.037\* +0.025\* +0.051\* +0.029 | −0.042 −0.023 −0.029 −0.067\* (mean −0.040) | +0.017 +0.012 +0.017\* +0.014 |
+| same, `V_rot` | −0.009 +0.031 −0.025 −0.020 | +0.003 +0.029 −0.011 −0.009 | −0.010 +0.016 −0.027 −0.021 | +0.021 +0.009 −0.015 −0.005 |
+| ν median per split (`T_i`) | 3.0 2.8 3.1 3.5 | — | 2.4 2.1 2.4 2.9 | — |
+| **guards (i)–(iv)** | **pass** | **pass** | **fail (iv)** | **pass** |
+
+`V_rot` CRPS vs R0 pooled: `v2t` +0.363 / +0.352, `v2m2` +0.346 / +0.351 (cut / incl), every split
+significant, 90 % coverage 0.89–0.96. `V_rot` ν sits on the floor (median 2.1 in every split, 90th
+pct ≤ 2.8). Epochs: `v2t` runs to the 100 cap in 8/8 runs (best epoch 98–100, still improving); `v2m2`
+early-stops in 3/4 inclusive and 1/4 cut runs (best 47–69), the rest end at 97–99.
+
+**Hypotheses.**
+- **Hb-guards.** Cut: both arms pass. Inclusive: `v2m2` passes; `v2t` fails guard (iv) on `T_i`
+  (mean −0.040 < −0.02, 1/4 significant).
+- **Hb-1 (t vs mixture, `T_i` pooled CRPS).** Cut +0.009 [+0.005, +0.014] → significant but below
+  0.02 → **tie**. Inclusive **−0.022** [−0.029, −0.016] → **mixture better**. (`V_rot`: +0.026\*
+  cut, +0.000 incl — not a registered reading.)
+- **Hb-2 (ν).** `T_i` ν medians 2.8–3.5 (cut), 2.1–2.9 (incl): inside 2–8, i.e. a finite-variance
+  heavy tail in the cut population; the inclusive medians sit next to the ν > 2 floor, and the
+  `V_rot` ν is on the floor everywhere — there the t head is asking for a tail heavier than
+  finite variance allows.
+- **Hb-3 (cap).** `v2m2` cap 100 − cap 60: `T_i` +0.009 (cut) / +0.011 (incl), both significant,
+  both < 0.02 → B.17's mixture numbers were not a lower bound; no footnote.
+
+**Verdict by the registered rules.**
+1. **"Calibrated nowcaster" — supported, unconditional.** Cut: two arms pass, Hb-1 tie → the
+   fewer-parameter `v2t` is the named arm. Inclusive: `v2m2` is the only passing arm and is named.
+   §8bf's mixture result is thereby promoted from exploratory to confirmatory (the mixture passes
+   all four guards in both populations; footnote added to §8bf).
+2. **Mechanism.** Cut: t ties mixture → "the error is one heavy-tailed peak" is a measurement, not
+   only §8bf's description. Inclusive: mixture better → "the second scale's freedom pays", and the
+   layer is the peak rows (rule 3 below).
+3. **Guard (iv) violation → `v2t` rejected in the inclusive population; cause layer**: paired MSE vs
+   backbone on the `dist_test` rows, `T_i`, pooled over splits — `v2t` peak rows **−0.134**
+   [−0.223, −0.017], non-peak −0.028 [−0.045, −0.009]; `v2m2` peak −0.040 [−0.109, +0.043],
+   non-peak +0.023 [+0.015, +0.033]. Mechanism: the t location is a redescending M-estimator — its
+   NLL gradient vanishes as 1/residual — so on the > 3 keV fit-failure spikes kept in the inclusive
+   TEST it stays near the bulk and pays their full square in MSE; the mixture moves its mean with
+   the wide component's weight and keeps them. This is the likelihood-side copy of §8ay's inclusive
+   Huber cost.
+
+**Against the registered predictions.** `v2t` CRPS cut +0.22…+0.24 (predicted +0.18…+0.25 ✓),
+inclusive +0.41…+0.45 (+0.40…+0.47 ✓); coverage ✓; ν `T_i` cut 2.8–3.5 ✓, inclusive 2.1–2.9 (2/4
+below the predicted 2.5 floor); t − mixture tie ✓ cut, ✗ inclusive (−0.022); cap effect
++0.009/+0.011 ✓; `v2t` cut MSE +0.004…+0.049 ✓, `V_rot` tie ✓.
+
+**What this means for the thesis.** The seq_v2 nowcaster with a distribution head is a calibrated
+10 ms forecaster in both populations: it beats an oracle-scale Gaussian around the backbone by
+0.22 (cut) / 0.43–0.44 (inclusive) CRPS on `T_i` and 0.35 on `V_rot`, with 50 / 90 % intervals
+that cover 0.5 / 0.9 of TEST rows. The error it learns is a single peak with a ν ≈ 3 tail in the
+fit-failure-cut data; once the > 3 keV spikes are kept, a free second scale is needed to keep the
+posterior mean honest. `V_rot`'s ν on the floor is the third independent sign (after §8bf's
+staleness-blind σ and §8bi's OU bound) that `V_rot` increments are jump-like, which the
+jump-diffusion anchor named in §8bi is built to test. Artifacts: `data/.b17b_{v2t,v2m2}_{cut,incl}_s{42,1,7,123}/`,
+`data/.b17b_runner_summary.json`, `data/.b17b_summary.json`.
