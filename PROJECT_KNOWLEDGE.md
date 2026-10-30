@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi, §8bk
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi, §8bk, §8bl
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1460,3 +1460,8 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   the lag-1 autocorrelation of observed `V_rot` increments on TRAIN; positive → local-linear-trend
   cell, ≈ 0 → σ_n fitted by the anchor's own innovation likelihood. For `T_i`, the open row is a
   residual trained/selected on the median objective (§8bh rule) on top of the jump anchor.
+- **Measured (§8bl, TRAIN only)**: increments anti-correlate (ρ₁ −0.34…−0.50) — no trend, last-slope
+  predictors are worse. `V_rot`: the best fixed-gain smoother is persistence (0.996–0.999×) → the
+  attainable median is ≈ 1.00×; the anchors' 1.18× is shrinkage by σ_n 25–33 km/s vs a 4 km/s bulk
+  scatter. `T_i`: a k = 0.5–0.7 smoother gives 0.95–0.96× with σ_n 3–4× the bulk scatter (44 eV).
+  Common cause: Gaussian measurement noise on a heavy-tailed fit error. Next cell: Student-t noise.

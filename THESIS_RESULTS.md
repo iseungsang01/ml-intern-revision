@@ -4873,6 +4873,8 @@ exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
 > 1.189× / 1.183× persistence (§8bi), the pure hold-or-jump anchor at 1.181× / 1.183× (§8bk). The bound
 > is an OU-model number, not a measured property of the data; the measurement that decides why both
 > stall (`V_rot` increment autocorrelation vs end-to-end σ_n) is named in §8bk.
+> Measured in §8bl: no trend; at the median row persistence is already optimal for `V_rot`
+> (best smoother 0.996–0.999×), so the attainable `V_rot` median is ≈ 1.00× and 0.921× is an OU artifact.
 
 ### 3. Verdict
 
@@ -5698,3 +5700,49 @@ inclusive +0.25 survives with the residual on.
 stand as recorded in §8bg; P02's 0.921× bound is footnoted as unreached under both priors tested.
 Artifacts: `data/.b16_v4kj_{cut,incl}_s{42,1,7,123}/`, `data/.b18_anchor_{cut,incl}_s{…}/`,
 `data/.b18_summary.json`, `data/.b18_rescore.json`, `data/.b18_verdict.json`.
+
+## 8bl. The §8bk diagnostic (2026-10-30, TRAIN only, no model): `V_rot` increments do not trend, and at the median row carrying the last value is already optimal — the anchors' 1.18× is shrinkage by a σ_n six times the bulk scatter; `T_i` is noise around a level, and a plain smoother already reaches 0.95×
+
+**Design** (`experiments/b16_physics/vrot_increment_diag.py`, reading rules fixed in the docstring
+and committed before the first run, 4f25a0a; per-split TRAIN list fix before the run, then run).
+Each split's own TRAIN shots (the union would contain other splits' TEST shots), held-free, `T_i`
+spikes cut at 3 keV (cut) or kept (inclusive); only triples of consecutive observed 10 ms steps
+inside one block. No model, no TEST row. Readouts: increment lag-1 correlation ρ₁ (Pearson,
+Spearman), bulk sign concordance (both |d| ≤ median), robust scatter 1.4826·MAD(d)/√2 vs the
+Rice RMS, and the median AE / persistence of two simple causal predictors — exponential smoothing
+`x ← x + k(y − x)` and persistence + β·last slope. Output `data/.b19_vrot_diag.json`.
+
+| | `V_rot` (cut = inclusive) | `T_i` cut | `T_i` inclusive |
+|---|---|---|---|
+| ρ₁ Pearson / Spearman | −0.34 … −0.39 / −0.27 … −0.28 | −0.47 / −0.34 | −0.47 … −0.50 / −0.34 |
+| bulk sign concordance | 0.461–0.464 | 0.459–0.464 | 0.459–0.463 |
+| robust scatter · Rice RMS | **4.0–4.4 km/s** · 18–27 km/s | **44–45 eV** · 137–147 eV | 44–46 eV · 333–357 eV |
+| learned σ_n of the anchors (§8bg, §8bk) | 25–33 km/s | 118–124 eV | 191–201 eV |
+| smoothing k = 0.3 / 0.5 / 0.7, median AE / persistence | 1.11–1.12 / 1.02–1.03 / **0.996–0.999** | 0.99–1.01 / 0.95–0.96 / **0.95–0.96** | 1.00–1.02 / 0.95–0.96 / 0.95–0.96 |
+| last slope β = 0.25 / 0.5 | 1.05–1.07 / 1.13–1.15 | 1.12 / 1.26 | 1.12 / 1.26 |
+| registered reading (4/4 splits, both populations) | **persistence is median-optimal in the bulk** | **noise around a level, σ_n too large** | same |
+
+**What it says.**
+1. *No trend.* Increments anti-correlate (ρ₁ < 0, bulk signs agree less than half the time) and
+   adding the last slope makes every target worse. The level+velocity cell named in §8bk is
+   closed by measurement.
+2. *`V_rot`: the 1.18× is the price of over-shrinking, not of the prior.* The best fixed-gain
+   smoother on TRAIN is persistence itself (k = 0.7 → 0.996–0.999×), and heavier smoothing costs
+   exactly what the anchors pay (k = 0.3 → 1.11×). Both anchors learned σ_n ≈ 25–33 km/s — the
+   tail-dominated Rice value — while the bulk scatter is 4 km/s; a Gaussian measurement model has
+   one σ for both and the MSE objective sets it from the tail. Consequence for P02: at the median
+   row no causal filter of this history beats persistence by more than ≈ 0.5 %, so the 0.921×
+   bound is an OU-model artifact and the attainable `V_rot` median is ≈ 1.00× — reached on record
+   only by §8bh's self-selected Huber (1.02×).
+3. *`T_i`: there is real median headroom in the history alone.* A fixed k = 0.5–0.7 smoother gives
+   0.95–0.96× persistence on TRAIN in both populations — below the best anchor on TEST (jump, cut
+   0.979×) — and again the anchors' σ_n (118–201 eV) is 3–4× the bulk scatter (44–46 eV).
+4. *The common cause* is a Gaussian measurement model for a target whose fit error is heavy-tailed
+   (§8aq: 47–66 % of the squared 4th-difference mass in the top 1 %; §8bj: ν ≈ 3, `V_rot` ν on the
+   floor). Caveat: TRAIN triples are consecutive observed rows; TEST scoring rows include gaps,
+   where §8bk's stale stratum already favours the hold-or-jump cell.
+
+**Named next (registration, not run):** the anchor cell with Student-t (heavy-tailed) measurement
+noise — a robust Kalman update whose innovation weight falls for outlying observations, so σ_n can
+sit at the bulk scale (≈ 45 eV, ≈ 4 km/s) without being dragged to the tail. Predictions from this
+table: pure anchor `T_i` median ≈ 0.95–0.97×, `V_rot` ≈ 0.99–1.01× (not lower — point 2).
