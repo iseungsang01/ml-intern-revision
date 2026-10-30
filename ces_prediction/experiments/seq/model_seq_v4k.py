@@ -120,8 +120,13 @@ class KalmanAnchor(nn.Module):
 
 @torch.jit.script
 def _jump_scan(carried: torch.Tensor, obs_prev: torch.Tensor, lam: torch.Tensor, j: torch.Tensor,
-               d: torch.Tensor, r: torch.Tensor, p0: float) -> Tuple[torch.Tensor, torch.Tensor]:
-    """JumpAnchor recursion (see its docstring). Returns anchor and predictive sd, (B, L) each."""
+               d: torch.Tensor, r: torch.Tensor, p0: float, nu: torch.Tensor,
+               student: bool) -> Tuple[torch.Tensor, torch.Tensor]:
+    """JumpAnchor recursion (see its docstring). Returns anchor and predictive sd, (B, L) each.
+    student=True (B.19): Student-t measurement noise with dof nu and scale^2 r -- hypothesis
+    weights use the t likelihood and each hypothesis is updated with the one-step
+    variational noise variance R = r (nu + e^2 / S) / (nu + 1), so an outlying observation
+    is down-weighted instead of setting r for every row."""
     B, L = carried.shape[0], carried.shape[1]
     x = torch.zeros([B], dtype=carried.dtype, device=carried.device)
     P = torch.full([B], p0, dtype=carried.dtype, device=carried.device)
@@ -135,17 +140,24 @@ def _jump_scan(carried: torch.Tensor, obs_prev: torch.Tensor, lam: torch.Tensor,
             S0 = P + r
             S1 = P + j + r
             hh = h.clamp(1e-6, 1 - 1e-6)
-            logit = (torch.log(hh) - torch.log1p(-hh) - 0.5 * torch.log(S1 / S0)
-                     - 0.5 * e * e * (1.0 / S1 - 1.0 / S0))
-            w1 = torch.sigmoid(logit)
-            K0 = P / S0
-            K1 = (P + j) / S1
-            x0 = x + K0 * e
-            x1 = x + K1 * e
+            if student:
+                ll = (-0.5 * torch.log(S1 / S0)
+                      - 0.5 * (nu + 1) * (torch.log1p(e * e / (nu * S1)) - torch.log1p(e * e / (nu * S0))))
+                R0 = r * (nu + e * e / S0) / (nu + 1)
+                R1 = r * (nu + e * e / S1) / (nu + 1)
+            else:
+                ll = -0.5 * torch.log(S1 / S0) - 0.5 * e * e * (1.0 / S1 - 1.0 / S0)
+                R0 = r.expand_as(e)
+                R1 = r.expand_as(e)
+            w1 = torch.sigmoid(torch.log(hh) - torch.log1p(-hh) + ll)
+            T0 = P + R0
+            T1 = P + j + R1
+            x0 = x + P / T0 * e
+            x1 = x + (P + j) / T1 * e
             xm = (1 - w1) * x0 + w1 * x1
-            # (1 - K) P written as P r / S: exact when P >> r (diffuse prior)
-            Pm = ((1 - w1) * (P * r / S0 + (x0 - xm) ** 2)
-                  + w1 * ((P + j) * r / S1 + (x1 - xm) ** 2))
+            # (1 - K) P written as P R / S: exact when P >> R (diffuse prior)
+            Pm = ((1 - w1) * (P * R0 / T0 + (x0 - xm) ** 2)
+                  + w1 * ((P + j) * R1 / T1 + (x1 - xm) ** 2))
             # select, not blend: P + o (Pm - P) cancels catastrophically when P >> Pm
             upd = o > 0.5
             x = torch.where(upd, xm, x)
@@ -175,8 +187,13 @@ class JumpAnchor(nn.Module):
     followed (gain -> 1). Same interface and causality as KalmanAnchor.
     """
 
-    def __init__(self, sigma_n0, lam0=0.05, sigma_j0=1.0, sigma_d0=0.05, p0=1.0):
+    def __init__(self, sigma_n0, lam0=0.05, sigma_j0=1.0, sigma_d0=0.05, p0=1.0, nu0=None):
         super().__init__()
+        # B.19: nu0 set -> Student-t measurement noise, learnable dof nu = 2 + softplus (finite variance)
+        # (only the t cell owns the parameter, so v4kj checkpoints keep their state_dict)
+        self.student = nu0 is not None
+        if self.student:
+            self.nu_raw = nn.Parameter(torch.tensor(_inv_softplus(nu0 - 2.0)))
         self.lam_logit = nn.Parameter(torch.tensor(_inv_sigmoid(lam0)))
         self.j_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_j0 ** 2)))
         self.d_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_d0 ** 2)))
@@ -190,21 +207,32 @@ class JumpAnchor(nn.Module):
         r = nn.functional.softplus(self.r_raw) + 1e-6
         return lam, j, d, r
 
+    def nu(self):
+        if not self.student:
+            return torch.tensor(float("inf"))  # unused by the Gaussian branch
+        return 2.0 + nn.functional.softplus(self.nu_raw)
+
     def physical(self, target_std):
         """jump rate [1/s], jump sd / drift sd per step / noise sd (physical units)."""
         lam, j, d, r = (float(v.detach()) for v in self.params())
         return {"lam_per_step": lam, "jump_rate_hz": -math.log(1.0 - lam) / GRID_DT_S,
                 "sigma_jump": math.sqrt(j) * target_std, "sigma_drift_per_step": math.sqrt(d) * target_std,
-                "sigma_n": math.sqrt(r) * target_std}
+                "sigma_n": math.sqrt(r) * target_std,
+                **({"nu": float(self.nu().detach())} if self.student else {})}
 
     def forward(self, carried, obs_prev):
         # The scan runs on the CPU as TorchScript: ~40 tiny ops per step are kernel-launch bound
         # on the GPU (7.3 s vs 1.0 s per 16 x 1500 forward+backward). Same arithmetic.
         lam, j, d, r = self.params()
         dev = carried.device
-        a, s = _jump_scan(carried.cpu(),
-                          obs_prev.cpu(), lam.cpu(), j.cpu(), d.cpu(), r.cpu(), self.p0)
+        a, s = _jump_scan(carried.cpu(), obs_prev.cpu(), lam.cpu(), j.cpu(), d.cpu(), r.cpu(),
+                          self.p0, self.nu().cpu(), self.student)
         return a.to(dev), s.to(dev)
+
+
+# sec. 8bl: robust increment scatter 1.4826 MAD(d) / sqrt 2 on each split's TRAIN shots, in target-sd
+# units, mean of the four splits (T_i 0.112-0.118 cut / 0.068-0.073 inclusive, V_rot 0.054-0.076)
+BULK_SIGMA_N = {"CES_TI_cut": 0.116, "CES_TI_incl": 0.071, "CES_VT": 0.060}
 
 
 class SeqCESV4K(nn.Module):
@@ -230,9 +258,16 @@ class SeqCESV4K(nn.Module):
         self.col_carried = (self.n_fast + 1, self.n_fast + 4)
 
         # B.18: anchor="jump" swaps the OU cell for the hold-or-jump cell (same noise sd init)
+        # B.19 (PREREGISTRATION_B19.md): anchor="jump_t" = the same cell with a Student-t
+        # measurement model (nu0 = 3) whose scale starts at the TRAIN bulk scatter (sec. 8bl,
+        # target-sd units; T_i depends on the population via CES_TI_SPIKE_CUT_EV)
         if anchor == "jump":
             self.kalman_ti = JumpAnchor(init_ti[2])
             self.kalman_vt = JumpAnchor(init_vt[2])
+        elif anchor == "jump_t":
+            cut = float(os.getenv("CES_TI_SPIKE_CUT_EV", "0") or 0.0) > 0
+            self.kalman_ti = JumpAnchor(BULK_SIGMA_N["CES_TI_cut" if cut else "CES_TI_incl"], nu0=3.0)
+            self.kalman_vt = JumpAnchor(BULK_SIGMA_N["CES_VT"], nu0=3.0)
         elif anchor == "ou":
             self.kalman_ti = KalmanAnchor(*init_ti, hold_level=hold_level)
             self.kalman_vt = KalmanAnchor(*init_vt, hold_level=hold_level)

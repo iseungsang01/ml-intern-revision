@@ -28,13 +28,18 @@ POPS = ("cut", "incl")
 EPS = 0.02
 
 
+def _prefix(arm):
+    return arm if arm.startswith(".") else f".b16_{arm}"
+
+
 def arms_pair(a, b, pop, t, rng, stratum=None):
     names = shot_names()
     per, parts = {}, []
     for s in SEEDS:
         test_files = set(json.loads((DATA / B13_POPS[pop]["manifest"].format(s=s)).read_text(encoding="utf-8"))["test_files"])
-        A = load_arm(DATA / f".b16_{a}_{pop}_s{s}" / "comparison_errors_test.npz", names, test_files)[t]
-        Bm = load_arm(DATA / f".b16_{b}_{pop}_s{s}" / "comparison_errors_test.npz", names, test_files)[t]
+        # an arm is a training arm (.b16_{arm}_*) or, with a leading dot, a run prefix (e.g. .b18_anchor)
+        A = load_arm(DATA / f"{_prefix(a)}_{pop}_s{s}" / "comparison_errors_test.npz", names, test_files)[t]
+        Bm = load_arm(DATA / f"{_prefix(b)}_{pop}_s{s}" / "comparison_errors_test.npz", names, test_files)[t]
         if not (np.array_equal(A["shot"], Bm["shot"]) and np.array_equal(A["dt"], Bm["dt"], equal_nan=True)):
             raise SystemExit(f"FATAL: {pop} s{s} {t}: {a} and {b} not row-paired")
         m = np.ones(len(A["shot"]), bool) if stratum is None else stratum(A)

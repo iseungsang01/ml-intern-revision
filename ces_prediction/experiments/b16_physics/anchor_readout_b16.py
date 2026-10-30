@@ -9,9 +9,10 @@ is reachable by the filter alone.
 Steps per (pop, seed): copy metrics.json + weights into .b16_anchor_{pop}_s{seed}, eval_seq.py
 on TEST, bootstrap ladder, paired vs the backbone and paired vs v4kng. Resumable.
 
-Usage (repo root):  py ces_prediction/experiments/b16_physics/anchor_readout_b16.py [--arm v4kng | v4kj]
+Usage (repo root):  py ces_prediction/experiments/b16_physics/anchor_readout_b16.py [--arm v4kng | v4kj | v4kjt]
 B.18 (PREREGISTRATION_B18.md): `--arm v4kj` reads out the pure hold-or-jump anchor of the v4kj
-checkpoints into .b18_anchor_{pop}_s{seed} (summary .b18_anchor_summary.json).
+checkpoints into .b18_anchor_{pop}_s{seed} (summary .b18_anchor_summary.json); B.19 `--arm v4kjt`
+into .b19_anchor_{pop}_s{seed}.
 """
 
 import argparse
@@ -29,9 +30,9 @@ from run_b16 import (DATA, CES_DIR, SEQ_DIR, PAIRED, POPS, SEEDS, base_env, run_
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--arm", default="v4kng", choices=("v4kng", "v4kj"))
+    ap.add_argument("--arm", default="v4kng", choices=("v4kng", "v4kj", "v4kjt"))
     arm = ap.parse_args().arm
-    tag = ".b16_anchor" if arm == "v4kng" else ".b18_anchor"
+    tag = {"v4kng": ".b16_anchor", "v4kj": ".b18_anchor", "v4kjt": ".b19_anchor"}[arm]
     recs = []
     for pop in POPS:
         p = POPS[pop]
