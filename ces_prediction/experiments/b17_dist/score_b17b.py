@@ -175,9 +175,10 @@ def main():
                                     "calibration_splits": c_ok, "mse_guard_both_targets": guard_ok,
                                     "pass": r0_ok >= 3 and a["pooled"]["crps_skill_vs_r0"]["pass"] and a["pooled"]["crps_skill_vs_r1"]["pass"] and c_ok >= 3 and guard_ok}
         tv = ti["v2t"]["pooled"]["v2t_vs_v2m2"]
-        h["Hb-1_t_vs_mixture"] = {"pooled": tv, "tie": abs(tv["skill_point"]) < PRACTICAL_EPS or not tv["pass"],
-                                  "t_better": tv["pass"] and tv["skill_point"] >= PRACTICAL_EPS,
-                                  "mixture_better": tv["pass"] and tv["skill_point"] <= -PRACTICAL_EPS}
+        sig = tv["skill_ci95"][0] > 0 or tv["skill_ci95"][1] < 0  # two-sided: `pass` is one-sided (lo > 0)
+        h["Hb-1_t_vs_mixture"] = {"pooled": tv, "tie": abs(tv["skill_point"]) < PRACTICAL_EPS or not sig,
+                                  "t_better": sig and tv["skill_point"] >= PRACTICAL_EPS,
+                                  "mixture_better": sig and tv["skill_point"] <= -PRACTICAL_EPS}
         nus = [ti["v2t"]["per_seed"][str(s)]["nu_q10_50_90"] for s in SEEDS]
         h["Hb-2_nu"] = {"nu_median_per_split": [n[1] for n in nus], "in_2_to_8": all(2.0 <= n[1] <= 8.0 for n in nus)}
         cap = ti["v2m2"]["pooled"]["v2m2_cap100_vs_cap60"]
