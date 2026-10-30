@@ -9,8 +9,12 @@ is reachable by the filter alone.
 Steps per (pop, seed): copy metrics.json + weights into .b16_anchor_{pop}_s{seed}, eval_seq.py
 on TEST, bootstrap ladder, paired vs the backbone and paired vs v4kng. Resumable.
 
-Usage (repo root):  py ces_prediction/experiments/b16_physics/anchor_readout_b16.py
+Usage (repo root):  py ces_prediction/experiments/b16_physics/anchor_readout_b16.py [--arm v4kng | v4kj]
+B.18 (PREREGISTRATION_B18.md): `--arm v4kj` reads out the pure hold-or-jump anchor of the v4kj
+checkpoints into .b18_anchor_{pop}_s{seed} (summary .b18_anchor_summary.json).
 """
+
+import argparse
 
 import json
 import os
@@ -24,12 +28,16 @@ from run_b16 import (DATA, CES_DIR, SEQ_DIR, PAIRED, POPS, SEEDS, base_env, run_
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--arm", default="v4kng", choices=("v4kng", "v4kj"))
+    arm = ap.parse_args().arm
+    tag = ".b16_anchor" if arm == "v4kng" else ".b18_anchor"
     recs = []
     for pop in POPS:
         p = POPS[pop]
         for s in SEEDS:
-            src = DATA / f".b16_v4kng_{pop}_s{s}"
-            out = DATA / f".b16_anchor_{pop}_s{s}"
+            src = DATA / f".b16_{arm}_{pop}_s{s}"
+            out = DATA / f"{tag}_{pop}_s{s}"
             control = DATA / p["control"].format(s=s)
             split = DATA / p["split"].format(s=s)
             cm = DATA / p["control_metrics"].format(s=s) / "metrics.json"
@@ -41,7 +49,7 @@ def main():
             if not (out / "weights" / "seq_lstm.pth").exists():
                 shutil.copy2(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth")
                 shutil.copy2(src / "metrics.json", out / "metrics.json")
-            env = base_env(pop, "v4kng", False)
+            env = base_env(pop, arm, False)
             env.update({"CES_SEED": str(s), "CES_INIT_SEED": str(s), "CES_SPLIT_DIR": str(split),
                         "CES_OUTPUT_DIR": str(out), "CES_CONTROL_METRICS": str(cm), "CES_SPLIT_TAG": "test",
                         "CES_SEQ_ANCHOR_ONLY": "1"})
@@ -55,12 +63,12 @@ def main():
             if not (out / "bootstrap_summary.json").exists():
                 if not run_step([CES_DIR / "bootstrap_compare.py"], env, log, "bootstrap", artifacts=(out / "bootstrap_summary.json",)):
                     rec["status"] = "bootstrap_failed"; recs.append(rec); continue
-            for tag, other in (("control", control), ("v4kng", src)):
-                paired = out / f"paired_vs_{tag}.json"
+            for ptag, other in (("control", control), (arm, src)):
+                paired = out / f"paired_vs_{ptag}.json"
                 if not paired.exists():
                     if not run_step([PAIRED, "--a", out / "comparison_errors_test.npz", "--b", other / "comparison_errors_test.npz",
-                                     "--out", paired], env, log, f"paired-vs-{tag}", artifacts=(paired,)):
-                        rec["status"] = f"paired_{tag}_failed"; break
+                                     "--out", paired], env, log, f"paired-vs-{ptag}", artifacts=(paired,)):
+                        rec["status"] = f"paired_{ptag}_failed"; break
             if not (out / "shot_winrate.json").exists():
                 shot_winrate(out)
             recs.append(rec)
@@ -72,23 +80,23 @@ def main():
     summary = {}
     for pop in POPS:
         for s in SEEDS:
-            out = DATA / f".b16_anchor_{pop}_s{s}"
+            out = DATA / f"{tag}_{pop}_s{s}"
             pc = json.loads((out / "paired_vs_control.json").read_text(encoding="utf-8"))["targets"]
-            pv = json.loads((out / "paired_vs_v4kng.json").read_text(encoding="utf-8"))["targets"]
+            pv = json.loads((out / f"paired_vs_{arm}.json").read_text(encoding="utf-8"))["targets"]
             bs = json.loads((out / "bootstrap_summary.json").read_text(encoding="utf-8"))["splits"]["test"]
             summary.setdefault(pop, {})[str(s)] = {
                 t: {"vs_backbone": pc[t]["skill_point"], "vs_backbone_ci": pc[t]["skill_ci95"],
-                    "vs_v4kng": pv[t]["skill_point"], "vs_v4kng_ci": pv[t]["skill_ci95"],
+                    f"vs_{arm}": pv[t]["skill_point"], f"vs_{arm}_ci": pv[t]["skill_ci95"],
                     "vs_pchip": bs[t]["pchip"]["skill_point"], "vs_persistence": bs[t]["persistence"]["skill_point"],
                     "vs_gp_causal": bs[t].get("gp_causal", {}).get("skill_point")}
                 for t in ("CES_TI", "CES_VT")}
             summary[pop][str(s)]["shot_winrate"] = json.loads((out / "shot_winrate.json").read_text(encoding="utf-8"))
-    (DATA / ".b16_anchor_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (DATA / f"{tag}_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     for pop in POPS:
         for t in ("CES_TI", "CES_VT"):
             print(f"[b16-anchor] {pop:4s} {t}: MSE skill vs backbone " + " ".join(f"{summary[pop][str(s)][t]['vs_backbone']:+.3f}" for s in SEEDS)
                   + " | vs persistence " + " ".join(f"{summary[pop][str(s)][t]['vs_persistence']:+.3f}" for s in SEEDS))
-    print("[b16-anchor] M1 / median-vs-persistence: rescore_b13.py --extra anchor=.b16_anchor_{pop}_s{s} --out data/.b16_anchor_rescore.json")
+    print(f"[b16-anchor] M1 / median-vs-persistence: rescore_b13.py --extra anchor={tag}_{{pop}}_s{{s}} --out data/{tag}_rescore.json")
 
 
 if __name__ == "__main__":

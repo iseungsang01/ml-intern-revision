@@ -117,12 +117,86 @@ class KalmanAnchor(nn.Module):
         return torch.stack(anchors, dim=1), torch.stack(sds, dim=1)
 
 
+class JumpAnchor(nn.Module):
+    """B.18 (PREREGISTRATION_B18.md): hold-or-jump anchor, per target, normalized units.
+
+    Prior on the true value: y_t = y_{t-1} + w_t + J_t, w ~ N(0, q_d) a slow drift, and a
+    jump J ~ N(0, sigma_J^2) with probability lam per 10 ms step (zero otherwise).
+    Measurement: carried = y + N(0, r). sec. 8bi: the increments are bursty (hold, then
+    jump), which the OU relaxation of KalmanAnchor misreads in the median and on stale rows.
+
+    Between observations the mean is held (jumps and drift are zero-mean), the variance
+    grows by q_d per step and the jump hazard h = 1 - (1 - lam)^k accumulates. At an
+    observation the two hypotheses "no jump since the last update" (prior variance P) and
+    "one jump" (P + sigma_J^2) are weighted by prior hazard x innovation likelihood, each is
+    Kalman-updated, and the pair is collapsed to its first two moments (GPB1). Small
+    innovations are averaged with the history (denoising the quiet bulk); large ones are
+    followed (gain -> 1). Same interface and causality as KalmanAnchor.
+    """
+
+    def __init__(self, sigma_n0, lam0=0.05, sigma_j0=1.0, sigma_d0=0.05, p0=1.0):
+        super().__init__()
+        self.lam_logit = nn.Parameter(torch.tensor(_inv_sigmoid(lam0)))
+        self.j_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_j0 ** 2)))
+        self.d_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_d0 ** 2)))
+        self.r_raw = nn.Parameter(torch.tensor(_inv_softplus(sigma_n0 ** 2)))
+        self.p0 = float(p0)  # prior variance before the first observation (per-shot units)
+
+    def params(self):
+        lam = torch.sigmoid(self.lam_logit).clamp(1e-6, 1 - 1e-6)
+        j = nn.functional.softplus(self.j_raw) + 1e-6
+        d = nn.functional.softplus(self.d_raw) + 1e-8
+        r = nn.functional.softplus(self.r_raw) + 1e-6
+        return lam, j, d, r
+
+    def physical(self, target_std):
+        """jump rate [1/s], jump sd / drift sd per step / noise sd (physical units)."""
+        lam, j, d, r = (float(v.detach()) for v in self.params())
+        return {"lam_per_step": lam, "jump_rate_hz": -math.log(1.0 - lam) / GRID_DT_S,
+                "sigma_jump": math.sqrt(j) * target_std, "sigma_drift_per_step": math.sqrt(d) * target_std,
+                "sigma_n": math.sqrt(r) * target_std}
+
+    def forward(self, carried, obs_prev):
+        lam, j, d, r = self.params()
+        B, L = carried.shape
+        x = torch.zeros(B, dtype=carried.dtype, device=carried.device)
+        P = torch.full((B,), self.p0, dtype=carried.dtype, device=carried.device)
+        h = torch.zeros(B, dtype=carried.dtype, device=carried.device)
+        anchors, sds = [], []
+        for t in range(L):
+            if t > 0:
+                o = obs_prev[:, t]
+                v = carried[:, t]
+                e = v - x
+                S0, S1 = P + r, P + j + r
+                hh = h.clamp(1e-6, 1 - 1e-6)
+                logit = (torch.log(hh) - torch.log1p(-hh) - 0.5 * torch.log(S1 / S0)
+                         - 0.5 * e * e * (1.0 / S1 - 1.0 / S0))
+                w1 = torch.sigmoid(logit)
+                K0, K1 = P / S0, (P + j) / S1
+                x0, x1 = x + K0 * e, x + K1 * e
+                xm = (1 - w1) * x0 + w1 * x1
+                # (1 - K) P written as P r / S: exact when P >> r (diffuse prior)
+                Pm = ((1 - w1) * (P * r / S0 + (x0 - xm) ** 2)
+                      + w1 * ((P + j) * r / S1 + (x1 - xm) ** 2))
+                # select, not blend: P + o (Pm - P) cancels catastrophically when P >> Pm
+                upd = o > 0.5
+                x = torch.where(upd, xm, x)
+                P = torch.where(upd, Pm, P)
+                h = torch.where(upd, torch.zeros_like(h), h)
+            P = P + d
+            h = 1 - (1 - h) * (1 - lam)
+            anchors.append(x)
+            sds.append(torch.sqrt(P + h * j))
+        return torch.stack(anchors, dim=1), torch.stack(sds, dim=1)
+
+
 class SeqCESV4K(nn.Module):
     needs_obs = True  # forward wants the per-step per-target observation mask
 
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS,
                  hidden_ti=160, layers_ti=2, hidden_vt=64, layers_vt=1,
-                 head=64, dropout=0.1, gated=True, gate_bias=-2.0, hold_level=False,
+                 head=64, dropout=0.1, gated=True, gate_bias=-2.0, hold_level=False, anchor="ou",
                  init_ti=(0.88, 0.35, 0.30), init_vt=(0.90, 0.60, 0.40)):
         super().__init__()
         # sec. 10 sensitivity rows: gate_bias (+2 = gate initialised open), hold_level (B.16b).
@@ -139,8 +213,15 @@ class SeqCESV4K(nn.Module):
         # seq_data layout: [fast | dt | TI(carried, stale, has) | VT(carried, stale, has)]
         self.col_carried = (self.n_fast + 1, self.n_fast + 4)
 
-        self.kalman_ti = KalmanAnchor(*init_ti, hold_level=hold_level)
-        self.kalman_vt = KalmanAnchor(*init_vt, hold_level=hold_level)
+        # B.18: anchor="jump" swaps the OU cell for the hold-or-jump cell (same noise sd init)
+        if anchor == "jump":
+            self.kalman_ti = JumpAnchor(init_ti[2])
+            self.kalman_vt = JumpAnchor(init_vt[2])
+        elif anchor == "ou":
+            self.kalman_ti = KalmanAnchor(*init_ti, hold_level=hold_level)
+            self.kalman_vt = KalmanAnchor(*init_vt, hold_level=hold_level)
+        else:
+            raise ValueError(f"unknown anchor {anchor!r}")
 
         # T_i branch: full state + both anchors and sds (4 extra channels)
         self.lstm_ti = nn.LSTM(self.n_in + 4, hidden_ti, num_layers=layers_ti, batch_first=True,

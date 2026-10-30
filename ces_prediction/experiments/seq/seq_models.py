@@ -37,6 +37,8 @@ SEQ_MODELS = {
     # sec. 10 rows (registered 2026-10-29 after sec. 8bg): gate initialised open; level-holding anchor
     "v4ko": functools.partial(SeqCESV4K, gate_bias=2.0),
     "v4kngh": functools.partial(SeqCESV4K, gated=False, hold_level=True),
+    # B.18 (PREREGISTRATION_B18.md): hold-or-jump anchor + ungated residual
+    "v4kj": functools.partial(SeqCESV4K, gated=False, anchor="jump"),
     # B.17b (PREREGISTRATION_B17B.md): Student-t head with learnable nu
     "v2t": functools.partial(SeqCESLSTMv2Dist, dist="t"),
 
