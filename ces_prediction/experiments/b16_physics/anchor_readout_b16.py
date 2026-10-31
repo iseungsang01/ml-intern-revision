@@ -13,6 +13,9 @@ Usage (repo root):  py ces_prediction/experiments/b16_physics/anchor_readout_b16
 B.18 (PREREGISTRATION_B18.md): `--arm v4kj` reads out the pure hold-or-jump anchor of the v4kj
 checkpoints into .b18_anchor_{pop}_s{seed} (summary .b18_anchor_summary.json); B.19 `--arm v4kjt`
 into .b19_anchor_{pop}_s{seed}.
+B.23 (PREREGISTRATION_B23.md): `--arm v4kjt --vt-jump data/.b23_vrot_jump_fit.json` copies the same
+v4kjt checkpoints with only the V_rot cell's (lam, sigma_J) replaced by the TRAIN-likelihood fit of
+that split, into .b23_anchor_{pop}_s{seed}. The T_i cell is untouched (its errors must equal B.19's).
 """
 
 import argparse
@@ -28,11 +31,29 @@ sys.path.insert(0, str(HERE))
 from run_b16 import (DATA, CES_DIR, SEQ_DIR, PAIRED, POPS, SEEDS, base_env, run_step, shot_winrate)  # noqa: E402
 
 
+def patch_vt_jump(src, dst, fit):
+    import math
+    import torch
+    sd = torch.load(src, map_location="cpu")
+    lam, j = fit["lam_per_step"], fit["sigma_j"] ** 2 - 1e-6
+    sd["kalman_vt.lam_logit"] = torch.tensor(math.log(lam / (1 - lam)), dtype=sd["kalman_vt.lam_logit"].dtype)
+    sd["kalman_vt.j_raw"] = torch.tensor(j + math.log(-math.expm1(-j)), dtype=sd["kalman_vt.j_raw"].dtype)
+    torch.save(sd, dst)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", default="v4kng", choices=("v4kng", "v4kj", "v4kjt"))
-    arm = ap.parse_args().arm
+    ap.add_argument("--vt-jump", default=None, help="B.23 fit json; patches the V_rot jump process")
+    args = ap.parse_args()
+    arm = args.arm
     tag = {"v4kng": ".b16_anchor", "v4kj": ".b18_anchor", "v4kjt": ".b19_anchor"}[arm]
+    fits = None
+    if args.vt_jump:
+        if arm != "v4kjt":
+            raise SystemExit("FATAL: --vt-jump is defined for the B.19 v4kjt cell only")
+        tag = ".b23_anchor"
+        fits = json.loads(Path(args.vt_jump).read_text(encoding="utf-8"))["fits"]
     recs = []
     for pop in POPS:
         p = POPS[pop]
@@ -48,8 +69,12 @@ def main():
             out.mkdir(parents=True, exist_ok=True)
             (out / "weights").mkdir(exist_ok=True)
             if not (out / "weights" / "seq_lstm.pth").exists():
-                shutil.copy2(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth")
                 shutil.copy2(src / "metrics.json", out / "metrics.json")
+                if fits is None:
+                    shutil.copy2(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth")
+                else:
+                    patch_vt_jump(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth",
+                                  fits[f"{pop}_s{s}"])
             env = base_env(pop, arm, False)
             env.update({"CES_SEED": str(s), "CES_INIT_SEED": str(s), "CES_SPLIT_DIR": str(split),
                         "CES_OUTPUT_DIR": str(out), "CES_CONTROL_METRICS": str(cm), "CES_SPLIT_TAG": "test",
