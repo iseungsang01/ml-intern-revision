@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn, §8bo
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn, §8bo, §8bp
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1493,3 +1493,8 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   lose the pure anchor's 0.975× `V_rot` median → an output that must also win the MSE moves the
   quiet rows. Report the median from the pure anchor and the mean from the trained model (dual
   readout, B.22) rather than asking one output to carry both.
+- **Dual readout result (B.22, §8bp).** Pure t anchor as the median estimator: `T_i` beats backbone
+  and persistence 4/4 × both populations at 0.906–0.920× persistence (split spread ±0.007, parameters
+  set by registration) → **physics median estimator unconditional for `T_i`**. `V_rot`: beats the
+  backbone 4/4 × 2 but ties persistence (0.94–1.00× by split, 1/4 significant). Mean estimator stays
+  trained (`v4kjt` cut, `seq_v2` inclusive). Next lever for `V_rot`: TRAIN-fitted jump rate λ.

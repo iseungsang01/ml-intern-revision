@@ -5988,3 +5988,55 @@ variable, the combination rule.
    So any output that also has to win the MSE moves the quiet rows. Within this cell family that is now measured, not assumed. This is the reason for the registered next row: report the median claim from the pure anchor and the mean claim from the trained model, and do not ask one output to carry both objectives.
 
 **Named next (registered rule 3).** B.22, the training-free dual readout over the frozen B.19 artifacts. The median estimator is the pure t anchor (`.b19_anchor_*`) and the mean estimator is the trained model, both scored on the same TEST rows. It is registered before its per-split numbers are read; only the pooled pure-anchor numbers of §8bm have been seen.
+
+## 8bp. B.22 (2026-11-01): dual readout. The pure t anchor is a physics median estimator for `T_i` unconditionally: it beats the backbone and persistence in 4/4 splits × both populations, at 0.91× persistence in every split. For `V_rot` it beats the backbone 4/4 × 2 but ties persistence (1/4 significant). The mean estimator stays the trained model: `v4kjt` in cut, the backbone in inclusive
+
+**Design** (`PREREGISTRATION_B22.md`, committed before the per-split numbers, ae6237e). No training and no rescoring. The only input is the frozen B.19 scoring `data/.b19_rescore.json`, and `verdict_b22.py` writes `data/.b22_verdict.json`.
+
+- **Median estimator:** the pure t anchor (`.b19_anchor_*`).
+- **Mean estimator:** `v4kjt` where its MSE guard holds, else the backbone `v2`. This rule was fixed before the numbers.
+- **What was already seen:** only §8bm's pooled values, and the predictions say so.
+
+| | cut | inclusive |
+|---|---|---|
+| anchor M1 vs backbone `T_i`, per split (* = ≥ +0.05 ∧ CI > 0) | +0.116* +0.139* +0.059* +0.105* (**4/4**) | +0.284* +0.390* +0.222* +0.352* (**4/4**) |
+| anchor M1 vs persistence `T_i`, per split | +0.084 +0.080 +0.089 +0.081, all CI > 0 (**4/4**) | +0.088 +0.085 +0.094 +0.086, all CI > 0 (**4/4**) |
+| `T_i` median / persistence, per split | 0.916 0.920 0.911 0.919 | 0.912 0.915 0.906 0.914 |
+| anchor M1 vs backbone `V_rot`, per split | +0.177* +0.232* +0.088* +0.160* (**4/4**) | +0.171* +0.088* +0.167* +0.265* (**4/4**) |
+| anchor M1 vs persistence `V_rot`, per split | +0.061 [+0.016, +0.095], +0.014, +0.029, −0.000 (1/4) | +0.062 [+0.010, +0.098], +0.012, +0.029, −0.003 (1/4) |
+| `V_rot` median / persistence, per split | 0.939 0.986 0.971 1.000 | 0.938 0.988 0.971 1.003 |
+| anchor MSE vs backbone `T_i` / `V_rot` (H22-c) | −0.30 … −0.41 / −0.06 … −0.51 | −0.35 … −0.47 / −0.06 … −0.52 |
+| anchor MSE vs PCHIP `T_i` / `V_rot` | −0.07 … −0.02 / −0.074, +0.078, +0.079, +0.198 | −0.10 … +0.05 / −0.082, +0.065, +0.079, +0.193 |
+| mean estimator (rule of §1) | `v4kjt` (guard: sig worse 0/4, mean −0.004) | `v2` (`v4kjt` mean −0.0214) |
+
+**Verdict (registered rules, §2).**
+
+- **H22-a** passes for all four cells (4/4 each).
+- **H22-b** passes for `T_i` in both populations (4/4). It fails for `V_rot` in both (1/4).
+- **Rule 1** (unconditional across both targets) is not met.
+- **Rule 2:** the **physics median estimator is unconditional for `T_i`**, in both populations and every split.
+- **Rule 3** applies to `V_rot` in both populations. The `V_rot` median beats the backbone but ties persistence.
+- The mean-side readout reproduces §8bm, as restated in the registration.
+
+**Prediction check (§3).**
+
+- **Hits:** H22-a `T_i` (4/4, 4/4), H22-a `V_rot` (4/4, 4/4), H22-b `T_i` (4/4, 4/4), and the overall verdict (`T_i` unconditional, `V_rot` rule 3).
+- **Miss:** H22-b `V_rot` came in at 1/4, below the predicted 2–4/4.
+
+**Reading.**
+
+1. *The `T_i` median result is the cleanest physics number of the B.16–B.22 line.*
+   - A hold-or-jump filter with Student-t measurement noise at the TRAIN bulk scale sits at 0.906–0.920× persistence in all 8 split × population cells.
+   - Its parameters were set by the registration, not by training (§8bm).
+   - The spread across splits is ±0.007, against ±0.1 or more for every trained arm.
+   - The physics rung for the median claim is therefore unconditional. The paper's result II can be written as a dual readout: the median from the physics filter, the mean from the trained model (`v4kjt` in cut, `seq_v2` in inclusive), with the trade measured in §8bm–§8bo.
+2. *`V_rot`: better than any trained model at the median, tied with persistence.*
+   - The `V_rot` ratio is split-dependent (0.94–1.00×), the same pattern as §8bm's fresh-row stratum.
+   - The pure anchor also beats PCHIP on `V_rot` MSE in 3/4 splits (+0.065 … +0.198). That is an offline interpolator, yet the anchor sees only past labels.
+   - The measurement named to turn the persistence tie (registered rule 3) is this: initialise the jump rate λ from a TRAIN likelihood fit, then read the split-wise fresh/stale strata. The current λ is the registered value, and training does not move it (§8bm).
+3. *Why the median and the mean have separate estimators.* The anchor loses the aggregate MSE to the backbone (−0.30 … −0.52), because event rows stay late. Three attempts to put the anchor's median into a single MSE-winning output (§8bm, §8bn, §8bo) all lost it. The dual readout reports what each estimator is the right tool for.
+
+**Named next.** Update the paper-number pipeline. It touches the uncommitted `docs/paper` edits, so it waits for the author's confirmation. Two experimental rows are named and not run:
+
+- the TRAIN-fitted λ for `V_rot` (above);
+- the TEST k·r inference measurement of §8bo point 1.
