@@ -5837,3 +5837,79 @@ inclusive rule 1; `V_rot` median ≤ 1.00× with MSE sig worse ≤ 1/4 → H19-d
 If the median comes back only at the guard's expense, the trade is structural to an additive
 residual, and the next layer is routing (residual acting only where the anchor's jump posterior is
 high).
+
+## 8bn. B.20 (2026-11-01): selecting the t-anchor residual on val median-AE swaps which population passes. Inclusive now meets B.16 rule 1: M1 4/4, guard holds, and median-AE selection beats MSE selection on M1 (+0.093) with no MSE cost. Cut loses its guard: the median key stops training before the residual has bought the event rows. The physics rung is therefore population-specific in its selection rule and is not unconditional. The median does not come back to the pure anchor's level in either population (H20-a fails), so routing is next, and B.21 is its soft form
+
+**Design** (`PREREGISTRATION_B20.md`, committed before any number, 3059155). One controlled variable,
+the checkpoint selection of the B.19 `v4kjt` cell:
+
+- **Selection:** val masked MSE → val median-AE. The key is the mean over targets of the median |err| on observed rows. With `CES_SEQ_SELECT=medae` it drives the checkpoint, early stop (patience 6) and the LR plateau.
+- **Unchanged:** loss (MSE), cell, initial values and data.
+
+Runs:
+
+- **Training:** splits {42, 1, 7, 123} × two populations = 8 runs, with `run_b16.py --arms v4kjt --select medae --summary-name .b20_summary.json` → `data/.b20_v4kjt_*`.
+- **Scoring:** `rescore_b13.py --extra v4kjtm=.b20_v4kjt_{pop}_s{s}` → `data/.b20_rescore.json`.
+- **Verdict:** `verdict_b20.py` → `data/.b20_verdict.json`. Arm vs arm = B.20 vs the frozen B.19 `.b16_v4kjt_*`, using the same shot-cluster bootstrap with B = 10⁴.
+
+**Batch log.** GPU smoke OK. Training finished 2026-11-01 01:28 (8/8, without interruption). CPU rescore finished 02:14 and the verdict 02:16.
+
+| | cut | inclusive |
+|---|---|---|
+| medae − MSE selection, pooled M1 `T_i` | +0.003 [−0.007, +0.013] | **+0.093 [+0.067, +0.118]** |
+| medae − MSE selection, pooled MSE `T_i` | **−0.035 [−0.051, −0.016]** | +0.007 [−0.004, +0.017] |
+| medae − MSE selection, pooled M1 / MSE `V_rot` | +0.014 [−0.014, +0.039] / −0.040 [−0.091, −0.008] | +0.040 [+0.013, +0.067] / +0.007 [−0.015, +0.027] |
+| `v4kjt`(medae) M1 vs backbone `T_i`, per split (* = ≥ +0.05 ∧ CI > 0) | +0.094* +0.113* +0.077* +0.104* (4/4), pooled +0.097 | +0.239* +0.371* +0.162* +0.305* (4/4), pooled +0.278 |
+| `T_i` paired MSE vs backbone | −0.042 −0.078 −0.003 −0.017, sig worse 1/4, **mean −0.035** | −0.010 −0.045 −0.008 −0.004, sig worse 1/4, mean −0.017 |
+| MSE guard (≤ 1/4 sig worse ∧ mean ≥ −0.02) | **fails** (B.19: holds) | **holds** (B.19: fails by 0.0014) |
+| M1 vs backbone `V_rot`, per split | +0.066* +0.124* +0.057* +0.095* (4/4); MSE sig worse 3/4 | +0.062* −0.029 +0.131* +0.205* (3/4); MSE sig worse 2/4 |
+| median / persistence `T_i` (B.19 MSE-selected; pure t anchor) | 0.925 (0.928; 0.916) | **0.965** (1.064; 0.911) |
+| median / persistence `V_rot` (B.19; pure t anchor) | 1.067 (1.083; 0.975) | 1.071 (1.116; 0.976) |
+| epochs run / best epoch, s42 s1 s7 s123 (B.19 MSE-selected) | 29/23 8/2 13/7 11/5 (27/21 19/13 30/24 22/16) | 13/7 13/7 14/8 20/14 (24/18 9/3 19/13 16/10) |
+
+**Verdict (registered rules, §4).**
+- **H20-a** (median back to ≤ 0.95× `T_i` ∧ ≤ 1.00× `V_rot`) fails in both populations.
+  - Inclusive `T_i` moves most of the way back: 1.064 → 0.965.
+  - `V_rot` barely moves: 1.08–1.12 → 1.07.
+- **H20-b** (selection gain ≥ +0.02, CI > 0): cut fails (+0.003), inclusive passes (+0.093).
+- **H20-c** (B.16 rule 1): inclusive passes (4/4, guard holds). Cut fails on the guard alone: M1 is still 4/4, but the mean paired MSE is −0.035.
+- **H20-d** (`V_rot` overall): fails in both populations (MSE sig worse 3/4 and 2/4).
+- **Rule 1:** inclusive rule 1 is met under median-AE selection, but cut rule 1 breaks under the same selection.
+  - By the registered caveat, this is recorded as a **population-specific selection rule**, not an unconditional rung: cut passes with MSE selection (§8bm), inclusive with median-AE selection (here).
+  - §5 forbids combining the two into one claim.
+- **Rules 2–4:**
+  - Cut: "selection is not the cause" (neither H20-a nor H20-b holds).
+  - Inclusive: none of the three trade readings applies (H20-b holds with the guard, H20-a fails).
+  - `next_is_residual_routing` = true.
+
+**Prediction check (§3).** Inside the predicted ranges:
+
+- `T_i` medians: 0.925 / 0.965.
+- Inclusive `V_rot` median: 1.071.
+- medae − MSE M1: +0.003 / +0.093.
+- M1 vs backbone: +0.097 / +0.278.
+- Cut MSE mean: −0.035.
+
+Outside them:
+
+- Cut `V_rot` median: 1.067 against 1.00–1.06.
+- **The central prediction was wrong:** the trade was expected to cost the inclusive guard and spare the cut one, and the opposite happened. Inclusive MSE got no worse (−0.017 against the predicted −0.03 … −0.08).
+- "Best epoch earlier or equal" held in cut for 3 of 4 splits (s42: 23 vs 21) and in inclusive for 2 of 4.
+
+**Reading.**
+1. *Which selection key is valid depends on the label noise.*
+   - In the inclusive population the labels contain the > 3 keV fit failures (§8ab), and val MSE is dominated by them. MSE selection therefore picks checkpoints by the artifact rows. Median-AE selection is robust to those rows and wins M1 with no MSE cost (+0.007, CI spans 0).
+   - In the cut population the artifacts are removed and val MSE is a valid key. There the median key stops very early: s1 at best epoch 2, before the residual has learned the event rows. Those rows are exactly what the MSE guard measures.
+   - This is a reading, not a measured mechanism. The measurement that would test it is the per-row val error of the two selected checkpoints, split by fit-failure rows (> 3 keV) versus the rest, on frozen artifacts with no training.
+2. *Selection alone does not restore the anchor's median.* Even the best-selected residual leaves `V_rot` at 1.07×, against the pure anchor's 0.975×. The additive residual moves the quiet rows at every checkpoint the run passes through. Choosing when to stop cannot undo that.
+   - This is what H20-a measures. It places the fix in the combination rule, not the selection rule.
+
+**Named next.** The registered rule names residual routing, which lets the residual act only where the anchor is uncertain.
+
+- **B.21** (registered before any B.20 number, 8f3f2bd, running since 01:29) is its soft form:
+  - `y = a + k·r` with k = s²/(s² + σ_r²), where s² carries the jump hazard.
+  - Selection is MSE, so B.21 tests the combination rule against the same MSE-selected `v4kjt` as B.19.
+- Reading B.21 against B.20:
+  - If B.21 restores the median (H21-a) with the guard holding in both populations, the combination rule fixes what selection could not.
+  - If the LSTM compensates by 1/k (H21-b fails), the registered next row is the training-free dual readout: median from the pure anchor, mean from `v4kjt`.
+- Combining B.20 × B.21 (median-AE selection on the fused cell) is a separate registration after B.21. It must take one selection rule for both populations.

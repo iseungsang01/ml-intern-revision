@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 31) — §8bh, §8bi, §8bk, §8bl, §8bm
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1479,6 +1479,10 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   persistence on fresh TEST rows (`V_rot` 0.94–1.00× by split). Do not quote ≈ 1.00× as a causal bound.
 - **The residual is now the layer that costs the median.** Pure anchor → anchor + MSE residual moves
   `V_rot` 0.98× → 1.08–1.12× and inclusive `T_i` 0.91× → 1.06×; the anchor alone loses aggregate MSE
-  by −0.37…−0.42 (event rows late), which the residual buys back from the median rows. Next row:
-  same `v4kjt`, checkpoint selected on val median-AE skill (§8bh rule); if that only trades against
-  the guard, route the residual by the anchor's jump posterior.
+  by −0.37…−0.42 (event rows late), which the residual buys back from the median rows.
+- **The valid selection key depends on the label noise (B.20, §8bn).** Same `v4kjt`, checkpoint on
+  val median-AE: inclusive (fit-failure rows in val) gains M1 +0.093 at no MSE cost and meets B.16
+  rule 1; cut (val MSE already clean) stops early (best epoch 2–7), loses MSE −0.035 and its guard.
+  The passing population swaps, so the rung is population-specific in its selection rule — never
+  merge per-population selection into one claim. Selection does not restore the pure anchor's
+  median (`V_rot` 1.07× vs 0.975×): the fix lives in the combination rule (B.21, `y = a + k·r`).
