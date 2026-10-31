@@ -96,7 +96,12 @@ decomposition matches the backbone's \Ti{} skill under the spike cut, and wideni
 the backbone from 34k to 879k parameters changes it by less than $\pm 0.01$---the
 information, not the estimator, is the ceiling of the aggregate loss (46.6\% of the
 squared error sits in the top 1\% of one-step changes, so that statement is about a
-tail statistic). Moving context and structure separately separates their roles:
+tail statistic). In the median row, where the backbone only equals persistence, a
+pre-registered hold-or-jump filter with Student-$t$ measurement noise at the training
+bulk scale sits at 0.91$\times$ persistence for \Ti{} on all eight split--population
+cells and beats the backbone's median for \Vrot{} too; because every output that must
+also win the aggregate gives that median back, median and mean are reported from
+separate estimators. Moving context and structure separately separates their roles:
 stretching contiguous causal context from 20 to 630\,ms raises skill from $+0.055$ to
 $+0.138$ and lifts the fraction of discharges beating the causal GP from 0.52 to 0.66
 before it flattens, whereas at matched reach recurrence, dilated convolution and
@@ -221,6 +226,21 @@ GP arm and report the model against it separately.
         from 34k to 879k parameters moves \Ti{} skill by less than $\pm0.01$.
         The input set, not the estimator, is the ceiling of the aggregate loss;
         the levers that remain are named (\S\ref{sec:headroom}).
+  \item \textbf{Where the aggregate skill comes from, and the one model-side lever
+        that moves the rest} (\S\ref{sec:bulk}, \S\ref{sec:family}): the \Ti{} win
+        is a tail effect---in the median row the nowcaster equals persistence and
+        trails future-using PCHIP by 20\%, and the \Vrot{} null is a bulk loss, not
+        a tail artifact. A Huber loss whose scale is pinned to the target's own
+        10\,ms reproducibility bound lowers the median error 8--10\% at no
+        aggregate cost (cut population). A shot-encoding neural process, a
+        transformer pretrained on another tokamak, and a 4-init ensemble all tie;
+        with no same-shot label, no learned arm beats the training mean on \Vrot{}.
+  \item \textbf{A physics filter owns the median} (\S\ref{sec:physfilter}): a
+        pre-registered hold-or-jump filter with Student-$t$ noise at the TRAIN bulk
+        scale sits at 0.91$\times$ persistence for \Ti{} on 8/8 split--population cells
+        and beats the backbone's median for both targets on 4/4 splits; three ways of
+        folding it into one MSE-winning output all give the median back, so median and
+        mean are reported from separate estimators.
   \item \textbf{Context and structure, separated} (\S\ref{sec:context}): stretching
         contiguous causal context from 20 to 630\,ms raises \Ti{} skill from $+0.055$
         to $+0.138$ and the fraction of discharges beating the causal GP from 0.52 to
@@ -722,6 +742,15 @@ validation-based checkpoint selection forbidden, and even there the backbone's p
 \Ti{} gain is positive on all four splits ($+0.063$, $+0.033$, $+0.045$, $+0.030$;
 \S\ref{sec:selection}). The conclusion is therefore not an artifact of the training
 schedule.
+
+The loss axis has since received one controlled experiment (\S\ref{sec:bulk}): a
+Huber loss with its scale pinned to the target's 10\,ms reproducibility bound cut the
+median error by 8--10\% in the cut population while holding the aggregate skill, and
+the backbone's loss stays MSE by the pre-registered rule. That experiment also taught
+a coupling: selecting an arm that changes the objective on val MSE picks a nearly
+untrained checkpoint (epoch 2--4) in the tail-dominated inclusive population. The
+objective and the checkpoint-selection metric are a pair, and when one is changed,
+how the other was set is part of the result.
 
 "Why batch 16" now has a measured answer. The gradient noise scale
 $B_\mathrm{simple} = \operatorname{tr}\Sigma / \lVert G\rVert^2$ is the batch size at
@@ -1473,6 +1502,272 @@ bulk rows and score \seqv{} in each with the shot-clustered bootstrap
   \label{fig:peak}
 \end{figure}
 
+\subsection{The aggregate skill is a tail effect: in the median row the nowcaster carries its anchor}
+\label{sec:bulk}
+
+An MSE-based skill is decided by a sum of squared errors, and that sum is decided by
+a few large ones: the backbone's top 1\% of \Ti{} squared-error rows carry 48\% (cut)
+and 83\% (inclusive) of the total (PCHIP: 51\% and 87\%). ``$+0.24$ on \Ti{}'' is
+therefore not, by itself, a statement that the model beats interpolation on a
+\emph{typical} row. To separate the two we re-scored the frozen TEST artifacts, with
+no retraining, under three robust co-metrics whose rules---and the sentence each
+outcome would write---were fixed before any number: a median-absolute-error skill
+$M_1 = 1 - \mathrm{medAE}_{\text{model}}/\mathrm{medAE}_{\text{PCHIP}}$
+(shot-clustered weighted-median bootstrap), the skill of a Huber loss clipped at the
+target's own 10\,ms reproducibility bound (\Ti{} 129.9\,eV, \Vrot{} 16.4\,km/s),
+$M_2$, and a symmetric 1\%-trimmed MSE skill $M_3$.
+
+\begin{table}[t]
+  \centering
+  \caption{The error of a typical row. Four test splits pooled (301 shots), cut
+  population, absolute-error quantiles in physical units. $M_1$ is the median-AE
+  skill against PCHIP (shot-clustered 95\% CI); the win rate is the fraction of
+  rows on which the model's error is below PCHIP's. The backbone's \Ti{} median of
+  47\,eV equals the target's own 10\,ms bulk scatter (MAD of adjacent-sample
+  differences, 46.4\,eV). The Huber arm is the subject of the last paragraph of
+  \S\ref{sec:bulk}.}
+  \label{tab:bulk}
+  \small
+  \begin{tabular}{llrrrlc}
+    \toprule
+    target & arm & median & q75 & q90 & $M_1$ vs PCHIP & win rate \\
+    \midrule
+    \Ti{} [eV]
+      & \seqv{} backbone (MSE loss) & 47.2 & 101.0 & 202.4 & $-0.198$ $[-0.259, -0.135]$ & 0.48 \\
+      & \seqv{} Huber loss & \textbf{43.4} & \textbf{93.8} & \textbf{193.3} & $-0.101$ & \\
+      & persistence & 46.1 & 116.6 & 262.7 & & \\
+      & causal GP & 44.4 & 106.7 & 219.8 & & \\
+      & PCHIP (uses the future) & 39.4 & 105.4 & 236.6 & & \\
+    \midrule
+    \Vrot{} [km/s]
+      & \seqv{} backbone (MSE loss) & 4.3 & 10.0 & 21.4 & $-0.488$ $[-0.604, -0.387]$ & 0.40 \\
+      & \seqv{} Huber loss & \textbf{3.8} & \textbf{9.2} & \textbf{19.8} & $-0.333$ & \\
+      & persistence & 3.7 & 9.3 & 20.9 & & \\
+      & causal GP & 3.8 & 9.3 & 20.0 & & \\
+      & PCHIP (uses the future) & 2.9 & 7.8 & 18.3 & & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{The \Ti{} advantage comes from the tail.} $M_1$ against PCHIP is negative,
+and significantly so, on all 16 population $\times$ target $\times$ split cells (cut
+\Ti{} $-0.198$, inclusive $-0.562$). On half of the rows the model ties or trails
+PCHIP; the quantile ladder of the error ratio model/PCHIP falls from 1.20 at q50
+through 1.01 at q70 and 0.96 at q75 to 0.78 at q99---the win begins in the upper
+error quartile, the fit-failure, transient and ELM rows. In that tail $M_2$
+($+0.156$) and $M_3$ ($+0.210$) are both significantly positive, so it is not an
+effect of the top 1\% alone. The median row has a simpler picture: the backbone's
+47\,eV is persistence's 46\,eV and the target's own bulk scatter of 46.4\,eV.
+\emph{On a typical row the nowcaster carries the last observation, noise included},
+and PCHIP is 20\% better there because averaging with the future neighbour halves
+that noise---a gain no causal method can have. The bulk ordering (acausal GP 38.5
+$<$ PCHIP 39.4 $<$ causal GP 44.4 $<$ persistence 46.1 $\approx$ backbone 47.2) is
+exactly the ordering of how many noisy samples each method averages.
+
+\paragraph{The \Vrot{} null is not a tail artifact.} The pre-registration wrote
+``ties in aggregate but wins in the median'' down as \Vrot{}'s possible rescue. The
+opposite was observed: $M_1 = -0.488$ (cut) and $-0.518$ (inclusive), significantly
+negative on 4/4 splits, and in the median row the model is worse than persistence
+(4.3 vs 3.7\,km/s). The aggregate tie is a bulk loss offset by a tail win
+(peak-stratum $+0.54$ to $+0.79$, \S\ref{sec:peak}), the same conclusion as the
+term-by-term audit of \S\ref{sec:asym}.
+
+\paragraph{The loss's influence function moves that bulk.} A loss that 1\% of the
+rows decide teaches nothing about the other 99\%. So \emph{one} variable was
+changed---the influence function of the training loss---with the residual scale
+$\delta$ pinned to the target's own 10\,ms reproducibility bound (cut: \Ti{}
+129.9\,eV, \Vrot{} 16.4\,km/s; inclusive 274.3\,eV): a Huber loss ($r^2$ inside,
+$2\delta|r|-\delta^2$ outside) and a Student-$t$ negative log-likelihood at the same
+scale ($\nu=3$, redescending). Both are normalized to coincide with $r^2$ inside
+$\delta$, so they share the MSE control's bulk curvature and penalty ratio, and
+validation early stopping was kept on MSE for all three arms. Everything else is the
+backbone's; the control was not retrained. In the cut population Huber lowers the
+\Ti{} median from 47.2 to 43.4\,eV ($M_1$ vs the backbone $+0.081$ $[+0.068,
++0.094]$, significant on 4/4 splits) and \Vrot{} from 4.3 to 3.8\,km/s ($+0.104$,
+3/4) while the aggregate MSE skill ties (paired $-0.004$ / $-0.007$, significant
+deficits 0/4). It is the first arm whose median beats persistence ($+0.058$, 3/4)
+and ties the causal GP, and it halves the median gap to PCHIP from $-0.198$ to
+$-0.101$. The Student-$t$ arm is behind Huber on every metric and loses \Ti{} MSE
+significantly on one split: a redescending influence discards useful tail signal.
+In the inclusive population the same arms came out behind on aggregate MSE
+(significant deficits 2/4), and the cause is the selection rule, not the loss: 7 of
+the 8 runs stopped with their best val-MSE checkpoint at epoch 2--4. A loss that
+ignores residuals beyond 274\,eV has no reason to lower a validation MSE those
+residuals dominate. Selecting each robust arm on its \emph{own} validation
+objective instead confirmed this: the inclusive arms then train 30--60 epochs, the
+Huber \Ti{} median gain grows to $M_1 = +0.285$ $[+0.250, +0.322]$ (4/4) and \Vrot{}
+turns to $+0.145$ (4/4), with the \Vrot{} median at 1.02$\times$ persistence---but one
+split keeps a significant \Ti{} MSE deficit ($-0.040$; pooled $-0.019$), so by the
+pre-registered letter the rung stays conditional.
+By the pre-registered rule the Huber arm is recorded as the \textbf{robust rung,
+conditional on the cut population}, and the backbone keeps the MSE loss. The
+deployment statement now carries two numbers---aggregate skill (the tail) and
+median error (the bulk)---and the Huber arm keeps the first while buying the second.
+
+\subsection{A physics filter is the median estimator: a dual readout}
+\label{sec:physfilter}
+
+\S\ref{sec:bulk} located the headroom in the median row, where the backbone only
+equals persistence. That row is the regime a filter is built for: a slowly varying
+level observed through noise, with occasional jumps. We therefore asked whether a
+\emph{physical} measurement model, not a learned one, owns the median. The cell is a
+scalar state-space filter per target, run causally on the CES history alone: the
+prior holds the level and lets it jump at rate $\lambda$ with jump variance
+$\sigma_J^2$, and the measurement is Student-$t$ ($\nu_0 = 3$) at the target's
+10\,ms bulk scatter estimated on TRAIN (\Ti{} 0.116 / 0.071 target s.d.\ in the cut /
+inclusive population, \Vrot{} 0.060). Every parameter is fixed by the registration;
+training it end-to-end moves none of them by more than 7\%, so they are not reported
+as measured plasma quantities.
+
+\paragraph{How the measurement model was found.} Each step was one pre-registered
+variable. An Ornstein--Uhlenbeck prior with Gaussian noise moved the \Ti{} median
+below persistence for the first time (0.98$\times$ cut) but left \Vrot{} at
+1.19$\times$; a hold-or-jump prior fixed \Ti{} (0.98$\times$ / 1.00$\times$) and left
+\Vrot{} at 1.18$\times$ under both priors. A TRAIN-only diagnostic located the cause:
+\Vrot{} increments do not trend, and the Gaussian noise scale had been set at the
+tail, six times the bulk scatter, so the filter shrank every fresh sample. Student-$t$
+noise at the bulk scale removes it: the pure filter sits at \textbf{0.916$\times$ /
+0.911$\times$} persistence for \Ti{} and \textbf{0.975$\times$ / 0.976$\times$} for
+\Vrot{}.
+
+\paragraph{One output cannot carry both objectives.} Adding the backbone's residual
+($y = a + r$, MSE-trained) gives back aggregate skill and meets the physics-rung bar
+in the cut population ($M_1$ vs the backbone $+0.077$ to $+0.117$, 4/4, MSE deficit
+$\le 1/4$), but misses the inclusive MSE guard by 0.0014---and it gives the
+anchor's median back (\Vrot{} 1.08--1.12$\times$, inclusive \Ti{} 1.06$\times$).
+Two further single-variable rows tried to keep it: selecting the residual's
+checkpoint on validation median error (\Vrot{} 1.07$\times$; the passing population
+swaps, inclusive in and cut out), and weighting the residual by the filter's
+variance gain $k = s^2/(s^2+\sigma_r^2)$ (\Vrot{} 1.15--1.21$\times$: the residual
+learns to undo $k$, imprecisely). Within this family it is therefore measured, not
+assumed, that an output which must also win the aggregate moves the quiet rows.
+
+\begin{table}[t]
+  \centering
+  \caption{Dual readout on the frozen TEST rows (no retraining). Median estimator:
+  the pure Student-$t$ hold-or-jump filter; mean estimator: the trained model
+  (anchor $+$ residual where its MSE guard holds, i.e.\ cut; \seqv{} in the
+  inclusive population). $M_1$ is the median-AE skill, shot-clustered paired
+  bootstrap; counts are splits with $M_1 \ge +0.05$ and CI $> 0$ (vs the
+  backbone) or $M_1 > 0$ and CI $> 0$ (vs persistence). Ranges are over the four
+  splits.}
+  \label{tab:dual}
+  \small
+  \begin{tabular}{llcccc}
+    \toprule
+    target & population & median / persistence & $M_1$ vs \seqv{} & $M_1$ vs persistence & MSE vs \seqv{} \\
+    \midrule
+    \Ti{}   & cut       & 0.911--0.920 & $+0.06$ to $+0.14$, \textbf{4/4} & $+0.08$ to $+0.09$, \textbf{4/4} & $-0.30$ to $-0.41$ \\
+            & inclusive & 0.906--0.915 & $+0.22$ to $+0.39$, \textbf{4/4} & $+0.09$, \textbf{4/4} & $-0.35$ to $-0.47$ \\
+    \Vrot{} & cut       & 0.939--1.000 & $+0.09$ to $+0.23$, \textbf{4/4} & $0.00$ to $+0.06$, 1/4 & $-0.06$ to $-0.51$ \\
+            & inclusive & 0.938--1.003 & $+0.09$ to $+0.27$, \textbf{4/4} & $0.00$ to $+0.06$, 1/4 & $-0.06$ to $-0.52$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{The dual readout.} The pre-registered consequence is to report the median
+and the mean from separate estimators on the same rows (Table~\ref{tab:dual}). For
+\Ti{} the physics filter is the median estimator \textbf{unconditionally}: it beats
+the backbone and persistence on 4/4 splits in both populations, at 0.906--0.920$\times$
+persistence with a split spread of $\pm0.007$, against $\pm0.1$ or more for every
+trained arm. For \Vrot{} it beats the backbone in the median on 4/4 splits in both
+populations and ties persistence (1/4 significant, 0.94--1.00$\times$ by split); the
+named lever is a jump rate fitted on TRAIN rather than set by the registration. The
+filter loses the aggregate MSE to the backbone ($-0.06$ to $-0.52$) because event
+rows stay late, which is exactly why it is not the mean estimator. The deployment
+statement becomes: median from the filter, mean from the nowcaster, and the trade
+between them measured, not hidden in one output.
+
+\subsection{Model families and ensembles: the inductive-bias axis closes too}
+\label{sec:family}
+
+\S\ref{sec:ladder} closed the size axis within one family. Two model-side questions
+remained: whether a different \emph{inductive bias} extracts more from the same
+inputs, and how much an initialization ensemble of the same model buys. Both were
+measured with the rule written first.
+
+\paragraph{The 4-init ensemble lands exactly on the tie threshold.} Averaging the
+four initializations' normalized predictions per split on the confirmed-protocol
+B.1 grid (4 splits $\times$ 4 inits) gives paired \Ti{} gains of $+0.011$ / $+0.010$
+/ $+0.027$ / $+0.030$ in the cut population (4/4 significant, mean $+0.020$) and a
+mean of $+0.007$ (2/4) in the inclusive one. The pre-registered rule made a
+deployment recommendation only above the $0.02$ tie band, so this is recorded as a
+\textbf{tie} and the headline stays a single run. The $+0.048$ once measured in a
+reduced configuration was that configuration's initialization noise.
+
+\paragraph{An offline model-family card.} The inductive-bias comparison was designed
+as a \emph{card}, not a hypothesis test: one hypothesis per family, scored against an
+offline control that differs from \seqv{} only in direction (its bidirectional
+version, a BiLSTM) on identical masks, splits and budget. The setting is offline
+gap-filling: observed CES rows are hidden in spans drawn from the measured
+missing-run-length distribution and filled (three quarters of the scored points sit
+in gaps longer than 10 steps). Three arms: a neural process with a shot-level latent
+and cross-attention (\texttt{np}; hypothesis---the \Vrot{} gain concentrates where
+the same shot has few labels), and the transformer backbone of the public tokamak
+foundation model TokaMind, pretrained on another device (MAST), transplanted
+(\texttt{tm\_pre}) against the same architecture from a random initialization
+(\texttt{tm\_scratch}; hypothesis---their difference is the value of cross-device
+domain knowledge). 4 arms $\times$ 4 splits $\times$ 2 populations; TEST scored once
+per arm.
+
+\begin{table}[t]
+  \centering
+  \caption{Offline model-family card. Skill vs PCHIP (4 splits pooled,
+  shot-clustered 95\% CI) and the paired difference $\delta$ to the BiLSTM control
+  (normalized by the PCHIP MSE). Verdicts follow the pre-registered rule:
+  $\delta>0.02$, CI low $>0$, same sign on 3/4 splits, and the same against the
+  acausal GP. The label-sparsified sets keep $k$ \Vrot{} labels in label-rich test
+  shots; at $k=0$ the reference is the training mean.}
+  \label{tab:family}
+  \small
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{llrrrr}
+    \toprule
+    population / target & metric & BiLSTM (control) & \texttt{np} & \texttt{tm\_pre} & \texttt{tm\_scratch} \\
+    \midrule
+    cut \Ti{} & vs PCHIP & $+0.274$ & $+0.300$ & $+0.179$ & $+0.184$ \\
+              & $\delta$ vs control & & $+0.026$ $[+0.004, +0.049]$ improve & $-0.094$ worse & $-0.090$ worse \\
+    cut \Vrot{} & vs PCHIP & $+0.364$ & $+0.384$ & $+0.376$ & $+0.384$ \\
+              & $\delta$ vs control & & $+0.021$ $[+0.000, +0.050]$ edge & $+0.012$ tie & $+0.021$ $[+0.001, +0.044]$ edge \\
+    incl.\ \Ti{} & vs PCHIP & $+0.410$ & $+0.403$ & $+0.371$ & $+0.378$ \\
+              & $\delta$ vs control & & $-0.006$ tie & $-0.039$ worse & $-0.032$ worse \\
+    incl.\ \Vrot{} & vs PCHIP & $+0.336$ & $+0.327$ & $+0.321$ & $+0.333$ \\
+              & $\delta$ vs control & & $-0.009$ tie & $-0.016$ tie & $-0.003$ tie \\
+    \midrule
+    \Vrot{}, $k=0$ labels & vs train mean & $-0.025$ & $-0.040$ & $-0.016$ & $-0.003$ \\
+    \Vrot{}, $k=3$ labels & vs PCHIP & $+0.146$ & $+0.148$ & $+0.132$ & $+0.137$ \\
+    \Vrot{}, $k=10$ labels & vs PCHIP & $+0.407$ & $+0.403$ & $+0.392$ & $+0.398$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+Three things are read off Table~\ref{tab:family}. \emph{First}, on \Vrot{} the family
+ties: the two cut-population edge cells have CI lows of $0.000$ and $0.001$, all
+three arms tie in the inclusive population, and no stratum reproduces either cell.
+\emph{Second}, the neural process's hypothesis is rejected exactly where it was
+built to hold: with no same-shot \Vrot{} label \emph{no} arm beats the training mean
+and \texttt{np} is the worst, and with 3 and 10 labels all four arms rise by the
+same amount ($+0.15 \rightarrow +0.40$). What carries a shot's operating regime is
+its context labels, not an encoder, and the 28\% between-shot \Vrot{} variance
+belongs to operating variables the diagnostics do not contain (beam sources, $I_p$,
+$B_T$)---the next measurement is \texttt{np} conditioned on that metadata, not
+another encoder. \emph{Third}, the pretrained and random backbones agree to
+$0.004$--$0.013$ on every cell: what was learned on MAST transfers nothing to KSTAR
+CES gap-filling, the same sign and size as TokaMind's own profile fine-tuning result
+($-0.005$). The transformer family is also behind the BiLSTM on \Ti{} at 7$\times$
+the parameters (cut $-0.09$, inclusive $-0.03$ to $-0.04$). The \texttt{np} \Ti{}
+$+0.026$ clears the rule in the cut population only and ties in the inclusive one,
+so it is recorded as a marginal effect of the same size as the ensemble's.
+
+The card's one positive result is the gap-length profile. On \Vrot{} all four
+learned arms lose to PCHIP in one-step gaps ($-0.25$) and win by $+0.4$ to $+0.6$
+in gaps of two steps or more (the acausal GP: $+0.02$ to $+0.08$). The scale at
+which \Vrot{} is recoverable from the diagnostics is 100\,ms; the 10\,ms scale,
+where the adjacent CES sample is a better estimator than anything the diagnostics
+say, is where the \Vrot{} tie of \S\ref{sec:asym} lives. The offline gap-filler and
+the causal nowcaster are the same model seen at two scales, and a \Vrot{} claim has
+to say which.
+
 \subsection{Cut-threshold sensitivity}
 \label{sec:cutsens}
 Retraining the backbone with the spike threshold at 2.5 and 4\,keV (four splits
@@ -1760,9 +2055,12 @@ technique. At $\alpha = 0.10$, TEST, both populations:
 The negative results in this paper are unusually specific, and specificity is what
 makes them useful: they do not say ``this problem is hard'', they say \emph{which
 change would move it}. Capacity is ruled out (\S\ref{sec:ladder}), longer windows
-are ruled out (\S\ref{sec:window}), and the framing that buys reach has been
-adopted (\S\ref{sec:gate}). What remains is data, and each lever is identified by
-evidence already in this dataset.
+are ruled out (\S\ref{sec:window}), inductive bias, cross-device pretraining and
+ensembling are ruled out (\S\ref{sec:family}), and the framing that buys reach has
+been adopted (\S\ref{sec:gate}). The one model-side axis that moved is the loss's
+influence function, and its gain is a bulk gain (\S\ref{sec:bulk}). What remains
+beyond that is data, and each lever is identified by evidence already in this
+dataset.
 
 \paragraph{1. CES fit-quality metadata would replace a proxy with a measurement.}
 The two-population report exists because a value cut is a proxy for ``the fit
@@ -1809,6 +2107,15 @@ that receive the beam actuators as inputs do predict rotation's
 evolution~\citep{Char2024FullShot}, so the missing channel is learnable once
 measured.
 
+\paragraph{4. The rest of the bulk belongs to the future neighbour.}
+After the Huber arm's recovery, a 4\,eV median gap to PCHIP remains
+(\S\ref{sec:bulk}). Its size is what averaging two adjacent noisy observations buys,
+so the only way a causal model closes it is by denoising the history---weighting it
+by the per-exposure fit quality a CES re-analysis would provide---which is the same
+deliverable as lever 1. And the zero-label row of the model-family card
+(\S\ref{sec:family}) states lever 3 most sharply: with no same-shot \Vrot{} label,
+no learned arm rises above the training mean from BES, ECEI and Mirnov alone.
+
 None of these is a statement that the present result is at a ceiling. They are the
 places where the next measurable gain is, ordered by how cheaply they can be tried,
 and all three are actionable on archived KSTAR data.
@@ -1817,6 +2124,16 @@ and all three are actionable on archived KSTAR data.
 \section{Limitations}
 \label{sec:limits}
 
+\textbf{The headline skill is a tail statistic.} In the median row the backbone
+equals persistence and trails PCHIP by 20\%, and \Vrot{} is below persistence in the
+median (\S\ref{sec:bulk}); the paper therefore reports median absolute error beside
+every aggregate skill and does not claim to beat interpolation on a typical row. The
+scale-pinned Huber loss recovers 8--10\% of the bulk at no aggregate cost, reported
+as conditional on the cut population; selecting on the arm's own objective lifts the inclusive median gain to
+$+0.285$ but leaves one split with a significant MSE deficit (\S\ref{sec:bulk}). The
+\Ti{} median is owned by a physics filter unconditionally (\S\ref{sec:physfilter}),
+reported beside, not inside, the aggregate model; for \Vrot{} that filter ties
+persistence in the median.
 \textbf{Statistical power.} The unit of replication is the shot; with 96 (\Ti) /
 60--66 (\Vrot) test shots per split, power bounds every significance call, and
 per-shot squared-error differences are heavy-tailed (a few discharges dominate the
@@ -1886,7 +2203,11 @@ points where it matters. It emits calibrated intervals that beat both baselines'
 by a proper scoring rule in every cell.
 
 We also report where it does not work and why. Rotation ties interpolation
-globally and its skill lives in transients; the value cut that defines one of the
+globally and its skill lives in transients; the ion-temperature win is itself a
+tail effect---in the median row the nowcaster equals persistence and trails
+future-using PCHIP by 20\%, and a Huber loss pinned to the target's reproducibility
+bound recovers half of that bulk at no aggregate cost (conditional on the cut); the
+value cut that defines one of the
 two populations is a one-sided proxy for fit quality; the reweighting reaches
 54--68\% of missing \Ti{} rows and a twentieth of missing \Vrot{} rows; the
 predictive intervals are calibrated marginally, not per discharge; and beyond
@@ -1897,7 +2218,9 @@ stream whose information 100\,Hz decimation destroyed before the model ever saw
 it; the NBI torque channel that is absent from the dataset but is the physical
 cause of rotation---and the model-size axis is closed: a 21k-parameter
 persistence-plus-bounded-correction model matches the backbone under the cut, and
-a 26$\times$ width sweep is flat. Alongside these, the work contributes a
+a 26$\times$ width sweep is flat. So is the model-family axis: a shot-encoding
+neural process, a transformer pretrained on another tokamak and a 4-init ensemble
+all tie, and with no same-shot label no arm beats the training mean. Alongside these, the work contributes a
 corrected \Vrot{} evaluation (54\% instrument holds, removed everywhere), a
 two-population treatment of spectral-fit failures with the measurement that shows
 why neither population suffices alone, a full-grid causal framing whose reach is
