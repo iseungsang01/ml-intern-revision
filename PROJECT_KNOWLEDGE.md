@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 30) — §8bh, §8bi, §8bk, §8bl
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 31) — §8bh, §8bi, §8bk, §8bl, §8bm
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1469,3 +1469,16 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   B.18 cell sits within ~7 % of its initial σ_n, λ, σ_J (target-sd units). The anchor's measurement
   model is therefore whatever the registration initialises — choose the init from data (TRAIN
   bulk scale) and do not report learned anchor parameters as measured plasma quantities.
+- **Student-t measurement noise at the bulk scale fixes the anchor (B.19, §8bm).** Pure filter:
+  `T_i` 0.916× / 0.911×, `V_rot` 0.975× / 0.976× persistence (Gaussian tail-scale cells: 0.98–1.00×,
+  1.18×). With the residual: B.16 rule 1 met in the cut population (M1 +0.077…+0.117, 4/4, guard
+  holds); inclusive is 4/4 on M1 but misses the MSE guard by 0.0014 → physics rung cut-conditional.
+  ν stayed 2.9–3.0, σ_n within 5 % of init (again not moved by training).
+- **"Persistence is median-optimal" holds for fixed-gain filters only.** §8bl's TRAIN table was right
+  for a fixed k; an innovation-adaptive (t) update shrinks noise and follows jumps, and beats
+  persistence on fresh TEST rows (`V_rot` 0.94–1.00× by split). Do not quote ≈ 1.00× as a causal bound.
+- **The residual is now the layer that costs the median.** Pure anchor → anchor + MSE residual moves
+  `V_rot` 0.98× → 1.08–1.12× and inclusive `T_i` 0.91× → 1.06×; the anchor alone loses aggregate MSE
+  by −0.37…−0.42 (event rows late), which the residual buys back from the median rows. Next row:
+  same `v4kjt`, checkpoint selected on val median-AE skill (§8bh rule); if that only trades against
+  the guard, route the residual by the anchor's jump posterior.

@@ -4875,6 +4875,8 @@ exactly `skill = f_I r_I − (1 − f_I) ℓ_B` (P01).
 > stall (`V_rot` increment autocorrelation vs end-to-end σ_n) is named in §8bk.
 > Measured in §8bl: no trend; at the median row persistence is already optimal for `V_rot`
 > (best smoother 0.996–0.999×), so the attainable `V_rot` median is ≈ 1.00× and 0.921× is an OU artifact.
+> Corrected in §8bm (B.19): ≈ 1.00× bounds *fixed-gain* filters only. The learned Student-t anchor at the bulk
+> scale reaches 0.975× / 0.976× on TEST (fresh rows 0.94–1.00× by split) — below persistence, above 0.921×.
 
 ### 3. Verdict
 
@@ -5749,3 +5751,89 @@ Rice RMS, and the median AE / persistence of two simple causal predictors — ex
 noise — a robust Kalman update whose innovation weight falls for outlying observations, so σ_n can
 sit at the bulk scale (≈ 45 eV, ≈ 4 km/s) without being dragged to the tail. Predictions from this
 table: pure anchor `T_i` median ≈ 0.95–0.97×, `V_rot` ≈ 0.99–1.01× (not lower — point 2).
+
+## 8bm. B.19 (2026-10-31): a Student-t measurement model at the bulk scale fixes the anchor — the pure filter now beats persistence at the median in both targets (`T_i` 0.916× / 0.911×, `V_rot` 0.975× / 0.976×); with the residual it meets B.16 rule 1 in the cut population (4/4) and misses the inclusive MSE guard by 0.0014, so the physics rung is cut-conditional and the residual is now what gives the anchor's median back
+
+**Design** (`PREREGISTRATION_B19.md`, committed before any number, 895487f). One controlled
+variable: the anchor's measurement model, Gaussian at the tail scale (σ_n 0.30 / 0.40 target sd) →
+Student-t, ν₀ = 3, scale at the §8bl TRAIN bulk scatter (`T_i` 0.116 cut / 0.071 inclusive, `V_rot`
+0.060). Arm `v4kjt` = `SeqCESV4K(gated=False, anchor="jump_t")`, against the frozen `v4kj` (§8bk),
+the frozen pure hold-or-jump anchor (`.b18_anchor_*`) and the frozen backbone `v2`. Splits
+{42, 1, 7, 123} × init = split seed × two populations = 8 runs (`run_b16.py --arms v4kjt --summary-name
+.b19_summary.json`), plus 8 pure-anchor TEST readouts (`anchor_readout_b16.py --arm v4kjt` →
+`.b19_anchor_*`). Env as B.16/B.18 (W = 2, held-free, cap 500, `CES_TI_SPIKE_CUT_EV` 3000 / 0 pinned
+by the runner). Scoring `rescore_b13.py --extra v4kjt=… anchort=…` → `data/.b19_rescore.json`; verdict
+`verdict_b19.py` → `data/.b19_verdict.json`.
+
+**Batch log.** GPU smoke 1.5 min (ν 3.00, σ_n at the registered bulk scale). The first chain was
+killed at epoch 11 of `.b16_v4kjt_cut_s42` by a session end; the partial dir (run.log only) was
+deleted and the chain relaunched 2026-10-31 18:36. Training finished 20:29 (8/8, Windows CUDA
+teardown rc 3221226505 with fresh artifacts → OK), readouts 20:53 (8/8), CPU rescore 22:28.
+
+| | cut | inclusive |
+|---|---|---|
+| pure t anchor `T_i` median / persistence (pure jump §8bk) | **0.916** (0.979) | **0.911** (1.001) |
+| pure t anchor `V_rot` median / persistence (pure jump) | **0.975** (1.181) | **0.976** (1.183) |
+| pure t − pure jump, pooled M1 `T_i` / `V_rot` | +0.064 [+0.053, +0.078] / +0.174 [+0.142, +0.209] | +0.090 [+0.072, +0.107] / +0.175 [+0.142, +0.208] |
+| pure t anchor M1 vs backbone `T_i` / `V_rot`, pooled | +0.106 / +0.165 | +0.318 / +0.181 |
+| pure t anchor MSE vs backbone `T_i` / `V_rot`, pooled | −0.374 / −0.184 | −0.417 / −0.190 |
+| pure t anchor MSE vs PCHIP `T_i` (pure jump −0.07 … −0.23) | −0.040 | −0.023 |
+| `v4kjt − v4kj` pooled M1 `T_i` | +0.050 [+0.037, +0.064], MSE +0.003 | +0.138 [+0.116, +0.159], MSE −0.005 |
+| `v4kjt − v4kj` pooled M1 `V_rot` | +0.113 [+0.080, +0.147] | +0.105 [+0.067, +0.146] |
+| `v4kjt` M1 vs backbone `T_i`, per split (* = ≥ +0.05 ∧ CI > 0) | +0.090* +0.117* +0.077* +0.096* (4/4) | +0.132* +0.235* +0.192* +0.242* (4/4) |
+| `v4kjt` `T_i` paired MSE vs backbone | −0.048 +0.003 +0.024 +0.003, sig worse 0/4, mean −0.005 | +0.005 −0.046 −0.030 −0.014, sig worse 1/4, **mean −0.0214** |
+| `v4kjt` M1 vs backbone `V_rot`, per split | +0.048 +0.157* +0.035 +0.039 (1/4) | +0.033 −0.067 +0.071* +0.166* (2/4) |
+| `v4kjt` `V_rot` paired MSE vs backbone | sig worse 1/4 | sig worse 2/4 |
+| `v4kjt` median / persistence `T_i` / `V_rot` | 0.928 / 1.083 | 1.064 / 1.116 |
+| learned ν, σ_n / init, σ_J / init, jump rate (H19-e) | ν 2.91–3.00; σ_n 1.00–1.05; σ_J 0.97–0.99; `T_i` 5.3–5.7 Hz | ν 2.95–3.02; σ_n 1.02–1.05; σ_J 0.97–1.00; `T_i` 5.1–5.4 Hz |
+
+**Verdict (registered rules, §4).**
+- H19-a, mechanism: `V_rot` reading "noise scale" in both populations (0.975 / 0.976 ≤ 1.02), and
+  `T_i` pure-anchor gain passes (+0.064 / +0.090, CI > 0). **Rule 1: the measurement-model mechanism
+  is confirmed.** The 1.18× of §8bi/§8bk was the tail-scale Gaussian σ_n.
+- H19-b: cut pass (+0.050, CI > 0, guard holds); inclusive fails on the MSE guard alone: mean paired
+  MSE −0.0214 against the −0.02 floor, with 1/4 significantly worse. **Rule 2: the measurement model
+  replaces the Gaussian one cut-conditionally.**
+- H19-c: cut 4/4 with guard → **B.16 rule 1 is met in the cut population**; inclusive 4/4 splits on
+  M1 but the same guard miss. The physics rung moves from inclusive-conditional (§8bg) to
+  **cut-conditional with the full rule-1 bar**, and inclusive is short by 0.0014 MSE.
+- H19-d (`V_rot` overall): not met (1/4, 2/4; MSE sig worse 1/4, 2/4).
+- Rule 5 (`next_is_residual_selection`) is false by its letter (rule 2 passed in cut). The
+  measurement below still names the residual as the next layer.
+
+**Prediction check (§3).** In band: pure t − pure jump M1 `V_rot` (+0.174 / +0.175 vs +0.14 … +0.18),
+pure anchor MSE vs PCHIP (−0.040 / −0.023 vs −0.08 … +0.05), `v4kjt − v4kj` inclusive (+0.138 vs
+0 … +0.15), `v4kjt` `V_rot` median cut (1.083 vs 1.02–1.10), ν and scale ratio (2.91–3.02, 1.00–1.05
+vs 2.7–3.3, 0.9–1.1), aggregate MSE tie (±0.02, except inclusive −0.021). **Better than predicted:**
+pure anchor `T_i` median (0.916 / 0.911 vs 0.95–0.97 / 0.95–0.98), pure anchor `V_rot` median
+(0.975 / 0.976 vs 0.99–1.02), pure t − pure jump `T_i` (+0.064 / +0.090 vs +0.01 … +0.04 / +0.02 …
++0.05), `v4kjt − v4kj` cut (+0.050 vs 0 … +0.03), `v4kjt` M1 cut (+0.093 pooled vs +0.04 … +0.08).
+**Worse:** `v4kjt` `V_rot` median inclusive (1.116 vs ≤ 1.10).
+
+**What it says.**
+1. *§8bl's "attainable `V_rot` median ≈ 1.00×" was a bound for fixed-gain filters, not for causal
+   filters.* On TEST rows with Δt ≤ 15 ms (98–99 % of rows) the pure t anchor's `V_rot` median is
+   0.938 / 0.988 / 0.967 / 0.998× persistence (cut, splits 42/1/7/123; inclusive 0.938–1.003×).
+   A fixed gain must choose one shrinkage for every innovation; the t update shrinks small
+   innovations (bulk noise) and follows large ones (jumps), which a fixed k cannot. §8bl's TRAIN
+   smoother table stands; its consequence sentence ("no causal filter … beats persistence by more
+   than ≈ 0.5 %") is corrected here. The gain is split-dependent (s42 0.94×, s123 1.00×).
+2. *The `T_i` gain is on the fresh rows, not the stale ones.* Pure t anchor `T_i`: fresh 0.904–0.917×,
+   stale (Δt > 15 ms, 2–3 % of rows) 0.98–1.04× — the opposite of §8bk's hold-or-jump story, where the
+   stale stratum carried the cell. Bulk noise around a level was the larger lever (§8bl point 3).
+3. *The residual now gives the anchor's median back.* Pure anchor → `v4kjt`, fresh rows:
+   `T_i` cut 0.91 → 0.89–0.94 (kept), `T_i` inclusive 0.90–0.91 → 0.94–1.15 (lost), `V_rot` 0.94–1.00 →
+   1.03–1.16 (lost in both). The anchor alone loses the aggregate badly (MSE −0.37 … −0.42 vs backbone:
+   event rows stay late), and the residual, trained and selected on MSE, buys those rows back by
+   moving the median rows. In the inclusive population this trade is what costs the MSE guard
+   and the `T_i` median (1.064×).
+
+**Named next (the measurement that would turn the inclusive verdict and `V_rot`):** the residual's
+selection on its own objective, with the anchor and the measurement model frozen as here: same
+`v4kjt` cell, residual trained on MSE but checkpoint selected on val median-AE skill (§8bh's rule,
+which raised inclusive Huber M1 +0.285 and put `V_rot` at 1.02×). One controlled variable, the
+selection rule. Reading: inclusive `T_i` median of `v4kjt` back to ≤ 0.95× with guard holding →
+inclusive rule 1; `V_rot` median ≤ 1.00× with MSE sig worse ≤ 1/4 → H19-d's bar becomes reachable.
+If the median comes back only at the guard's expense, the trade is structural to an additive
+residual, and the next layer is routing (residual acting only where the anchor's jump posterior is
+high).
