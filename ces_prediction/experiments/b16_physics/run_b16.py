@@ -46,8 +46,12 @@ POPS = {
 }
 
 
+SELECT = "mse"  # B.20: --select medae -> CES_SEQ_SELECT=medae, run dirs .b20_{arm}_*
+
+
 def arm_dir(arm, pop, s, smoke=False):
-    return DATA / (f".b16_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
+    prefix = ".b20" if SELECT == "medae" else ".b16"
+    return DATA / (f"{prefix}_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
 
 
 def base_env(pop, arm, smoke):
@@ -61,7 +65,7 @@ def base_env(pop, arm, smoke):
     env.update({
         "CES_TI_SPIKE_CUT_EV": p["cut"],
         "CES_SEQ_LOSS": "mse",
-        "CES_SEQ_SELECT": "mse",
+        "CES_SEQ_SELECT": SELECT,
         "CES_SEQ_EPOCHS": EPOCH_CAP,
         "CES_SEQ_MODEL": arm,
         "CES_PER_SHOT_NORM": "1",
@@ -174,7 +178,7 @@ SUMMARY_NAME = ".b16_summary.json"
 
 
 def summarize(arms):
-    summary = {"epoch_cap": int(EPOCH_CAP), "arms": {}}
+    summary = {"epoch_cap": int(EPOCH_CAP), "select": SELECT, "arms": {}}
     for arm in arms:
         for pop in POPS:
             rows = {}
@@ -214,15 +218,20 @@ def summarize(arms):
 
 
 def main():
-    global SUMMARY_NAME
+    global SUMMARY_NAME, SELECT
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
     ap.add_argument("--summary-name", default=SUMMARY_NAME,
                     help="sec. 10 sensitivity rows write .b16s_summary.json, never the frozen .b16_summary.json")
     ap.add_argument("--pops", nargs="*", default=list(POPS))
+    ap.add_argument("--select", choices=("mse", "medae"), default="mse",
+                    help="B.20: checkpoint / early stop / LR plateau on val median AE (dirs .b20_*)")
     args = ap.parse_args()
     SUMMARY_NAME = args.summary_name
+    SELECT = args.select
+    if SELECT != "mse" and SUMMARY_NAME.startswith(".b16"):
+        raise SystemExit("FATAL: --select medae needs its own --summary-name (e.g. .b20_summary.json)")
     if set(args.arms) - set(ARMS) and SUMMARY_NAME == ".b16_summary.json":
         raise SystemExit("FATAL: sensitivity arms must use --summary-name .b16s_summary.json (the frozen B.16 summary is not overwritten)")
     if not any(DATA.glob("s*.csv")):

@@ -128,11 +128,18 @@ def robust_residual_loss(r, cfg):
     return s2 * torch.log1p(r ** 2 / s2)                           # grad 2r / (1 + r^2 / s2)
 
 
+def median_ae_key(abs_err):
+    """B.20 selection key: mean over targets of the median absolute error (normalised units)
+    over observed rows. abs_err = per-target lists of 1-D arrays."""
+    return float(np.mean([np.median(np.concatenate(a)) for a in abs_err]))
+
+
 def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip=1.0, rng=None,
-                loss_cfg=None):
+                loss_cfg=None, abs_err=None):
     """Returns (masked MSE, mean penalty, masked robust fit). The third value equals the
     first when loss_cfg is mse; for a robust loss it is the arm's own objective, which
-    B.14's sensitivity row (CES_SEQ_SELECT=loss) uses for checkpoint selection."""
+    B.14's sensitivity row (CES_SEQ_SELECT=loss) uses for checkpoint selection.
+    abs_err (eval only): per-target lists, filled with |pred - y| on observed rows (B.20)."""
     training = optimizer is not None
     model.train(training)
     se_sum, n_obs, pen_sum, n_batches, fit_sum = 0.0, 0.0, 0.0, 0, 0.0
@@ -168,6 +175,10 @@ def masked_pass(model, blocks, batch_size, device, zero_ti, optimizer=None, clip
                 loss.backward()
                 nn.utils.clip_grad_norm_(model.parameters(), clip)
                 optimizer.step()
+        if abs_err is not None:
+            ae = (out - y).detach().abs()
+            for j in range(len(abs_err)):
+                abs_err[j].append(ae[..., j][m[..., j] > 0].cpu().numpy())
         se_sum += float(se.detach().sum())
         fit_sum += float(se.detach().sum()) if kind == "mse" else float(fit_el.detach())
         n_obs += float(m.sum())
@@ -249,18 +260,21 @@ def main():
 
     # B.14 sensitivity row (PREREGISTRATION_B14.md sec. 9): CES_SEQ_SELECT = mse (default,
     # the frozen regime: early stop, checkpoint and LR plateau all on val MSE) | loss (all
-    # three on the arm's own val objective). Identical for an mse arm.
+    # three on the arm's own val objective). Identical for an mse arm. B.20: medae = all three
+    # on the val median absolute error (mean over targets), the training loss unchanged.
     select = os.getenv("CES_SEQ_SELECT", "mse")
-    if select not in ("mse", "loss"):
-        raise SystemExit(f"CES_SEQ_SELECT must be mse|loss, got {select!r}")
+    if select not in ("mse", "loss", "medae"):
+        raise SystemExit(f"CES_SEQ_SELECT must be mse|loss|medae, got {select!r}")
     rng = random.Random(seed)
     best_val, best_key, best_state, best_epoch, patience = float("inf"), float("inf"), None, -1, 6
     for epoch in range(epochs):
         tr_mse, tr_pen, _ = masked_pass(model, train_blocks, batch_size, device, zero_ti,
                                         optimizer=optimizer, rng=rng, loss_cfg=loss_cfg)
+        abs_err = [[], []] if select == "medae" else None
         val_mse, _, val_fit = masked_pass(model, val_blocks, batch_size, device, zero_ti,
-                                          loss_cfg=loss_cfg)
-        val_key = val_fit if select == "loss" else val_mse
+                                          loss_cfg=loss_cfg, abs_err=abs_err)
+        val_key = (val_fit if select == "loss" else median_ae_key(abs_err) if select == "medae"
+                   else val_mse)
         scheduler.step(val_key)
         star = ""
         if val_key < best_key:
@@ -268,6 +282,8 @@ def main():
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
             star = " *"
         extra = f" val_{loss_cfg['kind']}={val_fit:.4f}" if loss_cfg["kind"] != "mse" else ""
+        if select == "medae":
+            extra += f" val_medae={val_key:.4f}"
         print(f"[seq] epoch {epoch + 1:02d}/{epochs} train_mse={tr_mse:.4f} "
               f"pen={tr_pen:.4f} val_mse={val_mse:.4f}{extra}{star}", flush=True)
         if not fixed_epochs and epoch - best_epoch >= patience:
