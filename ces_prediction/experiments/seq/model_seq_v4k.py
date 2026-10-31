@@ -233,6 +233,9 @@ class JumpAnchor(nn.Module):
 # sec. 8bl: robust increment scatter 1.4826 MAD(d) / sqrt 2 on each split's TRAIN shots, in target-sd
 # units, mean of the four splits (T_i 0.112-0.118 cut / 0.068-0.073 inclusive, V_rot 0.054-0.076)
 BULK_SIGMA_N = {"CES_TI_cut": 0.116, "CES_TI_incl": 0.071, "CES_VT": 0.060}
+# B.21: residual error variance init = median of the frozen backbone's best VAL masked MSE over the
+# four splits (cut .b1_seqv2: 0.228 0.253 0.284 0.925; inclusive .b5i_seqv2: 0.421 0.525 0.551 1.201)
+FUSION_SIGMA_R2 = {"cut": 0.27, "incl": 0.54}
 
 
 class SeqCESV4K(nn.Module):
@@ -241,7 +244,7 @@ class SeqCESV4K(nn.Module):
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS,
                  hidden_ti=160, layers_ti=2, hidden_vt=64, layers_vt=1,
                  head=64, dropout=0.1, gated=True, gate_bias=-2.0, hold_level=False, anchor="ou",
-                 init_ti=(0.88, 0.35, 0.30), init_vt=(0.90, 0.60, 0.40)):
+                 init_ti=(0.88, 0.35, 0.30), init_vt=(0.90, 0.60, 0.40), fusion=False):
         super().__init__()
         # sec. 10 sensitivity rows: gate_bias (+2 = gate initialised open), hold_level (B.16b).
         # CES_SEQ_ANCHOR_ONLY=1 makes forward() return the bare anchors (r = 0): the pure
@@ -273,6 +276,18 @@ class SeqCESV4K(nn.Module):
             self.kalman_vt = KalmanAnchor(*init_vt, hold_level=hold_level)
         else:
             raise ValueError(f"unknown anchor {anchor!r}")
+
+        # B.21 (PREREGISTRATION_B21.md): fusion=True replaces y = a + r by the variance-weighted
+        # gain y = a + k r, k = s^2 / (s^2 + sigma_r^2) -- the residual treated as one more
+        # measurement of error variance sigma_r^2 (learnable, init = backbone VAL MSE median of
+        # the population), the anchor as the prior with predictive variance s^2.
+        self.fusion = bool(fusion)
+        if self.fusion:
+            if gated:
+                raise ValueError("fusion replaces the gate; use gated=False")
+            cut = float(os.getenv("CES_TI_SPIKE_CUT_EV", "0") or 0.0) > 0
+            v0 = FUSION_SIGMA_R2["cut" if cut else "incl"]
+            self.fuse_raw = nn.Parameter(torch.full((2,), _inv_softplus(v0)))
 
         # T_i branch: full state + both anchors and sds (4 extra channels)
         self.lstm_ti = nn.LSTM(self.n_in + 4, hidden_ti, num_layers=layers_ti, batch_first=True,
@@ -314,9 +329,21 @@ class SeqCESV4K(nn.Module):
             out, _ = lstm(x)
         return norm(out)
 
+    def sigma_r2(self):
+        return nn.functional.softplus(self.fuse_raw) + 1e-6
+
+    def fusion_gain(self, s, i):
+        v = s * s
+        return v / (v + self.sigma_r2()[i])
+
     def physics(self, target_std):
-        return {"CES_TI": self.kalman_ti.physical(float(target_std[0])),
-                "CES_VT": self.kalman_vt.physical(float(target_std[1]))}
+        out = {"CES_TI": self.kalman_ti.physical(float(target_std[0])),
+               "CES_VT": self.kalman_vt.physical(float(target_std[1]))}
+        if self.fusion:
+            for i, t in enumerate(("CES_TI", "CES_VT")):
+                out[t]["sigma_r"] = math.sqrt(float(self.sigma_r2()[i].detach())) * float(target_std[i])
+                out[t]["sigma_r_norm"] = math.sqrt(float(self.sigma_r2()[i].detach()))
+        return out
 
     def forward(self, x, lengths=None, obs=None):
         """x (B, L, n_in), obs (B, L, 2) per-step per-target observation mask -> (B, L, 2)."""
@@ -347,6 +374,8 @@ class SeqCESV4K(nn.Module):
         if self.gated:
             g_ti = torch.sigmoid(self.gate_ti(torch.cat(
                 [h_ti, u.unsqueeze(-1), s_ti.unsqueeze(-1)], dim=-1))).squeeze(-1)
+        elif self.fusion:
+            g_ti = self.fusion_gain(s_ti, 0)
         else:
             g_ti = torch.ones_like(r_ti)
         y_ti = a_ti + g_ti * r_ti
@@ -356,6 +385,8 @@ class SeqCESV4K(nn.Module):
         r_vt = self.head_vt(h_vt).squeeze(-1)
         if self.gated:
             g_vt = torch.sigmoid(self.gate_vt(torch.cat([h_vt, s_vt.unsqueeze(-1)], dim=-1))).squeeze(-1)
+        elif self.fusion:
+            g_vt = self.fusion_gain(s_vt, 1)
         else:
             g_vt = torch.ones_like(r_vt)
         y_vt = a_vt + g_vt * r_vt
