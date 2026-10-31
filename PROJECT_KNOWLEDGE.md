@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn, §8bo
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1486,3 +1486,10 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   The passing population swaps, so the rung is population-specific in its selection rule — never
   merge per-population selection into one claim. Selection does not restore the pure anchor's
   median (`V_rot` 1.07× vs 0.975×): the fix lives in the combination rule (B.21, `y = a + k·r`).
+- **A variance-weighted combination does not save the median either (B.21, §8bo).** `y = a + k(s)·r`
+  with k = s²/(s² + σ_r²): the MSE residual compensates for the small quiet-row k, imprecisely, and
+  makes the `V_rot` median worse (1.21× / 1.15×; inclusive `T_i` M1 −0.071 vs additive). σ_r² stayed
+  within 14 % of init. Three residual changes (additive, median-AE selection, variance gain) all
+  lose the pure anchor's 0.975× `V_rot` median → an output that must also win the MSE moves the
+  quiet rows. Report the median from the pure anchor and the mean from the trained model (dual
+  readout, B.22) rather than asking one output to carry both.

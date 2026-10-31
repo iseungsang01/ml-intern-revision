@@ -5913,3 +5913,78 @@ Outside them:
   - If B.21 restores the median (H21-a) with the guard holding in both populations, the combination rule fixes what selection could not.
   - If the LSTM compensates by 1/k (H21-b fails), the registered next row is the training-free dual readout: median from the pure anchor, mean from `v4kjt`.
 - Combining B.20 × B.21 (median-AE selection on the fused cell) is a separate registration after B.21. It must take one selection rule for both populations.
+
+## 8bo. B.21 (2026-11-01): weighting the residual by the anchor's variance gain does not replace the additive combination. The residual compensates for the gain, and does so imperfectly. Cut `T_i` keeps rule 1 with a tighter guard, but the `V_rot` median worsens to 1.21× / 1.15× and inclusive `T_i` loses −0.071 M1 against `v4kjt`. The trade belongs to the objective, so the registered next row is the training-free dual readout
+
+**Design** (`PREREGISTRATION_B21.md`, committed before any B.20 or B.21 number, 8f3f2bd). One controlled
+variable, the combination rule.
+
+- **Rule:** `y = a + r` → `y = a + k(s)·r`, with k = s²/(s² + σ_r²). σ_r² is one learnable scalar per target, initialised at the frozen backbone's VAL MSE median: 0.27 cut / 0.54 inclusive.
+- **Arm:** `v4kjtf` = `SeqCESV4K(gated=False, anchor="jump_t", fusion=True)`, against the frozen B.19 `v4kjt` (`.b16_v4kjt_*`). Selection is val MSE, as in B.19.
+- **Runs:** 8, via `run_b16.py --arms v4kjtf --summary-name .b21_summary.json`.
+- **Scoring:** `rescore_b13.py --extra v4kjtf=…` → `data/.b21_rescore.json`.
+- **Verdict:** `verdict_b21.py` → `data/.b21_verdict.json`.
+
+**Batch log.**
+
+- GPU smoke at 01:29: OK.
+- Training 01:29–03:42: 8/8, no interruption, about 15 min per run including TEST eval.
+- CPU rescore finished 04:56; verdict 05:01.
+
+| | cut | inclusive |
+|---|---|---|
+| `v4kjtf − v4kjt` pooled M1 `T_i` | +0.011 [+0.001, +0.020] (< +0.02 bar), MSE −0.008 | **−0.071 [−0.105, −0.040]**, MSE −0.024 |
+| `v4kjtf − v4kjt` pooled M1 `V_rot` | **−0.121 [−0.179, −0.076]**, MSE −0.002 | −0.027 [−0.060, +0.001], MSE +0.012 |
+| M1 vs backbone `T_i`, per split (* = ≥ +0.05 ∧ CI > 0) | +0.098* +0.131* +0.096* +0.087* (4/4), pooled +0.104 | +0.059* +0.270* +0.158* +0.073* (4/4), pooled +0.147 |
+| `T_i` paired MSE vs backbone | −0.015 −0.023 +0.016 −0.012, sig worse 0/4, mean −0.008 | −0.011 −0.089 −0.038 −0.044, sig worse 2/4, **mean −0.046** |
+| MSE guard | holds (B.19: holds, mean −0.005) | **fails** (B.19: fails by 0.0014) |
+| M1 vs backbone `V_rot`, per split | −0.150 +0.167* −0.119 −0.067 (1/4), pooled −0.039; MSE sig worse 0/4 | +0.049 −0.220 +0.094* +0.207* (2/4), pooled +0.038; MSE sig worse 0/4 |
+| median / persistence `T_i` (B.19 `v4kjt`; pure t anchor) | **0.918** (0.928; 0.916) | 1.140 (1.064; 0.911) |
+| median / persistence `V_rot` (B.19; pure t anchor) | **1.214** (1.083; 0.975) | **1.146** (1.116; 0.976) |
+| learned σ_r² / init (σ_r / init), H21-e | 0.87–0.95 (0.94–0.97) | 0.86–0.91 (0.93–0.95) |
+| epochs run / best epoch, s42 s1 s7 s123 | 14/8 20/14 30/24 24/18 | 16/10 19/13 19/13 15/9 |
+
+**Verdict (registered rules, §4).**
+
+- **H21-a (median preserved):** fails in both populations. The `V_rot` median moves *away* from the pure anchor (1.21× / 1.15×), compared with the additive cell's 1.08× / 1.12×.
+- **H21-b (combination gain ≥ +0.02 with CI > 0):** fails in both populations. Cut is +0.011, with CI > 0 but below the bar. Inclusive is −0.071, significantly worse.
+- **H21-c (B.16 rule 1):** cut passes, 4/4 with the guard holding, and the guard is tighter than B.19's (sig worse 0/4). Inclusive fails on the guard (mean −0.046, sig worse 2/4).
+- **H21-d (`V_rot` overall):** fails (1/4 and 2/4).
+- **H21-e:** σ_r² stayed within 9–14 % of its initial value. Training did not move the gain's scale either (cf. §8bm on the anchor parameters).
+- **Rule 1 (combination rule replaced):** not supported.
+- **Rule 2 (physics rung):** stays **cut-conditional**. `v4kjtf` also meets it in cut, but it is not preferred over `v4kjt`, because its cut `V_rot` M1 is −0.121.
+- **Rule 3 (the trade belongs to the objective):** holds in both populations, because H21-b fails. `next_is_dual_readout` = true.
+
+**Prediction check (§3).**
+
+- **Inside the predicted range:**
+  - cut `T_i` median, 0.918;
+  - cut `T_i` combination gain, +0.011;
+  - cut M1 vs backbone, +0.104;
+  - inclusive MSE mean, −0.046;
+  - σ_r / init, 0.93–0.97.
+- **Outside, for every `V_rot` quantity:**
+  - median 1.21 / 1.15 against a predicted 0.98–1.03 / 0.98–1.04;
+  - gain −0.121 / −0.027 against a predicted +0.05 … +0.12.
+- **Outside, for every inclusive `T_i` quantity except MSE:**
+  - median 1.140 against a predicted 0.91–0.98;
+  - gain −0.071 against a predicted +0.06 … +0.14;
+  - M1 +0.147 against a predicted +0.25 … +0.32.
+- **Slightly outside:** cut MSE mean, −0.008, is better than the predicted −0.01 … −0.04.
+- **The registered "known limit" happened, in a worse form than registered.** The registration expected compensation by 1/k to reproduce `v4kjt`. Instead it is worse than `v4kjt` at the median.
+
+**Reading.**
+
+1. *The residual undoes the gain, and pays for it.*
+   - On quiet rows k is small: about 0.08–0.16 at init. To keep its event-row correction, the MSE-trained residual LSTM, which sees s, can only inflate r by roughly 1/k. σ_r² barely moved, so the gain itself stays as registered.
+   - s varies from row to row, and the LSTM never sees k directly, so the inflation is imprecise. Its error lands on the quiet rows as k·r noise.
+   - The quiet rows are where the median is read. `V_rot`, with 2–3× fewer labelled rows than `T_i`, suffers most.
+   - This is a reading. The measurement that would confirm it needs no training: run one TEST inference pass of the frozen `v4kjtf` and `v4kjt` checkpoints, storing k, r and a per row. On quiet rows, binned by k, compare |k·r| (fusion) with |r| (additive). The prediction is that |k·r| > |r| in the low-k bins.
+2. *Three changes to the residual all fail to keep the pure anchor's `V_rot` median of 0.975×:*
+   - §8bm, the additive MSE residual: 1.08–1.12×;
+   - B.20, median-AE selection: 1.07×;
+   - B.21, variance-weighted combination: 1.15–1.21×.
+
+   So any output that also has to win the MSE moves the quiet rows. Within this cell family that is now measured, not assumed. This is the reason for the registered next row: report the median claim from the pure anchor and the mean claim from the trained model, and do not ask one output to carry both objectives.
+
+**Named next (registered rule 3).** B.22, the training-free dual readout over the frozen B.19 artifacts. The median estimator is the pure t anchor (`.b19_anchor_*`) and the mean estimator is the trained model, both scored on the same TEST rows. It is registered before its per-split numbers are read; only the pooled pure-anchor numbers of §8bm have been seen.
