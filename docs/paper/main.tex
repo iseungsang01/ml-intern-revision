@@ -283,10 +283,15 @@ Neural diagnostic inference has three main lines, and it is instructive to ask
 of each: \emph{what happens when the target measurement is absent?} The oldest
 line accelerates spectral fitting---NN analysis of JET CX
 spectra~\citep{Bishop1993AutomaticAnalysis,Svensson1999AnalysisJet} and fast
-\Ti{} estimation from EAST CXRS spectra~\citep{Chai2019FastEstimation}. These
-gain orders of magnitude in speed over least-squares fits, but by construction
-they require measured spectra at the timestep: a missing CES exposure leaves
-them with no input at all. A second line replaces one inference pipeline with
+\Ti{} estimation from EAST CXRS spectra~\citep{Chai2019FastEstimation}, and the
+newest member, on \emph{our} diagnostic: NN-CES, a physics-constrained network
+that extracts \Ti{} and rotation from KSTAR CES spectra without beam
+modulation~\citep{Lee2026NeuralNetworkbased}. These gain orders of magnitude in
+speed over least-squares fits, but by construction they require measured spectra
+at the timestep: a missing CES exposure leaves them with no input at all. NN-CES
+is the closest prior work, so the distinction fits in one sentence: \emph{NN-CES
+reads the measured timesteps better; this work fills the ones that are not
+measured.} A second line replaces one inference pipeline with
 another diagnostic's: Bayesian-model emulation at
 W7-X~\citep{Pavone2019NeuralNetwork}, profile shapes from scalar parameters on
 NSTX-U~\citep{Boyer2021PredictionElectron}, and---closest to our targets---\Ti{}
@@ -2068,7 +2073,12 @@ failed'': it removes one-sample upward events that no method can predict, but it
 is one-sided (dips are untouched) and it catches only 19\% of $\geq 2\times$
 upward outliers (\S\ref{sec:spikes}). With per-sample fit $\chi^2$ or signal
 level, a quality cut would replace or accompany the value cut in every arm at
-once, and the two populations would collapse into one. \Vrot{}'s own spikes
+once, and the two populations would collapse into one. The route to those
+values already exists on the same device: NN-CES analyses CES spectra without
+beam modulation and so yields a fit diagnostic per
+exposure~\citep{Lee2026NeuralNetworkbased}, which also removes the gaps that come
+from modulation itself. This lever is a CES reanalysis product, not a code change
+on our side. \Vrot{}'s own spikes
 (119 rows above 1{,}000\,km/s) would be handled by the same rule; until then any
 persistence-anchored \Vrot{} comparison reports the share of squared error those
 rows carry, as \S\ref{sec:ladder} does.
