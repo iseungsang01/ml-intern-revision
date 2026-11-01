@@ -23,6 +23,14 @@ Sources (all under data/):
   .b5_spike_structure.json   fit-failure spike structure audit (sec. 8ab memo)
   .latency_benchmark.json    inference latency (window family; seq_v2 if measured)
   per-run comparison_metrics*.json  physical-unit RMSE ladders
+  .b22_verdict.json          physics-filter dual readout, tab:dual (sec. 8bp)
+  .b23_verdict.json, .b24_verdict.json, .b26_precheck.json
+                             V_rot photon floor: fitted jump process / noise law, sqrt 2 ratio (sec. 8bq-8bt)
+  .b17b_summary.json         predictive-distribution heads, sec:dist (sec. 8bj)
+
+The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
+hand; `transcription_check` re-reads the values printed in main.tex from these files and fails on
+any mismatch, so the hand transcription is mechanically checked.
 
 Usage (repo root):  py ces_prediction/collect_paper_numbers.py
 Writes: docs/paper/paper_numbers.json
@@ -222,6 +230,87 @@ def latency(lat):
                       if k in r} for r in runs]}
 
 
+def _rng(xs, nd=3):
+    return [round(float(min(xs)), nd), round(float(max(xs)), nd)]
+
+
+def physfilter(b22, b23, b24, b26):
+    out = {"dual_readout": {}, "vrot_floor": {}}
+    for pop in POPS:
+        out["dual_readout"][pop] = {}
+        for t in TARGETS:
+            c = b22[pop][t]
+            out["dual_readout"][pop][t] = {
+                "median_over_persistence_range": _rng(c["median_over_persistence_split"]),
+                "m1_vs_backbone_range": _rng([e["point"] for e in c["m1_vs_backbone"]["per_seed"]], 2),
+                "m1_vs_backbone_sig": sum(e["ci"][0] > 0 for e in c["m1_vs_backbone"]["per_seed"]),
+                "m1_vs_persistence_range": _rng([e["point"] for e in c["m1_vs_persistence"]], 2),
+                "m1_vs_persistence_sig": sum(e["ci"][0] > 0 for e in c["m1_vs_persistence"]),
+                "mse_vs_backbone_range": _rng(c["mse_vs_backbone"], 2)}
+        out["dual_readout"][pop]["mean_estimator"] = b22[pop]["mean_estimator"]["arm"]
+    out["dual_readout"]["rules"] = b22["rules"]
+    for pop in POPS:
+        out["vrot_floor"][pop] = {
+            "b23_median_over_persistence_pooled": b23[pop]["median_over_persistence_pooled"],
+            "b24_median_over_persistence_pooled": b24[pop]["median_over_persistence_pooled"],
+            "b24_median_over_persistence_range": _rng(b24[pop]["median_over_persistence_split"]),
+            "b24_beats_persistence": sum(e["ci"][0] > 0 for e in b24[pop]["m1_vs_persistence"]),
+            "b24_fit": {s: {k: b24[pop]["fit"][s][k] for k in ("sigma_n_kms", "nu", "lam_per_step", "at_grid_edge")}
+                        for s in SEEDS}}
+    out["vrot_floor"]["rules_b24"] = b24["rules"]
+    out["vrot_floor"]["photon_ratio_A1"] = {k: b26[k]["A1"]["R_median"] for k in b26 if k != "verdict"}
+    out["vrot_floor"]["b26_verdict"] = b26["verdict"]
+    return out
+
+
+def dist_head(b17b):
+    out = {"rules": b17b["rules"]}
+    for pop in POPS:
+        arm = b17b["rules"][pop]["named_arm"]
+        out[pop] = {"named_arm": arm,
+                    "t_vs_mixture_TI": b17b["pops"][pop]["hypotheses"]["Hb-1_t_vs_mixture"]["pooled"]["skill_point"],
+                    "nu_median_TI": b17b["pops"][pop]["hypotheses"]["Hb-2_nu"]["nu_median_per_split"]}
+        for t in TARGETS:
+            a = b17b["pops"][pop]["targets"][t][arm]
+            out[pop][t] = {"crps_vs_r0_pooled": a["pooled"]["crps_skill_vs_r0"]["skill_point"],
+                           "crps_vs_r0_splits_sig": sum(a["per_seed"][s]["crps_skill_vs_r0"]["skill_ci95"][0] > 0 for s in SEEDS),
+                           "coverage_50_range": _rng([a["per_seed"][s]["coverage"]["50"] for s in SEEDS], 2),
+                           "coverage_90_range": _rng([a["per_seed"][s]["coverage"]["90"] for s in SEEDS], 2)}
+    return out
+
+
+def transcription_check(n):
+    """Values printed in main.tex (sec:physfilter tab:dual, sec:dist) against the artifacts."""
+    d, v, h = n["physfilter"]["dual_readout"], n["physfilter"]["vrot_floor"], n["dist_head"]
+    printed = [
+        ("tab:dual cut T_i median range", d["cut"]["CES_TI"]["median_over_persistence_range"], [0.911, 0.920], 0.0015),
+        ("tab:dual incl T_i median range", d["incl"]["CES_TI"]["median_over_persistence_range"], [0.906, 0.915], 0.0015),
+        ("tab:dual cut V_rot median range", d["cut"]["CES_VT"]["median_over_persistence_range"], [0.939, 1.000], 0.0015),
+        ("tab:dual incl V_rot median range", d["incl"]["CES_VT"]["median_over_persistence_range"], [0.938, 1.003], 0.0015),
+        ("tab:dual cut V_rot vs persistence sig", [d["cut"]["CES_VT"]["m1_vs_persistence_sig"]], [1], 0),
+        ("tab:dual cut T_i MSE vs backbone", d["cut"]["CES_TI"]["mse_vs_backbone_range"], [-0.41, -0.29], 0.015),
+        ("physfilter B.24 V_rot median range (0.97-0.98 pooled)", [v["cut"]["b24_median_over_persistence_pooled"],
+                                                                v["cut"]["b23_median_over_persistence_pooled"]], [0.97, 0.98], 0.0051),
+        ("physfilter B.24 beats persistence (<= 2/4)", [v["cut"]["b24_beats_persistence"], v["incl"]["b24_beats_persistence"]], [2, 2], 0),
+        ("physfilter B.24 nu", [v["cut"]["b24_fit"][s]["nu"] for s in SEEDS], [2.2] * 4, 1e-9),
+        ("sec:dist cut T_i CRPS (+0.229)", [h["cut"]["CES_TI"]["crps_vs_r0_pooled"]], [0.229], 0.0005),
+        ("sec:dist cut V_rot CRPS (+0.363)", [h["cut"]["CES_VT"]["crps_vs_r0_pooled"]], [0.363], 0.0005),
+        ("sec:dist incl T_i CRPS (+0.444)", [h["incl"]["CES_TI"]["crps_vs_r0_pooled"]], [0.444], 0.0005),
+        ("sec:dist incl V_rot CRPS (+0.351)", [h["incl"]["CES_VT"]["crps_vs_r0_pooled"]], [0.351], 0.0005),
+        ("sec:dist cut t vs mixture (+0.009)", [h["cut"]["t_vs_mixture_TI"]], [0.009], 0.0005),
+        ("sec:dist cut coverage 50", h["cut"]["CES_TI"]["coverage_50_range"], [0.49, 0.51], 0.0101),
+        ("sec:dist cut coverage 90", h["cut"]["CES_TI"]["coverage_90_range"], [0.91, 0.92], 0.0051),
+        ("sec:dist incl coverage 50", h["incl"]["CES_TI"]["coverage_50_range"], [0.53, 0.55], 0.0051),
+        ("sec:dist incl coverage 90", h["incl"]["CES_TI"]["coverage_90_range"], [0.90, 0.91], 0.0051),
+        ("sec:dist CRPS significant splits", [h[p][t]["crps_vs_r0_splits_sig"] for p in POPS for t in TARGETS], [4] * 4, 0),
+    ]
+    problems = []
+    for name, got, want, tol in printed:
+        if len(got) != len(want) or any(abs(float(a) - b) > tol for a, b in zip(got, want)):
+            problems.append(f"{name}: artifact {got} vs paper {want}")
+    return problems
+
+
 def crosscheck(numbers, b5, b3c, b4):
     problems = []
     for pop in POPS:
@@ -260,6 +349,9 @@ def main():
     audit = _load(DATA / ".protocol_audit_stats.json")
     spikes = _load(DATA / ".b5_spike_structure.json")
     lat = _load(DATA / ".latency_benchmark.json")
+    b22, b23, b24 = (_load(DATA / f".b{k}_verdict.json") for k in (22, 23, 24))
+    b26 = _load(DATA / ".b26_precheck.json")
+    b17b = _load(DATA / ".b17b_summary.json")
     for name in ("headline", "coverage_pr2", "ladder", "conformal", "peak_and_largegap", "campaign", "cut_sensitivity", "ablation", "mnar"):
         if "error" in b5.get(name, {}):
             raise SystemExit(f".b5_summary.json block {name} failed: {b5[name]['error']}")
@@ -283,14 +375,17 @@ def main():
         "ablation_window_eval": b5["ablation"],
         "mnar": b5["mnar"],
         "latency": latency(lat),
+        "physfilter": physfilter(b22, b23, b24, b26),
+        "dist_head": dist_head(b17b),
     }
-    problems = crosscheck(numbers, b5, b3c, b4)
+    problems = crosscheck(numbers, b5, b3c, b4) + transcription_check(numbers)
     if problems:
         raise SystemExit("artifacts disagree with each other:\n  " + "\n  ".join(problems))
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(numbers, indent=2, default=float), encoding="utf-8")
     print(f"wrote {OUT_PATH}")
     print("crosscheck: B.5 ladder/headline, B.3, B.4 and the TEST reports agree on every seed and population")
+    print("transcription: sec:physfilter (tab:dual, V_rot floor) and sec:dist values in main.tex match the artifacts")
 
     for pop in POPS:
         print(f"\n=== headline / {pop} (TEST, skill vs PCHIP [95% CI]) ===")

@@ -2094,18 +2094,18 @@ online \emph{statefully}: the hidden state is carried across the grid and each n
 row costs one recurrent step at batch 1, which is the number that matters.
 Measured as the network forward pass only (feature assembly is outside the model)
 over 1{,}000 timed calls after warm-up on an idle laptop-class machine, the
-\seqv{} step costs \textbf{1.05\,ms median and 1.61\,ms at p99 on CPU} (16\% of one
-grid period; p95 1.35\,ms), and 1.21 / 2.31\,ms on the GPU---at this size a GPU buys
+\seqv{} step costs \textbf{0.97\,ms median and 1.49\,ms at p99 on CPU} (15\% of one
+grid period; p95 1.17\,ms), and 1.08 / 1.79\,ms on the GPU---at this size a GPU buys
 nothing at batch 1. The whole-segment re-run that offline scoring uses costs
-2.9\,ms median / 5.6\,ms p99 for a 100-row (1\,s) block and 6.4 / 8.9\,ms for
-300 rows on CPU, i.e.\ 35--47k rows/s of bulk reprocessing (47--63k rows/s on
-the GPU). The windowed control at batch 1 is slower and, on this machine,
-tail-heavy: $W{=}2$ 3.8\,ms median but 18.9\,ms at p99 on CPU (7.2 / 11.6\,ms on
-the GPU); $W{=}4$ 4.0 / 8.1\,ms. Two idle-machine runs of the same benchmark
-differed by up to 2$\times$ in absolute terms (the \seqv{} step measured
-0.51 / 0.99\,ms median / p99 in the other run) because a laptop's power states move
-these numbers; the ordering---sequence step $\ll$ windowed forward pass, CPU
-sufficient---did not. The practical guidance is therefore: \emph{run the
+2.6\,ms median / 4.1\,ms p99 for a 100-row (1\,s) block and 6.1 / 9.6\,ms for
+300 rows on CPU, i.e.\ 38--49k rows/s of bulk reprocessing (46--62k rows/s on
+the GPU). The windowed control at batch 1 is slower: $W{=}2$ 2.9\,ms median and
+4.5\,ms at p99 on CPU (5.1 / 8.6\,ms on the GPU); $W{=}4$ 3.1 / 5.1\,ms. Earlier
+idle-machine runs of the same benchmark put the \seqv{} step at 0.51--1.05\,ms
+median and 0.99--1.61\,ms p99, and one showed a heavy CPU tail for the windowed
+control (18.9\,ms p99), because a laptop's power states move these numbers; the
+ordering---sequence step $\ll$ windowed forward pass, CPU sufficient---did not
+change in any run. The practical guidance is therefore: \emph{run the
 stateful nowcaster on the control computer's CPU}; it leaves more than 80\% of
 the 10\,ms budget to acquisition and control.
 
