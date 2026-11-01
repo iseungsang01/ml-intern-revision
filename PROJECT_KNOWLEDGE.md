@@ -1443,6 +1443,10 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   +0.285, `V_rot` +0.145, `V_rot` median 1.02× persistence — the first arm inside the P02 band),
   at a pooled `T_i` MSE cost of −0.019 with one significant split, so the rung stays
   cut-conditional by the letter. A robust loss early-stopped on val MSE is not a test of the loss.
+  §8bu (B.14 §10) closes it: the same rule lifts the cut Huber `T_i` M1 from +0.081 to +0.128 (4/4, MSE
+  tie, median 0.894x persistence = the physics filter's band); cap 100 changes no inclusive Huber
+  checkpoint, so the inclusive deficit is the fit-failure rows' square, not training. Rule: select on
+  the arm's own objective in both populations; the rung stays cut-conditional.
 - **Three B.16 follow-ups** (§8bi): an open-initialised gate learns to stay open and reproduces the
   ungated arm (the gate carries nothing); a level-holding anchor wins the 2.5 % stale rows by the
   predicted +0.08 / +0.10 and loses the other 97.5 %; the pure learned OU filter sits at 1.19×

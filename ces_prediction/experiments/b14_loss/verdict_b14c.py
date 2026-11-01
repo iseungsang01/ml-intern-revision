@@ -59,9 +59,9 @@ def cell(row, arm, t):
         out["m1_splits_pos"] += int(m1["skill_ci95"][0] > 0)
         out["mse_sig_deficits"] += int(bool(pv["b_better"]))
     po = res["pooled"][t]
-    out["m1_pooled"] = po[f"{key}_vs_model"]["all"]["m1_medae"]
-    out["mse_pooled"] = po[f"{key}_vs_model"]["all"]["mse"]
-    out["median_over_persistence_pooled"] = 1.0 - po[f"{key}_vs_persistence"]["all"]["m1_medae"]["skill_point"]
+    out["m1_pooled"] = po[f"{key}_vs_model"]["m1_medae"]
+    out["mse_pooled"] = po[f"{key}_vs_model"]["mse"]
+    out["median_over_persistence_pooled"] = 1.0 - po[f"{key}_vs_persistence"]["m1_medae"]["skill_point"]
     out["pass"] = passes(out)
     return out
 

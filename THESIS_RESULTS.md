@@ -6260,3 +6260,47 @@ variable, the combination rule.
    B.24 also gives a number to check against when those diagnostics arrive: a core of ≈ 2.2 km/s with ν ≈ 2.
 
 **Named next.** No further in-data `V_rot` median rows. The (λ, σ_J) and (σ_n, ν) knobs are both fitted and both null on the median. The B.22 dual-readout table (§8bp) stands for the paper. The `V_rot` sentence there now reads "photon-limited floor, per-exposure uncertainty is the lever".
+
+## 8bu. B.14 §10 (2026-11-01): the own-objective checkpoint rule carries the cut robust rung and strengthens it (huber `T_i` M1 +0.081 → +0.128, 4/4, MSE tie 0/4; median 0.894× persistence, now beating the causal GP in the median); the inclusive MSE deficit is not the epoch cap — raising it to 100 leaves every Huber checkpoint bit-identical. Registered rule 2: the rung stays cut-conditional, and the selection rule is unified to the arm's own val objective in both populations
+
+**Design** (`experiments/PREREGISTRATION_B14.md` §10, registered with code before any number, 5b17998).
+Two rows, one variable each, against the frozen MSE backbones (no retraining of controls):
+
+- **Row A (selection rule):** cut population, huber / tnll × 4 splits, `--select loss`, cap 60, otherwise the §8ay cut runs. `data/.b14s_{arm}_cut_s{s}`, co-metrics `data/.b14s_cut_rescore.json`.
+- **Row B (epoch cap):** inclusive population, huber / tnll × 4 splits, `--select loss`, **cap 100**, otherwise §8bh. `data/.b14c_{arm}_incl_s{s}`, co-metrics `data/.b14c_rescore.json`.
+- Verdict `b14_loss/verdict_b14c.py` → `data/.b14c_verdict.json` (huber `T_i` is the primary readout; pass = MSE significant deficits 0/4 and M1 CI > 0 ≥ 3/4).
+
+**Batch log.** Chain started 14:46 on a GPU shared with another project's job (no wait loop; one batch of this project). Row A done 17:23, row B 18:29, rescores 19:12 / 20:03. The verdict script first failed on a key path (the pooled block of `rescore_b13` has no `all` level; per-split blocks do); fixed to read `pooled[t][key]` directly and rerun on the same artifacts — bookkeeping only, the rule is unchanged.
+
+**Training (epochs run / best).**
+
+- Row A huber 60/60, 52/46, 47/41, 60/60; tnll 60/58, 60/59, 60/57, 60/60 (§8ay with MSE selection: 20–46). **6 of 8 cut runs reach the 60 cap**, so row A is a lower bound on what the rule buys in the cut population.
+- Row B huber 55/49, 31/25, 30/24, 65/59 — every best epoch is below 60, and the four Huber checkpoints are **bit-identical to §8bh** (paired MSE skill equal to the last digit on 4/4; training is deterministic). tnll 36/30, 89/83, 86/80, 67/61: three runs moved past 60.
+
+| row / arm / target | M1 vs MSE backbone (s42 s1 s7 s123) | M1 pooled | MSE paired (sig. worse) | median AE / persistence (backbone) | M1 vs causal GP pooled | pass |
+|---|---|---|---|---|---|---|
+| A huber `T_i` | +0.128\* +0.152\* +0.103\* +0.124\* | **+0.128** [+0.114, +0.141] | +0.010 −0.005 +0.014 +0.012 (**0/4**), pooled +0.007 | **0.894** (1.024) | **+0.073** [+0.043, +0.099] | **yes** |
+| A huber `V_rot` | +0.087\* +0.199\* +0.075\* +0.137\* | +0.128 [+0.098, +0.161] | +0.020 +0.046 −0.023 −0.016 (0/4), pooled −0.004 | 1.018 (1.168) | +0.010 [−0.020, +0.040] | yes |
+| A tnll `T_i` | +0.145\* +0.170\* +0.110\* +0.136\* | +0.141 [+0.126, +0.154] | −0.008 −0.014 +0.007 −0.003 (0/4), pooled −0.005 | 0.880 | +0.087 [+0.060, +0.112] | yes |
+| A tnll `V_rot` | +0.108\* +0.208\* +0.065\* +0.119\* | +0.130 [+0.101, +0.161] | +0.003 +0.041 −0.030 −0.025 (0/4) | 1.016 | +0.012 | yes |
+| B huber `T_i` | +0.224\* +0.361\* +0.214\* +0.319\* | **+0.285** [+0.250, +0.322] | −0.009 −0.003 −0.014 **−0.040\*** (**1/4**), pooled −0.019 | 0.956 (1.337) | +0.023 [−0.012, +0.057] | **no** |
+| B huber `V_rot` | +0.101\* +0.051\* +0.140\* +0.246\* | +0.145 [+0.108, +0.181] | +0.030 +0.028 −0.022 −0.014 (0/4) | 1.019 (1.191) | +0.010 | yes |
+| B tnll `T_i` | +0.261\* +0.380\* +0.246\* +0.330\* | +0.310 [+0.274, +0.346] | −0.044 −0.026 −0.025 −0.072\* (1/4), pooled −0.044 | 0.923 | +0.056 [+0.025, +0.089] | no |
+| B tnll `V_rot` | +0.100\* +0.058\* +0.160\* +0.249\* | +0.153 [+0.120, +0.190] | +0.013 +0.026 −0.025 −0.021 (0/4) | 1.010 | +0.018 | yes |
+
+MSE skill vs PCHIP is kept: cut huber `T_i` +0.182 … +0.273 (pooled +0.249), inclusive +0.218 … +0.289.
+
+**Verdict (§10, registered rules).** A passes (huber `T_i` M1 4/4, MSE deficits 0/4), B fails (1/4 significant deficit, s123 −0.040). **Rule 2:** the robust rung stays conditional on the cut population; the inclusive deficit is not the cap; the checkpoint rule is unified to the arm's own val objective in both populations (it is never worse than val-MSE selection on any cell of this table).
+
+**Prediction check (written before any number).**
+
+- **Hits:** A passes (predicted ≈ 0.7); B fails with one significant split (≈ 0.6) → rule 2; s123 `T_i` deficit −0.040 (predicted −0.02 … −0.04, at the edge); inclusive `V_rot` median 1.019 / 1.010 (predicted 1.00–1.03); 2–4 runs past 60 in B (4 ran past 60, 3 with a best epoch past 60).
+- **Misses:** cut epochs were predicted 25–60 and came in 41–60 with 6/8 at the cap — the cut arms want longer training than predicted.
+
+**Reading.**
+
+1. *The rule, not the loss, set §8ay's cut number too.* Under MSE selection the cut Huber arm stopped at 20–46 epochs with M1 +0.081; on its own objective it trains to the cap and the median gain rises by half (+0.128), at a cut MSE that now leans positive (+0.007, 0/4 deficits). The cut `T_i` median moves from 1.024× (backbone) and 0.942× (§8ay Huber) to **0.894× persistence**, and the median now beats the causal GP (+0.073, CI > 0) instead of tying it. This is the same 0.88–0.92× band the physics filter's pure anchor reaches (§8bp, 0.911–0.920×): a loss whose influence is cut at the 10 ms reproducibility bound and a filter whose measurement noise is Student-t reach the same typical-row error from opposite sides.
+2. *The inclusive deficit is a spike-row property, not under-training.* Raising the cap changed none of the Huber checkpoints (best epochs 24–59, patience 6 ends every run before 66), and the three tnll runs that trained to 80–83 epochs moved their M1 by ≤ 0.004 and kept the s123 deficit (−0.076 → −0.072). The one remaining significant split is the MSE the > 3 keV fit-failure rows dominate (§8br: 76–80 % of inclusive val `T_i` SE): a loss that caps their influence pays their square on TEST. The measurement that would remove it is the spike cut itself — which is why the cut population is co-primary — or a per-exposure fit-quality flag for those rows; neither is a training change.
+3. *`V_rot`.* Both rows pass on `V_rot` (8/8 splits significant), with the median at 1.01–1.02× persistence and a median tie with the causal GP — the photon-floor tie of §8bs/§8bt, now reached from the loss side as well.
+
+**Named next.** None for B.14 in-data: the selection axis is settled (own objective), the cap axis is settled for the inclusive population, and the inclusive guard is decided by fit-failure rows, not training. The cut arms reaching the 60 cap is recorded, not chased (it can only raise a number that already passes). Paper: the bulk paragraph and the conclusion carry the cut own-objective numbers and the cap result.
