@@ -1436,7 +1436,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   When a registration defines adoption on one population and the other one passes, say so with the
   mirror label rather than "not adopted" alone, and fix the asymmetry in the next registration.
 
-## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn, §8bo, §8bp
+## The OU Prior Is Right For The Tail And Wrong For The Bulk — The P02 Median Bound Is An OU Number (2026-10-29 … 11-01) — §8bh, §8bi, §8bk, §8bl, §8bm, §8bn, §8bo, §8bp, §8bq, §8br, §8bs
 
 - **Checkpoint selection must match the objective** (§8bh): re-selecting the inclusive Huber arm on
   its own val loss let it train 30–60 epochs instead of 8–23 and doubled its median gain (`T_i` M1
@@ -1498,3 +1498,16 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   set by registration) → **physics median estimator unconditional for `T_i`**. `V_rot`: beats the
   backbone 4/4 × 2 but ties persistence (0.94–1.00× by split, 1/4 significant). Mean estimator stays
   trained (`v4kjt` cut, `seq_v2` inclusive). Next lever for `V_rot`: TRAIN-fitted jump rate λ.
+- **The `V_rot` persistence tie is a photon-noise floor, measured (B.23 §8bq, B.25 §8br, B.26 §8bs).**
+  TRAIN-fitted λ (5–13 Hz, σ_J 0.35 sd) buys +0.10 `V_rot` MSE over the registered anchor but moves
+  M1 by 0.000 — between labels the filter's predictive is symmetric about the carried value, so no
+  jump-process tuning moves the median. The 10 ms scatter ratio (δT/T)/(δv/σ_v) is the Gaussian
+  line-fit √2 in 8/8 cells (1.40–1.53) and the two channels' noise is independent in size and sign
+  (|ρ| < 0.07); posterior-median readout gains ≤ 0.6 %; joint jumps |ρ| < 0.05. **Closed by
+  measurement:** λ, σ_J, IMM/collapse, posterior median, bivariate noise, joint jumps, √T_i noise.
+  The one lever left is per-exposure CES fit uncertainty (photon count / χ², e.g. NN-CES output) —
+  a data request, not code. Don't propose another in-data `V_rot` median filter without it.
+- **Val selection under fit-failure labels (B.25 §8br).** In the inclusive population ≈ 78 % of
+  val `T_i` squared error sits on > 3 keV rows that no checkpoint predicts (arms differ ≤ 4 % there),
+  so val MSE there is a noisy key; median-AE picks better on physical rows. In cut, median-AE selection
+  gives up event rows (3/4). A fit-quality flag would make the two keys agree.

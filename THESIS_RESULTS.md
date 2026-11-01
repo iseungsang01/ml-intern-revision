@@ -6040,3 +6040,164 @@ variable, the combination rule.
 
 - the TRAIN-fitted λ for `V_rot` (above);
 - the TEST k·r inference measurement of §8bo point 1.
+
+## 8bq. B.23 (2026-11-01): fitting the `V_rot` jump process on TRAIN does not move the median. Likelihood picks frequent small jumps (λ 5–13 Hz, σ_J 0.35 sd ≈ 20–27 km/s, not the registered 5 Hz / 1.0 sd). The fitted anchor improves `V_rot` MSE by +0.10 against the registered one, but its M1 is unchanged (−0.002 / −0.000) and persistence is still tied (1/4). λ is not the lever (registered rule 3)
+
+**Design** (`PREREGISTRATION_B23.md`, committed before any fit or number, e7f78c1). No training.
+
+- **Fit:** `fit_vrot_jump_b23.py` scores the B.19 filter's exact one-step predictive t-mixture likelihood on TRAIN over a fixed 10 × 7 (λ, σ_J) grid, separately for each split and population. The recursion is a float64 copy of `_jump_scan`, unit-tested to match it.
+- **Readout:** only `kalman_vt.lam_logit` and `kalman_vt.j_raw` of the B.19 `v4kjt` checkpoints are patched, then the pure anchor is read on TEST (`.b23_anchor_*`, GPU, 8 × ~3 min).
+- **Scoring:** `rescore_b13.py` (shot-cluster bootstrap B = 10⁴), then `verdict_b23.py`.
+- **Control:** `T_i` TEST errors bit-identical to B.19: **True** in both populations.
+- **Batch log:** fit 08:06. Readout 08:28. The first rescore was stopped at 6/8 on the author's instruction; it was rerun from scratch, 10:20 → 11:29 (its output is written only at the end, so nothing partial was used). Verdict 11:30.
+
+| | cut (s42 s1 s7 s123) | inclusive |
+|---|---|---|
+| fitted λ / step (Hz) | 0.08 (8.3), 0.05 (5.1), 0.12 (12.8), 0.08 (8.3) | same (`V_rot` has no spike cut, so the TRAIN rows are the same) |
+| fitted σ_J (km/s) | 0.35 sd (25.7, 26.5, 20.3, 26.8) | same |
+| log-lik / obs, fitted vs registered | +0.4725/+0.4605, +0.4717/+0.4604, +0.1690/+0.1466, +0.4229/+0.4098 | same |
+| at grid edge | no (all) | no |
+| `V_rot` M1 vs persistence | +0.058 [+0.017, +0.092], +0.021, +0.034, −0.001 (**H23-a 1/4**) | +0.059 [+0.016, +0.095], +0.018, +0.034, −0.003 (1/4) |
+| `V_rot` median / persistence | 0.942 0.979 0.966 1.001 (pooled 0.977) | 0.941 0.982 0.966 1.003 (0.976) |
+| B.19 registered anchor, same quantity (§8bp) | 0.939 0.986 0.971 1.000 | 0.938 0.988 0.971 1.003 |
+| `V_rot` M1 vs backbone | +0.175 +0.237 +0.092 +0.159 (**H23-c 4/4**) | +0.168 +0.093 +0.171 +0.265 (4/4) |
+| fitted − registered pooled M1 / MSE | −0.002 [−0.006, +0.007] / **+0.097** (H23-b fails) | −0.000 [−0.004, +0.008] / **+0.102** |
+
+**Verdict (registered rules, §4).**
+
+- H23-a fails (1/4 × 2) and H23-b fails. H23-c holds (4/4 × 2).
+- **Rule 3: λ is not the lever** (`lambda_not_the_lever` = true; fitted λ / registered = 1.0–2.4).
+- The `V_rot` physics median estimator stays "beats the backbone, ties persistence".
+
+**Prediction check (§5).**
+
+- **Hits:** H23-a (1/4 sits below the predicted 2–4/4, but the verdict call was right), H23-b (+0.00 predicted, uncertain), H23-c 4/4, median 0.976–0.977 (inside 0.94–0.98).
+- **Misses:**
+  - λ was predicted at 1–3 Hz (rarer jumps) and came in at 5–13 Hz: the fit prefers more frequent jumps.
+  - σ_J was predicted at 0.5–1.0 and came in at 0.35 at every split. 0.35 is an interior grid point (the grid edge is 0.25).
+
+**Reading.**
+
+1. *What the fit changes.* Frequent jumps of about 25 km/s match the TRAIN predictive better (+0.011…+0.022 nats/obs). The anchor follows real moves sooner, which buys +0.10 `V_rot` MSE skill against the registered anchor. It does not change the median row, where the filter's gain is already near 1 and its point estimate is the last value.
+2. *Why the median cannot move by λ.* Between labels the predictive is symmetric about the carried value whatever λ and σ_J are: jumps and drift have zero mean. The median-optimal point is then the last value, so the tie with persistence is structural, not a matter of tuning (filter-methods scan, scratchpad `lit_filter_methods.md` §1). Reading the posterior median instead of the merged mean gains at most 0.6 %, which B.26 measured on TRAIN (§8bs E1b).
+3. *Registered next (rule 3).* Fit σ_n and ν by the same likelihood. B.23 rule 3 named this before §8bs existed; it becomes B.24. §8bs A1 already places the bulk scatter at the photon floor (the √2 ratio in 8/8 cells), so B.24 is expected to be null for the median. It still runs as registered, because a likelihood-fitted σ_n is the last in-data knob of the measurement model.
+
+## 8br. B.25 (2026-11-01, inference only): row-level readouts of the readings in §8bn and §8bo. The B.21 fusion residual does move the quiet rows more than the additive one, but only in two of the four target × population cells. In the inclusive population, fit-failure rows carry 76–80 % of the val `T_i` squared error, and the two selected checkpoints differ there by under 4 %, so inclusive val MSE is a noisy selection key. In the cut population, median-AE selection loses the event rows (3/4). Neither checkpoint's anchor moved during training: |a − y| is equal between arms to 0.1 eV and 0.1 km/s
+
+**Design** (`PREREGISTRATION_B25.md`, committed before any number, 3336425).
+
+- **Readout:** one whole-block GPU inference of frozen checkpoints (`residual_rows_b25.py`). The re-called Kalman anchor matched the model's own `anchor_only` path bit for bit, and the TRAIN statistics matched every checkpoint (both are FATAL checks, and both passed).
+- **Rows:** observed rows with an earlier observation of the same target in the block. Part A: 36–51 k `T_i` and 14–19 k `V_rot` rows per split.
+- **Output:** `data/.b25_rows.npz`; verdict in `data/.b25_verdict.json`.
+
+**A — §8bo reading 1 (TEST, `.b16_v4kjtf` vs `.b16_v4kjt`; low-k = lowest 3 deciles of the fusion gain k).**
+
+| cell | R_low = median\|k·r\| / median\|r\| (s42 s1 s7 s123) | H25-a | median \|ŷ − y\| low-k, fusion/additive | H25-b | rule |
+|---|---|---|---|---|---|
+| cut `T_i` | 1.33 0.79 0.89 1.18 | 2/4 | 22.7/22.0 21.9/23.2 22.7/24.0 20.8/20.3 eV | 2/4 | rejected |
+| cut `V_rot` | 2.54 2.25 3.20 1.15 | **4/4** | 3.0/2.1 2.0/2.0 2.6/1.9 2.4/2.1 km/s | **3/4** | **confirmed** |
+| incl `T_i` | 1.33 0.51 1.12 1.84 | **3/4** | 38.9/32.4 29.2/37.3 27.0/25.3 39.9/27.3 eV | **3/4** | **confirmed** |
+| incl `V_rot` | 0.50 2.94 0.69 0.76 | 1/4 | 2.0/2.2 3.2/2.1 2.0/2.2 1.8/2.0 km/s | 1/4 | rejected |
+
+- **Anchor error on the same rows** (the registered follow-up): identical between arms in every cell, for example `T_i` 19.9/19.7 and `V_rot` 1.7/1.7. Training did not move the anchor (§8bm), so the anchor is not where the arms differ.
+- **The gain k barely varies:** median ≈ 30th percentile (cut 0.17–0.24, inclusive 0.10–0.11). "Low-k" is therefore most rows, not a quiet subset.
+
+**B — §8bn reading 1 (VAL, `.b16_v4kjt` MSE-selected vs `.b20_v4kjt` median-AE-selected).**
+
+| | s42 | s1 | s7 | s123 | verdict |
+|---|---|---|---|---|---|
+| inclusive: share of val `T_i` SE on `T_i` > 3 keV rows (MSE-selected) | 0.79 | 0.76 | 0.80 | 0.80 | **H26-a 4/4** |
+| inclusive: N-rows median \|err\| MSE-sel / medae-sel (eV) | 52.0/47.5 | 51.1/42.4 | 42.5/44.3 | 52.5/48.4 | 3/4 medae lower |
+| inclusive: F-rows MSE MSE-sel / medae-sel (10⁷ eV²) | 4.41/4.60 | 3.18/3.13 | 3.91/3.97 | 4.21/4.27 | 3/4 MSE-sel lower, by 1–4 % |
+| H26-b (both in the same split) | yes | no | no | yes | 2/4 |
+| cut: event-row (top 10 % \|Δ\|) `T_i` MSE MSE-sel / medae-sel (10⁵ eV²) | 2.39/2.38 | 2.30/2.52 | 2.96/3.19 | 2.56/2.71 | **H26-c 3/4** |
+
+**Verdict (registered rules).**
+
+- **A:** the §8bo reading is **confirmed for cut `V_rot` and inclusive `T_i`, rejected for cut `T_i` and inclusive `V_rot`.** The registered follow-up (|a − y|) shows identical anchors, so in the rejected cells the median loss is not on the low-k rows. Cut `V_rot`, where B.21 lost most (1.21×), is a confirmed cell: there the fusion residual is 1.2–3.2× the additive one on the low-k rows.
+- **B inclusive:** "F dominates, but the selection trade is not where the reading puts it."
+  - Fit-failure rows do carry about 78 % of val `T_i` squared error (H26-a 4/4).
+  - The two checkpoints differ there by only 1–4 %, while on the remaining rows the median-AE pick is 4–17 % better in 3/4 splits.
+- **B cut:** the reading is **confirmed.** Median-AE selection gives up the event rows (+5–10 % MSE in 3/4 splits).
+
+**Prediction check.**
+
+- **Hits:** H26-a (share 0.76–0.80 inside 0.5–0.9, 4/4), H26-c (3/4), H25-a and H25-b for `V_rot` cut.
+- **Misses:** H25-a `T_i` cut (2/4 vs 2–4/4 is borderline; the rule failed), H25-a/b `V_rot` inclusive (1/4 vs 3–4/4), H26-b (2/4 vs 3–4/4).
+
+**Reading.**
+
+1. *Inclusive val MSE is a key the checkpoints cannot move.*
+   - About 78 % of it sits on fit-failure rows that no checkpoint predicts; the arms differ by ≤ 4 % there.
+   - The MSE key's choice is therefore set mostly by noise on rows that carry no physics. This is the measured form of §8bn's reading: the median-AE key wins on the physical rows (N, 3/4).
+   - The reading's second half ("the MSE pick is better on F") holds only weakly, which is why H26-b fails as a joint rule.
+   - This is the label-quality problem again. A per-exposure fit-quality flag (§8bs item 3) would remove F from val and make the two keys agree.
+2. *Cut: the median key gives up event rows, as §8bn read it* (best epoch 2 in s1, the split where the E-row MSE gap is largest, +10 %).
+3. *The fusion trade is cell-specific, not one mechanism.*
+   - In cut `V_rot` and inclusive `T_i`, the residual moves the low-k rows more under fusion, and the median is worse there.
+   - In the other two cells it does not, and the B.21 loss there (inclusive `T_i` −0.071 M1, §8bo) must come from the remaining rows. Inclusive `T_i` is a confirmed cell, so this applies to cut `T_i`, whose B.21 change was small (+0.011), and to inclusive `V_rot` (1.146× vs 1.12×, also small).
+   - So in both cells where B.21 changed the median materially, the mechanism is measured. Where it is rejected, there was little to explain.
+
+**Named next.** Nothing new in the residual family: the dual readout (§8bp) stands. The one open lever is shared with §8bs: per-exposure fit quality, which would remove F from val and make the selection keys agree.
+
+## 8bs. B.26 (2026-11-01, TRAIN only, no model): the 10 ms CES scatter is photon-limited. Its `T_i`/`V_rot` ratio is the √2 of a Gaussian line fit in all 8 split × population cells, and the noise in the two channels is independent in size and in sign. The filter's mixture collapse is not a median lever either: reading the posterior median gains at most 0.6 %. Every in-data route to beating persistence on the 10 ms `V_rot` median is now closed by measurement. The lever left is per-exposure fit uncertainty from the CES analysis
+
+**Design** (`PREREGISTRATION_B26.md`, committed before any number, 0c082c4). It is a battery of TRAIN-only checks with no model, built from two literature scans of 2026-11-01. All citations were checked through OpenAlex.
+
+- **Rows:** second differences e_t = y_t − (y_{t−1} + y_{t+1})/2 inside blocks, used only where all three grid points are observed. Increments are taken over consecutive observed rows.
+- **Filter:** the B.19 hold-or-jump t recursion in float64. `T_i` and `V_rot` use the registered parameters. `V_rot` is also run with the B.23 TRAIN fit.
+- **Thresholds** and their consequences were fixed in the registration. Script: `precheck_b26.py`, output `data/.b26_precheck.json`.
+
+| check | cut (s42 s1 s7 s123) | inclusive | registered yes | verdict |
+|---|---|---|---|---|
+| A1 photon ratio R = [rsd(e_T)/T̄] / [rsd(e_V)/σ_v(T̄)], shot median (≈ 210 shots) | 1.520 1.395 1.490 1.413 | 1.532 1.477 1.511 1.491 | 1.41 ± 0.30 | **yes 4/4 × 2** |
+| A2 log-log slope of \|e_V\| scale vs `T_i` | +0.155 +0.098 +0.087 +0.228 | +0.151 +0.099 +0.087 +0.225 | 0.5 ± 0.15 | no 0/4 × 2 |
+| A3 Spearman ρ(\|e_T\|, \|e_V\|) / ρ(e_T, e_V) | +0.016…+0.065 / +0.003…+0.012 | +0.016…+0.064 / +0.004…+0.013 | ≥ 0.15 ∧ < 0.1 | no; both < 0.1 in 4/4 × 2 → **bivariate noise route closed** |
+| A4 median \|e_V\| on `T_i` > 3 keV rows / rest | — | 0.92 1.06 1.16 1.08 | ≥ 2 | no 0/4 |
+| E2 ρ(Δ_T, Δ_V), top 10 % \|Δ_T\| | +0.023 +0.032 +0.042 +0.028 | +0.028 +0.033 +0.049 +0.031 | \|ρ\| ≥ 0.15 | no 0/4 × 2 → **joint-jump route closed** |
+| E1 ambiguous jump weight 0.2 < w₁ < 0.8, `T_i` / `V_rot` reg. / `V_rot` B.23 fit | 0.057–0.061 / 0.039–0.066 / 0.061–0.168 | 0.045–0.047 / same / same | ≥ 5 % | `T_i` cut 4/4, inclusive 0/4; `V_rot` reg. 1/4; `V_rot` fit 4/4 |
+| E1b one-step median AE, posterior median / merged mean | `T_i` 0.9941–0.9967; `V_rot` 0.9968–1.0004; fit 0.9955–1.0040 | same | ≤ 0.99 | **no 0/4 everywhere** → posterior-median readout closed |
+
+(`V_rot` has no spike cut, so the inclusive `V_rot` rows equal the cut rows. The identical `V_rot` E1 columns are the expected result, not a copying error.)
+
+**Verdict (registered rules).**
+
+- **A1 is yes** in every cell: the bulk 10 ms scatter of both channels is consistent with one common photon-statistics noise, not with physics variation.
+- **A2, A3, A4 and E2 are no.**
+  - The `V_rot` noise does not scale as √T_i.
+  - The `T_i` and `V_rot` noise draws are independent in size and in sign. This is what a clean Gaussian fit predicts (the line centre and width errors are orthogonal).
+  - The `T_i` fit failures do not contaminate `V_rot`.
+  - Large `T_i` jumps carry no `V_rot` jump.
+- **E1:** ambiguous weights reach 5 % in some cells. **E1b is no** everywhere: the best gain from replacing the merged mean by the two-component posterior median is 0.6 % (`T_i` cut s42). The collapse approximation is therefore not where the median is lost. The IMM/GPB2/RBPF family has no headroom here.
+
+**Prediction check.**
+
+- **Hits:** A1 (R 1.1–1.6), A3 sign (< 0.1), A4 (1–2), E1 (2–8 %, except the 17 % B.23-fit case), E1b (0.99–1.00).
+- **Misses, all on the low side:**
+  - A2 was predicted at 0.2–0.6 and came in at 0.09–0.23.
+  - A3 size was predicted at 0.1–0.3 and came in at 0.02–0.07.
+  - E2 was predicted at |ρ| 0.05–0.2 and came in at 0.02–0.05.
+  - The two channels are more independent than predicted.
+
+**Reading.**
+
+1. *The persistence tie on the `V_rot` median is a measurement limit, not a model failure.*
+   - Three facts together fix this:
+     - the √2 ratio in 8/8 cells (A1);
+     - noise independent between the two channels (A3);
+     - §8bl's lag-1 increment autocorrelation.
+   - The bulk 10 ms `V_rot` change is dominated by line-fit photon noise of about 4 km/s.
+   - Against that, the literature's physical drivers at 10 ms are small:
+     - momentum transport: τ_φ ≈ τ_E ≈ 90 ms, de Vries 2008, doi:10.1088/0029-5515/48/6/065006;
+     - intrinsic-rotation scaling: about 0.2 km/s per 10 ms, Rice 2007 and Yoo 2017, doi:10.1063/1.4991397.
+   - On a symmetric noise floor the median-optimal point estimate is the last value, so persistence ties.
+   - The same reading explains why `T_i` does beat persistence (0.91×). At fixed photon count the relative noise is √2 larger for `T_i`, so `T_i` has more noise to average out. A smoother can gain where a single exposure is noisy relative to the level. *(This is a reading; the measurement is item 3.)*
+2. *A2 says the noise scale does not follow √T_i.* The photon count N must therefore co-vary with `T_i` (brighter plasma, more counts), which roughly cancels the √T dependence. A per-exposure noise model built only from `T_i` has no basis. A per-row σ_n needs the counts themselves.
+3. *Named measurement (the one that would overturn the measurement-limit reading).* Obtain the per-exposure CES fit uncertainty (photon count or χ², exposure time, channel radius) from the KSTAR CES analysis. NN-CES (Lee 2026, doi:10.1016/j.fusengdes.2025.115518) produces a per-exposure fit diagnostic. With measured σ_n per row:
+   - the filter's gain becomes row-specific;
+   - the upper bound of a `V_rot` median gain becomes computable;
+   - the prediction is that noisy-exposure rows give a gain and clean rows stay at persistence.
+
+   This is a data request, not code. Until it is answered, the dual-readout statement for `V_rot` stands: it beats every trained model and ties persistence at the photon floor.
+
+**Named next.** No further in-data filter rows for the `V_rot` median. Routes closed by this section: bivariate noise, joint jumps, √T_i noise, collapse/IMM, posterior-median readout. Routes already closed earlier: Mirnov (§8bd), NBI at 10 ms (memory note of 2026-10-29), λ (§8bq). Open: the per-exposure uncertainty request above.
