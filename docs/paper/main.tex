@@ -1507,6 +1507,27 @@ bulk rows and score \seqv{} in each with the shot-clustered bootstrap
   \label{fig:peak}
 \end{figure}
 
+Figure~\ref{fig:eventquiet} shows the same statement on two held-out discharges of
+split 42, chosen by a rule fixed before plotting: the case-study discharge \#31815
+and the TEST discharge with the smallest within-discharge \Ti{} spread. That
+spread is the per-discharge covariate that predicts where the model wins (Spearman
+$\rho = +0.40$ with the per-discharge skill against the causal GP, pooled over the
+splits). Where \Ti{} moves
+(spread 220\,eV) the nowcast beats PCHIP by $+0.42$ in MSE and ties the causal GP
+($+0.03$). Where it does not (spread 34\,eV, \#31089) the nowcast follows the
+photon noise of the last sample and loses to both ($-1.06$, $-0.73$), which is the
+median-row cost \S\ref{sec:bulk} measures on every split.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig_event_quiet}
+  \caption{Two held-out discharges (split 42, cut population). Top: CES \Ti{} and the
+  \seqv{} nowcast. Bottom: absolute error of \seqv{}, PCHIP and the causal GP on the
+  same rows (5-row running mean). Left: the case-study discharge \#31815 (\Ti{}
+  spread 220\,eV, rank 31 of 60). Right: the quietest TEST discharge (34\,eV).}
+  \label{fig:eventquiet}
+\end{figure}
+
 \subsection{The aggregate skill is a tail effect: in the median row the nowcaster carries its anchor}
 \label{sec:bulk}
 
@@ -1691,6 +1712,66 @@ filter loses the aggregate MSE to the backbone ($-0.06$ to $-0.52$) because even
 rows stay late, which is exactly why it is not the mean estimator. The deployment
 statement becomes: median from the filter, mean from the nowcaster, and the trade
 between them measured, not hidden in one output.
+
+\subsection{The predictive distribution: one heavy-tailed peak, reported calibrated}
+\label{sec:dist}
+
+A nowcast used for control needs an uncertainty, so the backbone's head was replaced
+by a predictive distribution trained by its negative log-likelihood (nothing else
+changes; the posterior mean goes through the same point harness). Three likelihood
+families were registered in turn: a heteroscedastic Gaussian, a two-component
+Gaussian mixture, and a Student-$t$ with learnable $\nu$. The reference is the
+backbone's point prediction with its own TEST RMSE as the scale, an oracle choice
+that favours the reference. The registration fixed four guards (CRPS gain, central
+50\,\% and 90\,\% coverage, and no posterior-mean MSE loss against the backbone)
+and named the arm before any number.
+
+\paragraph{The Gaussian is rejected.} Its central 50\,\% interval covers 0.62--0.80
+of the rows (Fig.~\ref{fig:pit}): a single Gaussian scale inflated by the tail rows
+is too wide for the bulk. On \Vrot{} its likelihood weighting is pulled by the
+$|v| > 1000$\,km\,s$^{-1}$ fit failures and its mean loses MSE to the backbone on
+3/4 cut splits.
+
+\paragraph{The named arms are calibrated.} In the cut population the Student-$t$ head
+ties the mixture (CRPS difference $+0.009$, below the 0.02 tie width) and is named for
+having fewer parameters. It beats the reference in CRPS by $+0.229$ (\Ti{}) and
+$+0.363$ (\Vrot{}), significant on every split, with 50\,\% / 90\,\% coverage
+0.48--0.51 / 0.91--0.92. In the inclusive population only the mixture passes the
+guards ($+0.444$ / $+0.351$, coverage 0.53--0.55 / 0.90--0.91). The $t$ location
+there is a redescending estimator: on the $>3$\,keV fit-failure rows it stays at the
+bulk and pays their full square in MSE ($-0.134$ on the peak rows), whereas the
+mixture moves its mean with the wide component.
+
+\paragraph{What the distribution says about the physics.} The mixture never uses two
+peaks: its two-mode test fires on no row, and the second component is a wide one
+with weight $\approx 0.07$. The fitted $t$ tail is $\nu = 2.8$--$3.5$ for \Ti{} and
+sits on the $\nu > 2$ floor for \Vrot{}. The nowcast error is therefore one
+heavy-tailed peak: a narrow photon-noise core with rare large departures from events
+and fit failures, the same shape the physics filter needed for its measurement model
+(\S\ref{sec:physfilter}). The \Ti{} predictive width rises 1.2$\times$ on event rows;
+the \Vrot{} width does not grow with the time since the last label, so the \Vrot{}
+uncertainty is a per-discharge scale, not a variance that accumulates between
+labels. Figure~\ref{fig:interval} shows the intervals on one held-out discharge.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig_pit}
+  \caption{PIT histograms on the frozen TEST rows, four splits pooled. Filled: the
+  registered arm (Student-$t$ in the cut population, mixture in the inclusive one).
+  Outline: the Gaussian head. A flat histogram at density 1 is calibrated; a central
+  hump means intervals that are too wide in the bulk.}
+  \label{fig:pit}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig_interval}
+  \caption{Posterior mean and central 50\,\% / 90\,\% predictive intervals of the
+  Student-$t$ head on the held-out discharge \#31815 (split 42, cut population),
+  with the CES measurements. The \Ti{} axis is cut at 0; the first row's interval
+  extends below it.}
+  \label{fig:interval}
+\end{figure}
 
 \subsection{Model families and ensembles: the inductive-bias axis closes too}
 \label{sec:family}
