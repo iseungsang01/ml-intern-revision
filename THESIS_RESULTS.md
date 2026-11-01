@@ -6201,3 +6201,62 @@ variable, the combination rule.
    This is a data request, not code. Until it is answered, the dual-readout statement for `V_rot` stands: it beats every trained model and ties persistence at the photon floor.
 
 **Named next.** No further in-data filter rows for the `V_rot` median. Routes closed by this section: bivariate noise, joint jumps, √T_i noise, collapse/IMM, posterior-median readout. Routes already closed earlier: Mirnov (§8bd), NBI at 10 ms (memory note of 2026-10-29), λ (§8bq). Open: the per-exposure uncertainty request above.
+
+## 8bt. B.24 (2026-11-01): fitting the `V_rot` measurement model (σ_n, ν) on TRAIN does not move the median either. The likelihood picks the lowest grid edge in ν (2.2) and a small core scale, σ_n ≈ 2.2–2.3 km/s, in place of the registered ν = 3 and 0.06 sd. Persistence is beaten in 2/4 splits, not ≥ 3/4. B.24 − B.23 pooled M1 is +0.008 with a CI that includes 0. Registered rule 3 holds: on the 10 ms `V_rot` median, persistence is median-optimal for the adaptive t filter too. The remaining lever is per-exposure fit uncertainty
+
+**Design** (`PREREGISTRATION_B24.md`, committed before any fit or number, 0d810de). No training.
+
+- **Fit:** `fit_vrot_noise_b24.py` uses the same TRAIN objective and recursion as B.23 (`scan_loglik`, one-step predictive t-mixture likelihood).
+  - (λ, σ_J) are held at the B.23 split fit.
+  - The fixed grid is 9 × 7: σ_n ∈ {0.03 … 0.17} sd × ν ∈ {2.2 … 30}.
+  - The base point (0.06, 3) reproduces the B.23 optimum to 1e-9 in every cell (FATAL otherwise).
+- **Readout:** `anchor_readout_b16.py --vt-jump --vt-noise` patches `kalman_vt` `lam_logit`, `j_raw`, `r_raw` and `nu_raw` of the B.19 `v4kjt` checkpoints, writing `.b24_anchor_*` (GPU).
+- **Scoring:** `rescore_b13.py` (shot-cluster bootstrap, B = 10⁴), then `verdict_b24.py` (comparison against `.b23_anchor`).
+- **Control:** `T_i` TEST errors bit-identical to B.19: **True** in both populations.
+- **Batch log:** fit 11:34, readout 12:06, rescore 13:02, verdict 13:03, with no interruption.
+
+| | cut (s42 s1 s7 s123) | inclusive |
+|---|---|---|
+| fitted σ_n, sd (km/s) | 0.030 (2.21), 0.030 (2.28), 0.040 (2.32), 0.030 (2.30) | same (`V_rot` has no spike cut) |
+| fitted ν | 2.2 (all) | same |
+| log-lik / obs, fitted vs B.23 base | +0.5183/+0.4725, +0.5195/+0.4717, +0.1929/+0.1690, +0.4640/+0.4229 | same |
+| at grid edge | **yes (all)**: ν at the lower edge everywhere, σ_n at the lower edge in 3/4 (s7 interior at 0.04) | same |
+| `V_rot` M1 vs persistence | +0.047 [+0.019, +0.068], +0.032 [−0.003, +0.061], +0.040 [+0.008, +0.070], +0.020 [−0.014, +0.049] (**H24-a 2/4**) | +0.049 [+0.022, +0.073], +0.029, +0.040 [+0.007, +0.071], +0.020 (2/4) |
+| `V_rot` median / persistence | 0.953 0.968 0.960 0.980 (pooled 0.970) | 0.951 0.971 0.960 0.980 (0.969) |
+| B.23 anchor, same quantity (§8bq) | 0.942 0.979 0.966 1.001 (0.977) | 0.941 0.982 0.966 1.003 (0.976) |
+| `V_rot` M1 vs backbone | +0.164 +0.246 +0.098 +0.177 (**H24-c 4/4**) | +0.160 +0.104 +0.177 +0.282 (4/4) |
+| `V_rot` MSE skill vs backbone / vs persistence | −0.228 −0.190 −0.063 −0.043 / +0.387 +0.162 +0.304 +0.395 | −0.221 −0.208 −0.061 −0.041 / +0.385 +0.161 +0.304 +0.395 |
+| B.24 − B.23 pooled M1 / MSE | +0.008 [−0.006, +0.023] / −0.025 (H24-b fails) | +0.008 [−0.006, +0.023] / −0.025 |
+
+**Verdict (registered rules, §4).**
+
+- H24-a fails (2/4 × 2) and H24-b fails. H24-c holds (4/4 × 2).
+- `vrot_physics_median_estimator` = not supported. `noise_fit_beats_b23` = not supported.
+- **Rule 3:** `persistence_median_optimal_for_adaptive_t_filter` = true.
+- The `V_rot` dual-readout statement is unchanged: the physics anchor beats the backbone on the median 4/4 × 2 and ties persistence. The lever left is the per-exposure CES fit uncertainty named in §8bs (a data request).
+
+**Edge optimum (recorded as registered, grid not extended).**
+
+- The likelihood rises toward ν → 2 in every cell. At σ_n = 0.03, ν 2.2 → 2.5 costs 0.006–0.013 nats/obs.
+- σ_n sits at the lower edge in 3/4 splits. s7 has an interior maximum at 0.04.
+- A t law with ν = 2.2 has variance 11 σ_n², so its marginal sd is ≈ 7.3 km/s. The fit is not saying the noise is smaller. It says the noise is a narrow core with very heavy tails.
+
+**Prediction check (§5).**
+
+- **Hits:** median / persistence 0.97–0.98 (pooled 0.970 / 0.969), H24-a 0–2/4 (2/4, at the upper end), H24-b fails, H24-c 4/4, rule 3.
+- **Misses, both on the low side:**
+  - σ_n was predicted at 0.04–0.06 sd and came in at 0.03–0.04 (edge).
+  - ν was predicted at 2.5–4 and came in at 2.2 (edge).
+
+**Reading.**
+
+1. *The heavy tail is the per-exposure variance, seen in aggregate.* A Student-t is the marginal of a Gaussian whose variance changes from draw to draw (scale mixture). A fit that runs to ν → 2 with a narrow core says the 10 ms `V_rot` exposures are not one noise population. Most are clean (core ≈ 2.2 km/s, below the ≈ 4 km/s bulk scatter of §8bl). A minority are much noisier. This matches §8bs A2: the noise scale does not follow T_i, so it must follow the photon count of each exposure.
+2. *Why the median still does not move.* Without knowing which row is noisy, the filter can only apply the pooled mixture. Between labels its predictive is still symmetric about the carried value (§8bq reading 2), so on the median row the point estimate stays the last value. Across splits the median ratio moves 0.977 → 0.970. Two splits clear persistence and two do not. That is a shift inside the tie band, not a new estimator. The MSE gets worse (−0.025): a narrower core follows the noisy rows less.
+3. *Named measurement (unchanged, now sharper).* Obtain the per-exposure CES fit uncertainty (photon count or χ², exposure time, channel radius). NN-CES (Lee 2026, doi:10.1016/j.fusengdes.2025.115518) produces a per-exposure fit diagnostic. With it, the scale mixture this fit infers in aggregate becomes a known σ_n per row. The prediction:
+   - the filter's gain becomes row-specific;
+   - noisy-exposure rows gain on the median;
+   - clean rows stay at persistence.
+
+   B.24 also gives a number to check against when those diagnostics arrive: a core of ≈ 2.2 km/s with ν ≈ 2.
+
+**Named next.** No further in-data `V_rot` median rows. The (λ, σ_J) and (σ_n, ν) knobs are both fitted and both null on the median. The B.22 dual-readout table (§8bp) stands for the paper. The `V_rot` sentence there now reads "photon-limited floor, per-exposure uncertainty is the lever".
