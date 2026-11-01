@@ -16,6 +16,8 @@ into .b19_anchor_{pop}_s{seed}.
 B.23 (PREREGISTRATION_B23.md): `--arm v4kjt --vt-jump data/.b23_vrot_jump_fit.json` copies the same
 v4kjt checkpoints with only the V_rot cell's (lam, sigma_J) replaced by the TRAIN-likelihood fit of
 that split, into .b23_anchor_{pop}_s{seed}. The T_i cell is untouched (its errors must equal B.19's).
+B.24 (PREREGISTRATION_B24.md): adding `--vt-noise data/.b24_vrot_noise_fit.json` also replaces the V_rot
+cell's (sigma_n, nu) by the TRAIN-likelihood fit, into .b24_anchor_{pop}_s{seed}.
 """
 
 import argparse
@@ -31,13 +33,21 @@ sys.path.insert(0, str(HERE))
 from run_b16 import (DATA, CES_DIR, SEQ_DIR, PAIRED, POPS, SEEDS, base_env, run_step, shot_winrate)  # noqa: E402
 
 
-def patch_vt_jump(src, dst, fit):
+def _inv_softplus(v):
+    import math
+    return v + math.log(-math.expm1(-v))
+
+
+def patch_vt_jump(src, dst, fit, noise=None):
     import math
     import torch
     sd = torch.load(src, map_location="cpu")
     lam, j = fit["lam_per_step"], fit["sigma_j"] ** 2 - 1e-6
     sd["kalman_vt.lam_logit"] = torch.tensor(math.log(lam / (1 - lam)), dtype=sd["kalman_vt.lam_logit"].dtype)
-    sd["kalman_vt.j_raw"] = torch.tensor(j + math.log(-math.expm1(-j)), dtype=sd["kalman_vt.j_raw"].dtype)
+    sd["kalman_vt.j_raw"] = torch.tensor(_inv_softplus(j), dtype=sd["kalman_vt.j_raw"].dtype)
+    if noise is not None:
+        sd["kalman_vt.r_raw"] = torch.tensor(_inv_softplus(noise["sigma_n"] ** 2 - 1e-6), dtype=sd["kalman_vt.r_raw"].dtype)
+        sd["kalman_vt.nu_raw"] = torch.tensor(_inv_softplus(noise["nu"] - 2.0), dtype=sd["kalman_vt.nu_raw"].dtype)
     torch.save(sd, dst)
 
 
@@ -45,6 +55,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", default="v4kng", choices=("v4kng", "v4kj", "v4kjt"))
     ap.add_argument("--vt-jump", default=None, help="B.23 fit json; patches the V_rot jump process")
+    ap.add_argument("--vt-noise", default=None, help="B.24 fit json; also patches V_rot sigma_n and nu")
     args = ap.parse_args()
     arm = args.arm
     tag = {"v4kng": ".b16_anchor", "v4kj": ".b18_anchor", "v4kjt": ".b19_anchor"}[arm]
@@ -54,6 +65,12 @@ def main():
             raise SystemExit("FATAL: --vt-jump is defined for the B.19 v4kjt cell only")
         tag = ".b23_anchor"
         fits = json.loads(Path(args.vt_jump).read_text(encoding="utf-8"))["fits"]
+    noise = None
+    if args.vt_noise:
+        if fits is None:
+            raise SystemExit("FATAL: --vt-noise is defined on top of --vt-jump (B.24 inherits B.23)")
+        tag = ".b24_anchor"
+        noise = json.loads(Path(args.vt_noise).read_text(encoding="utf-8"))["fits"]
     recs = []
     for pop in POPS:
         p = POPS[pop]
@@ -74,7 +91,7 @@ def main():
                     shutil.copy2(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth")
                 else:
                     patch_vt_jump(src / "weights" / "seq_lstm.pth", out / "weights" / "seq_lstm.pth",
-                                  fits[f"{pop}_s{s}"])
+                                  fits[f"{pop}_s{s}"], None if noise is None else noise[f"{pop}_s{s}"])
             env = base_env(pop, arm, False)
             env.update({"CES_SEED": str(s), "CES_INIT_SEED": str(s), "CES_SPLIT_DIR": str(split),
                         "CES_OUTPUT_DIR": str(out), "CES_CONTROL_METRICS": str(cm), "CES_SPLIT_TAG": "test",

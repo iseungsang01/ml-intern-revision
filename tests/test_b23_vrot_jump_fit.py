@@ -66,3 +66,32 @@ def test_patch_sets_only_vrot_jump(tmp_path, monkeypatch):
     assert abs(lam - 0.02) < 1e-6 and abs(j - 0.25) < 1e-6
     a, b = m.state_dict(), m2.state_dict()
     assert all(torch.equal(a[k], b[k]) for k in a if k not in ("kalman_vt.lam_logit", "kalman_vt.j_raw"))
+
+
+def test_b24_patch_sets_vrot_noise_too(tmp_path, monkeypatch):
+    monkeypatch.setenv("CES_TI_SPIKE_CUT_EV", "3000")
+    from anchor_readout_b16 import patch_vt_jump
+    from seq_models import SEQ_MODELS
+    m = SEQ_MODELS["v4kjt"]()
+    torch.save(m.state_dict(), tmp_path / "a.pth")
+    patch_vt_jump(tmp_path / "a.pth", tmp_path / "b.pth", {"lam_per_step": 0.08, "sigma_j": 0.35},
+                  {"sigma_n": 0.05, "nu": 4.0})
+    m2 = SEQ_MODELS["v4kjt"]()
+    m2.load_state_dict(torch.load(tmp_path / "b.pth"))
+    lam, j, d, r = (float(v) for v in m2.kalman_vt.params())
+    assert abs(lam - 0.08) < 1e-6 and abs(j - 0.35 ** 2) < 1e-6 and abs(r - 0.05 ** 2) < 1e-6
+    assert abs(float(m2.kalman_vt.nu()) - 4.0) < 1e-5
+    keys = ("kalman_vt.lam_logit", "kalman_vt.j_raw", "kalman_vt.r_raw", "kalman_vt.nu_raw")
+    a, b = m.state_dict(), m2.state_dict()
+    assert all(torch.equal(a[k], b[k]) for k in a if k not in keys)
+
+
+def test_b24_noise_grid_reproduces_scalar_scan():
+    from fit_vrot_jump_b23 import scan_loglik
+    carried, obs_prev = _series()
+    lam, j = np.full(2, 0.08), np.full(2, 0.35 ** 2)
+    r, nu = np.array([0.06 ** 2, 0.05 ** 2])[:, None], np.array([3.0, 4.0])[:, None]
+    joint, n = scan_loglik(carried, obs_prev, lam, j, r=r, nu=nu)
+    for g in range(2):
+        one, _ = scan_loglik(carried, obs_prev, lam[g:g + 1], j[g:g + 1], r=float(r[g, 0]), nu=float(nu[g, 0]))
+        assert abs(one[0] - joint[g]) < 1e-9
