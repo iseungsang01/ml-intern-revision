@@ -9376,5 +9376,38 @@
         ]
       }
     }
+  },
+  "b14_select": {
+    "rules": {
+      "A_huber_ti_pass": true,
+      "B_huber_ti_pass": false,
+      "verdict": "cut-conditional: loss selection keeps the cut rung; the inclusive guard still fails at cap 100"
+    },
+    "cut_huber_TI": {
+      "m1_pooled": 0.12757382502775783,
+      "m1_ci": [
+        0.11419333331845001,
+        0.14057261815917307
+      ],
+      "m1_splits_pos": 4,
+      "mse_pooled": 0.007312562538858147,
+      "mse_sig_deficits": 0,
+      "median_over_persistence": 0.8935290356480532,
+      "m1_vs_gp_causal": 0.07304093834487368,
+      "m1_vs_gp_causal_ci": [
+        0.04340181002144253,
+        0.09935244788711142
+      ]
+    },
+    "incl_huber_TI": {
+      "m1_pooled": 0.28509645253524707,
+      "mse_sig_deficits": 1,
+      "best_epochs": [
+        49,
+        25,
+        24,
+        59
+      ]
+    }
   }
 }

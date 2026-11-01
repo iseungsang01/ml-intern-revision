@@ -1624,7 +1624,16 @@ objective instead confirmed this: the inclusive arms then train 30--60 epochs, t
 Huber \Ti{} median gain grows to $M_1 = +0.285$ $[+0.250, +0.322]$ (4/4) and \Vrot{}
 turns to $+0.145$ (4/4), with the \Vrot{} median at 1.02$\times$ persistence---but one
 split keeps a significant \Ti{} MSE deficit ($-0.040$; pooled $-0.019$), so by the
-pre-registered letter the rung stays conditional.
+pre-registered letter the rung stays conditional. A second registered row settled
+both remaining questions. In the cut population the own-objective rule
+strengthens the rung: Huber \Ti{} $M_1 = +0.128$ $[+0.114, +0.141]$ (4/4) at an MSE
+tie (pooled $+0.007$, significant deficits 0/4), the \Ti{} median at 0.894$\times$
+persistence---the band the physics filter reaches (\S\ref{sec:physfilter})---and a
+median that now beats the causal GP ($+0.073$, CI $>0$). In the inclusive
+population raising the epoch cap from 60 to 100 left every Huber checkpoint
+bit-identical (best epochs 24--59), so the one deficit is the fit-failure rows'
+square, not under-training. The selection rule is therefore the arm's own
+objective in both populations, and the rung is conditional on the cut.
 By the pre-registered rule the Huber arm is recorded as the \textbf{robust rung,
 conditional on the cut population}, and the backbone keeps the MSE loss. The
 deployment statement now carries two numbers---aggregate skill (the tail) and
@@ -2228,9 +2237,11 @@ and all three are actionable on archived KSTAR data.
 equals persistence and trails PCHIP by 20\%, and \Vrot{} is below persistence in the
 median (\S\ref{sec:bulk}); the paper therefore reports median absolute error beside
 every aggregate skill and does not claim to beat interpolation on a typical row. The
-scale-pinned Huber loss recovers 8--10\% of the bulk at no aggregate cost, reported
-as conditional on the cut population; selecting on the arm's own objective lifts the inclusive median gain to
-$+0.285$ but leaves one split with a significant MSE deficit (\S\ref{sec:bulk}). The
+scale-pinned Huber loss recovers 8--10\% of the bulk at no aggregate cost
+(13\% when selected on its own objective), reported as conditional on the cut
+population; the same rule lifts the inclusive median gain to $+0.285$ but leaves
+one split with a significant MSE deficit that a longer cap does not remove
+(\S\ref{sec:bulk}). The
 \Ti{} median is owned by a physics filter unconditionally (\S\ref{sec:physfilter}),
 reported beside, not inside, the aggregate model; for \Vrot{} that filter ties
 persistence in the median at the photon floor of the 10\,ms line fit.

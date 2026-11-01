@@ -27,6 +27,8 @@ Sources (all under data/):
   .b23_verdict.json, .b24_verdict.json, .b26_precheck.json
                              V_rot photon floor: fitted jump process / noise law, sqrt 2 ratio (sec. 8bq-8bt)
   .b17b_summary.json         predictive-distribution heads, sec:dist (sec. 8bj)
+  .b14c_verdict.json, .b14s_cut_rescore.json
+                             B.14 sec. 10 own-objective selection / epoch cap, sec:bulk (sec. 8bu)
 
 The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
 hand; `transcription_check` re-reads the values printed in main.tex from these files and fails on
@@ -279,6 +281,19 @@ def dist_head(b17b):
     return out
 
 
+def b14_select(v, rescore_cut):
+    a, b = v["A_cut_select_loss"]["huber"]["CES_TI"], v["B_incl_cap100"]["huber"]["CES_TI"]
+    gp = rescore_cut["results"]["cut"]["pooled"]["CES_TI"]["huber_s_vs_gp_causal"]["m1_medae"]
+    return {"rules": v["rules"],
+            "cut_huber_TI": {"m1_pooled": a["m1_pooled"]["skill_point"], "m1_ci": a["m1_pooled"]["skill_ci95"],
+                             "m1_splits_pos": a["m1_splits_pos"], "mse_pooled": a["mse_pooled"]["skill_point"],
+                             "mse_sig_deficits": a["mse_sig_deficits"],
+                             "median_over_persistence": a["median_over_persistence_pooled"],
+                             "m1_vs_gp_causal": gp["skill_point"], "m1_vs_gp_causal_ci": gp["skill_ci95"]},
+            "incl_huber_TI": {"m1_pooled": b["m1_pooled"]["skill_point"], "mse_sig_deficits": b["mse_sig_deficits"],
+                              "best_epochs": [b["per_split"][s]["epochs"][1] for s in SEEDS]}}
+
+
 def transcription_check(n):
     """Values printed in main.tex (sec:physfilter tab:dual, sec:dist) against the artifacts."""
     d, v, h = n["physfilter"]["dual_readout"], n["physfilter"]["vrot_floor"], n["dist_head"]
@@ -302,6 +317,17 @@ def transcription_check(n):
         ("sec:dist cut coverage 90", h["cut"]["CES_TI"]["coverage_90_range"], [0.91, 0.92], 0.0051),
         ("sec:dist incl coverage 50", h["incl"]["CES_TI"]["coverage_50_range"], [0.53, 0.55], 0.0051),
         ("sec:dist incl coverage 90", h["incl"]["CES_TI"]["coverage_90_range"], [0.90, 0.91], 0.0051),
+        ("sec:bulk B.14 sec.10 cut huber T_i M1 (+0.128 [+0.114, +0.141])",
+         [n["b14_select"]["cut_huber_TI"]["m1_pooled"]] + n["b14_select"]["cut_huber_TI"]["m1_ci"], [0.128, 0.114, 0.141], 0.0005),
+        ("sec:bulk B.14 sec.10 cut huber T_i MSE (+0.007, 0/4)", [n["b14_select"]["cut_huber_TI"]["mse_pooled"],
+         n["b14_select"]["cut_huber_TI"]["mse_sig_deficits"], n["b14_select"]["cut_huber_TI"]["m1_splits_pos"]], [0.007, 0, 4], 0.0005),
+        ("sec:bulk B.14 sec.10 cut median / persistence (0.894)", [n["b14_select"]["cut_huber_TI"]["median_over_persistence"]], [0.894], 0.0005),
+        ("sec:bulk B.14 sec.10 cut median vs causal GP (+0.073, CI > 0)", [n["b14_select"]["cut_huber_TI"]["m1_vs_gp_causal"],
+         float(n["b14_select"]["cut_huber_TI"]["m1_vs_gp_causal_ci"][0] > 0)], [0.073, 1.0], 0.0005),
+        ("sec:bulk B.14 sec.10 inclusive best epochs 24-59", [min(n["b14_select"]["incl_huber_TI"]["best_epochs"]),
+         max(n["b14_select"]["incl_huber_TI"]["best_epochs"])], [24, 59], 0),
+        ("sec:bulk B.14 sec.10 inclusive M1 (+0.285) and deficit 1/4", [n["b14_select"]["incl_huber_TI"]["m1_pooled"],
+         n["b14_select"]["incl_huber_TI"]["mse_sig_deficits"]], [0.285, 1], 0.0005),
         ("sec:dist CRPS significant splits", [h[p][t]["crps_vs_r0_splits_sig"] for p in POPS for t in TARGETS], [4] * 4, 0),
     ]
     problems = []
@@ -352,6 +378,7 @@ def main():
     b22, b23, b24 = (_load(DATA / f".b{k}_verdict.json") for k in (22, 23, 24))
     b26 = _load(DATA / ".b26_precheck.json")
     b17b = _load(DATA / ".b17b_summary.json")
+    b14c, b14s_cut = _load(DATA / ".b14c_verdict.json"), _load(DATA / ".b14s_cut_rescore.json")
     for name in ("headline", "coverage_pr2", "ladder", "conformal", "peak_and_largegap", "campaign", "cut_sensitivity", "ablation", "mnar"):
         if "error" in b5.get(name, {}):
             raise SystemExit(f".b5_summary.json block {name} failed: {b5[name]['error']}")
@@ -377,6 +404,7 @@ def main():
         "latency": latency(lat),
         "physfilter": physfilter(b22, b23, b24, b26),
         "dist_head": dist_head(b17b),
+        "b14_select": b14_select(b14c, b14s_cut),
     }
     problems = crosscheck(numbers, b5, b3c, b4) + transcription_check(numbers)
     if problems:
@@ -385,7 +413,7 @@ def main():
     OUT_PATH.write_text(json.dumps(numbers, indent=2, default=float), encoding="utf-8")
     print(f"wrote {OUT_PATH}")
     print("crosscheck: B.5 ladder/headline, B.3, B.4 and the TEST reports agree on every seed and population")
-    print("transcription: sec:physfilter (tab:dual, V_rot floor) and sec:dist values in main.tex match the artifacts")
+    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values in main.tex match the artifacts")
 
     for pop in POPS:
         print(f"\n=== headline / {pop} (TEST, skill vs PCHIP [95% CI]) ===")
