@@ -1676,8 +1676,18 @@ and the mean from separate estimators on the same rows (Table~\ref{tab:dual}). F
 the backbone and persistence on 4/4 splits in both populations, at 0.906--0.920$\times$
 persistence with a split spread of $\pm0.007$, against $\pm0.1$ or more for every
 trained arm. For \Vrot{} it beats the backbone in the median on 4/4 splits in both
-populations and ties persistence (1/4 significant, 0.94--1.00$\times$ by split); the
-named lever is a jump rate fitted on TRAIN rather than set by the registration. The
+populations and ties persistence (1/4 significant, 0.94--1.00$\times$ by split). The
+tie survives fitting the filter on TRAIN. Likelihood-fitted jump statistics
+(5--13\,Hz) and a likelihood-fitted noise law (Student-$t$ with $\nu\to2$ and a
+2.2\,km\,s$^{-1}$ core) leave the median at 0.97--0.98$\times$ persistence, with
+persistence beaten on at most 2/4 splits. The reason is measured. The 10\,ms scatter
+sits at the photon floor: the ratio of the relative \Ti{} scatter to the Doppler
+velocity scatter is the $\sqrt2$ of a Gaussian line fit in 8/8 split--population
+cells, and the noise of the two channels is independent. Between labels the filter's
+predictive is symmetric about the carried value, so its median-optimal point is the
+last value. The lever left is the per-exposure fit uncertainty of the CES analysis,
+which a spectral network already produces~\citep{Lee2026NeuralNetworkbased}. This
+is a measurement request, not a model. The
 filter loses the aggregate MSE to the backbone ($-0.06$ to $-0.52$) because event
 rows stay late, which is exactly why it is not the mean estimator. The deployment
 statement becomes: median from the filter, mean from the nowcaster, and the trade
@@ -2143,7 +2153,7 @@ as conditional on the cut population; selecting on the arm's own objective lifts
 $+0.285$ but leaves one split with a significant MSE deficit (\S\ref{sec:bulk}). The
 \Ti{} median is owned by a physics filter unconditionally (\S\ref{sec:physfilter}),
 reported beside, not inside, the aggregate model; for \Vrot{} that filter ties
-persistence in the median.
+persistence in the median at the photon floor of the 10\,ms line fit.
 \textbf{Statistical power.} The unit of replication is the shot; with 96 (\Ti) /
 60--66 (\Vrot) test shots per split, power bounds every significance call, and
 per-shot squared-error differences are heavy-tailed (a few discharges dominate the
