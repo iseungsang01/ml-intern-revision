@@ -169,3 +169,33 @@ co-metric은 `rescore_b13.py --pops incl --extra huber_s=.b14s_huber_{pop}_s{s} 
 3. M1 이득이 사라짐 → §8ay의 포함 모집단 중앙값 이득(+0.157)은 '덜 학습된 모델이 anchor에 가까이 머문 것'
    이었다 → §8ay §2 문단을 그렇게 고쳐 쓴다.
 MSE 가드는 B.13·§4와 같은 paired bootstrap, M1은 rescore_b13의 가중 중앙값 bootstrap. 동률 폭 0.02.
+
+## 10. 두 모집단 같은 선택 규칙 행 (2026-11-01, §8bh가 지목; 어떤 수치도 보기 전에 등록)
+
+**질문.** §8bh는 포함 모집단에서 팔 자신의 val 목적함수로 고르면(`--select loss`) M1이 4/4로 서지만 s123 한 split의
+`T_i` MSE 유의 열세(−0.040)로 case 2가 되었고, 8 run 중 4개가 epoch 상한 60에 붙었다고 기록했다. 남은 두 질문:
+(A) 같은 선택 규칙이 컷 모집단의 강건 rung(§8ay, MSE 선택)을 유지하는가, (B) 포함 모집단의 남은 열세가 상한 탓인가.
+
+**행 A (변수 하나 = 선택 규칙).** 컷 모집단, huber / tnll × 4 split, `--select loss`, 상한 60, 나머지는 §8ay 컷 run과 동일.
+디렉터리 `data/.b14s_{arm}_cut_s{s}`. 비교 = 동결 MSE 백본(`.b1_seqv2_s{s}_i{s}`).
+**행 B (변수 하나 = epoch 상한).** 포함 모집단, huber / tnll × 4 split, `--select loss`, **상한 100**, 나머지는 §8bh와 동일.
+디렉터리 `data/.b14c_{arm}_incl_s{s}`. 비교 = 동결 포함 백본(`.b5i_seqv2_s{s}`).
+
+**실행.** `run_b14.py --pops cut --select loss` (8 run) → `run_b14.py --pops incl --select loss --cap 100` (8 run), GPU, 한 번에 하나.
+co-metric: `rescore_b13.py --pops cut --extra huber_s=.b14s_huber_{pop}_s{s} tnll_s=.b14s_tnll_{pop}_s{s} --out data/.b14s_cut_rescore.json`,
+`rescore_b13.py --pops incl --extra huber_c=.b14c_huber_{pop}_s{s} tnll_c=.b14c_tnll_{pop}_s{s} --out data/.b14c_rescore.json`,
+판정 `b14_loss/verdict_b14c.py` → `data/.b14c_verdict.json`.
+
+**판정 규칙 (huber `T_i`가 주 판독, §9 case 1과 같은 글자).** 통과 = MSE 유의 열세(paired_vs_control `b_better`) 0/4 **그리고**
+M1 CI > 0 ≥ 3/4.
+1. A 통과 ∧ B 통과 → 강건 rung은 **한 선택 규칙(val 자기 목적함수) 아래 두 모집단에서 무조건부** → §8ay·§8bh 문장과 논문 bulk 절을 갱신.
+2. A 통과 ∧ B 실패 → 컷 조건부 유지, 선택 규칙은 두 모집단에서 loss로 통일(포함 열세는 상한 탓이 아님).
+3. A 실패 ∧ B 통과 → 모집단별 선택 규칙(컷 = MSE, 포함 = loss)으로 기록.
+4. 둘 다 실패 → §8ay 그대로(컷 조건부, MSE 선택), loss 선택은 컷 rung을 나르지 않는다고 기록.
+tnll, `V_rot`, 중앙값/persistence, 상한 도달 수(epochs_run = cap)는 서술로 함께 적는다. 동률 폭 0.02.
+
+**예측 (수치 전에).** A: 컷 run은 MSE 선택에서도 20–46 epoch를 학습했으므로 loss 선택은 비슷하거나 조금 길고(25–60),
+huber `T_i` M1 4/4, MSE 유의 열세 0/4 → A 통과(확률 ≈ 0.7). B: 상한 100에서 2–4 run이 60을 넘고, s123 `T_i` 열세는
+−0.02…−0.04로 남아 유의 1/4 → B 실패(≈ 0.6), 판정 2. 포함 `V_rot` 중앙값/persistence 1.00–1.03.
+
+**비용.** GPU 약 0.5 분/epoch, 16 run × 30–100 epoch ≈ 6–10 시간, 재채점 CPU 약 2 시간.

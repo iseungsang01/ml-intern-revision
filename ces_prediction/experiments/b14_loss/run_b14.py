@@ -49,10 +49,17 @@ POPS = {
 # Sensitivity row (PREREGISTRATION_B14.md sec. 9): --select loss re-runs the arms with
 # early stop / checkpoint / LR plateau on the arm's own val objective; dirs `.b14s_*`.
 SELECT = "mse"
+# sec. 10 row B: --cap 100 with --select loss writes `.b14c_*` (the cap-bound check of sec. 8bh).
+
+
+def run_prefix():
+    if SELECT == "loss":
+        return ".b14c" if EPOCH_CAP != "60" else ".b14s"
+    return ".b14"
 
 
 def arm_dir(arm, pop, s, smoke=False):
-    prefix = ".b14s" if SELECT == "loss" else ".b14"
+    prefix = run_prefix()
     return DATA / (f"{prefix}_{arm}_{pop}_s{s}" + ("_smoke" if smoke else ""))
 
 
@@ -151,7 +158,7 @@ def summarize(arms):
                     for t in ("CES_TI", "CES_VT")}
                 rows[str(s)]["epochs"] = [m["epochs_run"], m["best_epoch"]]
             summary["arms"].setdefault(arm, {})[pop] = rows
-    name = ".b14s_summary.json" if SELECT == "loss" else ".b14_summary.json"
+    name = f"{run_prefix()}_summary.json"
     (DATA / name).write_text(json.dumps(summary, indent=2), encoding="utf-8")
     for arm, pops in summary["arms"].items():
         for pop, rows in pops.items():
@@ -171,9 +178,11 @@ def main():
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
     ap.add_argument("--pops", nargs="*", default=list(POPS))
     ap.add_argument("--select", choices=("mse", "loss"), default="mse")
+    ap.add_argument("--cap", default="60", help="epoch cap (sec. 10 row B: 100)")
     args = ap.parse_args()
-    global SELECT
+    global SELECT, EPOCH_CAP
     SELECT = args.select
+    EPOCH_CAP = str(int(args.cap))
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required.")
     recs = []
