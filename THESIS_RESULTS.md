@@ -6304,3 +6304,38 @@ MSE skill vs PCHIP is kept: cut huber `T_i` +0.182 … +0.273 (pooled +0.249), i
 3. *`V_rot`.* Both rows pass on `V_rot` (8/8 splits significant), with the median at 1.01–1.02× persistence and a median tie with the causal GP — the photon-floor tie of §8bs/§8bt, now reached from the loss side as well.
 
 **Named next.** None for B.14 in-data: the selection axis is settled (own objective), the cap axis is settled for the inclusive population, and the inclusive guard is decided by fit-failure rows, not training. The cut arms reaching the 60 cap is recorded, not chased (it can only raise a number that already passes). Paper: the bulk paragraph and the conclusion carry the cut own-objective numbers and the cap result.
+
+## 8bv. Across-split interval (2026-11-03, analysis only, no training): one 95 % t-interval over the four frozen splits puts split-to-split variation inside the error bar. `T_i` keeps every headline verdict (vs PCHIP, persistence and causal GP the interval excludes 0 in both populations; offline GP ties). On `V_rot` the pooled interval is less conservative than the registered 4/4 count: vs PCHIP it excludes 0 at 1/4 (cut) and 2/4 (inclusive) split-level passes, vs persistence at 3/4; vs causal GP it spans 0. Four splits are enough for `T_i` (two to three would have sufficed at the observed spread)
+
+**Why.** The registered headline rule counts splits whose shot-cluster bootstrap CI excludes 0 ("4/4"). The count has no statistical basis of its own: under the null of no difference, 4/4 one-sided wins occur with probability 1/16 = 0.06. Its evidence sits in the per-split bootstrap CIs, which only cover which shots landed in TEST, not which split was drawn. The standard complement is one interval on the mean skill with the split treated as a random replicate.
+
+**Design.** `ces_prediction/analyze_split_interval.py` reads the frozen per-split MSE skills of the `seq_v2` backbone (`docs/paper/paper_numbers.json` → `headline`), and writes `docs/paper/split_interval.json`. For each population × target × reference it reports the mean over the four splits (42, 1, 7, 123), sd, the 95 % t-interval (t_{0.975,3} = 3.18), and the smallest n at which t·sd/√n < |mean| would hold at the same mean and sd. No new scoring, no new rows.
+
+| pop / target / ref | per-split skill (s42 s1 s7 s123) | mean (sd) | 95 % t-interval | interval | registered count | n needed |
+|---|---|---|---|---|---|---|
+| cut `T_i` PCHIP | +0.174 +0.248 +0.257 +0.264 | +0.236 (0.042) | [+0.169, +0.302] | excludes 0 | 4/4 | 3 |
+| cut `T_i` persistence | +0.360 +0.406 +0.403 +0.415 | +0.396 (0.025) | [+0.357, +0.435] | excludes 0 | 4/4 | 2 |
+| cut `T_i` causal GP | +0.078 +0.133 +0.138 +0.105 | +0.113 (0.028) | [+0.069, +0.158] | excludes 0 | 4/4 | 3 |
+| cut `T_i` GP | −0.053 +0.039 +0.019 −0.006 | −0.000 (0.039) | [−0.063, +0.062] | spans 0 | 0/4 | — |
+| cut `V_rot` PCHIP | +0.390 +0.183 +0.135 +0.305 | +0.253 (0.116) | [+0.069, +0.438] | excludes 0 | 1/4 | 4 |
+| cut `V_rot` persistence | +0.501 +0.295 +0.345 +0.420 | +0.390 (0.090) | [+0.248, +0.533] | excludes 0 | 3/4 | 3 |
+| cut `V_rot` causal GP | +0.331 +0.130 +0.020 +0.134 | +0.154 (0.129) | [−0.051, +0.359] | spans 0 | 2/4 | 6 |
+| cut `V_rot` GP | +0.089 −0.072 −0.058 +0.061 | +0.005 (0.082) | [−0.125, +0.135] | spans 0 | 0/4 | — |
+| incl `T_i` PCHIP | +0.225 +0.238 +0.292 +0.316 | +0.268 (0.044) | [+0.198, +0.337] | excludes 0 | 4/4 | 3 |
+| incl `T_i` persistence | +0.423 +0.436 +0.406 +0.459 | +0.431 (0.023) | [+0.395, +0.467] | excludes 0 | 4/4 | 2 |
+| incl `T_i` causal GP | +0.154 +0.169 +0.123 +0.149 | +0.149 (0.019) | [+0.119, +0.179] | excludes 0 | 4/4 | 3 |
+| incl `T_i` GP | +0.020 +0.038 +0.106 +0.041 | +0.051 (0.038) | [−0.008, +0.111] | spans 0 | 1/4 | 5 |
+| incl `V_rot` PCHIP | +0.384 +0.195 +0.132 +0.304 | +0.254 (0.112) | [+0.075, +0.432] | excludes 0 | 2/4 | 4 |
+| incl `V_rot` persistence | +0.496 +0.306 +0.344 +0.419 | +0.391 (0.084) | [+0.257, +0.525] | excludes 0 | 3/4 | 3 |
+| incl `V_rot` causal GP | +0.324 +0.143 +0.018 +0.132 | +0.154 (0.127) | [−0.047, +0.356] | spans 0 | 2/4 | 6 |
+| incl `V_rot` GP | +0.081 −0.057 −0.061 +0.059 | +0.005 (0.075) | [−0.114, +0.124] | spans 0 | 0/4 | — |
+
+**Reading.**
+
+1. *`T_i`: the two rules agree everywhere.* The split-to-split sd is 0.02–0.04, so the interval is narrow and far from 0 against PCHIP, persistence and the causal GP; the offline GP is a tie under both rules. Two to three splits would have carried the verdict at this spread, so the choice of four is justified after the fact by half-width < effect, not by the count.
+2. *`V_rot`: the count was the conservative rule.* Individual splits have few `V_rot` TEST shots and wide CIs, so the per-split count fails where the across-split mean is consistently positive (PCHIP 1/4 and 2/4, persistence 3/4, all with intervals clear of 0). Against the causal GP the splits scatter from +0.02 to +0.33 and the interval spans 0; about six splits would be needed at this spread.
+3. *This does not change the `V_rot` physics reading.* These are MSE skills. §8ax showed the `V_rot` MSE gain is carried by the top ~1 % error rows, and the median ties persistence at the photon floor (§8bs, §8bt). The interval strengthens "the mean wins, by the tail"; it says nothing new about the typical row.
+
+**Caveats.** (i) n = 4 t-interval assumes the four split skills are roughly normal. (ii) The four splits share most of their TRAIN shots, so they are not independent replicates and the interval is somewhat too narrow; the readout most exposed to this is `V_rot` vs PCHIP in the cut population (lower bound +0.069). The correction is a shot-level 5-fold split with the Nadeau–Bengio corrected t-test (every shot tested once), which needs retraining and is not registered. (iii) The registered rule stays the 4/4 count for every batch already run; this interval is reported beside it, not in place of it.
+
+**Named next.** For new batches, register the across-split interval as the primary readout with the per-split count as a secondary. If the `V_rot` vs PCHIP claim is to be made in the paper, register the 5-fold shot-level replicate first.

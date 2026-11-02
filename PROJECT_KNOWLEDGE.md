@@ -1517,3 +1517,17 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
   val `T_i` squared error sits on > 3 keV rows that no checkpoint predicts (arms differ ≤ 4 % there),
   so val MSE there is a noisy key; median-AE picks better on physical rows. In cut, median-AE selection
   gives up event rows (3/4). A fit-quality flag would make the two keys agree.
+
+## A Split Count Is Not A Test — Put One Interval Over The Splits (2026-11-03) — §8bv
+
+- **"4/4 splits significant" has no statistical basis of its own** (4/4 by chance = 1/16 ≈ 0.06), and
+  the per-split shot-cluster CI covers which shots landed in TEST, not which split was drawn. Report
+  beside every count one 95 % t-interval on the mean skill across splits
+  (`ces_prediction/analyze_split_interval.py` → `docs/paper/split_interval.json`).
+- **Result:** `T_i` verdicts are unchanged (sd 0.02–0.04; four splits were more than enough, 2–3
+  would do). `V_rot` MSE wins vs PCHIP / persistence clear 0 where the count said 1–3/4, so the count
+  was the conservative rule there; vs causal GP it spans 0 (~6 splits needed at sd 0.13). These are
+  MSE (tail) wins — the `V_rot` median tie (§8bs) stands.
+- **Caveat that decides how to extend:** the four splits share most TRAIN shots, so the interval is
+  somewhat too narrow. The fix is a shot-level 5-fold split + Nadeau–Bengio corrected t, not more
+  random seeds. New batches: register the across-split interval as the primary readout.
