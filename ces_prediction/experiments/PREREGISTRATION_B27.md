@@ -111,7 +111,7 @@ were seen. B.27c tests that claim on **new data**: eight new partitions, eight n
 The readout carries training variation by construction.
 
 **Design.** Same as §2 except repeat seeds 2703–2710 (r2–r9). That is 2 populations × 8 repeats ×
-5 folds = **40 new GPU runs**. Init seed 27000 + 10r + k. r0–r1 are reused unchanged. Runner:
+5 folds = **80 new GPU runs** (erratum 2026-11-03: first written as 40, an arithmetic slip; the runner was always set to 10 repeats = 100 runs total, and the design and decision rule are unchanged). Init seed 27000 + 10r + k. r0–r1 are reused unchanged. Runner:
 `run_b27.py` with `REPEAT_SEEDS = 2701..2710`, which resumes past the 20 finished runs. The
 machine is kept out of standby during the batch.
 
