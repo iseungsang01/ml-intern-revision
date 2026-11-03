@@ -6339,3 +6339,39 @@ MSE skill vs PCHIP is kept: cut huber `T_i` +0.182 … +0.273 (pooled +0.249), i
 **Caveats.** (i) n = 4 t-interval assumes the four split skills are roughly normal. (ii) The four splits share most of their TRAIN shots, so they are not independent replicates and the interval is somewhat too narrow; the readout most exposed to this is `V_rot` vs PCHIP in the cut population (lower bound +0.069). The correction is a shot-level 5-fold split with the Nadeau–Bengio corrected t-test (every shot tested once), which needs retraining and is not registered. (iii) The registered rule stays the 4/4 count for every batch already run; this interval is reported beside it, not in place of it.
 
 **Named next.** For new batches, register the across-split interval as the primary readout with the per-split count as a secondary. If the `V_rot` vs PCHIP claim is to be made in the paper, register the 5-fold shot-level replicate first.
+
+## 8bw. B.27 (2026-11-03, 20 GPU runs, 2.24 h): shot-level repeated 5-fold replicate of the seq_v2 headline, read by the Nadeau–Bengio corrected 95 % interval. `T_i` beats PCHIP, persistence and causal GP in both populations and ties the offline GP — every headline `T_i` verdict replicates. `V_rot` beats persistence only; vs PCHIP and vs causal GP the corrected interval spans 0 (undecided). This supersedes the §8bv uncorrected `V_rot` vs PCHIP interval, which excluded 0 only because the four splits overlap in TRAIN
+
+**Design.** `PREREGISTRATION_B27.md` (4d54928, before any number). Universe = 639 files of `.b1_manifest_s42`, partition seeds 2701/2702, K = 5. TEST = fold k (≈128 shots), VAL = 128, TRAIN = 383. Each shot is TEST once per repeat. `seq_v2`, `CES_PER_SHOT_NORM=1`, `GATE_ENV` pinned: W = 2, held-free (`CES_DROP_STUCK_TARGETS=1`), per-file cap 500, `CES_TI_SPIKE_CUT_EV` = 3000 (cut) / 0 (inclusive). Init seed 27000 + 10r + k. Harness stats come from `fit_normalization_stats` on each fold's TRAIN files. Verified bit-identical to the frozen controls (stage `verify`). Runner: `experiments/b27_kfold/run_b27.py`. Per-fold summaries: `data/.b27_seqv2_{pop}_r{r}_f{k}/bootstrap_summary.json`. Pooled: `data/.b27_summary.json`, copied to `docs/paper/b27_kfold_interval.json`. All 20 runs ok. The Windows CUDA teardown rc is accepted with fresh artifacts.
+
+**Result.** MSE skill over 10 folds. NB = Nadeau–Bengio corrected 95 % t-interval (decides), n_test/n_train = 0.334. Unc. = plain t-interval (reported, never decides). Pass = folds whose shot-cluster bootstrap CI excludes 0.
+
+| pop | target | ref | mean | fold sd | NB 95 % | unc. 95 % | fold range | pass | verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| cut | `T_i` | PCHIP | +0.224 | 0.020 | [+0.194, +0.253] | [+0.209, +0.238] | +0.181…+0.249 | 10/10 | **beats** |
+| cut | `T_i` | persistence | +0.389 | 0.016 | [+0.365, +0.413] | [+0.377, +0.400] | +0.351…+0.405 | 10/10 | **beats** |
+| cut | `T_i` | causal GP | +0.110 | 0.026 | [+0.071, +0.149] | [+0.091, +0.129] | +0.071…+0.151 | 10/10 | **beats** |
+| cut | `T_i` | GP | −0.012 | 0.029 | [−0.055, +0.031] | [−0.033, +0.008] | −0.072…+0.019 | 0/10 | undecided |
+| cut | `V_rot` | PCHIP | +0.170 | 0.187 | [−0.108, +0.448] | [+0.036, +0.304] | −0.110…+0.488 | 3/10 | undecided |
+| cut | `V_rot` | persistence | +0.410 | 0.224 | [+0.077, +0.743] | [+0.250, +0.570] | +0.039…+0.687 | 8/10 | **beats** |
+| cut | `V_rot` | causal GP | +0.256 | 0.256 | [−0.125, +0.638] | [+0.073, +0.439] | +0.035…+0.709 | 2/10 | undecided |
+| cut | `V_rot` | GP | +0.041 | 0.187 | [−0.237, +0.319] | [−0.092, +0.175] | −0.222…+0.351 | 0/10 | undecided |
+| incl | `T_i` | PCHIP | +0.250 | 0.038 | [+0.193, +0.306] | [+0.223, +0.277] | +0.185…+0.306 | 10/10 | **beats** |
+| incl | `T_i` | persistence | +0.404 | 0.032 | [+0.356, +0.451] | [+0.381, +0.427] | +0.347…+0.444 | 10/10 | **beats** |
+| incl | `T_i` | causal GP | +0.116 | 0.049 | [+0.044, +0.189] | [+0.082, +0.151] | +0.043…+0.171 | 8/10 | **beats** |
+| incl | `T_i` | GP | +0.035 | 0.040 | [−0.025, +0.095] | [+0.006, +0.064] | −0.041…+0.098 | 1/10 | undecided |
+| incl | `V_rot` | PCHIP | +0.158 | 0.180 | [−0.110, +0.427] | [+0.029, +0.287] | −0.065…+0.451 | 3/10 | undecided |
+| incl | `V_rot` | persistence | +0.394 | 0.220 | [+0.066, +0.721] | [+0.236, +0.551] | +0.033…+0.688 | 8/10 | **beats** |
+| incl | `V_rot` | causal GP | +0.243 | 0.274 | [−0.165, +0.651] | [+0.047, +0.439] | −0.023…+0.721 | 2/10 | undecided |
+| incl | `V_rot` | GP | +0.037 | 0.195 | [−0.254, +0.327] | [−0.103, +0.176] | −0.252…+0.348 | 0/10 | undecided |
+
+**Prediction check (prereg §4).** Six of seven cell predictions held. `T_i` beats PCHIP, persistence and causal GP: held in both populations. `T_i` ties GP: held. `V_rot` beats persistence: held. `V_rot` vs causal GP undecided: held. `V_rot` vs GP undecided: held. **Missed:** `V_rot` vs PCHIP was predicted beats (0.55) and is undecided in both populations. Fold `T_i` vs PCHIP range +0.181…+0.306 lies inside the predicted +0.15…+0.32. `V_rot` fold sd is 0.18–0.27 against `T_i`'s 0.02–0.05, ≥ 2× as predicted (≈ 5–9×).
+
+**Reading.**
+1. *The `T_i` headline replicates under a design that tests every shot.* All three online references are beaten with the corrected interval well clear of 0. Cut lower bounds: +0.19 / +0.37 / +0.07. The fold means sit inside the frozen four-split range. The offline GP ties, as before. The paper's `T_i` significance statements can cite B.27 instead of the 4/4 count.
+2. *§8bv's `V_rot` vs PCHIP interval was overlap-exposed, and B.27 removes it.* The uncorrected interval over the 10 folds still excludes 0 ([+0.036, +0.304] cut). The NB correction for TRAIN overlap widens it to span 0. This is the same mechanism §8bv flagged as its caveat. Per prereg §5 the paper must **not** state a `V_rot` mean win over PCHIP. The `V_rot` claim that survives is "beats persistence on MSE". That gain is carried by tail rows (§8ax). The median ties persistence at the photon floor (§8bs). §8bs is untouched.
+3. *Why `V_rot` stays undecided.* Fold sd is 0.18–0.27. One fold loses to PCHIP outright (−0.110 cut). With n_test/n_train = 0.33 the correction multiplies the plain half-width by ≈ 2.1. At this mean the corrected interval would clear 0 only if the fold sd fell from 0.187 to ≈ 0.11, or the mean rose to ≈ +0.28 at this sd. The lever is the same one named in §8bs–§8bt: per-exposure CES uncertainty or a rotation-informative input. Shuffling splits or adding more folds is not it.
+
+**Verdict.** Registered rule (prereg §3). `T_i`: beats PCHIP, persistence and causal GP; undecided vs GP, both populations. `V_rot`: beats persistence; undecided vs PCHIP, causal GP and GP, both populations. Supersedes §8bv for the same cells. The frozen four-split headline (§8ab) stays as recorded.
+
+**Named next.** Paper: replace the `T_i` "4/4 splits" significance sentence with the B.27 corrected interval. Keep the `V_rot` sentence at "beats persistence (mean, tail-carried); ties at the median". This is a text change and waits for confirmation. Future batches register the NB-corrected interval as the primary readout.

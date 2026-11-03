@@ -1531,3 +1531,7 @@ inclusive-conditional rung, the mirror of B.5's cut-conditional one.
 - **Caveat that decides how to extend:** the four splits share most TRAIN shots, so the interval is
   somewhat too narrow. The fix is a shot-level 5-fold split + Nadeau–Bengio corrected t, not more
   random seeds. New batches: register the across-split interval as the primary readout.
+
+## An Interval Over Overlapping Splits Is Too Narrow — Correct It Or Don't Cite It (2026-11-03) — §8bw
+
+B.27 re-ran the headline as shot-level repeated 5-fold and read it with the Nadeau–Bengio corrected interval. `T_i` replicated everywhere. `V_rot` vs PCHIP did not. The plain t-interval over the 10 folds excluded 0 ([+0.04, +0.30]), as the §8bv four-split interval had. The correction for shared TRAIN shots (×≈2.1 half-width at n_test/n_train = 0.33) spans 0. Rule: any interval built over splits that share training data must carry the overlap correction before it decides a claim. A count (4/4) and a plain interval can both mislead in the same direction when one fold-to-fold sd dominates.
