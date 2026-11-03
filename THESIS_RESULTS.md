@@ -6375,3 +6375,38 @@ MSE skill vs PCHIP is kept: cut huber `T_i` +0.182 … +0.273 (pooled +0.249), i
 **Verdict.** Registered rule (prereg §3). `T_i`: beats PCHIP, persistence and causal GP; undecided vs GP, both populations. `V_rot`: beats persistence; undecided vs PCHIP, causal GP and GP, both populations. Supersedes §8bv for the same cells. The frozen four-split headline (§8ab) stays as recorded.
 
 **Named next.** Paper: replace the `T_i` "4/4 splits" significance sentence with the B.27 corrected interval. Keep the `V_rot` sentence at "beats persistence (mean, tail-carried); ties at the median". This is a text change and waits for confirmation. Future batches register the NB-corrected interval as the primary readout.
+
+## 8bx. B.27b (2026-11-03, analysis only, post hoc, registered in PREREGISTRATION_B27.md §7 at f938f19 before computing): pooled out-of-fold readout of the B.27 folds. Scored as one 639-shot ratio per repeat, `V_rot` beats PCHIP, persistence and causal GP in both populations and both repeats. `T_i` reproduces every §8bw verdict. The offline GP stays undecided for both targets. The §8bw Nadeau–Bengio verdict (`V_rot` vs PCHIP undecided) stands as primary; this is the registered secondary sentence beside it
+
+**Design.** Per population × repeat, the five TEST folds are concatenated, so every shot is scored once (shots with no observed label of a target drop out: `T_i` 633–635, `V_rot` 410–412). Skill = 1 − ΣSE_model/ΣSE_ref over the pooled rows. CI = paired shot-cluster bootstrap, B = 10 000, seed 2727, 95 % percentile. **beats** iff the lower bound is > 0 in both repeats. Script: `experiments/b27_kfold/analyze_b27_pooled.py`. Output: `data/.b27b_pooled.json`, copied to `docs/paper/b27b_pooled.json`.
+
+| pop | target | ref | r0 skill [95 %] | r1 skill [95 %] | verdict |
+|---|---|---|---|---|---|
+| cut | `T_i` | PCHIP | +0.221 [+0.194, +0.246] | +0.227 [+0.200, +0.252] | **beats** |
+| cut | `T_i` | persistence | +0.386 [+0.369, +0.401] | +0.392 [+0.376, +0.407] | **beats** |
+| cut | `T_i` | causal GP | +0.108 [+0.091, +0.124] | +0.111 [+0.094, +0.129] | **beats** |
+| cut | `T_i` | GP | −0.014 [−0.036, +0.007] | −0.011 [−0.034, +0.010] | undecided |
+| cut | `V_rot` | PCHIP | +0.331 [+0.061, +0.383] | +0.141 [+0.076, +0.353] | **beats** |
+| cut | `V_rot` | persistence | +0.457 [+0.292, +0.556] | +0.273 [+0.096, +0.638] | **beats** |
+| cut | `V_rot` | causal GP | +0.364 [+0.056, +0.502] | +0.190 [+0.030, +0.593] | **beats** |
+| cut | `V_rot` | GP | +0.268 [−0.126, +0.347] | +0.031 [−0.129, +0.170] | undecided |
+| incl | `T_i` | PCHIP | +0.250 [+0.190, +0.300] | +0.246 [+0.195, +0.289] | **beats** |
+| incl | `T_i` | persistence | +0.408 [+0.366, +0.443] | +0.402 [+0.369, +0.430] | **beats** |
+| incl | `T_i` | causal GP | +0.126 [+0.084, +0.166] | +0.105 [+0.071, +0.138] | **beats** |
+| incl | `T_i` | GP | +0.039 [−0.012, +0.082] | +0.030 [−0.013, +0.065] | undecided |
+| incl | `V_rot` | PCHIP | +0.331 [+0.065, +0.384] | +0.130 [+0.062, +0.315] | **beats** |
+| incl | `V_rot` | persistence | +0.455 [+0.285, +0.553] | +0.266 [+0.093, +0.606] | **beats** |
+| incl | `V_rot` | causal GP | +0.370 [+0.041, +0.525] | +0.182 [+0.026, +0.562] | **beats** |
+| incl | `V_rot` | GP | +0.267 [−0.127, +0.346] | +0.021 [−0.132, +0.146] | undecided |
+
+**Prediction check (§7).** All five predictions held. `T_i` reproduces §3. `V_rot` beats persistence. `V_rot` beats PCHIP in both populations (stated 0.5). `V_rot` beats causal GP (0.4). `V_rot` ties GP.
+
+**Reading.**
+1. *Pooling removes the fold lottery.* The §8bw fold range for `V_rot` vs PCHIP was −0.11…+0.49. That spread is a few heavy-error shots landing in an 80-shot fold. Over all ~410 shots, every pooled CI clears 0 in both repeats.
+2. *The win is tail-carried, and the CIs show it.* The `V_rot` point skills sit near the top of their CIs (cut r0 PCHIP +0.331 in [+0.061, +0.383]). The bootstrap distribution is left-skewed, because a few shots carry most of the SE gap. This matches §8ax (top ~1 % rows carry the MSE gain) and §8bs (median tie at the photon floor). The physics reading does not change: `V_rot` is better than interpolation **on average, through rare large-error moments**, not at a typical instant.
+3. *Training variation is real.* The two repeats differ by ~0.19 on `V_rot` point skill (+0.331 vs +0.141). That is why the rule demands both repeats. Both clear 0.
+4. *Limitation.* The bootstrap conditions on the trained models and does not carry the TRAIN-overlap correlation (Bates, Hastie & Tibshirani 2023). The NB interval does. So the paper statement is two-level. Primary (registered, §8bw): `V_rot` vs PCHIP is undecided under the overlap-corrected fold interval. Secondary (post hoc, §8bx): pooled over all shots, the mean-error win over PCHIP and causal GP holds in both repeats and both populations.
+
+**Verdict.** Secondary readout. `V_rot` mean-error win over PCHIP, persistence and causal GP holds pooled over all shots in both repeats and both populations. The §8bw primary verdicts are unchanged.
+
+**Named next.** To promote the `V_rot` vs PCHIP claim to primary, register a design that carries training variation by construction. Options: nested CV (Bates et al. 2023), or more repeats with the pooled readout and a repeat-level interval. Register before running. GPU ≈ 1.1 h per added repeat pair (both populations).
