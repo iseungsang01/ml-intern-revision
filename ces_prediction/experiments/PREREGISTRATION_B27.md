@@ -102,3 +102,44 @@ secondary, post hoc readout.
 **Prediction.** `T_i` cells reproduce the §3 verdicts (0.9). `V_rot` vs persistence beats (0.85).
 `V_rot` vs PCHIP beats in both populations (0.5). `V_rot` vs causal GP beats (0.4). `V_rot`
 vs GP undecided (0.8).
+
+## 8. B.27c — eight new repeats, two-level bootstrap as the primary readout for the mean-error claims (registered 2026-11-03, before any r2–r9 run)
+
+**Why.** §8bx (post hoc) found `V_rot` beating PCHIP and causal GP when all shots are scored at
+once. It conditioned on two trained model sets, and its rule was written after the §8bw numbers
+were seen. B.27c tests that claim on **new data**: eight new partitions, eight new model sets.
+The readout carries training variation by construction.
+
+**Design.** Same as §2 except repeat seeds 2703–2710 (r2–r9). That is 2 populations × 8 repeats ×
+5 folds = **40 new GPU runs**. Init seed 27000 + 10r + k. r0–r1 are reused unchanged. Runner:
+`run_b27.py` with `REPEAT_SEEDS = 2701..2710`, which resumes past the 20 finished runs. The
+machine is kept out of standby during the batch.
+
+**Primary readout (decides).** `analyze_b27c.py`. Each repeat's five TEST folds are pooled.
+One bootstrap draw (B = 20 000, seed 2728) does two things. (i) It picks one repeat uniformly
+from **r2–r9 only**: that is model and training-partition variation. (ii) It resamples that
+repeat's shots with replacement: that is shot sampling. Skill = 1 − ΣSE_model/ΣSE_ref.
+**beats** iff the 2.5th percentile > 0, **loses** iff the 97.5th < 0, else undecided. All 16
+cells are reported. r0–r1 are excluded from the primary readout because their numbers shaped
+this rule.
+
+**What the readout is.** The 95 % range of the skill that one model trained by this procedure
+on ≈ 383 shots attains on a fresh sample of the same number of shots. It includes the full
+single-model training variance (not divided by the number of repeats), so it is stricter than
+an interval on the repeat average.
+
+**Secondary (reported, never decides).** The same two-level bootstrap on all ten repeats.
+Per-repeat pooled skills. The Nadeau–Bengio interval over 50 folds (`data/.b27_summary_R10.json`).
+
+**Limitation (stated now).** All repeats draw TRAIN from the same 639 shots, so the model-level
+spread can still understate variation across fully independent training sets. Only new shots
+(another campaign) remove that.
+
+**Paper rule.** If `V_rot` vs PCHIP **beats** here, the paper states the `V_rot` mean-error win
+over interpolation as a registered result. It cites B.27c, and §8bw stays as the
+fold-interval reading beside it. If it is undecided, the paper keeps §8bw as is, and §8bx stays
+a labeled post hoc sentence. The median tie at the photon floor (§8bs) is stated in either case.
+
+**Predictions.** `T_i` vs PCHIP, persistence, causal GP: beats (0.9). `T_i` vs GP: undecided (0.85).
+`V_rot` vs persistence: beats (0.75). `V_rot` vs PCHIP: beats (0.45). `V_rot` vs causal GP:
+beats (0.35). `V_rot` vs GP: undecided (0.85).

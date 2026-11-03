@@ -45,7 +45,7 @@ sys.path.insert(0, str(CES_DIR))
 from run_b1_gate import GATE_ENV, AMBIENT_VARS, SMOKE_OVERRIDES, run_step  # noqa: E402
 
 K = 5
-REPEAT_SEEDS = (2701, 2702)        # fold-partition seeds, one per repeat
+REPEAT_SEEDS = tuple(range(2701, 2711))   # fold-partition seeds, one per repeat; r0-r1 = B.27, r2-r9 = B.27c
 POPS = {"cut": 3000.0, "incl": 0.0}
 VAL_FRACTION = 0.2                 # of the shot universe, as in the headline manifests
 TARGETS = ("CES_TI", "CES_VT")
@@ -253,8 +253,8 @@ def stage_analyze():
                 summary["cells"][key] = iv
                 lo, hi = iv["ci95_corrected"]
                 print(f"[b27] {key:28s} mean {iv['mean']:+.3f} sd {iv['sd']:.3f} "
-                      f"CI_NB [{lo:+.3f}, {hi:+.3f}] -> {iv['verdict']:9s} fold-pass {passes}/10", flush=True)
-    out = DATA / ".b27_summary.json"
+                      f"CI_NB [{lo:+.3f}, {hi:+.3f}] -> {iv['verdict']:9s} fold-pass {passes}/{len(vals)}", flush=True)
+    out = DATA / (".b27_summary.json" if len(REPEAT_SEEDS) == 2 else f".b27_summary_R{len(REPEAT_SEEDS)}.json")
     out.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"[b27] summary -> {out}", flush=True)
     return summary
@@ -266,6 +266,9 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--stages", default="verify,folds,stats,runs,analyze")
     args = ap.parse_args()
+    if sys.platform == "win32":   # keep the machine out of standby for the batch (B.27 r0 f1 lost 22 min to it)
+        import ctypes  # noqa: PLC0415
+        ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required, aborting.")
     stages = args.stages.split(",")

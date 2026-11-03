@@ -1,4 +1,4 @@
-# B.27 launcher: start or resume the 20-run batch, then write data/.b27_summary.json.
+# B.27 launcher: start or resume the batch (B.27 + B.27c: 10 repeats x 5 folds x 2 populations = 100 runs; 20 done in B.27), then write data/.b27_summary.json.
 # Safe to rerun at any time: finished folds (bootstrap_summary.json present) are skipped,
 # a fold killed mid-training is retrained from scratch (weights are written only at the end).
 # Run from anywhere:  powershell -ExecutionPolicy Bypass -File ces_prediction\experiments\b27_kfold\run_b27.ps1
@@ -16,7 +16,7 @@ if ($running) {
 
 $done = (Get-ChildItem -Path "data" -Directory -Filter ".b27_seqv2_*" -ErrorAction SilentlyContinue |
     Where-Object { Test-Path (Join-Path $_.FullName "bootstrap_summary.json") }).Count
-Write-Host "B.27: $done / 20 folds finished. Resuming; log -> $log"
+Write-Host "B.27: $done / 100 folds finished. Resuming; log -> $log"
 py ces_prediction\experiments\b27_kfold\run_b27.py --resume *>> $log
 if ($LASTEXITCODE -ne 0) {
     Write-Host "B.27 exited with $LASTEXITCODE -- see $log (rerun this script to resume)."
