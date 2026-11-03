@@ -70,3 +70,35 @@ TRAIN is 8 % smaller). Fold sd of `V_rot` skills larger than `T_i`'s by ≥ 2×.
 
 No architecture, loss, population or env change; no window-family control (the harness
 stats replace it); the 4 frozen splits are not rerun.
+
+## 7. Addendum B.27b — pooled out-of-fold readout (registered 2026-11-03, after §8bw, before computing it)
+
+**Status: post hoc.** Written after the §3 verdicts were seen (§8bw: `V_rot` vs PCHIP undecided).
+It cannot overturn a §3 verdict. The paper must label it "post hoc, pooled out-of-fold". It may
+add one sentence beside the §3 verdict and never replaces it.
+
+**Why.** The §3 statistic averages ten fold-level ratio skills. Each `V_rot` fold has ≈ 80 shots,
+and a few heavy-error shots set a fold's ratio (fold range −0.11…+0.49). Pooling every
+out-of-fold row of a repeat scores all 639 shots in one ratio, so no fold is held hostage by
+its few tail shots.
+
+**Statistic.** For each population × repeat r ∈ {0, 1}: concatenate the five TEST folds'
+rows from `comparison_errors_test.npz`. Every shot appears exactly once. Skill =
+1 − Σ SE_model / Σ SE_ref over the pooled rows, the same ratio-of-means as §2. The CI is the
+paired shot-cluster bootstrap (B = 10 000, seed 2727, same resampling as `bootstrap_compare.py`),
+95 % percentile.
+
+**Decision rule (fixed now).** A cell **beats** iff the pooled 95 % CI lower bound is > 0 in
+**both** repeats. It **loses** iff the upper bound is < 0 in both. Otherwise it is undecided.
+Requiring both repeats is the guard for training-set variation: the two repeats are disjoint
+model sets trained on different TRAIN partitions. All 16 cells are reported (2 populations ×
+2 targets × 4 references). None is reported alone.
+
+**Known limitation (stated before the number).** The bootstrap conditions on the trained models.
+It does not carry the TRAIN-overlap correlation that the Nadeau–Bengio factor corrects
+(Bates, Hastie & Tibshirani 2023: naive CV intervals can undercover). This is why it stays a
+secondary, post hoc readout.
+
+**Prediction.** `T_i` cells reproduce the §3 verdicts (0.9). `V_rot` vs persistence beats (0.85).
+`V_rot` vs PCHIP beats in both populations (0.5). `V_rot` vs causal GP beats (0.4). `V_rot`
+vs GP undecided (0.8).
