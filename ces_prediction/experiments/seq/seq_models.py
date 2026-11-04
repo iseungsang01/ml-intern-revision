@@ -21,8 +21,15 @@ from model_seq_xfmr import SeqCESXfmr
 from model_seq_ssm import SeqCESSSM
 from model_seq_v4k import SeqCESV4K
 from model_seq_v2d import SeqCESLSTMv2Dist
+from model_seq_b28 import SeqCESB28
 
 SEQ_MODELS = {
+    # B.28 (PREREGISTRATION_B28.md): the two-term equation read off the frozen seq_v2 T_i branch
+    # (EWMA of past observations with a gap-dependent gain + saturating fast-channel increment
+    # term), V_rot branch = seq_v2's. `b28x` adds the ONE cross term c * dECEI * dBES.
+    "b28": SeqCESB28,
+    "b28x": functools.partial(SeqCESB28, cross=True),
+
     # B.17 (PREREGISTRATION_B17.md): seq_v2 with a predictive-distribution head trained by
     # NLL. `v2g` = heteroscedastic Gaussian, `v2m2` = two-component mixture. forward()
     # returns the posterior mean so every point-scoring harness runs unchanged.
