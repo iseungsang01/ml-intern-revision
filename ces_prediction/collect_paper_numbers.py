@@ -29,6 +29,8 @@ Sources (all under data/):
   .b17b_summary.json         predictive-distribution heads, sec:dist (sec. 8bj)
   .b14c_verdict.json, .b14s_cut_rescore.json
                              B.14 sec. 10 own-objective selection / epoch cap, sec:bulk (sec. 8bu)
+  .b27_summary_R10.json, .b27c_hier.json
+                             B.27/B.27c shot-level repeated 5-fold replicate, tab:replicate (sec. 8bw, 8by)
 
 The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
 hand; `transcription_check` re-reads the values printed in main.tex from these files and fails on
@@ -294,6 +296,46 @@ def b14_select(v, rescore_cut):
                               "best_epochs": [b["per_split"][s]["epochs"][1] for s in SEEDS]}}
 
 
+def replicate_b27(r10, hier):
+    """B.27/B.27c (sec. 8bw/8by): fold-level Nadeau-Bengio interval over 50 folds and the registered
+    two-level (repeat x shot) bootstrap over the eight post-registration repeats (r2-r9)."""
+    out = {"design": {k: r10["design"][k] for k in ("K", "repeat_seeds", "test_over_train_files")},
+           "primary_rule": "two-level bootstrap on r2-r9: beats iff 2.5th percentile > 0 (PREREGISTRATION_B27.md sec. 8)"}
+    for pop in POPS:
+        out[pop] = {}
+        for t in TARGETS:
+            out[pop][t] = {}
+            for ref in ("pchip", "persistence", "gp_causal", "gp"):
+                a, b = r10["cells"][f"{pop}/{t}/{ref}"], hier[f"{pop}/{t}/{ref}"]
+                out[pop][t][ref] = {
+                    "fold_mean": a["mean"], "fold_sd": a["sd"], "nb_ci95": a["ci95_corrected"],
+                    "nb_verdict": a["verdict"], "fold_pass": a["per_fold_pass"], "n_folds": a["n"],
+                    "two_level_ci95": b["primary_r2_r9"]["ci95"], "two_level_verdict": b["primary_r2_r9"]["verdict"],
+                    "per_repeat_pooled": b["per_repeat_pooled"]}
+    return out
+
+
+# values printed in tab:replicate (3 decimals): (pop, target, ref) -> (nb lo, nb hi, pass, two-level lo, two-level hi)
+TAB_REPLICATE = {
+    ("cut", "CES_TI", "pchip"): (0.186, 0.253, 50, 0.188, 0.248),
+    ("cut", "CES_TI", "persistence"): (0.368, 0.410, 50, 0.369, 0.408),
+    ("cut", "CES_TI", "gp_causal"): (0.084, 0.138, 47, 0.085, 0.132),
+    ("cut", "CES_TI", "gp"): (-0.044, 0.020, 1, -0.043, 0.014),
+    ("cut", "CES_VT", "pchip"): (-0.021, 0.405, 15, 0.072, 0.701),
+    ("cut", "CES_VT", "persistence"): (0.190, 0.601, 42, 0.277, 0.763),
+    ("cut", "CES_VT", "gp_causal"): (-0.060, 0.512, 11, 0.045, 0.701),
+    ("cut", "CES_VT", "gp"): (-0.234, 0.312, 0, -0.119, 0.635),
+    ("incl", "CES_TI", "pchip"): (0.188, 0.307, 46, 0.192, 0.294),
+    ("incl", "CES_TI", "persistence"): (0.361, 0.445, 50, 0.364, 0.438),
+    ("incl", "CES_TI", "gp_causal"): (0.067, 0.170, 40, 0.076, 0.157),
+    ("incl", "CES_TI", "gp"): (-0.026, 0.094, 12, -0.017, 0.075),
+    ("incl", "CES_VT", "pchip"): (-0.053, 0.391, 11, 0.046, 0.683),
+    ("incl", "CES_VT", "persistence"): (0.159, 0.587, 38, 0.139, 0.747),
+    ("incl", "CES_VT", "gp_causal"): (-0.096, 0.502, 10, 0.023, 0.683),
+    ("incl", "CES_VT", "gp"): (-0.268, 0.300, 0, -0.139, 0.609),
+}
+
+
 def transcription_check(n):
     """Values printed in main.tex (sec:physfilter tab:dual, sec:dist) against the artifacts."""
     d, v, h = n["physfilter"]["dual_readout"], n["physfilter"]["vrot_floor"], n["dist_head"]
@@ -330,6 +372,15 @@ def transcription_check(n):
          n["b14_select"]["incl_huber_TI"]["mse_sig_deficits"]], [0.285, 1], 0.0005),
         ("sec:dist CRPS significant splits", [h[p][t]["crps_vs_r0_splits_sig"] for p in POPS for t in TARGETS], [4] * 4, 0),
     ]
+    rep = n["replicate_b27"]
+    for (pop, t, ref), (lo, hi, npass, lo2, hi2) in TAB_REPLICATE.items():
+        c = rep[pop][t][ref]
+        printed.append((f"tab:replicate {pop} {t} vs {ref} fold-level", c["nb_ci95"] + [c["fold_pass"]], [lo, hi, npass], 0.0005))
+        printed.append((f"tab:replicate {pop} {t} vs {ref} two-level", c["two_level_ci95"], [lo2, hi2], 0.0005))
+    printed.append(("sec:headline V_rot vs PCHIP r2-r9 pooled range (cut +0.28..+0.59, incl +0.09..+0.56)",
+                    [f(rep[p]["CES_VT"]["pchip"]["per_repeat_pooled"][str(r)] for r in range(2, 10))
+                     for p in POPS for f in (min, max)], [0.28, 0.59, 0.09, 0.56], 0.005))
+    printed.append(("sec:headline V_rot vs PCHIP fold sd 0.18 (cut)", [rep["cut"]["CES_VT"]["pchip"]["fold_sd"]], [0.18], 0.005))
     problems = []
     for name, got, want, tol in printed:
         if len(got) != len(want) or any(abs(float(a) - b) > tol for a, b in zip(got, want)):
@@ -379,6 +430,7 @@ def main():
     b26 = _load(DATA / ".b26_precheck.json")
     b17b = _load(DATA / ".b17b_summary.json")
     b14c, b14s_cut = _load(DATA / ".b14c_verdict.json"), _load(DATA / ".b14s_cut_rescore.json")
+    r10, hier = _load(DATA / ".b27_summary_R10.json"), _load(DATA / ".b27c_hier.json")
     for name in ("headline", "coverage_pr2", "ladder", "conformal", "peak_and_largegap", "campaign", "cut_sensitivity", "ablation", "mnar"):
         if "error" in b5.get(name, {}):
             raise SystemExit(f".b5_summary.json block {name} failed: {b5[name]['error']}")
@@ -405,6 +457,7 @@ def main():
         "physfilter": physfilter(b22, b23, b24, b26),
         "dist_head": dist_head(b17b),
         "b14_select": b14_select(b14c, b14s_cut),
+        "replicate_b27": replicate_b27(r10, hier),
     }
     problems = crosscheck(numbers, b5, b3c, b4) + transcription_check(numbers)
     if problems:
@@ -413,7 +466,7 @@ def main():
     OUT_PATH.write_text(json.dumps(numbers, indent=2, default=float), encoding="utf-8")
     print(f"wrote {OUT_PATH}")
     print("crosscheck: B.5 ladder/headline, B.3, B.4 and the TEST reports agree on every seed and population")
-    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values in main.tex match the artifacts")
+    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values and tab:replicate (B.27/B.27c) in main.tex match the artifacts")
 
     for pop in POPS:
         print(f"\n=== headline / {pop} (TEST, skill vs PCHIP [95% CI]) ===")

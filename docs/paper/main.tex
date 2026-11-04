@@ -81,8 +81,15 @@ failures ($>$3\,keV) as missing or keep them, with an unqualified claim required
 hold in both---the nowcaster beats future-using PCHIP on \Ti{} with skill $+0.17$
 to $+0.26$ (spike-cut) and $+0.23$ to $+0.32$ (spike-inclusive), 95\% CIs
 excluding zero on \emph{four independent held-out splits in both populations},
-and beats the causal GP on all eight; \Vrot{} clears the same gate on 1/4 and 2/4
-splits and is reported as a tie. Two stress tests separate the offline from the
+and beats the causal GP on all eight; a pre-registered replicate that re-runs the
+backbone as shot-level repeated 5-fold cross-validation (every discharge tested
+once; 100 runs) puts the overlap-corrected interval at $[+0.19, +0.25]$ (cut) and
+$[+0.19, +0.31]$ (inclusive). \Vrot{} clears the four-split gate on only 1/4 and
+2/4 splits, but under the replicate's registered two-level (model$\times$discharge)
+bootstrap over eight fresh partitions it beats PCHIP, persistence and the causal
+GP in mean squared error in both populations ($[+0.07, +0.70]$ cut vs.\ PCHIP)---a
+tail-carried win; in the median it ties persistence at the 10\,ms photon floor.
+Two stress tests separate the offline from the
 deployment claim: reweighting the scored points onto the covariate distribution of
 the \emph{genuinely missing} ones keeps the advantage over every causal method on
 all splits and over PCHIP on 2/4 (cut) and 4/4 (inclusive); re-splitting strictly
@@ -192,15 +199,23 @@ GP arm and report the model against it separately.
         (cut) and $+0.23$ to $+0.32$ (inclusive), CIs excluding zero on all four
         held-out splits in both populations, and beats the causal GP on all eight
         split--population cells; it ties the offline GP, the strongest
-        future-using smoother.
-  \item \textbf{A physics-grounded negative result for \Vrot{}}, reported as a
-        finding rather than a failure: \Vrot{} ties future-using interpolation
-        (1/4 and 2/4 significant, what noise alone would give) while beating
-        persistence on most splits; zeroing the fast diagnostics leaves the
-        \Vrot{} output bit-identical and zeroing history collapses it, so
-        rotation remains history-autocorrelation-limited at 10\,ms (unobserved
-        NBI torque; Mirnov aliasing). We call this the \Ti$\leftrightarrow$\Vrot{}
-        \emph{information asymmetry}.
+        future-using smoother. A pre-registered shot-level repeated 5-fold
+        replicate (every discharge tested once, ten repeats, 100 runs) reproduces
+        every verdict, with the overlap-corrected interval $[+0.19, +0.25]$ (cut)
+        and $[+0.19, +0.31]$ (inclusive) vs.\ PCHIP.
+  \item \textbf{A physics-grounded, two-level result for \Vrot{}}: on the four
+        frozen splits \Vrot{} clears the gate on only 1/4 and 2/4 (what noise
+        alone would give) and was first recorded as a tie; the repeated-5-fold
+        replicate, read by its registered two-level bootstrap over eight fresh
+        partitions, shows that the mean-squared-error win over PCHIP, persistence
+        and the causal GP is real in both populations ($[+0.07, +0.70]$ cut and
+        $[+0.05, +0.68]$ inclusive vs.\ PCHIP) and tail-carried, while in the
+        median \Vrot{} ties persistence at the 10\,ms photon floor
+        (\S\ref{sec:physfilter}). The win comes from history alone: zeroing the
+        fast diagnostics leaves the \Vrot{} output bit-identical and zeroing
+        history collapses it, so rotation remains history-autocorrelation-limited
+        at 10\,ms (unobserved NBI torque; Mirnov aliasing). We call this the
+        \Ti$\leftrightarrow$\Vrot{} \emph{information asymmetry}.
   \item \textbf{Two stress tests that separate two claims usually conflated}
         (\S\ref{sec:mnar}, \S\ref{sec:campaign}). Reweighting the scored points
         onto the covariate distribution of the genuinely missing ones keeps the
@@ -874,6 +889,29 @@ that the effective sample size is the number of shots ($\approx$96 for \Ti{},
 comparisons (backbone vs.\ control, rung vs.\ backbone) use the same paired
 bootstrap on the same rows.
 
+\paragraph{Replication beyond the four splits.}
+A count of passing splits is not a test (4/4 by chance alone is $1/16$), and the
+four frozen splits share most of their TRAIN discharges, so an interval over them
+is too narrow. Two pre-registered replicates therefore re-ran the backbone as
+shot-level repeated 5-fold cross-validation on the 639-discharge universe (TEST
+128, VAL 128, TRAIN 383 discharges per fold; every discharge tested once per
+repeat; two repeats first, then eight more; 100 GPU runs in the headline's
+environment). Two readouts were registered before any number. (i) \emph{Fold-level}:
+the mean of the fold skills with the Nadeau--Bengio overlap-corrected $t$-interval,
+$\bar S \pm t_{0.975,\,n-1}\sqrt{(1/n + n_{\mathrm{test}}/n_{\mathrm{train}})\,s^{2}}$
+\citep{Nadeau2003Inference}, which widens the plain interval by about $2\times$ at
+$n_{\mathrm{test}}/n_{\mathrm{train}} = 0.33$ and does not shrink to zero with more
+folds \citep{Bates2024CrossValidation}. (ii) \emph{Pooled}: each repeat's five TEST
+folds concatenated so that every discharge is scored once in one ratio skill, with
+a two-level bootstrap that first draws one repeat (training-partition variation)
+and then resamples its discharges (shot variation); a cell \emph{beats} iff the
+2.5th percentile exceeds zero. For \Ti{} the two agree to the second decimal. For
+\Vrot{}, whose $\approx$80-discharge folds are set by a few heavy-error discharges
+(fold-to-fold s.d.\ 0.18), the fold-level interval spans zero while the pooled one
+does not; the registration named the pooled two-level readout, computed on the
+eight repeats run after the rule was written, as the deciding one for the
+replicate, and Table~\ref{tab:replicate} reports both.
+
 \paragraph{The MNAR problem, and what we do about it.}
 Truly missing points have no ground truth, so skill is measured by masking
 \emph{observed} points. Because CES missingness is MNAR (drop-out at low S/N, ELMs,
@@ -978,14 +1016,30 @@ Fig.~\ref{fig:forest} shows the PCHIP intervals.
         (point estimates $-0.05$ to $+0.11$, significant on 1/8 cells), so the
         observed-population claim reads ``beats the pre-registered interpolants
         and every deployable causal method, and matches a future-using,
-        per-sample-tuned smoother''.
-  \item \textbf{\Vrot{}: a tie, not a win.} Point estimates are positive on every
-        split in both populations, but PR4 passes on 1/4 (cut) and 2/4
-        (inclusive)---seed 42 in both, seed 1 at $[+0.000, +0.286]$ inclusive.
-        Against persistence \Vrot{} passes on 3/4 splits in both populations
-        ($+0.30$ to $+0.50$; seed 7's CI touches zero) and against the causal GP
-        on 2/4. One or two significant splits out of four is what noise would
-        produce, so we claim no rotation win.
+        per-sample-tuned smoother''. The replicate (Table~\ref{tab:replicate})
+        reproduces every verdict: vs.\ PCHIP the overlap-corrected fold-level
+        interval is $[+0.19, +0.25]$ (cut) and $[+0.19, +0.31]$ (inclusive), the
+        pooled two-level interval $[+0.19, +0.25]$ and $[+0.19, +0.29]$, and
+        96/100 folds pass on their own.
+  \item \textbf{\Vrot{}: a tie on the four-split count, a registered win on the
+        replicate.} Point estimates are positive on every split in both
+        populations, but PR4 passes on 1/4 (cut) and 2/4 (inclusive)---seed 42 in
+        both, seed 1 at $[+0.000, +0.286]$ inclusive; against persistence \Vrot{}
+        passes on 3/4 splits in both populations ($+0.30$ to $+0.50$; seed 7's CI
+        touches zero) and against the causal GP on 2/4. One or two significant
+        splits out of four is what noise would produce, so the four-split count
+        alone supports no rotation claim. The replicate resolves it. Scored
+        discharge by discharge across eight fresh partitions, \Vrot{} beats PCHIP
+        ($[+0.07, +0.70]$ cut, $[+0.05, +0.68]$ inclusive), persistence
+        ($[+0.28, +0.76]$, $[+0.14, +0.75]$) and the causal GP ($[+0.05, +0.70]$,
+        $[+0.02, +0.68]$) under the registered two-level bootstrap, every one of
+        the eight new model sets positive ($+0.28$ to $+0.59$ cut, $+0.09$ to
+        $+0.56$ inclusive vs.\ PCHIP), while the fold-level overlap-corrected
+        interval still spans zero ($[-0.02, +0.41]$ cut) because an 80-discharge
+        fold's ratio is set by a few heavy-error discharges. The win is a
+        mean-squared-error, tail-carried one (\S\ref{sec:bulk}); in the median
+        \Vrot{} ties persistence at the 10\,ms photon floor
+        (\S\ref{sec:physfilter}), and the two statements are made together.
   \item \textbf{Why the inclusive numbers are higher.} Every arm scores
         \emph{better} against PCHIP without the cut (backbone mean $+0.268$ vs.\
         $+0.236$; control $+0.238$ vs.\ $+0.173$), because the spikes poison the
@@ -993,6 +1047,37 @@ Fig.~\ref{fig:forest} shows the PCHIP intervals.
         where an interpolant cannot. \S\ref{sec:asym} quantifies this
         component; it is the reason neither population is quoted alone.
 \end{itemize}
+
+\begin{table}[t]
+  \centering
+  \caption{Pre-registered replicate of the headline as shot-level repeated 5-fold
+  cross-validation (ten repeats, every discharge tested once per repeat, 100 runs).
+  Fold-level: Nadeau--Bengio overlap-corrected 95\% $t$-interval on the mean of the
+  50 fold skills, with the number of folds whose own shot-clustered CI excludes
+  zero. Pooled: two-level (one repeat, then its discharges) bootstrap 95\% interval
+  on the per-repeat pooled skill over the eight repeats run after the rule was
+  registered. Bold = interval excludes 0.}
+  \label{tab:replicate}
+  \small
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{llcccc}
+    \toprule
+    Target & vs. & cut: fold-level (pass) & cut: pooled & inclusive: fold-level (pass) & inclusive: pooled \\
+    \midrule
+    \multirow{4}{*}{\Ti{}}
+      & PCHIP       & $\mathbf{[+0.186, +0.253]}$ (50/50) & $\mathbf{[+0.188, +0.248]}$ & $\mathbf{[+0.188, +0.307]}$ (46/50) & $\mathbf{[+0.192, +0.294]}$ \\
+      & persistence & $\mathbf{[+0.368, +0.410]}$ (50/50) & $\mathbf{[+0.369, +0.408]}$ & $\mathbf{[+0.361, +0.445]}$ (50/50) & $\mathbf{[+0.364, +0.438]}$ \\
+      & causal GP   & $\mathbf{[+0.084, +0.138]}$ (47/50) & $\mathbf{[+0.085, +0.132]}$ & $\mathbf{[+0.067, +0.170]}$ (40/50) & $\mathbf{[+0.076, +0.157]}$ \\
+      & offline GP  & $[-0.044, +0.020]$ (1/50) & $[-0.043, +0.014]$ & $[-0.026, +0.094]$ (12/50) & $[-0.017, +0.075]$ \\
+    \midrule
+    \multirow{4}{*}{\Vrot{}}
+      & PCHIP       & $[-0.021, +0.405]$ (15/50) & $\mathbf{[+0.072, +0.701]}$ & $[-0.053, +0.391]$ (11/50) & $\mathbf{[+0.046, +0.683]}$ \\
+      & persistence & $\mathbf{[+0.190, +0.601]}$ (42/50) & $\mathbf{[+0.277, +0.763]}$ & $\mathbf{[+0.159, +0.587]}$ (38/50) & $\mathbf{[+0.139, +0.747]}$ \\
+      & causal GP   & $[-0.060, +0.512]$ (11/50) & $\mathbf{[+0.045, +0.701]}$ & $[-0.096, +0.502]$ (10/50) & $\mathbf{[+0.023, +0.683]}$ \\
+      & offline GP  & $[-0.234, +0.312]$ (0/50) & $[-0.119, +0.635]$ & $[-0.268, +0.300]$ (0/50) & $[-0.139, +0.609]$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
 
 \begin{figure}[t]
   \centering
@@ -1239,7 +1324,8 @@ always been there.
 \begin{table}[t]
   \centering
   \caption{The two claims under stress, \seqv{}, \Ti{}. Entries are PR4 pass
-  counts (cut / inclusive) with the point-estimate range.}
+  counts (cut / inclusive) with the point-estimate range; the replicate row gives
+  overlap-corrected 95\% intervals.}
   \label{tab:stress}
   \small
   \resizebox{\linewidth}{!}{%
@@ -1250,6 +1336,7 @@ always been there.
     Random split, observed points & \textbf{4/4 / 4/4}, $+0.17$ to $+0.32$ & \textbf{4/4 / 4/4} vs.\ causal GP, $+0.08$ to $+0.17$ \\
     Reweighted to missing points (\S\ref{sec:mnar}) & 2/4 / \textbf{4/4}, $+0.14$ to $+0.28$ & \textbf{4/4 / 4/4} vs.\ persistence, $+0.28$ to $+0.44$ \\
     Temporal campaign split (\S\ref{sec:campaign}) & \textbf{4/4 / 4/4}, $+0.17$ to $+0.20$ & \textbf{4/4 / 4/4} vs.\ causal GP, $+0.11$ to $+0.16$ \\
+    Repeated 5-fold replicate, every discharge tested once (Table~\ref{tab:replicate}) & $\mathbf{[+0.19, +0.25]}$ / $\mathbf{[+0.19, +0.31]}$ (overlap-corrected 95\% CI) & $\mathbf{[+0.08, +0.14]}$ / $\mathbf{[+0.07, +0.17]}$ vs.\ causal GP \\
     \bottomrule
   \end{tabular}}
 \end{table}
@@ -1491,8 +1578,10 @@ bulk rows and score \seqv{} in each with the shot-clustered bootstrap
   \item \Vrot{}: peak-stratum skill $+0.54$ to $+0.79$ (point estimates positive
         on 8/8, PASS 2/4 in each population, against persistence $+0.75$ to
         $+0.86$ PASS 8/8), and $\approx 0$ in the bulk ($-0.07$ to $+0.15$, PASS
-        0/8). The asymmetry is therefore \emph{regional}: globally \Vrot{} ties
-        interpolation, but in high-activity neighbourhoods---where smooth
+        0/8). The asymmetry is therefore \emph{regional}: on the four-split
+        count \Vrot{} ties interpolation globally (the replicate's pooled readout
+        later registers the mean win, \S\ref{sec:headline}), but in high-activity
+        neighbourhoods---where smooth
         past+future interpolation is worst---even the history-driven \Vrot{}
         predictor adds value. We report it as a regional strength with a thin
         significance base, not a reversal of the global null.
@@ -2295,9 +2384,14 @@ two-population protocol against a deliberately adverse bar: interpolation that
 sees the future, and a causal GP that is the strongest method that does not. On the
 observed population the model beats future-using PCHIP for ion temperature with
 significant, replicated skill ($+0.17$ to $+0.32$ across four independent splits
-and both populations), ties the strongest offline smoother, and beats every causal
-baseline for both targets, including the causal GP on all eight cells and
-including the non-adjacent regime ($\Delta t > 15$\,ms).
+and both populations; $[+0.19, +0.25]$ and $[+0.19, +0.31]$ under a pre-registered
+repeated 5-fold replicate that tests every discharge once), ties the strongest
+offline smoother, and beats every causal baseline for both targets, including the
+causal GP on all eight cells and including the non-adjacent regime
+($\Delta t > 15$\,ms). For rotation the replicate turns the four-split tie into a
+registered mean-squared-error win over PCHIP, persistence and the causal GP in
+both populations ($[+0.07, +0.70]$ cut vs.\ PCHIP), carried by the tail; in the
+median \Vrot{} still ties persistence at the photon floor.
 
 The claim we make about deployment is now supported by both stress tests. At
 genuinely missing, in-domain timesteps the advantage over every causal method
@@ -2313,8 +2407,8 @@ interpolant that reads the future; by that comparison the nowcaster works at the
 points where it matters. It emits calibrated intervals that beat both baselines'
 by a proper scoring rule in every cell.
 
-We also report where it does not work and why. Rotation ties interpolation
-globally and its skill lives in transients; the ion-temperature win is itself a
+We also report where it does not work and why. Rotation beats interpolation
+only in the mean, ties it in the median, and its skill lives in transients; the ion-temperature win is itself a
 tail effect---in the median row the nowcaster equals persistence and trails
 future-using PCHIP by 20\%, and a Huber loss pinned to the target's reproducibility
 bound recovers half of that bulk at no aggregate cost (conditional on the cut); the
