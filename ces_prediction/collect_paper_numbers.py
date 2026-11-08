@@ -31,6 +31,8 @@ Sources (all under data/):
                              B.14 sec. 10 own-objective selection / epoch cap, sec:bulk (sec. 8bu)
   .b27_summary_R10.json, .b27c_hier.json
                              B.27/B.27c shot-level repeated 5-fold replicate, tab:replicate (sec. 8bw, 8by)
+  .b28_stage1.json, .b28_stage2.json
+                             B.28 what-the-backbone-computes: surrogate ratios and the trained equation (sec. 8bz)
 
 The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
 hand; `transcription_check` re-reads the values printed in main.tex from these files and fails on
@@ -336,6 +338,29 @@ TAB_REPLICATE = {
 }
 
 
+def equation_b28(s1, s2):
+    """B.28 (sec. 8bz): stage-1 surrogate ratios on the frozen rows and the stage-2 trained equation."""
+    out = {"stage1": {}, "stage2": {}}
+    for rec in s1["splits"]:
+        out["stage1"].setdefault(rec["pop"], {})[str(rec["seed"])] = {
+            "alpha_star": rec["alpha_star"],
+            "ratio_ewma_vs_persistence": rec["ratios"]["ewma_star"]["persistence"]["ratio_point"],
+            "ratio_ewma_inc_vs_persistence": rec["ratios"]["ewma_inc"]["persistence"]["ratio_point"],
+            "ewma_vs_pchip": rec["skills"]["ewma_star"]["pchip"]["skill_point"],
+            "ewma_inc_vs_pchip": rec["skills"]["ewma_inc"]["pchip"]["skill_point"]}
+    for pop in POPS:
+        out["stage2"][pop] = {}
+        for s in SEEDS:
+            r = s2["arms"]["b28"][pop][s]
+            out["stage2"][pop][s] = {"ratio_vs_pchip": r["CES_TI"]["ratio_vs_pchip"],
+                                     "ratio_vs_persistence": r["CES_TI"]["ratio_vs_persistence"],
+                                     "paired_vs_control_TI": r["CES_TI"]["paired_vs_control"],
+                                     "paired_vs_control_VT": r["CES_VT"]["paired_vs_control"],
+                                     "physics": {k: r["physics"][k] for k in ("K0", "K_inf", "s_K_ms", "a_sum_BES_eV", "a_sum_ECEI_eV", "a_sum_MC_eV")}}
+        out["stage2"][pop]["verdict"] = s2["verdict"][pop]
+    return out
+
+
 def transcription_check(n):
     """Values printed in main.tex (sec:physfilter tab:dual, sec:dist) against the artifacts."""
     d, v, h = n["physfilter"]["dual_readout"], n["physfilter"]["vrot_floor"], n["dist_head"]
@@ -381,6 +406,25 @@ def transcription_check(n):
                     [f(rep[p]["CES_VT"]["pchip"]["per_repeat_pooled"][str(r)] for r in range(2, 10))
                      for p in POPS for f in (min, max)], [0.28, 0.59, 0.09, 0.56], 0.005))
     printed.append(("sec:headline V_rot vs PCHIP fold sd 0.18 (cut)", [rep["cut"]["CES_VT"]["pchip"]["fold_sd"]], [0.18], 0.005))
+    e1, e2 = n["equation_b28"]["stage1"]["cut"], n["equation_b28"]["stage2"]["cut"]
+    printed.append(("sec:model B.28 stage-1 EWMA-only ratio range 0.73-0.82 (cut)",
+                    [min(v["ratio_ewma_vs_persistence"] for v in e1.values()), max(v["ratio_ewma_vs_persistence"] for v in e1.values())], [0.73, 0.82], 0.005))
+    printed.append(("sec:model B.28 stage-1 EWMA+inc ratio range 0.77-0.85 (cut), all >= 0.75",
+                    [min(v["ratio_ewma_inc_vs_persistence"] for v in e1.values()), max(v["ratio_ewma_inc_vs_persistence"] for v in e1.values()),
+                     float(all(v["ratio_ewma_inc_vs_persistence"] >= 0.75 for v in e1.values()))], [0.77, 0.85, 1.0], 0.005))
+    printed.append(("sec:model B.28 stage-2 ratio vs PCHIP 0.50-0.66 (cut)",
+                    [min(e2[s]["ratio_vs_pchip"] for s in SEEDS), max(e2[s]["ratio_vs_pchip"] for s in SEEDS)], [0.50, 0.66], 0.005))
+    printed.append(("sec:model B.28 stage-2 ratio vs persistence 0.81-0.83 (cut)",
+                    [min(e2[s]["ratio_vs_persistence"] for s in SEEDS), max(e2[s]["ratio_vs_persistence"] for s in SEEDS)], [0.81, 0.83], 0.005))
+    ph = [e2[s]["physics"] for s in SEEDS]
+    printed.append(("sec:model B.28 K0 0.30-0.31, K_inf 0.52-0.54, s_K 37-40 ms (cut)",
+                    [min(p["K0"] for p in ph), max(p["K0"] for p in ph), min(p["K_inf"] for p in ph), max(p["K_inf"] for p in ph),
+                     min(p["s_K_ms"] for p in ph), max(p["s_K_ms"] for p in ph)], [0.30, 0.31, 0.52, 0.54, 37, 40], 0.5))
+    printed.append(("sec:model B.28 sum a_BES +43..+51, a_ECEI +39..+46 eV/sigma (cut)",
+                    [min(p["a_sum_BES_eV"] for p in ph), max(p["a_sum_BES_eV"] for p in ph), min(p["a_sum_ECEI_eV"] for p in ph), max(p["a_sum_ECEI_eV"] for p in ph)],
+                    [43, 51, 39, 46], 0.5))
+    printed.append(("sec:model B.28 cross term < 0.001 (cut, 4/4)",
+                    [float(all(abs(x) < 0.001 for x in n["equation_b28"]["stage2"]["cut"]["verdict"]["H28_4_cross_vs_b28_TI"]))], [1.0], 0))
     problems = []
     for name, got, want, tol in printed:
         if len(got) != len(want) or any(abs(float(a) - b) > tol for a, b in zip(got, want)):
@@ -431,6 +475,7 @@ def main():
     b17b = _load(DATA / ".b17b_summary.json")
     b14c, b14s_cut = _load(DATA / ".b14c_verdict.json"), _load(DATA / ".b14s_cut_rescore.json")
     r10, hier = _load(DATA / ".b27_summary_R10.json"), _load(DATA / ".b27c_hier.json")
+    b28s1, b28s2 = _load(DATA / ".b28_stage1.json"), _load(DATA / ".b28_stage2.json")
     for name in ("headline", "coverage_pr2", "ladder", "conformal", "peak_and_largegap", "campaign", "cut_sensitivity", "ablation", "mnar"):
         if "error" in b5.get(name, {}):
             raise SystemExit(f".b5_summary.json block {name} failed: {b5[name]['error']}")
@@ -458,6 +503,7 @@ def main():
         "dist_head": dist_head(b17b),
         "b14_select": b14_select(b14c, b14s_cut),
         "replicate_b27": replicate_b27(r10, hier),
+        "equation_b28": equation_b28(b28s1, b28s2),
     }
     problems = crosscheck(numbers, b5, b3c, b4) + transcription_check(numbers)
     if problems:
@@ -466,7 +512,7 @@ def main():
     OUT_PATH.write_text(json.dumps(numbers, indent=2, default=float), encoding="utf-8")
     print(f"wrote {OUT_PATH}")
     print("crosscheck: B.5 ladder/headline, B.3, B.4 and the TEST reports agree on every seed and population")
-    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values and tab:replicate (B.27/B.27c) in main.tex match the artifacts")
+    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values tab:replicate (B.27/B.27c) and the sec:model B.28 paragraph in main.tex match the artifacts")
 
     for pop in POPS:
         print(f"\n=== headline / {pop} (TEST, skill vs PCHIP [95% CI]) ===")

@@ -719,6 +719,29 @@ recurrent state would carry fast-diagnostic information into the \Vrot{} head no
 matter how the head is wired, whereas here perturbing all 15 fast channels leaves
 the \Vrot{} output bit-identical (\S\ref{sec:asym}).
 
+\paragraph{What the backbone computes.}
+A pre-registered readout of the thirty frozen \seqv{} checkpoints found that weight
+magnitude carries no stable information (first-layer column norms are flat across the
+fifteen fast channels, the largest weights sit on the least influential input, and
+per-channel ranks do not reproduce across splits), whereas the input--output response
+does: the \Ti{} output is an exponentially weighted average of the past observed
+\Ti{} plus a saturating, same-instant response to the fast-channel increments, with a
+forget-gate memory of 1.3 grid steps. Scored on the frozen TEST rows, an unfitted
+running mean alone carries 73--82\% (cut) of the backbone's skill over persistence,
+and a ridge-fitted linear term in the 15 increments raises it to 77--85\%
+(4/4 splits above the registered 0.75 bar). Trained from scratch as a 20-parameter
+equation under the identical protocol, $\hat y_t = m_t + \sum_c a_c\,\kappa
+\tanh(\Delta x_{c,t}/\kappa) + b_0$ with an observation gain $K(s) = K_\infty + (K_0 -
+K_\infty)e^{-s/s_K}$ of the gap $s$ since the previous measurement, the same four
+physical numbers return on every cut split: $K_0 = 0.30$--$0.31$, $K_\infty =
+0.52$--$0.54$, $s_K = 37$--$40$\,ms, $\sum a_{\mathrm{BES}} = +43$ to $+51$\,eV per
+$\sigma$, $\sum a_{\mathrm{ECEI}} = +39$ to $+46$\,eV per $\sigma$, $\sum
+a_{\mathrm{MC}} \approx 0$. That equation keeps 81--83\% of the backbone's
+persistence-relative skill but only 50--66\% of its PCHIP-relative skill (cut), and a
+single cross term adds less than $0.001$. The remainder is concentrated in the
+event rows and is a state-dependent response the weights do not expose; its form is
+the subject of a registered follow-up, not a claim here.
+
 \subsection{The windowed control: observation-masked attention pooling}
 \label{sec:model:window}
 
