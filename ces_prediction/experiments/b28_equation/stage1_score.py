@@ -1,6 +1,7 @@
 """B.28 stage 1 (PREREGISTRATION_B28.md sec. 3): score the two-term equation on the FROZEN rows.
 
-No training, CPU only. For each frozen backbone run (cut: `.b1_seqv2_s{s}_i42`, inclusive:
+No training, CPU only. For each frozen backbone run (cut: `.b1_seqv2_s{s}_i{s}`, the headline
+runs; the registration's `_i42` was a naming slip, see PREREGISTRATION_B28.md sec. 6; inclusive:
 `.b5i_seqv2_s{s}`) the exact TEST row population of its `comparison_errors_test.npz` is
 re-derived through the same harness call (`build_clean_val_subset` + the keep / baseline-NaN
 mask of eval_seq.py) and verified against the npz (shot ids, y_true, dt_ms must match). On
@@ -40,7 +41,7 @@ from run_b1_gate import GATE_ENV, AMBIENT_VARS  # noqa: E402
 
 SEEDS = (42, 1, 7, 123)
 POPS = {
-    "cut": {"cut": "3000", "run": ".b1_seqv2_s{s}_i42", "control_metrics": ".b1_w2cut_s{s}",
+    "cut": {"cut": "3000", "run": ".b1_seqv2_s{s}_i{s}", "control_metrics": ".b1_w2cut_s{s}",
             "split": ".b1_w2cut_split_s{s}"},
     "incl": {"cut": "0", "run": ".b5i_seqv2_s{s}", "control_metrics": ".wsweep_hf_w2_s{s}",
              "split": ".b1_manifest_s{s}"},
@@ -104,13 +105,17 @@ def frozen_rows(control_metrics, manifest, seed, npz):
         raise SystemExit(f"FATAL: re-derived {len(shot)} rows, npz has {n_npz}")
     if not np.array_equal(shot, npz["CES_TI_shot"]):
         raise SystemExit("FATAL: shot ids differ from the npz")
-    dy = float(np.max(np.abs(y - npz["CES_TI_y_true"])))
+    # The cut s1/s7/s123 npz files (eval_seq of 2026-08-14) predate the `_y_true` key; for them
+    # the row identity is checked on shot ids and dt_ms alone (both exact) and y_true is unverified.
+    has_y = "CES_TI_y_true" in npz.files
+    dy = float(np.max(np.abs(y - npz["CES_TI_y_true"]))) if has_y else float("nan")
     ddt = float(np.max(np.abs(dt - npz["CES_TI_dt_ms"])))
-    if dy > 1e-2 or ddt > 1e-6:
+    if (has_y and dy > 1e-2) or ddt > 1e-6:
         raise SystemExit(f"FATAL: y_true / dt_ms differ from the npz (max {dy:.3g} eV, {ddt:.3g} ms)")
     return {"shot": shot, "file": fname, "row": np.asarray(row), "time": np.asarray(tkey),
             "y": y, "dt_ms": dt, "check": {"n": int(n_npz), "max_dy_eV": dy, "max_ddt_ms": ddt,
-                                            "y_bit_identical": bool(dy == 0.0)}}
+                                            "y_bit_identical": bool(has_y and dy == 0.0),
+                                            "y_true_in_npz": bool(has_y)}}
 
 
 # ---------------------------------------------------------------- features

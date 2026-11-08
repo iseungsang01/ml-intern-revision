@@ -132,6 +132,13 @@ No other rule decides a claim. Nothing here changes a registered headline.
   lowered to 0.45 above. The full stage 1 recomputes s42 with all VAL files and B = 10 000.
 - The readout's own skill numbers (persistence-relative, sampled rows) are not comparable to
   the thesis headline; only stage 1's frozen-row numbers are.
+- **Erratum 2026-11-08 (before any stage-1 split other than cut s42 was scored).** §2 named the cut
+  runs `.b1_seqv2_s{s}_i42`. The headline cut runs, the B.5 rescore and stage 2's own control are
+  the seed-matched `.b1_seqv2_s{s}_i{s}` (identical for s = 42); the `_i42` directories for
+  s ∈ {1, 7, 123} are 2026-08-14 gate runs whose npz lacks the persistence / GP / y_true columns,
+  so stage 1 could not have been scored against them. Stage 1 uses `_i{s}`. For the cut s1 / s7 /
+  s123 npz the `_y_true` column is present and verified; the rule, the arms and the predictions are
+  unchanged.
 
 ## 7. What would change the paper
 
