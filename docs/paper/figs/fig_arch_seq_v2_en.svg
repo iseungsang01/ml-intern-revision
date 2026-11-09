@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="seq_v2: the 22 input channels of grid row t split into two causal LSTM branches; the T_i branch reads all 22 channels through a 2-layer 160-unit LSTM and a head, the V_rot branch reads only the 7 slow-tail channels through a 1-layer 64-unit LSTM and a head; the fast-channel path to V_rot is structurally absent; the recurrent state passes from t-1 to t to t+1; the loss is computed only on rows with an actual CES measurement." style="max-width:100%;height:auto;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:13px">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b71c1c"/></marker>
+  </defs>
+  <g stroke="currentColor" fill="none" stroke-width="1.4">
+    <!-- ===== input band ===== -->
+    <rect x="40" y="40" width="1120" height="110" rx="6" stroke-dasharray="4 3" opacity="0.6"/>
+    <rect x="70" y="72" width="330" height="60" rx="4"/>
+    <rect x="430" y="72" width="100" height="60" rx="4"/>
+    <rect x="560" y="72" width="270" height="60" rx="4"/>
+    <rect x="860" y="72" width="270" height="60" rx="4"/>
+    <!-- ===== T_i branch ===== -->
+    <rect x="110" y="250" width="260" height="46" rx="4"/>
+    <rect x="110" y="326" width="260" height="46" rx="4"/>
+    <rect x="110" y="402" width="260" height="34" rx="4"/>
+    <rect x="110" y="462" width="260" height="34" rx="4"/>
+    <rect x="110" y="522" width="260" height="34" rx="4"/>
+    <rect x="110" y="582" width="260" height="34" rx="4"/>
+    <!-- ===== V_rot branch ===== -->
+    <rect x="800" y="326" width="260" height="46" rx="4"/>
+    <rect x="800" y="402" width="260" height="34" rx="4"/>
+    <rect x="800" y="462" width="260" height="34" rx="4"/>
+    <rect x="800" y="522" width="260" height="34" rx="4"/>
+    <rect x="800" y="582" width="260" height="34" rx="4"/>
+    <!-- arrows: inputs -> branches -->
+    <path d="M235,132 L235,250" marker-end="url(#ah)"/>
+    <path d="M480,132 L480,200 L300,200 L300,250" marker-end="url(#ah)"/>
+    <path d="M695,132 L695,200 L330,200 L330,250" marker-end="url(#ah)"/>
+    <path d="M995,132 L995,200 L930,200 L930,326" marker-end="url(#ah)"/>
+    <path d="M480,200 L870,200 L870,326" marker-end="url(#ah)"/>
+    <path d="M695,200 L900,200 L900,326" marker-end="url(#ah)"/>
+    <!-- within branches -->
+    <path d="M240,296 L240,326" marker-end="url(#ah)"/>
+    <path d="M240,372 L240,402" marker-end="url(#ah)"/>
+    <path d="M240,436 L240,462" marker-end="url(#ah)"/>
+    <path d="M240,496 L240,522" marker-end="url(#ah)"/>
+    <path d="M240,556 L240,582" marker-end="url(#ah)"/>
+    <path d="M240,616 L240,650" marker-end="url(#ah)"/>
+    <path d="M930,372 L930,402" marker-end="url(#ah)"/>
+    <path d="M930,436 L930,462" marker-end="url(#ah)"/>
+    <path d="M930,496 L930,522" marker-end="url(#ah)"/>
+    <path d="M930,556 L930,582" marker-end="url(#ah)"/>
+    <path d="M930,616 L930,650" marker-end="url(#ah)"/>
+    <!-- recurrent state in/out, T_i -->
+    <path d="M40,273 L110,273" marker-end="url(#ah)"/>
+    <path d="M370,273 L440,273" marker-end="url(#ah)"/>
+    <path d="M40,349 L110,349" marker-end="url(#ah)"/>
+    <path d="M370,349 L440,349" marker-end="url(#ah)"/>
+    <!-- recurrent state in/out, V_rot -->
+    <path d="M730,349 L800,349" marker-end="url(#ah)"/>
+    <path d="M1060,349 L1130,349" marker-end="url(#ah)"/>
+  </g>
+  <!-- blocked path: fast channels -> V_rot branch -->
+  <g stroke="#b71c1c" fill="none" stroke-width="1.6" stroke-dasharray="6 4">
+    <path d="M400,102 L560,102 M830,102 L860,102" opacity="0"/>
+    <path d="M235,170 L640,170 L640,300 L800,300" marker-end="url(#ahr)"/>
+  </g>
+  <g stroke="#b71c1c" stroke-width="2.2" fill="none">
+    <path d="M630,290 L650,310 M650,290 L630,310"/>
+  </g>
+  <!-- ===== labels ===== -->
+  <g fill="currentColor">
+    <text x="52" y="60" font-size="12" opacity="0.75">input x_t · row t of the 10 ms grid · 22 channels</text>
+    <text x="235" y="96" text-anchor="middle" font-weight="600">fast channels 15</text>
+    <text x="235" y="116" text-anchor="middle" font-size="12">BES 9 · ECEI 4 · Mirnov 2 (per-shot z)</text>
+    <text x="480" y="96" text-anchor="middle" font-weight="600">dt</text>
+    <text x="480" y="116" text-anchor="middle" font-size="12">grid spacing 1</text>
+    <text x="695" y="96" text-anchor="middle" font-weight="600">T_i history tail 3</text>
+    <text x="695" y="116" text-anchor="middle" font-size="12">carried value · staleness log1p(s) · observed flag</text>
+    <text x="995" y="96" text-anchor="middle" font-weight="600">V_rot history tail 3</text>
+    <text x="995" y="116" text-anchor="middle" font-size="12">carried · staleness · observed flag</text>
+
+    <text x="240" y="232" text-anchor="middle" font-weight="700">T_i branch — all 22 channels</text>
+    <text x="240" y="269" text-anchor="middle" font-weight="600">LSTM layer 1 · hidden 160</text>
+    <text x="240" y="286" text-anchor="middle" font-size="11" opacity="0.8">W_ih 640×22, W_hh 640×160 · 117,760</text>
+    <text x="240" y="345" text-anchor="middle" font-weight="600">LSTM layer 2 · hidden 160 (dropout 0.1)</text>
+    <text x="240" y="362" text-anchor="middle" font-size="11" opacity="0.8">W_ih 640×160, W_hh 640×160 · 206,080</text>
+    <text x="240" y="424" text-anchor="middle">LayerNorm(160)</text>
+    <text x="240" y="484" text-anchor="middle">Linear 160→64</text>
+    <text x="240" y="544" text-anchor="middle">GELU</text>
+    <text x="240" y="604" text-anchor="middle">Linear 64→1</text>
+    <text x="240" y="676" text-anchor="middle" font-weight="700" font-size="15">T̂_i,t (normalised z)</text>
+
+    <text x="930" y="308" text-anchor="middle" font-weight="700">V_rot branch — slow tail only (7 channels)</text>
+    <text x="930" y="345" text-anchor="middle" font-weight="600">LSTM 1 layer · hidden 64</text>
+    <text x="930" y="362" text-anchor="middle" font-size="11" opacity="0.8">W_ih 256×7, W_hh 256×64 · 18,688</text>
+    <text x="930" y="424" text-anchor="middle">LayerNorm(64)</text>
+    <text x="930" y="484" text-anchor="middle">Linear 64→64</text>
+    <text x="930" y="544" text-anchor="middle">GELU</text>
+    <text x="930" y="604" text-anchor="middle">Linear 64→1</text>
+    <text x="930" y="676" text-anchor="middle" font-weight="700" font-size="15">V̂_rot,t (normalised z)</text>
+
+    <text x="44" y="262" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="376" y="262" font-size="11">h_t, c_t → t+1</text>
+    <text x="44" y="338" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="376" y="338" font-size="11">h_t, c_t → t+1</text>
+    <text x="734" y="338" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="1066" y="338" font-size="11">h_t, c_t → t+1</text>
+    <text x="640" y="262" text-anchor="middle" font-size="12" fill="#b71c1c" font-weight="600">blocked: fast channels → V_rot branch</text>
+    <text x="640" y="278" text-anchor="middle" font-size="11" fill="#b71c1c">no 10 ms torque information (P02) · ablation bit-identical 8/8 (§8ab)</text>
+
+    <text x="600" y="724" text-anchor="middle" font-size="12">loss: per-target masked MSE on rows where CES was actually measured · the CES input at the target row is masked to 0 · 357,570 parameters (T_i branch 334,529 · V_rot branch 23,041)</text>
+    <text x="600" y="744" text-anchor="middle" font-size="12" opacity="0.8">State flows only from past to present (causal). One step per grid row; empty rows are inputs too (carried value, staleness and flag turn missingness into information).</text>
+  </g>
+
+  <g stroke="currentColor" fill="none" stroke-width="1" opacity="0.7"><rect x="470" y="400" width="260" height="216" rx="4" stroke-dasharray="3 3"/></g>
+  <g fill="currentColor" font-size="11">
+    <text x="482" y="420" font-weight="600" font-size="12">details (as in the source)</text>
+    <text x="482" y="440">· Norm: nn.LayerNorm(160 / 64) on the LSTM output,</text>
+    <text x="482" y="455">  each time-step vector (learned γ, β, ε = 1e-5)</text>
+    <text x="482" y="475">· activation: GELU (not ReLU); none after the last Linear</text>
+    <text x="482" y="495">· dropout 0.1 only between the two T_i LSTM layers</text>
+    <text x="482" y="515">· loss: per-target masked MSE + 0.1·mean relu(0_z − T̂_i)</text>
+    <text x="482" y="535">· AdamW lr 1e-3, wd 1e-4 · grad-norm clip 1.0</text>
+    <text x="482" y="555">· ReduceLROnPlateau(2, ×0.5) · early stop 6 · batch 16 blocks</text>
+    <text x="482" y="575">· variable-length blocks via pack_padded_sequence</text>
+    <text x="482" y="595">· init: PyTorch default (fixed init seed) · budget 1e6</text>
+  </g>
+</svg>
