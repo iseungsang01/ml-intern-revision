@@ -725,27 +725,33 @@ magnitude carries no stable information (first-layer column norms are flat acros
 fifteen fast channels, the largest weights sit on the least influential input, and
 per-channel ranks do not reproduce across splits), whereas the input--output response
 does: the \Ti{} output is an exponentially weighted average of the past observed
-\Ti{} plus a saturating, same-instant response to the fast-channel increments, with a
-forget-gate memory of 1.3 grid steps. Scored on the frozen TEST rows, an unfitted
-running mean alone carries 73--82\% (cut) of the backbone's skill over persistence,
-and a ridge-fitted linear term in the 15 increments raises it to 77--85\%
-(4/4 splits above the registered 0.75 bar). Trained from scratch as a 20-parameter
-equation under the identical protocol, $\hat y_t = m_t + \sum_c a_c\,\kappa
+\Ti{} plus a same-instant response to the fast channels, with a forget-gate memory of
+1.3 grid steps. Scored on the frozen TEST rows, an unfitted running mean alone carries
+73--82\% (cut) of the backbone's skill over persistence, and a ridge-fitted linear term
+in the 15 ten-millisecond increments raises it to 77--85\% (4/4 splits above the
+registered 0.75 bar). Trained from scratch as a 20-parameter equation under the
+identical protocol with that increment term, $\hat y_t = m_t + \sum_c a_c\,\kappa
 \tanh(\Delta x_{c,t}/\kappa) + b_0$ with an observation gain $K(s) = K_\infty + (K_0 -
-K_\infty)e^{-s/s_K}$ of the gap $s$ since the previous measurement, the same four
-physical numbers return on every cut split: $K_0 = 0.30$--$0.31$, $K_\infty =
-0.52$--$0.54$, $s_K = 37$--$40$\,ms, $\sum a_{\mathrm{BES}} = +43$ to $+51$\,eV per
-$\sigma$, $\sum a_{\mathrm{ECEI}} = +39$ to $+46$\,eV per $\sigma$, $\sum
-a_{\mathrm{MC}} \approx 0$. That equation keeps 81--83\% of the backbone's
-persistence-relative skill but only 50--66\% of its PCHIP-relative skill (cut), and a
-single cross term adds less than $0.001$. A registered follow-up measured the
-remainder directly, with the Jacobian of the output on every frozen TEST row: the
-backbone's fast-channel response is a ${\approx}100$\,ms high-pass (the current value
-minus the preceding ten-step mean) whose gain is flat to $2\sigma$ and cut off beyond
-$3\sigma$---not a state-dependent gain and not a smooth saturation---and the best
-linear description of the remainder in that form closes 32--45\% of the gap to the
-backbone (cut); the rest is not a low-order function of the fast-channel history.
-These are measurements of the model, not headline claims.
+K_\infty)e^{-s/s_K}$ of the gap $s$ since the previous measurement, the same physical
+numbers return on every cut split ($K_0 = 0.30$--$0.31$, $K_\infty = 0.52$--$0.54$,
+$s_K = 37$--$40$\,ms, $\sum a_{\mathrm{BES}} = +43$ to $+51$, $\sum a_{\mathrm{ECEI}} =
++39$ to $+46$\,eV per $\sigma$, $\sum a_{\mathrm{MC}} \approx 0$), but the equation keeps
+only 50--66\% of the backbone's PCHIP-relative skill (cut), below the registered 0.70 bar,
+and a single cross term adds less than $0.001$. The Jacobian of the output on every
+frozen TEST row then showed that the form, not a missing state-dependent term, was the
+gap: the backbone's fast-channel response is a ${\approx}100$\,ms high-pass (the current
+value minus the preceding ten-step mean) whose gain is flat to $2\sigma$ and switched off
+beyond $3\sigma$, with no dependence on the recent increments. Re-trained with exactly
+that form and the same 20 parameters, $\hat y_t = m_t + \sum_c a_c\,d_{c,t}\,
+\sigma\!\big((\theta - |d_{c,t}|)/0.5\sigma\big) + b_0$ with $d_{c,t} = x_{c,t} -
+\overline{x}_{c,\,t-10..t-1}$, the equation keeps 72--78\% of the backbone's
+PCHIP-relative skill and 87--90\% of its persistence-relative skill on 4/4 cut splits,
+beats the increment-form equation on every split (paired $+0.034$ to $+0.042$, CIs above
+zero), and learns $\theta = 2.9$--$3.0\sigma$, $\sum a_{\mathrm{BES}} = +48$ to $+53$,
+$\sum a_{\mathrm{ECEI}} = +44$ to $+50$\,eV per $\sigma$, $K_0 = 0.27$--$0.30$. The
+remaining quarter of the PCHIP skill is the network's nonlinear event handling, which no
+low-order function of the fast-channel history reproduces. These are measurements of the
+model; the headline numbers remain the backbone's.
 
 \subsection{The windowed control: observation-masked attention pooling}
 \label{sec:model:window}

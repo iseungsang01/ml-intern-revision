@@ -6617,3 +6617,44 @@ The run is deterministic: at the selected epoch the norms (MC 1.591, BES 1.350, 
 **Paper (prereg §7, "H28-3 not supported" branch, stage 3 recorded).** One sentence appended to `sec:model:backbone`'s paragraph (en/ko): the residual's form as measured. No headline number changes.
 
 **Named next.** A registered `b28h` variant (high-pass kernel + 3σ rejection, still ≈ 20 parameters) under the stage-2 protocol would test whether the form corrections recover the 0.70 bar; it is a GPU batch of 8 runs and is not started here. The nonlinear remainder needs a different probe than input Jacobians (e.g. hidden-state clustering on event rows); not registered.
+
+## 8bz-4. B.28 stage 4 (2026-11-09) — with the backbone's own kernel the 20-parameter equation clears the registered bar: 0.72–0.78 of the PCHIP skill on 4/4 cut splits, beating the stage-2 equation on every split
+
+Registered in `PREREGISTRATION_B28.md` §9 (rules H28-5 / H28-6, guards, predictions, disclosure) before any run; `run_b28.py --stage 4` (8 GPU runs, one batch, 6 … 11 min each; summary `data/.b28_stage4.json`, copied to `docs/paper/b28_stage4.json`). `b28h` = `SeqCESB28(fast_term="hp", nonlin="reject")`: T_i = EWMA m with the gap-dependent gain K(s) + Σ_c a_c · d_c · σ((θ − |d_c|)/0.5σ) + b₀, d_c = x_c,t − mean(x_c,t−10..t−1), θ learned from 3σ; 20 T_i parameters, V_rot branch = seq_v2's. Everything else is stage 2's protocol; control = the frozen backbone; second pairing = the stage-2 `b28` run of the same split.
+
+| pop · split | ratio vs PCHIP (stage 2 `b28`) | ratio vs persistence (stage 2) | `b28h` − `b28` paired T_i [CI] | `b28h` − backbone paired T_i | V_rot paired vs control | θ [σ] | Σa_BES / Σa_ECEI / Σa_MC [eV/σ] | K₀ / K_∞ / s_K [ms] | epochs (best) |
+|---|---|---|---|---|---|---|---|---|---|
+| cut s42 | **0.723** (0.503) | 0.896 (0.814) | +0.0417 [+0.028, +0.057] ✓ | -0.0583 [-0.096, -0.020] | -0.0028 [-0.029, +0.015] | 2.98 | +47.5 / +49.8 / -0.5 | 0.299 / 0.529 / 38.9 | 21 (15) |
+| cut s1 | **0.722** (0.606) | 0.866 (0.810) | +0.0339 [+0.024, +0.046] ✓ | -0.0918 [-0.119, -0.063] | +0.0122 [+0.005, +0.023] | 3.00 | +49.1 / +44.4 / +3.7 | 0.294 / 0.532 / 39.4 | 23 (17) |
+| cut s7 | **0.767** (0.630) | 0.881 (0.811) | +0.0417 [+0.029, +0.056] ✓ | -0.0806 [-0.107, -0.054] | +0.0012 [-0.009, +0.013] | 2.93 | +51.6 / +47.9 / +1.8 | 0.273 / 0.504 / 43.7 | 35 (29) |
+| cut s123 | **0.776** (0.661) | 0.886 (0.828) | +0.0367 [+0.028, +0.047] ✓ | -0.0806 [-0.129, -0.019] | -0.0052 [-0.028, +0.002] | 2.94 | +52.6 / +48.3 / +0.9 | 0.271 / 0.478 / 46.8 | 38 (32) |
+| incl s42 | 0.427 (0.406) | 0.773 (0.765) | +0.0051 [+0.003, +0.008] ✓ | -0.1664 [-0.384, -0.042] | -0.0231 [-0.132, +0.033] | 2.81 | -6.8 / +34.8 / -5.6 | 0.251 / 0.464 / 50.8 | 37 (31) |
+| incl s1 | 0.498 (0.487) | 0.798 (0.793) | +0.0028 [+0.001, +0.005] ✓ | -0.1565 [-0.303, -0.075] | -0.0110 [-0.032, +0.003] | 2.90 | -7.4 / +28.6 / -1.9 | 0.239 / 0.441 / 54.3 | 44 (38) |
+| incl s7 | **0.805** (0.796) | 0.882 (0.877) | +0.0035 [+0.002, +0.006] ✓ | -0.0804 [-0.117, -0.039] | +0.0025 [-0.029, +0.037] | 2.97 | -2.4 / +36.9 / -3.0 | 0.244 / 0.444 / 53.0 | 56 (50) |
+| incl s123 | **0.751** (0.748) | 0.864 (0.863) | +0.0010 [-0.001, +0.003] | -0.1155 [-0.145, -0.086] | -0.0037 [-0.067, +0.015] | 2.74 | -23.2 / +37.1 / -8.3 | 0.250 / 0.455 / 50.2 | 42 (36) |
+
+Bold = at or above the registered 0.70 bar; ✓ = shot-cluster CI above 0 with `b28h` better.
+
+**Rules (prereg §9).** **Cut.** ratio vs PCHIP 0.722 … 0.776 (mean 0.747; stage 2 `b28` 0.503 … 0.661, mean 0.600), 4/4 at ≥ 0.70; vs persistence 0.866 … 0.896; `b28h` − `b28` +0.034 … +0.042, significant on 4/4; V_rot significant deficits 0/4; θ 2.93 … 3.00σ; Σa_BES +48 … +53, Σa_ECEI +44 … +50, Σa_MC -1 … +4 eV/σ; K₀ 0.271 … 0.299, K_∞ 0.478 … 0.532, s_K 39 … 47 ms.
+
+**Inclusive (secondary).** ratio vs PCHIP 0.427 … 0.805 (mean 0.620; stage 2 `b28` 0.406 … 0.796, mean 0.610), 2/4 at ≥ 0.70; vs persistence 0.773 … 0.882; `b28h` − `b28` +0.001 … +0.005, significant on 3/4; V_rot significant deficits 0/4; θ 2.74 … 2.97σ; Σa_BES -23 … -2, Σa_ECEI +29 … +37, Σa_MC -8 … -2 eV/σ; K₀ 0.239 … 0.251, K_∞ 0.441 … 0.464, s_K 50 … 54 ms.
+
+**Guards.** V_rot: 0 significant deficits in 8 (the branch is untouched). θ ∈ [2, 5]σ: 4/4 cut. Σa_BES ∈ [+40, +80] and Σa_ECEI ∈ [+20, +50] eV/σ (the §8bz-3 Jacobian impulse bands): 4/4 and 4/4 cut. K₀, K_∞, s_K within ±0.05 / ±0.05 / ±10 ms of stage 2: K₀ 0.271 … 0.299 vs 0.30–0.31, K_∞ 0.478 … 0.532 vs 0.52–0.54, s_K 39 … 47 vs 37–40 ms — all inside the bands; the gain after a long gap and the transition time drift slightly down / up when the fast-channel term carries more of the event response.
+
+**Prediction check (prereg §9).** H28-5 cut 4/4 (0.40): **held**; mean ratio 0.64–0.74 (0.6): **missed** (0.747, above the band); H28-6 ≥ 3/4 (0.75): **held**; θ 2.5–4.0σ on 4/4 (0.6): **held**; Σa in the impulse bands 4/4 (0.6): **held**; V_rot deficits 0–1 (0.7): **held**; run time 5–20 min (0.7): **held**. Stage 4: 6 held / 1 missed. B.28 overall (stages 1, 2, 4): 13 held / 6 missed of 19 directional cells.
+
+**Reading.**
+1. *The form was the gap.* Changing nothing but the kernel (10-step baseline instead of one-step increment) and the nonlinearity (linear gain with a ≈ 3σ cutoff instead of a 1σ tanh) lifts the equation from 0.50 … 0.66 to 0.72 … 0.78 of the backbone's PCHIP skill and from 0.81 … 0.83 to 0.87 … 0.90 of its persistence skill, with the same 20 parameters. The gain over `b28` is +0.034 … +0.042 skill on every cut split with CIs above 0 — in ratio terms ≈ 37 % of what stage 2 lacked, in the range of the best *post hoc linear fit* of the residual in §8bz-3 (32–45 %). Training the form end to end does better than fitting it on top of the old equation, because the EWMA gains and the channel gains re-balance (K_∞ and s_K move).
+2. *θ lands where the Jacobian put it.* The learned cutoff is 2.93 … 3.00σ from a 3σ initialisation, with the width fixed at 0.5σ: the > 3σ rejection §8bz-3 read off the backbone survives end-to-end training. Σa_BES +48 … +53 and Σa_ECEI +44 … +50 eV/σ sit inside the registered guard bands; BES reaches the Jacobian impulse range (+52…+60 in §8bz-3) while ECEI stays above the Jacobian's +30…+35 — the equation's ECEI gain carries part of what the LSTM reads from the BES–ECEI co-movement, as in stage 2 (+43…+51 / +39…+46).
+3. *What is still missing.* 0.22 … 0.28 of the PCHIP skill (cut) is not in the equation. §8bz-3 said the remainder beyond the linear form is not a low-order function of the fast-channel history; stage 4 confirms that the form was worth that much and no more. The rest is the LSTM's genuinely nonlinear event handling; it is the price of a 20-parameter description, not a missing term that these inputs expose.
+4. *Inclusive (secondary).* ratio vs PCHIP 0.43 … 0.81 (stage 2 0.41 … 0.80), `b28h` − `b28` only +0.001 … +0.005 (significant on 3/4 at the 10⁻³ level), Σa_BES still negative (-23 … -2 eV/σ, stage 2 −27…+2). The form corrections change almost nothing here: the inclusive equation's deficit is the > 3 keV fit-failure population effect (the backbone learned to ignore rows the least-squares BES gain is pulled around by, readout §7.4), not the kernel. The physics bands are read from the cut population only, as registered.
+
+**Verdict (prereg §9).** **H28-5: form corrections recover the bar (>= 0.70 on 4/4)** (cut 4/4, mean 0.747). **H28-6: high-pass + rejection named as the better description (>= 3/4)** (4/4). Guards all inside their bands. The §8bz-2 verdict ("the event-row nonlinear term is needed") is superseded in its *form* reading: what the stage-2 equation lacked was mostly the right kernel and the right nonlinearity, not a state-dependent term; the equation that explains the backbone at the registered bar is
+
+    T̂_t = m_t + Σ_c a_c · d_c,t · σ((θ − |d_c,t|)/0.5σ) + b₀,   d_c,t = x_c,t − mean(x_c,t−10..t−1),   m_t = m_{t−1} + K(s)·(T_obs − m_{t−1}) on new observations,   K(s) = K_∞ + (K_0 − K_∞)e^{−s/s_K}
+
+with K₀ ≈ 0.28, K_∞ ≈ 0.51, s_K ≈ 42 ms, θ ≈ 3.0σ, Σa_BES ≈ +50, Σa_ECEI ≈ +48, Σa_MC ≈ +1 eV per σ (cut, 4-split means).
+
+**Paper (prereg §7 and §9).** The `sec:model:backbone` paragraph "What the backbone computes" is rewritten with the corrected form and the stage-4 shares (0.72–0.78 of the PCHIP skill, 0.87–0.90 of the persistence skill, cut), keeping the stage-2 numbers as the increment-form comparison; the §8bz-3 sentence becomes the motivation for the form. Collector transcription checks added for every printed stage-4 value. No headline number changes; the backbone remains the model whose numbers are reported.
+
+**Named next.** Nothing further is registered for B.28. The remaining 22–28 % of the PCHIP skill is the backbone's nonlinear event handling; a probe of it would be hidden-state clustering on event rows or a 2-layer gated variant of `b28h`, both new designs, neither registered.
