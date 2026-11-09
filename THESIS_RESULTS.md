@@ -6523,3 +6523,97 @@ Bold = PR4 pass (shot-cluster CI > 0). `b28x − b28` paired `T_i`: cut +0.0006 
 **Paper (prereg §7, "H28-3 not supported" branch).** One paragraph in `sec:model:backbone`: the equation, its parameters in physical units, the share it carries (81–83 % of the persistence skill, 50–66 % of the PCHIP skill, cut), and that the remainder is an event-row term the weights do not expose. Carried into main.tex / main_ko.tex with the collector's transcription checks (b28 block). No headline number changes.
 
 **Named next.** Stage 3 as registered: (i) Jacobian on every frozen row to read the form of r_t (CPU); (ii) context-truncation MSE deficit at 1/2/3/5/10 steps on the frozen checkpoints to join the 0.5/step amplitude decay with P03's 0.559/step (CPU); (iii) the MC column-norm trajectory from the stage-2 logs (if train_seq.py logged it; otherwise a one-run re-train with logging). Each is a registered measurement, not a new claim; 승상님's instruction of 2026-11-04 (no auxiliary runs without asking) stands, so none is started here.
+
+## 8bz-3. B.28 stage 3 (2026-11-09) — the event term is not a state-dependent gain; the backbone's fast-channel kernel is a 100 ms high-pass, and the context deficit is baseline-building time, not carried-value memory
+
+Registered in `PREREGISTRATION_B28.md` §2 ("Stage 3") and the §6 addendum of 2026-11-09 (reading criteria fixed before any measurement; one deviation disclosed there: stage 2 logged no column norms, so (iii) is a single seq_v2 re-train with logging). Script `experiments/b28_equation/stage3_measure.py` (parts `jac`, `resid2`, `trunc`, `mcnorm`; artifact `data/.b28_stage3.json`, copied to `docs/paper/b28_stage3.json`). CPU except (iii) (GPU, 4.6 min, one run). Three measurements, no claim: nothing here changes §8bz-2's verdict or any headline; the readings below say what the remainder of the backbone *is* and *is not*.
+
+### (i) Jacobian on every frozen row
+
+**Rows.** The eight TEST row populations re-derived through the harness match the frozen npz bit-identically (shot ids, `y_true`, `dt_ms`; n = 32589, 35582, 35759, 34038 cut, 32721, 35743, 35916, 34271 inclusive). The full-block CPU recompute of the backbone reproduces the npz errors to 0.31 … 0.69 eV (cut) / 0.65 … 2.10 eV (inclusive; GPU vs CPU float32), the trained equation to 0.00 eV, and the stage-2 equation rows are paired row-for-row with the backbone rows (8/8). Gradients are taken on the 100-step window ending at each row (0.00 … 1.32 eV from the full-block output, max over all rows; 65404 rows lie within the first 100 steps of their block and use the whole prefix, which is the exact full-block computation). Batched autograd, 2.5 … 2.9 min per split.
+
+**Lag kernels (cut, splits 42 / 1 / 7 / 123; sum over the group's channels, mean over all rows, eV per σ step).**
+
+| group | impulse (lag 0) | −∂y/∂x_{t−1} ÷ ∂y/∂x_t | step response ÷ impulse (lags 0–11) |
+|---|---|---|---|
+| BES | +59.5 / +57.1 / +52.0 / +52.7 | -0.04 / -0.05 / -0.11 / -0.06 | -0.10 / +0.15 / +0.16 / +0.20 |
+| ECEI | +35.1 / +31.5 / +30.0 / +34.4 | +0.06 / +0.06 / +0.04 / +0.06 | +0.25 / +0.14 / +0.36 / +0.20 |
+| MC | -0.5 / -1.5 / +0.9 / +0.1 | +2.06 / -1.20 / +0.99 / +2.70 | +12.37 / +2.78 / -4.86 / +17.33 |
+
+The lag-1 gradient is ≈ 0 and the step response is ≤ 20 % (BES) / ≤ 36 % (ECEI) of the impulse: the cancellation of a sustained step happens over lags 2–11, not at lag 1. The backbone's fast-channel term is therefore **x_t minus a ≈ 10-step running mean of the channel**, a ≈ 100 ms high-pass, not the 10 ms increment x_t − x_{t−1} that the §4 equation (and stage 2's `b28`) uses. The impulse sums (BES +52 … +60, ECEI +30 … +35 eV/σ, MC ≈ 0) sit above the readout's 220-row estimate (BES ≈ +50, ECEI ≈ +28) and above the trained equation's Σa (BES +43 … +51, ECEI +39 … +46), as expected once the equation's increment term has to absorb a kernel it cannot represent.
+
+**Carried-T_i amplitude decay (cut).** Lag profile of ∂y_t/∂(carried T_i)_{t−k}: ratios lag1/lag0 0.51 … 0.57, lag2/lag1 0.44 … 0.53, lag3/lag2 0.51 … 0.64; log-linear fit on lags 0–3 **ρ_amp = 0.575 / 0.497 / 0.527 / 0.497** (r² ≥ 0.995), Σ lags 0–11 = 0.89 … 0.93. By staleness of the row: ≤ 15 ms 0.50 … 0.58, 15–55 ms 0.45 … 0.58, > 55 ms 0.24 … 0.43 — the carried value is forgotten faster after a long gap. Inclusive ρ_amp 0.622 … 0.662. The readout's 0.5/step (220 rows) is confirmed on all rows at 0.50–0.58.
+
+**Saturation form of the lag-0 gain (cut; all rows × channels; gain relative to the |Δx| < 0.25σ bin).**
+
+| group | 0.25–0.5σ | 0.5–1 | 1–1.5 | 1.5–2 | 2–3 | 3–5 | > 5σ | sech² κ (grid 0.1–20σ) | SSE(sech²)/SSE(flat) | trained-equation κ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| BES | 1.10 … 1.14 | 1.10 … 1.20 | 1.05 … 1.23 | 1.00 … 1.18 | 0.85 … 1.07 | 0.38 … 0.68 | 0.35 … 1.03 | 6.4 … 20.0 | 0.9996 … 1.0001 | 0.95 … 0.98 |
+| ECEI | 1.01 … 1.06 | 0.99 … 1.14 | 0.99 … 1.23 | 0.99 … 1.28 | 0.97 … 1.19 | 0.99 … 1.07 | 0.44 … 0.73 | 11.7 … 20.0 | 0.9997 … 1.0001 | 0.95 … 0.98 |
+
+The gain is **flat (within +23 %) up to 2σ and is cut off beyond 3σ for BES (0.38–0.68 of the quiet gain at 3–5σ); ECEI stays flat through 3σ**. A sech² (the derivative of the equation's κ tanh) or a Cauchy profile fitted on all rows runs to the edge of the κ grid and lowers the SSE by ≤ 0.04 % against a constant gain: there is no smooth saturation at κ ≈ 1σ. The trained equation's κ = 0.95–0.98σ is therefore not the backbone's form; the backbone's response is linear with a large-step rejection, and `b28`'s early tanh roll-off is a compromise the MSE fit made for the > 3σ rows. Inclusive BES reads the other way (gain *rising* to 1.7–2.0× at 1.5–2σ, then dropping): with > 3 keV fit-failure spikes in the targets the backbone has learned a steeper response to large BES steps, the same population effect that flipped Σa_BES's sign in §8bz-2.
+
+**State dependence of the lag-0 gain (cut).** OLS of the per-row group-mean gain on six standardised state variables: R² 0.04 … 0.14 (BES), 0.02 … 0.06 (ECEI). The only partial R² above 0.01 are the channel *level* (0.023 … 0.112 BES) and |carried − EWMA| (0.014 … 0.046 ECEI); |Δx_{t−1}| and |Δx_{t−2}| contribute ≤ 0.003 and the gain by tercile of the previous step's |Δx| is flat (BES 5.5 … 6.1 / 6.0 … 7.0 / 5.6 … 6.8 eV/σ per channel). **The gain is not conditioned on the recent event history**: §8bz-2 reading 2's "the same ΔECEI means a different ΔT_i depending on what the last few steps looked like" is not what the Jacobian shows.
+
+**The residual r_t = backbone − equation (cut; eV; cross-fitted ridge by shot parity, λ = 10⁻² n).** RMS 72 … 101 eV; the top-10 % |ΔECEI| rows hold 0.13 … 0.15 of Σr². "Gap closed" = (skill_PCHIP(equation + r̂) − skill_PCHIP(equation)) / (skill_PCHIP(backbone) − skill_PCHIP(equation)); the registered bar is ≥ 0.50 on 4/4.
+
+| candidate family (features) | gap closed, splits 42 / 1 / 7 / 123 | R²_cv of r |
+|---|---|---|
+| Δx_t linear (15) | +0.01 / +0.00 / -0.01 / -0.01 | +0.003 / -0.000 / -0.001 / +0.005 |
+| Δx_{t−1} (15) | +0.16 / +0.09 / +0.08 / +0.02 | +0.073 / +0.048 / +0.064 / +0.036 |
+| Δx_{t−2} (15) | +0.01 / -0.00 / -0.01 / -0.02 | +0.005 / -0.003 / -0.002 / +0.001 |
+| Δx_t · Δx_{t−1} (15) | -0.08 / -0.01 / -0.00 / -0.03 | -0.051 / -0.006 / -0.002 / -0.006 |
+| Δx_t · staleness (15) | -0.01 / -0.01 / -0.02 / -0.05 | -0.003 / -0.008 / -0.002 / -0.007 |
+| Δx_t · (carried − EWMA) (15) | -0.11 / +0.00 / +0.03 / -0.01 | -0.051 / -0.016 / -0.015 / -0.004 |
+| x_t levels (15) | +0.10 / +0.08 / +0.07 / +0.06 | +0.030 / +0.071 / +0.056 / +0.044 |
+| |Δx_t| (15) | -0.00 / +0.00 / -0.00 / -0.03 | +0.011 / +0.005 / +0.003 / -0.002 |
+| carried − EWMA, staleness, EWMA (3) | +0.05 / +0.06 / +0.07 / +0.11 | +0.054 / +0.085 / +0.089 / +0.053 |
+| all registered families (123) | +0.27 / +0.33 / +0.33 / +0.32 | +0.172 / +0.241 / +0.262 / +0.169 |
+| *post hoc (kernel-motivated, added after the s42 kernel was read):* x_t − mean(x_{t−1..t−10}) (15) | +0.25 / +0.21 / +0.19 / +0.14 | +0.117 / +0.121 / +0.096 / +0.068 |
+| *post hoc:* clipped / gated Δx_t at 3σ (15) | +0.00 / +0.00 / -0.02 / -0.02 | +0.000 / -0.003 / +0.001 / +0.001 |
+| *post hoc:* full linear FIR, lags 0–11 (180) | +0.39 / +0.26 / +0.25 / +0.12 | +0.189 / +0.169 / +0.181 / +0.086 |
+| *post hoc:* FIR + EWMA state (183) | **+0.45 / +0.36 / +0.32 / +0.34** | +0.248 / +0.263 / +0.283 / +0.180 |
+
+**Reading the residual.** No family reaches the 0.50 bar: the registered set closes 0.27 … 0.33 of the gap, the best linear model of the fast channels over 110 ms plus the EWMA state 0.32 … 0.45 (0/4 ≥ 0.50). The state-dependent-gain products (Δx · staleness, Δx · deviation, Δx_t · Δx_{t−1}) close nothing or less than nothing on 4/4 — **the event term is not a state-dependent gain**. Its linear part has a definite form: the fitted FIR kernel of the residual is BES +20 … +30 (lag 0), +13 … +18 (lag 1), -13 … -3 (lags 2–5) eV/σ; ECEI +10 … +14 (lag 0), +20 … +25 (lag 1), -11 … -3 (lags 2–5): the backbone sums the last two steps and subtracts the preceding ≈ 100 ms baseline, which is what the Jacobian kernel said. That linear part, with the three EWMA-state variables, closes 32–45 % of the gap. **The other 55–68 % is not linear in any lagged fast-channel level up to 110 ms, not a product with staleness or with the EWMA deviation, and not the clipped increment** — it is the part of the LSTM that no first- or second-order readout of these inputs reaches on these rows. Inclusive residual (secondary): the fast-channel families close ≤ 5 %, the three EWMA-state variables 0.13 … 0.45 — there the equation's running mean itself diverges from the backbone's under the fit-failure spikes (readout §7.4), as §8bz-2 reading 4 anticipated.
+
+### (ii) Context truncation: joining the amplitude decay with the MSE deficit
+
+Cut: the §8ac artifacts `.reach_s{s}` (the same frozen checkpoints; `ctx = full` reproduces the frozen `se_model`, `se_pchip`, shot ids and `dt_ms` bit-identically, 4/4). Inclusive: `eval_seq` with `CES_SEQ_CONTEXTS = 1,2,3,5,10,20,50` on a copy of `.b5i_seqv2_s{s}` (CPU; same identity check). Deficit_k = skill_full − skill_ctx=k; the per-step decay is the same number for every reference because deficit_k ∝ Σ(se_k − se_full), so the reference-free MSE excess is reported.
+
+| pop · split | deficit vs persistence at ctx 1 / 2 / 3 / 5 / 10 / 20 | ρ_MSE (k ≤ 10) | ρ_MSE (k ∈ {2, 3, 5}) | memory −1/ln ρ [steps] | ρ_amp (i) | ρ_amp² | ρ_MSE ∈ [ρ_amp², ρ_amp] |
+|---|---|---|---|---|---|---|---|
+| cut s42 | 0.785 / 0.402 / 0.202 / 0.071 / 0.016 / 0.011 | 0.654 (r² 0.96) | 0.567 | 2.4 | 0.575 | 0.331 | **no** (ρ_MSE > ρ_amp) |
+| cut s1 | 0.582 / 0.257 / 0.127 / 0.059 / 0.010 / 0.000 | 0.647 (r² 0.97) | 0.620 | 2.3 | 0.497 | 0.247 | **no** (ρ_MSE > ρ_amp) |
+| cut s7 | 0.752 / 0.329 / 0.163 / 0.081 / 0.017 / 0.001 | 0.671 (r² 0.96) | 0.637 | 2.5 | 0.527 | 0.278 | **no** (ρ_MSE > ρ_amp) |
+| cut s123 | 0.596 / 0.251 / 0.123 / 0.064 / 0.029 / 0.024 | 0.738 (r² 0.86) | 0.645 | 3.3 | 0.497 | 0.247 | **no** (ρ_MSE > ρ_amp) |
+| incl s42 | 0.105 / 0.032 / 0.021 / 0.008 / 0.000 / -0.000 | 0.568 (r² 0.99) | 0.617 | 1.8 | 0.654 | 0.428 | yes |
+| incl s1 | 0.064 / 0.017 / 0.013 / 0.009 / 0.002 / 0.001 | 0.714 (r² 0.90) | 0.826 | 3.0 | 0.662 | 0.438 | **no** (ρ_MSE > ρ_amp) |
+| incl s7 | 0.118 / 0.044 / 0.019 / 0.004 / 0.000 / -0.000 | 0.514 (r² 0.98) | 0.446 | 1.5 | 0.622 | 0.387 | yes |
+| incl s123 | 0.066 / 0.035 / 0.023 / 0.010 / 0.002 / -0.000 | 0.703 (r² 0.97) | 0.649 | 2.8 | 0.660 | 0.435 | **no** (ρ_MSE > ρ_amp) |
+
+**Reading.** The amplitude of the carried value decays at ρ_amp = 0.50–0.58 per step (memory 1.2–1.5 steps); if the context deficit were that memory, the MSE excess would decay at ρ_amp² = 0.25–0.33. It decays at **ρ_MSE = 0.647 … 0.738** (k ≤ 10; 0.567 … 0.645 on k ∈ {2, 3, 5}), memory 2.3 … 3.3 steps — slower than the amplitude on 4/4, so the registered "join" fails: **the two numbers are not one quantity.** What the truncation removes at k ≤ 10 is not the memory of the last T_i observation (that is gone in 2–3 steps) but the ≈ 10-step fast-channel baseline that (i) found the backbone subtracting: with fewer than ten steps of context the high-pass has no mean to subtract from, and the deficit vanishes exactly when the baseline window fills (deficit ≤ 0.03 at ctx 10, ≤ 0.001 at ctx 50 on 4/4). P03's 0.559/step (fitted on §8al's *trained-at-reach* curve, k = 2–6) and the truncation's 0.57–0.65 on k ∈ {2, 3, 5} are the same order; both are baseline-building rates, not the carried-value memory, and P03's "memory 3.4 steps" should be read as that.
+
+Inclusive (secondary): ρ_MSE 0.514 … 0.714 against ρ_amp 0.622 … 0.662, the join holds on 2/4; the skill-unit deficits are an order of magnitude smaller than the cut ones (0.064 … 0.118 at ctx 1) only because the persistence denominator is dominated by the > 3 keV fit-failure rows, not because the inclusive backbone needs less context (its MSE excess at ctx 1 is 21 … 38 ×10³ eV² against 31 … 41 ×10³ eV² cut). The full-block CPU re-evaluation reproduces the frozen inclusive errors to 0.65 … 2.10 eV with identical rows.
+
+### (iii) The Mirnov column-norm trajectory
+
+One seq_v2 re-train (cut split 42, init 42, the B.1 env, `CES_SEQ_LOG_WIH=1`): 25 epochs, early stop, best epoch 19, 725 optimizer steps, 4.6 min (GPU). First-layer `W_ih` column norms of the T_i branch (mean over the group's columns):
+
+| columns | at init | at the selected epoch | at the last epoch | norm² growth: slope per step | linear-in-steps r² | 2nd-half / 1st-half growth | f-gate column norm init → last |
+|---|---|---|---|---|---|---|---|
+| MC | 1.156 | 1.591 | 1.765 | 0.0026 | 0.961 | 1.92 | 0.58 → 0.97 |
+| BES | 1.155 | 1.350 | 1.414 | 0.0010 | 0.988 | 1.33 | 0.59 → 0.71 |
+| ECEI | 1.146 | 1.342 | 1.405 | 0.0010 | 0.987 | 1.36 | 0.57 → 0.67 |
+| dt | 1.178 | 1.534 | 1.700 | | | | |
+| carried | 1.162 | 2.209 | 2.315 | | | | |
+| stale | 1.126 | 3.352 | 3.827 | | | | |
+
+The run is deterministic: at the selected epoch the norms (MC 1.591, BES 1.350, ECEI 1.342, dt 1.534, carried 2.209, staleness 3.352) equal the frozen headline checkpoint's (MC 1.591, BES 1.350, ECEI 1.342, dt 1.534, carried 2.209, staleness 3.352) to three decimals, so the trajectory is the headline run's trajectory. **Reading.** The MC columns start at the same norm as BES and ECEI and grow 2.7× faster (norm² slope), monotonically, with r² 0.96 against a straight line in optimizer steps — the three registered criteria for the "random walk on a white input" reading are met (r² ≥ 0.9, not saturating, slope ≥ 2× BES). But the growth is **superlinear** (the second half of training adds 1.9× what the first half did, against 1.33× for BES) and sits almost entirely in the **forget-gate rows** (MC f-gate column norm 0.58 → 0.97, BES 0.59 → 0.71), exactly where the frozen readout found the MC excess (§2.2). A drift-free diffusion gives linear norm² growth; an accelerating, gate-specific growth is a systematic push: the forget gate learns to use the white Mirnov input as a per-step noise source that modulates how much state is kept — a regulariser-like role, not an information channel (its output contribution stays 5 %, readout §2.3; its Jacobian impulse here is ≈ 0 on all rows). So the reading "large MC weights ≠ importance" stands and its mechanism is refined from "random walk" to "gate-driven growth on a noise input".
+
+**Prediction check (prereg §6 addendum, reading criteria).** (i) a residual family ≥ 0.50 on 4/4: **none** (best 0.32–0.45, post hoc). Saturation form: **flat + cutoff, not sech²**. State dependence: **absent** (partial R² of the recent increments ≤ 0.003). (ii) ρ_MSE ∈ [ρ_amp², ρ_amp] on 4/4: **no, 0/4** (ρ_MSE above ρ_amp on 4/4). (iii) random-walk criteria: **met 3/3**, with the superlinear, f-gate-specific growth recorded as a refinement.
+
+**Verdict.** Stage 3 does not overturn §8bz-2 (H28-3 not supported stands) and it narrows what the event term can be: it is **not** a state-dependent gain, **not** a smooth saturation, and **not** a cross term; its linear part is a two-step sum against a ≈ 100 ms baseline (with the EWMA-state correction, 32–45 % of the gap) and the rest (55–68 %) is not a low-order function of the fast-channel history. The §4 equation keeps its status (the bulk: EWMA of past observations with a gap-dependent gain + linear fast-channel response) with two corrections to its *form* that would be the next registered variant: the fast-channel term should be x_t − mean(x_{t−1..t−10}) (a high-pass) rather than the 10 ms increment, and the nonlinearity should be a > 3σ rejection rather than κ ≈ 1σ tanh. P03's "memory 3.4 steps" is re-read as the baseline-building time, consistent with (i).
+
+**Paper (prereg §7, "H28-3 not supported" branch, stage 3 recorded).** One sentence appended to `sec:model:backbone`'s paragraph (en/ko): the residual's form as measured. No headline number changes.
+
+**Named next.** A registered `b28h` variant (high-pass kernel + 3σ rejection, still ≈ 20 parameters) under the stage-2 protocol would test whether the form corrections recover the 0.70 bar; it is a GPU batch of 8 runs and is not started here. The nonlinear remainder needs a different probe than input Jacobians (e.g. hidden-state clustering on event rows); not registered.

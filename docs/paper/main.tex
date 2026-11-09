@@ -738,9 +738,14 @@ physical numbers return on every cut split: $K_0 = 0.30$--$0.31$, $K_\infty =
 $\sigma$, $\sum a_{\mathrm{ECEI}} = +39$ to $+46$\,eV per $\sigma$, $\sum
 a_{\mathrm{MC}} \approx 0$. That equation keeps 81--83\% of the backbone's
 persistence-relative skill but only 50--66\% of its PCHIP-relative skill (cut), and a
-single cross term adds less than $0.001$. The remainder is concentrated in the
-event rows and is a state-dependent response the weights do not expose; its form is
-the subject of a registered follow-up, not a claim here.
+single cross term adds less than $0.001$. A registered follow-up measured the
+remainder directly, with the Jacobian of the output on every frozen TEST row: the
+backbone's fast-channel response is a ${\approx}100$\,ms high-pass (the current value
+minus the preceding ten-step mean) whose gain is flat to $2\sigma$ and cut off beyond
+$3\sigma$---not a state-dependent gain and not a smooth saturation---and the best
+linear description of the remainder in that form closes 32--45\% of the gap to the
+backbone (cut); the rest is not a low-order function of the fast-channel history.
+These are measurements of the model, not headline claims.
 
 \subsection{The windowed control: observation-masked attention pooling}
 \label{sec:model:window}

@@ -31,7 +31,7 @@ Sources (all under data/):
                              B.14 sec. 10 own-objective selection / epoch cap, sec:bulk (sec. 8bu)
   .b27_summary_R10.json, .b27c_hier.json
                              B.27/B.27c shot-level repeated 5-fold replicate, tab:replicate (sec. 8bw, 8by)
-  .b28_stage1.json, .b28_stage2.json
+  .b28_stage1.json, .b28_stage2.json, .b28_stage3.json
                              B.28 what-the-backbone-computes: surrogate ratios and the trained equation (sec. 8bz)
 
 The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
@@ -338,9 +338,10 @@ TAB_REPLICATE = {
 }
 
 
-def equation_b28(s1, s2):
-    """B.28 (sec. 8bz): stage-1 surrogate ratios on the frozen rows and the stage-2 trained equation."""
-    out = {"stage1": {}, "stage2": {}}
+def equation_b28(s1, s2, s3):
+    """B.28 (sec. 8bz): stage-1 surrogate ratios on the frozen rows, the stage-2 trained equation,
+    and the stage-3 measurements (sec. 8bz-3: Jacobian form, truncation decay, MC norm trajectory)."""
+    out = {"stage1": {}, "stage2": {}, "stage3": {}}
     for rec in s1["splits"]:
         out["stage1"].setdefault(rec["pop"], {})[str(rec["seed"])] = {
             "alpha_star": rec["alpha_star"],
@@ -358,6 +359,26 @@ def equation_b28(s1, s2):
                                      "paired_vs_control_VT": r["CES_VT"]["paired_vs_control"],
                                      "physics": {k: r["physics"][k] for k in ("K0", "K_inf", "s_K_ms", "a_sum_BES_eV", "a_sum_ECEI_eV", "a_sum_MC_eV")}}
         out["stage2"][pop]["verdict"] = s2["verdict"][pop]
+    jac = {(r["pop"], r["seed"]): r for r in s3["jac"]["splits"]}
+    res2 = {(r["pop"], r["seed"]): r for r in s3["resid2"]["splits"]}
+    trunc = {(r["pop"], r["seed"]): r for r in s3["trunc"]["splits"] if "fit" in r}
+    for pop in POPS:
+        out["stage3"][pop] = {}
+        for s in SEEDS:
+            j, r2 = jac[(pop, int(s))], res2[(pop, int(s))]
+            bins_bes = j["saturation"]["BES"]["bins"]
+            cell = {"rho_amp": j["amplitude"]["fit_lag0_3"]["rho"],
+                    "gap_closed_registered_all": j["residual"]["families"]["all"]["gap_closed"],
+                    "gap_closed_fir_plus_state": r2["families"]["fir+ewma_state"]["gap_closed"],
+                    "gap_closed_hp_mean10": r2["families"]["hp_mean10"]["gap_closed"],
+                    "bes_gain_rel_max_le2sigma": max(b["grad_rel_to_quiet_bin"] for b in bins_bes[1:5]),
+                    "bes_gain_rel_3_5sigma": bins_bes[6]["grad_rel_to_quiet_bin"],
+                    "impulse_eV_per_sigma": {g: j["kernels"][g]["impulse_eV_per_sigma_sum"] for g in ("BES", "ECEI", "MC")}}
+            if (pop, int(s)) in trunc:
+                cell["rho_mse_k_le10"] = trunc[(pop, int(s))]["fit"]["mse_excess_k_le10"]["rho"]
+            out["stage3"][pop][s] = cell
+    out["stage3"]["mcnorm"] = {"mc_over_bes_growth_slope": s3["mcnorm"]["mc_over_bes_growth_slope"],
+                               "mc_r2_linear": s3["mcnorm"]["random_walk_check"]["MC"]["r2_linear_in_steps"]}
     return out
 
 
@@ -423,6 +444,12 @@ def transcription_check(n):
     printed.append(("sec:model B.28 sum a_BES +43..+51, a_ECEI +39..+46 eV/sigma (cut)",
                     [min(p["a_sum_BES_eV"] for p in ph), max(p["a_sum_BES_eV"] for p in ph), min(p["a_sum_ECEI_eV"] for p in ph), max(p["a_sum_ECEI_eV"] for p in ph)],
                     [43, 51, 39, 46], 0.5))
+    e3 = n["equation_b28"]["stage3"]["cut"]
+    printed.append(("sec:model B.28 stage-3 FIR+state closes 32-45 % of the gap (cut)",
+                    [min(e3[s]["gap_closed_fir_plus_state"] for s in SEEDS), max(e3[s]["gap_closed_fir_plus_state"] for s in SEEDS)], [0.32, 0.45], 0.005))
+    printed.append(("sec:model B.28 stage-3 BES gain flat to 2 sigma (max rel 1.23) and cut beyond 3 sigma (0.38-0.68)",
+                    [max(e3[s]["bes_gain_rel_max_le2sigma"] for s in SEEDS), min(e3[s]["bes_gain_rel_3_5sigma"] for s in SEEDS), max(e3[s]["bes_gain_rel_3_5sigma"] for s in SEEDS)],
+                    [1.23, 0.38, 0.68], 0.005))
     printed.append(("sec:model B.28 cross term < 0.001 (cut, 4/4)",
                     [float(all(abs(x) < 0.001 for x in n["equation_b28"]["stage2"]["cut"]["verdict"]["H28_4_cross_vs_b28_TI"]))], [1.0], 0))
     problems = []
@@ -475,7 +502,7 @@ def main():
     b17b = _load(DATA / ".b17b_summary.json")
     b14c, b14s_cut = _load(DATA / ".b14c_verdict.json"), _load(DATA / ".b14s_cut_rescore.json")
     r10, hier = _load(DATA / ".b27_summary_R10.json"), _load(DATA / ".b27c_hier.json")
-    b28s1, b28s2 = _load(DATA / ".b28_stage1.json"), _load(DATA / ".b28_stage2.json")
+    b28s1, b28s2, b28s3 = _load(DATA / ".b28_stage1.json"), _load(DATA / ".b28_stage2.json"), _load(DATA / ".b28_stage3.json")
     for name in ("headline", "coverage_pr2", "ladder", "conformal", "peak_and_largegap", "campaign", "cut_sensitivity", "ablation", "mnar"):
         if "error" in b5.get(name, {}):
             raise SystemExit(f".b5_summary.json block {name} failed: {b5[name]['error']}")
@@ -503,7 +530,7 @@ def main():
         "dist_head": dist_head(b17b),
         "b14_select": b14_select(b14c, b14s_cut),
         "replicate_b27": replicate_b27(r10, hier),
-        "equation_b28": equation_b28(b28s1, b28s2),
+        "equation_b28": equation_b28(b28s1, b28s2, b28s3),
     }
     problems = crosscheck(numbers, b5, b3c, b4) + transcription_check(numbers)
     if problems:

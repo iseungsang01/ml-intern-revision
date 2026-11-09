@@ -13,6 +13,7 @@ Env: CES_DATA_DIR, CES_SPLIT_DIR, CES_OUTPUT_DIR, CES_SEED, CES_INIT_SEED,
 """
 
 import json
+import math
 import os
 import random
 import sys
@@ -240,6 +241,23 @@ def main():
 
     model = SEQ_MODELS[variant]().to(device)
     print(f"[seq] params={model.n_params:,}")
+    # B.28 stage 3 (iii): per-epoch column norms of the T_i branch's first-layer W_ih, per
+    # gate, so the MC "random walk on a white input" reading can be checked against a
+    # trajectory. Off unless CES_SEQ_LOG_WIH=1; it never touches the optimisation.
+    log_wih = os.getenv("CES_SEQ_LOG_WIH", "0") == "1" and hasattr(model, "lstm_ti")
+    wih_log = []
+
+    def _wih_snapshot(epoch_idx, steps_done):
+        w = model.lstm_ti.weight_ih_l0.detach().cpu()           # (4H, n_in): gates i, f, g, o
+        hid = w.shape[0] // 4
+        gates = {g: w[k * hid:(k + 1) * hid].norm(dim=0).tolist() for k, g in enumerate("ifgo")}
+        wih_log.append({"epoch": epoch_idx, "optimizer_steps": steps_done,
+                        "col_norm_total": w.norm(dim=0).tolist(), "col_norm_gate": gates})
+        (out_dir / "wih_norms.json").write_text(json.dumps(wih_log), encoding="utf-8")
+
+    if log_wih:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        _wih_snapshot(0, 0)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min",
                                                            patience=2, factor=0.5)
@@ -286,6 +304,8 @@ def main():
             extra += f" val_medae={val_key:.4f}"
         print(f"[seq] epoch {epoch + 1:02d}/{epochs} train_mse={tr_mse:.4f} "
               f"pen={tr_pen:.4f} val_mse={val_mse:.4f}{extra}{star}", flush=True)
+        if log_wih:
+            _wih_snapshot(epoch + 1, (epoch + 1) * math.ceil(len(train_blocks) / batch_size))
         if not fixed_epochs and epoch - best_epoch >= patience:
             print(f"[seq] early stop (no val improvement for {patience} epochs)")
             break

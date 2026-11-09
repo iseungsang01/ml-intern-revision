@@ -139,6 +139,24 @@ No other rule decides a claim. Nothing here changes a registered headline.
   so stage 1 could not have been scored against them. Stage 1 uses `_i{s}`. For the cut s1 / s7 /
   s123 npz the `_y_true` column is present and verified; the rule, the arms and the predictions are
   unchanged.
+- **Stage-3 addendum 2026-11-09 (written before any stage-3 measurement other than the plumbing
+  smokes named below).** Stage 2 did not log the first-layer column norms (`run_b28.py` had no such
+  log), so (iii) is taken from ONE seq_v2 re-train of the cut split 42 / init 42 under the B.1 env
+  with `CES_SEQ_LOG_WIH=1` (per-epoch W_ih column norms, `train_seq.py`; the flag is off by default
+  and touches no optimisation). (ii) reuses the §8ac artifacts `.reach_s{s}` for the cut population
+  (same frozen checkpoints; identity re-verified on shot / dt_ms / se_pchip / se_model) and scores
+  the inclusive checkpoints with `CES_SEQ_CONTEXTS=1,2,3,5,10,20,50` on CPU. Reading criteria,
+  fixed now, reported not deciding (stage 3 carries no claim): (i) a candidate residual family
+  whose cross-fitted (shot-parity) fit closes ≥ 50 % of the backbone − equation PCHIP-skill gap on
+  4/4 cut splits names the form of the event term; the lag-0 gain's saturation form is read from
+  the sech² / Cauchy / flat SSE on all rows × channels, and its state dependence from the partial
+  R² of |Δx_{t−1}|, staleness and |carried − EWMA|. (ii) the per-step decay of the truncation
+  deficit ρ_MSE (log-linear on k ≤ 10) "joins" the amplitude decay ρ_amp (carried-T_i gradient,
+  lags 0–3, all rows) if ρ_MSE ∈ [ρ_amp², ρ_amp] on 4/4 cut splits; P03's 0.559 is compared with
+  the same fit on k ∈ {2, 3, 5}. (iii) the random-walk reading is supported if the MC columns'
+  norm² − norm₀² grows linearly in optimizer steps (R² ≥ 0.9, growth not saturating) with a slope
+  ≥ 2× the BES columns'; it is rejected if the MC norm shrinks or grows no faster than BES.
+  Plumbing smokes run before this addendum was final: none (the stage-3 script was not executed).
 
 ## 7. What would change the paper
 
