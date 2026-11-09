@@ -23,7 +23,7 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 \hypersetup{
-  pdftitle={Multimodal Nowcasting of Sparse Charge-Exchange Spectroscopy on KSTAR},
+  pdftitle={Causal nowcasting of 10 ms charge-exchange spectroscopy gaps in KSTAR: an LSTM with lower error than acausal interpolation and the 20-parameter physical filter it computes},
   pdfauthor={Seungsang Lee},
 }
 \usepackage{xcolor}
@@ -37,9 +37,9 @@
 
 \graphicspath{{figures/}}
 
-\title{\textbf{Multimodal Nowcasting of Sparse Charge-Exchange Spectroscopy on KSTAR:\\
-Fast Diagnostics Recover Ion Temperature Beyond Future-Using Interpolation,\\
-but Not Toroidal Rotation}}
+\title{\textbf{Causal Nowcasting of 10\,ms Charge-Exchange Spectroscopy Gaps in KSTAR:\\
+an LSTM with Lower Error than Acausal Interpolation\\
+and the 20-Parameter Physical Filter It Computes}}
 
 \author{%
   Seungsang Lee\\
@@ -55,77 +55,63 @@ but Not Toroidal Rotation}}
 % =========================================================================
 \begin{abstract}
 Charge-exchange spectroscopy (CES) is the primary measurement of ion temperature
-(\Ti) and toroidal rotation (\Vrot) in tokamaks, but photon-collection constraints
-make it slow and intermittently missing: on the KSTAR 10\,ms grid studied here,
+(\Ti) and toroidal rotation (\Vrot) in tokamaks, but photon collection makes it slow
+and intermittently missing: on the KSTAR 10\,ms grid studied here (641 discharges),
 8.2\% of \Ti{} and 23.9\% of \Vrot{} samples are absent, the two targets go missing
 independently, and a further 41.1\% of \Vrot{} rows are instrument holds, leaving
-65.0\% of the grid without independent \Vrot{} information. We ask whether the
-always-available fast diagnostics---beam-emission spectroscopy (BES),
-electron-cyclotron-emission imaging (ECEI), and Mirnov coils---together with the
-irregular past CES history can recover information at missing CES timesteps that
-\emph{temporal interpolation of CES alone cannot}. Because the fast diagnostics
-are dense on the 10\,ms grid, we frame the problem as \emph{causal full-grid
-sequence estimation}: a compact (0.36M-parameter) two-branch recurrent nowcaster
-consumes every grid row as context, handles the sparse targets in a per-target
-masked loss rather than by dropping rows, and routes the \Vrot{} branch away from
-the fast diagnostics by construction; a windowed GRU--attention model with
-observation-masked pooling is the paired control. Evaluation is deliberately
-adverse: offline interpolation (linear, monotone-cubic PCHIP, local AR, and a
-Gaussian process) may see \emph{past and future} CES neighbours, while the model
-is strictly causal, and a \emph{causal} GP represents the strongest deployable
-baseline. Under a pre-registered protocol---plateau-minimal history ($W{=}2$),
-hold-free training and scoring, file-level splits, a test set never touched by
-model selection, a shot-clustered paired bootstrap (10{,}000 resamples), and
-\emph{two co-primary populations} that treat the 0.53\% of \Ti{} spectral-fit
-failures ($>$3\,keV) as missing or keep them, with an unqualified claim required to
-hold in both---the nowcaster's skill over future-using PCHIP on \Ti{} is $+0.17$
-to $+0.26$ (spike-cut) and $+0.23$ to $+0.32$ (spike-inclusive), 95\% CIs
-excluding zero on \emph{four independent held-out splits in both populations},
-and its skill over the causal GP is $+0.08$ to $+0.17$ with the CI excluding zero on
-all eight; a pre-registered replicate that re-runs the
-backbone as shot-level repeated 5-fold cross-validation (every discharge tested
-once; 100 runs) puts the overlap-corrected interval at $[+0.19, +0.25]$ (cut) and
-$[+0.19, +0.31]$ (inclusive). \Vrot{} clears the four-split gate on only 1/4 and
-2/4 splits, but under the replicate's registered two-level (model$\times$discharge)
-bootstrap over eight fresh partitions its mean-squared-error skill over PCHIP,
-persistence and the causal GP has a 95\% interval excluding zero in both populations
-($[+0.07, +0.70]$ cut vs.\ PCHIP)---a tail-carried effect; in the median its
-error ratio to persistence is 0.94--1.00 (physics-filter median), with the interval
-including 1 on 3/4 splits, at the 10\,ms photon floor.
-Two stress tests separate the offline from the
-deployment claim: reweighting the scored points onto the covariate distribution of
-the \emph{genuinely missing} ones keeps the skill over persistence, the causal
-reference, at $+0.28$ to $+0.44$ with CIs above zero on all splits and over PCHIP at
-$+0.14$ to $+0.28$ with the CI above zero on 2/4 (cut) and 4/4 (inclusive);
-re-splitting strictly in time across campaigns---which removes the windowed
-control's advantage over interpolation---leaves the sequence nowcaster at $+0.17$ to
-$+0.20$ over PCHIP and $+0.11$ to $+0.16$ over the causal GP, CIs above zero on 4/4
-initialisations in both populations. The edge concentrates in
-high-variability neighbourhoods (peak-stratum \Ti{} skill $+0.45$ to $+0.72$, 8/8
-PASS); calibrated conformal intervals have a lower (better) Winkler score than
-both baselines' in every cell (32/32); a
-21k-parameter latent-bottleneck model with an exact persistence-plus-correction
-decomposition matches the backbone's \Ti{} skill under the spike cut, and widening
-the backbone from 34k to 879k parameters changes it by less than $\pm 0.01$---the
-information, not the estimator, is the ceiling of the aggregate loss (46.6\% of the
-squared error sits in the top 1\% of one-step changes, so that statement is about a
-tail statistic). In the median row, where the backbone only equals persistence, a
-pre-registered hold-or-jump filter with Student-$t$ measurement noise at the training
-bulk scale sits at 0.91$\times$ persistence for \Ti{} on all eight split--population
-cells and its median skill over the backbone for \Vrot{} is $+0.09$ to $+0.27$ with
-CIs above zero on 4/4 splits; because every output that must
-also win the aggregate gives that median back, median and mean are reported from
-separate estimators. Moving context and structure separately separates their roles:
-stretching contiguous causal context from 20 to 630\,ms raises skill from $+0.055$ to
-$+0.138$ and lifts the fraction of discharges beating the causal GP from 0.52 to 0.66
-before it flattens, whereas at matched reach recurrence, dilated convolution and
-attention differ by at most 0.023---so the architecture is chosen on cost (dispatched
-operator count), not on skill. Input ablations show the
-\Ti$\leftrightarrow$\Vrot{} asymmetry is physical: history alone falls below
-interpolation for \Ti{} in the cut population, while zeroing the fast diagnostics
-leaves \Vrot{} bit-identical (unobserved NBI torque; 100\,Hz-sampled Mirnov
-signals alias away kHz mode rotation). We release the full pipeline,
-pre-registration, and evaluation artifacts.
+65.0\% of the grid without independent \Vrot{} information. The incumbent way to
+fill a gap is interpolation of the CES channel itself, which reads neighbours on
+both sides of the gap and is therefore unavailable online. We ask whether a strictly
+\emph{causal} estimator---the always-available fast diagnostics (beam-emission
+spectroscopy, electron-cyclotron-emission imaging, Mirnov coils) plus the irregular
+past CES history---can fill a missing 10\,ms row with lower error than that
+future-using interpolation. The estimator is a compact two-branch causal LSTM
+(0.36M parameters) that reads every grid row of a discharge segment, supervises the
+sparse targets through a per-target masked loss, and routes the \Vrot{} branch away
+from the fast diagnostics by construction. Under a pre-registered protocol---hold-free
+training and scoring, file-level splits, a test set never read by model selection, a
+shot-clustered paired bootstrap (10{,}000 resamples), and two co-primary populations
+that treat the 0.53\% of \Ti{} spectral-fit failures ($>$3\,keV) as missing or keep
+them---the nowcaster's skill over monotone-cubic PCHIP interpolation on \Ti{} is
+$+0.17$ to $+0.26$ (cut) and $+0.23$ to $+0.32$ (inclusive) with the 95\% interval
+excluding zero on all four held-out splits in both populations, $+0.08$ to $+0.17$
+over a causal Gaussian process with the interval excluding zero on 8/8 cells, and
+$-0.05$ to $+0.11$ against the offline GP with the interval including zero on 7/8; a
+pre-registered shot-level repeated 5-fold replicate (100 runs, every discharge tested
+once) puts the overlap-corrected interval at $[+0.19, +0.25]$ (cut) and
+$[+0.19, +0.31]$ (inclusive). The skill survives two stress tests: reweighting onto
+the covariate distribution of the genuinely missing rows keeps the skill over
+persistence at $+0.28$ to $+0.44$ with intervals above zero on 8/8 cells, and a strict
+time split across campaigns keeps $+0.17$ to $+0.20$ over PCHIP with intervals above
+zero on 4/4 initialisations in both populations. The converse holds for rotation:
+zeroing the fast diagnostics leaves the \Vrot{} output bit-identical, its
+mean-squared-error skill over PCHIP is tail-carried ($[+0.07, +0.70]$ cut under the
+registered two-level bootstrap), and in the median its error ratio to persistence is
+0.94--1.00 with the interval including 1 on 3/4 splits---an information asymmetry we
+attribute to the unobserved NBI torque and to the 10\,ms photon floor, stated for
+standard CES at 10\,ms from the core to the pedestal top. We then ask what the
+nowcaster computes. A pre-registered four-stage readout (frozen-row equation, trained
+equation, full-row Jacobian, corrected form) writes the \Ti{} branch as a
+20-parameter physical filter: an observation filter whose gain rises with the gap
+since the last measurement ($K_0 = 0.27$--$0.30$ fresh, $K_\infty = 0.48$--$0.53$
+after a long gap, transition $s_K = 39$--$47$\,ms) plus a linear response to each fast
+channel's deviation from its preceding 100\,ms baseline that is switched off beyond
+$\theta = 2.9$--$3.0\sigma$, with $\sum a_{\mathrm{BES}} = +48$ to $+53$ and
+$\sum a_{\mathrm{ECEI}} = +44$ to $+50$\,eV per $\sigma$. Trained from scratch under
+the identical protocol, that equation keeps 72--78\% of the backbone's PCHIP-relative
+skill and 87--90\% of its persistence-relative skill on 4/4 cut splits (registered
+bar 0.70) and sits above the earlier increment-form equation by a paired $+0.034$ to
+$+0.042$ with intervals above zero on 4/4; the remaining 22--28\% is the network's
+nonlinear event handling, which no low-order function of the fast-channel history
+reproduces. Two secondary results separate estimands: a pre-registered hold-or-jump
+filter with Student-$t$ noise at the training bulk scale is the median estimator
+(0.91$\times$ persistence for \Ti{} on 8/8 split--population cells) while the
+nowcaster is the mean estimator, and a Student-$t$ distribution head is calibrated
+(CRPS gain $+0.229$ for \Ti{} and $+0.363$ for \Vrot{} over the point reference,
+50\,\%/90\,\% coverage 0.49--0.51 / 0.91--0.92, cut). The aggregate skill is a tail
+statistic, the offline claim is bounded above by the offline GP, the value cut is a
+proxy for fit quality, and everything is one device and one campaign. We release the
+pipeline, the pre-registrations and the evaluation artifacts.
 \end{abstract}
 
 % =========================================================================
@@ -180,111 +166,129 @@ competitor is not persistence but a past-only smoother, we also add a \emph{caus
 GP arm and report the model against it separately.
 
 \paragraph{Contributions.}
+The argument runs in one direction: the problem (missing CES rows, a causal nowcast
+against acausal interpolation), the \Ti{} result and its replication, the
+\Ti$\leftrightarrow$\Vrot{} asymmetry as the converse evidence, the equation the
+nowcaster computes, and the two estimands it does not fold into one output.
 \begin{enumerate}
-  \item \textbf{A causal full-grid framing for sparse-target nowcasting}
-        (\S\ref{sec:model}). The fast diagnostics are dense on the grid, so instead
-        of assembling per-sample windows and dropping unlabelled rows we keep every
-        input-complete row as sequence context and move the sparsity into the
-        loss: a two-branch causal LSTM reads the whole past of a discharge segment
-        with per-target carried-value, staleness and observation-flag channels, and
-        the \Vrot{} branch is \emph{structurally} blocked from the fast diagnostics.
-        Against a paired windowed GRU--attention control with observation-masked
-        pooling, this reframing is worth $+0.081$ pooled \Ti{} skill (16 runs,
-        run-cluster CI $[+0.067,+0.096]$, 16/16 positive) at a fraction of the
-        training cost---and it is the reach it buys that clears the causal GP.
-  \item \textbf{A pre-registered, two-population, shot-clustered evaluation
-        protocol} (\S\ref{sec:eval}). History length is set by a plateau-minimal
-        rule from a 24-run sweep ($W{=}2$); instrument holds are removed from
-        training and scoring; the 0.53\% of \Ti{} spectral-fit failures ($>$3\,keV)
-        define two co-primary populations---treated as missing in every arm, or
-        kept everywhere---and \emph{an unqualified claim must hold in both}. The
-        test set is never read by model selection, significance is a shot-clustered
-        paired bootstrap, and every model decision was fixed in writing before the
-        corresponding TEST scoring.
-  \item \textbf{A robust positive result for \Ti{}} (\S\ref{sec:results}): the
-        causal nowcaster's skill over future-using PCHIP is $\skillp = +0.17$ to $+0.26$
-        (cut) and $+0.23$ to $+0.32$ (inclusive), CIs excluding zero on all four
-        held-out splits in both populations, and its skill over the causal GP is
-        $+0.08$ to $+0.17$ with CIs excluding zero on all eight split--population
-        cells; against the offline GP, the strongest future-using smoother, the paired
-        skill is $-0.05$ to $+0.11$ with the CI including zero on 7/8 cells. A pre-registered shot-level repeated 5-fold
-        replicate (every discharge tested once, ten repeats, 100 runs) reproduces
-        every verdict, with the overlap-corrected interval $[+0.19, +0.25]$ (cut)
-        and $[+0.19, +0.31]$ (inclusive) vs.\ PCHIP.
-  \item \textbf{A physics-grounded, two-level result for \Vrot{}}: on the four
-        frozen splits \Vrot{} clears the gate on only 1/4 and 2/4 (what noise
-        alone would give) and was first recorded as an interval including zero; the
+  \item \textbf{A causal nowcast of missing 10\,ms CES ion temperature with lower
+        error than acausal interpolation, replicated} (\S\ref{sec:headline}). The
+        nowcaster's skill over future-using PCHIP is $\skillp = +0.17$ to $+0.26$
+        (cut) and $+0.23$ to $+0.32$ (inclusive), the 95\% interval excluding zero on
+        all four held-out splits in both populations; over the causal GP, the
+        strongest deployable baseline, it is $+0.08$ to $+0.17$ with the interval
+        excluding zero on all eight split--population cells; against the offline GP,
+        the strongest future-using smoother, the paired skill is $-0.05$ to $+0.11$
+        with the interval including zero on 7/8 cells. A pre-registered shot-level
+        repeated 5-fold replicate (every discharge tested once, ten repeats, 100
+        runs) reproduces every verdict, with the overlap-corrected interval
+        $[+0.19, +0.25]$ (cut) and $[+0.19, +0.31]$ (inclusive) vs.\ PCHIP. The
+        estimator is a full-grid two-branch causal LSTM that keeps every
+        input-complete row as context and moves the target sparsity into a
+        per-target masked loss (\S\ref{sec:model}); against a paired windowed
+        GRU--attention control this framing is worth $+0.081$ pooled \Ti{} skill (16
+        runs, run-cluster CI $[+0.067,+0.096]$, 16/16 positive), and it is the reach
+        it buys that clears the causal GP (\S\ref{sec:gate}). In the fusion
+        literature we found no precedent for causal gap-filling of CES/CXRS \Ti{} or
+        \Vrot{} time series from other diagnostics, nor for interpolation-relative
+        skill as the evaluation bar (\S\ref{sec:related}).
+  \item \textbf{The equation the nowcaster computes, registered and retained}
+        (\S\ref{sec:model:backbone}). A four-stage pre-registered readout of the
+        frozen backbone found that weight magnitude carries no stable information
+        while the input--output response does. Read off the frozen TEST rows, an
+        unfitted exponentially weighted mean of the past observed \Ti{} carries
+        73--82\% of the backbone's persistence-relative skill and a ridge-fitted
+        linear increment term raises it to 77--85\% (stage 1); the same two terms
+        trained from scratch as a 20-parameter equation keep only 50--66\% of the
+        PCHIP-relative skill, below the registered 0.70 bar (stage 2); the Jacobian
+        on every frozen TEST row showed the missing piece to be the \emph{form}---a
+        ${\approx}100$\,ms high-pass with a gain flat to $2\sigma$ and switched off
+        beyond $3\sigma$, with no dependence on the recent increments (stage 3); and
+        the equation re-trained with exactly that form and the same 20 parameters
+        keeps 72--78\% of the PCHIP-relative skill and 87--90\% of the
+        persistence-relative skill on 4/4 cut splits, above the stage-2 equation on
+        every split by a paired $+0.034$ to $+0.042$ with intervals above zero
+        (stage 4). Its parameters are physical: an observation gain
+        $K(s) = K_\infty + (K_0 - K_\infty)e^{-s/s_K}$ rising with the gap $s$ since
+        the last measurement ($K_0 = 0.27$--$0.30$, $K_\infty = 0.48$--$0.53$,
+        $s_K = 39$--$47$\,ms), a rejection threshold $\theta = 2.9$--$3.0\sigma$, and
+        channel gains $\sum a_{\mathrm{BES}} = +48$ to $+53$ and
+        $\sum a_{\mathrm{ECEI}} = +44$ to $+50$\,eV per $\sigma$. The remaining
+        22--28\% is the network's nonlinear event handling, which no low-order
+        function of the fast-channel history reproduces. We found no precedent for
+        extracting a closed-form equation from a trained fusion predictor and
+        retraining it under the same protocol against a pre-registered retention
+        bar.
+  \item \textbf{The \Ti$\leftrightarrow$\Vrot{} information asymmetry as the
+        converse evidence} (\S\ref{sec:asym}, \S\ref{sec:physfilter}). On the four
+        frozen splits \Vrot{} clears the gate on only 1/4 and 2/4 (what noise alone
+        would give) and was initially recorded as an interval including zero; the
         repeated-5-fold replicate, read by its registered two-level bootstrap over
         eight fresh partitions, puts the mean-squared-error skill over PCHIP,
-        persistence and the causal GP above zero in both populations ($[+0.07,
-        +0.70]$ cut and $[+0.05, +0.68]$ inclusive vs.\ PCHIP), tail-carried, while
-        in the median the error ratio to persistence is 0.94--1.00 with the interval
-        including 1 on 3/4 splits, at the 10\,ms photon floor
-        (\S\ref{sec:physfilter}). The skill comes from history alone: zeroing the
-        fast diagnostics leaves the \Vrot{} output bit-identical and zeroing
-        history collapses it, so rotation remains history-autocorrelation-limited
-        at 10\,ms (unobserved NBI torque; Mirnov aliasing). We call this the
-        \Ti$\leftrightarrow$\Vrot{} \emph{information asymmetry}.
-  \item \textbf{Two stress tests that separate two claims usually conflated}
-        (\S\ref{sec:mnar}, \S\ref{sec:campaign}). Reweighting the scored points
-        onto the covariate distribution of the genuinely missing ones keeps the
-        \Ti{} skill over persistence, the causal reference, at $+0.28$ to $+0.44$
+        persistence and the causal GP above zero in both populations
+        ($[+0.07, +0.70]$ cut and $[+0.05, +0.68]$ inclusive vs.\ PCHIP),
+        tail-carried, while in the median the error ratio to persistence is
+        0.94--1.00 with the interval including 1 on 3/4 splits. The skill comes from
+        history alone: zeroing the fast diagnostics leaves the \Vrot{} output
+        bit-identical and zeroing history collapses it. The same equation that
+        explains \Ti{} explains the null: the fast channels carry the event response
+        of ion temperature, whereas the drivers of rotation (the NBI torque) are
+        unobserved and the 10\,ms line fit sits at its photon floor. The statement is
+        scoped to standard CES at 10\,ms, from the core to the pedestal top, with the
+        torque unobserved.
+  \item \textbf{Mean and median from separate estimators, and a calibrated
+        distribution} (\S\ref{sec:bulk}, \S\ref{sec:physfilter}, \S\ref{sec:dist}).
+        The \Ti{} skill is a tail effect---in the median row the nowcaster equals
+        persistence and trails future-using PCHIP by 20\%. A pre-registered
+        hold-or-jump filter with Student-$t$ noise at the TRAIN bulk scale sits at
+        0.91$\times$ persistence for \Ti{} on 8/8 split--population cells and its
+        median skill over the backbone is $+0.06$ to $+0.39$ (\Ti{}) and $+0.09$ to
+        $+0.27$ (\Vrot{}) with CIs above zero on 4/4 splits; three ways of folding it
+        into one MSE-winning output all give the median back, so median and mean are
+        reported from separate estimators. A Huber loss pinned to the target's own
+        10\,ms reproducibility bound lowers the median error 8--10\% at no aggregate
+        cost (cut). A Student-$t$ distribution head is calibrated (CRPS gain $+0.229$
+        for \Ti{} and $+0.363$ for \Vrot{}, coverage 0.49--0.51 / 0.91--0.92, cut).
+  \item \textbf{Two stress tests that separate the offline from the deployment
+        claim} (\S\ref{sec:mnar}, \S\ref{sec:campaign}). Reweighting the scored
+        points onto the covariate distribution of the genuinely missing ones keeps
+        the \Ti{} skill over persistence, the causal reference, at $+0.28$ to $+0.44$
         with CIs above zero on 4/4 splits in both populations and over PCHIP at
         $+0.14$ to $+0.28$ with the CI above zero on 2/4 (cut) and 4/4 (inclusive).
-        Re-splitting strictly in time across campaigns takes the windowed
-        control's skill over interpolation to $-0.001$ to $+0.091$ with the CI above
-        zero on only 2/4 and 0/4 initialisations---the fast
-        diagnostics drift $1.22\,\sigma$ (BES) between periods against
-        $0.115\,\sigma$ for the targets---while the sequence nowcaster, which
-        standardizes each discharge's inputs by its own statistics, keeps $+0.17$ to
-        $+0.20$ over PCHIP and $+0.11$ to $+0.16$ over the causal GP with CIs above
-        zero on 4/4 initialisations in both populations.
-  \item \textbf{Where the edge lives}: in high-variability neighbourhoods
-        (peak-stratum \Ti{} skill $+0.45$ to $+0.72$, PASS on 8/8
-        population--split cells; \Vrot{} $+0.54$ to $+0.79$ point estimates, nil in
-        the bulk) and into the non-adjacent regime ($\Delta t > 15$\,ms pooled,
-        PASS in both populations).
-  \item \textbf{The complexity ladder and the size axis, both measured}
-        (\S\ref{sec:ladder}): a 21{,}498-parameter model that predicts
-        \emph{persistence plus a bounded correction read linearly from eight
-        probeable latents} matches the backbone's \Ti{} skill under the spike cut
-        (paired mean $+0.002$)---and sits $-0.19$ below it without the cut (CI below
-        zero on 4/4), because a bounded
-        correction cannot recover a spiked anchor---while widening the backbone
-        from 34k to 879k parameters moves \Ti{} skill by less than $\pm0.01$.
-        The input set, not the estimator, is the ceiling of the aggregate loss;
-        the levers that remain are named (\S\ref{sec:headroom}).
-  \item \textbf{Where the aggregate skill comes from, and the one model-side lever
-        that moves the rest} (\S\ref{sec:bulk}, \S\ref{sec:family}): the \Ti{} skill
-        is a tail effect---in the median row the nowcaster equals persistence and
-        trails future-using PCHIP by 20\%, and the \Vrot{} null is a bulk loss, not
-        a tail artifact. A Huber loss whose scale is pinned to the target's own
-        10\,ms reproducibility bound lowers the median error 8--10\% at no
-        aggregate cost (cut population). A shot-encoding neural process, a
-        transformer pretrained on another tokamak, and a 4-init ensemble all change
-        \Ti{} skill by $-0.09$ to $+0.03$ against their control, none clearing the
-        0.02 band in both populations (ensemble $+0.020$ cut, $+0.007$ inclusive);
-        with no same-shot label, every learned arm's \Vrot{} skill against the
-        training mean is negative ($-0.003$ to $-0.040$).
-  \item \textbf{A physics filter owns the median} (\S\ref{sec:physfilter}): a
-        pre-registered hold-or-jump filter with Student-$t$ noise at the TRAIN bulk
-        scale sits at 0.91$\times$ persistence for \Ti{} on 8/8 split--population cells
-        and its median skill over the backbone is $+0.06$ to $+0.39$ (\Ti{}) and
-        $+0.09$ to $+0.27$ (\Vrot{}) with CIs above zero on 4/4 splits; three ways of
-        folding it into one MSE-winning output all give the median back, so median and
-        mean are reported from separate estimators.
-  \item \textbf{Context and structure, separated} (\S\ref{sec:context}): stretching
-        contiguous causal context from 20 to 630\,ms raises \Ti{} skill from $+0.055$
-        to $+0.138$ and the fraction of discharges beating the causal GP from 0.52 to
-        0.66, while at matched reach a 110$\times$ parameter range across recurrence,
-        dilated convolution and attention differs by at most 0.023. Context makes the
-        positive per-discharge skill typical; the operator family sets the price, and the price is dispatched
-        operator count.
-  \item \textbf{Deployability, measured} (\S\ref{sec:deploy}): distribution-free
-        conformal intervals whose Winkler score is below both baselines' in all 32
-        population--target--variant--split cells without touching the predictor,
-        and stateful one-step inference of the recurrent nowcaster inside the 10\,ms
-        cadence on a CPU.
+        Re-splitting strictly in time across campaigns takes the windowed control's
+        skill over interpolation to $-0.001$ to $+0.091$ with the CI above zero on
+        only 2/4 and 0/4 initialisations---the fast diagnostics drift $1.22\,\sigma$
+        (BES) between periods against $0.115\,\sigma$ for the targets---while the
+        sequence nowcaster, which standardizes each discharge's inputs by its own
+        statistics, keeps $+0.17$ to $+0.20$ over PCHIP and $+0.11$ to $+0.16$ over
+        the causal GP with CIs above zero on 4/4 initialisations in both populations.
+  \item \textbf{The ceiling is the input set, not the estimator} (\S\ref{sec:peak},
+        \S\ref{sec:ladder}, \S\ref{sec:family}, \S\ref{sec:context},
+        \S\ref{sec:deploy}). The edge lives in high-variability neighbourhoods
+        (peak-stratum \Ti{} skill $+0.45$ to $+0.72$, PASS on 8/8 cells) and in the
+        non-adjacent regime ($\Delta t > 15$\,ms, PASS in both populations). A
+        21{,}498-parameter model that predicts persistence plus a bounded correction
+        matches the backbone's \Ti{} skill under the spike cut (paired $+0.002$) and
+        sits $-0.19$ below it without the cut (CI below zero on 4/4); widening the
+        backbone from 34k to 879k parameters moves \Ti{} skill by less than
+        $\pm0.01$; a shot-encoding neural process, a transformer pretrained on
+        another tokamak and a 4-init ensemble change it by $-0.09$ to $+0.03$, none
+        clearing the 0.02 band in both populations; stretching contiguous causal
+        context from 20 to 630\,ms raises skill from $+0.055$ to $+0.138$ while at
+        matched reach recurrence, dilated convolution and attention differ by at most
+        0.023, so the architecture is chosen on dispatched operator count.
+        Distribution-free conformal intervals have a lower Winkler score than both
+        baselines' in all 32 cells, and stateful one-step inference fits inside the
+        10\,ms cadence on a CPU.
+  \item \textbf{One evaluation methodology, described in full in
+        \S\ref{sec:eval}}: pre-registration with a scored prediction ledger per
+        batch, two co-primary populations, a shot-clustered paired bootstrap, the
+        Nadeau--Bengio overlap-corrected interval for repeated 5-fold
+        cross-validation, and a two-level (training repeat $\times$ discharge)
+        bootstrap on pooled out-of-fold predictions. Each piece is standard in
+        another field; we found no precedent in fusion diagnostic machine learning
+        for discharge-cluster intervals, paired tests or pre-registration, and the
+        combination is reported as a combination, not as new.
 \end{enumerate}
 
 % =========================================================================
@@ -305,7 +309,12 @@ sampled series admit exact AR-type null models
 ladder---persistence, linear interpolation~\citep{press2007}, PCHIP, local
 AR---as pre-registered baselines, with PCHIP as
 the headline comparator, and Murphy's MSE skill score~\citep{murphy1988} as the
-metric. Our contribution is orthogonal to this literature: rather than a better
+metric. A persistence baseline has precedent in fusion profile
+forecasting---\citet{Abbate2025Combining} report that both machine-learning and
+physics-based predictors, extrapolated out of distribution, fall below the
+assumption that the profile does not change---but we found no fusion precedent for
+Murphy's skill against persistence and against acausal interpolation as the
+evaluation bar, nor for the term \emph{nowcasting} in its meteorological sense. Our contribution is orthogonal to this literature: rather than a better
 CES-only interpolant, we test whether \emph{other diagnostics} add information
 beyond any CES-only method, by benchmarking a causal multimodal model against
 future-using interpolation.
@@ -364,7 +373,10 @@ sub-ms~\citep{Joung2018ImputationFaulty}; ML detects and compensates corrupted
 sensors~\citep{Mohapatra2019RealtimeSensor}; autoencoders fuse redundant density
 diagnostics for resilience~\citep{Kaldas2026DevelopingAutoencoder}; time-series
 extrinsic regression fills missing electron-temperature data on
-EAST~\citep{Wang2025TimeSeries}; and FusionMAE performs masked-channel ``virtual
+EAST~\citep{Wang2025TimeSeries}, and a CNN--BiGRU--transformer reconstructs missing
+effective charge $Z_{\mathrm{eff}}$ on EAST from exogenous
+signals~\citep{Jia2026TimeSeries}---bidirectional, hence acausal, and described by
+its authors as offline signal restoration; and FusionMAE performs masked-channel ``virtual
 backup diagnosis'' across 88 channels on HL-3~\citep{Yang2026FusionmaeSelfsupervised}.
 Closest to our framing, Diag2Diag synthesizes Thomson-scattering $T_e$/$n_e$ at
 fluctuation-diagnostic rates from other simultaneous diagnostics on
@@ -380,8 +392,10 @@ and \citealp{Imrek2026TemporalSuperresolution}; ECE-type $T_e$ in
 \citealp{Wang2025TimeSeries}; arbitrary masked channels in
 \citealp{Yang2026FusionmaeSelfsupervised}), and where CER/CES appears at all it
 is an \emph{input}~\citep{Jalalvand2025MultimodalSuperresolution}, never the
-sparse target; (ii) \emph{causality}---Diag2Diag and the COMPASS study are
-simultaneous, memory-less mappings, and FusionMAE reconstructs within a window,
+sparse target; (ii) \emph{causality}---Diag2Diag (a memory-less multilayer perceptron that
+maps same-instant inputs to each Thomson time point and is scored against the
+measured points with no interpolation or persistence baseline) and the COMPASS
+study are simultaneous mappings, and FusionMAE reconstructs within a window,
 whereas our model conditions on the target's own irregular past and never reads
 the future; (iii) \emph{evaluation bar}---none benchmarks against
 \emph{future-using} interpolation of the target channel, which for gap-filling
@@ -394,9 +408,11 @@ always on---and extends it in three directions: from electron channels to a
 \emph{sparse ion channel}, from simultaneous memory-less mappings to \emph{causal
 estimation conditioned on the target's own irregular past}, and from assumed
 reconstructability to \emph{per-target tests against pre-registered baselines}.
-To our knowledge the conjunction of these three---causal temporal gap-filling of
-sparse CXRS ion measurements---has not yet been addressed; we present it as the
-family's natural next step rather than as a departure from it.
+A literature check (OpenAlex, arXiv, Crossref; 2026-11-09; full-text search
+incomplete) found no precedent for the conjunction of these three---causal temporal
+gap-filling of sparse CXRS ion measurements---on DIII-D, JET, ASDEX Upgrade, EAST or
+KSTAR; we present it as the family's natural next step rather than as a departure
+from it, and ``not found'' is not ``does not exist''.
 
 \paragraph{Irregular-time and masked multitask learning.}
 Our design borrows standard ingredients from the irregular time-series
@@ -412,6 +428,36 @@ its use in machine-learning weather
 prediction~\citep{Shi2015ConvolutionalLstm,Ravuri2021SkilfulPrecipitation}. The
 novelty is not any single ingredient but the leakage-hardened combination under a
 physics-adverse evaluation protocol.
+
+\paragraph{Methods lineage.}
+Each method we lean on is standard in another field, and we cite its source rather
+than claim it. Fixing the analysis plan before the data are read follows the
+registered-report logic of \citet{Nosek2014RegisteredReports} and its adoption in
+machine learning by the NeurIPS pre-registration
+workshops~\citep{Bertinetto2021Preregistration}. The overlap correction for repeated
+cross-validation is \citet{Nadeau2003Inference}, and the reason a plain
+cross-validation interval under-covers is given by \citet{Bates2024CrossValidation}.
+Resampling discharges as clusters, with the training repeat as an outer level, is
+the hierarchical bootstrap of \citet{Saravanan2020Hierarchical} and
+\citet{Ren2010Nonparametric}. The skill score is Murphy's~\citep{murphy1988} and the
+proper scoring of the predictive distribution follows
+\citet{Gneiting2007StrictlyProper}. Reading a trained recurrent network through its
+input--output response rather than its weights follows \citet{Sussillo2013OpeningBlackBox},
+and turning a trained network into a closed-form equation that is then tested on its
+own follows \citet{Cranmer2020DiscoveringSymbolic}; that weight magnitude is not
+importance is the result of optimal brain damage~\citep{LeCun1990OptimalBrainDamage},
+and \citet{Allen1992NeuralNetwork} reached the same conclusion for a tokamak
+confinement network in 1992, reading its response instead of its weights. The
+Student-$t$ measurement model of the physics filter is the robust Kalman filtering of
+\citet{Roth2013StudentT} and \citet{Agamennoni2012ApproximateInference}, where
+tokamak Kalman observers have so far been Gaussian. In fusion machine learning the
+literature check found none of these in use---discharge-cluster confidence intervals,
+paired tests, pre-registration, interpolation- or persistence-relative skill,
+response-based readouts of a recurrent network, or an equation extracted from a
+trained predictor and retrained under the same protocol---and we state that as ``no
+precedent found'', not as absence: the check (OpenAlex, arXiv, Crossref, 2026-11-09)
+could not complete its full-text search, and publisher full texts were largely
+unread.
 
 % =========================================================================
 \section{Data and problem setup}
@@ -720,8 +766,38 @@ transport times $\tau_E$ or $\tau_\varphi$.
 \subsection{Full-grid causal sequence backbone}
 \label{sec:model:backbone}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig_arch_seq_v2}
+  \caption{\seqv{} for one grid row $t$. The 22 input channels (15 fast: BES, ECEI,
+  Mirnov, per-shot $z$; $\Delta t$; two history tails of carried value, staleness and
+  observed flag) feed two causal LSTM branches. The \Ti{} branch reads all 22 channels
+  (2 layers, 160 units; 117{,}760 + 206{,}080 parameters), the \Vrot{} branch reads
+  only the seven slow-tail channels (1 layer, 64 units; 18{,}688); each is followed by
+  a per-step LayerNorm and a Linear--GELU--Linear head (no activation after the last
+  layer). The dashed red path from the fast channels to the \Vrot{} branch does not
+  exist by construction; the recurrent state $(h, c)$ passes from $t-1$ to $t$ to
+  $t+1$; the loss is the per-target masked MSE on rows with an actual CES measurement
+  plus $0.1\,\mathrm{relu}(0_z - \hat T_i)$. 357{,}570 parameters in total.}
+  \label{fig:arch}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{fig_lstm_cell}
+  \caption{One LSTM cell (\Ti{} branch, layer 1, 160 units). The cell state is
+  multiplied by the forget gate and incremented by the gated candidate,
+  $c_t = f_t \odot c_{t-1} + i_t \odot g_t$, so $\partial c_t / \partial c_{t-1} = f_t$
+  and the memory length is set by $f$ rather than by compounded Jacobians. Purple:
+  values measured on the frozen weights (geometric-mean $f$ 0.465--0.482, memory 1.3
+  steps; 0 of 320 units with $\tau > 5$ steps). Red: where the Mirnov input columns
+  grow during training (forget-gate rows, 0.58 $\to$ 0.97 against 0.59 $\to$ 0.71 for
+  BES).}
+  \label{fig:lstmcell}
+\end{figure}
+
+
 \seqv{} runs two independent causal LSTMs over the 22-channel grid sequence of a
-segment (\S\ref{sec:framing}). The \Ti{} branch (2 layers, 160 units) reads the
+segment (\S\ref{sec:framing}; Fig.~\ref{fig:arch}, cell in Fig.~\ref{fig:lstmcell}). The \Ti{} branch (2 layers, 160 units) reads the
 full state---fast diagnostics, both targets' carried values, staleness flags and
 $\Delta t$---and the \Vrot{} branch (1 layer, 64 units) reads \emph{only the seven
 non-fast channels}: $\Delta t$ and the per-target carried value, staleness and
@@ -954,9 +1030,11 @@ $\bar S \pm t_{0.975,\,n-1}\sqrt{(1/n + n_{\mathrm{test}}/n_{\mathrm{train}})\,s
 $n_{\mathrm{test}}/n_{\mathrm{train}} = 0.33$ and does not shrink to zero with more
 folds \citep{Bates2024CrossValidation}. (ii) \emph{Pooled}: each repeat's five TEST
 folds concatenated so that every discharge is scored once in one ratio skill, with
-a two-level bootstrap that first draws one repeat (training-partition variation)
-and then resamples its discharges (shot variation); a cell \emph{beats} iff the
-2.5th percentile exceeds zero. For \Ti{} the two agree to the second decimal. For
+a two-level bootstrap that draws one repeat (training-partition variation) and
+then resamples its discharges (shot variation)---a hierarchical bootstrap in the
+sense of \citet{Saravanan2020Hierarchical} and \citet{Ren2010Nonparametric} with
+the training repeat as the outer level, assembled from standard pieces and not
+claimed as new; a cell passes iff the 2.5th percentile exceeds zero. For \Ti{} the two agree to the second decimal. For
 \Vrot{}, whose $\approx$80-discharge folds are set by a few heavy-error discharges
 (fold-to-fold s.d.\ 0.18), the fold-level interval spans zero while the pooled one
 does not; the registration named the pooled two-level readout, computed on the
@@ -1481,7 +1559,13 @@ re-grounds the routing of \S\ref{sec:model} under the confirmed protocol
 
 This asymmetry was predicted from physics before the ablation and is confirmed by
 it; the \Vrot{} null is a finding about diagnostic information content, not a
-model failure. It also motivates the per-target routing of \S\ref{sec:model}.
+model failure. It also motivates the per-target routing of \S\ref{sec:model}. The
+statement is scoped: it holds for standard CES at 10\,ms, from the core to the
+pedestal top, with the NBI torque unobserved. Edge $E_r$ and edge rotation are known
+to move within an ELM cycle at sub-millisecond
+resolution~\citep{Viezzer2020Dynamics,Cavedon2017Pedestal}, which a 10\,ms
+single-sightline exposure does not resolve, so nothing here speaks to the edge inside
+an ELM cycle.
 
 \subsection{How much history is needed? One observation}
 \label{sec:window}
@@ -1813,9 +1897,10 @@ training it end-to-end moves none of them by more than 7\%, so they are not repo
 as measured plasma quantities.
 
 \paragraph{How the measurement model was found.} Each step was one pre-registered
-variable. An Ornstein--Uhlenbeck prior with Gaussian noise moved the \Ti{} median
-below persistence for the first time (0.98$\times$ cut) but left \Vrot{} at
-1.19$\times$; a hold-or-jump prior fixed \Ti{} (0.98$\times$ / 1.00$\times$) and left
+variable. An Ornstein--Uhlenbeck prior with Gaussian noise---our modelling
+assumption for rotation, for which we found no literature precedent in tokamak
+rotation---moved the \Ti{} median below persistence (0.98$\times$ cut), which no
+earlier anchor had done, but left \Vrot{} at 1.19$\times$; a hold-or-jump prior fixed \Ti{} (0.98$\times$ / 1.00$\times$) and left
 \Vrot{} at 1.18$\times$ under both priors. A TRAIN-only diagnostic located the cause:
 \Vrot{} increments do not trend, and the Gaussian noise scale had been set at the
 tail, six times the bulk scatter, so the filter shrank every fresh sample. Student-$t$
@@ -2447,75 +2532,107 @@ feature assembly and acquisition overhead are not included.
 (pedestal-top CES channels); no radial-dependence experiment is performed, and
 event-phase analyses (ELM cycle, L--H transitions) are future work---the
 high-variability analysis of \S\ref{sec:peak} is an event-agnostic proxy.
+\textbf{Scope of the asymmetry.} The \Ti$\leftrightarrow$\Vrot{} statement holds for
+standard CES at 10\,ms, from the core to the pedestal top, with the NBI torque
+unobserved; edge $E_r$ and rotation are known to move within an ELM
+cycle~\citep{Viezzer2020Dynamics,Cavedon2017Pedestal}, and a measurement that resolves
+the ELM cycle could carry fast-channel information about rotation that ours cannot.
+\textbf{The equation is three quarters of the backbone, read in one population.}
+22--28\% of the backbone's PCHIP-relative skill is nonlinear event handling that the
+20-parameter form does not reproduce, and its physical bands are read from the cut
+population only: in the inclusive population the equation keeps 0.43--0.81 of the
+PCHIP-relative skill and its BES gain changes sign under the fit-failure spikes
+(\S\ref{sec:model:backbone}).
 
 % =========================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We built a causal, leakage-hardened multimodal nowcaster for sparse KSTAR CES
-targets---a full-grid two-branch recurrent model whose \Vrot{} branch never sees
-the fast diagnostics---and evaluated it under a pre-registered, shot-clustered,
-two-population protocol against a deliberately adverse bar: interpolation that
-sees the future, and a causal GP that is the strongest method that does not. On the
-observed population the model's skill over future-using PCHIP for ion temperature is
-$+0.17$ to $+0.32$ across four independent splits and both populations with every
-CI excluding zero ($[+0.19, +0.25]$ and $[+0.19, +0.31]$ under a pre-registered
-repeated 5-fold replicate that tests every discharge once), its paired skill against
-the strongest offline smoother is $-0.05$ to $+0.11$ with the CI including zero on
-7/8 cells, and its skill over every causal baseline is above zero for both targets
-(ion temperature: CI above zero on all eight cells against the causal GP, $+0.08$ to
-$+0.17$, and in the non-adjacent regime, $\Delta t > 15$\,ms, $+0.27$ and $+0.21$).
-For rotation the replicate turns the four-split intervals that included zero into a
-registered mean-squared-error interval above zero over PCHIP, persistence and the
-causal GP in both populations ($[+0.07, +0.70]$ cut vs.\ PCHIP), carried by the
-tail; in the median the \Vrot{} error ratio to persistence is still 0.94--1.00 with
-the interval including 1 on 3/4 splits, at the photon floor.
+A missing 10\,ms CES row in KSTAR can be filled with lower error, for ion
+temperature, by a strictly causal estimator than by interpolation that reads the
+future. We built that estimator---a full-grid two-branch causal LSTM whose \Vrot{}
+branch never sees the fast diagnostics---and evaluated it under a pre-registered,
+shot-clustered, two-population protocol against a deliberately adverse bar:
+interpolation that sees the future, and a causal GP that is the strongest method that
+does not. The model's skill over future-using PCHIP for ion temperature is $+0.17$ to
+$+0.32$ across four independent splits and both populations with every interval
+excluding zero ($[+0.19, +0.25]$ and $[+0.19, +0.31]$ under a pre-registered repeated
+5-fold replicate that tests every discharge once), its paired skill against the
+strongest offline smoother is $-0.05$ to $+0.11$ with the interval including zero on
+7/8 cells, and its skill over the causal GP is $+0.08$ to $+0.17$ with the interval
+above zero on all eight cells (and $+0.27$ and $+0.21$ in the non-adjacent regime,
+$\Delta t > 15$\,ms). The skill survives both stress tests: at genuinely missing,
+in-domain timesteps the skill over persistence stays at $+0.28$ to $+0.44$ with
+intervals above zero on 8/8 cells, and across a campaign boundary the sequence
+nowcaster keeps $+0.17$ to $+0.20$ over PCHIP and $+0.11$ to $+0.16$ over the causal
+GP with intervals above zero on 4/4 initialisations, where the windowed control it
+replaced had lost its offline advantage (interval above zero on 2/4 and 0/4 vs.\
+PCHIP)---the fast diagnostics drift 5--11$\times$ more between campaigns than the
+targets, and the sequence framing standardizes per shot and reaches the whole past
+by construction.
 
-The claim we make about deployment is now supported by both stress tests. At
-genuinely missing, in-domain timesteps the skill over persistence, the causal
-reference, survives reweighting at $+0.28$ to $+0.44$ with CIs above zero on 8/8
-population--split cells; across a campaign boundary the sequence nowcaster keeps
-$+0.17$ to $+0.20$ over PCHIP and $+0.11$ to $+0.16$ over the causal GP with CIs
-above zero on 4/4 initialisations in both populations, where the windowed control it replaced had
-lost its offline advantage entirely (CI above zero on 2/4 and 0/4 vs.\ PCHIP, 0/4 vs.\ the
-causal GP)---and the difference is measured, not
-asserted: the fast diagnostics drift 5--11$\times$ more between campaigns than the
-targets, per-shot standardization repairs the control, and the sequence framing
-standardizes per shot and reaches the whole past by construction. An online
-virtual sensor competes with persistence and a causal smoother, not with an
-interpolant that reads the future; by that comparison the nowcaster works at the
-points where it matters. It emits calibrated intervals whose proper-scoring-rule
-(Winkler) score is below both baselines' in every cell.
+What that nowcaster computes can be written down. Weight magnitude told us nothing
+stable; the input--output response did, and a four-stage registered readout turned it
+into a 20-parameter physical filter: an observation filter whose gain on a new
+measurement rises with the gap since the last one ($K_0 = 0.27$--$0.30$ fresh,
+$K_\infty = 0.48$--$0.53$ after a long gap, transition $s_K = 39$--$47$\,ms), plus a
+linear response to each fast channel's deviation from its preceding 100\,ms baseline
+that is switched off beyond $\theta = 2.9$--$3.0\sigma$, with $\sum a_{\mathrm{BES}} =
++48$ to $+53$ and $\sum a_{\mathrm{ECEI}} = +44$ to $+50$\,eV per $\sigma$. Trained
+from scratch under the identical protocol, that equation keeps 72--78\% of the
+backbone's PCHIP-relative skill and 87--90\% of its persistence-relative skill on
+4/4 cut splits, above the registered 0.70 bar and above the increment-form equation
+on every split by a paired $+0.034$ to $+0.042$ with intervals above zero. The
+remaining 22--28\% is the network's nonlinear event handling, which no low-order
+function of the fast-channel history reproduces; it is the price of a 20-parameter
+description, not a missing term that these inputs expose. The equation also says
+where the skill comes from: the bulk of it is denoising of the noisy anchor, and the
+margin over interpolation is carried by the rows where a pedestal event is seen in
+BES and ECEI before the next CES exposure.
 
-We also report where it does not work and why. Rotation's interval over
-interpolation excludes zero only in the mean ($[+0.07, +0.70]$), its median-error
-ratio to persistence is 0.94--1.00 with the interval including 1, and its skill lives
-in transients; the ion-temperature skill is itself a
-tail effect---in the median row the nowcaster equals persistence and trails
-future-using PCHIP by 20\%, and a Huber loss pinned to the target's reproducibility
-bound recovers half of that bulk at no aggregate cost (conditional on the cut); the
-value cut that defines one of the
-two populations is a one-sided proxy for fit quality; the reweighting reaches
-54--68\% of missing \Ti{} rows and a twentieth of missing \Vrot{} rows; the
-predictive intervals are calibrated marginally, not per discharge; and beyond
-45\,ms the inclusive-population interval includes zero ($-0.004$, $[-0.30, +0.25]$).
-None of these is a ceiling argument, and
-none is left as a shrug. Each points at a specific, testable change---CES
-fit-quality metadata; per-window features recomputed from the raw kHz Mirnov
-stream whose information 100\,Hz decimation destroyed before the model ever saw
-it; the NBI torque channel that is absent from the dataset but is the physical
-cause of rotation---and the model-size axis is closed: a 21k-parameter
-persistence-plus-bounded-correction model matches the backbone under the cut, and
-a 26$\times$ width sweep is flat. So is the model-family axis: a shot-encoding
-neural process, a transformer pretrained on another tokamak and a 4-init ensemble
-all change \Ti{} skill by $-0.09$ to $+0.03$ with none clearing the 0.02 band in both
-populations, and with no same-shot label every arm's skill against the training mean
-is negative ($-0.003$ to $-0.040$). Alongside these, the work contributes a
-corrected \Vrot{} evaluation (54\% instrument holds, removed everywhere), a
-two-population treatment of spectral-fit failures with the measurement that shows
-why neither population suffices alone, a full-grid causal framing whose reach is
-what clears the strongest deployable baseline, and a test-frozen selection
-protocol whose every decision rule was written down before the number it decided.
+The same equation explains the converse result. For rotation the fast channels carry
+nothing the model uses---zeroing them leaves the \Vrot{} output bit-identical---so
+its mean-squared-error skill over interpolation is a tail effect carried by history
+alone ($[+0.07, +0.70]$ cut vs.\ PCHIP under the registered two-level bootstrap, 1/4
+and 2/4 passes on the frozen splits), and in the median its error ratio to
+persistence is 0.94--1.00 with the interval including 1 on 3/4 splits. The physics is
+the one our inputs do not observe: the NBI torque that drives rotation, and the
+photon floor of a 10\,ms line fit, whose $\sqrt2$ ratio between the \Ti{} and
+\Vrot{} scatter we measure in 8/8 cells. The statement is scoped to standard CES at
+10\,ms from the core to the pedestal top; edge rotation inside an ELM cycle is a
+different measurement.
+
+Two estimands are kept apart. The aggregate skill is a tail statistic---in the median
+row the nowcaster equals persistence and trails future-using PCHIP by 20\%---and a
+pre-registered hold-or-jump filter with Student-$t$ noise at the training bulk scale
+is the median estimator (0.91$\times$ persistence for \Ti{} on 8/8 cells, median skill
+over the backbone $+0.06$ to $+0.39$ for \Ti{} and $+0.09$ to $+0.27$ for \Vrot{} with
+intervals above zero on 4/4 splits); every output that must also win the aggregate
+gives that median back, so median and mean are reported from separate estimators,
+and a Student-$t$ distribution head carries the uncertainty calibrated (CRPS gain
+$+0.229$ and $+0.363$, coverage 0.49--0.51 / 0.91--0.92, cut).
+
+We also report what is not claimed and what would overturn it. The offline claim is
+bounded above by the offline GP; the value cut that defines one population is a
+one-sided proxy for fit quality, and CES fit-quality metadata would replace it; the
+reweighting reaches 54--68\% of missing \Ti{} rows and a twentieth of missing \Vrot{}
+rows; the predictive intervals are calibrated marginally, not per discharge; beyond
+45\,ms the inclusive-population interval includes zero ($-0.004$, $[-0.30, +0.25]$);
+the equation's physical bands are read from the cut population only, since under the
+fit-failure spikes its inclusive BES gain changes sign; and everything is one device
+and one campaign. The model-size and model-family axes are closed---a 21k-parameter
+persistence-plus-bounded-correction model matches the backbone under the cut, a
+26$\times$ width sweep is flat, and a shot-encoding neural process, a transformer
+pretrained on another tokamak and a 4-init ensemble change \Ti{} skill by $-0.09$ to
+$+0.03$ with none clearing the 0.02 band in both populations---so the levers that
+remain are inputs: the NBI torque channel absent from the dataset, features
+recomputed from the raw kHz Mirnov stream that 100\,Hz decimation destroyed, and
+per-exposure fit uncertainty from the CES analysis. The evaluation that supports all
+of this---pre-registration with a scored prediction ledger, discharge-cluster
+intervals, overlap-corrected repeated cross-validation and a two-level
+bootstrap---is assembled from standard pieces of other fields; we found no precedent
+for it in fusion diagnostic machine learning, and it is reported as the condition of
+belief, not as a result.
 
 % =========================================================================
 \subsubsection*{Reproducibility}
