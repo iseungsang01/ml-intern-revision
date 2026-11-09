@@ -29,6 +29,10 @@ SEQ_MODELS = {
     # term), V_rot branch = seq_v2's. `b28x` adds the ONE cross term c * dECEI * dBES.
     "b28": SeqCESB28,
     "b28x": functools.partial(SeqCESB28, cross=True),
+    # B.28 stage 4 (PREREGISTRATION_B28.md sec. 9): the same equation with the kernel sec. 8bz-3 read
+    # off the backbone -- x_t minus the preceding 10-step mean, linear gain switched off beyond a
+    # learned theta ~ 3 sigma. Still 20 T_i parameters; V_rot branch unchanged.
+    "b28h": functools.partial(SeqCESB28, fast_term="hp", nonlin="reject"),
 
     # B.17 (PREREGISTRATION_B17.md): seq_v2 with a predictive-distribution head trained by
     # NLL. `v2g` = heteroscedastic Gaussian, `v2m2` = two-component mixture. forward()

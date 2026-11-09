@@ -41,6 +41,8 @@ from run_b1_gate import GATE_ENV, AMBIENT_VARS, SMOKE_OVERRIDES, run_step  # noq
 
 SEEDS = (42, 1, 7, 123)
 ARMS = ("b28", "b28x")
+ARMS_STAGE4 = ("b28h",)
+STAGE4_OUT = DATA / ".b28_stage4.json"
 EPOCH_CAP = "60"
 POPS = {
     "cut": {"cut": "3000", "control": ".b1_seqv2_s{s}_i{s}", "control_metrics": ".b1_w2cut_s{s}",
@@ -133,12 +135,12 @@ def one_run(arm, pop, s, smoke):
                         env, log, "paired-vs-control", artifacts=(paired,)):
             rec["status"] = "paired_failed"
             return rec
-    if arm == "b28x":
+    if arm != "b28":
         other = arm_dir("b28", pop, s) / "comparison_errors_test.npz"
-        paired_x = out / "paired_b28x_vs_b28.json"
+        paired_x = out / f"paired_{arm}_vs_b28.json"
         if other.exists() and not paired_x.exists():
             if not run_step([PAIRED, "--a", out / "comparison_errors_test.npz", "--b", other, "--out", paired_x],
-                            env, log, "paired-b28x-vs-b28", artifacts=(paired_x,)):
+                            env, log, f"paired-{arm}-vs-b28", artifacts=(paired_x,)):
                 rec["status"] = "paired_x_failed"
                 return rec
     m = json.loads((out / "metrics.json").read_text(encoding="utf-8"))
@@ -217,6 +219,66 @@ def summarize():
     return summary
 
 
+def summarize_stage4():
+    """PREREGISTRATION_B28.md sec. 9 rules (b28h) on whatever runs are finished."""
+    summary = {"epoch_cap": int(EPOCH_CAP), "arm": "b28h", "pops": {}, "verdict": {}}
+    for pop in POPS:
+        rows = {}
+        for s in SEEDS:
+            out = arm_dir("b28h", pop, s)
+            control = DATA / POPS[pop]["control"].format(s=s)
+            need = [out / n for n in ("paired_vs_control.json", "bootstrap_summary.json", "metrics.json",
+                                       "physics_params.json", "paired_b28h_vs_b28.json")] + [control / "bootstrap_summary.json"]
+            if not all(n.exists() for n in need):
+                continue
+            tg = json.loads(need[0].read_text(encoding="utf-8"))["targets"]
+            bs = json.loads(need[1].read_text(encoding="utf-8"))["splits"]["test"]
+            m = json.loads(need[2].read_text(encoding="utf-8"))
+            phys = json.loads(need[3].read_text(encoding="utf-8"))
+            th = json.loads(need[4].read_text(encoding="utf-8"))["targets"]["CES_TI"]
+            cb = json.loads(need[5].read_text(encoding="utf-8"))["splits"]["test"]
+            row = {}
+            for t in ("CES_TI", "CES_VT"):
+                arm_sk = {ref: bs[t][ref]["skill_point"] for ref in ("pchip", "persistence", "gp_causal", "gp") if ref in bs[t]}
+                ctl_sk = {ref: cb[t][ref]["skill_point"] for ref in ("pchip", "persistence", "gp_causal", "gp") if ref in cb[t]}
+                row[t] = {"paired_vs_control": tg[t]["skill_point"], "ci95": tg[t]["skill_ci95"],
+                          "arm_better": tg[t]["a_better"], "control_better": tg[t]["b_better"],
+                          "skill": arm_sk, "control_skill": ctl_sk,
+                          "ratio_vs_pchip": (arm_sk["pchip"] / ctl_sk["pchip"]) if ctl_sk.get("pchip") else None,
+                          "ratio_vs_persistence": (arm_sk["persistence"] / ctl_sk["persistence"]) if ctl_sk.get("persistence") else None}
+            row["epochs"] = [m["epochs_run"], m["best_epoch"]]
+            row["physics"] = phys
+            row["b28h_vs_b28_TI"] = {"skill_point": th["skill_point"], "ci95": th["skill_ci95"],
+                                     "h_better": th["a_better"], "b28_better": th["b_better"]}
+            rows[str(s)] = row
+        summary["pops"][pop] = rows
+        ratios = [rows[s]["CES_TI"]["ratio_vs_pchip"] for s in rows]
+        v = {"n_runs": len(rows), "H28_5_ratio_vs_pchip": ratios,
+             "H28_5_pass_count_ge_0.70": int(sum(x is not None and x >= 0.70 for x in ratios)),
+             "H28_5_mean_ratio": float(np.mean([x for x in ratios if x is not None])) if ratios else None,
+             "ratio_vs_persistence": [rows[s]["CES_TI"]["ratio_vs_persistence"] for s in rows],
+             "H28_6_b28h_vs_b28_TI": [rows[s]["b28h_vs_b28_TI"]["skill_point"] for s in rows],
+             "H28_6_significant_better_runs": int(sum(rows[s]["b28h_vs_b28_TI"]["h_better"] for s in rows)),
+             "vt_significant_deficit_runs": int(sum(rows[s]["CES_VT"]["control_better"] for s in rows)),
+             "theta_sigma": [rows[s]["physics"].get("theta_sigma") for s in rows],
+             "a_sum_BES_eV": [rows[s]["physics"]["a_sum_BES_eV"] for s in rows],
+             "a_sum_ECEI_eV": [rows[s]["physics"]["a_sum_ECEI_eV"] for s in rows],
+             "a_sum_MC_eV": [rows[s]["physics"]["a_sum_MC_eV"] for s in rows],
+             "K0": [rows[s]["physics"]["K0"] for s in rows], "K_inf": [rows[s]["physics"]["K_inf"] for s in rows],
+             "s_K_ms": [rows[s]["physics"]["s_K_ms"] for s in rows]}
+        if len(rows) == 4:
+            mr = v["H28_5_mean_ratio"]
+            v["H28_5_verdict"] = ("form corrections recover the bar (>= 0.70 on 4/4)" if v["H28_5_pass_count_ge_0.70"] == 4
+                                  else "form corrections help, a nonlinear remainder stays (mean 0.60-0.70)" if 0.60 <= mr < 0.70
+                                  else "form corrections are not the gap (mean < 0.60)" if mr < 0.60
+                                  else "mean >= 0.70 but not 4/4: not supported by the registered rule")
+            v["H28_6_verdict"] = ("high-pass + rejection named as the better description (>= 3/4)"
+                                  if v["H28_6_significant_better_runs"] >= 3 else "no significant gain over b28: null")
+        summary["verdict"][pop] = v
+    STAGE4_OUT.write_text(json.dumps(summary, indent=1), encoding="utf-8")
+    return summary
+
+
 def keep_awake(on):
     """Windows: hold the machine out of standby for the batch (B.27 r0 f1 lost 22 min to it)."""
     if sys.platform != "win32":
@@ -227,7 +289,7 @@ def keep_awake(on):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", default="all", choices=["1", "2", "all"])
+    ap.add_argument("--stage", default="all", choices=["1", "2", "4", "all"])
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--resume", action="store_true", help="accepted; every step is artifact-checked anyway")
     ap.add_argument("--arms", nargs="*", default=list(ARMS))
@@ -257,6 +319,25 @@ def main():
         if not args.smoke:
             summary = summarize()
             print(json.dumps(summary["verdict"], indent=1), flush=True)
+    if args.stage == "4":
+        keep_awake(True)
+        records = []
+        try:
+            for pop in args.pops:
+                for s in args.seeds:
+                    for arm in ARMS_STAGE4:
+                        records.append(one_run(arm, pop, s, args.smoke))
+                        print(f"[b28] {records[-1]}", flush=True)
+                        if not args.smoke:
+                            summarize_stage4()
+        finally:
+            keep_awake(False)
+        if not args.smoke:
+            summary = summarize_stage4()
+            print(json.dumps(summary["verdict"], indent=1), flush=True)
+        (DATA / (".b28_stage4_runs_smoke.json" if args.smoke else ".b28_stage4_runs.json")).write_text(
+            json.dumps(records, indent=1), encoding="utf-8")
+        return
         (DATA / (".b28_runs_smoke.json" if args.smoke else ".b28_runs.json")).write_text(
             json.dumps(records, indent=1), encoding="utf-8")
     print(f"[b28] done in {(time.time()-t0)/60:.1f} min", flush=True)

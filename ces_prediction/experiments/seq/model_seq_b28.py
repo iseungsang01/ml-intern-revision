@@ -69,8 +69,19 @@ def _ewma_scan(carried: torch.Tensor, new_obs: torch.Tensor, gain: torch.Tensor)
 class SeqCESB28(nn.Module):
     def __init__(self, n_in=N_FEATURES, n_fast=N_FAST_CHANNELS, hidden_vt=64, layers_vt=1,
                  head=64, dropout=0.1, cross=False,
-                 k0=0.35, k_inf=0.60, s_k=0.03, kappa0=1.0):
+                 k0=0.35, k_inf=0.60, s_k=0.03, kappa0=1.0,
+                 fast_term="inc", nonlin="tanh", baseline_steps=10, theta0=3.0, reject_width=0.5):
+        """fast_term: "inc" = 10 ms increment x_t - x_{t-1} (stage 2); "hp" = x_t minus the causal
+        mean of the preceding `baseline_steps` rows (the kernel sec. 8bz-3 read off the backbone).
+        nonlin: "tanh" = a_c kappa tanh(d/kappa) (stage 2); "reject" = a_c d sigma((theta - |d|)/w),
+        a linear gain that is switched off beyond theta sigma (sec. 8bz-3: flat to 2 sigma, cut
+        beyond 3 sigma); theta is learned (softplus, init theta0), the width w is fixed."""
         super().__init__()
+        if fast_term not in ("inc", "hp") or nonlin not in ("tanh", "reject"):
+            raise ValueError(f"fast_term={fast_term!r} nonlin={nonlin!r}")
+        self.fast_term, self.nonlin = fast_term, nonlin
+        self.baseline_steps = int(baseline_steps)
+        self.reject_width = float(reject_width)
         self.n_in = int(n_in)
         self.n_fast = int(n_fast)
         self.n_slow = self.n_in - self.n_fast
@@ -88,7 +99,10 @@ class SeqCESB28(nn.Module):
         self.kinf_logit = nn.Parameter(torch.tensor(_inv_sigmoid(k_inf)))
         self.sk_raw = nn.Parameter(torch.tensor(_inv_softplus(s_k)))
         self.a = nn.Parameter(torch.zeros(self.n_fast))          # start exactly at the EWMA
-        self.kappa_raw = nn.Parameter(torch.tensor(_inv_softplus(kappa0)))
+        if self.nonlin == "tanh":
+            self.kappa_raw = nn.Parameter(torch.tensor(_inv_softplus(kappa0)))
+        else:
+            self.theta_raw = nn.Parameter(torch.tensor(_inv_softplus(theta0)))
         self.b0 = nn.Parameter(torch.zeros(()))
         if self.cross:
             self.c = nn.Parameter(torch.zeros(()))
@@ -116,6 +130,33 @@ class SeqCESB28(nn.Module):
     def kappa(self):
         return nn.functional.softplus(self.kappa_raw) + 1e-3
 
+    def theta(self):
+        return nn.functional.softplus(self.theta_raw) + 1e-3
+
+    def fast_input(self, fast):
+        """(B, L, n_fast) -> the quantity the gain acts on: the 10 ms increment, or x_t minus the
+        causal mean of the preceding `baseline_steps` rows (fewer at the block start; 0 at t = 0)."""
+        if self.fast_term == "inc":
+            return torch.cat([torch.zeros_like(fast[:, :1]), fast[:, 1:] - fast[:, :-1]], dim=1)
+        n = self.baseline_steps
+        cs = torch.cumsum(torch.cat([torch.zeros_like(fast[:, :1]), fast], dim=1), dim=1)   # cs[t] = sum fast[:t]
+        L = fast.shape[1]
+        t = torch.arange(L, device=fast.device)
+        lo = torch.clamp(t - n, min=0)
+        window_sum = cs[:, t] - cs[:, lo]                     # sum of fast[lo:t] = the preceding <= n rows
+        count = (t - lo).to(fast.dtype).clamp(min=1.0)
+        base = window_sum / count[None, :, None]
+        d = fast - base
+        d[:, 0] = 0.0
+        return d
+
+    def gain_fn(self, d):
+        if self.nonlin == "tanh":
+            kappa = self.kappa()
+            return kappa * torch.tanh(d / kappa)
+        theta = self.theta()
+        return d * torch.sigmoid((theta - d.abs()) / self.reject_width)
+
     def physics(self, target_std):
         """K_0, K_inf, s_K [ms], per-channel gains a_c in eV per 1 sigma (per-shot) step,
         kappa (sigma units), b0 [eV], c (cross) -- for the record (physics_params.json)."""
@@ -126,8 +167,13 @@ class SeqCESB28(nn.Module):
                "a_eV_per_sigma": a, "a_sum_BES_eV": float(sum(a[:N_BES])),
                "a_sum_ECEI_eV": float(sum(a[N_BES:N_BES + N_ECEI])),
                "a_sum_MC_eV": float(sum(a[N_BES + N_ECEI:])),
-               "kappa_sigma": float(self.kappa().detach()), "b0_eV": float(self.b0.detach()) * std_ti,
-               "n_params_ti": int(self.n_params_ti)}
+               "b0_eV": float(self.b0.detach()) * std_ti,
+               "n_params_ti": int(self.n_params_ti), "fast_term": self.fast_term, "nonlin": self.nonlin}
+        if self.nonlin == "tanh":
+            out["kappa_sigma"] = float(self.kappa().detach())
+        else:
+            out["theta_sigma"] = float(self.theta().detach())
+            out["baseline_steps"] = self.baseline_steps
         if self.cross:
             out["c_eV_per_sigma2"] = float(self.c.detach()) * std_ti
         return out
@@ -148,9 +194,8 @@ class SeqCESB28(nn.Module):
         m = _ewma_scan(carried.cpu(), new_obs.cpu(), gain.cpu()).to(dev)
 
         fast = x[..., :self.n_fast]
-        d = torch.cat([torch.zeros_like(fast[:, :1]), fast[:, 1:] - fast[:, :-1]], dim=1)
-        kappa = self.kappa()
-        g = kappa * torch.tanh(d / kappa)
+        d = self.fast_input(fast)
+        g = self.gain_fn(d)
         term = g @ self.a
         if self.cross:
             term = term + self.c * d[..., N_BES:N_BES + N_ECEI].mean(-1) * d[..., :N_BES].mean(-1)

@@ -83,3 +83,37 @@ def test_b28_is_causal_and_vt_is_blind_to_fast_channels():
         x3 = x.clone()
         x3[0, :, :15] += 1.0                      # perturb all fast channels
         assert torch.allclose(base[0, :, 1], m(x3)[0, :, 1])
+
+
+def test_b28h_contract_highpass_kernel_and_rejection():
+    """Stage 4 (prereg sec. 9): 20 T_i parameters, EWMA at init, causal, V_rot blind; the fast term
+    is x_t minus the mean of the preceding 10 rows (so a one-step impulse is paid back over the
+    next 10 steps) and the gain is switched off beyond theta."""
+    m = SEQ_MODELS["b28h"]()
+    m.eval()
+    assert m.n_params_ti == 20 and not hasattr(m, "kappa_raw") and hasattr(m, "theta_raw")
+    x, y, obs = _sequence()
+    with torch.no_grad():
+        ti0 = m(x)[0, :, 0]
+        # init: a = 0 -> exactly the EWMA (same recursion as b28)
+        ref = SEQ_MODELS["b28"]()
+        ref.eval()
+        assert torch.allclose(ti0, ref(x)[0, :, 0], atol=1e-6)
+        # kernel: put a unit gain on channel 0 and a +1 sigma impulse at t0
+        m.a.data[0] = 1.0
+        base = m(x)[0, :, 0]
+        xi = x.clone()
+        xi[0, 30, 0] += 1.0
+        resp = m(xi)[0, :, 0] - base
+        assert float(resp[30]) > 0.5, "lag-0 response missing"
+        assert all(float(resp[k]) < 0 for k in range(31, 41)), "no pay-back over the next 10 steps"
+        assert abs(float(resp[45])) < 1e-6, "response outlasts the 10-step baseline"
+        assert torch.allclose(resp[:30], torch.zeros(30), atol=1e-6), "acausal"
+        # rejection: a +10 sigma impulse moves the output less than a +1 sigma one
+        xb = x.clone()
+        xb[0, 30, 0] += 10.0
+        assert float((m(xb)[0, 30, 0] - base[30])) < float(resp[30])
+        # V_rot blind to the fast channels
+        x3 = x.clone()
+        x3[0, :, :15] += 1.0
+        assert torch.allclose(m(x)[0, :, 1], m(x3)[0, :, 1])

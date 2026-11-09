@@ -171,3 +171,47 @@ No other rule decides a claim. Nothing here changes a registered headline.
 
 No change to the backbone, the loss, the populations, the splits or the harness; no W = 2
 window control (the pairing is against the seq_v2 backbone); no GPU use in stage 1.
+
+## 9. Stage 4 (registered 2026-11-09, after §8bz-3, before any `b28h` run): does the backbone's own kernel recover the bar?
+
+**Why.** Stage 3 (§8bz-3) read two form errors off the backbone that the §2 equation does not have: the
+fast-channel term is x_t minus the preceding ≈ 10-step mean (a ≈ 100 ms high-pass), not the 10 ms
+increment, and the gain is flat to 2σ and switched off beyond 3σ, not a κ ≈ 1σ tanh. Stage 4 asks
+whether correcting the *form* alone, with the same 20 parameters, recovers the registered 0.70 bar.
+
+**Design.** `CES_SEQ_MODEL=b28h` = `SeqCESB28(fast_term="hp", nonlin="reject")`: T_i = EWMA m (gains
+K_0, K_∞, s_K as before) + Σ_c a_c · d_c · σ((θ − |d_c|)/0.5) + b_0, with d_c = x_c,t − mean(x_c,t−10..t−1)
+(fewer rows at a block start; 0 at t = 0) and θ learned (softplus, init 3σ): 3 + 15 + 1 + 1 = **20 T_i
+parameters**; V_rot branch = seq_v2's, verbatim. Env, splits, controls, selection and pairing exactly
+as stage 2 (§2); 8 GPU runs (cut + inclusive × 4 splits), one batch at a time. Control = the frozen
+backbone; second pairing = the stage-2 `b28` run of the same split (`paired_b28h_vs_b28.json`).
+Summary `data/.b28_stage4.json` (`run_b28.py --stage 4`).
+
+**Rules (fixed now).**
+- **H28-5 (primary).** ratio vs PCHIP = skill(`b28h`)/skill(backbone) ≥ 0.70 on **4/4 cut** → "the equation
+  with the backbone's kernel explains the model" (the §7 paragraph is then rewritten with the corrected
+  form). Mean in [0.60, 0.70) → "form corrections help but a nonlinear remainder stays". Mean < 0.60
+  (stage 2's value) → "the form corrections are not the gap". Inclusive: same readout, secondary.
+- **H28-6.** `b28h − b28` paired T_i skill significant (shot-cluster CI > 0, arm better) on ≥ 3/4 cut →
+  the high-pass + rejection form is named the better description of the backbone; otherwise null.
+- **Guards (reported).** V_rot deficits vs control (expected 0–1 of 4). θ in [2, 5]σ. Σa_BES in [+40, +80],
+  Σa_ECEI in [+20, +50] eV/σ (the §8bz-3 Jacobian impulse bands, cut). K_0, K_∞, s_K within ±0.05 / ±0.05
+  / ±10 ms of stage 2's.
+
+**Predictions.**
+
+| cell | prediction | confidence |
+|---|---|---|
+| H28-5 cut 4/4 (ratio ≥ 0.70) | supported | 0.40 |
+| mean ratio vs PCHIP, cut | 0.64–0.74 | 0.6 |
+| H28-6 (b28h > b28 significant ≥ 3/4 cut) | supported | 0.75 |
+| θ, cut | 2.5–4.0σ on 4/4 | 0.6 |
+| Σa_BES, Σa_ECEI in the impulse bands, 4/4 cut | supported | 0.6 |
+| V_rot significant deficits | 0–1 of 4 | 0.7 |
+| run time | 5–20 min per run | 0.7 |
+
+**Disclosures.** The kernel and the rejection form were read from the stage-3 Jacobian on the same
+frozen checkpoints and the same TEST rows that stage 4 is scored on; stage 4 is therefore a test of
+whether that reading transfers to end-to-end training, not an independent discovery of the form.
+The baseline length (10 steps) and the rejection width (0.5σ) are fixed from §8bz-3, not fitted.
+Plumbing smoke before this section was final: none (`--stage 4 --smoke` is run after it is written).
