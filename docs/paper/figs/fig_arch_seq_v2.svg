@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="seq_v2: 10 ms 격자 행 t의 입력 22채널이 두 가닥의 인과 LSTM으로 갈라진다. T_i 가지는 22채널 전부를 2층 160 LSTM과 head로 읽어 T_i를 내고, V_rot 가지는 느린 꼬리 7채널만 1층 64 LSTM과 head로 읽어 V_rot을 낸다. 빠른 채널에서 V_rot 가지로 가는 경로는 구조적으로 차단된다. 순환 상태 (h, c)는 격자를 따라 t−1에서 t로, t에서 t+1로 전달되고, 손실은 CES가 실제로 관측된 행에서만 타깃별로 계산된다." style="max-width:100%;height:auto;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:13px">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b71c1c"/></marker>
+  </defs>
+  <g stroke="currentColor" fill="none" stroke-width="1.4">
+    <!-- ===== input band ===== -->
+    <rect x="40" y="40" width="1120" height="110" rx="6" stroke-dasharray="4 3" opacity="0.6"/>
+    <rect x="70" y="72" width="330" height="60" rx="4"/>
+    <rect x="430" y="72" width="100" height="60" rx="4"/>
+    <rect x="560" y="72" width="270" height="60" rx="4"/>
+    <rect x="860" y="72" width="270" height="60" rx="4"/>
+    <!-- ===== T_i branch ===== -->
+    <rect x="110" y="250" width="260" height="46" rx="4"/>
+    <rect x="110" y="326" width="260" height="46" rx="4"/>
+    <rect x="110" y="402" width="260" height="34" rx="4"/>
+    <rect x="110" y="462" width="260" height="34" rx="4"/>
+    <rect x="110" y="522" width="260" height="34" rx="4"/>
+    <rect x="110" y="582" width="260" height="34" rx="4"/>
+    <!-- ===== V_rot branch ===== -->
+    <rect x="800" y="326" width="260" height="46" rx="4"/>
+    <rect x="800" y="402" width="260" height="34" rx="4"/>
+    <rect x="800" y="462" width="260" height="34" rx="4"/>
+    <rect x="800" y="522" width="260" height="34" rx="4"/>
+    <rect x="800" y="582" width="260" height="34" rx="4"/>
+    <!-- arrows: inputs -> branches -->
+    <path d="M235,132 L235,250" marker-end="url(#ah)"/>
+    <path d="M480,132 L480,200 L300,200 L300,250" marker-end="url(#ah)"/>
+    <path d="M695,132 L695,200 L330,200 L330,250" marker-end="url(#ah)"/>
+    <path d="M995,132 L995,200 L930,200 L930,326" marker-end="url(#ah)"/>
+    <path d="M480,200 L870,200 L870,326" marker-end="url(#ah)"/>
+    <path d="M695,200 L900,200 L900,326" marker-end="url(#ah)"/>
+    <!-- within branches -->
+    <path d="M240,296 L240,326" marker-end="url(#ah)"/>
+    <path d="M240,372 L240,402" marker-end="url(#ah)"/>
+    <path d="M240,436 L240,462" marker-end="url(#ah)"/>
+    <path d="M240,496 L240,522" marker-end="url(#ah)"/>
+    <path d="M240,556 L240,582" marker-end="url(#ah)"/>
+    <path d="M240,616 L240,650" marker-end="url(#ah)"/>
+    <path d="M930,372 L930,402" marker-end="url(#ah)"/>
+    <path d="M930,436 L930,462" marker-end="url(#ah)"/>
+    <path d="M930,496 L930,522" marker-end="url(#ah)"/>
+    <path d="M930,556 L930,582" marker-end="url(#ah)"/>
+    <path d="M930,616 L930,650" marker-end="url(#ah)"/>
+    <!-- recurrent state in/out, T_i -->
+    <path d="M40,273 L110,273" marker-end="url(#ah)"/>
+    <path d="M370,273 L440,273" marker-end="url(#ah)"/>
+    <path d="M40,349 L110,349" marker-end="url(#ah)"/>
+    <path d="M370,349 L440,349" marker-end="url(#ah)"/>
+    <!-- recurrent state in/out, V_rot -->
+    <path d="M730,349 L800,349" marker-end="url(#ah)"/>
+    <path d="M1060,349 L1130,349" marker-end="url(#ah)"/>
+  </g>
+  <!-- blocked path: fast channels -> V_rot branch -->
+  <g stroke="#b71c1c" fill="none" stroke-width="1.6" stroke-dasharray="6 4">
+    <path d="M400,102 L560,102 M830,102 L860,102" opacity="0"/>
+    <path d="M235,170 L640,170 L640,300 L800,300" marker-end="url(#ahr)"/>
+  </g>
+  <g stroke="#b71c1c" stroke-width="2.2" fill="none">
+    <path d="M630,290 L650,310 M650,290 L630,310"/>
+  </g>
+  <!-- ===== labels ===== -->
+  <g fill="currentColor">
+    <text x="52" y="60" font-size="12" opacity="0.75">입력 x_t · 10 ms 격자의 행 t · 22채널</text>
+    <text x="235" y="96" text-anchor="middle" font-weight="600">빠른 채널 15</text>
+    <text x="235" y="116" text-anchor="middle" font-size="12">BES 9 · ECEI 4 · Mirnov 2 (shot별 z)</text>
+    <text x="480" y="96" text-anchor="middle" font-weight="600">dt</text>
+    <text x="480" y="116" text-anchor="middle" font-size="12">격자 간격 1</text>
+    <text x="695" y="96" text-anchor="middle" font-weight="600">T_i 이력 꼬리 3</text>
+    <text x="695" y="116" text-anchor="middle" font-size="12">이월값 · 신선도 log1p(s) · 관측 플래그</text>
+    <text x="995" y="96" text-anchor="middle" font-weight="600">V_rot 이력 꼬리 3</text>
+    <text x="995" y="116" text-anchor="middle" font-size="12">이월값 · 신선도 · 관측 플래그</text>
+
+    <text x="240" y="232" text-anchor="middle" font-weight="700">T_i 가지 — 22채널 전부</text>
+    <text x="240" y="269" text-anchor="middle" font-weight="600">LSTM 층 1 · 은닉 160</text>
+    <text x="240" y="286" text-anchor="middle" font-size="11" opacity="0.8">W_ih 640×22, W_hh 640×160 · 117,760</text>
+    <text x="240" y="345" text-anchor="middle" font-weight="600">LSTM 층 2 · 은닉 160 (dropout 0.1)</text>
+    <text x="240" y="362" text-anchor="middle" font-size="11" opacity="0.8">W_ih 640×160, W_hh 640×160 · 206,080</text>
+    <text x="240" y="424" text-anchor="middle">LayerNorm(160)</text>
+    <text x="240" y="484" text-anchor="middle">Linear 160→64</text>
+    <text x="240" y="544" text-anchor="middle">GELU</text>
+    <text x="240" y="604" text-anchor="middle">Linear 64→1</text>
+    <text x="240" y="676" text-anchor="middle" font-weight="700" font-size="15">T̂_i,t (정규화 z)</text>
+
+    <text x="930" y="308" text-anchor="middle" font-weight="700">V_rot 가지 — 느린 꼬리 7채널만</text>
+    <text x="930" y="345" text-anchor="middle" font-weight="600">LSTM 1층 · 은닉 64</text>
+    <text x="930" y="362" text-anchor="middle" font-size="11" opacity="0.8">W_ih 256×7, W_hh 256×64 · 18,688</text>
+    <text x="930" y="424" text-anchor="middle">LayerNorm(64)</text>
+    <text x="930" y="484" text-anchor="middle">Linear 64→64</text>
+    <text x="930" y="544" text-anchor="middle">GELU</text>
+    <text x="930" y="604" text-anchor="middle">Linear 64→1</text>
+    <text x="930" y="676" text-anchor="middle" font-weight="700" font-size="15">V̂_rot,t (정규화 z)</text>
+
+    <text x="44" y="262" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="376" y="262" font-size="11">h_t, c_t → t+1</text>
+    <text x="44" y="338" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="376" y="338" font-size="11">h_t, c_t → t+1</text>
+    <text x="734" y="338" font-size="11">h_{t−1}, c_{t−1}</text>
+    <text x="1066" y="338" font-size="11">h_t, c_t → t+1</text>
+    <text x="640" y="262" text-anchor="middle" font-size="12" fill="#b71c1c" font-weight="600">차단: 빠른 채널 → V_rot 가지</text>
+    <text x="640" y="278" text-anchor="middle" font-size="11" fill="#b71c1c">10 ms 토크 정보 없음(P02) · 절제 8/8 비트 동일(§8ab)</text>
+
+    <text x="600" y="724" text-anchor="middle" font-size="12">손실: CES가 실제로 측정된 행에서만, 타깃별 마스크 MSE  ·  타깃 시각의 CES 입력은 0으로 마스킹  ·  총 모수 357,570 (T_i 가지 334,529 · V_rot 가지 23,041)</text>
+    <text x="600" y="744" text-anchor="middle" font-size="12" opacity="0.8">상태는 과거 → 현재로만 흐른다(인과). 격자 행마다 한 스텝, 빈 행도 입력으로 쓰인다(이월값·신선도·플래그가 결측을 정보로 바꾼다).</text>
+  </g>
+
+  <g stroke="currentColor" fill="none" stroke-width="1" opacity="0.7"><rect x="470" y="400" width="260" height="216" rx="4" stroke-dasharray="3 3"/></g>
+  <g fill="currentColor" font-size="11">
+    <text x="482" y="420" font-weight="600" font-size="12">세부(소스 그대로)</text>
+    <text x="482" y="440">· Norm: nn.LayerNorm(160 / 64), LSTM 출력의</text>
+    <text x="482" y="455">  각 스텝 벡터를 정규화(γ, β 학습, ε = 1e-5)</text>
+    <text x="482" y="475">· 활성: GELU (ReLU 아님); 마지막 Linear 뒤 활성 없음</text>
+    <text x="482" y="495">· dropout 0.1: T_i LSTM 두 층 사이에만; head·V_rot 없음</text>
+    <text x="482" y="515">· 손실: 타깃별 마스크 MSE + 0.1·mean relu(0_z − T̂_i)</text>
+    <text x="482" y="535">· AdamW lr 1e-3, wd 1e-4 · 기울기 노름 1.0 자르기</text>
+    <text x="482" y="555">· ReduceLROnPlateau(2, ×0.5) · 조기 종료 6 · 배치 16 블록</text>
+    <text x="482" y="575">· 가변 길이 블록은 pack_padded_sequence로 처리</text>
+    <text x="482" y="595">· 초기화: PyTorch 기본(초기값 시드 고정) · 모수 상한 1e6</text>
+  </g>
+</svg>
