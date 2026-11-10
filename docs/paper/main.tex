@@ -758,8 +758,7 @@ removing held values gives 16\,ms and keeping them gives more than 300\,ms, a fa
 of over 19. \textbf{The \Vrot{} relaxation time cannot be measured in this dataset.}
 \Ti{} does not suffer this, having one held row in 641 files. The held pathology costs
 not only 54\% of the values but the ability to characterize the quantity's own
-dynamics, which makes it a third acquisition task alongside NBI torque and the raw
-kHz Mirnov stream (\S\ref{sec:headroom}). These autocorrelations are computed without
+dynamics, which makes it an acquisition task of its own (\S\ref{sec:headroom}). These autocorrelations are computed without
 detrending and are dominated by the discharge envelope, so they are not quoted as
 transport times $\tau_E$ or $\tau_\varphi$.
 
@@ -2429,9 +2428,8 @@ on our side. \Vrot{}'s own spikes
 persistence-anchored \Vrot{} comparison reports the share of squared error those
 rows carry, as \S\ref{sec:ladder} does.
 
-\paragraph{2. The Mirnov information was destroyed by preprocessing, not absent from
-the plasma.} It would be wrong to conclude from \S\ref{sec:asym} that magnetics
-carry no rotation information. On the identical 10\,ms grid, lag-1 autocorrelation
+\paragraph{2. The raw Mirnov stream was tested: the registered features do not carry
+\Vrot{}.} On the identical 10\,ms grid, lag-1 autocorrelation
 within contiguous blocks is $+0.568$ for BES and $+0.572$ for ECEI but $-0.009$ for
 the Mirnov coils, with 82\% of blocks below $|r| = 0.1$: the magnetic channel is
 white noise \emph{on this grid}. That is the signature of $\mathrm{d}B/\mathrm{d}t$
@@ -2440,28 +2438,43 @@ anti-aliasing filter, so successive samples have random relative phase. The
 mode-rotation frequency---the one quantity in our diagnostic set that could proxy
 toroidal rotation---was therefore discarded upstream of the model, which is also why
 every derived MC feature we tried (integral, PCHIP integral, $|MC|$, rolling RMS)
-failed: information already lost cannot be recovered downstream. The fix is a
-preprocessing change, not a model change: per-window RMS, band power, mode number
-and mode-rotation frequency computed from the \emph{raw} kHz Mirnov timeseries,
-routed into the \Vrot{} branch under a pre-registered pilot-then-expand rule. This
-is the highest-value experiment we can name for \Vrot{}, and it is testable on
-archived data.
+failed: information already lost cannot be recovered downstream. That reading named
+a preprocessing fix, and the fix was tested under a pre-registration. The raw
+2\,MHz coil stream was obtained for 12 discharges, and 15 causal 10\,ms window
+features (RMS envelope and five band powers per coil, and the dominant peak of the
+two-coil cross-spectrum) were routed into the \Vrot{} branch, with six training
+discharges and three \Vrot{}-carrying test discharges. The paired change in \Vrot{}
+skill is $-0.128$ $[-0.544, -0.105]$ in the cut population and $-0.164$
+$[-0.473, -0.133]$ in the inclusive one. Both intervals exclude zero on the negative
+side, and 0 of 3 test discharges improve. The coil physics itself is confirmed: the
+edge harmonic oscillation of \#32092 appears at 4.39 and 8.91\,kHz. But the dominant
+mode frequency in a 10\,ms window is not a row-by-row function of the CES edge
+rotation: its within-discharge Spearman correlation with \Vrot{} is $|\rho| \leq 0.11$
+in six of seven discharges. The rejection covers the 15 registered features on a
+six-discharge training set. Other functions of the raw stream (for example the
+cross-phase slope over many coils) were not tested. Raw Mirnov features are
+therefore not a named next experiment for the 10\,ms \Vrot{} nowcast.
 
-\paragraph{3. The actuator channel is simply absent.}
+\paragraph{3. The actuator channel is absent, and at 10\,ms it would change little.}
 Toroidal rotation is set by injected torque, and no torque signal exists in this
 dataset. The data show the break precisely: between shots, the ECE-derived $T_e$
 surrogate correlates with \Ti{} at $r = +0.353$ ($p = 3\times10^{-17}$) but with
 \Vrot{} at $r = +0.024$ ($p = 0.58$), and within shots the \Ti{} correlation keeps a
 consistent sign while the \Vrot{} one is sign-random. So $T_e$ does track the heating
 level, and heating level does not reach rotation---power is not torque, which depends
-on beam energy, tangency radius and injection geometry. Adding NBI torque (or the
-per-beam power and geometry from which it is computed) is a data-acquisition task,
-not a modelling one, and it is the only lever we can identify that addresses the
-\emph{cause} of rotation rather than its autocorrelation. A positive control
-already exists in the literature: recurrent full-discharge simulators on DIII-D
-that receive the beam actuators as inputs do predict rotation's
-evolution~\citep{Char2024FullShot}, so the missing channel is learnable once
-measured.
+on beam energy, tangency radius and injection geometry. NBI torque is the cause of
+the rotation \emph{level}. It is not a lever for the 10\,ms nowcast. Beam power is
+a step input, held constant between a handful of source on/off steps per
+discharge, so it acts only on the slow band. The part of the 10\,ms increment
+variance carried by a 300\,ms moving average is 0.34\% for \Vrot{} (interquartile
+range 0.21--0.94\%, 20 discharges) and 0.25\% for \Ti{} (63 discharges). A perfect
+torque channel therefore bounds the removable 10\,ms increment variance at about
+1\%, and the level it sets is already in the input as the value observed 10\,ms
+earlier. The channel matters for a different scope: forecasts of 100\,ms and longer
+after a power step, and the cold start before the first CES sample. The positive
+control in the literature is of that kind: recurrent full-discharge simulators on
+DIII-D that receive the beam actuators as inputs predict rotation's
+evolution~\citep{Char2024FullShot}.
 
 \paragraph{4. The rest of the bulk belongs to the future neighbour.}
 After the Huber arm's recovery, a 4\,eV median gap to PCHIP remains
@@ -2469,12 +2482,13 @@ After the Huber arm's recovery, a 4\,eV median gap to PCHIP remains
 so the only way a causal model closes it is by denoising the history---weighting it
 by the per-exposure fit quality a CES re-analysis would provide---which is the same
 deliverable as lever 1. And the zero-label row of the model-family card
-(\S\ref{sec:family}) states lever 3 most sharply: with no same-shot \Vrot{} label,
-no learned arm rises above the training mean from BES, ECEI and Mirnov alone.
+(\S\ref{sec:family}) shows the cold-start scope of item 3: with no same-shot \Vrot{}
+label, no learned arm rises above the training mean from BES, ECEI and Mirnov alone.
 
-None of these is a statement that the present result is at a ceiling. They are the
-places where the next measurable gain is, ordered by how cheaply they can be tried,
-and all three are actionable on archived KSTAR data.
+For the 10\,ms nowcast the lever that remains is therefore the per-exposure fit
+quality of items 1 and 4, which the 641 shot files do not contain. Item 2 is a
+route closed within its registered scope, and item 3 belongs to forecasts of
+100\,ms and longer.
 
 % =========================================================================
 \section{Limitations}
@@ -2624,10 +2638,11 @@ and one campaign. The model-size and model-family axes are closed---a 21k-parame
 persistence-plus-bounded-correction model matches the backbone under the cut, a
 26$\times$ width sweep is flat, and a shot-encoding neural process, a transformer
 pretrained on another tokamak and a 4-init ensemble change \Ti{} skill by $-0.09$ to
-$+0.03$ with none clearing the 0.02 band in both populations---so the levers that
-remain are inputs: the NBI torque channel absent from the dataset, features
-recomputed from the raw kHz Mirnov stream that 100\,Hz decimation destroyed, and
-per-exposure fit uncertainty from the CES analysis. The evaluation that supports all
+$+0.03$ with none clearing the 0.02 band in both populations---so what
+remains is on the input side: per-exposure fit uncertainty from the CES analysis for
+the 10\,ms nowcast, and the NBI torque channel for forecasts of 100\,ms and longer.
+The registered features of the raw 2\,MHz Mirnov stream were tested and changed
+\Vrot{} skill by $-0.128$ $[-0.544, -0.105]$ (\S\ref{sec:headroom}). The evaluation that supports all
 of this---pre-registration with a scored prediction ledger, discharge-cluster
 intervals, overlap-corrected repeated cross-validation and a two-level
 bootstrap---is assembled from standard pieces of other fields; we found no precedent
