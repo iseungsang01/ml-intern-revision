@@ -222,7 +222,7 @@ nowcaster computes, and the two estimands it does not fold into one output.
   \item \textbf{The \Ti$\leftrightarrow$\Vrot{} information asymmetry as the
         converse evidence} (\S\ref{sec:asym}, \S\ref{sec:physfilter}). On the four
         frozen splits \Vrot{} clears the gate on only 1/4 and 2/4 (what noise alone
-        would give) and was initially recorded as an interval including zero; the
+        would give), so the four-split count supports no rotation claim; the
         repeated-5-fold replicate, read by its registered two-level bootstrap over
         eight fresh partitions, puts the mean-squared-error skill over PCHIP,
         persistence and the causal GP above zero in both populations
@@ -545,11 +545,9 @@ Under the confirmed protocol holds are removed \emph{everywhere}---from the
 supervision targets, from the history/carried inputs and their observation flags,
 from the normalization statistics, and from the interpolation anchors of every
 baseline---so no arm can score a forward-fill for free. Every number in this paper
-is on genuine measurements only; the ledger of the project records the earlier
-hold-inclusive convention and the paired retrain that showed holds also
-contaminate \emph{training} (a forward-filled staircase teaches a model that
-copying history is near-optimal), which is why hold-free is the protocol rather
-than a sensitivity row.
+is on genuine measurements only, and hold-free is the protocol rather than a
+sensitivity row because holds also contaminate \emph{training} (a forward-filled
+staircase teaches a model that copying history is near-optimal).
 
 \subsection{Data-quality audit 2: \Ti{} spectral-fit failures and the two
 populations}
@@ -882,7 +880,7 @@ indirect, piece of evidence defends the setting: the \emph{budget-equalization}
 condition of the backbone gate trains both models for a fixed 10 epochs with
 validation-based checkpoint selection forbidden, and even there the backbone's paired
 \Ti{} gain is positive on all four splits ($+0.063$, $+0.033$, $+0.045$, $+0.030$;
-\S\ref{sec:selection}). The conclusion is therefore not an artifact of the training
+\S\ref{sec:gate}). The conclusion is therefore not an artifact of the training
 schedule.
 
 The loss axis has since received one controlled experiment (\S\ref{sec:bulk}): a
@@ -937,7 +935,7 @@ Across two rounds of controlled architecture iterations on the windowed family
 that survived, and capacity scaling, skip topologies and extra extractors never
 helped. Under the confirmed protocol the same lesson recurs twice more:
 observation-masked causal attention added to \seqv{} is a small, consistently
-positive but non-significant gain (\S\ref{sec:selection}), and a five-point width
+positive but non-significant gain (\S\ref{sec:gate}), and a five-point width
 sweep of \seqv{} is flat (\S\ref{sec:ladder}). The bottleneck in this problem is
 information, not capacity, and~\eqref{eq:floor} and Table~\ref{tab:torque} say where
 that bottleneck sits for each target.
@@ -997,7 +995,7 @@ scoring; $W{=}2$ by the plateau-minimal rule of a 24-run sweep
 (\S\ref{sec:context}); a per-file sample cap of 500 in the windowed family; the two
 co-primary populations of \S\ref{sec:spikes}; and \emph{model-decision rules
 committed before TEST scoring} for the backbone gate, the one attention candidate,
-the interpretable rung and the width sweep (\S\ref{sec:selection}). Threshold
+the interpretable rung and the width sweep (\S\ref{sec:gate}). Threshold
 sensitivity (2.5/3/4\,keV) is reported.
 
 \paragraph{Shot-clustered paired bootstrap.}
@@ -1017,7 +1015,8 @@ four frozen splits share most of their TRAIN discharges, so an interval over the
 is too narrow. Two pre-registered replicates therefore re-ran the backbone as
 shot-level repeated 5-fold cross-validation on the 639-discharge universe (TEST
 128, VAL 128, TRAIN 383 discharges per fold; every discharge tested once per
-repeat; two repeats first, then eight more; 100 GPU runs in the headline's
+repeat; ten repeats, eight of them run after the pooled readout rule was
+registered; 100 GPU runs in the headline's
 environment). Two readouts were registered before any number. (i) \emph{Fold-level}:
 the mean of the fold skills with the Nadeau--Bengio overlap-corrected $t$-interval,
 $\bar S \pm t_{0.975,\,n-1}\sqrt{(1/n + n_{\mathrm{test}}/n_{\mathrm{train}})\,s^{2}}$
@@ -1087,16 +1086,6 @@ sequence nowcaster has the lowest error.
   \end{tabular}
 \end{table}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.9\linewidth]{fig_rmse_ladder}
-  \caption{RMSE ladder for the seed-42 test split (cut population, genuine
-  measurements): the causal nowcaster attains the lowest RMSE among deployable
-  methods for both targets and a lower RMSE than the future-using interpolants. Same numbers
-  as Table~\ref{tab:ladder}; both are generated from the same frozen artifacts.}
-  \label{fig:ladder}
-\end{figure}
-
 \subsection{Headline: \Ti{} skill over future-using interpolation excludes zero on
 four independent splits, in both populations}
 \label{sec:headline}
@@ -1154,7 +1143,7 @@ Fig.~\ref{fig:forest} shows the PCHIP intervals.
         passes on 3/4 splits in both populations ($+0.30$ to $+0.50$; seed 7's CI
         touches zero) and against the causal GP on 2/4. One or two significant
         splits out of four is what noise would produce, so the four-split count
-        alone supports no rotation claim. The replicate resolves it. Scored
+        alone supports no rotation claim. In the replicate, scored
         discharge by discharge across eight fresh partitions, the \Vrot{} skill over
         PCHIP is $[+0.07, +0.70]$ (cut) and $[+0.05, +0.68]$ (inclusive), over
         persistence $[+0.28, +0.76]$ and $[+0.14, +0.75]$, and over the causal GP
@@ -1218,30 +1207,23 @@ Fig.~\ref{fig:forest} shows the PCHIP intervals.
 
 \subsection{The full-grid framing against the windowed control: the backbone gate}
 \label{sec:gate}
-Was the sequence framing worth adopting? The decision was pre-registered as a
-gate with four conditions and scored once (cut population, the population under
-which internal model selection is done): a $4\times 4$ grid of split seed
-$\times$ initialisation seed, each run paired row-for-row against its split's
-$W{=}2$ windowed control. Paired \Ti{} skill was \textbf{positive on 16/16 runs and
-individually significant on 13/16}; the per-split initialisation means are
-$+0.129$, $+0.059$, $+0.078$, $+0.058$ (initialisation spread $\ll$ split spread);
-the pooled mean is $\mathbf{+0.081}$ with run-cluster 95\% CI $[+0.067, +0.096]$;
-a budget-equalized arm (fixed 10 epochs, final weights, no validation selection)
-keeps the sign on 4/4 splits ($+0.063$, $+0.033$, $+0.045$, $+0.030$), so the gain
-is architectural rather than a training-budget effect; and no run showed a
-significant \Vrot{} deficit (8/16 with the CI above zero). All four conditions held. On
-the four confirmatory splits reported everywhere else in this paper the same
-comparison reads $+0.130$, $+0.058$, $+0.062$, $+0.044$ (cut) and $+0.053$,
-$+0.024$, $+0.047$, $+0.029$ (inclusive), positive on 8/8, significant on 2/4 in
-each population.
-
-The gate also settles \emph{what} the framing buys. The windowed control's skill
-over the causal GP is $+0.041$ with the CI including zero on 3/4 splits (cut), and
-the sequence backbone's is $+0.08$ to $+0.17$ with CIs above zero on 4/4 in both
-populations: the reach into the whole past of a segment is what clears
-the strongest deployable baseline. Its cost is negative---the backbone trains in a
-fraction of the windowed family's time because there is no per-sample window
-assembly or combinatorial augmentation.
+The sequence framing was adopted under a pre-registered four-condition gate, scored
+once in the cut population on a $4\times 4$ grid of split seed $\times$ initialisation
+seed, each run paired row-for-row against its split's $W{=}2$ windowed control. The
+paired \Ti{} skill is positive on \textbf{16/16 runs} (CI above zero on 13/16), with
+pooled mean $\mathbf{+0.081}$ and run-cluster 95\% CI $[+0.067, +0.096]$, excluding
+zero; a budget-equalized arm (fixed 10 epochs, final weights, no validation selection)
+keeps the sign on 4/4 splits ($+0.063$, $+0.033$, $+0.045$, $+0.030$), and no run has
+a significant \Vrot{} deficit, so all four conditions hold. What the framing buys is
+reach: the windowed control's skill over the causal GP is $+0.041$ with the CI
+including zero on 3/4 splits (cut), and the backbone's is $+0.08$ to $+0.17$ with CIs
+above zero on 4/4 in both populations. Every model decision was taken on validation
+data or under a rule committed in writing before the corresponding TEST scoring, with
+TEST scored once per decision. Under the same rule the one architectural candidate
+explored afterwards---observation-masked causal attention over each target's own past
+observation steps, added to \seqv{}---has a paired \Ti{} skill against the backbone
+of $+0.009$, $+0.013$, $+0.033$, $+0.020$, with the CI above zero on 1/4 splits
+against a pre-committed bar of $\geq 3/4$, so it was not promoted.
 
 \subsection{Where the skill lives: gap regime}
 \label{sec:gap}
@@ -1373,8 +1355,7 @@ split is fixed, so the four runs vary the \emph{initialisation} seed only, and w
 say so rather than presenting them as four splits. Three arms per population:
 the windowed control as trained for the headline (train-file-only
 normalization), the same control with per-shot standardization of the fast
-diagnostics (cut population), and \seqv{} (Table~\ref{tab:campaign},
-Fig.~\ref{fig:campaign}).
+diagnostics (cut population), and \seqv{} (Table~\ref{tab:campaign}).
 
 \begin{table}[t]
   \centering
@@ -1400,16 +1381,6 @@ Fig.~\ref{fig:campaign}).
   \end{tabular}}
 \end{table}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.92\linewidth]{fig_campaign}
-  \caption{Campaign (temporal) split: the windowed control's skill over
-  interpolation collapses, per-shot standardization repairs it, and the sequence
-  nowcaster keeps it in both populations. Bars are 4-initialisation means with
-  per-initialisation points and PR4 counts.}
-  \label{fig:campaign}
-\end{figure}
-
 Three things in that table are worth stating explicitly. First, the
 \emph{windowed} model's skill over offline interpolation does not survive the
 shift: $-0.001$ to $+0.091$, with the CI above zero on 2/4 (cut) and 0/4
@@ -1429,22 +1400,16 @@ its \Vrot{} margin over the control is $+0.06$ to $+0.18$ with the CI above zero
 8/8.
 
 \paragraph{Why the control degrades---measured, not asserted.}
-What fails to transfer should be the \emph{fast-diagnostic} pathway, since that is
-what buys the edge over CES-only interpolation, while the CES-history pathway sees
-the same physical quantity in the same units in both periods. Measuring the
-train$\rightarrow$test drift per channel, in the units the control was normalized
-in, confirms it: the median location shift is \textbf{1.22\,$\sigma$ for BES} and
-\textbf{0.53\,$\sigma$ for ECEI}, with scale ratios of $0.75$ and $0.62$---against
-\textbf{0.115\,$\sigma$ and a scale ratio of $1.06$ for the CES targets
-themselves}. The fast diagnostics drift 5--11$\times$ more than the quantity being
-predicted. Train-file-only normalization (\S\ref{sec:data}) is the correct
-leakage-hardening choice under a random split and is precisely what breaks under
-campaign shift; per-shot standardization uses only that discharge's own data, so
-it stays leak-free. \seqv{} standardizes per shot by definition---which is one
-of the two reasons it transfers; the other is reach (\S\ref{sec:gate}).
+Between the train and test periods the median location shift, in the units the
+control was normalized in, is \textbf{1.22\,$\sigma$ for BES} and
+\textbf{0.53\,$\sigma$ for ECEI} (scale ratios $0.75$ and $0.62$) against
+\textbf{0.115\,$\sigma$} (scale ratio $1.06$) for the CES targets, a 5--11$\times$
+larger drift, so train-file-only normalization does not transfer across the campaign
+boundary while per-shot standardization, which \seqv{} uses by definition and which
+reads only that discharge's own data, does.
 
 \paragraph{Two stress tests, one reading.}
-Table~\ref{tab:stress} puts them side by side for the adopted model. The skill
+The skill
 over the baselines a real-time system can actually run survives both stress tests
 in both populations with CIs above zero ($+0.28$ to $+0.44$ over persistence under
 reweighting, $+0.11$ to $+0.16$ over the causal GP under the campaign split). The
@@ -1453,37 +1418,13 @@ populations ($+0.17$ to $+0.20$, CIs above zero) and the MNAR reweighting with
 population-conditional significance ($+0.14$ to $+0.28$, CI above zero on 2/4 cut
 and 4/4 inclusive).
 
-\begin{table}[t]
-  \centering
-  \caption{The two claims under stress, \seqv{}, \Ti{}. Entries are PR4 pass
-  counts (cut / inclusive) with the point-estimate range; the replicate row gives
-  overlap-corrected 95\% intervals.}
-  \label{tab:stress}
-  \small
-  \resizebox{\linewidth}{!}{%
-  \begin{tabular}{lcc}
-    \toprule
-    Evaluation & vs.\ PCHIP (offline, future-using) & vs.\ causal baselines \\
-    \midrule
-    Random split, observed points & \textbf{4/4 / 4/4}, $+0.17$ to $+0.32$ & \textbf{4/4 / 4/4} vs.\ causal GP, $+0.08$ to $+0.17$ \\
-    Reweighted to missing points (\S\ref{sec:mnar}) & 2/4 / \textbf{4/4}, $+0.14$ to $+0.28$ & \textbf{4/4 / 4/4} vs.\ persistence, $+0.28$ to $+0.44$ \\
-    Temporal campaign split (\S\ref{sec:campaign}) & \textbf{4/4 / 4/4}, $+0.17$ to $+0.20$ & \textbf{4/4 / 4/4} vs.\ causal GP, $+0.11$ to $+0.16$ \\
-    Repeated 5-fold replicate, every discharge tested once (Table~\ref{tab:replicate}) & $\mathbf{[+0.19, +0.25]}$ / $\mathbf{[+0.19, +0.31]}$ (overlap-corrected 95\% CI) & $\mathbf{[+0.08, +0.14]}$ / $\mathbf{[+0.07, +0.17]}$ vs.\ causal GP \\
-    \bottomrule
-  \end{tabular}}
-\end{table}
-
-\paragraph{Caveat that stays.} The four campaign passes are initialisations on
-one temporal test block, so this is one temporal split's evidence, not four; and
-two of the four cut-population \seqv{} campaign runs stopped at the 30-epoch cap.
-
 \subsection{The \Ti$\leftrightarrow$\Vrot{} information asymmetry}
 \label{sec:asym}
 A controlled input-modality ablation on the windowed control---one modality group
 zeroed \emph{at evaluation}, no retraining, persistence and interpolants computed
 from the real history---explains \emph{why} the two targets behave differently and
 re-grounds the routing of \S\ref{sec:model} under the confirmed protocol
-(Table~\ref{tab:ablation}, Fig.~\ref{fig:ablation}).
+(Table~\ref{tab:ablation}).
 
 \begin{table}[t]
   \centering
@@ -1507,15 +1448,6 @@ re-grounds the routing of \S\ref{sec:model} under the confirmed protocol
     \bottomrule
   \end{tabular}}
 \end{table}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.92\linewidth]{fig_ablation}
-  \caption{Evaluation-time modality ablation of the windowed control, both
-  populations. Zeroing the fast diagnostics leaves \Vrot{} bit-identical and
-  removes the \Ti{} margin under the cut; zeroing history collapses both targets.}
-  \label{fig:ablation}
-\end{figure}
 
 \begin{itemize}
   \item \textbf{History is indispensable for both targets.} Without the CES
@@ -1619,28 +1551,6 @@ bulk rows and score \seqv{} in each with the shot-clustered bootstrap
   per-split points, PR4 counts). The skill over interpolation concentrates
   where interpolation is weakest; \Vrot{} skill lives entirely in the peak stratum.}
   \label{fig:peak}
-\end{figure}
-
-Figure~\ref{fig:eventquiet} shows the same statement on two held-out discharges of
-split 42, chosen by a rule fixed before plotting: the case-study discharge \#31815
-and the TEST discharge with the smallest within-discharge \Ti{} spread. That
-spread is the per-discharge covariate that predicts where the model's per-discharge
-skill is positive (Spearman $\rho = +0.40$ with the per-discharge skill against the
-causal GP, pooled over the splits). Where \Ti{} moves (spread 220\,eV) the nowcast's
-MSE skill is $+0.42$ over PCHIP and $+0.03$ over the causal GP (single-discharge
-point estimates, no interval). Where it does not (spread 34\,eV, \#31089) the nowcast
-follows the photon noise of the last sample and its skill is $-1.06$ and $-0.73$
-against the two, which is the median-row cost \S\ref{sec:bulk} measures on every
-split.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.98\linewidth]{fig_event_quiet}
-  \caption{Two held-out discharges (split 42, cut population). Top: CES \Ti{} and the
-  \seqv{} nowcast. Bottom: absolute error of \seqv{}, PCHIP and the causal GP on the
-  same rows (5-row running mean). Left: the case-study discharge \#31815 (\Ti{}
-  spread 220\,eV, rank 31 of 60). Right: the quietest TEST discharge (34\,eV).}
-  \label{fig:eventquiet}
 \end{figure}
 
 \subsection{The aggregate skill is a tail effect: in the median row the nowcaster carries its anchor}
@@ -1914,55 +1824,13 @@ in earlier runs of the same benchmark), which is the basis for calling it usable
 inside a 10\,ms cycle.
 
 \paragraph{The model's per-discharge skill is positive where the target moves.}
-Pooled rescoring of the same context ladder produces a \Vrot{} result that would be badly misread on its own: every
-rung's pooled CI clears zero (at 70\,ms, $+0.123$ $[+0.036, +0.248]$). But the per-discharge
-win rate is 0.48, the median discharge's skill is about zero, and removing the top five of
-some 62 discharges takes the pooled skill to zero or below on all four splits.
-\textbf{A tight interval is not the same as a general effect.} \Ti{} is the opposite: its
-win rate is 0.70 and its single largest contributor accounts for only 9--16\%.
-
-Of eleven covariates tested for predicting a positive per-discharge skill, one survives,
-and it is \emph{how much the target moves within a discharge}. Split into terciles of that
-spread, the \Ti{} win rate is 42\% / 83\% / 85\% and the \Vrot{} win rate 34\% / 48\% / 55\%. The mechanism is physical rather
-than statistical: where a discharge is flat the causal GP is already near-optimal, since
-interpolating a straight line is easy, and the model has nothing to add. That \Vrot{}
-reaches only 55\% even in the most variable tercile restates the term-by-term audit of
-\S\ref{sec:model:physics} from the other side---the driver of rotation is unobserved, so
-the model cannot track motion it has no input for.
-
-% =========================================================================
-\section{Model-selection protocol}
-\label{sec:selection}
-
-Every model decision in this paper was taken on validation data or under a
-decision rule committed in writing before the corresponding TEST scoring, and
-TEST was scored once per decision.
-
-\paragraph{The windowed family.} Its architecture was reached by a sequence of
-controlled experiments, each \emph{one} change that had to preserve the data
-contract, scored on the \emph{clean, non-augmented} validation $\skillp$---never
-the augmented validation loss, which rewards smoothing exactly where interpolation
-is already strong---and kept iff it improved the best score so far. Its history
-length was then set by the sweep of \S\ref{sec:context}, and holds were removed
-from training by the audit of \S\ref{sec:stuck}.
-
-\paragraph{The backbone gate.} The sequence framing was adopted only after the
-four-condition gate of \S\ref{sec:gate} (sign on 4/4 splits, pooled run-cluster CI
-excluding zero, sign preserved under budget equalization, no \Vrot{} deficit) had
-been fixed and then met. Under the same rule the one architectural candidate
-explored afterwards---observation-masked causal attention over each target's own
-past observation steps, added to \seqv{} with zero-initialized projections---was
-positive on 4/4 splits ($+0.009$, $+0.013$, $+0.033$, $+0.020$ vs.\ the backbone)
-but significant on 1/4 against a pre-committed bar of $\geq 3/4$, so it was
-\emph{not} promoted; the backbone stayed \seqv{}. Its validation gains had been
-2/2 significant on the exploration splits, which is the usual optimism of
-selection-split results and the reason the promotion bar is set on TEST.
-
-\paragraph{The rung and the width sweep} (\S\ref{sec:ladder}) had their two-branch
-verdicts and their descriptive readings (ceiling / knee) written down before any
-TEST scoring, and no backbone re-selection was allowed on the sweep by
-construction. The full pre-registration, its per-batch execution records and the
-runner scripts are in the released repository.
+On the same context ladder the pooled \Vrot{} skill at 70\,ms is $+0.123$
+$[+0.036, +0.248]$, excluding zero, but the per-discharge win rate is 0.48 and
+removing the top five of some 62 discharges takes the pooled skill to zero or below
+on all four splits (\Ti{}: win rate 0.70, largest single contributor 9--16\%), and of
+eleven covariates tested the one that predicts a positive per-discharge skill is how
+much the target moves within a discharge: by tercile of that spread the win rate is
+42\% / 83\% / 85\% for \Ti{} and 34\% / 48\% / 55\% for \Vrot{}.
 
 % =========================================================================
 \section{Where the remaining headroom is}
