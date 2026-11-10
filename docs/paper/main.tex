@@ -263,8 +263,7 @@ nowcaster computes, and the two estimands it does not fold into one output.
         statistics, keeps $+0.17$ to $+0.20$ over PCHIP and $+0.11$ to $+0.16$ over
         the causal GP with CIs above zero on 4/4 initialisations in both populations.
   \item \textbf{The ceiling is the input set, not the estimator} (\S\ref{sec:peak},
-        \S\ref{sec:ladder}, \S\ref{sec:family}, \S\ref{sec:context},
-        \S\ref{sec:deploy}). The edge lives in high-variability neighbourhoods
+        \S\ref{sec:ladder}, \S\ref{sec:context}). The edge lives in high-variability neighbourhoods
         (peak-stratum \Ti{} skill $+0.45$ to $+0.72$, PASS on 8/8 cells) and in the
         non-adjacent regime ($\Delta t > 15$\,ms, PASS in both populations). A
         21{,}498-parameter model that predicts persistence plus a bounded correction
@@ -277,9 +276,7 @@ nowcaster computes, and the two estimands it does not fold into one output.
         context from 20 to 630\,ms raises skill from $+0.055$ to $+0.138$ while at
         matched reach recurrence, dilated convolution and attention differ by at most
         0.023, so the architecture is chosen on dispatched operator count.
-        Distribution-free conformal intervals have a lower Winkler score than both
-        baselines' in all 32 cells, and stateful one-step inference fits inside the
-        10\,ms cadence on a CPU.
+        Stateful one-step inference fits inside the 10\,ms cadence on a CPU.
   \item \textbf{One evaluation methodology, described in full in
         \S\ref{sec:eval}}: pre-registration with a scored prediction ledger per
         batch, two co-primary populations, a shot-clustered paired bootstrap, the
@@ -502,7 +499,7 @@ seconds, inter-row delta seconds, and their $\log(1{+}x)$ transforms---expose th
 irregular observation pattern explicitly (the reliability of a past CES value
 depends strongly on whether it is 10\,ms or 200\,ms old); the four CES-history
 channels are the previous normalized \Ti{}, previous normalized \Vrot{}, and one
-observation flag per target. $W{=}2$ throughout (\S\ref{sec:window}).
+observation flag per target. $W{=}2$ throughout (\S\ref{sec:context}).
 
 The \emph{full-grid sequence} framing (our main model) keeps every input-complete
 row of a contiguous segment---labelled or not---as context, because the fast
@@ -616,8 +613,7 @@ physical penalty discouraging \Ti{} predictions below the normalized zero $z_0$:
 The minimizer of the first term of~\eqref{eq:loss} is the conditional expectation
 $\mathbb{E}[y_t\mid x_{\le t}]$, so what this work reports is the mean of the
 conditional distribution and not the distribution itself. Uncertainty is handled
-separately, by distribution-free intervals that leave the model untouched
-(\S\ref{sec:deploy}).
+separately, by a predictive-distribution head (\S\ref{sec:dist}).
 
 This objective has a floor no estimator can remove. The target is the output of a
 photon-integrated spectral fit, so it carries its own measurement noise
@@ -879,7 +875,7 @@ confirmatory runs stopped at 14--25 epochs).
 
 These values are \emph{inherited} from the windowed pipeline rather than derived, and
 this work does not hide that. The data and structure axes were all closed by
-controlled experiments---window size (\S\ref{sec:window}), held treatment
+controlled experiments---window size (\S\ref{sec:context}), held treatment
 (\S\ref{sec:stuck}), the two populations (\S\ref{sec:spikes}), complexity and width
 (\S\ref{sec:ladder})---but the optimization axis never received one. A single, and
 indirect, piece of evidence defends the setting: the \emph{budget-equalization}
@@ -998,7 +994,7 @@ rows}, so ``vs.\ PCHIP'' for \Vrot{} is two-fifths ``vs.\ persistence'');
 \textbf{PR4} significance means a shot-clustered bootstrap 95\% CI on the skill
 excluding zero. To these the confirmed protocol adds: hold-free training and
 scoring; $W{=}2$ by the plateau-minimal rule of a 24-run sweep
-(\S\ref{sec:window}); a per-file sample cap of 500 in the windowed family; the two
+(\S\ref{sec:context}); a per-file sample cap of 500 in the windowed family; the two
 co-primary populations of \S\ref{sec:spikes}; and \emph{model-decision rules
 committed before TEST scoring} for the backbone gate, the one attention candidate,
 the interpretable rung and the width sweep (\S\ref{sec:selection}). Threshold
@@ -1455,11 +1451,7 @@ reweighting, $+0.11$ to $+0.16$ over the causal GP under the campaign split). Th
 skill over \emph{future-using} interpolation survives the temporal shift in both
 populations ($+0.17$ to $+0.20$, CIs above zero) and the MNAR reweighting with
 population-conditional significance ($+0.14$ to $+0.28$, CI above zero on 2/4 cut
-and 4/4 inclusive). The version of this table
-for the windowed model---which the earlier draft of this work reported---had the
-offline advantage surviving \emph{neither} test; the sequence framing is what
-changed it, and we say so rather than presenting the new column as if it had
-always been there.
+and 4/4 inclusive).
 
 \begin{table}[t]
   \centering
@@ -1566,145 +1558,30 @@ resolution~\citep{Viezzer2020Dynamics,Cavedon2017Pedestal}, which a 10\,ms
 single-sightline exposure does not resolve, so nothing here speaks to the edge inside
 an ELM cycle.
 
-\subsection{How much history is needed? One observation}
-\label{sec:window}
-
-The history window of the windowed family was originally an unexamined default
-($W{=}4$). We replaced the assertion with a curve and a stated selection rule:
-\textbf{24 independent runs}, $W \in \{2,3,4,6,8\} \times$ seeds
-$\{42,1,7,123\}$, plus a \emph{history-0} point $\times 4$ seeds, each scored on
-its own held-out test split with the same protocol as the headline (hold-free,
-per-file cap 500, no spike cut---this sweep predates the cut, and its frozen $W{=}2$
-runs are the inclusive-population control of \S\ref{sec:headline}). Three controls
-make the points comparable: the file-level split is window-invariant (all runs
-evaluate the same 96 test shots per seed); the per-file cap prevents
-temporal-subset augmentation---which explodes from 240k samples at $W{=}2$ to
-30.1M at $W{=}8$---from letting a few long-block discharges dominate; and the
-scored population shrinks only 1.8\% from $W{=}2$ to $W{=}8$.
-
-\begin{table}[t]
-  \centering
-  \caption{Window sweep, mean held-out test $\skillp$ over 4 seeds (PASS = seeds
-  whose shot-clustered 95\% CI excludes zero). History-0 is the
-  \texttt{no\_history} ablation at $W{=}4$; $W{=}1$ is not constructible.}
-  \label{tab:window}
-  \small
-  \begin{tabular}{rrrcrc}
-    \toprule
-    History obs. & $W$ & \Ti{} skill & PASS & \Vrot{} skill & PASS \\
-    \midrule
-    0 & 4 & $-0.026$ & 0/4 & $-0.783$ & 0/4 \\
-    1 & 2 & $+0.238$ & \textbf{4/4} & $\mathbf{+0.206}$ & 0/4 \\
-    2 & 3 & $\mathbf{+0.246}$ & \textbf{4/4} & $+0.203$ & 1/4 \\
-    3 & 4 \emph{(old default)} & $+0.221$ & 3/4 & $+0.190$ & 1/4 \\
-    5 & 6 & $+0.190$ & 3/4 & $+0.205$ & 1/4 \\
-    7 & 8 & $+0.216$ & \textbf{4/4} & $+0.204$ & 2/4 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\paragraph{History is essential, and its first observation carries essentially all
-of it.} Removing previous-CES entirely puts \Ti{} \emph{below} PCHIP ($-0.026$,
-0/4) and \Vrot{} at $-0.78$. A \emph{single} past observation lifts both targets to
-their plateau at once and the curve is flat from there: \Ti{} spans
-$0.190$--$0.246$ and \Vrot{} $0.190$--$0.206$, while the seed spread \emph{within}
-a single point is $0.07$--$0.16$, wider than the whole curve. Applying ``smallest
-$W$ that reaches plateau'' returns $\mathbf{W = 2}$; the incumbent $W{=}4$ is
-below the $W{=}2$/$W{=}3$ values on both targets, so nothing in the data supports
-paying for a longer window on accuracy grounds. The one defensible reason to go
-wider is \textbf{coverage}: a windowed sample is scored only when an observed
-value exists inside the window, so $\Delta t > 15$\,ms scored rows go 456 $\to$
-1{,}958 and $\Delta t > 45$\,ms 14 $\to$ 135 from $W{=}2$ to $W{=}8$. That is not
-an argument for a longer window; it is the argument for the sequence framing,
-whose reach is the whole segment and whose $W$ is not a hyper-parameter.
-
 \subsection{What does the complexity buy, and does size help? A ladder and a
 width sweep}
 \label{sec:ladder}
 
-A fair criticism of any learned nowcaster is that its parameters are
-unexplainable. The useful reply is to \emph{measure what the complexity earns},
-under the same protocol, with decision rules fixed before TEST scoring.
-
-\paragraph{The interpretable rung.} \bthree{} (\S\ref{sec:model}) predicts
-$\hat y = \text{carried value} + \sum_{k=1}^{K} w_k z_k + b$ with $z\in[-1,1]^K$
-from a small causal GRU and a zero-initialized readout, so (i) the decomposition
-into $K{+}1$ named terms is exact, not an attribution approximation; (ii) every
-number the readout can see is one of $K$ probeable latents; (iii) the correction is
-bounded by $\sum_k|w_k| + |b|$ in target $\sigma$. $K$ was the one explored variable
-(val only, two splits; $K{=}8$ chosen), and both arms stop by the same patience
-rule with a non-binding cap. Two pre-registered conditions: beat a retrained
-named-terms anchor+$\Delta$ model (1{,}258 parameters) on 4/4 splits with no
-\Vrot{} deficit, and stay within $-0.05$ of the backbone's \Ti{} skill on average.
-
-\begin{table}[t]
-  \centering
-  \caption{Complexity ladder, held-out TEST $\skillp$ for \Ti{} (4-split mean),
-  and the paired verdicts of the pre-registered rule, both populations. The
-  anchor+$\Delta$ model collapses onto persistence at $W{=}2$ (its slope term needs
-  two observed history rows and never fires).}
-  \label{tab:ladder2}
-  \small
-  \resizebox{\linewidth}{!}{%
-  \begin{tabular}{lrrrcc}
-    \toprule
-    Arm & params & cut & inclusive & \bthree{} $-$ anchor (\Ti{}, cut / incl.) & \bthree{} $-$ \seqv{} (\Ti{}, cut / incl.) \\
-    \midrule
-    Persistence & 0 & $-0.264$ & $-0.288$ & & \\
-    Anchor+$\Delta$ (named terms) & 1{,}258 & $-0.261$ & $-0.287$ & \multirow{2}{*}{$+0.35$ to $+0.42$, 4/4$^{*}$ / $+0.29$ to $+0.34$, 4/4$^{*}$} & \multirow{2}{*}{mean $\mathbf{+0.002}$ (all CIs $\ni 0$) / mean $\mathbf{-0.194}$ (4/4$^{*}$)} \\
-    \textbf{\bthree{}} & \textbf{21{,}498} & $\mathbf{+0.237}$ & $+0.126$ & & \\
-    Windowed control & 201{,}258 & $+0.173$ & $+0.238$ & & \\
-    \seqv{} backbone & 357{,}570 & $+0.236$ & $+0.268$ & & \\
-    \bottomrule
-  \end{tabular}}
-\end{table}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.95\linewidth]{fig_ladder_scaling}
-  \caption{Complexity ladder and width sweep on one axis (TEST \Ti{} skill vs.\
-  trainable parameters, 4-split means). Under the cut the 21k latent-bottleneck
-  model sits on the backbone's curve and the curve is flat from 34k to 879k
-  parameters; in the inclusive population the bounded-correction rung drops to
-  $+0.126$.}
-  \label{fig:ladder_scaling}
-\end{figure}
-
-\begin{itemize}
-  \item \textbf{Under the cut, all of the backbone's \Ti{} skill survives
-        compression to eight bounded numbers plus persistence.} \bthree{}'s paired
-        skill over the retrained anchor is $+0.35$ to $+0.42$ with the CI above zero
-        on 4/4 splits and no \Vrot{} deficit, and its paired \Ti{} skill against the
-        backbone is $-0.009$, $-0.005$, $+0.026$, $-0.004$ (mean $+0.002$, every CI
-        containing zero); it passes PR4 vs.\ PCHIP 4/4 and its skill over the causal
-        GP is $+0.07$ to $+0.16$ with the CI above zero on 4/4. Linear probes on TEST inputs (no targets touched)
-        show the \Ti{} latent encodes the last observed \Ti{} ($R^2$ 0.47--0.75)
-        and the ECEI $T_e$ proxy (0.31--0.48), distributed across dimensions, and
-        barely encodes local BES activity (0.09--0.13) or staleness (0.01--0.07);
-        the learned correction accounts for 25--39\% of prediction variance. What
-        the task needs is the full-grid causal state, and that state is small.
-  \item \textbf{Without the cut the rung costs $-0.16$ to $-0.21$ against the
-        backbone (4/4 significant) and sits below the windowed control on 3/4
-        splits}---not because eight latents are too few, but because a bounded
-        correction cannot recover a spiked carried value: rows whose persistence
-        error exceeds 2\,keV are 0.6--1.3\% of the inclusive test rows and carry
-        73--83\% of \bthree{}'s \Ti{} squared error (and 70--83\% of every other
-        arm's, PCHIP included). The rung condition still holds there (4/4 vs.\ the
-        anchor); the backbone-tolerance condition is cut-conditional, and we state
-        it so.
-  \item \textbf{More capacity buys nothing.} Widening the \seqv{} \Ti{} encoder
-        from 24 to 260 units (34k / 49k / 114k / 358k / 879k parameters; every
-        other setting fixed; TEST once per point) gives mean \Ti{} skill $+0.230$
-        / $+0.236$ / $+0.235$ / $+0.236$ / $+0.230$ (cut), paired against the
-        358k backbone within $\pm 0.008$ on average, the widest point
-        significantly better on 1/4 splits, and no width down to 24 units
-        significantly worse on $\geq$3/4; \Vrot{} (branch fixed) does not move
-        ($+0.250$ to $+0.254$). Together with the rung, this closes the model-size
-        axis: the \Ti{} information in \{100\,Hz BES/ECEI/MC + CES history + time\}
-        is exhausted by $\sim$50k parameters of causal recurrent state, and the
-        remaining variance across splits ($+0.14$ to $+0.17$ on seed 42 vs.\ $+0.23$
-        to $+0.28$ on seed 123) is split variance, not capacity.
-\end{itemize}
+The model-size and model-family axes are closed; each was measured under the same
+protocol with its decision rule fixed before TEST scoring. The interpretable rung
+\bthree{} (\S\ref{sec:model:rung}; 21{,}498 parameters) has a paired \Ti{} skill
+against the backbone of $-0.009$, $-0.005$, $+0.026$, $-0.004$ in the cut population
+(mean $+0.002$, every CI containing zero) and of $-0.16$ to $-0.21$ in the inclusive
+one (mean $-0.194$, CI below zero on 4/4 splits), where a bounded correction cannot
+recover a spiked carried value: rows whose persistence error exceeds 2\,keV are
+0.6--1.3\% of the inclusive test rows and carry 73--83\% of \bthree{}'s \Ti{} squared
+error (70--83\% of every other arm's, PCHIP included). Widening the \seqv{} \Ti{}
+encoder from 24 to 260 units (34k / 49k / 114k / 358k / 879k parameters, a 26$\times$
+range) gives mean \Ti{} skill $+0.230$ / $+0.236$ / $+0.235$ / $+0.236$ / $+0.230$
+(cut), within $\pm 0.008$ of the 358k backbone on average, with \Vrot{} unchanged
+($+0.250$ to $+0.254$). Averaging four initializations changes \Ti{} skill by a paired
+$+0.020$ in the cut population (CI above zero on 4/4 splits) and $+0.007$ in the
+inclusive one (2/4), on the pre-registered 0.02 band and not above it. In an offline
+model-family card (gap-filling, scored against a bidirectional version of the backbone), a
+shot-encoding neural process and a transformer pretrained on another tokamak (and the
+same transformer from a random initialization) change \Ti{} skill by $-0.094$ to
+$+0.026$, no arm clearing the 0.02 band in both populations, and with no same-shot
+\Vrot{} label every arm's skill against the training mean is $-0.003$ to $-0.040$.
 
 \subsection{The edge concentrates in high-variability neighbourhoods}
 \label{sec:peak}
@@ -1836,49 +1713,23 @@ negative on 4/4 splits, and in the median row the model is worse than persistenc
 offset by a tail gain (peak-stratum $+0.54$ to $+0.79$, \S\ref{sec:peak}), the same conclusion as the
 term-by-term audit of \S\ref{sec:asym}.
 
-\paragraph{The loss's influence function moves that bulk.} A loss that 1\% of the
-rows decide teaches nothing about the other 99\%. So \emph{one} variable was
+\paragraph{The loss's influence function moves that bulk.} One variable was
 changed---the influence function of the training loss---with the residual scale
 $\delta$ pinned to the target's own 10\,ms reproducibility bound (cut: \Ti{}
 129.9\,eV, \Vrot{} 16.4\,km/s; inclusive 274.3\,eV): a Huber loss ($r^2$ inside,
-$2\delta|r|-\delta^2$ outside) and a Student-$t$ negative log-likelihood at the same
-scale ($\nu=3$, redescending). Both are normalized to coincide with $r^2$ inside
-$\delta$, so they share the MSE control's bulk curvature and penalty ratio, and
-validation early stopping was kept on MSE for all three arms. Everything else is the
-backbone's; the control was not retrained. In the cut population Huber lowers the
-\Ti{} median from 47.2 to 43.4\,eV ($M_1$ vs the backbone $+0.081$ $[+0.068,
-+0.094]$, significant on 4/4 splits) and \Vrot{} from 4.3 to 3.8\,km/s ($+0.104$,
-3/4) while the aggregate MSE skill is paired $-0.004$ / $-0.007$ with the interval
-including zero (significant deficits 0/4). It is the first arm whose median skill
-over persistence is $+0.058$ with the CI above zero on 3/4 splits and whose median
-interval against the causal GP includes zero, and it halves the median gap to PCHIP
-from $-0.198$ to $-0.101$. The Student-$t$ arm sits below Huber on every metric and
-its \Ti{} MSE against the backbone is $-0.018$ $[-0.033, -0.001]$, with the
-individual CI below zero on 1/4 splits: a redescending influence discards useful tail signal.
-In the inclusive population the same arms came out behind on aggregate MSE
-(significant deficits 2/4), and the cause is the selection rule, not the loss: 7 of
-the 8 runs stopped with their best val-MSE checkpoint at epoch 2--4. A loss that
-ignores residuals beyond 274\,eV has no reason to lower a validation MSE those
-residuals dominate. Selecting each robust arm on its \emph{own} validation
-objective instead confirmed this: the inclusive arms then train 30--60 epochs, the
-Huber \Ti{} median gain grows to $M_1 = +0.285$ $[+0.250, +0.322]$ (4/4) and \Vrot{}
-turns to $+0.145$ (4/4), with the \Vrot{} median at 1.02$\times$ persistence---but one
-split keeps a \Ti{} MSE difference of $-0.040$ with the CI below zero (pooled $-0.019$), so by the
-pre-registered letter the rung stays conditional. A second registered row settled
-both remaining questions. In the cut population the own-objective rule
-strengthens the rung: Huber \Ti{} $M_1 = +0.128$ $[+0.114, +0.141]$ (4/4) at an MSE
-difference of $+0.007$ pooled with the interval including zero (significant deficits
-0/4), the \Ti{} median at 0.894$\times$ persistence---the band the physics filter
-reaches (\S\ref{sec:physfilter})---and a median skill over the causal GP of $+0.073$
-$[+0.043, +0.099]$ (CI $>0$). In the inclusive
-population raising the epoch cap from 60 to 100 left every Huber checkpoint
-bit-identical (best epochs 24--59), so that one negative MSE difference is the fit-failure rows'
-square, not under-training. The selection rule is therefore the arm's own
-objective in both populations, and the rung is conditional on the cut.
-By the pre-registered rule the Huber arm is recorded as the \textbf{robust rung,
-conditional on the cut population}, and the backbone keeps the MSE loss. The
-deployment statement now carries two numbers---aggregate skill (the tail) and
-median error (the bulk)---and the Huber arm keeps the first while buying the second.
+$2\delta|r|-\delta^2$ outside), everything else the backbone's. Selected on its own
+validation objective, the Huber arm's \Ti{} median-AE skill against the MSE backbone
+is $M_1 = +0.128$ $[+0.114, +0.141]$ in the cut population (CI above zero on 4/4
+splits) at a pooled MSE difference of $+0.007$ with the interval including zero
+(significant deficits 0/4), with the \Ti{} median at 0.894$\times$ persistence; in the
+inclusive population $M_1 = +0.285$ $[+0.250, +0.322]$ (4/4) but one split keeps a
+\Ti{} MSE difference of $-0.040$ with the CI below zero (unchanged when the epoch cap
+is raised from 60 to 100), so by the pre-registered rule the Huber arm is the
+\textbf{robust rung, conditional on the cut population}, and the backbone keeps the
+MSE loss. The Huber rows of Table~\ref{tab:bulk} are the same loss selected on
+validation MSE, which lowers the cut-population median by 8--10\% (\Ti{} 47.2 to
+43.4\,eV, \Vrot{} 4.3 to 3.8\,km/s) at a paired MSE skill of $-0.004$ / $-0.007$ with
+the interval including zero.
 
 \subsection{A physics filter is the median estimator: a dual readout}
 \label{sec:physfilter}
@@ -1894,30 +1745,18 @@ $\sigma_J^2$, and the measurement is Student-$t$ ($\nu_0 = 3$) at the target's
 inclusive population, \Vrot{} 0.060). Every parameter is fixed by the registration;
 training it end-to-end moves none of them by more than 7\%, so they are not reported
 as measured plasma quantities.
+With Student-$t$ noise at that bulk scale the pure filter's median absolute error is
+\textbf{0.916$\times$ / 0.911$\times$} persistence for \Ti{} and
+\textbf{0.975$\times$ / 0.976$\times$} for \Vrot{} (cut / inclusive).
 
-\paragraph{How the measurement model was found.} Each step was one pre-registered
-variable. An Ornstein--Uhlenbeck prior with Gaussian noise---our modelling
-assumption for rotation, for which we found no literature precedent in tokamak
-rotation---moved the \Ti{} median below persistence (0.98$\times$ cut), which no
-earlier anchor had done, but left \Vrot{} at 1.19$\times$; a hold-or-jump prior fixed \Ti{} (0.98$\times$ / 1.00$\times$) and left
-\Vrot{} at 1.18$\times$ under both priors. A TRAIN-only diagnostic located the cause:
-\Vrot{} increments do not trend, and the Gaussian noise scale had been set at the
-tail, six times the bulk scatter, so the filter shrank every fresh sample. Student-$t$
-noise at the bulk scale removes it: the pure filter sits at \textbf{0.916$\times$ /
-0.911$\times$} persistence for \Ti{} and \textbf{0.975$\times$ / 0.976$\times$} for
-\Vrot{}.
-
-\paragraph{One output cannot carry both objectives.} Adding the backbone's residual
-($y = a + r$, MSE-trained) gives back aggregate skill and meets the physics-rung bar
-in the cut population ($M_1$ vs the backbone $+0.077$ to $+0.117$, 4/4, MSE deficit
-$\le 1/4$), but misses the inclusive MSE guard by 0.0014---and it gives the
-anchor's median back (\Vrot{} 1.08--1.12$\times$, inclusive \Ti{} 1.06$\times$).
-Two further single-variable rows tried to keep it: selecting the residual's
-checkpoint on validation median error (\Vrot{} 1.07$\times$; the passing population
-swaps, inclusive in and cut out), and weighting the residual by the filter's
-variance gain $k = s^2/(s^2+\sigma_r^2)$ (\Vrot{} 1.15--1.21$\times$: the residual
-learns to undo $k$, imprecisely). Within this family it is therefore measured, not
-assumed, that an output which must also win the aggregate moves the quiet rows.
+\paragraph{One output cannot carry both objectives.} Adding the backbone's
+MSE-trained residual to the filter ($y = a + r$) meets the physics-rung bar in the
+cut population ($M_1$ vs the backbone $+0.077$ to $+0.117$, 4/4, MSE deficit
+$\le 1/4$) and misses the inclusive MSE guard by 0.0014, and in each of the three
+registered variants---the plain residual, its checkpoint selected on validation
+median error, and the residual weighted by the filter's variance gain---the combined
+output gives the filter's median back (\Vrot{} 1.07--1.21$\times$ persistence), so
+within this family an output that must also hold the aggregate moves the quiet rows.
 
 \begin{table}[t]
   \centering
@@ -2026,98 +1865,6 @@ labels. Figure~\ref{fig:interval} shows the intervals on one held-out discharge.
   \label{fig:interval}
 \end{figure}
 
-\subsection{Model families and ensembles: the inductive-bias axis closes too}
-\label{sec:family}
-
-\S\ref{sec:ladder} closed the size axis within one family. Two model-side questions
-remained: whether a different \emph{inductive bias} extracts more from the same
-inputs, and how much an initialization ensemble of the same model buys. Both were
-measured with the rule written first.
-
-\paragraph{The 4-init ensemble lands exactly on the tie threshold.} Averaging the
-four initializations' normalized predictions per split on the confirmed-protocol
-B.1 grid (4 splits $\times$ 4 inits) gives paired \Ti{} gains of $+0.011$ / $+0.010$
-/ $+0.027$ / $+0.030$ in the cut population (4/4 significant, mean $+0.020$) and a
-mean of $+0.007$ (2/4) in the inclusive one. The pre-registered rule made a
-deployment recommendation only above the $0.02$ tie band, so this is recorded as a
-\textbf{tie} and the headline stays a single run. The $+0.048$ once measured in a
-reduced configuration was that configuration's initialization noise.
-
-\paragraph{An offline model-family card.} The inductive-bias comparison was designed
-as a \emph{card}, not a hypothesis test: one hypothesis per family, scored against an
-offline control that differs from \seqv{} only in direction (its bidirectional
-version, a BiLSTM) on identical masks, splits and budget. The setting is offline
-gap-filling: observed CES rows are hidden in spans drawn from the measured
-missing-run-length distribution and filled (three quarters of the scored points sit
-in gaps longer than 10 steps). Three arms: a neural process with a shot-level latent
-and cross-attention (\texttt{np}; hypothesis---the \Vrot{} gain concentrates where
-the same shot has few labels), and the transformer backbone of the public tokamak
-foundation model TokaMind, pretrained on another device (MAST), transplanted
-(\texttt{tm\_pre}) against the same architecture from a random initialization
-(\texttt{tm\_scratch}; hypothesis---their difference is the value of cross-device
-domain knowledge). 4 arms $\times$ 4 splits $\times$ 2 populations; TEST scored once
-per arm.
-
-\begin{table}[t]
-  \centering
-  \caption{Offline model-family card. Skill vs PCHIP (4 splits pooled,
-  shot-clustered 95\% CI) and the paired difference $\delta$ to the BiLSTM control
-  (normalized by the PCHIP MSE). Verdicts follow the pre-registered rule:
-  $\delta>0.02$, CI low $>0$, same sign on 3/4 splits, and the same against the
-  acausal GP. The label-sparsified sets keep $k$ \Vrot{} labels in label-rich test
-  shots; at $k=0$ the reference is the training mean.}
-  \label{tab:family}
-  \small
-  \resizebox{\linewidth}{!}{%
-  \begin{tabular}{llrrrr}
-    \toprule
-    population / target & metric & BiLSTM (control) & \texttt{np} & \texttt{tm\_pre} & \texttt{tm\_scratch} \\
-    \midrule
-    cut \Ti{} & vs PCHIP & $+0.274$ & $+0.300$ & $+0.179$ & $+0.184$ \\
-              & $\delta$ vs control & & $+0.026$ $[+0.004, +0.049]$ improve & $-0.094$ worse & $-0.090$ worse \\
-    cut \Vrot{} & vs PCHIP & $+0.364$ & $+0.384$ & $+0.376$ & $+0.384$ \\
-              & $\delta$ vs control & & $+0.021$ $[+0.000, +0.050]$ edge & $+0.012$ tie & $+0.021$ $[+0.001, +0.044]$ edge \\
-    incl.\ \Ti{} & vs PCHIP & $+0.410$ & $+0.403$ & $+0.371$ & $+0.378$ \\
-              & $\delta$ vs control & & $-0.006$ tie & $-0.039$ worse & $-0.032$ worse \\
-    incl.\ \Vrot{} & vs PCHIP & $+0.336$ & $+0.327$ & $+0.321$ & $+0.333$ \\
-              & $\delta$ vs control & & $-0.009$ tie & $-0.016$ tie & $-0.003$ tie \\
-    \midrule
-    \Vrot{}, $k=0$ labels & vs train mean & $-0.025$ & $-0.040$ & $-0.016$ & $-0.003$ \\
-    \Vrot{}, $k=3$ labels & vs PCHIP & $+0.146$ & $+0.148$ & $+0.132$ & $+0.137$ \\
-    \Vrot{}, $k=10$ labels & vs PCHIP & $+0.407$ & $+0.403$ & $+0.392$ & $+0.398$ \\
-    \bottomrule
-  \end{tabular}}
-\end{table}
-
-Three things are read off Table~\ref{tab:family}. \emph{First}, on \Vrot{} the family's
-$\delta$ against the control is $-0.016$ to $+0.021$: the two cut-population edge
-cells have CI lows of $0.000$ and $0.001$, the three inclusive-population cells sit at
-$-0.003$ to $-0.016$ inside the 0.02 band, and no stratum reproduces either cell.
-\emph{Second}, the neural process's hypothesis is rejected exactly where it was
-built to hold: with no same-shot \Vrot{} label \emph{every} arm's skill against the
-training mean is negative ($-0.003$ to $-0.040$; \texttt{np} $-0.040$ $[-0.07, -0.02]$,
-control $-0.025$ $[-0.06, +0.01]$) and \texttt{np} is the worst, and with 3 and 10 labels all four arms rise by the
-same amount ($+0.15 \rightarrow +0.40$). What carries a shot's operating regime is
-its context labels, not an encoder, and the 28\% between-shot \Vrot{} variance
-belongs to operating variables the diagnostics do not contain (beam sources, $I_p$,
-$B_T$)---the next measurement is \texttt{np} conditioned on that metadata, not
-another encoder. \emph{Third}, the pretrained and random backbones agree to
-$0.004$--$0.013$ on every cell: what was learned on MAST transfers nothing to KSTAR
-CES gap-filling, the same sign and size as TokaMind's own profile fine-tuning result
-($-0.005$). The transformer family's $\delta$ to the BiLSTM on \Ti{} is also negative at
-7$\times$ the parameters (cut $-0.09$, inclusive $-0.03$ to $-0.04$). The \texttt{np} \Ti{}
-$+0.026$ clears the rule in the cut population only and is $-0.006$, inside the band,
-in the inclusive one, so it is recorded as a marginal effect of the same size as the ensemble's.
-
-The card's one positive result is the gap-length profile. On \Vrot{} all four
-learned arms have skill $-0.25$ against PCHIP in one-step gaps and $+0.4$ to $+0.6$
-in gaps of two steps or more (the acausal GP: $+0.02$ to $+0.08$). The scale at
-which \Vrot{} is recoverable from the diagnostics is 100\,ms; the 10\,ms scale,
-where the adjacent CES sample is a better estimator than anything the diagnostics
-say, is where the \Vrot{} null of \S\ref{sec:asym} lives. The offline gap-filler and
-the causal nowcaster are the same model seen at two scales, and a \Vrot{} claim has
-to say which.
-
 \subsection{Cut-threshold sensitivity}
 \label{sec:cutsens}
 Retraining the backbone with the spike threshold at 2.5 and 4\,keV (four splits
@@ -2130,158 +1877,44 @@ populations, not where inside the tail the cut falls.
 \subsection{Context, structure and cost: what sets skill and what sets the price}
 \label{sec:context}
 
-Everything above scores one architecture at one context length. This section moves the
-two separately and asks which one produces the result. They answer very differently:
-stretching \emph{context} from 20\,ms to 630\,ms raises \Ti{} skill from $+0.055$ to
-$+0.138$, while swapping the \emph{operator family} at matched context---recurrence for
-dilated convolution or for attention---never moves it by more than 0.023 anywhere. The
-architecture should therefore be chosen on cost rather than on skill, and that cost
-follows the number of dispatched operators rather than the parameter count.
-
-\paragraph{Reach must be measured by training, not by truncation.}
-Truncating a trained backbone's recurrent state to $r$ steps after the fact makes \Ti{}
-look as though it loses out to 500\,ms, but that reads \emph{unlearned state
-reconstruction} as missing information. Retraining on non-overlapping segments of length
-$r$ recovers at least 84\% of that deficit. Every reach number below is from a model
-trained at that context, not from a truncated one.
-
-\paragraph{Saturation is near 50\,ms, and what context buys is typicality rather than
-the average.}
-Applying the pre-registered rule---the smallest $r$ whose deficit against full context is
-under 0.02 with at most one significant deficit out of four splits---to a ladder densified
-to one-step spacing returns \textbf{5 steps $=$ 50\,ms}. That threshold must not be read
-as a crossing point. Pooling the four splits by discharge and rescoring over 301
-discharges gives Table~\ref{tab:pooled}, and \textbf{the model's skill over the causal
-GP is above zero at 20\,ms as well} ($+0.057$, 95\% CI $[+0.027, +0.085]$).
-
-\begin{table}[t]
-  \centering
-  \caption{Recurrent family, pooled rescoring over 301 discharges. "Win rate" is the
-  fraction of discharges on which the model beats the causal GP; "$-$top10" is the pooled
-  skill after deleting the ten largest contributors. The trend is $+0.0497$ per decade of
-  context $[+0.0363, +0.0638]$---rising.}
-  \label{tab:pooled}
-  \small
-  \begin{tabular}{rccc}
-    \toprule
-    Context & \Ti{} skill vs causal GP [95\% CI] & Win rate & $-$top10 \\
-    \midrule
-    20\,ms  & $+0.057$ $[+0.027, +0.085]$ & \textbf{0.52} & $+0.028$ \\
-    30\,ms  & $+0.087$ $[+0.061, +0.111]$ & 0.60 & $+0.060$ \\
-    50\,ms  & $+0.104$ $[+0.079, +0.128]$ & 0.64 & $+0.077$ \\
-    70\,ms  & $+0.119$ $[+0.095, +0.142]$ & 0.66 & $+0.092$ \\
-    150\,ms & $+0.123$ $[+0.096, +0.148]$ & 0.66 & $+0.096$ \\
-    630\,ms & $+0.143$ $[+0.118, +0.168]$ & 0.67 & $+0.116$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-The win-rate column is this section's conclusion: $0.52 \rightarrow 0.60 \rightarrow 0.64
-\rightarrow 0.66$, then flat from about 70\,ms. At 20\,ms the pooled skill is $+0.057$ with
-the CI above zero but the per-discharge win rate is 0.52; by 70\,ms it is 0.66.
-\textbf{Context does not raise the average so much as it raises the win rate.} That is the
-statement a deployment audience needs, and the threshold must not be described as "the
-context needed to be useful": already at 20\,ms the model's skill over persistence---what
-a deployed system actually displaces---is $+0.356$.
-
-One methodological caution follows from this ladder. The per-split 4/4 count is not a
-monotone function of reach at one-step spacing ($2/4 \rightarrow 3/4 \rightarrow 4/4
-\rightarrow 3/4 \rightarrow 4/4 \rightarrow 4/4 \rightarrow 3/4 \rightarrow 4/4 \rightarrow
-4/4 \rightarrow 4/4$ from 20 to 630\,ms) while the point estimates underneath rise
-smoothly. That is what a five-level vote on four samples does, not a problem with the
-runs. Report the counts; decide on the deficit.
-
-\paragraph{At matched context the operator family does not set skill.}
-Holding reach fixed and comparing a recurrent LSTM (357{,}570 parameters), a dilated
-causal convolution (3{,}238) and banded attention (295{,}746), all three have skill over
-the causal GP of $+0.113$, $+0.119$ and $+0.119$ with the CI above zero on 4/4 splits. A 110$\times$ parameter range and three of the
-most dissimilar sequence operators available produce no distinguishable difference. Read
-as ladders this is Table~\ref{tab:family}; paired at matched reach---the more robust
-contrast---the differences are quieter still: \texttt{tcn3/5/7} differ from the same-reach
-LSTM by $-0.004$, $+0.005$, $-0.004$, with the CI including zero on every split and only attention at
-the 70\,ms rung returns a difference under the pre-registered rule ($-0.023$, significant
-on 3/4). The largest family gap anywhere is 0.023 in \Ti{}, against $+0.060$ for moving
-reach from 20 to 70\,ms.
-
-\begin{table}[t]
-  \centering
-  \caption{Per-family reach ladders (\Ti{} skill vs the causal GP, mean of four splits
-  $\cdot$ number of splits whose CI clears zero). On this work's own promotion bar of
-  $\ge 3/4$ all three families are monotone. The convolutional arm's 30\,ms rung is its
-  structural minimum (one layer, receptive field 3), so its crossing is an upper bound.}
-  \label{tab:family}
-  \small
-  \begin{tabular}{rlll}
-    \toprule
-    Context & Recurrent (LSTM) & Dilated conv (TCN) & Banded attention \\
-    \midrule
-    20\,ms  & $+0.055$ $\cdot$ 2/4 & --- & --- \\
-    30\,ms  & $+0.083$ $\cdot$ 3/4 & $+0.079$ $\cdot$ 3/4 & --- \\
-    50\,ms  & $+0.098$ $\cdot$ 3/4 & $+0.103$ $\cdot$ 3/4 & $+0.090$ $\cdot$ 2/4 \\
-    70\,ms  & $+0.115$ $\cdot$ 4/4 & $+0.111$ $\cdot$ 4/4 & $+0.094$ $\cdot$ 3/4 \\
-    150\,ms & $+0.117$ $\cdot$ 4/4 & $+0.130$ $\cdot$ 4/4 & $+0.119$ $\cdot$ 4/4 \\
-    630\,ms & $+0.138$ $\cdot$ 4/4 & $+0.124$ $\cdot$ 4/4 & $+0.122$ $\cdot$ 4/4 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-A fourth family, a diagonal state-space model, behaves differently on the same ladder. It
-does convert context into skill ($+0.0235$ per decade $[+0.0102, +0.0372]$) but stops
-around 70\,ms at a lower ceiling: $+0.105$ at 630\,ms against the recurrent $+0.143$, with
-a win rate capped at 0.58--0.60 rather than 0.66. It is, however, the best pooled point of
-any family at 20\,ms ($+0.065$ against the recurrent $+0.057$)---a same-rung pooled
-comparison rather than a paired test, so it is reported and not promoted. \Vrot{} declines
-with context in \textbf{all four} families.
-
-\paragraph{So the architecture is chosen on cost, and cost is operator count.}
-Online single-step latency tracks the number of dispatched operators (about
-2--3\,$\mu$s each) rather than parameter count or arithmetic. Those counts are exact on
-any machine; this machine's absolute timings moved by 21.84$\times$ between sessions and
-are therefore not quoted.
-
-\begin{table}[t]
-  \centering
-  \caption{Online single-step cost by family. $R$ is reach and "ops" counts dispatched
-  \texttt{aten::} operators per step. Attention is also $O(1)$ in $R$ thanks to the KV
-  cache; it simply carries a 3.5--4.3$\times$ worse constant.}
-  \label{tab:cost}
-  \small
-  \begin{tabular}{llrr}
-    \toprule
-    Family & Cost in $R$ & $R=15$ & $R=63$ \\
-    \midrule
-    Recurrent (LSTM) & $O(1)$ --- the state carries it & 111 & 111 \\
-    Dilated causal conv & $O(\log R)$, $+48$ per layer & 209 & 305 \\
-    Banded attention & $O(1)$, constant 4.3$\times$ & 473 & 473 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-On this problem attention is \emph{strictly dominated}: \texttt{tcn3k} (3{,}238
-parameters) matches its skill ($+0.119$, 4/4) with 91$\times$ fewer parameters and
-2.3--2.7$\times$ fewer dispatched operators. Three operating points are worth naming:
-\texttt{tcn3k} matches the 357{,}570-parameter backbone on \Ti{} with skill $+0.119$ over
-the causal GP and the CI above zero on 4/4, \texttt{v2m4k} (3{,}898) is the cheapest recurrent arm that still clears 4/4, and
-\texttt{tcn2k} (1{,}808) is the cheapest arm of any family. They are not "the small
-version of the model"; they are the answer to what this problem actually requires. The
-10\,ms budget binds no arm, and the 1\,ms verdict is \textbf{suspended} by the
-pre-registered rule because of the between-session spread above.
-
-\paragraph{Why the windowed family could not reach this axis.}
-\S\ref{sec:window} reports that one past \emph{observation} is enough and this section
-reports that about 50\,ms of \emph{contiguous context} is needed. They do not conflict,
-because they count different resources. The windowed family satisfied the first and could
-not reach the second at any $W$, by construction: average-pooling the window discards its
-ordering, the temporal-subset augmentation makes each window an arbitrary non-contiguous
-subset of past rows, and rows without an observed target were dropped before the model saw
-them. The numbers land exactly where that explanation predicts: the $W{=}2$ window model
-scores $+0.041$ (1/4) against the causal GP and \seqv{} truncated to the same two steps
-scores $+0.055$ (2/4). Different architectures, same starvation, same result. The
-full-grid reframing was not a modelling preference; it was the only way to make the
-resource that matters reachable.
+History length, contiguous context, operator family and cost were moved separately,
+each under a pre-registered rule. In the windowed family a 24-run sweep
+($W \in \{2,3,4,6,8\}$ and a history-0 point, four split seeds each; hold-free,
+per-file cap 500, inclusive population) puts the mean \Ti{} skill at $-0.026$ (PR4
+0/4) and \Vrot{} at $-0.78$ with no past CES observation, at $+0.238$ (4/4) and
+$+0.206$ with one, and at $+0.190$ to $+0.246$ and $+0.190$ to $+0.206$ for every
+longer window, against a seed spread of $0.07$--$0.16$ within a single point, so the
+smallest-$W$-at-plateau rule returns $W = 2$. For the backbone, trained at each
+context length $r$ on non-overlapping segments (truncating a trained state after the
+fact reads unlearned state reconstruction as missing information; retraining recovers
+at least 84\% of that deficit), the pre-registered rule---the smallest $r$ whose
+deficit against full context is under 0.02 with at most one significant deficit out
+of four splits---returns \textbf{5 steps $=$ 50\,ms}; pooled over 301 discharges the
+\Ti{} skill over the causal GP is $+0.057$ $[+0.027, +0.085]$ at 20\,ms, $+0.104$
+$[+0.079, +0.128]$ at 50\,ms and $+0.143$ $[+0.118, +0.168]$ at 630\,ms (four-split
+means $+0.055$, $+0.098$ and $+0.138$), every interval excluding zero, with the
+per-discharge win rate at 0.52, 0.64 and 0.67. One past observation and 50\,ms of
+contiguous context are different resources, and the windowed family cannot supply the
+second at any $W$ (its window is pooled without order and its unlabelled rows are
+dropped): the $W{=}2$ control's skill over the causal GP is $+0.041$ (CI above zero
+on 1/4 splits) and \seqv{} restricted to the same two steps has $+0.055$ (2/4). At
+matched reach a recurrent LSTM (357{,}570 parameters), a dilated causal convolution
+(3{,}238) and banded attention (295{,}746) have \Ti{} skill over the causal GP of
+$+0.113$, $+0.119$ and $+0.119$ with the CI above zero on 4/4 splits; the largest
+paired family difference is $-0.023$ (attention at the 70\,ms rung, CI excluding zero
+on 3/4 splits), against $+0.060$ for moving reach from 20 to 70\,ms, and a diagonal
+state-space model reaches $+0.105$ at 630\,ms against the recurrent $+0.143$ (pooled).
+Online single-step cost follows the number of dispatched operators (about
+2--3\,$\mu$s each): 111 per step for the LSTM at any reach, 209--305 for the dilated
+convolution and 473 for banded attention at reach 15--63, so the architecture is
+chosen on cost and not on skill; measured as the network forward pass only (1{,}000
+timed calls at batch 1 after warm-up, laptop-class machine), the stateful \seqv{}
+step costs \textbf{0.97\,ms median and 1.49\,ms at p99 on CPU} (0.51--1.05\,ms median
+in earlier runs of the same benchmark), which is the basis for calling it usable
+inside a 10\,ms cycle.
 
 \paragraph{The model's per-discharge skill is positive where the target moves.}
-Pooled rescoring produces a \Vrot{} result that would be badly misread on its own: every
+Pooled rescoring of the same context ladder produces a \Vrot{} result that would be badly misread on its own: every
 rung's pooled CI clears zero (at 70\,ms, $+0.123$ $[+0.036, +0.248]$). But the per-discharge
 win rate is 0.48, the median discharge's skill is about zero, and removing the top five of
 some 62 discharges takes the pooled skill to zero or below on all four splits.
@@ -2295,11 +1928,7 @@ than statistical: where a discharge is flat the causal GP is already near-optima
 interpolating a straight line is easy, and the model has nothing to add. That \Vrot{}
 reaches only 55\% even in the most variable tercile restates the term-by-term audit of
 \S\ref{sec:model:physics} from the other side---the driver of rotation is unobserved, so
-the model cannot track motion it has no input for. The family preferences point the same
-way: \Vrot{}'s best arm is the small \emph{recurrent} one and \Ti{}'s is the small
-\emph{convolutional} one, exactly as the routing predicts, because \Vrot{} rides a highly
-autocorrelated carried value where recurrence suffices while \Ti{} integrates
-fast-diagnostic history, where weight sharing across time pays.
+the model cannot track motion it has no input for.
 
 % =========================================================================
 \section{Model-selection protocol}
@@ -2314,7 +1943,7 @@ controlled experiments, each \emph{one} change that had to preserve the data
 contract, scored on the \emph{clean, non-augmented} validation $\skillp$---never
 the augmented validation loss, which rewards smoothing exactly where interpolation
 is already strong---and kept iff it improved the best score so far. Its history
-length was then set by the sweep of \S\ref{sec:window}, and holds were removed
+length was then set by the sweep of \S\ref{sec:context}, and holds were removed
 from training by the audit of \S\ref{sec:stuck}.
 
 \paragraph{The backbone gate.} The sequence framing was adopted only after the
@@ -2336,77 +1965,14 @@ construction. The full pre-registration, its per-batch execution records and the
 runner scripts are in the released repository.
 
 % =========================================================================
-\section{Is it deployable?}
-\label{sec:deploy}
-
-Two things stand between a skill score and a usable instrument: it has to run
-inside the measurement cadence, and it has to say how much to trust it.
-
-\paragraph{Latency: stateful one-step inference fits on a CPU with room to spare.}
-CES sits on a 10\,ms grid, so an online gap-filler has 10\,ms per step minus
-whatever acquisition and control already spend. A recurrent nowcaster is run
-online \emph{statefully}: the hidden state is carried across the grid and each new
-row costs one recurrent step at batch 1, which is the number that matters.
-Measured as the network forward pass only (feature assembly is outside the model)
-over 1{,}000 timed calls after warm-up on an idle laptop-class machine, the
-\seqv{} step costs \textbf{0.97\,ms median and 1.49\,ms at p99 on CPU} (15\% of one
-grid period; p95 1.17\,ms), and 1.08 / 1.79\,ms on the GPU---at this size a GPU buys
-nothing at batch 1. The whole-segment re-run that offline scoring uses costs
-2.6\,ms median / 4.1\,ms p99 for a 100-row (1\,s) block and 6.1 / 9.6\,ms for
-300 rows on CPU, i.e.\ 38--49k rows/s of bulk reprocessing (46--62k rows/s on
-the GPU). The windowed control at batch 1 is slower: $W{=}2$ 2.9\,ms median and
-4.5\,ms at p99 on CPU (5.1 / 8.6\,ms on the GPU); $W{=}4$ 3.1 / 5.1\,ms. Earlier
-idle-machine runs of the same benchmark put the \seqv{} step at 0.51--1.05\,ms
-median and 0.99--1.61\,ms p99, and one showed a heavy CPU tail for the windowed
-control (18.9\,ms p99), because a laptop's power states move these numbers; the
-ordering---sequence step $\ll$ windowed forward pass, CPU sufficient---did not
-change in any run. The practical guidance is therefore: \emph{run the
-stateful nowcaster on the control computer's CPU}; it leaves more than 80\% of
-the 10\,ms budget to acquisition and control.
-
-\paragraph{Uncertainty: distribution-free intervals without touching the model.}
-The community standard for fusion profile data is Gaussian-process regression,
-which returns a posterior; our model returns a point. Fitting a variance or
-quantile head would require retraining and would move every number above---so we
-use \emph{split conformal prediction} instead: calibrate on the run's own
-validation split, change nothing about the predictor, obtain distribution-free
-finite-sample marginal coverage. Two variants: a single quantile (\emph{global})
-and one per $\Delta t$ bin (\emph{Mondrian}). The identical procedure is applied to
-PCHIP and persistence, so what is compared is interval quality, not calibration
-technique. At $\alpha = 0.10$, TEST, both populations:
-
-\begin{itemize}
-  \item \textbf{The model's intervals have a lower (better) Winkler score than both
-        baselines' in every cell} (32/32 population $\times$ target $\times$ variant
-        $\times$ split); the score penalises width and misses jointly: \Ti{} 1{,}272
-        vs.\ 1{,}554 (PCHIP) vs.\ 1{,}727 (persistence) in the cut population,
-        2{,}290 vs.\ 2{,}851 vs.\ 3{,}120 inclusive; \Vrot{} 150 vs.\ 164 vs.\
-        179 (global variant, 4-split means). This does not follow from better point
-        estimates; it is a separate property.
-  \item \textbf{In the inclusive population the model's \Ti{} intervals are
-        actually \emph{wider} than PCHIP's} (half-width 224--255 vs.\ 211--241\,eV)
-        and still score better: the spikes inflate the miss penalty, and the model
-        misses less. Mondrian calibration tightens every \Ti{} arm by
-        $\approx$4--5\%, leaves \Vrot{} unchanged, and changes no verdict.
-  \item \textbf{Honest failure: coverage is marginal, not conditional.} \Ti{}
-        coverage is $0.87$--$0.92$ against a $0.90$ target (one split under-covers
-        for every arm) and \Vrot{} $0.91$--$0.94$; per-shot coverage still ranges
-        widely. Conformal guarantees coverage under exchangeability, and
-        calibration and test are disjoint \emph{discharges}; shot-level shift
-        breaks it. For a deployed instrument this matters more than the pooled
-        number, and fixing it needs shot-conditional calibration that the present
-        shot count cannot support.
-\end{itemize}
-
-% =========================================================================
 \section{Where the remaining headroom is}
 \label{sec:headroom}
 
 The negative results in this paper are unusually specific, and specificity is what
 makes them useful: they do not say ``this problem is hard'', they say \emph{which
 change would move it}. Capacity is ruled out (\S\ref{sec:ladder}), longer windows
-are ruled out (\S\ref{sec:window}), inductive bias, cross-device pretraining and
-ensembling are ruled out (\S\ref{sec:family}), and the framing that buys reach has
+are ruled out (\S\ref{sec:context}), inductive bias, cross-device pretraining and
+ensembling are ruled out (\S\ref{sec:ladder}), and the framing that buys reach has
 been adopted (\S\ref{sec:gate}). The one model-side axis that moved is the loss's
 influence function, and its gain is a bulk gain (\S\ref{sec:bulk}). What remains
 beyond that is data, and each lever is identified by evidence already in this
@@ -2482,7 +2048,7 @@ After the Huber arm's recovery, a 4\,eV median gap to PCHIP remains
 so the only way a causal model closes it is by denoising the history---weighting it
 by the per-exposure fit quality a CES re-analysis would provide---which is the same
 deliverable as lever 1. And the zero-label row of the model-family card
-(\S\ref{sec:family}) shows the cold-start scope of item 3: with no same-shot \Vrot{}
+(\S\ref{sec:ladder}) shows the cold-start scope of item 3: with no same-shot \Vrot{}
 label, no learned arm rises above the training mean from BES, ECEI and Mirnov alone.
 
 For the 10\,ms nowcast the lever that remains is therefore the per-exposure fit
@@ -2538,9 +2104,9 @@ deliberately adverse to the causal models but complicates direct interpretation.
 set and two closely related recurrent families; nothing here establishes transfer
 to another tokamak.
 \textbf{Uncertainty is calibrated marginally, not conditionally}
-(\S\ref{sec:deploy}).
+(\S\ref{sec:dist}).
 \textbf{Latency} is a network-only measurement on one laptop-class machine, with
-up to 2$\times$ run-to-run variation from power states (\S\ref{sec:deploy});
+up to 2$\times$ run-to-run variation from power states (\S\ref{sec:context});
 feature assembly and acquisition overhead are not included.
 \textbf{Scope.} The pedestal-top framing is inherited from the data selection
 (pedestal-top CES channels); no radial-dependence experiment is performed, and
