@@ -2103,8 +2103,9 @@ deliberately adverse to the causal models but complicates direct interpretation.
 \textbf{Single device and model family.} Everything is one device, one diagnostic
 set and two closely related recurrent families; nothing here establishes transfer
 to another tokamak.
-\textbf{Uncertainty is calibrated marginally, not conditionally}
-(\S\ref{sec:dist}).
+\textbf{Uncertainty is calibrated on pooled rows.} The coverage of the predictive
+head is reported per split over all rows (\S\ref{sec:dist}); its coverage per
+discharge was not measured.
 \textbf{Latency} is a network-only measurement on one laptop-class machine, with
 up to 2$\times$ run-to-run variation from power states (\S\ref{sec:context});
 feature assembly and acquisition overhead are not included.
@@ -2196,7 +2197,7 @@ We also report what is not claimed and what would overturn it. The offline claim
 bounded above by the offline GP; the value cut that defines one population is a
 one-sided proxy for fit quality, and CES fit-quality metadata would replace it; the
 reweighting reaches 54--68\% of missing \Ti{} rows and a twentieth of missing \Vrot{}
-rows; the predictive intervals are calibrated marginally, not per discharge; beyond
+rows; the predictive intervals are calibrated on pooled rows, and per-discharge coverage was not measured; beyond
 45\,ms the inclusive-population interval includes zero ($-0.004$, $[-0.30, +0.25]$);
 the equation's physical bands are read from the cut population only, since under the
 fit-failure spikes its inclusive BES gain changes sign; and everything is one device
