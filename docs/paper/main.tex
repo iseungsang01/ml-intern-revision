@@ -1834,7 +1834,11 @@ toroidal rotation---was therefore discarded upstream of the model, which is also
 every derived MC feature we tried (integral, PCHIP integral, $|MC|$, rolling RMS)
 failed: information already lost cannot be recovered downstream. That reading named
 a preprocessing fix, and the fix was tested under a pre-registration. The raw
-2\,MHz coil stream was obtained for 12 discharges, and 15 causal 10\,ms window
+2\,MHz coil stream was obtained for 12 discharges. It first turns the decimation
+reading into a measurement: on 24 of 24 coils checked, the 100\,Hz value in the shot
+files equals a single raw sample at the grid time (lag 0, difference zero or within
+the print quantum), that is, a point snapshot with no averaging and no filter. Then
+15 causal 10\,ms window
 features (RMS envelope and five band powers per coil, and the dominant peak of the
 two-coil cross-spectrum) were routed into the \Vrot{} branch, with six training
 discharges and three \Vrot{}-carrying test discharges. The paired change in \Vrot{}
