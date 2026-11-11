@@ -35,7 +35,7 @@ Sources (all under data/):
                              B.28 what-the-backbone-computes: surrogate ratios and the trained equation (sec. 8bz)
 
 The paper sections written after the B.5 pipeline (sec:physfilter, sec:dist) transcribe numbers by
-hand; `transcription_check` re-reads the values printed in main.tex from these files and fails on
+hand; `transcription_check` re-reads the values printed in the paper from these files and fails on
 any mismatch, so the hand transcription is mechanically checked.
 
 Usage (repo root):  py ces_prediction/collect_paper_numbers.py
@@ -395,7 +395,7 @@ def equation_b28(s1, s2, s3, s4):
 
 
 def transcription_check(n):
-    """Values printed in main.tex (sec:physfilter tab:dual, sec:dist) against the artifacts."""
+    """Values printed in the paper (dual readout, distribution head, B.14, B.27, B.28) against the artifacts."""
     d, v, h = n["physfilter"]["dual_readout"], n["physfilter"]["vrot_floor"], n["dist_head"]
     printed = [
         ("tab:dual cut T_i median range", d["cut"]["CES_TI"]["median_over_persistence_range"], [0.911, 0.920], 0.0015),
@@ -569,7 +569,7 @@ def main():
     OUT_PATH.write_text(json.dumps(numbers, indent=2, default=float), encoding="utf-8")
     print(f"wrote {OUT_PATH}")
     print("crosscheck: B.5 ladder/headline, B.3, B.4 and the TEST reports agree on every seed and population")
-    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values tab:replicate (B.27/B.27c) and the sec:model B.28 paragraph in main.tex match the artifacts")
+    print("transcription: sec:physfilter (tab:dual, V_rot floor), sec:dist and the sec:bulk B.14 sec. 10 values tab:replicate (B.27/B.27c) and the B.28 values printed in the paper match the artifacts")
 
     for pop in POPS:
         print(f"\n=== headline / {pop} (TEST, skill vs PCHIP [95% CI]) ===")

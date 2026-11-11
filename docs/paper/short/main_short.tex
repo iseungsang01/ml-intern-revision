@@ -1,7 +1,12 @@
 % =========================================================================
-% KSTAR CES causal nowcasting -- 8-page CVPR-style condensed version.
-% The long version (docs/paper/main.tex) is the supplement; every number here is
-% copied from it. Build (from this folder): latexmk -pdf main_short
+% KSTAR CES causal nowcasting -- 8-page CVPR-style paper (the only paper version).
+% Numbers traced to THESIS_RESULTS.md §0 and the sections it cites (2026-11-11).
+% Per-split values not printed in the record are read from the artifacts it names:
+% docs/paper/paper_numbers.json (RMSE ladder, per-split headline CIs, ablation means,
+% MNAR, test shot counts), docs/paper/b27_kfold_interval_R10.json (fold-level column),
+% docs/paper/b27c_hier.json (pooled column), docs/b28_weight_physics_report.md
+% (forget-gate readout of the 30 frozen checkpoints).
+% Build (from this folder): latexmk -pdf main_short
 % =========================================================================
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
@@ -145,8 +150,9 @@ persistence (4.3 vs.\ 3.7\,km/s).
 The protocol is pre-registered. The evaluation---two co-primary populations, a shot-clustered
 paired bootstrap, an overlap-corrected repeated cross-validation interval and a
 two-level bootstrap (\S\ref{sec:eval})---is assembled from standard pieces of other
-fields and is described as method, not claimed. A full version of this paper
-(supplement) carries every ablation, sensitivity row and derivation omitted here.
+fields and is described as method, not claimed. The ablations, sensitivity rows and
+derivations omitted here are in the experiment record (THESIS\_RESULTS.md) of the
+released repository.
 
 % =========================================================================
 \section{Related work}
@@ -234,10 +240,7 @@ sets~\citep{CPMP2000Switching,ICH2019E9R1}. The threshold is immaterial across
 
 The main model, \seqv{}, is a 357{,}570-parameter causal sequence nowcaster. This
 section fixes what is estimated, why the inputs are wired to each target, which time
-scales the model sits on, and what equation the trained network computes. The full
-version (supplement) gives in addition the full windowed-control architecture, the
-interpretable rung, the optimization setup in detail, and the stage-by-stage readout
-with its intermediate parameter bands.
+scales the model sits on, and what equation the trained network computes.
 
 \subsection{Estimand, loss and an irreducible floor}
 \label{sec:model:target}
@@ -447,9 +450,8 @@ and the primary score is $\skillp = 1 - \mathrm{MSE}_{\mathrm{model}}/\mathrm{MS
 and a local AR are causal; linear, PCHIP and an offline GP (Matérn-3/2 + white noise,
 nearest 16+16 neighbours, per-sample marginal-likelihood selection) read the future;
 the causal GP is the same GP on the 16 past neighbours. Where no future neighbour
-exists the interpolant predicts persistence (0.3--0.4\% of scored \Ti{} rows, but
-40--44\% of \Vrot{} rows, so ``vs.\ PCHIP'' for \Vrot{} is two-fifths ``vs.\
-persistence'').
+exists the interpolant predicts persistence (0.2\% of scored \Ti{} rows and
+0.3--0.5\% of scored \Vrot{} rows).
 
 \paragraph{Splits and pre-registration.} Files are split train/val/test with four
 seeds (42, 1, 7, 123); test files were reserved before any architecture search and
@@ -482,7 +484,11 @@ Table~\ref{tab:ladder} gives the physical-unit RMSE on the canonical test split.
 the methods that do not read the future, \seqv{} has the lowest RMSE, 4\% (\Ti) and
 18\% (\Vrot) below the causal GP, and it is also below linear and PCHIP
 interpolation. The offline GP, which averages noisy anchors, is the one arm with a
-lower \Ti{} RMSE (153.8 vs.\ 157.8).
+lower \Ti{} RMSE (153.8 vs.\ 157.8). Linear interpolation is the stronger offline
+interpolant here: per split, the \Ti{} skill over it is $+0.136$ to $+0.226$ (cut) and
+$+0.209$ to $+0.288$ (inclusive), the interval excluding zero on 4/4 splits in both
+populations, 0.01--0.05 below the skill over PCHIP; for \Vrot{} it excludes zero on
+1/4 splits in each population.
 
 \begin{table}[t]
   \centering
@@ -520,8 +526,8 @@ lower \Ti{} RMSE (153.8 vs.\ 157.8).
   shot-clustered 95\% CI excludes zero. \emph{Fold-level}: Nadeau--Bengio 95\% interval
   over 50 folds of repeated 5-fold CV, with the number of folds whose own CI excludes
   zero. \emph{Pooled}: two-level bootstrap 95\% interval over the eight registered
-  repeats. Bold = interval excludes zero. The four-split \Ti{} vs.\ offline GP entry
-  pools both populations; ``--'' = not in the full version.}
+  repeats. Bold = interval excludes zero. The four-split offline GP entries pool both
+  populations.}
   \label{tab:headline}
   \footnotesize
   \setlength{\tabcolsep}{3pt}
@@ -542,7 +548,7 @@ lower \Ti{} RMSE (153.8 vs.\ 157.8).
       & PCHIP       & $+0.135$ to $+0.390$ (1/4) & $+0.132$ to $+0.384$ (2/4) & $[-0.021, +0.405]$ (15/50) & $[-0.053, +0.391]$ (11/50) & $\mathbf{[+0.072, +0.701]}$ & $\mathbf{[+0.046, +0.683]}$ \\
       & persistence & \multicolumn{2}{c}{$+0.30$ to $+0.50$ (3/4 in each)} & $\mathbf{[+0.190, +0.601]}$ (42/50) & $\mathbf{[+0.159, +0.587]}$ (38/50) & $\mathbf{[+0.277, +0.763]}$ & $\mathbf{[+0.139, +0.747]}$ \\
       & causal GP   & $+0.020$ to $+0.331$ (2/4) & $+0.018$ to $+0.324$ (2/4) & $[-0.060, +0.512]$ (11/50) & $[-0.096, +0.502]$ (10/50) & $\mathbf{[+0.045, +0.701]}$ & $\mathbf{[+0.023, +0.683]}$ \\
-      & offline GP  & -- & -- & $[-0.234, +0.312]$ (0/50) & $[-0.268, +0.300]$ (0/50) & $[-0.119, +0.635]$ & $[-0.139, +0.609]$ \\
+      & offline GP  & \multicolumn{2}{c}{$-0.07$ to $+0.09$ (CI includes 0 on 7/8)} & $[-0.234, +0.312]$ (0/50) & $[-0.268, +0.300]$ (0/50) & $[-0.119, +0.635]$ & $[-0.139, +0.609]$ \\
     \bottomrule
   \end{tabular}}
 \end{table*}
@@ -690,7 +696,8 @@ a two-component mixture head passes the guards, coverage 0.53--0.55 / 0.90--0.91
 \label{sec:conclusion}
 
 \paragraph{Limitations.} The aggregate skill is a tail statistic: on the median row
-the backbone's \Ti{} error equals persistence's and PCHIP's is 20\% lower, and its
+the backbone's \Ti{} error equals persistence's and PCHIP's is 17\% lower (39.4 vs.\
+47.2\,eV), and its
 \Vrot{} median error is above persistence's; the median is reported from the physics
 filter beside, not inside, the aggregate. The unit of replication is
 the shot (96 \Ti{} / 60--66 \Vrot{} test shots per split), which bounds power. Skill is
@@ -723,9 +730,9 @@ power is a step input whose band slower than 300\,ms carries 0.34\% of the 10\,m
 and longer. In the median the physics filter's \Vrot{} error is 0.94--1.00$\times$ persistence (interval including 1 on 3/4 splits), the 10\,ms photon floor. The aggregate skill of both targets is a tail
 statistic, and the statement is scoped to standard CES at 10\,ms from the core to the
 pedestal top. The lever that remains for the 10\,ms nowcast is per-exposure fit
-quality from the CES analysis. The full version (supplement) gives the gap-regime,
-peak-stratum, context and family ladders, the loss and distribution-head experiments
-and the complete readout. Code, pre-registrations and evaluation artifacts:
+quality from the CES analysis. Code, pre-registrations, evaluation artifacts and the
+experiment record (THESIS\_RESULTS.md: gap-regime, peak-stratum, context and family
+ladders, loss and distribution-head experiments, the complete readout):
 \url{https://github.com/iseungsang01/ml-intern-revision}.
 
 {\small
