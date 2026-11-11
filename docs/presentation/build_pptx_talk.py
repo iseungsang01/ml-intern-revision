@@ -1,9 +1,10 @@
-"""KSTAR CES 나우캐스팅 발표(대본 포함). Cellfie 기말발표 v5.17 디자인 문법을 그대로 따른다.
+"""KSTAR CES 나우캐스팅 발표(대본 포함). 핵플실 발표 템플릿(1조, 수정_5) 위에 짓는다.
 
-  py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v1.pptx
+  py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v2.pptx
 
-* 디자인: 흰 바탕 · 큰 제목 · 큰 숫자 · 짧은 설명 · 고정폭 출처 한 줄 · 회색 카드 · 고정폭 쪽 표시
-  (cellfie/docs/presentation/team/build_v4.py 의 도형 규칙과 색). 글꼴 Pretendard · IBM Plex Mono.
+* 템플릿: 핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx 의 마스터·레이아웃·테마(위쪽 세 색 띠, 남색 제목 띠,
+  남색 1A3260 · 파랑 4590B8 · 회색 969FA7, Gill Sans MT). 한글은 Pretendard(테마 한글 글꼴 대신).
+* 본문 배치 문법은 Cellfie 기말발표 v5.17 에서 왔다: 큰 숫자 · 짧은 설명 · 출처 한 줄 · 회색 카드.
 * 내용: THESIS_RESULTS.md §0 (2026-11-11)과 8쪽 논문 docs/paper/short/main_short_ko.tex 의 수치만 쓴다.
 * 발표자 노트 = 쓰임·시간 / 핵심 / 대본(발표 말투) / 숫자와 출처 / 예상 질문.
 * 용어: 파라미터, estimator 등 흔한 영어 용어. 결과는 점추정 + 95 % 구간 + 0 제외 여부.
@@ -23,36 +24,55 @@ from pptx.util import Inches, Pt
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 HERE = Path(__file__).resolve().parent
-OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v1.pptx"
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v2.pptx"
+TEMPLATE = Path(r"D:\승상 자료\대학교\4학년\2학기\핵플실\실험 3 (필라멘트)\발표준비\핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx")
 
-SANS, SANS_B, MONO = "Pretendard", "Pretendard", "IBM Plex Mono"
-INK = RGBColor(0x12, 0x14, 0x18)
-BODY = RGBColor(0x3A, 0x3F, 0x47)
-MUTED = RGBColor(0x6B, 0x72, 0x80)
+SANS, SANS_B, MONO = "Gill Sans MT", "Gill Sans MT", "Gill Sans MT"
+EA = "Pretendard"                      # 한글
+NAVY = RGBColor(0x1A, 0x32, 0x60)      # 테마 accent1
+BLUE = RGBColor(0x45, 0x90, 0xB8)      # 테마 accent2
+GREEN_T = RGBColor(0x42, 0x95, 0x5F)   # 테마 accent6
+INK = NAVY
+BODY = RGBColor(0x3D, 0x3D, 0x3D)      # 테마 dk2
+MUTED = RGBColor(0x6E, 0x77, 0x80)
 RULE = RGBColor(0xC9, 0xCD, 0xD3)
-GRAY = RGBColor(0xA4, 0xA9, 0xB1)
-CARD = RGBColor(0xF1, 0xF1, 0xF4)
+GRAY = RGBColor(0x96, 0x9F, 0xA7)      # 테마 accent4
+CARD = RGBColor(0xF2, 0xF3, 0xF5)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
-# Cellfie 는 흑백 + 초록 한 점. 여기서는 그 초록 자리에 두 물리량의 색을 둔다.
-TI = RGBColor(0x2F, 0x5E, 0x9E)    # 이온 온도
-VR = RGBColor(0xB9, 0x56, 0x3C)    # 회전 (Cellfie 팔레트의 붉은 갈색)
-TI_BG = RGBColor(0xE9, 0xF0, 0xF8)
-VR_BG = RGBColor(0xF8, 0xEC, 0xE7)
+TI = BLUE                              # 이온 온도
+VR = GREEN_T                           # 회전
+TI_BG = RGBColor(0xE6, 0xF0, 0xF7)
+VR_BG = RGBColor(0xE5, 0xF1, 0xE9)
 
-prs = Presentation()
-prs.slide_width, prs.slide_height = Inches(20), Inches(11.25)
-W, H = prs.slide_width, prs.slide_height
-L = Inches(1.3)
+prs = Presentation(TEMPLATE)
+_ids = prs.slides._sldIdLst
+for _sid in list(_ids):                # 템플릿의 기존 슬라이드는 지우고 마스터·레이아웃만 쓴다
+    prs.part.drop_rel(_sid.rId)
+    _ids.remove(_sid)
+W, H = prs.slide_width, prs.slide_height      # 13.333 × 7.5 in
+S = 2 / 3                                      # 설계 좌표(20 in 폭) → 템플릿 좌표
+FS = 0.70                                      # 글자 크기 배율
+DY = Inches(0.55)                              # 남색 제목 띠 아래로 내리는 양
+
+
+def I(v):
+    return Inches(v * S)
+
+
+def P(v):
+    return Pt(v * FS)
+
+
+L = I(1.3)
 CW = W - 2 * L
-I = Inches
-BLANK = prs.slide_layouts[6]
+LAY = {l.name: l for l in prs.slide_layouts}
 
 
 # ---------------------------------------------------------------- 기본 도형 (Cellfie build_v4.py 규칙)
 
 def _font(run, face, size, color, bold=False, spacing=None):
     f = run.font
-    f.size = Pt(size)
+    f.size = P(size)
     f.bold = bold
     f.color.rgb = color
     rpr = run._r.get_or_add_rPr()
@@ -61,14 +81,14 @@ def _font(run, face, size, color, bold=False, spacing=None):
         if el is None:
             el = rpr.makeelement(qn(tag), {})
             rpr.append(el)
-        el.set("typeface", SANS if (tag == "a:ea" and face == MONO) else face)
+        el.set("typeface", EA if tag == "a:ea" else face)
     if spacing is not None:
         rpr.set("spc", str(spacing))
 
 
 def text(slide, x, y, w, h, lines, size=20, face=SANS, color=BODY, bold=False, align=PP_ALIGN.LEFT,
          anchor=MSO_ANCHOR.TOP, spacing=None, line=1.25, after=0):
-    tb = slide.shapes.add_textbox(x, y, w, h)
+    tb = slide.shapes.add_textbox(x, y + DY, w, h)
     tf = tb.text_frame
     tf.word_wrap = True
     tf.auto_size = None
@@ -95,7 +115,7 @@ def B(s, **k):
 
 
 def rule(slide, x, y, w, color=RULE, weight=1.0, dash=False):
-    ln = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x, y, x + w, y)
+    ln = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x, y + DY, x + w, y + DY)
     ln.line.color.rgb = color
     ln.line.width = Pt(weight)
     if dash:
@@ -104,7 +124,7 @@ def rule(slide, x, y, w, color=RULE, weight=1.0, dash=False):
 
 
 def box(slide, x, y, w, h, fill=CARD, radius=0.06, line=None, dash=False, shape=MSO_SHAPE.ROUNDED_RECTANGLE):
-    shp = slide.shapes.add_shape(shape, x, y, w, h)
+    shp = slide.shapes.add_shape(shape, x, y + DY, w, h)
     if shape == MSO_SHAPE.ROUNDED_RECTANGLE:
         shp.adjustments[0] = radius
     if fill is None:
@@ -142,8 +162,20 @@ SECTIONS = [  # (번호, 이름, 한 줄 설명, 시간)
 PAGE = {"n": 0}
 
 
-def title(slide, s, y=I(1.15), size=44):
-    text(slide, L, y, CW, I(1.4), s, size=size, face=SANS_B, color=INK, bold=True, line=1.15)
+def title(slide, s, y=None, size=None):
+    tf = slide.shapes.title.text_frame
+    tf.text = s
+    n = len(s)
+    pt = 28 if n <= 24 else 24 if n <= 30 else 21
+    for r in tf.paragraphs[0].runs:
+        r.font.size = Pt(pt)
+        rpr = r._r.get_or_add_rPr()
+        rpr.set("cap", "none")
+        el = rpr.find(qn("a:ea"))
+        if el is None:
+            el = rpr.makeelement(qn("a:ea"), {})
+            rpr.append(el)
+        el.set("typeface", EA)
 
 
 def source(slide, s, y=I(9.6)):
@@ -151,9 +183,9 @@ def source(slide, s, y=I(9.6)):
 
 
 def chrome(slide, label=True):
-    text(slide, L, I(10.3), I(8), I(0.3), "KSTAR CES NOWCASTING", size=14, face=MONO, color=MUTED, spacing=60)
+    text(slide, L, I(10.15), I(8), I(0.3), "KSTAR CES NOWCASTING", size=14, face=MONO, color=MUTED, spacing=60)
     s = f"{CUR['sec'][0]} · {CUR['sec'][1]}  ·  {PAGE['n']:02d}" if (label and CUR["sec"]) else f"{PAGE['n']:02d}"
-    text(slide, W - L - I(8), I(10.3), I(8), I(0.3), s, size=14, face=MONO, color=MUTED, align=PP_ALIGN.RIGHT)
+    text(slide, W - L - I(8), I(10.15), I(8), I(0.3), s, size=14, face=MONO, color=MUTED, align=PP_ALIGN.RIGHT)
 
 
 def stat_col(slide, x, y, w, label, big, desc, big_size=66, big_color=INK, rule_top=True, desc_size=22,
@@ -162,7 +194,7 @@ def stat_col(slide, x, y, w, label, big, desc, big_size=66, big_color=INK, rule_
         rule(slide, x, y, w, color=rule_color, weight=1.25)
     eyebrow(slide, x, y + I(0.32), w, label)
     text(slide, x, y + I(0.8), w, I(1.3), big, size=big_size, face=SANS_B, color=big_color, bold=True, line=1.0)
-    text(slide, x, y + I(0.8) + Pt(big_size * 1.3), w, I(1.8), desc, size=desc_size, color=BODY, line=1.4)
+    text(slide, x, y + I(0.8) + P(big_size * 1.3), w, I(1.8), desc, size=desc_size, color=BODY, line=1.4)
 
 
 def cols(n, gap=I(0.8), x0=None, width=None):
@@ -217,18 +249,25 @@ def notes(slide, use, key, say, facts="", qa=""):
     tf.text = "\n\n".join(parts)
 
 
-def new_slide():
+def new_slide(layout="제목만"):
     PAGE["n"] += 1
-    return prs.slides.add_slide(BLANK)
+    return prs.slides.add_slide(LAY[layout])
+
+
+def drop_placeholders(slide, keep=()):
+    for ph in list(slide.placeholders):
+        if ph.placeholder_format.idx not in keep:
+            ph._element.getparent().remove(ph._element)
 
 
 def divider(k, say):
     no, name, desc, when = SECTIONS[k]
     CUR["sec"] = (no, name)
     s = new_slide()
-    eyebrow(s, L, I(3.7), I(8), f"SECTION {no}")
-    text(s, L, I(4.15), CW, I(1.5), name, size=72, face=SANS_B, bold=True, color=INK, line=1.05)
-    text(s, L, I(5.75), I(15), I(1.2), desc, size=26, color=MUTED, line=1.4)
+    drop_placeholders(s)
+    text(s, L, I(4.0), CW, I(0.5), f"SECTION {no}", size=22, color=BLUE, spacing=120, align=PP_ALIGN.CENTER)
+    text(s, L, I(4.6), CW, I(1.6), name, size=80, color=NAVY, line=1.05, align=PP_ALIGN.CENTER)
+    text(s, L, I(6.4), CW, I(1.2), desc, size=26, color=MUTED, line=1.4, align=PP_ALIGN.CENTER)
     chrome(s)
     notes(s, f"구획 전환 · 3초 · 구획 시간 {when}", f"{name}: {desc}", say)
     return s
@@ -238,42 +277,48 @@ def divider(k, say):
 
 def s_cover():
     CUR["sec"] = None
-    s = new_slide()
-    eyebrow(s, L, I(2.6), I(10), "SNU NUCLEAR ENGINEERING · THESIS TALK")
-    text(s, L, I(3.1), I(10), I(2.6), "KSTAR CES\n나우캐스팅", size=96, face=SANS_B, color=INK, bold=True, line=1.05)
-    text(s, L, I(6.3), I(9.5), I(1.4), "10 ms마다 비는 이온 온도와 회전을\n그 순간까지의 정보만으로 채운다", size=30,
-         color=BODY, line=1.35)
-    rule(s, L, I(8.6), I(9), color=BODY, weight=1.25)
-    text(s, L, I(8.85), I(9), I(0.4), "SEOUL NATIONAL UNIVERSITY", size=15, face=MONO, color=MUTED, spacing=60)
-    text(s, L, I(9.25), I(9), I(0.5), "이승상", size=22, color=INK)
-    # 오른쪽 그림: 10 ms 격자 위의 측정 점과 빈 칸 하나
-    x0, y0, step, d = I(11.6), I(4.6), I(1.15), I(0.62)
-    box(s, I(11.0), I(2.4), I(7.7), I(5.9), fill=CARD, radius=0.06)
-    eyebrow(s, I(11.6), I(2.9), I(6.5), "CES · 10 ms GRID")
-    for i in range(6):
-        cx = x0 + i * step + d // 2
-        if i == 3:
-            dot(s, cx, y0, d, WHITE, line=TI)
-            text(s, cx - I(0.4), y0 - I(0.32), I(0.8), I(0.64), "?", size=28, face=SANS_B, bold=True, color=TI,
-                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
-        elif i > 3:
-            dot(s, cx, y0, d, WHITE, line=GRAY)
-        else:
-            dot(s, cx, y0, d, INK)
-    text(s, I(11.6), I(5.3), I(3.3), I(0.5), "지금까지의 측정", size=18, color=BODY)
-    text(s, x0 + 3 * step - I(0.25), I(5.3), I(1.6), I(0.5), "지금", size=18, face=SANS_B, bold=True, color=TI)
-    text(s, x0 + 4 * step, I(5.3), I(2.4), I(0.5), "아직 없음", size=18, color=MUTED)
-    rule(s, I(11.6), I(6.35), I(6.6), color=RULE)
-    text(s, I(11.6), I(6.6), I(6.6), I(1.2), "빠른 진단 BES · ECEI · Mirnov 는\n빈 칸 없이 계속 들어온다", size=20,
-         color=BODY, line=1.4)
+    PAGE["n"] += 1
+    s = prs.slides.add_slide(LAY["제목 슬라이드"])
+    drop_placeholders(s, keep=(0, 1))
+    tf = s.shapes.title.text_frame
+    tf.text = "KSTAR CES 나우캐스팅"
+    p2 = tf.add_paragraph()
+    p2.text = "10 ms마다 비는 이온 온도와 회전을 채우기"
+    for p, pt in ((tf.paragraphs[0], 40), (p2, 30)):
+        for r in p.runs:
+            r.font.size = Pt(pt)
+            rpr = r._r.get_or_add_rPr()
+            rpr.set("cap", "none")
+            el = rpr.makeelement(qn("a:ea"), {"typeface": EA})
+            rpr.append(el)
+    sub = s.placeholders[1].text_frame
+    sub.text = "그 순간까지의 정보만으로, 미래를 쓰는 보간보다 덜 틀릴 수 있을까"
+    for r in sub.paragraphs[0].runs:
+        r.font.size = Pt(18)
+        rpr = r._r.get_or_add_rPr()
+        rpr.append(rpr.makeelement(qn("a:ea"), {"typeface": EA}))
+    tb = s.shapes.add_textbox(Inches(0.49), Inches(5.55), Inches(12.35), Inches(0.9))
+    tf = tb.text_frame
+    tf.word_wrap = True
+    for i, (line, pt) in enumerate((("Department of Nuclear Engineering, Seoul National University, Seoul, Korea", 18),
+                                    ("이승상", 18))):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.alignment = PP_ALIGN.CENTER
+        r = p.add_run()
+        r.text = line
+        r.font.size = Pt(pt)
+        r.font.color.rgb = WHITE
+        rpr = r._r.get_or_add_rPr()
+        rpr.append(rpr.makeelement(qn("a:latin"), {"typeface": "Gill Sans MT"}))
+        rpr.append(rpr.makeelement(qn("a:ea"), {"typeface": EA}))
     notes(s, "발표 0:00~0:30", "빈 칸을 미래 없이 채울 수 있는가, 하나의 질문",
           say="""안녕하십니까, 이승상입니다.
 
-오늘 발표는 질문 하나로 시작합니다. 토카막에서 이온 온도와 회전을 재는 장비가 10 ms마다 값을 내는데, 그중 빈 칸이 꽤 많습니다. 오른쪽 그림에서 물음표가 그 빈 칸입니다.
+오늘 발표는 질문 하나로 시작합니다. 토카막에서 이온 온도와 회전을 재는 장비가 10 ms마다 값을 내는데, 그중 빈 칸이 꽤 많습니다.
 
 그 칸을, 그 순간까지 들어온 정보만으로 채울 수 있을까요?
 
-"그 순간까지"가 중요한 이유는 간단합니다. 실시간으로 쓰려면, 오른쪽 회색 점들, 즉 미래 측정은 아직 없거든요.
+"그 순간까지"가 중요한 이유는 간단합니다. 실시간으로 쓰려면, 그 뒤의 측정은 아직 없거든요.
 
 결론부터 말씀드리면, 채울 수 있습니다. 다만 이온 온도와 회전은 채워지는 이유가 서로 다릅니다. 그 차이가 오늘 발표의 뼈대입니다.""",
           facts="자료: KSTAR 2022 캠페인 641개 방전, CES 10 ms 격자.",
@@ -488,7 +533,6 @@ def s_score():
 
 def s_claim1():
     s = new_slide()
-    eyebrow(s, L, I(0.75), I(10), "CLAIM 1 · ION TEMPERATURE", color=TI)
     title(s, "이온 온도는 과거만 보고도 보간보다 오차가 작음")
     x1, w1 = L, I(7.4)
     rule(s, x1, I(2.9), w1, color=TI, weight=2.0)
@@ -523,7 +567,6 @@ def s_claim1():
 
 def s_why1():
     s = new_slide()
-    eyebrow(s, L, I(0.75), I(10), "CLAIM 1 · WHY", color=TI)
     title(s, "온도가 변하는 순간은 빠른 진단에 같이 보임")
     for (x, w), (lab, big, desc, c) in zip(cols(2, gap=I(1.0)), [
         ("CORRELATION · d T_i / dt", "+0.070 / +0.078", "BES / ECEI와\n이온 온도 변화율의 상관.\n회전은 −0.006 / −0.003", TI),
@@ -550,7 +593,6 @@ def s_why1():
 
 def s_equation():
     s = new_slide()
-    eyebrow(s, L, I(0.75), I(10), "CLAIM 1 · WHAT THE NETWORK COMPUTES", color=TI)
     title(s, "신경망이 하는 일의 약 3/4이 파라미터 20개 식으로 적힘")
     box(s, L, I(2.6), CW, I(1.2), fill=TI_BG, radius=0.08)
     text(s, L, I(2.6), CW, I(1.2), "지금 온도  ≈  과거 측정의 가중 평균  +  Σ 계수 × ( 빠른 진단 − 그 진단의 최근 100 ms 평균 )",
@@ -591,7 +633,6 @@ def s_equation():
 
 def s_claim2():
     s = new_slide()
-    eyebrow(s, L, I(0.75), I(10), "CLAIM 2 · ROTATION", color=VR)
     title(s, "회전도 오차가 작지만, 이득은 과거 CES에서만 옴")
     x1, w1 = L, I(7.4)
     rule(s, x1, I(2.9), w1, color=VR, weight=2.0)
@@ -631,7 +672,6 @@ def s_claim2():
 
 def s_median():
     s = new_slide()
-    eyebrow(s, L, I(0.75), I(10), "CLAIM 2 · TYPICAL MOMENT", color=VR)
     title(s, "평범한 순간의 회전 오차는 측정 잡음이 바닥")
     # 지어낸 숫자 예시 표
     x1, w1 = L, I(8.6)
