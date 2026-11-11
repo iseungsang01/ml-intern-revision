@@ -1,6 +1,6 @@
 """KSTAR CES 나우캐스팅 발표(대본 포함). 핵플실 발표 템플릿(1조, 수정_5) 위에 짓는다.
 
-  py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v2.pptx
+  py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v3.pptx
 
 * 템플릿: 핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx 에서는 배경 모양(위쪽 세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다.
   글꼴(Pretendard · IBM Plex Mono)·색·배치는 v1 그대로.
@@ -24,7 +24,7 @@ from pptx.util import Inches, Pt
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 HERE = Path(__file__).resolve().parent
-OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v2.pptx"
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v3.pptx"
 TEMPLATE = Path(r"D:\승상 자료\대학교\4학년\2학기\핵플실\실험 3 (필라멘트)\발표준비\핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx")
 
 # 템플릿에서는 배경 모양(세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다. 글꼴·색·배치는 v1 그대로.
@@ -37,10 +37,11 @@ RULE = RGBColor(0xC9, 0xCD, 0xD3)
 GRAY = RGBColor(0xA4, 0xA9, 0xB1)
 CARD = RGBColor(0xF1, 0xF1, 0xF4)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
-TI = RGBColor(0x2F, 0x5E, 0x9E)    # 이온 온도
-VR = RGBColor(0xB9, 0x56, 0x3C)    # 회전
-TI_BG = RGBColor(0xE9, 0xF0, 0xF8)
-VR_BG = RGBColor(0xF8, 0xEC, 0xE7)
+# 글씨는 Cellfie 처럼 검정·회색만. 두 물리량도 색으로 가르지 않는다.
+TI = INK
+VR = INK
+TI_BG = CARD
+VR_BG = CARD
 
 prs = Presentation(TEMPLATE)
 _ids = prs.slides._sldIdLst
@@ -171,14 +172,13 @@ def title(slide, s, y=None, size=None):
 
 
 def source(slide, s, y=I(9.6)):
-    text(slide, L, y, CW, I(0.4), "Source: " + s, size=14, face=MONO, color=MUTED)
+    """출처 줄은 화면에 두지 않는다(발표자 노트의 '숫자와 출처'에 있다)."""
+    return None
 
 
 def chrome(slide, label=True):
-    text(slide, L, I(10.15), I(8), I(0.3), "KSTAR CES NOWCASTING", size=14, face=MONO, color=MUTED, spacing=60)
-    s = f"{CUR['sec'][0]} · {CUR['sec'][1]}  ·  {PAGE['n']:02d}" if (label and CUR["sec"]) else f"{PAGE['n']:02d}"
-    text(slide, W - L - I(8), I(10.15), I(8), I(0.3), s, size=14, face=MONO, color=MUTED, align=PP_ALIGN.RIGHT)
-
+    """아래 바닥 줄(덱 이름 · 쪽 번호)은 두지 않는다."""
+    return None
 
 def stat_col(slide, x, y, w, label, big, desc, big_size=66, big_color=INK, rule_top=True, desc_size=22,
              rule_color=BODY):
