@@ -2,8 +2,8 @@
 
   py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v2.pptx
 
-* 템플릿: 핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx 의 마스터·레이아웃·테마(위쪽 세 색 띠, 남색 제목 띠,
-  남색 1A3260 · 파랑 4590B8 · 회색 969FA7, Gill Sans MT). 한글은 Pretendard(테마 한글 글꼴 대신).
+* 템플릿: 핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx 에서는 배경 모양(위쪽 세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다.
+  글꼴(Pretendard · IBM Plex Mono)·색·배치는 v1 그대로.
 * 본문 배치 문법은 Cellfie 기말발표 v5.17 에서 왔다: 큰 숫자 · 짧은 설명 · 출처 한 줄 · 회색 카드.
 * 내용: THESIS_RESULTS.md §0 (2026-11-11)과 8쪽 논문 docs/paper/short/main_short_ko.tex 의 수치만 쓴다.
 * 발표자 노트 = 쓰임·시간 / 핵심 / 대본(발표 말투) / 숫자와 출처 / 예상 질문.
@@ -27,22 +27,20 @@ HERE = Path(__file__).resolve().parent
 OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v2.pptx"
 TEMPLATE = Path(r"D:\승상 자료\대학교\4학년\2학기\핵플실\실험 3 (필라멘트)\발표준비\핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx")
 
-SANS, SANS_B, MONO = "Gill Sans MT", "Gill Sans MT", "Gill Sans MT"
-EA = "Pretendard"                      # 한글
-NAVY = RGBColor(0x1A, 0x32, 0x60)      # 테마 accent1
-BLUE = RGBColor(0x45, 0x90, 0xB8)      # 테마 accent2
-GREEN_T = RGBColor(0x42, 0x95, 0x5F)   # 테마 accent6
-INK = NAVY
-BODY = RGBColor(0x3D, 0x3D, 0x3D)      # 테마 dk2
-MUTED = RGBColor(0x6E, 0x77, 0x80)
+# 템플릿에서는 배경 모양(세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다. 글꼴·색·배치는 v1 그대로.
+SANS, SANS_B, MONO = "Pretendard", "Pretendard", "IBM Plex Mono"
+EA = "Pretendard"
+INK = RGBColor(0x12, 0x14, 0x18)
+BODY = RGBColor(0x3A, 0x3F, 0x47)
+MUTED = RGBColor(0x6B, 0x72, 0x80)
 RULE = RGBColor(0xC9, 0xCD, 0xD3)
-GRAY = RGBColor(0x96, 0x9F, 0xA7)      # 테마 accent4
-CARD = RGBColor(0xF2, 0xF3, 0xF5)
+GRAY = RGBColor(0xA4, 0xA9, 0xB1)
+CARD = RGBColor(0xF1, 0xF1, 0xF4)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
-TI = BLUE                              # 이온 온도
-VR = GREEN_T                           # 회전
-TI_BG = RGBColor(0xE6, 0xF0, 0xF7)
-VR_BG = RGBColor(0xE5, 0xF1, 0xE9)
+TI = RGBColor(0x2F, 0x5E, 0x9E)    # 이온 온도
+VR = RGBColor(0xB9, 0x56, 0x3C)    # 회전
+TI_BG = RGBColor(0xE9, 0xF0, 0xF8)
+VR_BG = RGBColor(0xF8, 0xEC, 0xE7)
 
 prs = Presentation(TEMPLATE)
 _ids = prs.slides._sldIdLst
@@ -81,7 +79,7 @@ def _font(run, face, size, color, bold=False, spacing=None):
         if el is None:
             el = rpr.makeelement(qn(tag), {})
             rpr.append(el)
-        el.set("typeface", EA if tag == "a:ea" else face)
+        el.set("typeface", SANS if (tag == "a:ea" and face == MONO) else face)
     if spacing is not None:
         rpr.set("spc", str(spacing))
 
@@ -168,14 +166,8 @@ def title(slide, s, y=None, size=None):
     n = len(s)
     pt = 28 if n <= 24 else 24 if n <= 30 else 21
     for r in tf.paragraphs[0].runs:
-        r.font.size = Pt(pt)
-        rpr = r._r.get_or_add_rPr()
-        rpr.set("cap", "none")
-        el = rpr.find(qn("a:ea"))
-        if el is None:
-            el = rpr.makeelement(qn("a:ea"), {})
-            rpr.append(el)
-        el.set("typeface", EA)
+        _font(r, SANS_B, pt / FS, WHITE, bold=True)
+        r._r.get_or_add_rPr().set("cap", "none")
 
 
 def source(slide, s, y=I(9.6)):
@@ -265,9 +257,9 @@ def divider(k, say):
     CUR["sec"] = (no, name)
     s = new_slide()
     drop_placeholders(s)
-    text(s, L, I(4.0), CW, I(0.5), f"SECTION {no}", size=22, color=BLUE, spacing=120, align=PP_ALIGN.CENTER)
-    text(s, L, I(4.6), CW, I(1.6), name, size=80, color=NAVY, line=1.05, align=PP_ALIGN.CENTER)
-    text(s, L, I(6.4), CW, I(1.2), desc, size=26, color=MUTED, line=1.4, align=PP_ALIGN.CENTER)
+    eyebrow(s, L, I(3.7), I(8), f"SECTION {no}")
+    text(s, L, I(4.15), CW, I(1.5), name, size=72, face=SANS_B, bold=True, color=INK, line=1.05)
+    text(s, L, I(5.75), I(15), I(1.2), desc, size=26, color=MUTED, line=1.4)
     chrome(s)
     notes(s, f"구획 전환 · 3초 · 구획 시간 {when}", f"{name}: {desc}", say)
     return s
@@ -284,33 +276,24 @@ def s_cover():
     tf.text = "KSTAR CES 나우캐스팅"
     p2 = tf.add_paragraph()
     p2.text = "10 ms마다 비는 이온 온도와 회전을 채우기"
-    for p, pt in ((tf.paragraphs[0], 40), (p2, 30)):
+    for p, pt, bold in ((tf.paragraphs[0], 40, True), (p2, 28, False)):
         for r in p.runs:
-            r.font.size = Pt(pt)
-            rpr = r._r.get_or_add_rPr()
-            rpr.set("cap", "none")
-            el = rpr.makeelement(qn("a:ea"), {"typeface": EA})
-            rpr.append(el)
+            _font(r, SANS_B, pt / FS, INK, bold=bold)
+            r._r.get_or_add_rPr().set("cap", "none")
     sub = s.placeholders[1].text_frame
     sub.text = "그 순간까지의 정보만으로, 미래를 쓰는 보간보다 덜 틀릴 수 있을까"
     for r in sub.paragraphs[0].runs:
-        r.font.size = Pt(18)
-        rpr = r._r.get_or_add_rPr()
-        rpr.append(rpr.makeelement(qn("a:ea"), {"typeface": EA}))
+        _font(r, SANS, 18 / FS, BODY)
     tb = s.shapes.add_textbox(Inches(0.49), Inches(5.55), Inches(12.35), Inches(0.9))
     tf = tb.text_frame
     tf.word_wrap = True
-    for i, (line, pt) in enumerate((("Department of Nuclear Engineering, Seoul National University, Seoul, Korea", 18),
+    for i, (line, pt) in enumerate((("SEOUL NATIONAL UNIVERSITY · NUCLEAR ENGINEERING", 14),
                                     ("이승상", 18))):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
         p.alignment = PP_ALIGN.CENTER
         r = p.add_run()
         r.text = line
-        r.font.size = Pt(pt)
-        r.font.color.rgb = WHITE
-        rpr = r._r.get_or_add_rPr()
-        rpr.append(rpr.makeelement(qn("a:latin"), {"typeface": "Gill Sans MT"}))
-        rpr.append(rpr.makeelement(qn("a:ea"), {"typeface": EA}))
+        _font(r, MONO if i == 0 else SANS, pt / FS, WHITE)
     notes(s, "발표 0:00~0:30", "빈 칸을 미래 없이 채울 수 있는가, 하나의 질문",
           say="""안녕하십니까, 이승상입니다.
 
