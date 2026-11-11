@@ -1,0 +1,689 @@
+% =========================================================================
+% KSTAR CES 인과 나우캐스팅 -- 8쪽 CVPR 형식 축약판(국문).
+% 영문 축약판 main_short.tex 의 국문 대응본이다. 수치는 모두 main_short.tex 에서
+% 그대로 옮겼다. 조판은 국문 전체판(preamble_ko.tex)의 LuaLaTeX + luatexko,
+% 함초롬바탕을 따르되, 판형은 main_short.tex 의 2단 CVPR 형식을 유지한다.
+% 빌드(이 폴더에서): latexmk -lualatex main_short_ko
+% =========================================================================
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage[textwidth=6.875in,textheight=8.875in,columnsep=0.3125in,
+            top=1in,headheight=0pt,headsep=0pt,centering]{geometry}
+\usepackage{amsmath,bm}
+\usepackage{newtxmath}
+\usepackage{luatexko}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{microtype}
+\usepackage[compact]{titlesec}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,unicode]{hyperref}
+
+% ── 폰트(국문 전체판 preamble_ko.tex 와 같은 한글 서체) ──────────────────
+\directlua{
+  luaotfload.add_fallback("symfallback", {
+    "HCR Batang:mode=node;",
+    "DejaVu Sans:mode=node;",
+    "Segoe UI Symbol:mode=node;",
+    "Malgun Gothic:mode=node;",
+  })
+}
+\setmainfont{TeX Gyre TermesX}[RawFeature={fallback=symfallback}]
+\setsansfont{Latin Modern Sans}[RawFeature={fallback=symfallback}]
+\setmonofont{Consolas}[Scale=0.92]
+\setmainhangulfont{HCR Batang}[BoldFont={HCR Batang Bold},AutoFakeSlant=0.2,Scale=0.96]
+\setsanshangulfont{HCR Dotum}[BoldFont={HCR Dotum Bold},AutoFakeSlant=0.2,Scale=0.96]
+\setmonohangulfont{GulimChe}[AutoFakeBold=1.5,AutoFakeSlant=0.2,Scale=1.0116]
+
+\linespread{1.10}
+\setlength{\emergencystretch}{2em}
+\registerbreakableafter{"00B7}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{8pt plus 2pt minus 2pt}{4pt plus 1pt}
+\titlespacing*{\subsection}{0pt}{6pt plus 2pt minus 1pt}{3pt plus 1pt}
+\renewcommand{\bibfont}{\small}
+\setlength{\bibsep}{1pt plus 0.5pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{0pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+
+\renewcommand{\abstractname}{초록}
+\renewcommand{\refname}{참고문헌}
+\renewcommand{\figurename}{그림}
+\renewcommand{\tablename}{표}
+
+\newcommand{\Ti}{\ensuremath{T_i}}
+\newcommand{\Vrot}{\ensuremath{V_\mathrm{rot}}}
+\newcommand{\skillp}{\ensuremath{\mathrm{skill}_{\mathrm{PCHIP}}}}
+\newcommand{\seqv}{\texttt{seq\_v2}}
+
+\graphicspath{{../figures/}}
+
+\hypersetup{
+  pdftitle={KSTAR 10 ms 전하교환분광 결측의 인과 나우캐스팅 (축약판)},
+  pdfauthor={이승상 (Seungsang Lee)},
+}
+
+\title{\vspace{-0.3in}\large\textbf{KSTAR 10\,ms 전하교환분광 결측의 인과 나우캐스팅:
+미래 보간보다 낮은 오차의 LSTM과 그것이 계산하는 20모수 물리 필터}}
+\author{이승상 (Seungsang Lee)\\
+  {\small 서울대학교 원자핵공학과}\quad
+  {\small\texttt{lss010330@snu.ac.kr}}}
+\date{\vspace{-0.25in}}
+
+\begin{document}
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+전하교환분광(CES)은 이온온도(\Ti)와 토로이달 회전(\Vrot)을 측정하지만, KSTAR
+10\,ms 격자(641개 방전)에서 \Ti{} 표본의 8.2\%와 \Vrot{} 표본의 23.9\%가 결측이고
+\Vrot{} 행의 41.1\%는 여기에 더해 계측기 유지값이다. 결측 채움의 현직 방법인 보간은
+다음 측정을 읽는다. 우리는 빔방출분광, 전자사이클로트론방출영상, Mirnov 코일과 과거
+CES를 읽는 엄격히 인과적인 2분기 LSTM으로 결측을 채우며, 그 \Vrot{} 분기는 고속
+진단과 배선되지 않는다. 두 모집단은 \Ti{} 피팅 실패 0.53\%를 결측으로 처리하거나(컷)
+그대로 둔다(포함).
+\emph{이온온도:} PCHIP 보간 대비 skill은 $+0.17\sim+0.26$(컷), $+0.23\sim+0.32$(포함)로
+네 held-out 분할 모두에서 95\% 구간이 0을 제외하고, 반복 5겹 재현에서는
+$[+0.19, +0.25]$ / $[+0.19, +0.31]$이다. 컷 모집단에서 그 여유는 고속 진단에서
+오며(윈도 대조군 절제), 신경망에서 읽어 내어 처음부터 학습한 20모수 물리 필터는 컷
+4/4 분할에서 그 PCHIP 대비 skill의 72--78\%를 유지한다(문턱 0.70).
+\emph{회전:} 새 분할 8벌에 대한 두 단계 bootstrap에서 PCHIP 대비 skill은
+$[+0.07, +0.70]$(컷), $[+0.05, +0.68]$(포함)로 0을 제외하며, 그 이득은 CES 이력만이
+실어 나른다. 고속 채널과 $d\Vrot/dt$의 상관은 $r = -0.006$ / $-0.003$이고, 물리 필터의
+중앙값 오차는 persistence의 0.94--1.00$\times$로 10\,ms 광자 바닥에 있다. 나우캐스터
+자신의 \Vrot{} 중앙값 오차는 persistence보다 크다(4.3 대 3.7\,km/s). 두 타겟의 집계
+skill은 꼬리 통계이며, 모든 결과는 한 장치·한 캠페인의 것이다.
+\end{abstract}
+
+% =========================================================================
+\section{서론}
+\label{sec:intro}
+
+이온온도 \Ti{}와 토로이달 회전 \Vrot{}은 페데스탈 구조, ELM 거동, 고성능 운전 영역
+접근을 지배한다. 두 물리량은 전하교환분광(CES)~\citep{Ko2010ChargeExchange}으로
+측정되며, CES는 전하교환 선의 도플러 확장에서 \Ti{}를, 도플러 이동에서 \Vrot{}을
+추정한다. CES는 광자를 적분해야 하므로 느리고 간헐적으로 결측된다. KSTAR 10\,ms
+격자에서 \Ti{} 관측의 8.2\%, \Vrot{} 관측의 23.9\%가 \emph{서로 독립적으로} 결측되고,
+\Vrot{} 행의 41.1\%는 여기에 더해 직전 값을 비트 단위로 반복하므로 독립적인 \Vrot{}
+측정을 담은 격자는 35.0\%뿐이다. 결측은 저신호 구간, ELM, 천이에 몰린다. 즉 무작위적이지
+않은 결측(MNAR)이다~\citep{Little2002StatisticalAnalysis}. 한편 빔방출분광(BES),
+전자사이클로트론방출영상(ECEI), Mirnov 코일은 같은 플라즈마를 결측 없이 보지만, 어느
+것도 \Ti{}나 \Vrot{}을 측정하지 않는다. 본 논문의 질문은 이것이다. \emph{CES가 결측된
+10\,ms 시점에서, 동시각 고속 진단과 불규칙한 과거 CES 이력은 CES 단독의 보간이 복원하지
+못하는 것을 복원할 수 있는가?}
+
+\paragraph{의도적으로 어려운 기준.}
+비교 대상은 CES 채널의 \emph{오프라인} 보간(선형, 단조 3차 PCHIP~\citep{fritsch1980},
+가우시안 과정)으로, 타겟 시점 양쪽의 이웃을 미래까지 포함해 읽는다. 모델은 엄격히
+인과적이다. 미래를 쓰는 보간보다 오차가 낮은 인과 추정기는 CES 시계열 자체에 없는
+정보를 써야 한다. 배치 가능한 가장 강한 경쟁자는 과거만 쓰는 평활기이므로 \emph{인과}
+GP 팔을 따로 보고한다.
+
+모든 결과는 두 공동 1차 모집단에서 보고한다. \emph{컷}은 3\,keV를 넘는 \Ti{} 행
+0.53\%(스펙트럼 피팅 실패)를 모든 팔에서 결측으로 처리하고, \emph{포함}은 그대로
+둔다(\S\ref{sec:data}).
+
+\paragraph{주장.}
+논문의 주장은 측정한 물리량마다 하나씩, 둘이다.
+\begin{enumerate}\setlength{\itemsep}{1pt}
+  \item \textbf{이온온도: 인과 나우캐스트가 비인과 보간보다 오차가 낮고, 그것이
+        계산하는 식이 적힌다} (\S\ref{sec:model:eq},
+        \S\ref{sec:res:headline}--\S\ref{sec:res:eq}). 미래를 쓰는 PCHIP 대비 skill은
+        네 held-out 분할에서 $+0.17\sim+0.26$(컷), $+0.23\sim+0.32$(포함)이고,
+        사전등록 반복 5겹 재현(100회 실행)의 겹 단위 겹침 보정 구간으로는
+        $[+0.19, +0.25]$ / $[+0.19, +0.31]$로 0을 제외한다. 인과 GP 대비로는
+        $+0.08\sim+0.17$(8/8 셀에서 구간이 0 위)이고, 오프라인 GP 대비로는
+        $-0.05\sim+0.11$(8셀 중 7셀에서 구간이 0 포함)이다. 컷 모집단에서 여유는 BES와
+        ECEI에서 온다(이를 제거하면 윈도 대조군이 PCHIP 아래로 떨어지며, 짝지은 변화
+        $-0.25\sim-0.43$, 4/4. 포함 모집단에서는 이력만 쓰는 모델도 $+0.15\sim+0.23$을
+        유지하는데, 이는 스파이크 강건성 성분이다). 사전등록 4단계 판독은 \Ti{} 분기를
+        20모수 물리 필터로 적고, 처음부터 학습한 그 식은 컷 4/4 분할에서 백본의 PCHIP
+        대비 skill의 72--78\%를 유지한다(등록 문턱 0.70).
+  \item \textbf{회전: 평균 오차도 낮지만, 그 이득은 CES 이력에서만 온다}
+        (\S\ref{sec:model:physics}, \S\ref{sec:res:asym}, \S\ref{sec:res:dual}). 새
+        5겹 분할 8벌에 대한 등록된 두 단계 bootstrap에서 PCHIP 대비 skill은
+        $[+0.07, +0.70]$(컷), $[+0.05, +0.68]$(포함)로 둘 다 0을 제외한다. 겹 단위 겹침
+        보정 구간 $[-0.02, +0.41]$(컷)은 여전히 0을 포함한다. 고속 채널과 $d\Vrot/dt$의
+        상관은 $r = -0.006$(BES)·$-0.003$(ECEI)으로, $d\Ti/dt$와의 $+0.070$·$+0.078$에
+        비해 0에 가깝다. 100\,Hz Mirnov 값은 원시 표본 하나이고(코일 24/24), 원시
+        2\,MHz Mirnov 스트림의 특징은 skill을 $-0.128$ $[-0.544, -0.105]$만큼
+        바꾼다(컷, 학습 방전 6개·시험 방전 3개). 중앙값에서는 별도의 유지-또는-점프
+        물리 필터의 persistence 대비 오차 비가 0.94--1.00(3/4 분할에서 구간이 1 포함)으로
+        10\,ms 광자 바닥에 있고, 나우캐스터 자신의 중앙값 행은 persistence보다
+        크다(4.3 대 3.7\,km/s).
+\end{enumerate}
+프로토콜은 사전등록되었다. 평가---두 공동 1차 모집단, shot 군집 paired bootstrap, 겹침
+보정 반복 교차검증 구간, 두 단계 bootstrap(\S\ref{sec:eval})---는 다른 분야의 표준
+조각을 조립한 것으로, 주장이 아니라 방법으로 기술한다. 여기서 생략한 모든 절제 실험,
+민감도 행, 유도는 이 논문의 전체판(보충 자료)에 있다.
+
+% =========================================================================
+\section{관련 연구}
+\label{sec:related}
+
+\paragraph{결측 채움과 기준선.} GP 회귀~\citep{rasmussen2006}는 핵융합 프로파일
+피팅의 표준 도구로~\citep{chilenski2015,michoski2024}, KSTAR CES \Ti{} 프로파일에도
+적용되었다~\citep{Kim2024KineticProfile}. PCHIP~\citep{fritsch1980}은 계단에서 스플라인
+진동을 피한다. 점수는 Murphy skill~\citep{murphy1988}이다. persistence 기준은 핵융합
+프로파일 예보~\citep{Abbate2025Combining}와 우주기상~\citep{Owens2013Persistence}에
+선례가 있다.
+
+\paragraph{신경망 진단 추론.} NN-CES는 빔 변조 없이 KSTAR CES 스펙트럼에서 \Ti{}와
+회전을 추출한다~\citep{Lee2026NeuralNetworkbased}. 가장 가까운 선행 연구이며 해당
+시점의 측정 스펙트럼을 필요로 한다. \emph{NN-CES는 측정된 시점을 더 잘 읽고, 본 연구는
+측정되지 않은 시점을 채운다.} \citet{Lin2024PredictionPlasma}는 EAST에서 X선 결정
+분광기를 \Ti{}와 회전으로 사상하는데, 같은 광자 채널의 동시각 사상이다.
+RTCAKENN~\citep{Shousha2023MachineLearningbased}은 운동 프로파일을 실시간으로 재구성하며
+Thomson/CER 입력의 탈락을 견딘다. 거기서 결측은 강건성 조건이고, 여기서는 타겟 자신의
+희소성이 문제다.
+
+\paragraph{교차 진단 재구성.} Diag2Diag는 DIII-D에서 동시각 진단으로 Thomson
+$T_e$/$n_e$를 합성하며~\citep{Jalalvand2025MultimodalSuperresolution} 기억 없는 MLP를
+쓴다. 관련 연구는 COMPASS에서 Thomson을 조밀화하고~\citep{Imrek2026TemporalSuperresolution},
+TCV에서 확장 칼만 필터로 Thomson 간격을 인과적으로 채우며~\citep{Pastore2023ModelBased},
+EAST의 $T_e$와 $Z_\mathrm{eff}$를 복원하고~\citep{Wang2025TimeSeries,Jia2026TimeSeries},
+HL-3에서 채널을 마스킹한다~\citep{Yang2026FusionmaeSelfsupervised}. 이들의 대상은 전자
+채널이나 일반적인 조밀 채널이다. 본 연구는 이 계보를 희소한 이온 채널로, 타겟 자신의
+불규칙한 과거를 조건으로 하는 인과 추정으로, 사전등록 기준선에 대한 타겟별 검정으로
+확장한다. 우리는 이 결합의 선례를 찾지 못했으며, ``찾지 못함''은 ``없음''이 아니다.
+
+\paragraph{방법의 계보.} 관측 마스크는 GRU-D~\citep{Che2018RecurrentNeural}를, 사전등록은
+registered report~\citep{Nosek2014RegisteredReports}를 따른다. 겹침 보정은
+\citep{Nadeau2003Inference}의 것이고, 학습 반복을 바깥 수준으로 둔 방전 군집 bootstrap은
+계층 bootstrap이다~\citep{Saravanan2020Hierarchical,Sellam2022MultiBERTs,Goddard2013Verification}.
+식 유지 검정은 \citep{Maheswaranathan2020HowRecurrent}의 것을 비열등성
+형식~\citep{Rothmann2003Design}으로 쓴 것이고, Student-$t$ 측정 모형은 강건 칼만
+필터링~\citep{Roth2013StudentT}으로 토카막 선례가 있다~\citep{Rath2022DataAugmentation}.
+
+% =========================================================================
+\section{데이터와 문제 설정}
+\label{sec:data}
+
+10\,ms 격자에 정렬한 KSTAR 방전 파일 641개(shot 30801--32751), 총 247{,}207행을
+사용한다. 각 행은 BES~\citep{Nam2012AnalysisEdge} 9채널, ECEI~\citep{Yun2010DevelopmentKstar}
+4채널, Mirnov 코일 2채널, 시간, 두 CES 타겟을 담는다. \Ti{}는 행의 8.2\%, \Vrot{}은
+23.9\%에서 서로 독립적으로 결측되므로 손실은 타겟별로 마스킹한다(그림~\ref{fig:missing}).
+행은 $\geq 0.5$\,s 간극에서 연속 세그먼트로 묶이며, 어떤 팔도 간극을 넘지 않는다.
+
+\paragraph{유지된 \Vrot{} 값.} 관측된 \Vrot{} 값의 54\%는 직전 관측의 비트 단위 반복이다
+(최대 1{,}214행 연속, 641개 중 499개 파일). \Vrot{}의 고유 측정 주기가 격자보다 느리기
+때문이며, \Ti{}의 유지값은 226{,}991행 중 1행이다. 유지값은 \emph{모든 곳에서}
+제거된다---타겟, 이력 입력, 정규화 통계, 모든 기준선의 앵커---따라서 어떤 팔도
+forward-fill로 공짜 점수를 받지 않는다.
+
+\paragraph{피팅 실패와 두 모집단.} \textbf{\Ti{} 1{,}197행(0.53\%)이 3\,keV를
+초과한다}(274개 방전의 951개 런, 런의 85\%는 단일 행). 이는 실패한 스펙트럼 피팅이며
+보간 앵커도 오염시킨다. 우리는 \textbf{두 공동 1차 모집단}을 사전등록했다.
+\emph{컷}($>$3\,keV를 모든 팔에서 결측 처리)과 \emph{포함}(컷 없음)이다. 두 분석 집합을
+두는 비열등성 시험의 형식을 따라~\citep{CPMP2000Switching,ICH2019E9R1}, 주장은 두
+모집단 모두에서 성립할 때만 조건 없이 진술한다. 임계값은 2.5--4\,keV에서 결과를 바꾸지
+않는다(평균 \Ti{} skill $+0.230$·$+0.232$, 3\,keV에서는 $+0.236$).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{fig_missing}
+  \caption{10\,ms 격자의 CES 결측. \Ti{}와 \Vrot{}은 서로 독립적으로 결측되며(8.2\% /
+  23.9\%), 유지값까지 세면 격자의 65.0\%가 독립적인 \Vrot{} 정보를 갖지 않는다.}
+  \label{fig:missing}
+\end{figure}
+
+% =========================================================================
+\section{모델}
+\label{sec:model}
+
+주 모델 \seqv{}는 357{,}570 파라미터의 인과 시퀀스 나우캐스터다. 이 절은 무엇을
+추정하는지, 왜 입력이 각 타겟에 그렇게 배선되는지, 모델이 어떤 시간 척도 위에 놓이는지,
+학습된 신경망이 어떤 식을 계산하는지를 정한다. 전체판(보충 자료)은 여기에 더해 윈도
+대조군의 전체 구조, 해석 가능한 사다리 칸, 최적화 설정의 세부, 중간 모수 띠를 포함한
+단계별 판독을 싣는다.
+
+\subsection{추정 대상, 손실, 그리고 환원 불가능한 하한}
+\label{sec:model:target}
+격자 시각 $t$에서 모델은 정규화 타겟 $y_t=[\Ti,\Vrot]_t$를 $x_{\le t}$와 타겟별 관측
+마스크 $m_{t,c}\in\{0,1\}$로부터 추정한다:
+\begin{multline}
+  \mathcal{L}
+  = \frac{\sum_{t,c} m_{t,c}\,(\hat y_{t,c}-y_{t,c})^2}{\sum_{t,c} m_{t,c}}\\
+  + \lambda\,\overline{\mathrm{ReLU}(z_0-\hat y_{t,\Ti})},\qquad \lambda = 0.1.
+  \label{eq:loss}
+\end{multline}
+첫 항의 최소화 해는 $\mathbb{E}[y_t\mid x_{\le t}]$이고, 둘째 항은 정규화 영점 $z_0$
+아래의 \Ti{} 예측을 억제한다. 한 타겟만 관측된 행도 그 타겟을 감독한다(두 타겟을 모두
+요구하는 필터는 라벨 행의 $\approx$28\%를 버린다). 타겟 자체가 잡음
+$\sigma_\mathrm{meas}$를 지닌 광자 적분 피팅이므로, 완벽한 물리 추정도
+$\mathrm{RMSE}^2=\sigma_\mathrm{meas}^2+b^2$를 기록한다. 차분 추정기로 잰 컷 모집단 \Ti{}의
+$\sigma_\mathrm{meas}$는 46.4--129.9\,eV로 백본의 157.8\,eV와 같은 자릿수이고, 4차 차분
+제곱질량의 46.6\%(\Vrot{}은 65.6\%)가 상위 1\%의 한 스텝 변화에 있다. 즉
+식~\eqref{eq:loss}는 \emph{꼬리 통계}다(\S\ref{sec:res:dual}).
+
+\subsection{두 보존식이 입력 라우팅을 정한다}
+\label{sec:model:physics}
+이온 에너지와 토로이달 각운동량은 다음을 따른다.
+\begin{align}
+  \partial_t\bigl(\tfrac{3}{2}n_i T_i\bigr) + \nabla\!\cdot\!\mathbf{q}_i
+    &= Q_{ei}\,(T_e-T_i) + S_i,
+  \label{eq:energy}\\
+  \partial_t\bigl(n_i m_i \langle R^2\rangle \omega_\varphi\bigr)
+    + \nabla\!\cdot\!\Pi_\varphi
+    &= T_\mathrm{NBI} + T_\mathrm{NTV} + T_\mathrm{int} + \cdots
+  \label{eq:momentum}
+\end{align}
+두 식 모두 \emph{변화율}을 구속하므로, 물어야 할 것은 고속 진단이 $d\Vrot/dt$와
+상관되는가이다. 표~\ref{tab:torque}는 식~\eqref{eq:momentum}의 각 항을 우리가 보유한
+채널에 대조한다. 도달 가능한 유일한 항인 난류 운동량 유속은 BES가 밀도요동으로 보며,
+측정값은
+\[
+  r(\mathrm{BES},d\Vrot/dt) = -0.006, r(\mathrm{ECEI},d\Vrot/dt) = -0.003
+\]
+이다. 에너지식의 $d\Ti/dt$에서는 $+0.070$과 $+0.078$이다(값 수준: \Ti{} $+0.341$,
+$+0.311$, \Vrot{} $+0.027$, $+0.005$). 같은 측정이 에너지식의 결합은 잡으므로, 회전의
+결과는 방법의 한계가 아니다. $T_\mathrm{NBI}$가 없고 $T_\mathrm{NTV}$가 닫혔으며
+$T_\mathrm{int}$가 도달 불가이므로, 우리 입력에서 식~\eqref{eq:momentum}을 거쳐 \Vrot{}에
+닿는 경로는 없다. 그래서 분기를 인코더에서 나눈다. \Ti{}의 경로는 충돌성 전자--이온
+결합 $Q_{ei}(T_e-T_i)$이며, ECEI가 $T_e$를, BES가 $n_e$ 구조를 공급한다.
+
+\begin{table}[t]
+  \centering
+  \caption{식~\eqref{eq:momentum}의 항별 감사(641개 방전 전수).}
+  \label{tab:torque}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lll}
+    \toprule
+    항 & 우리 데이터에 있는가 & 판정 \\
+    \midrule
+    $\partial L/\partial t$ & 연속 관측쌍 & 측정됨 \\
+    $T_\mathrm{NBI}$ (빔 토크) & 0-D 채널 없음 & 부재 \\
+    $T_\mathrm{NTV}\sim\delta B^2$ & Mirnov, 100\,Hz 데시메이트 & 음성 종결 \\
+    $\nabla\!\cdot\!\Pi_\varphi$ (난류 유속) & BES 밀도요동 & 측정됨, $r\approx0$ \\
+    $T_\mathrm{int}$ (잔여응력) & $\nabla T_i$ 필요, 스칼라만 보유 & 도달 불가 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{시간 척도}
+\label{sec:model:scales}
+격자 간격 $\Delta t=10$\,ms에서 $f_\mathrm{Nyq}=1/(2\Delta t)=50$\,Hz다. 모드 회전은 kHz
+대역에 있으므로(이 데이터셋의 가장자리 조화 진동은 약 4와 8\,kHz), 반앨리어싱 없이
+100\,Hz로 데시메이트한 $dB/dt$는 그것을 담을 수 없다. Mirnov의 lag-1 자기상관
+$-0.009$(BES $+0.568$)가 이를 확인한다. 전자--이온 평형화 시간
+$\tau_\mathrm{eq}\simeq (m_i/2m_e)\,\tau_e$는 Braginskii
+$\tau_e = 3.44\times10^{5}\,T_e^{3/2}/(Z\,n_e\ln\Lambda)$로부터
+$T_e=0.5$--3\,keV, $n_e=2$--$5\times10^{19}$\,m$^{-3}$에서 8.3--305\,ms이고, 관측된 \Ti{}
+중앙값 593\,eV 근방에서는 8--59\,ms다. 측정된 인과 문맥의 포화점은 약 50\,ms로 같은
+자릿수다(자릿수 수준의 정합성이며 $n_e,T_e$의 측정은 아니다). 자기상관 $1/e$ 시간은
+\Ti{}(159\,ms), BES(161), ECEI(147)에서 일치하지만, \Vrot{}은 유지값을 빼면 16\,ms,
+넣으면 300\,ms를 넘는다. \Vrot{}의 완화 시간은 이 데이터셋에서 측정할 수 없다.
+
+\subsection{전체격자 인과 시퀀스 백본}
+\label{sec:model:backbone}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.8\textwidth]{fig_arch_seq_v2_ko}
+  \caption{격자 행 $t$ 하나에 대한 \seqv{}. 입력 22채널(고속 15, shot별 $z$; $\Delta t$;
+  타겟별 이월값·경과시간·관측 플래그)이 두 인과 LSTM으로 들어간다. \Ti{} 분기는 22채널
+  전부를 읽고(2층, 160 유닛), \Vrot{} 분기는 느린 7채널만 읽으며(1층, 64 유닛), 각각
+  LayerNorm과 Linear--GELU--Linear로 끝난다. 고속 채널에서 \Vrot{}으로 가는 붉은 점선
+  경로는 구조상 존재하지 않는다. 총 357{,}570 파라미터.}
+  \label{fig:arch}
+\end{figure*}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig_lstm_cell_ko}
+  \caption{LSTM 셀 하나(\Ti{} 분기 1층, 160 유닛).
+  $c_t = f_t \odot c_{t-1} + i_t \odot g_t$이므로 $\partial c_t / \partial c_{t-1} = f_t$이고
+  기억 길이는 $f$가 정한다. 보라색: 동결 가중치에서 실측한 값(기하평균 $f$
+  0.465--0.482, 기억 1.3스텝; $\tau > 5$스텝 유닛 320개 중 0). 붉은색: 학습 중 Mirnov
+  입력 열이 자라는 자리(forget 게이트 행, 0.58 $\to$ 0.97; BES는 0.59 $\to$ 0.71).}
+  \label{fig:lstmcell}
+\end{figure*}
+
+고속 진단에는 결측이 없으므로, \seqv{}는 연속 세그먼트의 입력이 완전한 모든 행을 라벨
+유무와 무관하게 맥락으로 유지한다(그림~\ref{fig:arch}, 셀은 그림~\ref{fig:lstmcell}).
+각 스텝은 엄격히 인과적인 22개 채널을 담는다. 그 방전 자신의 평균·분산으로 표준화한
+고속 채널 15개, $\log(1{+}\Delta t_\mathrm{prev})$, 그리고 타겟별로 $t$ 이전 행에서 이월된
+마지막 관측값, $\log(1{+}\text{경과시간})$, 과거 관측 존재 플래그다. \Ti{} 분기는 전부를
+읽고, \Vrot{} 분기는 고속이 아닌 7개 채널만 읽는다. 이것이 \S\ref{sec:model:physics}의
+구현이다. 분기가 인코더에서 나뉘므로 고속 정보를 \Vrot{} 헤드로 나르는 공유 순환 상태는
+없다. 출력은 행별 정규화 $[\Ti,\Vrot]$이며, 모든 라벨 행에 대해 식~\eqref{eq:loss}로
+학습한다(AdamW, $\eta=10^{-3}$, weight decay $10^{-4}$, 배치 16 세그먼트, clipping 1.0,
+최대 30 epoch의 조기 종료). 분할은 파일 단위이고 정규화는 학습 파일 전용이며, 타겟 행은
+입력에 들어가지 않는다. 모델이 과거로 닿는 범위는 고정 윈도가 아니라 세그먼트 전체다.
+
+\paragraph{윈도 대조군과 관문.} 대조군(201{,}258 파라미터)은 각 모달리티를 직전 $W{=}2$
+행 위의 전용 시간 인지 1-D CNN으로 인코딩하고, CES 이력을 양방향 GRU로 읽은 뒤 타겟마다
+하나씩의 멀티헤드 어텐션 readout으로 풀링한다. 어텐션은 하드 마스킹되어 그 타겟이 실제로
+측정된 행에만 질량을 둔다. 그 \Vrot{} 헤드도 이력과 시간만 융합한다. 전체격자
+프레이밍은 분할 $\times$ 초기화 시드의 $4\times4$ 격자에 대한 사전등록 4조건 관문으로
+채택되었다. 짝지은 \Ti{} skill은 16/16 실행에서 양수이고, 합산하면 $+0.081$
+$[+0.067, +0.096]$이다. 이 프레이밍이 얻는 것은 도달 범위다. 인과 GP 대비 skill은
+대조군이 $+0.041$(컷, 3/4 분할에서 구간이 0 포함), 백본이 $+0.08\sim+0.17$이다.
+
+\paragraph{크기, 모델군, 비용.} persistence에서 출발해 유계 tanh 잠재를 더하는 해석 가능한
+칸(21{,}498 파라미터, 백본의 6\%)의 백본 대비 짝지은 \Ti{} skill은 컷에서 평균
+$+0.002$(모든 구간이 0 포함), 포함 모집단에서 $-0.194$다. \Ti{} 인코더 폭을 26$\times$
+범위로 넓히면 평균 \Ti{} skill은 $+0.230\sim+0.236$(컷)이고, 초기화 네 개를 평균하면
+짝지은 $+0.020$으로 사전등록 0.02 띠 위에 놓인다. 문맥은 5스텝 $=$ 50\,ms에서 포화하며,
+거기서 인과 GP 대비 skill은 $+0.104$ $[+0.079, +0.128]$이다. 배치 16은 학습 블록 452개
+전부에서 정확히 계산한 경사 잡음 척도
+\begin{gather}
+  B_\mathrm{simple} = \frac{\operatorname{tr}\Sigma}{\lVert G\rVert^2},\qquad
+  G = \tfrac{1}{N}\textstyle\sum_i g_i,\nonumber\\
+  \operatorname{tr}\Sigma = \tfrac{1}{N}\textstyle\sum_i \lVert g_i\rVert^2 - \lVert G\rVert^2
+  \label{eq:bsimple}
+\end{gather}
+로 점검했다. 초기값 이후 중앙값은 33.6 블록(범위 6.0--61.4)이므로 배치 16은 잡음 척도의
+절반쯤에 있고, 첫 epoch 이후 블록 하나의 그래디언트 에너지 가운데 86--98\%가 잡음이다.
+상태 유지 스텝 하나의 비용은 CPU에서 중앙값 0.97\,ms, p99 1.49\,ms다.
+
+\subsection{신경망이 계산하는 식}
+\label{sec:model:eq}
+동결된 \seqv{} 체크포인트 30벌에 대한 사전등록 판독에서 가중치 크기는 안정된 정보를
+주지 않았다(첫 층 열 노름은 고속 채널 15개에서 평평하고, 채널별 순위는 분할 간에
+재현되지 않는다). 반면 입출력 응답은 정보를 준다. \Ti{} 출력은 과거 관측 \Ti{}의 지수가중
+평균에 고속 채널에 대한 동시각 응답을 더한 것이고, forget 게이트의 기억은 격자 1.3
+스텝이다. 판독은 등록된 네 단계로 진행했다.
+\emph{(1) 동결 행:} 맞춤 모수가 없는 이동 평균 하나가 persistence 대비 백본 skill의
+73--82\%(컷)를 내고, 10\,ms 증분 15개에 대한 ridge 선형 항을 더하면 77--85\%가 된다(4/4
+분할이 문턱 0.75 이상).
+\emph{(2) 학습된 증분 형태:} 같은 식을 처음부터 학습하면 PCHIP 대비 skill의 50--66\%만
+유지해 문턱 0.70에 못 미치고, 교차항은 $0.001$ 미만을 더한다.
+\emph{(3) 야코비안:} 동결된 TEST 행 전부에서 백본의 고속 채널 응답은
+${\approx}100$\,ms 고역 통과(현재값에서 직전 10스텝 평균을 뺀 것)이고, 이득은 $2\sigma$까지
+평탄하다가 $3\sigma$ 너머에서 꺼지며 직전 증분에 의존하지 않는다. 빠진 것은 상태 의존
+항이 아니라 형태였다.
+\emph{(4) 교정된 형태}를 동일한 프로토콜로 처음부터 학습한다:
+\begin{gather}
+  \hat y_t = m_t + \sum_{c=1}^{15} a_c\, d_{c,t}\,
+     \sigma\!\Bigl(\frac{\theta-|d_{c,t}|}{0.5}\Bigr) + b_0,
+  \label{eq:b28h}\\
+  d_{c,t} = x_{c,t} - \overline{x}_{c,\,t-10..t-1},
+  \nonumber\\
+  m_t = m_{t-1} + K(s)\,(y^\mathrm{obs} - m_{t-1}),
+  \nonumber\\
+  K(s) = K_\infty + (K_0 - K_\infty)\,e^{-s/s_K}.
+  \label{eq:gain}
+\end{gather}
+여기서 $m_t$는 \Ti{} 측정이 새로 들어올 때만 갱신되고, $s$는 직전 측정 이후의 공백이며,
+$\sigma(\cdot)$는 로지스틱 함수이고, $d_{c,t}$와 $\theta$는 방전별 표준편차 단위다.
+세그먼트의 첫 관측은 그대로 받는다($K=1$). 20개 모수는 이득 상수 셋, 고속 채널마다의
+이득 $a_c$, 문턱 $\theta$, 오프셋 $b_0$이다. 컷 네 분할에서 학습된 값은 새 측정 직후
+$K_0 = 0.27$--$0.30$, 긴 공백 뒤 $K_\infty = 0.48$--$0.53$, 전이 $s_K = 39$--$47$\,ms,
+$\theta = 2.9$--$3.0\sigma$, $\sum a_{\mathrm{BES}} = +48\sim+53$,
+$\sum a_{\mathrm{ECEI}} = +44\sim+50$\,eV/$\sigma$다. 물리적으로 읽으면, 기다린 시간이
+길수록 새 CES 표본을 더 믿는 칼만형 관측 필터에, 각 고속 채널의 100\,ms 기준선 대비
+편차에 대한 선형 응답을 $3\sigma$ 너머의 이상치에서 차단한 항을 더한 것이다. 이 식의 백본
+skill 유지는 \S\ref{sec:res:eq}에 있다. 이는 모델에 대한 측정이며, 헤드라인 수치는 여전히
+백본의 것이다.
+
+% =========================================================================
+\section{평가 방법론}
+\label{sec:eval}
+
+\paragraph{지표와 기준선.} 오차는 물리 단위로 타겟별로 계산하며, 1차 점수는
+$\skillp = 1 - \mathrm{MSE}_{\mathrm{model}}/\mathrm{MSE}_{\mathrm{PCHIP}}$(0 = 오차가 같음)다.
+모든 팔은 동일한 (파일, 행) 집합에서 채점된다. persistence와 국소 AR은 인과적이고,
+선형·PCHIP·오프라인 GP(Matérn-3/2 + 백색잡음, 최근접 16+16 이웃, 표본별 주변우도 선택)는
+미래를 읽는다. 인과 GP는 같은 GP를 과거 이웃 16개로 제한한 것이다. 미래 이웃이 없는
+곳에서는 보간이 persistence 값을 예측하는데(채점된 \Ti{} 행의 0.3--0.4\%, 그러나
+\Vrot{} 행의 40--44\%), 따라서 \Vrot{}의 ``PCHIP 대비''는 5분의 2가 ``persistence
+대비''다.
+
+\paragraph{분할과 사전등록.} 파일은 네 시드(42, 1, 7, 123)로 train/val/test에 분할된다.
+test 파일은 어떤 아키텍처 탐색보다 먼저 예약되었고 모델 선택 중에 읽지 않는다. 표준
+test 셋은 96개 shot의 \Ti{} 32{,}589행과 60개 shot의 \Vrot{} 10{,}463행이다(컷).
+``사전등록''은 한 배치의 가설·판정 규칙·수치 예측을 실행 전에 저장소에 커밋했다는 뜻이며,
+제3자 등록소는 없다.
+
+\paragraph{구간.} 표본별 짝지은 제곱오차 차이를 shot 단위로 집계하고 shot 전체를 재표본한다
+(10{,}000회). 결과는 95\% 구간이 0을 제외하는지와 함께 보고한다. 네 분할은 학습 방전
+대부분을 공유하므로, 백본을 639개 방전의 shot 단위 반복 5겹 교차검증으로 다시
+돌렸다(반복 10회, 100회 실행, 반복마다 모든 방전을 한 번씩 시험).
+\emph{겹 단위}: Nadeau--Bengio 구간
+$\bar S \pm t_{0.975,n-1}\sqrt{(1/n + n_{\mathrm{test}}/n_{\mathrm{train}})\,s^2}$~\citep{Nadeau2003Inference}.
+\emph{합산}: 한 반복의 test 다섯 겹을 이어 붙여 하나의 skill로 채점하고, 반복 하나를 먼저
+뽑은 뒤 그 반복의 방전을 다시 뽑는 두 단계 bootstrap을 규칙 등록 이후 실행한 반복 8회에
+적용한다. 이 합산 판독이 판정 기준으로 지명되었다. 교차 재표집은 분산을
+과대추정하므로~\citep{Owen2007Pigeonhole,Gallas2009Framework} 구간은 보수적이다.
+
+% =========================================================================
+\section{결과}
+\label{sec:results}
+
+\subsection{RMSE 사다리}
+\label{sec:res:ladder}
+표~\ref{tab:ladder}는 표준 test 분할의 물리 단위 RMSE다. 미래를 읽지 않는 방법 가운데
+\seqv{}의 RMSE가 가장 낮아 인과 GP보다 4\%(\Ti)와 18\%(\Vrot) 낮고, 선형·PCHIP 보간보다도
+낮다. 잡음 낀 앵커를 평균하는 오프라인 GP가 \Ti{} RMSE가 더 낮은 유일한 팔이다(153.8 대
+157.8).
+
+\begin{table}[t]
+  \centering
+  \caption{RMSE. 시드 42 test 분할, 컷 모집단, 진짜 측정만($n = 32{,}589$ \Ti{},
+  $10{,}463$ \Vrot{}). 아래쪽 행은 미래를 읽는다. 포함 모집단: \seqv{} 363.0 / 23.7,
+  PCHIP 412.4 / 30.2, 인과 GP 394.6 / 28.8, persistence 478.0 / 33.4.}
+  \label{tab:ladder}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{llrr}
+    \toprule
+    팔 & 정보 & \Ti{} (eV) & \Vrot{} (km/s) \\
+    \midrule
+    \textbf{\seqv{}} & 고속 + 과거 CES, 세그먼트 & \textbf{157.8} & \textbf{23.6} \\
+    윈도 대조군 & 고속 + 과거 CES 2행 & 169.2 & 26.1 \\
+    인과 GP & 과거 CES 16개 & 164.3 & 28.8 \\
+    Persistence & 마지막 관측 CES & 197.2 & 33.4 \\
+    AR (국소) & 과거 CES & 472.2 & 51.0 \\
+    \midrule
+    GP (오프라인) & 과거 + 미래 CES & 153.8 & 24.7 \\
+    선형 보간 & 과거 + 미래 CES & 169.8 & 29.0 \\
+    PCHIP & 과거 + 미래 CES & 173.6 & 30.2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{헤드라인과 재현}
+\label{sec:res:headline}
+
+\begin{table*}[t]
+  \centering
+  \caption{비교 대상별 \seqv{}의 skill. \emph{네 분할}: 시드 42/1/7/123에 걸친 분할별
+  skill의 범위와, shot 군집 95\% CI가 0을 제외하는 분할 수. \emph{겹 단위}: 반복 5겹
+  CV의 50겹에 대한 Nadeau--Bengio 95\% 구간과, 자체 CI가 0을 제외하는 겹 수.
+  \emph{합산}: 등록된 반복 8회에 대한 두 단계 bootstrap 95\% 구간. 굵은 글씨 = 구간이
+  0을 제외. 네 분할의 \Ti{} 대 오프라인 GP 칸은 두 모집단을 합친 것이고, ``--'' = 전체판에
+  없음.}
+  \label{tab:headline}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llcccccc}
+    \toprule
+    & & \multicolumn{2}{c}{네 분할} & \multicolumn{2}{c}{겹 단위 (반복 5겹)} & \multicolumn{2}{c}{합산 (두 단계)} \\
+    \cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+    타겟 & 대비 & 컷 & 포함 & 컷 & 포함 & 컷 & 포함 \\
+    \midrule
+    \multirow{4}{*}{\Ti{}}
+      & PCHIP       & $+0.174sim+0.264$ (\textbf{4/4}) & $+0.225sim+0.316$ (\textbf{4/4}) & $\mathbf{[+0.186, +0.253]}$ (50/50) & $\mathbf{[+0.188, +0.307]}$ (46/50) & $\mathbf{[+0.188, +0.248]}$ & $\mathbf{[+0.192, +0.294]}$ \\
+      & persistence & $+0.360sim+0.415$ (\textbf{4/4}) & $+0.406sim+0.459$ (\textbf{4/4}) & $\mathbf{[+0.368, +0.410]}$ (50/50) & $\mathbf{[+0.361, +0.445]}$ (50/50) & $\mathbf{[+0.369, +0.408]}$ & $\mathbf{[+0.364, +0.438]}$ \\
+      & 인과 GP     & $+0.078sim+0.138$ (\textbf{4/4}) & $+0.123sim+0.169$ (\textbf{4/4}) & $\mathbf{[+0.084, +0.138]}$ (47/50) & $\mathbf{[+0.067, +0.170]}$ (40/50) & $\mathbf{[+0.085, +0.132]}$ & $\mathbf{[+0.076, +0.157]}$ \\
+      & 오프라인 GP & \multicolumn{2}{c}{$-0.05sim+0.11$ (8셀 중 7셀에서 CI가 0 포함)} & $[-0.044, +0.020]$ (1/50) & $[-0.026, +0.094]$ (12/50) & $[-0.043, +0.014]$ & $[-0.017, +0.075]$ \\
+    \midrule
+    \multirow{4}{*}{\Vrot{}}
+      & PCHIP       & $+0.135sim+0.390$ (1/4) & $+0.132sim+0.384$ (2/4) & $[-0.021, +0.405]$ (15/50) & $[-0.053, +0.391]$ (11/50) & $\mathbf{[+0.072, +0.701]}$ & $\mathbf{[+0.046, +0.683]}$ \\
+      & persistence & \multicolumn{2}{c}{$+0.30sim+0.50$ (각각 3/4)} & $\mathbf{[+0.190, +0.601]}$ (42/50) & $\mathbf{[+0.159, +0.587]}$ (38/50) & $\mathbf{[+0.277, +0.763]}$ & $\mathbf{[+0.139, +0.747]}$ \\
+      & 인과 GP     & $+0.020sim+0.331$ (2/4) & $+0.018sim+0.324$ (2/4) & $[-0.060, +0.512]$ (11/50) & $[-0.096, +0.502]$ (10/50) & $\mathbf{[+0.045, +0.701]}$ & $\mathbf{[+0.023, +0.683]}$ \\
+      & 오프라인 GP & -- & -- & $[-0.234, +0.312]$ (0/50) & $[-0.268, +0.300]$ (0/50) & $[-0.119, +0.635]$ & $[-0.139, +0.609]$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table*}
+
+\paragraph{\Ti{}.} 표~\ref{tab:headline}에서 $\skillp$는 $+0.17\sim+0.26$(컷),
+$+0.23\sim+0.32$(포함)이고, 네 분할 모두에서 shot 군집 구간이 0을 제외한다. 인과 GP 대비
+$+0.08\sim+0.17$, persistence 대비 $+0.36\sim+0.46$이며, 둘 다 모집단--분할 8/8 셀에서
+구간이 0을 제외한다. 오프라인 GP 대비 짝지은 skill은 $-0.05\sim+0.11$로 8셀 중 7셀에서
+구간이 0을 포함하므로, ``미래를 쓰는 보간보다 오차가 낮다''는 사전등록 보간들에 대한
+진술이지 모든 오프라인 평활기에 대한 진술이 아니다. 재현은 모든 판정을 되풀이한다. PCHIP
+대비 겹 단위 구간은 $[+0.19, +0.25]$(컷), $[+0.19, +0.31]$(포함), 합산 구간은
+$[+0.19, +0.25]$, $[+0.19, +0.29]$다. skill은 인접 이력에 국한되지 않는다. 마지막
+관측 이후 $\Delta t > 15$\,ms에서 PCHIP 대비 skill은 $+0.268$(컷), $+0.206$(포함)이고 두
+구간 모두 0을 제외한다.
+
+\paragraph{\Vrot{}.} 점추정은 모든 분할에서 양수이지만 네 분할 구간이 0을 제외하는 것은
+1/4(컷), 2/4(포함) 분할뿐이어서, 그것만으로는 회전에 관한 주장을 세우지 않는다. 새 분할
+8벌에서 방전 단위로 채점한 등록 합산 두 단계 구간은 PCHIP 대비 $[+0.07, +0.70]$(컷),
+$[+0.05, +0.68]$(포함), persistence 대비 $[+0.28, +0.76]$, $[+0.14, +0.75]$, 인과 GP 대비
+$[+0.05, +0.70]$, $[+0.02, +0.68]$로 모두 0을 제외한다. 겹 단위 구간은 여전히 0을
+포함하는데($[-0.02, +0.41]$, 컷), 방전 80개짜리 겹의 비율이 큰 오차 방전 몇 개로 정해지기
+때문이다.
+
+\paragraph{포함 모집단의 수치가 더 높은 이유.} 컷이 없으면 모든 팔의 PCHIP 대비 점수가
+오른다(백본 평균 $+0.268$ 대 $+0.236$). 스파이크가 보간 앵커를 오염시키고 학습 모델은
+그것을 할인할 수 있기 때문이다. 그래서 어느 모집단도 단독으로 인용하지 않는다.
+
+\paragraph{두 스트레스 테스트.} \emph{MNAR:} 채점 행을 진짜 결측이면서 도메인 안에 있는
+행(결측 \Ti{} 행의 54--68\%)의 공변량 분포($\Delta t$ $\times$ 국소 활동도)로 재가중하면,
+\Ti{}의 persistence 대비 skill은 $+0.28\sim+0.44$로 8/8 셀에서 구간이 0을 제외하고, PCHIP
+대비로는 $+0.14\sim+0.28$로 컷 2/4·포함 4/4 분할에서 구간이 0을 제외한다(결측 \Vrot{}
+행은 4--6\%만 도메인 안에 있어 아무것도 끌어내지 않는다). \emph{캠페인 이동:} 엄격한 시간
+분할(학습 416 shot, 검증 128, 시험은 가장 늦은 97)에서 \seqv{}는 PCHIP 대비
+$+0.17\sim+0.20$, 인과 GP 대비 $+0.11\sim+0.16$을 유지하며 두 모집단 4/4 초기화에서 구간이
+0을 제외하고, 윈도 대조군은 $-0.001\sim+0.091$(컷 2/4, 포함 0/4)이다. 고속 진단은 두 기간
+사이에 1.22$\sigma$(BES), 0.53$\sigma$(ECEI) 이동하고 타겟은 0.115$\sigma$ 이동한다.
+\seqv{}는 각 방전을 그 방전 자신의 통계로 표준화한다.
+
+\subsection{\texorpdfstring{\Ti$\leftrightarrow$\Vrot{} 비대칭}{Ti-Vrot 비대칭}}
+\label{sec:res:asym}
+윈도 대조군에서 평가 시점에 입력 그룹 하나를 0으로 만들면(표~\ref{tab:ablation}) 두
+타겟이 갈린다. 이력은 둘 다에 필수다. 컷 모집단의 \Ti{}에서는 고속 채널을 제거하면 skill이
+보간 아래로 떨어진다(짝지은 $-0.25\sim-0.43$, 4/4 유의). 보간 대비 여유는 고속 진단의
+정보다. 포함 모집단에서는 이력만 쓰는 모델도 PCHIP 대비 $+0.15\sim+0.23$을 유지하는데,
+이는 스파이크 강건성 성분이며, 그래서 고속 진단의 기여를 분리하는 것은 컷 모집단이다.
+\Vrot{}은 고속 채널 없이도 8/8 셀에서 출력이 비트 단위로 동일하다. 이는 라우팅의
+귀결이지 그 근거가 아니다. 근거는 \S\ref{sec:model:physics}의 변화율 상관($d\Vrot/dt$와
+$-0.006$ / $-0.003$, $d\Ti/dt$와 $+0.070$ / $+0.078$)과 아래의 두 직접 검정이다.
+
+\begin{table}[t]
+  \centering
+  \caption{윈도 대조군의 평가 시점 모달리티 절제: $\skillp$(4분할 평균)와 전체 모델 대비
+  짝지은 변화($^{*}$ = 유의한 분할).}
+  \label{tab:ablation}
+  \footnotesize
+  \setlength{\tabcolsep}{2.5pt}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{llcc}
+    \toprule
+    입력 & & 컷 & 포함 \\
+    \midrule
+    전체 & \Ti{} & $+0.173$ & $+0.238$ \\
+    고속 제거 & \Ti{} & $-0.125$; $-0.25\sim-0.43$ (4/4$^{*}$) & $+0.201$; $-0.03\sim-0.09$ (2/4$^{*}$) \\
+    이력 제거 & \Ti{} & $-2.11$ & $-1.16$ \\
+    \midrule
+    전체 & \Vrot{} & $+0.213$ & $+0.206$ \\
+    고속 제거 & \Vrot{} & $+0.213$; $+0.000\times4$ (비트 동일) & $+0.206$; $+0.000\times4$ (비트 동일) \\
+    이력 제거 & \Vrot{} & $-2.89$ & $-3.51$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\paragraph{회전 정보로 가는 두 경로의 검정.} \emph{Mirnov:} 원시 2\,MHz 스트림과 대조한
+코일 24개 전부(방전 12개)에서 100\,Hz 값은 격자 시각의 원시 표본 하나와 같다(시차 0).
+평균도 필터도 거치지 않은 점 스냅숏이므로 kHz 모드 회전은 앨리어싱으로 사라진다. 원시
+스트림의 등록된 인과 10\,ms 특징 15개(RMS 포락선, 대역 파워, 교차 스펙트럼 봉우리)를
+\Vrot{} 분기에 넣으면 skill이 $-0.128$ $[-0.544, -0.105]$(컷), $-0.164$
+$[-0.473, -0.133]$(포함)만큼 바뀐다. 학습 방전 6개, \Vrot{} 라벨이 있는 시험 방전 3개이며,
+3개 중 개선된 것은 0개다. 코일 물리 자체는 온전하다(\#32092의 가장자리 조화 진동이 4.39와
+8.91\,kHz에 나타난다). 방전 안에서 주 모드 주파수와 \Vrot{}의 상관은 일곱 방전 중 여섯에서
+$|\rho| \leq 0.11$이다. \emph{빔 토크:} 토크 채널은 없고, shot 사이에서 ECE $T_e$ 대리
+지표는 \Ti{}와 $r=+0.353$, \Vrot{}과 $r=+0.024$로 상관된다. NBI 토크는 회전
+\emph{수준}을 정하지만 빔 파워는 계단 입력이다. 10\,ms 증분 분산 가운데 300\,ms 이동
+평균이 나르는 몫은 \Vrot{} 0.34\%(\Ti{} 0.25\%)이므로, 완벽한 토크 채널은 100\,ms 이상의
+예보에서 의미를 갖고~\citep{Char2024FullShot} 10\,ms 나우캐스트에서는 그렇지 않다. 그
+수준은 10\,ms 전 관측값으로 이미 입력에 있다. 이 진술은 코어에서 페데스탈 상단까지의 표준
+CES 10\,ms에 한정한다. ELM 주기 안의 가장자리 회전~\citep{Viezzer2020Dynamics}은 다른
+측정이다.
+
+\subsection{식의 skill 유지}
+\label{sec:res:eq}
+동일한 프로토콜로 처음부터 학습한 20모수 식~\eqref{eq:b28h}--\eqref{eq:gain}은 컷 4/4
+분할에서 백본의 PCHIP 대비 skill의 \textbf{72--78\%}, persistence 대비 skill의
+87--90\%를 유지해 등록 문턱 0.70 위에 있고, 2단계의 증분 형태 식보다 짝지은
+$+0.034\sim+0.042$ 위에 있다(4/4 분할에서 구간이 0 위). 남은 22--28\%는 신경망의 비선형
+사건 처리로, 고속 채널 이력의 어떤 저차 함수로도 재현되지 않는다. 물리 띠는 컷
+모집단에서만 읽는다. 포함 모집단에서 이 식은 PCHIP 대비 skill의 0.43--0.81을 유지하고,
+그 BES 이득은 피팅 실패 스파이크 아래에서 부호를 바꾼다.
+
+\subsection{평균과 중앙값: 이중 판독}
+\label{sec:res:dual}
+MSE skill은 소수의 행이 정한다. 백본의 \Ti{} 제곱오차 상위 1\% 행이 전체의 48\%(컷),
+83\%(포함)를 담는다. 전형적인 행에서 백본은 앵커를 그대로 옮긴다. 중앙값 \Ti{} 절대오차
+47.2\,eV는 persistence의 46.1\,eV, 타겟 자신의 10\,ms 산포 46.4\,eV와 같고, PCHIP은 미래
+이웃과 평균해 39.4\,eV에 이른다(중앙값 AE skill $-0.198$ $[-0.259, -0.135]$, 승률 0.48).
+모델/PCHIP 오차 비는 오차 상위 사분위에서만 1 아래로 내려간다. \Vrot{}에서 백본의 중앙값
+행은 persistence보다 나쁘다(4.3 대 3.7\,km/s; PCHIP 대비 중앙값 AE skill 컷 $-0.488$, 포함
+$-0.518$, 4/4 분할에서 구간이 0 아래). 그 집계 skill은 꼬리의 이득이 본류의 손실을 상쇄한
+결과다. 그래서 중앙값은 별도의 사전등록 추정량에서 읽는다. 타겟별 스칼라
+유지-또는-점프 필터로, CES 이력 위에서 인과적으로 돌며, 사전은 수준을 유지하되 점프를
+허용하고 측정 잡음은 10\,ms 본류 산포를 척도로 하는 Student-$t$($\nu_0=3$)다. 그 중앙값
+절대오차는 \Ti{}에서 persistence의 0.911--0.920$\times$(컷), 0.906--0.915$\times$(포함)이고,
+persistence 대비 중앙값 skill은 $+0.08\sim+0.09$로 두 모집단 4/4 분할에서 구간이 0을
+제외한다(분할--모집단 8/8 셀). \Vrot{}에서 필터의 비는 0.94--1.00$\times$로 3/4 분할에서
+구간이 1을 포함하며, 필터를 TRAIN에서 맞춰도 그렇다. 반면 백본 대비 중앙값 skill은
+$+0.09\sim+0.27$(두 모집단 4/4)이다. 그 이유는 측정되어 있다. \Ti{} 상대 산포와 도플러
+속도 산포의 비가 8/8 분할--모집단 셀에서 가우스 선 맞춤의 $\sqrt2$이므로 10\,ms 산포는
+광자 바닥에 있고, 라벨 사이에서 중앙값 최적점은 마지막 값이다. 필터의 백본 대비 MSE
+skill은 $-0.06\sim-0.52$인데, 사건 행에서 늦기 때문이다. 중앙값은 필터에서, 평균은
+나우캐스터에서 읽는다. 백본에 Student-$t$ 예측 head를 달면 보정된 불확도를 준다(컷: 50\% /
+90\% 포함률 0.48--0.51 / 0.91--0.92. 포함 모집단에서는 두 성분 혼합 head만 guard를
+통과하며, 포함률은 0.53--0.55 / 0.90--0.91).
+
+% =========================================================================
+\section{한계와 결론}
+\label{sec:conclusion}
+
+\paragraph{한계.} 집계 skill은 꼬리 통계다. 중앙값 행에서 백본의 \Ti{} 오차는
+persistence와 같고 PCHIP의 오차는 20\% 낮으며, 백본의 \Vrot{} 중앙값 오차는 persistence보다
+크다. 중앙값은 집계 안이 아니라 그 옆의 물리 필터에서 보고한다. 반복 단위는 shot이고
+(분할당 시험 shot \Ti{} 96개 / \Vrot{} 60--66개), 이것이 검정력을 제한한다. skill은 관측된
+지점에서 측정되며, 재가중은 결측 \Ti{} 행의 54--68\%, 결측 \Vrot{} 행의 4--6\%에 닿는다.
+오프라인 주장의 상한은 오프라인 GP다. 값 기준 컷은 피팅 품질의 한쪽 방향 대리 지표이며,
+NN-CES~\citep{Lee2026NeuralNetworkbased}가 줄 수 있는 노출별 피팅 메타데이터가 그것을 대체할
+것이다. 캠페인 전이는 시간 블록 하나와 초기화 네 개에 기댄다. 예측 포함률은 방전별이 아니라
+행을 합친 기준으로 보고한다. 모든 것이 한 장치·한 캠페인이다.
+
+\paragraph{결론.} KSTAR의 빈 10\,ms CES 행은 엄격히 인과적인 추정기로 미래를 읽는 보간보다
+낮은 평균 제곱 오차로 채울 수 있다. 이온온도도 회전도 그렇다. 두 물리량을 가르는 것은 고속
+진단이 무엇을 담고 있는가이다. \emph{이온온도:} PCHIP 대비 skill은 네 분할에서
+$+0.17\sim+0.26$(컷), $+0.23\sim+0.32$(포함), 반복 5겹 재현의 겹 단위 겹침 보정 구간으로
+$[+0.19, +0.25]$, $[+0.19, +0.31]$이고, 인과 GP 대비 $+0.08\sim+0.17$(8/8 셀), 오프라인
+GP 대비 $-0.05\sim+0.11$(8셀 중 7셀에서 구간이 0 포함)이다. 컷 모집단에서 여유는 BES와
+ECEI에서 오며, 신경망은 20모수 물리 필터---공백 의존 관측 이득에 각 고속 채널에 대한
+이상치 차단 100\,ms 고역 통과 응답을 더한 것---를 계산하고, 이 식은 백본의 PCHIP 대비
+skill의 72--78\%를 유지한다. 중앙값에서는 유지-또는-점프 물리 필터가 8/8 셀에서 persistence의
+0.906--0.920$\times$에 이른다. \emph{회전:} 두 단계 bootstrap에서 PCHIP 대비 skill은
+$[+0.07, +0.70]$(컷), $[+0.05, +0.68]$(포함)로 0을 제외하며, 그 이득은 CES 이력만이 실어
+나른다. 고속 채널과 $d\Vrot/dt$의 상관은 $r = -0.006$, $-0.003$이고, 100\,Hz Mirnov 값은
+원시 표본 하나이며, 원시 2\,MHz 특징은 skill을 $-0.128$ $[-0.544, -0.105]$만큼 바꾼다(컷,
+시험 방전 3개). 빔 파워는 계단 입력이고 300\,ms보다 느린 띠는 10\,ms \Vrot{} 증분 분산의
+0.34\%를 담으므로, 토크 채널은 100\,ms 이상의 예보를 위한 레버다. 중앙값에서 물리 필터의
+\Vrot{} 오차는 persistence의 0.94--1.00$\times$(3/4 분할에서 구간이 1 포함)로 10\,ms 광자
+바닥에 있다. 두 타겟의 집계 skill은 꼬리 통계이며, 이 진술은 코어에서 페데스탈 상단까지의
+표준 CES 10\,ms에 한정한다. 10\,ms 나우캐스트에 남은 레버는 CES 분석이 내는 노출별 피팅
+품질이다. 전체판(보충 자료)은 간극 영역·정점 층·문맥·모델군 사다리, 손실과 분포 head 실험,
+판독 전체를 싣는다. 코드, 사전등록 문서, 평가 산출물:
+\url{https://github.com/iseungsang01/ml-intern-revision}.
+
+{\small
+\bibliographystyle{unsrtnat}
+\bibliography{../refs}
+}
+
+\end{document}
