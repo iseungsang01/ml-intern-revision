@@ -1,6 +1,6 @@
 """KSTAR CES 나우캐스팅 발표(대본 포함). 핵플실 발표 템플릿(1조, 수정_5) 위에 짓는다.
 
-  py docs/presentation/build_pptx_talk.py      -> docs/presentation/KSTAR_CES_발표_v3.pptx
+  py docs/presentation/build_pptx_talk.py      -> docs/presentation/기말발표/KSTAR_CES_발표_v4.pptx
 
 * 템플릿: 핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx 에서는 배경 모양(위쪽 세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다.
   글꼴(Pretendard · IBM Plex Mono)·색·배치는 v1 그대로.
@@ -25,7 +25,7 @@ from pptx.util import Inches, Pt
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 HERE = Path(__file__).resolve().parent
-OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "KSTAR_CES_발표_v4.pptx"
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "기말발표" / "KSTAR_CES_발표_v4.pptx"
 TEMPLATE = Path(r"D:\승상 자료\대학교\4학년\2학기\핵플실\실험 3 (필라멘트)\발표준비\핵플실발표자료_1조_김하빈, 이승상_수정_5.pptx")
 
 # 템플릿에서는 배경 모양(세 색 띠, 남색 제목 띠, 표지 남색 블록)만 쓴다. 글꼴·색·배치는 v1 그대로.
