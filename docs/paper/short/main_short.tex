@@ -462,7 +462,7 @@ repository before it was run; there is no third-party registry.
 
 \paragraph{Intervals.} Per-sample paired squared-error differences are aggregated by
 shot and whole shots resampled (10{,}000 resamples); a result is reported with whether
-its 95\% interval excludes zero. Because the four splits share most of their training
+its 95\% interval excludes zero. With four splits, each split's value is given with its own interval, together with the range and the number of splits whose interval excludes zero, rather than a mean $\pm$ standard deviation of four numbers~\citep{Weissgerber2015Beyond,Agarwal2021Deep}. Because the four splits share most of their training
 discharges, the backbone was re-run as shot-level repeated 5-fold cross-validation on
 639 discharges (ten repeats, 100 runs, every discharge tested once per repeat).
 \emph{Fold-level}: the Nadeau--Bengio interval
