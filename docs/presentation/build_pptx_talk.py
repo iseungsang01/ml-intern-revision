@@ -6,7 +6,7 @@
   (cellfie/docs/presentation/team/build_v4.py 의 도형 규칙과 색). 글꼴 Pretendard · IBM Plex Mono.
 * 내용: THESIS_RESULTS.md §0 (2026-11-11)과 8쪽 논문 docs/paper/short/main_short_ko.tex 의 수치만 쓴다.
 * 발표자 노트 = 쓰임·시간 / 핵심 / 대본(발표 말투) / 숫자와 출처 / 예상 질문.
-* 용어: '모수' 대신 파라미터, '추정량' 대신 estimator. 결과는 점추정 + 95 % 구간 + 0 제외 여부.
+* 용어: 파라미터, estimator 등 흔한 영어 용어. 결과는 점추정 + 95 % 구간 + 0 제외 여부.
 """
 import io
 import sys
