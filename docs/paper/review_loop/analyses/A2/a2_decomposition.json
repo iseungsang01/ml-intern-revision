@@ -1,0 +1,1004 @@
+{
+ "protocol": {
+  "B": 10000,
+  "seed_boot": 12345,
+  "skill": "1 - sum SE_arm / sum SE_ref, shot-cluster bootstrap",
+  "ewma": "alpha* in {0.25,0.35,0.45} chosen on VAL files (stage1_score.py)"
+ },
+ "b_surrogate": [
+  {
+   "pop": "cut",
+   "seed": 42,
+   "n_rows": 32589,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 162.34959806713806,
+    "gp_causal": 164.31483646153876,
+    "pchip": 173.61205177947176,
+    "persistence": 197.21596208045653,
+    "gp": 153.82010219095952,
+    "backbone": 157.81641886526873
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.023777354666487893,
+     "skill_ci95": [
+      -0.011550790320670095,
+      0.05708769047641486
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.12553446759858833,
+     "skill_ci95": [
+      0.04441227504706435,
+      0.1914820349564134
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.3223299214996548,
+     "skill_ci95": [
+      0.27824382387771573,
+      0.36007898241449005
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.11397705204157282,
+     "skill_ci95": [
+      -0.18500278122107974,
+      -0.05703760737454363
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.05827385543164598,
+     "skill_ci95": [
+      -0.09578225498541187,
+      -0.020110411749607357
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 1,
+   "n_rows": 35582,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 201.72550021976608,
+    "gp_causal": 207.35006186521017,
+    "pchip": 222.697820685067,
+    "persistence": 250.48099962184676,
+    "gp": 196.8936292469026,
+    "backbone": 193.06279315074138
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.05351602873657202,
+     "skill_ci95": [
+      0.03226960248430732,
+      0.07445818680871522
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.17947906167078032,
+     "skill_ci95": [
+      0.11996822803030036,
+      0.22700479116472744
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.3514073444945577,
+     "skill_ci95": [
+      0.3210428770329408,
+      0.37691048689801315
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.04968326594946193,
+     "skill_ci95": [
+      -0.08318618670987905,
+      -0.020290407281260713
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.09175309544176757,
+     "skill_ci95": [
+      -0.1191194158235041,
+      -0.06253193459325479
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 7,
+   "n_rows": 35759,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 180.5641047525833,
+    "gp_causal": 187.05826431134358,
+    "pchip": 201.4701720232036,
+    "persistence": 224.82429300134012,
+    "gp": 175.34463020319947,
+    "backbone": 173.6972362379344
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.06822932641100377,
+     "skill_ci95": [
+      0.03163069942009677,
+      0.10087942600907181
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.19676740554662342,
+     "skill_ci95": [
+      0.1381682537109954,
+      0.23997344531146786
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.35497527065776835,
+     "skill_ci95": [
+      0.3235306736874933,
+      0.3796894649968278
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.06041996789851267,
+     "skill_ci95": [
+      -0.11469714734653554,
+      -0.015870416681958818
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.08063000326299763,
+     "skill_ci95": [
+      -0.10681237065315524,
+      -0.05393823687325624
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 123,
+   "n_rows": 34038,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 209.71048160550095,
+    "gp_causal": 213.20541020281638,
+    "pchip": 235.20593263456882,
+    "persistence": 263.7101847124567,
+    "gp": 201.1254207725676,
+    "backbone": 201.7361554874737
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.032515906817539575,
+     "skill_ci95": [
+      -0.0038023029217530866,
+      0.06908586791377971
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.2050428284498591,
+     "skill_ci95": [
+      0.14064857472389572,
+      0.25246108228710035
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.36760785140467767,
+     "skill_ci95": [
+      0.3341994323755356,
+      0.39437686238506897
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.0871922398958076,
+     "skill_ci95": [
+      -0.13221413193208575,
+      -0.046899017181817625
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.08061948681065068,
+     "skill_ci95": [
+      -0.1293625310050307,
+      -0.018780620603030672
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 42,
+   "n_rows": 32721,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 392.0745413404352,
+    "gp_causal": 394.6080158999203,
+    "pchip": 412.39030794361844,
+    "persistence": 477.9675698263838,
+    "gp": 366.7544256378282,
+    "backbone": 363.0299031159301
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.012799242346645423,
+     "skill_ci95": [
+      -0.05762840791431258,
+      0.08027727454497022
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.09609999998630736,
+     "skill_ci95": [
+      -0.11879092843511399,
+      0.2150734812886639
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.3271156542317387,
+     "skill_ci95": [
+      0.21973859449105645,
+      0.3912903100732665
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.14284296637903227,
+     "skill_ci95": [
+      -0.35680717515673266,
+      -0.009936641820662602
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.1664133634181424,
+     "skill_ci95": [
+      -0.38365683371079096,
+      -0.04239942863917008
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 1,
+   "n_rows": 35743,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 457.23473391856044,
+    "gp_causal": 466.3895546048314,
+    "pchip": 486.94077854088806,
+    "persistence": 566.2466598002163,
+    "gp": 433.47880560755084,
+    "backbone": 425.167388069416
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.03887295510417288,
+     "skill_ci95": [
+      -0.01738140236032861,
+      0.09862417796473684
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.11828924781321393,
+     "skill_ci95": [
+      -0.024280287841882124,
+      0.21537977209295683
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.347970684715579,
+     "skill_ci95": [
+      0.2850697623935709,
+      0.3954181687377815
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.11260931686829712,
+     "skill_ci95": [
+      -0.25738135945630386,
+      -0.033379871212883674
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.15653435544296923,
+     "skill_ci95": [
+      -0.3029621953472195,
+      -0.07492733745679192
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 7,
+   "n_rows": 35916,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 457.1200056037817,
+    "gp_causal": 469.7452599143997,
+    "pchip": 522.8160032554033,
+    "persistence": 570.451875831119,
+    "gp": 465.0764132794994,
+    "backbone": 439.7847701990193
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.053031257960501565,
+     "skill_ci95": [
+      0.004023115402553568,
+      0.10476974109842482
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.23552601457224887,
+     "skill_ci95": [
+      0.1864047865611043,
+      0.2798534770574586
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.35787078191069055,
+     "skill_ci95": [
+      0.32023959393476353,
+      0.38666997644812723
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": 0.03392281079962978,
+     "skill_ci95": [
+      -0.0230433955929114,
+      0.09316575150486422
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.08038883018371212,
+     "skill_ci95": [
+      -0.11677533199122676,
+      -0.03857531738073903
+     ],
+     "n_shots": 96
+    }
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 123,
+   "n_rows": 34271,
+   "same_rows_as_backbone": true,
+   "rmse_eV": {
+    "surrogate_b28h": 528.1445358833465,
+    "gp_causal": 542.0989503362338,
+    "pchip": 604.8332561896511,
+    "persistence": 680.0533127317792,
+    "gp": 510.65932741180364,
+    "backbone": 500.0597230362991
+   },
+   "surrogate_vs": {
+    "gp_causal": {
+     "skill_point": 0.05082028288380991,
+     "skill_ci95": [
+      -0.01353249923543212,
+      0.11939378736409044
+     ],
+     "n_shots": 96
+    },
+    "pchip": {
+     "skill_point": 0.23750981596586385,
+     "skill_ci95": [
+      0.09894525650961111,
+      0.3166093835652435
+     ],
+     "n_shots": 96
+    },
+    "persistence": {
+     "skill_point": 0.39685787616923485,
+     "skill_ci95": [
+      0.32723969900868943,
+      0.4409149412493097
+     ],
+     "n_shots": 96
+    },
+    "gp": {
+     "skill_point": -0.06965332180048689,
+     "skill_ci95": [
+      -0.1841611056311403,
+      -0.0007679864417050273
+     ],
+     "n_shots": 96
+    },
+    "backbone": {
+     "skill_point": -0.11548010778290907,
+     "skill_ci95": [
+      -0.1449515412189604,
+      -0.08562056041804231
+     ],
+     "n_shots": 96
+    }
+   }
+  }
+ ],
+ "a_decomposition": [
+  {
+   "pop": "cut",
+   "seed": 42,
+   "run": ".b1_seqv2_s42_i42",
+   "n_rows": 32589,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 32589,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.12986622030521744,
+    "skill_ci95": [
+     0.08252898471326842,
+     0.17929725031066762
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.05036087262714384,
+    "skill_ci95": [
+     -0.0691663508970179,
+     0.14436483936574596
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.17368691675300163,
+    "skill_ci95": [
+     0.09701715147932144,
+     0.2356516553122191
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.07753305978126723,
+    "skill_ci95": [
+     0.03508545759927609,
+     0.11695119036987943
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": -0.06014380977406408,
+    "skill_ci95": [
+     -0.11913688316763368,
+     -0.0117891063008478
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 157.81641886526873,
+    "ewma": 169.18395368035038,
+    "gp_causal": 164.31483646153876,
+    "pchip": 173.61205177947176,
+    "persistence": 197.21596208045653,
+    "gp": 153.82010219095952
+   },
+   "minutes": 4.07,
+   "decomp_vs_pchip": {
+    "total": 0.17368691675300163,
+    "denoising_share_ewma": 0.05036087262714306,
+    "increment_above_ewma": 0.12332604412585856
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 1,
+   "run": ".b1_seqv2_s1_i1",
+   "n_rows": 35582,
+   "alpha_star": 0.35,
+   "row_check": {
+    "n": 35582,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.1301671179747742,
+    "skill_ci95": [
+     0.10028030417790669,
+     0.15802848105874817
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.1359688201683531,
+    "skill_ci95": [
+     0.07196820745262833,
+     0.1879234981863246
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.24843726868738247,
+    "skill_ci95": [
+     0.1880255435535236,
+     0.2951212396660773
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.13306041886655506,
+    "skill_ci95": [
+     0.09987957455150345,
+     0.16355788552135492
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.003326272151317533,
+    "skill_ci95": [
+     -0.02048075673116952,
+     0.02655162084390661
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 193.06279315074138,
+    "ewma": 207.00492325172965,
+    "gp_causal": 207.35006186521017,
+    "pchip": 222.697820685067,
+    "persistence": 250.48099962184676,
+    "gp": 196.8936292469026
+   },
+   "minutes": 0.92,
+   "decomp_vs_pchip": {
+    "total": 0.24843726868738247,
+    "denoising_share_ewma": 0.13596882016835177,
+    "increment_above_ewma": 0.11246844851903073
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 7,
+   "run": ".b1_seqv2_s7_i7",
+   "n_rows": 35759,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 35759,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.1368308897260384,
+    "skill_ci95": [
+     0.10494870144549255,
+     0.17073096634943463
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.13887060968175824,
+    "skill_ci95": [
+     0.061953786659234865,
+     0.19706562561596175
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.25669971032824423,
+    "skill_ci95": [
+     0.19910566291377826,
+     0.3017457211003402
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.1377523567035117,
+    "skill_ci95": [
+     0.1010061290997698,
+     0.17399269650380988
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.0010675393344193873,
+    "skill_ci95": [
+     -0.026774097998477568,
+     0.023572288859294594
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 173.6972362379344,
+    "ewma": 186.95839162222993,
+    "gp_causal": 187.05826431134358,
+    "pchip": 201.4701720232036,
+    "persistence": 224.82429300134012,
+    "gp": 175.34463020319947
+   },
+   "minutes": 0.63,
+   "decomp_vs_pchip": {
+    "total": 0.25669971032824423,
+    "denoising_share_ewma": 0.1388706096817569,
+    "increment_above_ewma": 0.11782910064648738
+   }
+  },
+  {
+   "pop": "cut",
+   "seed": 123,
+   "run": ".b1_seqv2_s123_i123",
+   "n_rows": 34038,
+   "alpha_star": 0.35,
+   "row_check": {
+    "n": 34038,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.1131784833859657,
+    "skill_ci95": [
+     0.058352054882590314,
+     0.15589679994984335
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.17046499930227732,
+    "skill_ci95": [
+     0.1003903059436698,
+     0.22403668097402682
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.2643505125968215,
+    "skill_ci95": [
+     0.18788522812979092,
+     0.3195541757422449
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.10469494119720069,
+    "skill_ci95": [
+     0.05683064126058939,
+     0.14859802383261214
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": -0.009566234050292222,
+    "skill_ci95": [
+     -0.03531631196373825,
+     0.017506851241679923
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 201.7361554874737,
+    "ewma": 214.22276934745997,
+    "gp_causal": 213.20541020281638,
+    "pchip": 235.20593263456882,
+    "persistence": 263.7101847124567,
+    "gp": 201.1254207725676
+   },
+   "minutes": 0.7,
+   "decomp_vs_pchip": {
+    "total": 0.2643505125968214,
+    "denoising_share_ewma": 0.1704649993022761,
+    "increment_above_ewma": 0.09388551329454536
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 42,
+   "run": ".b5i_seqv2_s42",
+   "n_rows": 32721,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 32721,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.14049583822005718,
+    "skill_ci95": [
+     0.02205816695305807,
+     0.3010551914559454
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.09838751727334782,
+    "skill_ci95": [
+     -0.1559136951564317,
+     0.23278319935390143
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.2250603187836957,
+    "skill_ci95": [
+     0.10869996730377349,
+     0.2925650668015076
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.15364416371191958,
+    "skill_ci95": [
+     0.0551694182646739,
+     0.2643402897511736
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.01529757047904634,
+    "skill_ci95": [
+     -0.08734695758895089,
+     0.10434772244569493
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 363.0299031159301,
+    "ewma": 391.5781117318199,
+    "gp_causal": 394.6080158999203,
+    "pchip": 412.39030794361844,
+    "persistence": 477.9675698263838,
+    "gp": 366.7544256378282
+   },
+   "minutes": 0.71,
+   "decomp_vs_pchip": {
+    "total": 0.2250603187836957,
+    "denoising_share_ewma": 0.09838751727334705,
+    "increment_above_ewma": 0.12667280151034854
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 1,
+   "run": ".b5i_seqv2_s1",
+   "n_rows": 35743,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 35743,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.13425063196806863,
+    "skill_ci95": [
+     0.06107757093564059,
+     0.24369517929384882
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.11940662159568571,
+    "skill_ci95": [
+     -0.03850824781239553,
+     0.2265956424819253
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.23762683915336158,
+    "skill_ci95": [
+     0.15320484744847312,
+     0.30248760722889717
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.1689593652168666,
+    "skill_ci95": [
+     0.09350948575139192,
+     0.2554687414598136
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.04009097151026486,
+    "skill_ci95": [
+     -0.029290882404463845,
+     0.1123138113069209
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 425.167388069416,
+    "ewma": 456.94492001450647,
+    "gp_causal": 466.3895546048314,
+    "pchip": 486.94077854088806,
+    "persistence": 566.2466598002163,
+    "gp": 433.47880560755084
+   },
+   "minutes": 0.75,
+   "decomp_vs_pchip": {
+    "total": 0.2376268391533617,
+    "denoising_share_ewma": 0.11940662159568505,
+    "increment_above_ewma": 0.1182202175576766
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 7,
+   "run": ".b5i_seqv2_s7",
+   "n_rows": 35916,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 35916,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.06083611679988232,
+    "skill_ci95": [
+     0.026999342206979558,
+     0.09019856160670678
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.24657289027565032,
+    "skill_ci95": [
+     0.19559396192390716,
+     0.29174828237366845
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.2924084699230387,
+    "skill_ci95": [
+     0.23174383014079356,
+     0.3438596266768057
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.12349265784386765,
+    "skill_ci95": [
+     0.07306594132144799,
+     0.17941130439625652
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.06671523699408954,
+    "skill_ci95": [
+     0.018910940473093146,
+     0.11647481726137254
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 439.7847701990193,
+    "ewma": 453.8052273533273,
+    "gp_causal": 469.7452599143997,
+    "pchip": 522.8160032554033,
+    "persistence": 570.451875831119,
+    "gp": 465.0764132794994
+   },
+   "minutes": 1.44,
+   "decomp_vs_pchip": {
+    "total": 0.2924084699230388,
+    "denoising_share_ewma": 0.24657289027565021,
+    "increment_above_ewma": 0.045835579647388616
+   }
+  },
+  {
+   "pop": "incl",
+   "seed": 123,
+   "run": ".b5i_seqv2_s123",
+   "n_rows": 34271,
+   "alpha_star": 0.25,
+   "row_check": {
+    "n": 34271,
+    "max_dy_eV": 0.0,
+    "max_ddt_ms": 0.0,
+    "y_bit_identical": true,
+    "y_true_in_npz": true
+   },
+   "backbone_vs_ewma": {
+    "skill_point": 0.08362462973675389,
+    "skill_ci95": [
+     0.058071731072709756,
+     0.10833931497109543
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_pchip": {
+    "skill_point": 0.25406837671162363,
+    "skill_ci95": [
+     0.1081808453807367,
+     0.3371152807208294
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_pchip": {
+    "skill_point": 0.31644663251804994,
+    "skill_ci95": [
+     0.18606150244931932,
+     0.39201743793933597
+    ],
+    "n_shots": 96
+   },
+   "backbone_vs_gp_causal": {
+    "skill_point": 0.14908413830637646,
+    "skill_ci95": [
+     0.08250862061721191,
+     0.2179146962421517
+    ],
+    "n_shots": 96
+   },
+   "ewma_vs_gp_causal": {
+    "skill_point": 0.07143307283653655,
+    "skill_ci95": [
+     -0.0008816553421431946,
+     0.14506769770770522
+    ],
+    "n_shots": 96
+   },
+   "rmse_eV": {
+    "model": 500.0597230362991,
+    "ewma": 522.378353285694,
+    "gp_causal": 542.0989503362338,
+    "pchip": 604.8332561896511,
+    "persistence": 680.0533127317792,
+    "gp": 510.65932741180364
+   },
+   "minutes": 2.14,
+   "decomp_vs_pchip": {
+    "total": 0.31644663251804983,
+    "denoising_share_ewma": 0.2540683767116234,
+    "increment_above_ewma": 0.062378255806426475
+   }
+  }
+ ]
+}
