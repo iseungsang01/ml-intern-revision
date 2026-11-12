@@ -6734,3 +6734,27 @@ with K₀ ≈ 0.28, K_∞ ≈ 0.51, s_K ≈ 42 ms, θ ≈ 3.0σ, Σa_BES ≈ +50
 **Paper (prereg §7 and §9).** The `sec:model:backbone` paragraph "What the backbone computes" is rewritten with the corrected form and the stage-4 shares (0.72–0.78 of the PCHIP skill, 0.87–0.90 of the persistence skill, cut), keeping the stage-2 numbers as the increment-form comparison; the §8bz-3 sentence becomes the motivation for the form. Collector transcription checks added for every printed stage-4 value. No headline number changes; the backbone remains the model whose numbers are reported.
 
 **Named next.** Nothing further is registered for B.28. The remaining 22–28 % of the PCHIP skill is the backbone's nonlinear event handling; a probe of it would be hidden-state clustering on event rows or a 2-layer gated variant of `b28h`, both new designs, neither registered.
+
+### Review-loop round 1 analysis A3 (2026-11-13, CPU only, CSVs only, no training): noise-corrected bound on the fast-channel / target association at 10–200 ms
+
+**Question.** After correcting for the label noise of each target, is the fast-channel association with `V_rot` bounded well below the `T_i` association at every time scale from 10 to 200 ms (to replace "no route exists" in Sec. 4.2 with a quantitative bound)?
+
+**Design.** 641 shot CSVs, held-free targets (held rule of `dataset.py`), `T_i` cut at 3000 eV, `V_rot` uncut; blocks split at time gaps ≥ 0.5 s. Fast drivers: per-shot z-scored modality means of `BES_*` (9) and `ECEI_*` (4), as in `analyze_foundations.py`. For w = 10, 20, 50, 100, 200 ms: target w-difference y_t − y_{t−w} (both observed, same block, exact spacing) against the fast w-difference ending at t − L, L = 0–200 ms (fast leads). Pooled within-shot Pearson r (each variable centred per shot), shot-cluster bootstrap (B = 10,000, seed 0, percentile 95 %). Noise correction: r_corr = r / sqrt(f), f = 1 − 2σ²_meas / Var(Δ_w y), applied inside every replicate, with σ_meas from the paper's own difference estimators (`data/.noise_floor.json`, cut): the robust order-1 MAD (T_i 46.4 eV, V_rot 4.34 km/s) and the order-4 binomial (T_i 129.9 eV, V_rot 16.4 km/s), i.e. both ends of the paper's 46.4–129.9 eV range. Level correlations: target level vs the w-boxcar fast mean. Script `docs/paper/review_loop/analyses/A3/fast_target_coupling_bound.py` (56 s); output `docs/paper/fast_target_coupling_bound.json` (copy in the A3 folder). Rows per w: T_i 179k–217k (603–630 shots), V_rot 66k–82k (374–399 shots).
+
+**Result (lag 0, corrected r [95 % CI]; MAD / order-4 correction).**
+
+| w (ms) | BES→T_i | ECEI→T_i | BES→V_rot | ECEI→V_rot | f T_i / V_rot (order-4) |
+|---:|---|---|---|---|---|
+| 10 | +0.150 [+0.127, +0.173] / +0.277 [+0.219, +0.366] | +0.149 [+0.131, +0.169] / +0.276 | −0.004 [−0.012, +0.003] / −0.005 [−0.015, +0.003] | −0.002 [−0.010, +0.005] / −0.003 | 0.27 / 0.67 |
+| 20 | +0.173 [+0.152, +0.193] / +0.309 | +0.155 / +0.278 | +0.003 [−0.002, +0.009] / +0.004 | +0.000 / +0.000 | 0.28 / 0.81 |
+| 50 | +0.246 [+0.221, +0.271] / +0.357 | +0.186 / +0.270 | +0.005 [−0.002, +0.012] / +0.006 | +0.002 / +0.003 | 0.44 / 0.78 |
+| 100 | +0.281 / +0.377 | +0.209 / +0.280 | +0.012 [+0.004, +0.019] / +0.013 [+0.005, +0.020] | +0.006 [−0.001, +0.014] / +0.007 | 0.52 / 0.81 |
+| 200 | +0.279 / +0.356 | +0.239 / +0.305 | +0.013 [+0.003, +0.022] / +0.014 [+0.003, +0.023] | +0.007 [−0.004, +0.016] / +0.007 | 0.58 / 0.88 |
+
+- Largest V_rot |CI bound| over all w, both modalities and all 21 lags: **0.043 (MAD) / 0.044 (order-4)**; at lag 0 only: 0.022 / 0.023. Smallest T_i lower bound at lag 0 over w ≤ 50 ms (and over all w): **+0.127 (MAD) / +0.219 (order-4)**.
+- Levels (lag 0, raw): T_i +0.317 … +0.361 (BES), +0.309 … +0.328 (ECEI); V_rot +0.025 … +0.029 (BES), −0.001 … +0.005 (ECEI) — the §8ar level numbers reproduce at every scale.
+- BES→V_rot at w = 100 and 200 ms excludes 0 at lag 0 (+0.012 / +0.013, MAD), but at |r| ≈ 0.01, a quarter of the 0.05 bar; 0–5 of 21 lags exclude 0 per cell (≈ 1 expected by chance per cell).
+- The premise "noisier V_rot label" does not hold at the difference level: the target's own noise takes a *larger* share of the w-difference variance for T_i (f = 0.27 at 10 ms, order-4) than for V_rot (f = 0.67), so the correction raises T_i more than V_rot. The order-1 (Rice) σ is not usable as a correction: at w = 10 ms it equals Var(Δy)/2 by construction (f = 0), and above that it is the signal-contaminated upper bound.
+- Definition note: the raw 10 ms diff–diff T_i r here (+0.143 BES, +0.142 ECEI) is not the §8ar "rate" number (+0.070 / +0.078), which correlated the fast *level* against the target's one-step increment; the two are different statistics and both are positive controls.
+
+**Verdict against the decision rule.** Branch 1 holds: the corrected V_rot |r| has a 95 % upper bound below 0.05 at every w (≤ 0.044 over all lags, ≤ 0.023 at lag 0), and the corrected T_i lower bound exceeds 0.10 for w ≤ 50 ms (≥ +0.127). Branch 2 is not triggered (no V_rot window has |r| ≥ 0.05). Recommended replacement for "no route exists" in Sec. 4.2 and the abstract: *"noise-corrected |r| ≤ 0.044 at 10–200 ms (lags 0–200 ms), against T_i ≥ 0.13"* — but phrase it as a bound, not as "no association": BES→V_rot at 100–200 ms is a nonzero r ≈ 0.01 whose interval excludes 0. Caveats: only target noise is corrected (fast-channel noise attenuates both targets alike); modality means, not individual channels or nonlinear features, are tested; the bound is on linear association and does not exclude a nonlinear route.
