@@ -79,7 +79,7 @@ $[+0.188, +0.248]$, about half of which a one-parameter running mean of past CES
 provides; against an offline Gaussian process it is $-0.010$ $[-0.043, +0.014]$. The
 fast channels enter as a same-instant 100\,ms high-pass response, and a 20-parameter
 surrogate filter built on it keeps 72--78\% of the PCHIP-relative skill. The gain sits
-in the tail: on the median row the error equals persistence's. For \Vrot{}, the
+in the tail: the median absolute error (47.2\,eV) is close to persistence's (46.1\,eV). For \Vrot{}, the
 noise-corrected correlation of fast-channel and \Vrot{} increments is bounded by
 $|r| \leq 0.044$ at every lag and window from 10 to 200\,ms (\Ti{}: $\geq +0.13$); the
 history-only estimate has skill $+0.265$ $[+0.198, +0.326]$ over persistence and
@@ -107,8 +107,8 @@ beam-emission spectroscopy (BES), electron-cyclotron-emission imaging (ECEI) and
 Mirnov coils observe the same plasma without gaps, but none measures \Ti{} or \Vrot{}.
 We ask: \emph{at a 10\,ms step where CES is missing, what do the simultaneous fast
 diagnostics add to the irregular CES past?} The use case is an estimate that cannot
-wait for the next CES exposure; offline, a noise-aware smoother that reads both
-neighbours reaches the same mean error (\S\ref{sec:res:headline}).
+wait for the next CES exposure; against an offline noise-aware smoother that reads
+both neighbours, the skill interval includes zero (\S\ref{sec:res:headline}).
 
 \paragraph{Comparators.}
 Deployable comparators read only the CES past: persistence, a running mean, and a causal
@@ -129,8 +129,8 @@ inclusive population's extra margin is mostly spike handling.
 to the CES past: skill over the causal GP $+0.113$ $[+0.085, +0.132]$ (cut) and
 $+0.118$ $[+0.076, +0.157]$ (inclusive); a 20-parameter surrogate filter keeps 72--78\%
 of the PCHIP-relative skill (cut; its form was chosen post hoc).
-\emph{(2) Rotation.} The same channels carry no detectable \Vrot{} information at
-10--200\,ms, and letting them reach \Vrot{} loses skill on 4/4 splits; \Vrot{} is
+\emph{(2) Rotation.} The same channels' noise-corrected correlation with \Vrot{}
+increments is bounded by $|r| \leq 0.044$ at 10--200\,ms, and letting them reach \Vrot{} loses skill on 4/4 splits; \Vrot{} is
 estimated from its own history (skill over persistence $+0.265$ $[+0.198, +0.326]$, cut,
 fit-failure rows removed), and its 10\,ms scatter is consistent with a Gaussian
 line-fit noise floor.
@@ -534,8 +534,8 @@ $+0.090$ $[-0.010, +0.177]$ (inclusive), and it includes zero in both population
 thresholds of 500 and 2{,}000\,km/s. Over persistence it is $+0.265$ $[+0.198, +0.326]$
 (cut) and $+0.257$ $[+0.183, +0.323]$ (inclusive), and over the causal GP $+0.151$
 $[+0.038, +0.290]$ and $+0.132$ $[+0.026, +0.267]$, excluding zero at all three
-thresholds. Against the offline GP the history-only estimate trails: $-0.073$
-$[-0.162, +0.005]$ (cut) and $-0.087$ $[-0.174, -0.008]$ (inclusive). The \Vrot{}
+thresholds. Against the offline GP the history-only estimate has $-0.073$
+$[-0.162, +0.005]$ (cut, including zero) and $-0.087$ $[-0.174, -0.008]$ (inclusive). The \Vrot{}
 claim therefore holds against causal estimators only.
 
 \paragraph{Why inclusive numbers are higher.} Every arm scores higher against PCHIP
@@ -628,7 +628,7 @@ its BES gain changes sign under the fit-failure spikes.
 \label{sec:res:dual}
 An MSE skill is decided by few rows: the backbone's top 1\% of \Ti{} squared-error
 rows carry 48\% (cut) and 83\% (inclusive) of the total. On a typical row the backbone
-carries its anchor: its median absolute \Ti{} error of 47.2\,eV equals persistence's
+carries its anchor: its median absolute \Ti{} error of 47.2\,eV is close to persistence's
 46.1\,eV and the target's own 10\,ms scatter of 46.4\,eV, while PCHIP reaches 39.4\,eV
 by averaging with the future neighbour (median-AE skill $-0.198$
 $[-0.259, -0.135]$, win rate 0.48); the error ratio model/PCHIP falls below 1 only in
@@ -670,9 +670,10 @@ NN-CES~\citep{Lee2026NeuralNetworkbased} can provide, would replace the value cu
 
 \paragraph{Conclusion.} For an estimate that cannot wait for the next CES exposure,
 co-located BES and ECEI add a same-instant transient term to the \Ti{} past, measured
-against a causal GP and summarized by a 20-parameter surrogate filter; offline, a
-noise-aware smoother of both neighbours reaches the same mean error. \Vrot{} at this
-chord is estimated from its own history, ahead of persistence and the causal GP; its
+against a causal GP and summarized by a 20-parameter surrogate filter; against an
+offline noise-aware smoother of both neighbours the skill interval includes zero.
+\Vrot{} at this chord is estimated from its own history, with skill intervals excluding
+zero over persistence and the causal GP; its
 10\,ms scatter sits at a fit-noise floor. Code and evaluation artifacts:
 \url{https://github.com/iseungsang01/ml-intern-revision}.
 
