@@ -63,7 +63,7 @@
   <g fill="currentColor">
     <text x="52" y="60" font-size="12" opacity="0.75">입력 x_t · 10 ms 격자의 행 t · 22채널</text>
     <text x="235" y="96" text-anchor="middle" font-weight="600">빠른 채널 15</text>
-    <text x="235" y="116" text-anchor="middle" font-size="12">BES 9 · ECEI 4 · Mirnov 2 (shot별 z)</text>
+    <text x="235" y="116" text-anchor="middle" font-size="12">BES 9 · ECEI 4 · Mirnov 2 (방전별 z)</text>
     <text x="480" y="96" text-anchor="middle" font-weight="600">dt</text>
     <text x="480" y="116" text-anchor="middle" font-size="12">격자 간격 1</text>
     <text x="695" y="96" text-anchor="middle" font-weight="600">T_i 이력 꼬리 3</text>
@@ -98,23 +98,9 @@
     <text x="734" y="338" font-size="11">h_{t−1}, c_{t−1}</text>
     <text x="1066" y="338" font-size="11">h_t, c_t → t+1</text>
     <text x="640" y="262" text-anchor="middle" font-size="12" fill="#b71c1c" font-weight="600">차단: 빠른 채널 → V_rot 가지</text>
-    <text x="640" y="278" text-anchor="middle" font-size="11" fill="#b71c1c">10 ms 토크 정보 없음(P02) · 절제 8/8 비트 동일(§8ab)</text>
+    <text x="640" y="278" text-anchor="middle" font-size="11" fill="#b71c1c">10–200 ms에서 고속 채널과 V_rot의 연관이 검출되지 않음</text>
 
-    <text x="600" y="724" text-anchor="middle" font-size="12">손실: CES가 실제로 측정된 행에서만, 타깃별 마스크 MSE  ·  타깃 시각의 CES 입력은 0으로 마스킹  ·  총 모수 357,570 (T_i 가지 334,529 · V_rot 가지 23,041)</text>
+    <text x="600" y="724" text-anchor="middle" font-size="12">손실: CES가 실제로 측정된 행에서만, 타깃별 마스크 MSE  ·  타깃 시각의 CES 입력은 0으로 마스킹  ·  총 파라미터 357,570 (T_i 가지 334,529 · V_rot 가지 23,041)</text>
     <text x="600" y="744" text-anchor="middle" font-size="12" opacity="0.8">상태는 과거 → 현재로만 흐른다(인과). 격자 행마다 한 스텝, 빈 행도 입력으로 쓰인다(이월값·신선도·플래그가 결측을 정보로 바꾼다).</text>
-  </g>
-
-  <g stroke="currentColor" fill="none" stroke-width="1" opacity="0.7"><rect x="470" y="400" width="260" height="216" rx="4" stroke-dasharray="3 3"/></g>
-  <g fill="currentColor" font-size="11">
-    <text x="482" y="420" font-weight="600" font-size="12">세부(소스 그대로)</text>
-    <text x="482" y="440">· Norm: nn.LayerNorm(160 / 64), LSTM 출력의</text>
-    <text x="482" y="455">  각 스텝 벡터를 정규화(γ, β 학습, ε = 1e-5)</text>
-    <text x="482" y="475">· 활성: GELU (ReLU 아님); 마지막 Linear 뒤 활성 없음</text>
-    <text x="482" y="495">· dropout 0.1: T_i LSTM 두 층 사이에만; head·V_rot 없음</text>
-    <text x="482" y="515">· 손실: 타깃별 마스크 MSE + 0.1·mean relu(0_z − T̂_i)</text>
-    <text x="482" y="535">· AdamW lr 1e-3, wd 1e-4 · 기울기 노름 1.0 자르기</text>
-    <text x="482" y="555">· ReduceLROnPlateau(2, ×0.5) · 조기 종료 6 · 배치 16 블록</text>
-    <text x="482" y="575">· 가변 길이 블록은 pack_padded_sequence로 처리</text>
-    <text x="482" y="595">· 초기화: PyTorch 기본(초기값 시드 고정) · 모수 상한 1e6</text>
   </g>
 </svg>
