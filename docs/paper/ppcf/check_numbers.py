@@ -11,7 +11,8 @@ artifacts), docs/paper/mast_gate.md, docs/paper/mast_gate_addendum1.md, the revi
 MAST records at the end of THESIS_RESULTS.md, PREREGISTRATION_MAST_GATE.md,
 docs/paper/ppcf/kstar_regime.json (rounded to three decimals), kstar_level.json, the two
 figure sources computed for this paper (fig_missing.json, fig_gap.json), docs/paper/mast_gate_addendum2.md,
-docs/paper/b29_causal.md, PREREGISTRATION_B29.md, docs/paper/mast_edge.md (+ .json for\ncounts), docs/paper/b29_addendum1.md, PREREGISTRATION_B29_ADDENDUM1.md and fig_trace.json.
+docs/paper/b29_causal.md, PREREGISTRATION_B29.md, docs/paper/mast_edge.md (+ .json for\ncounts), docs/paper/b29_addendum1.md, PREREGISTRATION_B29_ADDENDUM1.md, docs/paper/mast_coupling.md,
+PREREGISTRATION_MAST_COUPLING.md and fig_trace.json.
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -95,6 +96,8 @@ def main():
         (ROOT / "docs/paper/mast_edge.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b29_addendum1.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B29_ADDENDUM1.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/mast_coupling.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_COUPLING.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))
@@ -128,7 +131,9 @@ def main():
         extra += ["%.1f" % (100 * b[0] / a[0]), "%.1f" % (100 * b[1] / a[1])]
     # example traces (fig_trace.py): scored rows of the two discharges
     ft = json.loads((HERE / "fig_trace.json").read_text(encoding="utf-8"))
-    extra += [str(ft[k]["scored_rows"]) for k in ("s31921.csv", "s31923.csv")]
+    typ = ft["typical_discharge"]["file"]
+    extra += [str(ft[k]["scored_rows"]) for k in ("s31921.csv", "s31923.csv", typ)]
+    extra += ["%.1f" % ft[typ][k]["rmse_stored"] for k in ("model", "causal_gp", "persistence")]
     # MAST confirmation set: counts printed with a thousands separator in the paper
     me = json.loads((ROOT / "docs/paper/mast_edge.json").read_text(encoding="utf-8"))
     cnt = me["counts"]["Not Checked"]

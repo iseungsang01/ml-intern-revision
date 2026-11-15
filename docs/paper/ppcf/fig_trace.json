@@ -1,6 +1,15 @@
 {
  "device": "cuda",
- "rule": "Example time traces through CES gaps (KSTAR, T_i), with a row-level check.\n\nSelection rule, fixed before any trace was drawn: the two discharges of this data set whose\nedge has been analysed in the literature (31921, 31923) and the file-level split whose TEST\nset holds both (split seed 1); in each discharge the 0.6 s window with the most grid rows\nthat lack a T_i value between the first and the last observed T_i of a contiguous segment.",
+ "rule": "Example time traces through CES gaps (KSTAR, T_i), with a row-level check.\n\nSelection rule, fixed before any trace was drawn: the two discharges of this data set whose\nedge has been analysed in the literature (31921, 31923) and the file-level split whose TEST\nset holds both (split seed 1); in each discharge the 0.6 s window with the most grid rows\nthat lack a T_i value between the first and the last observed T_i of a contiguous segment.\n\nThird panel, added after the first two had been seen (post hoc): the measured T_i of those\ntwo discharges moves by more than 1 keV between adjacent rows, so a discharge with typical\nscatter is shown beside them -- among the TEST discharges of the same split with at least\n200 observed T_i rows and at least one such window, the one whose row-to-row scatter\n(1.4826 x MAD of the differences between observed T_i on adjacent grid rows) is the median\n(lower middle for an even count); same window rule.",
+ "typical_discharge": {
+  "file": "s31343.csv",
+  "scatter_eV": 87.6,
+  "candidates": 46,
+  "scatter_eV_of_literature_discharges": {
+   "s31921.csv": 66.1,
+   "s31923.csv": 65.7
+  }
+ },
  "s31921.csv": {
   "scored_rows": 437,
   "max_value_mismatch_eV": 4.57763671875e-05,
@@ -30,7 +39,12 @@
    8.571999549865723
   ],
   "rows_without_ti_in_window": 40,
-  "rows_in_window": 65
+  "rows_in_window": 65,
+  "scatter_eV": 66.1,
+  "measured_min_max_eV_in_window": [
+   36.7,
+   2809.8
+  ]
  },
  "s31923.csv": {
   "scored_rows": 389,
@@ -61,7 +75,48 @@
    6.992000102996826
   ],
   "rows_without_ti_in_window": 33,
-  "rows_in_window": 65
+  "rows_in_window": 65,
+  "scatter_eV": 65.7,
+  "measured_min_max_eV_in_window": [
+   34.3,
+   2702.8
+  ]
+ },
+ "s31343.csv": {
+  "scored_rows": 393,
+  "max_value_mismatch_eV": 6.103515625e-05,
+  "model": {
+   "max_abs_dev_of_error_eV": 3.5085879233065498e-06,
+   "max_rel_dev": 5.92977411502803e-08,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 63.76463911353061,
+   "rmse_stored": 63.76463911914058
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 6.103515625e-05,
+   "max_rel_dev": 1.1873519706034353e-06,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 80.68969469660678,
+   "rmse_stored": 80.68969521194867
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 63.57247435836144,
+   "rmse_stored": 63.57247435836144
+  },
+  "window_s": [
+   5.7220001220703125,
+   6.381999969482422
+  ],
+  "rows_without_ti_in_window": 1,
+  "rows_in_window": 66,
+  "scatter_eV": 87.6,
+  "measured_min_max_eV_in_window": [
+   765.7,
+   1029.5
+  ]
  },
  "check_passed": true
 }

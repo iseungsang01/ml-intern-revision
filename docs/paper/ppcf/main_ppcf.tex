@@ -62,7 +62,10 @@ use the next CES sample, a recurrent network that also reads co-located beam-emi
 and electron-cyclotron channels has the lowest \Ti{} mean squared error, with skill
 $+0.113$ $[+0.085, +0.132]$ over a CES-only causal Gaussian process; retrained without
 those channels it loses $+0.064$ to $+0.117$ on four splits when failed fits are
-excluded. Against an offline Gaussian process the interval includes zero. Rotation
+excluded. Against an offline Gaussian process the interval includes zero. With the
+fast channels standardized from training discharges only the estimator is causal, and
+its skill over the causal Gaussian process is $+0.068$ to $+0.141$ on four splits and
+$+0.103$ to $+0.112$ on later discharges. Rotation
 is estimated from its own history (fast-channel coupling $|r| \leq 0.044$). The gain
 is carried by large-error rows.
 \end{abstract}
@@ -139,9 +142,11 @@ only: it has many chords and per-sample fit errors but no fast diagnostic co-loc
 with them, so no MAST number supports the statement about fast diagnostics. Gaps on
 KSTAR are natural; on MAST they are frames hidden by us. The fast-channel share of
 the \Ti{} margin holds in the population that excludes failed fits and is small in
-the one that keeps them. The fast channels are standardized with whole-discharge
-statistics, so the estimator is described as one that does not use the next CES
-sample and not as a causal one (\S\ref{sec:limits}). The equilibrium of the KSTAR
+the one that keeps them. The headline network standardizes the fast channels with
+whole-discharge statistics, an offline step, and is described as an estimator that
+does not use the next CES sample; the same network with the fast channels
+standardized from training discharges only is causal, and its numbers are quoted
+separately (\S\ref{sec:fast}). The equilibrium of the KSTAR
 discharges is not in the files, and no statement about pedestal dynamics is made.
 
 % =========================================================================
@@ -276,7 +281,9 @@ $t$ only, and the target row never enters the input. Training uses AdamW (learni
 rate $10^{-3}$, weight decay $10^{-4}$, batches of 16 segments, gradient clipping at
 1.0) with early stopping; splits are by whole discharge file. The recurrent operator
 runs forward in time, but the 15 fast channels are standardized with the mean and
-variance of the whole discharge, which is an offline step. A stateful step costs
+variance of the whole discharge, which is an offline step; a variant standardized
+with the statistics of the training discharges only is causal throughout
+(\S\ref{sec:fast}). A stateful step costs
 0.97\,ms (median) on a CPU.
 
 \subsection{Scoring, intervals and registration}
@@ -517,21 +524,27 @@ and averages noisy anchors, the interval includes zero in both populations. Stat
 with its scope: among estimators that do not wait for the next CES sample this one
 has the lowest mean squared error, and it is statistically at the level of an offline
 GP that does wait. Figure~\ref{fig:trace} shows what the estimates look like through
-gaps in two discharges.
+gaps in three discharges.
 
-\begin{figure}[t]
+\begin{figure}[tp]
   \centering
-  \includegraphics[width=0.95\linewidth]{fig_trace}
+  \includegraphics[width=0.88\linewidth]{fig_trace}
   \caption{Example traces through gaps (cut population). Circles: measured CES \Ti{};
   shaded: grid rows without a usable \Ti{}. Lines: estimates at every grid row from
   information before that row (the recurrent estimator also reads the fast channels
-  of the segment). Selection, fixed before any trace was drawn: the two discharges of
-  this data set whose edge is analysed
+  of the segment). (a, b) Selection fixed before any trace was drawn: the two
+  discharges of this data set whose edge is analysed
   in~\citep{Heo2025ExperimentalIdentification}, in the split whose test set holds
-  both, and in each the 0.6\,s window with the most rows lacking \Ti{}. On the 437
-  and 389 rows of these discharges scored in the frozen evaluation, the recomputed
-  squared errors of all three estimators equal the stored ones. No event is
-  identified in these windows.}
+  both, and in each the 0.6\,s window with the most rows lacking \Ti{}. In these
+  windows the measured \Ti{} itself moves by more than 1\,keV between adjacent rows;
+  without per-exposure fit errors it cannot be decided whether those values are fit
+  excursions below the 3\,keV cut or changes of the plasma. (c) Added after (a, b)
+  had been seen: the test discharge of the same split whose row-to-row scatter of
+  measured \Ti{} is the median of 46 candidates, same window rule. On its 393 scored
+  rows the RMSE is 63.8\,eV (recurrent estimator), 63.6\,eV (causal GP) and 80.7\,eV
+  (persistence). On the 437 (a), 389 (b) and 393 (c) rows scored in the frozen evaluation, the
+  recomputed squared errors of all three estimators equal the stored ones. No event
+  is identified in these windows.}
   \label{fig:trace}
 \end{figure}
 
@@ -595,12 +608,39 @@ has $+0.102$ to $+0.155$ over the causal GP on four of four: there the margin co
 mainly from how the recurrent state handles a CES history that contains failed fits.
 The fast-channel statement is therefore a statement about the cut population.
 
+\paragraph{A causal variant.} The network above standardizes the fast channels with
+the mean and variance of the whole discharge. Variants that do not were registered
+and scored on the same test rows, with this rule: the word causal is used for a
+variant whose \Ti{} skill over the causal GP has an interval above zero on at least
+three of four cut splits, both on the file-level splits and on a split by time (train
+on the 416 earliest discharges, test on the 97 latest; four initialisations). With
+the fast channels standardized by the statistics of the training discharges, the
+skill over the causal GP is $+0.068$ $[+0.014, +0.112]$, $+0.094$ $[+0.067, +0.120]$,
+$+0.141$ $[+0.106, +0.177]$ and $+0.101$ $[+0.061, +0.140]$ on the file-level splits
+and $+0.103$ to $+0.112$ on the split by time, every interval excluding zero; in the
+inclusive population it is $+0.098$ to $+0.165$ and $+0.097$ to $+0.121$
+(Appendix~\ref{app:more}). This variant takes nothing from the discharge being
+estimated except rows before the estimated one, and it is the estimator this paper
+calls causal. The headline network is separated from it on one of the four file-level
+cut splits ($+0.043$ $[+0.022, +0.066]$; the other three $-0.004$ to $+0.010$) and on
+none of the initialisations of the split by time ($+0.003$ to $+0.015$): with failed
+fits excluded, whole-discharge standardization is not what carries the margin over
+the causal GP. With failed fits kept, on the split by time, the headline network has
+the lower error on three of four initialisations ($+0.010$ to $+0.065$). The
+fast-channel increment of Table~\ref{tab:honly} was measured with whole-discharge
+standardization only; no history-only network was trained under the causal
+standardizer.
+
 \paragraph{Three supporting measurements.} (i) \emph{Memory is necessary.} A
 memoryless regression (gradient-boosted trees) on the same 22 inputs of the target
 row, including the last CES value, has a larger error: the recurrent estimator's skill
 over it is $+0.156$ to $+0.231$ on the four cut splits and $+0.104$ to $+0.180$ on the
 inclusive ones, every interval excluding zero, and that regression does not reach the
-causal GP. One row of fast channels plus one CES value is not enough. (ii)
+causal GP. A memoryless neural network on the same inputs (44{,}994 parameters),
+registered with the variants above, reads the same way: $+0.167$ to $+0.196$ (cut)
+and $+0.032$ to $+0.072$ (inclusive), every interval excluding zero, and on no cut
+split is it above the causal GP. One row of fast channels plus one CES value is not
+enough. (ii)
 \emph{Inside a linear filter the fast-channel term is a measured increment.} A
 20-parameter filter (\S\ref{sec:character}) is a CES-only filter plus a linear
 fast-channel term; against the same filter refitted with the fast-channel gains set
@@ -644,7 +684,11 @@ bounds a linear association and does not prove its absence. It is the measured
 counterpart of the asymmetry between~\eqref{eq:energy} and~\eqref{eq:momentum}. The
 Mirnov signal at 100\,Hz equals a single raw sample of the 2\,MHz stream at the grid
 time on 24 of 24 coils checked, so mode rotation in the kHz band is aliased away, and
-no torque or beam-power channel exists. The statement is scoped to standard CES at
+no torque or beam-power channel exists. On MAST, where beam power is public, rotation
+increments are associated with beam-power increments 45\,ms earlier ($+0.112$
+$[+0.107, +0.117]$), but that association comes from beam switching and is not
+one-sided in time; away from beam steps it is $+0.016$ $[+0.010, +0.022]$
+(Appendix~\ref{app:coupling}). The statement is scoped to standard CES at
 10\,ms on this chord; edge rotation inside an ELM
 cycle~\citep{Viezzer2020Dynamics} is a different measurement.
 
@@ -721,14 +765,13 @@ flat or falls with the gap (0.30--0.32 at 10\,ms, 0.23--0.26 at 50\,ms).
 \item \emph{The fast-channel share is conditional on the population.} It is
 established with failed fits excluded (four of four splits, under both training caps)
 and is small with failed fits kept (two of four).
-\item \emph{The estimator is not causal as trained.} The fast channels are
-standardized with whole-discharge statistics. Variants with train-file statistics and
-with a standardizer that uses past rows only, and a memoryless network on the same
-inputs, are not reported here; whether the margin over the causal GP survives a
-past-only standardizer is not known under this protocol.
-% B29-REST-SLOT: arms B/C (train-file and expanding-window standardizers) and arm D
-% (memoryless MLP) are running; replace this item and the wording "does not use the
-% next CES sample" where the registered rules allow.
+\item \emph{Causality.} The headline numbers are those of the network standardized
+with whole-discharge statistics, which is not causal. The causal variant keeps an
+interval above zero over the causal GP on every split and is not separated from the
+headline network with failed fits excluded; with failed fits kept, on the split by
+time, the headline network has the lower error on three of four initialisations. The
+fast-channel increment was measured with whole-discharge standardization only. No
+variant was run on a real-time system.
 \item \emph{Tail statistic.} The skill is carried by large-error rows; typical rows
 are not improved over interpolation.
 \item \emph{Post hoc choices.} The 1{,}000\,km/s rotation scoring rule and the form of
@@ -736,12 +779,15 @@ the 20-parameter filter were chosen after results were seen. The recurrent desig
 per-discharge standardization were adopted using the same four test splits; with a
 strictly temporal split the \Ti{} skill over the causal GP is $+0.11$ to $+0.16$, but
 that standardization was adopted after an earlier design failed this split
-(Appendix~\ref{app:more}).
+(Appendix~\ref{app:more}); the causal variant, which does not use it, has $+0.103$ to
+$+0.112$ there.
 \item \emph{Position of the KSTAR chord.} The chord was selected as the pedestal top
 by the data provider, but its normalized radius is not established from an
 equilibrium, and the files carry no confinement-mode label, so where the chord sits
 relative to the pedestal in a given discharge is not known. There is no per-exposure
-fit uncertainty, so fit failures are handled by value rules, and no beam-power,
+fit uncertainty, so fit failures are handled by value rules and the excursions of
+more than 1\,keV between adjacent rows in Fig.~\ref{fig:trace}(a, b) are scored as
+measured; there is no beam-power,
 D-alpha or equilibrium signal, so no event is labelled and no transport quantity is
 derived.
 \item \emph{MAST.} Gaps are made by hiding frames; the normalized radius is a
@@ -772,15 +818,17 @@ At that chord, among estimators that do not use the next CES sample, a recurrent
 estimator that also reads BES and ECEI channels at the same location has the lowest
 \Ti{} mean squared error, with skill $+0.113$ $[+0.085, +0.132]$ over the CES-only
 causal GP; against an offline GP that uses the next sample the interval includes
-zero. Retrained without the fast channels, the same network has a larger error by
+zero. With the fast channels standardized from training discharges only, the
+estimator is causal and its skill over the causal GP is $+0.068$ to $+0.141$ on four
+splits and $+0.103$ to $+0.112$ on later discharges. Retrained without the fast channels, the same network has a larger error by
 $+0.064$ to $+0.117$ on four splits when failed fits are excluded, which is most of
 its margin over the causal GP, and by $+0.016$ to $+0.024$ when they are kept.
 Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) and is
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.
 
-The measurements that would change these statements are named: the variants with a
-past-only standardizer; an equilibrium mapping and per-exposure fit uncertainties for
+The measurements that would change these statements are named: a history-only
+network under the causal standardizer; an equilibrium mapping and per-exposure fit uncertainties for
 the KSTAR chord; and further KSTAR chords, on which the MAST result predicts a less
 noise-dominated series inward of the present one.
 
@@ -817,7 +865,14 @@ same decision rule and a numerical expectation (a smaller increment, $+0.03$ to
 $+0.10$), after the first result had been seen; the expectation of a smaller
 increment did not hold. The analysis script of the rerun at first stopped on a check
 of a logged field whose format had changed since the original network was trained;
-the check was corrected before any number was read.
+the check was corrected before any number was read. The variants without
+whole-discharge standardization and the memoryless network were registered, with
+their rules and numerical expectations, in the same document as the history-only
+network and before any of them was trained; of the expectations, the ranges for the
+causal variant on the file-level splits and for the memoryless network were met, and
+the expected loss of the causal variant on the split by time ($-0.12$ to $-0.02$
+against the headline network) was not: it is $-0.015$ to $-0.003$. The third panel of
+Fig.~\ref{fig:trace} was added after the first two had been seen.
 
 \paragraph{MAST.} In order: (i) a pilot of 13 shots was inspected and those shots were
 excluded; (ii) a development list of 300 shots, the fit rule, the tuning/test
@@ -983,7 +1038,70 @@ four initialisations in both populations. The fast diagnostics drift by 1.22 (BE
 0.53 (ECEI) standard deviations between the two periods against 0.115 for the
 targets. Per-discharge standardization, which absorbs that drift, was adopted after an
 earlier design failed this split and uses whole-discharge statistics, so this is not
-an independent test of a deployable estimator.
+an independent test of a deployable estimator; the variants of
+Table~\ref{tab:causal}, which use no statistic of the test discharge beyond past
+rows, are.
+
+\begin{table}[h]
+  \centering
+  \caption{KSTAR, \Ti{}, cut population: the network with the fast channels
+  standardized by training-discharge statistics (the causal variant) and by an
+  expanding standardizer (rows up to the estimated one pooled with 50 pseudo-rows of
+  training statistics), on the test rows of the headline network. Skill with
+  discharge-clustered 95\% intervals; bold = interval excludes zero. Rows 1--4 of
+  the split by time are four initialisations.}
+  \label{tab:causal}
+  \scriptsize
+  \setlength{\tabcolsep}{2pt}
+  \begin{tabular}{llcccc}
+    \toprule
+    & & \multicolumn{2}{c}{Training-discharge statistics} & \multicolumn{2}{c}{Expanding} \\
+    Split & & Over causal GP & Headline over variant & Over causal GP & Headline over variant \\
+    \midrule
+    \multirow{4}{*}{File-level}
+      & 1 & $\mathbf{+0.068}$ $[+0.014, +0.112]$ & $+0.010$ $[-0.021, +0.042]$ & $+0.049$ $[-0.010, +0.101]$ & $\mathbf{+0.030}$ $[+0.006, +0.055]$ \\
+      & 2 & $\mathbf{+0.094}$ $[+0.067, +0.120]$ & $\mathbf{+0.043}$ $[+0.022, +0.066]$ & $\mathbf{+0.114}$ $[+0.070, +0.146]$ & $\mathbf{+0.021}$ $[+0.005, +0.042]$ \\
+      & 3 & $\mathbf{+0.141}$ $[+0.106, +0.177]$ & $-0.004$ $[-0.024, +0.019]$ & $\mathbf{+0.137}$ $[+0.100, +0.175]$ & $+0.001$ $[-0.016, +0.021]$ \\
+      & 4 & $\mathbf{+0.101}$ $[+0.061, +0.140]$ & $+0.004$ $[-0.044, +0.040]$ & $\mathbf{+0.105}$ $[+0.060, +0.146]$ & $-0.001$ $[-0.031, +0.023]$ \\
+    \midrule
+    \multirow{4}{*}{By time}
+      & 1 & $\mathbf{+0.108}$ $[+0.073, +0.141]$ & $+0.015$ $[-0.008, +0.040]$ & $\mathbf{+0.126}$ $[+0.089, +0.158]$ & $-0.005$ $[-0.017, +0.006]$ \\
+      & 2 & $\mathbf{+0.106}$ $[+0.070, +0.138]$ & $+0.003$ $[-0.029, +0.033]$ & $\mathbf{+0.125}$ $[+0.088, +0.156]$ & $\mathbf{-0.019}$ $[-0.039, -0.001]$ \\
+      & 3 & $\mathbf{+0.112}$ $[+0.077, +0.142]$ & $+0.005$ $[-0.014, +0.024]$ & $\mathbf{+0.125}$ $[+0.090, +0.155]$ & $-0.010$ $[-0.022, +0.002]$ \\
+      & 4 & $\mathbf{+0.103}$ $[+0.067, +0.136]$ & $+0.009$ $[-0.013, +0.031]$ & $\mathbf{+0.121}$ $[+0.081, +0.155]$ & $-0.011$ $[-0.027, +0.004]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Lagged association with beam power and D-alpha on MAST}
+\label{app:coupling}
+
+The KSTAR files carry no beam-power or D-alpha signal. On MAST both are public, so
+the association of 5\,ms increments of \Ti{} and rotation with increments of the
+injected beam power and of mid-plane D-alpha was computed over lags of $-100$ to
+$+100$\,ms. The statements, their directions and the wording to use if they failed
+were registered before any such relation was computed. The lag was chosen on 1{,}582
+discharges and every number below is from the other 1{,}591; intervals are from a
+bootstrap over discharges.
+
+\sloppy Rotation increments are correlated with beam-power increments 45\,ms earlier
+($+0.112$ $[+0.107, +0.117]$) and \Ti{} increments with those 50\,ms earlier ($+0.082$
+$[+0.078, +0.087]$). The registered direction check did not pass: the correlation with
+beam-power increments that come \emph{after} the rotation increment is as large
+(0.126 against 0.112). With the two frames on either side of each beam step removed,
+the rotation value is $+0.016$ $[+0.010, +0.022]$ and is then one-sided in time; the
+\Ti{} value is not distinguished from the shifted-series null. Charge exchange exists
+only while the viewed beam is on, so a change of beam power also changes whether and
+how well a sample is fitted, and the association at beam steps cannot be read as the
+response time of the plasma. For D-alpha the correlation is negative at short lag
+(rotation $-0.206$ $[-0.229, -0.181]$ at 0\,ms; \Ti{} $-0.239$ $[-0.269, -0.210]$ at
+5\,ms) and as large in the core ($-0.244$) as at the edge, so the registered statement
+that it is an edge effect did not hold; a discharge-wide event and D-alpha light
+entering the fit are both possible and are not separated here. Of the five registered
+statements one of the two primary ones held. The reading kept is narrow: away from
+beam steps the rotation increments on MAST carry an association of $+0.016$ with the
+beam power, the same order as the KSTAR bound of 0.044 for the fast channels; the
+devices, signals and radii differ, so neither number supports the other.
 
 \section{The rotation scoring rule}
 \label{app:vrotrule}

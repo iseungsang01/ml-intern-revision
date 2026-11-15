@@ -5,6 +5,13 @@ edge has been analysed in the literature (31921, 31923) and the file-level split
 set holds both (split seed 1); in each discharge the 0.6 s window with the most grid rows
 that lack a T_i value between the first and the last observed T_i of a contiguous segment.
 
+Third panel, added after the first two had been seen (post hoc): the measured T_i of those
+two discharges moves by more than 1 keV between adjacent rows, so a discharge with typical
+scatter is shown beside them -- among the TEST discharges of the same split with at least
+200 observed T_i rows and at least one such window, the one whose row-to-row scatter
+(1.4826 x MAD of the differences between observed T_i on adjacent grid rows) is the median
+(lower middle for an even count); same window rule.
+
 Estimates on every grid row of the window:
   recurrent estimator -- inference with the frozen checkpoint data/.b1_seqv2_s1_i1 (GPU, the
                          device of the frozen evaluation; CES_TRACE_DEVICE=cpu also runs),
@@ -85,8 +92,7 @@ def estimates(arr, pred_table):
     return time, ti, model, pers, gp, seg_id
 
 
-def pick_window(time, ti, seg_id):
-    """0.6 s window with the most unlabelled rows lying between observed rows of a segment."""
+def _inside(time, ti, seg_id):
     inside = np.zeros(len(time), dtype=bool)
     for s in np.unique(seg_id):
         idx = np.flatnonzero(seg_id == s)
@@ -94,6 +100,21 @@ def pick_window(time, ti, seg_id):
         if obs.size >= 2:
             span = idx[(idx > obs[0]) & (idx < obs[-1])]
             inside[span] = np.isnan(ti[span])
+    return inside
+
+
+def scatter(time, ti):
+    """1.4826 x MAD of the differences between observed T_i on adjacent grid rows."""
+    ok = ~np.isnan(ti[1:]) & ~np.isnan(ti[:-1]) & (np.diff(time) < GAP)
+    d = (ti[1:] - ti[:-1])[ok]
+    if d.size < 50:
+        return np.nan
+    return 1.4826 * float(np.median(np.abs(d - np.median(d))))
+
+
+def pick_window(time, ti, seg_id):
+    """0.6 s window with the most unlabelled rows lying between observed rows of a segment."""
+    inside = _inside(time, ti, seg_id)
     best, best_n = None, -1
     for i in np.flatnonzero(inside):
         j = np.searchsorted(time, time[i] + WINDOW_S)
@@ -102,8 +123,29 @@ def pick_window(time, ti, seg_id):
         c = int(inside[i:j].sum())
         if c > best_n:
             best, best_n = (i, j), c
+    if best is None:
+        return None
     lo = max(best[0] - 5, 0)
     return lo, best[1], best_n
+
+
+def typical_shot(grid, test_files):
+    """TEST discharge with the median row-to-row scatter of the measured T_i."""
+    rows = []
+    for name in sorted(test_files):
+        arr = grid[name]
+        time, ti = arr[:, 0].astype(np.float64), arr[:, 1].astype(np.float64)
+        if int((~np.isnan(ti)).sum()) < 200:
+            continue
+        seg_id = np.zeros(len(time), dtype=int)
+        for k, idx in enumerate(segments(time)):
+            seg_id[idx] = k
+        sc = scatter(time, ti)
+        if not np.isfinite(sc) or pick_window(time, ti, seg_id) is None:
+            continue
+        rows.append((sc, name))
+    rows.sort()
+    return rows[(len(rows) - 1) // 2], len(rows), {n: round(v, 1) for v, n in rows}
 
 
 def check(name, time, ti, model, pers, gp, npz, valid_names):
@@ -143,13 +185,19 @@ def main():
             raise SystemExit(f"FATAL: {s} is not a TEST file of split 1")
     grid, _ = load_grid_files(ROOT / "data", True)
     valid_names = sorted(grid)
+    (typ_sc, typ_name), n_typ, sc_all = typical_shot(grid, manifest["test_files"])
+    shots = list(SHOTS) + [typ_name]
     with torch.no_grad():
-        lookup = build_pred_lookup(ROOT / "data", list(SHOTS), stats, torch.device(DEVICE))["full"]
+        lookup = build_pred_lookup(ROOT / "data", shots, stats, torch.device(DEVICE))["full"]
     npz = np.load(RUN / "comparison_errors_test.npz")
 
     report, traces = {"device": DEVICE, "rule": __doc__.split("Estimates")[0].strip()}, {}
     ok = True
-    for name in SHOTS:
+    report["typical_discharge"] = {"file": typ_name, "scatter_eV": round(typ_sc, 1),
+                                   "candidates": n_typ,
+                                   "scatter_eV_of_literature_discharges":
+                                       {n: sc_all.get(n) for n in SHOTS}}
+    for name in shots:
         time, ti, model, pers, gp, seg_id = estimates(grid[name], lookup[name])
         c = check(name, time, ti, model, pers, gp, npz, valid_names)
         report[name] = c
@@ -169,8 +217,8 @@ def main():
         raise SystemExit("FATAL: recomputed estimates do not match the stored errors; no figure.")
 
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False})
-    fig, axes = plt.subplots(len(SHOTS), 1, figsize=(7.0, 5.2))
-    for ax, name in zip(axes, SHOTS):
+    fig, axes = plt.subplots(len(shots), 1, figsize=(7.0, 5.3))
+    for k, (ax, name) in enumerate(zip(axes, shots)):
         time, ti, model, pers, gp, seg_id = traces[name]
         lo, hi, n_gap = pick_window(time, ti, seg_id)
         sl = slice(lo, hi)
@@ -184,15 +232,22 @@ def main():
         for r in np.flatnonzero(~obs):
             ax.axvspan(t[r] - 0.005, t[r] + 0.005, color="0.92", lw=0)
         ax.set_ylabel(r"$T_i$ (eV)")
-        ax.set_title(f"KSTAR #{name[1:6]}", loc="left", fontsize=9)
+        sc = scatter(time, ti)
+        vv = ti[sl][obs]
+        ax.set_title(f"({'abc'[k]}) KSTAR #{name[1:6]}: {int((~obs).sum())} of {len(t)} rows "
+                     f"without $T_i$; measured {vv.min():.0f} to {vv.max():.0f} eV",
+                     loc="left", fontsize=9)
         ax.margins(x=0.01)
         report[name]["window_s"] = [float(t[0]), float(t[-1])]
         report[name]["rows_without_ti_in_window"] = int((~obs).sum())
         report[name]["rows_in_window"] = int(len(t))
+        report[name]["scatter_eV"] = round(float(sc), 1)
+        report[name]["measured_min_max_eV_in_window"] = [round(float(vv.min()), 1),
+                                                         round(float(vv.max()), 1)]
     axes[-1].set_xlabel("time (s)")
-    axes[0].legend(ncol=4, fontsize=7.5, frameon=False, loc="upper center",
-                   bbox_to_anchor=(0.5, 1.32))
-    fig.tight_layout()
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, ncol=4, fontsize=7.5, frameon=False, loc="upper center")
+    fig.tight_layout(rect=(0, 0, 1, 0.95))
     fig.savefig(HERE / "fig_trace.pdf")
     fig.savefig(HERE / "fig_trace.png", dpi=170)
     (HERE / "fig_trace.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
