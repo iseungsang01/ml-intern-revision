@@ -1,0 +1,9 @@
+{
+ "n_files": 641,
+ "n_discharges": 603,
+ "median_of_medians_eV": 528.02209,
+ "p10_eV": 212.98609199999999,
+ "p90_eV": 1020.131014,
+ "nominal_rho": 0.7959999999999998,
+ "note": "nominal rho from R = 2.198 m, R0 = 1.8 m, a = 0.5 m; not an equilibrium mapping"
+}

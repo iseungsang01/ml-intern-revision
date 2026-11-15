@@ -9,8 +9,9 @@ by hand against the sources).
 Sources: docs/paper/short/main_short.tex (KSTAR numbers, traced there to the frozen
 artifacts), docs/paper/mast_gate.md, docs/paper/mast_gate_addendum1.md, the review-loop and
 MAST records at the end of THESIS_RESULTS.md, PREREGISTRATION_MAST_GATE.md,
-docs/paper/ppcf/kstar_regime.json (rounded to three decimals), and the two figure
-sources computed for this paper, docs/paper/ppcf/fig_missing.json and fig_gap.json.
+docs/paper/ppcf/kstar_regime.json (rounded to three decimals), kstar_level.json, the two
+figure sources computed for this paper (fig_missing.json, fig_gap.json), docs/paper/mast_gate_addendum2.md,
+docs/paper/b29_causal.md and PREREGISTRATION_B29.md.
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -38,6 +39,20 @@ DERIVED = {
     "0.455": "median of a chi-square variable with one degree of freedom (registration)",
     "2.2": "mean-to-median ratio of chi-square(1), 1 / 0.455 (registration)",
     "0.010": "10 ms",
+    "14708": "first shot of campaign M6 in the FAIR-MAST catalogue (mast_hardware_timeline.md)",
+    "30473": "last shot of campaign M9 in the FAIR-MAST catalogue (mast_hardware_timeline.md)",
+    "2006": "campaign M6 starts 2006-01 (catalogue time stamps)",
+    "2013": "campaign M9 ends 2013-09 (catalogue time stamps)",
+    "0.80": "nominal normalized radius of the KSTAR chord, (2.198 - 1.8) / 0.5 = 0.796 (kstar_level.json)",
+    "0.8": "same, rounded",
+    "1.8": "nominal KSTAR major radius, m",
+    "0.5": "nominal KSTAR minor radius, m / white-noise regime number -0.5 / loose fit rule 0.5",
+    "0.7": "bin edge of the normalized radius (registration of the radial breakdown)",
+    "0.9": "bin edge of the normalized radius",
+    "1.0": "bin edge of the normalized radius",
+    "+0.05": "registered expectation for the cut fast-channel increment, lower end (PREREGISTRATION_B29.md)",
+    "+0.14": "same, upper end",
+    "0.047": "smallest median relative T_i error of the three inner bins (addendum 2 md: 0.047)",
     "7,957": "act shots after excluding the 13 pilot shots (select_shots.py output; experiments/README.md mast row)",
 }
 
@@ -69,6 +84,9 @@ def main():
         (ROOT / "docs/paper/mast_gate.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/mast_gate_addendum1.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_GATE.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/mast_gate_addendum2.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b29_causal.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B29.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))
@@ -84,6 +102,13 @@ def main():
         r = fm[k]
         extra += ["%.1f" % r["missing_pct"], "%.1f" % r["no_independent_pct"], "%.1f" % r["independent_pct"],
                   "%.1f" % (100 * r["gap_le_50ms_share"]), f"{r['n_gaps']:,}"]
+    kl = json.loads((HERE / "kstar_level.json").read_text(encoding="utf-8"))
+    extra += ["%.0f" % kl["median_of_medians_eV"], "%.0f" % kl["p10_eV"], f"{kl['p90_eV']:,.0f}",
+              str(kl["n_discharges"]), "%.2f" % kl["nominal_rho"]]
+    fgi = json.loads((HERE / "fig_gap.json").read_text(encoding="utf-8"))["incl"]
+    for name, c in fgi["CES_TI"].items():
+        for sk in c["skill"].values():
+            extra += ["%+.3f" % v for v in [sk["median"], *sk["ci95"]]]
     fg = json.loads((HERE / "fig_gap.json").read_text(encoding="utf-8"))["cut"]
     for t in ("CES_TI", "CES_VT"):
         for name, c in fg[t].items():
