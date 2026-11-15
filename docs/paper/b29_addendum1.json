@@ -1,0 +1,662 @@
+{
+ "registration": "ces_prediction/experiments/PREREGISTRATION_B29_ADDENDUM1.md",
+ "epoch_cap": 80,
+ "splits_done": 4,
+ "splits_total": 4,
+ "identity_fields_checked": [
+  "seq_model",
+  "n_params",
+  "per_shot_input_norm",
+  "feature_dims",
+  "normalization",
+  "train_blocks",
+  "train_labels",
+  "drop_stuck_targets",
+  "fixed_epochs",
+  "seed",
+  "init_seed",
+  "loss"
+ ],
+ "statistic": "skill = 1 - SSE_X/SSE_Y, shot-clustered paired bootstrap (paired_model_compare.py)",
+ "splits": {
+  "42": {
+   "epochs": {
+    "arm_cap30": {
+     "epochs_run": 30,
+     "best_epoch": 29
+    },
+    "arm_cap80": {
+     "epochs_run": 49,
+     "best_epoch": 43
+    },
+    "backbone_frozen": {
+     "epochs_run": 25,
+     "best_epoch": 19
+    },
+    "backbone_cap80": {
+     "epochs_run": 25,
+     "best_epoch": 19
+    }
+   },
+   "cap80_bound": {
+    "arm": false,
+    "backbone": false
+   },
+   "CES_TI": {
+    "n_rows": 32589,
+    "n_shots": 96,
+    "first_backbone_vs_arm": {
+     "skill": 0.06749085460373061,
+     "ci95": [
+      0.0291782804410984,
+      0.10750724586788812
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": 0.06731252977024393,
+     "ci95": [
+      0.029431559700914683,
+      0.10674373141683408
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": 0.06731252977024393,
+     "ci95": [
+      0.029431559700914683,
+      0.10674373141683408
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.0001911946275451326,
+     "ci95": [
+      -0.005084054184185472,
+      0.004597860852682754
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.010958150867519945,
+     "ci95": [
+      -0.027344928120697998,
+      0.046345804324938206
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.07753305978126723,
+     "ci95": [
+      0.035455780860346155,
+      0.11629044034938525
+     ],
+     "above_0": true,
+     "below_0": false
+    }
+   },
+   "CES_VT": {
+    "n_rows": 10463,
+    "n_shots": 60,
+    "first_backbone_vs_arm": {
+     "skill": 0.002575695810910994,
+     "ci95": [
+      -0.00400427503707283,
+      0.012946585339205282
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": -0.0008199376161457383,
+     "ci95": [
+      -0.007070450776701637,
+      0.007630512489946687
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": -0.0008199376161457383,
+     "ci95": [
+      -0.007070450776701637,
+      0.007630512489946687
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.0033928515004855164,
+     "ci95": [
+      0.001522869908210303,
+      0.006745612097718183
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.3310493872566158,
+     "ci95": [
+      0.023845661135818964,
+      0.5811518805352477
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.33050088948588374,
+     "ci95": [
+      0.022077496562644468,
+      0.5805905035906661
+     ],
+     "above_0": true,
+     "below_0": false
+    }
+   }
+  },
+  "1": {
+   "epochs": {
+    "arm_cap30": {
+     "epochs_run": 30,
+     "best_epoch": 30
+    },
+    "arm_cap80": {
+     "epochs_run": 46,
+     "best_epoch": 40
+    },
+    "backbone_frozen": {
+     "epochs_run": 20,
+     "best_epoch": 14
+    },
+    "backbone_cap80": {
+     "epochs_run": 20,
+     "best_epoch": 14
+    }
+   },
+   "cap80_bound": {
+    "arm": false,
+    "backbone": false
+   },
+   "CES_TI": {
+    "n_rows": 35582,
+    "n_shots": 96,
+    "first_backbone_vs_arm": {
+     "skill": 0.07693163620212629,
+     "ci95": [
+      0.046786365425618384,
+      0.10639290979062062
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": 0.06417981695780672,
+     "ci95": [
+      0.0393943371826317,
+      0.08988616687323843
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": 0.06417981695780672,
+     "ci95": [
+      0.0393943371826317,
+      0.08988616687323843
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.013626356297280817,
+     "ci95": [
+      0.0021128994486279283,
+      0.025312911801334857
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.07360452697742537,
+     "ci95": [
+      0.0454908947237414,
+      0.10092801693428648
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.13306041886655506,
+     "ci95": [
+      0.10024018410660346,
+      0.16317325557315843
+     ],
+     "above_0": true,
+     "below_0": false
+    }
+   },
+   "CES_VT": {
+    "n_rows": 13247,
+    "n_shots": 62,
+    "first_backbone_vs_arm": {
+     "skill": -0.0024938242546057587,
+     "ci95": [
+      -0.013791423280775072,
+      0.009131936278420686
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": -0.01650417473703003,
+     "ci95": [
+      -0.04189253287256834,
+      -0.001826364399906818
+     ],
+     "above_0": false,
+     "below_0": true
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": -0.01650417473703003,
+     "ci95": [
+      -0.04189253287256834,
+      -0.001826364399906818
+     ],
+     "above_0": false,
+     "below_0": true
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.013782875496845648,
+     "ci95": [
+      0.0019674237605556894,
+      0.03518417632885392
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.14456405923851223,
+     "ci95": [
+      0.007792601700076836,
+      0.27223041930141856
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.13044579499584885,
+     "ci95": [
+      -0.00811226624060007,
+      0.25725694953935224
+     ],
+     "above_0": false,
+     "below_0": false
+    }
+   }
+  },
+  "7": {
+   "epochs": {
+    "arm_cap30": {
+     "epochs_run": 11,
+     "best_epoch": 5
+    },
+    "arm_cap80": {
+     "epochs_run": 11,
+     "best_epoch": 5
+    },
+    "backbone_frozen": {
+     "epochs_run": 20,
+     "best_epoch": 14
+    },
+    "backbone_cap80": {
+     "epochs_run": 20,
+     "best_epoch": 14
+    }
+   },
+   "cap80_bound": {
+    "arm": false,
+    "backbone": false
+   },
+   "CES_TI": {
+    "n_rows": 35759,
+    "n_shots": 96,
+    "first_backbone_vs_arm": {
+     "skill": 0.11689485882533779,
+     "ci95": [
+      0.09255960724752946,
+      0.14174751151708415
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": 0.11689485882533779,
+     "ci95": [
+      0.09255960724752946,
+      0.14174751151708415
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": 0.11689485882533779,
+     "ci95": [
+      0.09255960724752946,
+      0.14174751151708415
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.023618363098226625,
+     "ci95": [
+      -0.005307564505164397,
+      0.050442517443480994
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.1377523567035117,
+     "ci95": [
+      0.10112917322324122,
+      0.17463224181576859
+     ],
+     "above_0": true,
+     "below_0": false
+    }
+   },
+   "CES_VT": {
+    "n_rows": 14477,
+    "n_shots": 66,
+    "first_backbone_vs_arm": {
+     "skill": 0.005044039358189312,
+     "ci95": [
+      -0.008561245510701154,
+      0.02179457089674557
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": 0.005044039358189312,
+     "ci95": [
+      -0.008561245510701154,
+      0.02179457089674557
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": 0.005044039358189312,
+     "ci95": [
+      -0.008561245510701154,
+      0.02179457089674557
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.01544060441243189,
+     "ci95": [
+      -0.17910364889753363,
+      0.0751873105637354
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.02040676075425074,
+     "ci95": [
+      -0.16187053900137308,
+      0.07862038996543365
+     ],
+     "above_0": false,
+     "below_0": false
+    }
+   }
+  },
+  "123": {
+   "epochs": {
+    "arm_cap30": {
+     "epochs_run": 30,
+     "best_epoch": 30
+    },
+    "arm_cap80": {
+     "epochs_run": 58,
+     "best_epoch": 52
+    },
+    "backbone_frozen": {
+     "epochs_run": 30,
+     "best_epoch": 29
+    },
+    "backbone_cap80": {
+     "epochs_run": 42,
+     "best_epoch": 36
+    }
+   },
+   "cap80_bound": {
+    "arm": false,
+    "backbone": false
+   },
+   "CES_TI": {
+    "n_rows": 34038,
+    "n_shots": 96,
+    "first_backbone_vs_arm": {
+     "skill": 0.05858620809958215,
+     "ci95": [
+      0.010965325269441134,
+      0.10260333256354469
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": 0.06376697772200857,
+     "ci95": [
+      0.02186265846717907,
+      0.10344563689863275
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": 0.06854017355410824,
+     "ci95": [
+      0.020874943159097336,
+      0.11157461242476478
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": -0.0055336326525001756,
+     "ci95": [
+      -0.024879085321609283,
+      0.007458388349713543
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": 0.005098298947505353,
+     "ci95": [
+      -0.018902734117426746,
+      0.028440066369704673
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.04371557347508248,
+     "ci95": [
+      0.007140470240342487,
+      0.0742943992270992
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.10925947403619118,
+     "ci95": [
+      0.060495823058212266,
+      0.15395708292247032
+     ],
+     "above_0": true,
+     "below_0": false
+    }
+   },
+   "CES_VT": {
+    "n_rows": 13968,
+    "n_shots": 61,
+    "first_backbone_vs_arm": {
+     "skill": -0.0017444343769528192,
+     "ci95": [
+      -0.00956676501850039,
+      0.0027033776685523197
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "i_frozen_backbone_vs_cap80_arm": {
+     "skill": -0.001014054108867679,
+     "ci95": [
+      -0.006765516151060851,
+      0.0017268898429488573
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "ii_cap80_backbone_vs_cap80_arm": {
+     "skill": -0.002145725986892888,
+     "ci95": [
+      -0.011070932066974015,
+      0.0013758091552059624
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_arm_vs_first_arm": {
+     "skill": -0.0007296403732668377,
+     "ci95": [
+      -0.004566543410828549,
+      0.0028891699040856865
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "iii_cap80_backbone_vs_frozen": {
+     "skill": -0.0011305254640332496,
+     "ci95": [
+      -0.0073084418520692526,
+      0.003299770818535618
+     ],
+     "above_0": false,
+     "below_0": false
+    },
+    "cap80_arm_vs_causal_gp": {
+     "skill": 0.13514080546097385,
+     "ci95": [
+      0.007060743719489779,
+      0.3247317721678317
+     ],
+     "above_0": true,
+     "below_0": false
+    },
+    "cap80_backbone_vs_causal_gp": {
+     "skill": 0.13328505461224815,
+     "ci95": [
+      -0.0035394543418266113,
+      0.3246515716368318
+     ],
+     "above_0": false,
+     "below_0": false
+    }
+   }
+  }
+ },
+ "verdict": {
+  "count_i": 4,
+  "count_ii": 4,
+  "rule": "R-a: lower bound of (ii) > 0 on >= 3/4 cut splits -- the cut fast-channel increment is quoted as final with the (ii) numbers",
+  "R-d": "no run reached cap 80",
+  "guard_vrot_ii_above_0": 0
+ }
+}

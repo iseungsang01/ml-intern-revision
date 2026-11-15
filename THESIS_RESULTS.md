@@ -7163,3 +7163,27 @@ Registration `PREREGISTRATION_MAST_EDGE.md` (commit 56905e0, before any value of
 **Verdict.** The post hoc gate reading is confirmed on discharges that took no part in it: the fit-failure share and the reported relative error rise outside rho = 0.7, and the regime number of both targets falls from about +0.3 / +0.4 in the core to 0 at rho 0.8-0.9 and below 0 at 0.9-1.0 (population W). At either candidate for the normalized radius of the KSTAR chord MAST is no longer trend-dominated, but it does not reach the KSTAR value (-0.416); the two-device contrast of the pooled numbers is in large part a radius (signal-strength) dependence. Averaging does not become a gain at the MAST edge.
 
 **Limits.** rho is one EFIT scalar pair per discharge, a geometric midplane ratio, not a flux coordinate. No confinement-mode label exists, so nothing here is a statement about a pedestal. The regime number at the edge is that of the chords passing the fit rule: G and W disagree in sign in 0.9-1.0. The merged-bin regime number (-0.049) is recomputed over the chords of both sub-bins and is lower than either sub-bin median (-0.012, +0.008). M9 does not show the fall. Seven statements, two primary, no multiplicity correction. The normalized radius of the KSTAR chord is not EFIT-mapped. Not checked: sensitivity to the bin edges, to the 90 % scored-chord rule, and a second run for byte identity.
+
+
+### B.29 addendum 1 -- epoch cap 30 -> 80 for arm A and the backbone, cut splits (2026-11-16)
+
+Registration `PREREGISTRATION_B29_ADDENDUM1.md` (9a41de8, written after the arm-A read-out and before these runs); runner `run_b29.py --addendum1` (8 runs, 1.00 h wall, GPU alone, 724 MiB); analysis `analyze_b29_addendum1.py` -> `docs/paper/b29_addendum1.{json,md}`.
+
+Why: arm A (history-only seq_v2) had reached the 30-epoch cap on 3 of 4 cut splits (best epoch 29, 30, 30), so the fast-channel increment could have been inflated by an undertrained arm.
+
+Training length under cap 80: arm A stopped at 49 (best 43), 46 (40), 11 (5), 58 (52) epochs; the backbone at 25 (19), 20 (14), 20 (14), 42 (36). No run reached the cap. The three backbone retrains whose frozen run had early-stopped reproduced it exactly (cap-80 vs frozen +0.000 [+0.000, +0.000]).
+
+T_i, paired TEST rows, shot-clustered 95 % interval:
+
+| split | cap 30 (registered primary) | (i) frozen backbone vs cap-80 arm A | (ii) cap-80 backbone vs cap-80 arm A | cap-80 arm A vs cap-30 arm A |
+|---|---|---|---|---|
+| 42 | +0.067 [+0.029, +0.108] | +0.067 [+0.029, +0.107] | +0.067 [+0.029, +0.107] | +0.000 [-0.005, +0.005] |
+| 1 | +0.077 [+0.047, +0.106] | +0.064 [+0.039, +0.090] | +0.064 [+0.039, +0.090] | +0.014 [+0.002, +0.025] |
+| 7 | +0.117 [+0.093, +0.142] | +0.117 [+0.093, +0.142] | +0.117 [+0.093, +0.142] | +0.000 [+0.000, +0.000] |
+| 123 | +0.059 [+0.011, +0.103] | +0.064 [+0.022, +0.103] | +0.069 [+0.021, +0.112] | -0.006 [-0.025, +0.007] |
+
+Verdict by the registered rule R-a: the lower bound of (ii) is above 0 on 4/4 cut splits, so the cut-population fast-channel increment is quoted as final with the (ii) numbers, +0.064 to +0.117. Training arm A 16 to 28 epochs longer changed its TEST error by -0.006 to +0.014; the cap was not what made the increment. Cap-80 arm A vs causal GP: 2/4 exclude 0 (+0.074, +0.044), as at cap 30. V_rot guard (ii): 0/4 above 0; split 1 is -0.017 [-0.042, -0.002], i.e. the history-only arm has the lower V_rot error there.
+
+Expectation check: registered guess was a shrink to +0.03 to +0.10 with 3-4/4 holding; three splits are inside it, split 7 (+0.117) is above it, and the increment did not shrink. "No run reaches cap 80" held.
+
+Disclosure: the analysis script first aborted on its identity check, because `feature_dims` in metrics.json gained two keys (`extra_vt`, `extra_ti`, both 0) after the frozen backbone was trained. The check now requires those two to be 0 and compares the channels the backbone has; no number was read before the fix. The inclusive-population statement (increment +0.016 to +0.024, 2/4) is untouched by this addendum. Arms B, C, D of B.29 (causal standardization, memoryless MLP) are still not run.

@@ -31,9 +31,22 @@ IDENTITY_FIELDS = ("seq_model", "n_params", "per_shot_input_norm", "feature_dims
                    "init_seed", "loss")
 
 
+def _same(key, frozen_value, retrain_value):
+    """Equality of one identity field. `feature_dims` gained two keys after the frozen backbone
+    was trained (`extra_vt`, `extra_ti`: counts of optional extra input channels); they must be 0
+    in the retrain and are then ignored, so the comparison is on the channels the backbone has."""
+    if key == "feature_dims" and isinstance(frozen_value, dict) and isinstance(retrain_value, dict):
+        added = {k: v for k, v in retrain_value.items() if k not in frozen_value}
+        if any(k not in ("extra_vt", "extra_ti") or v != 0 for k, v in added.items()):
+            return False
+        return all(retrain_value.get(k) == v for k, v in frozen_value.items())
+    return frozen_value == retrain_value
+
+
 def identity_mismatches(frozen_metrics, retrain_metrics):
     """Names of the identity fields on which the two metrics.json records differ."""
-    return [k for k in IDENTITY_FIELDS if frozen_metrics.get(k) != retrain_metrics.get(k)]
+    return [k for k in IDENTITY_FIELDS
+            if not _same(k, frozen_metrics.get(k), retrain_metrics.get(k))]
 
 
 def read_split(s):
