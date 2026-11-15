@@ -95,3 +95,40 @@ Each prediction can fail; the outcome is reported as stated here.
   (`docs/paper/review_loop/venue_plan/mast_hardware_timeline.md`); it does not enter any rule here.
 - Output: `docs/paper/mast_gate_addendum2.json` / `.md`; record in `THESIS_RESULTS.md` section 8.
   CPU only; only gate-list shots are read.
+
+## 8. Stratum (f): normalized radius, and the KSTAR-matched bin (added 2026-11-15, before any value of this stratum is computed)
+
+Added after sections 1-7 were committed (a6d7b3a) and while the script for strata (a)-(e) was
+running; no readout by normalized radius has been computed. Known beforehand: the catalogue EFIT
+columns exist for 278-279 of the 300 gate shots, in metres (magnetic axis median 0.910 m, outer
+radius median 1.397 m), and the gate report gave the major-radius tertile edges of the scored rows
+in population G as 0.934 m and 1.063 m with mean reduced chi-square 1.42 / 2.39 / 4.46 (T_i, slope
+filter, first run). So most scored chords of population G are expected inside rho < 0.4.
+
+- Normalized radius per discharge: rho = (R_chord - R_axis) / (R_out - R_axis), with R_axis =
+  `radii_magnetic__radius_efit` and R_out = `radii_router_radius_efit` of
+  `data/mast/meta/l1_shots.parquet`. If R_out is missing, `radii_router_radius_d_alpha` is used and
+  counted; a shot without R_axis or without either outer radius is left out of this stratum and
+  counted. Low-field side only (R_chord > R_axis). One scalar per discharge: the time variation of
+  the axis and of the boundary inside the beam block is ignored (limit, stated).
+- Bins, fixed: rho 0.0-0.3 / 0.3-0.5 / 0.5-0.7 / 0.7-0.9 / 0.9-1.0 (left-closed; rho >= 1 dropped
+  and counted).
+- KSTAR-matched bin: 0.7-0.9. The KSTAR chord is at R = 2.198 m; with the nominal R0 = 1.8 m and
+  a = 0.5 m, (2.198 - 1.8) / 0.5 = 0.80, and a Shafranov shift of the axis keeps it inside 0.7-0.9.
+  This is an estimate from nominal geometry, not an EFIT mapping of the KSTAR discharges.
+- Readouts per bin (TEST, addendum-1 hyperparameters, no retuning), population G primary and
+  population W co-reported (stated now because G may be thin at large rho): regime number (median
+  over shots of the median over the chords of the bin, same per-chord definition and minimum of 8
+  increment pairs), mean and median reduced chi-square of the causal GP, skill of the causal GP,
+  the slope-state filter and the running mean against persistence, error ratio, rows and shots.
+  Intervals: 2,000 bootstrap resamples of TEST shots; a bin with fewer than 8 shots carrying scored
+  rows (for the regime number: fewer than 8 shots with a value) has point values only.
+- **S5.** In the bin rho 0.7-0.9 the regime number is positive with an interval above 0, for T_i
+  and for V_i: at the normalized radius of the KSTAR chord MAST is still trend-limited. Prediction:
+  holds for both targets in population W; in population G the bin is expected to have too few
+  shots for an interval, in which case S5 is read on W and that is said.
+- **S6.** The mean reduced chi-square of the causal GP increases monotonically with rho over the
+  bins that have an interval. Prediction: holds for T_i and for V_i (point estimates non-decreasing
+  from bin to bin), population G.
+- Wording if S5 fails: the device contrast is written for the MAST core only, and the sentence
+  comparing the two devices states that the comparison is not at matched normalized radius.
