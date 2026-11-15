@@ -7060,3 +7060,69 @@ Verdict by the registered rule. H29-1: lower bound > 0 on 4/4 cut splits -> the 
 Expectation check: registered prediction for the cut increment was +0.05 to +0.14; all four splits fall inside it.
 
 Caveat to resolve before quoting as final: in the cut population the history-only arm stopped at the epoch cap in 3 of 4 splits (30 epochs, best epoch 29, 30, 30), so it may be undertrained and the cut increment may be overstated; the inclusive arms early-stopped (best epoch 7 to 17). The cap is the registered one (the backbone's). A longer-cap rerun of arm A on the cut splits is the check.
+
+
+## MAST gate, addendum 2 (2026-11-15, CPU only, same 300 gate shots; no neural network trained, nothing retuned): the regime number stays positive in each of the four campaigns; the `T_i` residual above the fit floor does not (M6 and M9 include 1.5); at the normalized radius of the KSTAR chord the `T_i` regime number has an interval that includes 0 on good fits
+
+**Design.** Registration `ces_prediction/experiments/PREREGISTRATION_MAST_GATE_ADDENDUM2.md` (three commits, each before the values it covers: strata (a)-(e) a6d7b3a, stratum (f) f33d9be, its second readout 52b1d57). Post hoc breakdown: the pooled TEST results of the gate and of addendum 1 had been seen. Code `ces_prediction/experiments/mast/run_gate_addendum2.py` (6420c9d) rebuilds the TEST row tables with `run_gate.py` functions and the addendum-1 hyperparameters, and stops unless the pooled addendum-1 numbers (rows, skill and mean reduced chi-square of every arm, regime number, error ratio) are reproduced exactly; they are, for both targets. `mast_gate.json` and `mast_gate_addendum1.json` are byte-identical before and after. Output `docs/paper/mast_gate_addendum2.json` / `.md`. TEST shots, population G (relative `T_i` error < 0.1) unless stated; intervals from 2,000 bootstrap resamples of shots (inside the stratum for (a)-(e), all TEST shots for (f)); a stratum with fewer than 8 shots has point values only. No correction for multiplicity; only S1-S8 are statements. Hardware timeline from the literature: `docs/paper/review_loop/venue_plan/mast_hardware_timeline.md` (not part of any rule).
+
+**Campaign (primary stratum).**
+
+| readout | target | M6 | M7 | M8 | M9 |
+|---|---|---|---|---|---|
+| TEST shots with rows / rows | both | 16 / 6,734 | 19 / 14,208 | 29 / 22,155 | 24 / 15,747 |
+| regime number (ref 0) | `T_i` | +0.109 [+0.056, +0.337] | +0.226 [+0.101, +0.339] | +0.345 [+0.197, +0.595] | +0.359 [+0.205, +0.497] |
+| regime number (ref 0) | `V_i` | +0.383 [+0.210, +0.460] | +0.419 [+0.330, +0.590] | +0.569 [+0.382, +0.605] | +0.524 [+0.418, +0.606] |
+| causal GP mean reduced chi-square (ref 1.5) | `T_i` | 1.73 [1.12, 2.74] | 3.98 [2.40, 5.90] | 3.00 [1.97, 4.62] | 1.07 [0.70, 1.52] |
+| causal GP mean reduced chi-square (ref 1.5) | `V_i` | 13.07 [9.36, 19.36] | 24.39 [16.71, 32.97] | 19.55 [12.93, 27.79] | 7.25 [5.04, 9.58] |
+| causal GP skill vs persistence | `T_i` | +0.098 [+0.016, +0.162] | +0.149 [+0.011, +0.353] | +0.168 [+0.058, +0.290] | +0.074 [+0.022, +0.125] |
+| causal GP skill vs persistence | `V_i` | +0.051 [-0.045, +0.143] | +0.088 [+0.015, +0.227] | +0.159 [+0.063, +0.259] | +0.098 [-0.025, +0.224] |
+| slope-filter skill vs persistence | `T_i` | +0.083 [-0.000, +0.161] | -0.054 [-0.301, +0.110] | +0.177 [+0.088, +0.270] | +0.056 [-0.006, +0.123] |
+| running-mean skill vs persistence | `T_i` | -0.003 [-0.011, +0.002] | -0.009 [-0.017, -0.000] | -0.018 [-0.029, -0.008] | -0.012 [-0.023, -0.002] |
+| running-mean skill vs persistence | `V_i` | -0.019 [-0.028, -0.010] | -0.018 [-0.035, -0.010] | -0.030 [-0.039, -0.023] | -0.025 [-0.036, -0.015] |
+| error ratio (ref 1) | `T_i` | 0.701 [0.551, 1.013] | 0.792 [0.627, 0.964] | 0.530 [0.441, 0.676] | 0.358 [0.269, 0.518] |
+| error ratio (ref 1) | `V_i` | 2.538 [1.925, 3.905] | 3.150 [2.609, 3.756] | 2.721 [2.256, 3.412] | 1.366 [0.926, 2.109] |
+
+Counts over the 264 shots with data, population G, no block / block without a scored chord / block and chords: M6 19 / 19 / 29, M7 12 / 16 / 33 (3 more with 10 ms frames), M8 6 / 6 / 58, M9 4 / 10 / 49.
+
+**Statements S1-S4.**
+
+- S1 (regime number above 0 in every campaign): holds, 4 / 4 for `T_i` and 4 / 4 for `V_i`. Prediction met.
+- S2 (causal GP mean reduced chi-square above 1.5 in every campaign): `V_i` holds 4 / 4; `T_i` does not hold, 2 / 4 (M7 and M8 above 1.5; M6 1.73 [1.12, 2.74] and M9 1.07 [0.70, 1.52] include 1.5; the M9 point is below 1.5). The prediction "point above 1.5 in 4 / 4" fails for M9; "interval in at least 2 / 4" is met.
+- S3 (running-mean skill not above 0 in every campaign): holds, 4 / 4 for both targets. Prediction met.
+- S4 (shots without a beam block concentrated in discharges without the SS beam): not readable as registered and recorded as does not hold. Every one of the 17 gate shots tagged "SW Beam" is among the 36 shots without `act` arrays (the other 19 have no heating record), so the no-SS side of the comparison has only the 2 Ohmic shots (1 of 2 without a block in G, 0 of 2 in W). With the SS beam the share without a block is 0.069 (9 of 131). The fact behind the prediction is stronger than the prediction: SW-beam-only discharges store no charge-exchange arrays at all.
+
+**Configuration strata (description; confounded with campaign, half the tags missing).** Chord columns 160 (56 shots with rows) against 96 (32): `T_i` regime number +0.278 [+0.139, +0.384] against +0.307 [+0.196, +0.386], causal GP mean chi-square 2.82 [1.90, 4.03] against 2.22 [1.42, 3.27], `V_i` regime number +0.467 against +0.450; the array layout does not separate the readouts. Heating "SS Beam" against "2 beams": `T_i` regime number +0.474 [+0.246, +0.573] against +0.302 [+0.181, +0.423], causal GP mean chi-square 1.11 [0.67, 1.88] against 2.65 [1.77, 4.05]. RMP true (10 shots with rows) against false (29): `T_i` regime number +0.302 [+0.220, +0.392] against +0.497 [+0.197, +0.687]; `V_i` causal GP mean chi-square 8.16 [4.44, 12.41] against 19.11 [11.85, 28.55]. Shape: connected double null `T_i` regime number +0.573 [+0.392, +0.709] and causal GP skill +0.266 [+0.161, +0.389]; lower single null +0.212 [+0.121, +0.298] and -0.061 [-0.165, +0.018]. In every stratum with an interval the regime number is above 0 and the running-mean skill is not above 0.
+
+**Stratum (f): normalized radius.** rho = (R_chord - R_axis) / (R_out - R_axis) from the catalogue EFIT scalars (122 of 131 TEST shots; one value per discharge, time variation ignored), low-field side. KSTAR-matched bin 0.7-0.9 from nominal geometry ((2.198 - 1.8) / 0.5 = 0.80; not an EFIT mapping).
+
+| rho | `T_i` G: shots / rows | `T_i` regime number, G | `T_i` regime number, W | `T_i` causal GP mean chi-square, G | `T_i` causal GP skill, G | `V_i` regime number, G | `V_i` causal GP mean chi-square, G |
+|---|---|---|---|---|---|---|---|
+| 0.0-0.3 | 75 / 19,052 | +0.271 [+0.145, +0.379] | +0.165 [+0.121, +0.283] | 2.19 [1.67, 2.84] | +0.127 [+0.068, +0.194] | +0.478 [+0.406, +0.546] | 18.20 [13.32, 24.23] |
+| 0.3-0.5 | 66 / 12,380 | +0.346 [+0.198, +0.420] | +0.287 [+0.223, +0.335] | 3.41 [2.45, 4.55] | +0.101 [+0.037, +0.165] | +0.499 [+0.416, +0.598] | 15.50 [12.16, 19.14] |
+| 0.5-0.7 | 54 / 8,567 | +0.346 [+0.167, +0.424] | +0.341 [+0.230, +0.403] | 3.22 [2.01, 5.09] | +0.061 [-0.064, +0.168] | +0.401 [+0.282, +0.495] | 18.28 [12.86, 25.44] |
+| 0.7-0.9 | 26 / 3,256 | +0.103 [-0.079, +0.257] | +0.136 [+0.036, +0.230] | 4.44 [1.54, 9.88] | -0.095 [-0.363, +0.088] | +0.147 [+0.038, +0.337] | 40.19 [11.13, 78.94] |
+| 0.9-1.0 | 6 / 686 (too few) | +0.435 | -0.112 [-0.296, -0.000] | 1.43 | +0.153 | +0.212 | 13.99 |
+
+Pre-rule samples on the population-W beam block (112 TEST shots, every low-field chord column with a finite value, every block frame):
+
+| rho | samples | fail share, cut 0.1 | fail share, cut 0.5 | median relative `T_i` error | median `V_i` error (km/s) |
+|---|---|---|---|---|---|
+| 0.0-0.3 | 91,023 | 0.231 [0.189, 0.276] | 0.045 [0.030, 0.061] | 0.050 [0.045, 0.056] | 1.59 [1.46, 1.76] |
+| 0.3-0.5 | 62,028 | 0.226 [0.185, 0.273] | 0.077 [0.052, 0.105] | 0.048 [0.043, 0.053] | 1.39 [1.27, 1.55] |
+| 0.5-0.7 | 63,211 | 0.262 [0.222, 0.308] | 0.105 [0.078, 0.135] | 0.047 [0.043, 0.053] | 1.14 [1.05, 1.23] |
+| 0.7-0.9 | 64,524 | 0.430 [0.384, 0.478] | 0.184 [0.151, 0.221] | 0.072 [0.063, 0.084] | 1.10 [1.01, 1.21] |
+| 0.9-1.0 | 29,995 | 0.653 [0.593, 0.715] | 0.348 [0.299, 0.399] | 0.171 [0.128, 0.223] | 1.63 [1.39, 1.97] |
+
+Non-finite share 0.001-0.002 in every bin. Emissivity medians rise from 92 to 182 between rho 0-0.3 and 0.7-0.9, but their intervals are not usable (a few shots store emissivity on a scale about 1e14 times larger).
+
+**Statements S5-S8.**
+
+- S5 (regime number positive at rho 0.7-0.9): `V_i` holds on population G, +0.147 [+0.038, +0.337] (W +0.149 [+0.064, +0.219]). `T_i` does not hold on population G, the registered reading when G has an interval: +0.103 [-0.079, +0.257], includes 0, 26 shots; on population W it is +0.136 [+0.036, +0.230], above 0, 72 shots. The prediction expected G to be too thin to read; it was readable and includes 0.
+- S6 (causal GP mean reduced chi-square non-decreasing with rho, G): does not hold as a strict ordering for either target. `T_i` 2.19 / 3.41 / 3.22 / 4.44 (one inversion of 0.19 between adjacent bins whose intervals overlap); `V_i` 18.20 / 15.50 / 18.28 / 40.19. The outermost bin with an interval is the largest for both.
+- S7 (fail share and relative error increase with rho, largest at 0.9-1.0): largest at 0.9-1.0 for both, but not monotone over the inner three bins (fail share 0.231 / 0.226 / 0.262; relative error 0.050 / 0.048 / 0.047), so S7 does not hold as registered. From rho 0.5-0.7 outward both rise: fail share 0.262, 0.430, 0.653; relative error 0.047, 0.072, 0.171.
+- S8 (`T_i` regime number decreases with rho; read on W): does not hold. It rises from 0.165 to 0.341 over rho 0-0.7 and then falls to +0.136 (0.7-0.9) and -0.112 [-0.296, -0.000] (0.9-1.0). The registered difference (0.7-0.9 minus 0.0-0.3) is -0.029 [-0.185, +0.070], includes 0 (G: -0.167 [-0.377, +0.018], includes 0). Not registered, read after the fact: the fall is outside rho 0.7, where the fail share doubles.
+
+**Verdict.** (1) The sign of the MAST regime number is not a property of one campaign or one array layout: above 0 in 4 / 4 campaigns for both targets, and in both column-count layouts. The size rises from M6 to M9 for `T_i` (+0.109 to +0.359). (2) The `T_i` residual above the fit floor is campaign-dependent: above 1.5 in M7 and M8 only. The error ratio falls from 0.70-0.79 (M6, M7) to 0.36 (M9), so the reported `T_i` errors are larger relative to the frame-to-frame scatter in the later campaigns and the pooled reduced chi-square mixes calibrations. By the registered wording rule the `T_i` residual statement is written for campaigns M7-M8, with M6 and M9 named. (3) At the nominal normalized radius of the KSTAR chord the MAST `T_i` regime number is small and its interval includes 0 on good fits (+0.103 [-0.079, +0.257]), above 0 on the wide population (+0.136 [+0.036, +0.230]); in the outermost bin the wide population is at or below 0. The measurement weakens outward from rho 0.7 (fail share 0.26 to 0.43 to 0.65). So the two-device contrast is not at matched radius in the pooled numbers, and at the matched bin MAST `T_i` sits between the MAST core (+0.27 to +0.35) and KSTAR (-0.416), with `V_i` still above 0. By the registered wording rule the paper must state that the pooled comparison is not at matched normalized radius and quote the matched bin.
+
+**Limits.** Post hoc; many strata; no multiplicity correction. Strata are confounded (campaign, heating, RMP, shape) and half the catalogue tags are missing. rho uses one EFIT scalar pair per discharge and a nominal KSTAR geometry. The bin 0.7-0.9 has 26 shots and 3,256 rows in population G. The paper is not edited in this step.
