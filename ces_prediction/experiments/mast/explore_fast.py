@@ -187,13 +187,14 @@ def features(t, group):
     if "nb" in group:
         f["nb1"] = t["nb1"] - y1
         f["nb3"] = t["nb3"] - t["y3"]
-    if "fast" in group:
+    if "fast" in group or "da" in group:
         f["da01"] = t["da0"] - t["da1"]
         f["da12"] = t["da1"] - t["da2"]
         f["da23"] = t["da2"] - t["da3"]
         f["dmx0"] = t["dmx0"] - t["da1"]
         f["dmx1"] = t["dmx1"] - t["da2"]
         f["da0"] = t["da0"]
+    if "fast" in group or "bm" in group:
         f["bm0"] = t["bm0"]
         for k in range(BEAM_LAGS):
             f[f"bd{k}"] = t[f"bd{k}"]
@@ -219,7 +220,8 @@ def fit():
         # would otherwise set the trees; scoring uses the unclipped value
         target = np.clip(resid, -20 * scale, 20 * scale)
         for name, group in (("gb_ces", ()), ("gb_ces_nb", ("nb",)), ("gb_ces_fast", ("fast",)),
-                            ("gb_all", ("nb", "fast"))):
+                            ("gb_all", ("nb", "fast")), ("gb_ces_da", ("da",)),
+                            ("gb_ces_bm", ("bm",))):
             X, _ = features(t, group)
             pr = np.zeros(n)
             for k in range(5):
@@ -259,11 +261,16 @@ def report(tg, t, resid, preds, rng):
           f"(90th pct of |frame-mean change| / block median) = {thr:.3f}")
     cells = [("all", np.ones(len(resid), bool))]
     cells += [(f"rho {RHO_NAMES[k]}", rb == k) for k in range(4)]
+    bd = np.column_stack([t[f"bd{k}"] for k in range(BEAM_LAGS)])
+    steady = np.isfinite(bd).all(1) & (np.abs(bd).max(1) < 0.05) & (t["bm0"] > 0.5)
+    cells += [("beam steady 60 ms", steady), ("beam steady, D-alpha step", steady & fin & (ev >= thr)),
+              ("beam steady, quiet", steady & fin & (ev < thr)),
+              ("beam changed in 60 ms", np.isfinite(bd).all(1) & (np.abs(bd).max(1) >= 0.05))]
     cells += [("D-alpha step rows", fin & (ev >= thr)), ("quiet rows", fin & (ev < thr)),
               ("edge 0.8-1 step", fin & (ev >= thr) & (rb >= 2)),
               ("edge 0.8-1 quiet", fin & (ev < thr) & (rb >= 2))]
-    pairs = [("slope_filter", "persistence"), ("gb_ces", "persistence"), ("gb_ces", "slope_filter"),
-             ("gb_ces_fast", "gb_ces"), ("gb_ces_nb", "gb_ces"), ("gb_all", "gb_ces_nb"),
+    pairs = [("gb_ces", "persistence"), ("gb_ces_fast", "gb_ces"), ("gb_ces_da", "gb_ces"),
+             ("gb_ces_bm", "gb_ces"), ("gb_ces_fast", "gb_ces_bm"), ("gb_ces_fast", "gb_ces_da"),
              ("gb_all", "persistence")]
     print("| cell | rows | rmse pers | noise share of pers MSE | "
           + " | ".join(f"{a} vs {b}" for a, b in pairs) + " |")
