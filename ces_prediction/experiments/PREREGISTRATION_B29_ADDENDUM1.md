@@ -97,3 +97,20 @@ row for row.
   (section 3, tables) only asked that cap binding be reported.
 - 8 GPU runs, about 1.5 to 3 h at the measured 7 to 16 min per 30-epoch run; never on CPU.
 - Output: `docs/paper/b29_addendum1.json` / `.md`, record in `THESIS_RESULTS.md` section 8.
+
+## 7. Code and smoke record (added with the code commit; no GPU run, no result)
+
+- `b29_causal/run_b29.py --addendum1`: the 8 runs; the env is arm A's with `CES_SEQ_EPOCHS=80`
+  (and `CES_SEQ_MODEL=v2` for the backbone). The plan, env and directories of the 48 registered runs
+  are unchanged (`--list` output identical before and after the change; `tests/test_b29.py`).
+- Pairing files written per run: `paired_vs_backbone.json` / `paired_backbone_vs_arm.json` (against
+  the frozen backbone), `paired_vs_first_arm.json` (arm A only), `paired_vs_cap80_arm.json` /
+  `paired_cap80_arm_vs_run.json` (backbone run only; read-out (ii)).
+- `b29_causal/analyze_b29_addendum1.py`: read-outs of section 3, rules of section 4, the identity
+  check of section 2.
+- CPU plumbing smoke, `--addendum1 --smoke` (split 42, 40 train files, 1 epoch, smoke sample caps,
+  into `data/.smoke_b29a1_*`): both runs passed train, eval and bootstrap (v2h 347,970 parameters,
+  v2 357,570). The pairing steps do not run in a smoke (the smoke caps change the TEST rows); they
+  use the same tool and call pattern as arm A, which ran. The analysis script was exercised once on
+  stand-in copies of arm A artifacts written to a scratch folder (plumbing only, discarded).
+

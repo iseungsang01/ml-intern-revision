@@ -26,6 +26,13 @@ Usage (repo root):
   py ces_prediction/experiments/b29_causal/run_b29.py                    # full batch (GPU)
   py ces_prediction/experiments/b29_causal/run_b29.py --arms v2h norm0   # a subset
   py ces_prediction/experiments/b29_causal/analyze_b29.py                # rules + tables (CPU)
+
+Addendum 1 (PREREGISTRATION_B29_ADDENDUM1.md): epoch cap 30 -> 80 for arm A and for the backbone
+on the four cut splits, 8 runs into `data/.b29a1_{v2h|v2}_cut_s{seed}`. The 48 registered runs,
+their env and their directories are not changed by it.
+  py ces_prediction/experiments/b29_causal/run_b29.py --addendum1            # 8 runs (GPU)
+  py ces_prediction/experiments/b29_causal/run_b29.py --addendum1 --smoke    # CPU plumbing check
+  py ces_prediction/experiments/b29_causal/analyze_b29_addendum1.py          # read-outs (CPU)
 """
 
 import argparse
@@ -71,6 +78,13 @@ CONTROLS = {
 }
 RUNS_OUT = DATA / ".b29_runs.json"
 
+# Addendum 1: ONE variable (the epoch cap), cut population, file-level splits. `v2h` = arm A,
+# `v2` = the backbone retrained under the same cap; both keep arm A's data treatment
+# (per-discharge standardization, no expanding window), i.e. the backbone's.
+ADD1_EPOCH_CAP = "80"
+ADD1_MODELS = ("v2h", "v2")
+ADD1_RUNS_OUT = DATA / ".b29a1_runs.json"
+
 
 def controls(family, pop, s):
     backbone, split, stats = (DATA / p.format(s=s) for p in CONTROLS[family][pop])
@@ -82,7 +96,7 @@ def arm_dir(arm, family, pop, s, smoke=False):
     return DATA / (f".smoke_b29_{arm}_{fam}{pop}_s{s}" if smoke else f".b29_{arm}_{fam}{pop}_s{s}")
 
 
-def run_env(arm, family, pop, s, out, smoke):
+def run_env(arm, family, pop, s, out, smoke, epochs=EPOCH_CAP, model=None):
     backbone, split, cm = controls(family, pop, s)
     env = {k: v for k, v in os.environ.items() if not k.startswith("CES_")}
     env.update(GATE_ENV)     # W = 2 harness, held-free, per-file cap 500, sample caps
@@ -97,10 +111,10 @@ def run_env(arm, family, pop, s, out, smoke):
         "CES_SEQ_NORM_EXPANDING": a["expanding"],
         "CES_SEQ_ZERO_MC": "0",
         # model / optimisation: the backbone's regime
-        "CES_SEQ_MODEL": a["model"],
+        "CES_SEQ_MODEL": model or a["model"],
         "CES_SEQ_LOSS": "mse",
         "CES_SEQ_SELECT": "mse",
-        "CES_SEQ_EPOCHS": EPOCH_CAP,
+        "CES_SEQ_EPOCHS": epochs,
         "CES_SEQ_BATCH": "16",
         "CES_SEQ_FIXED_EPOCHS": "0",
         "CES_SEQ_TRAIN_CTX": "0",
@@ -162,6 +176,70 @@ def one_run(arm, family, pop, s, smoke):
     return rec
 
 
+def add1_dir(model, s, smoke=False):
+    return DATA / (f".smoke_b29a1_{model}_cut_s{s}" if smoke else f".b29a1_{model}_cut_s{s}")
+
+
+def add1_env(model, s, out, smoke):
+    """Arm A's env with the cap raised (and, for `v2`, the backbone model): nothing else moves."""
+    return run_env("v2h", "split", "cut", s, out, smoke, epochs=ADD1_EPOCH_CAP, model=model)
+
+
+def add1_plan(seeds, smoke):
+    """Order: arm A on every split, then the backbone (its pairing step needs arm A's npz)."""
+    return [(m, s) for m in ADD1_MODELS for s in ((42,) if smoke else seeds)]
+
+
+def one_add1_run(model, s, smoke):
+    backbone, split, cm = controls("split", "cut", s)
+    first_arm = arm_dir("v2h", "split", "cut", s)
+    for needed in (backbone / "comparison_errors_test.npz", split / "split_manifest.json", cm):
+        if not needed.exists():
+            raise SystemExit(f"FATAL: missing frozen control artifact {needed}")
+    out = add1_dir(model, s, smoke)
+    out.mkdir(parents=True, exist_ok=True)
+    log = out / "run.log"
+    env = add1_env(model, s, out, smoke)
+    rec = {"model": model, "seed": s, "out": str(out), "status": "ok"}
+    t0 = time.time()
+    print(f"[b29a1] === {out.name}", flush=True)
+    weights, metrics = out / "weights" / "seq_lstm.pth", out / "metrics.json"
+    npz = out / "comparison_errors_test.npz"
+    frozen = backbone / "comparison_errors_test.npz"
+    steps = [
+        ("train", [SEQ_DIR / "train_seq.py"], (weights, metrics)),
+        ("eval(test)", [SEQ_DIR / "eval_seq.py"], (npz, out / "comparison_metrics.json")),
+        ("bootstrap", [CES_DIR / "bootstrap_compare.py"], (out / "bootstrap_summary.json",)),
+    ]
+
+    def pair(label, a, b, name):
+        return (label, [PAIRED, "--a", a, "--b", b, "--out", out / name], (out / name,))
+
+    if not smoke:   # smoke caps change the TEST rows, so there is nothing frozen to pair with
+        steps += [pair("paired-vs-frozen-backbone", npz, frozen, "paired_vs_backbone.json"),
+                  pair("paired-frozen-backbone-vs-run", frozen, npz, "paired_backbone_vs_arm.json")]
+        if model == "v2h":
+            steps.append(pair("paired-vs-first-arm", npz, first_arm / "comparison_errors_test.npz",
+                              "paired_vs_first_arm.json"))
+        else:       # read-out (ii): cap-80 backbone vs cap-80 arm A, both directions
+            arm80 = add1_dir("v2h", s) / "comparison_errors_test.npz"
+            steps += [pair("paired-cap80-backbone-vs-cap80-arm", npz, arm80, "paired_vs_cap80_arm.json"),
+                      pair("paired-cap80-arm-vs-cap80-backbone", arm80, npz, "paired_cap80_arm_vs_run.json")]
+    for label, cmd, artifacts in steps:
+        if all(Path(a).exists() for a in artifacts):
+            continue
+        if not run_step(cmd, env, log, label, artifacts=artifacts):
+            rec["status"] = f"{label}_failed"
+            break
+    if metrics.exists():
+        m = json.loads(metrics.read_text(encoding="utf-8"))
+        rec.update({"epochs_run": m["epochs_run"], "best_epoch": m["best_epoch"],
+                    "cap_bound": m["epochs_run"] >= int(env["CES_SEQ_EPOCHS"]) and not smoke,
+                    "n_params": m["n_params"]})
+    rec["minutes"] = round((time.time() - t0) / 60, 1)
+    return rec
+
+
 def plan(arms, pops, seeds, families, smoke):
     """Order: arm (A -> B -> C -> D), then family, population, seed."""
     if smoke:
@@ -202,14 +280,21 @@ def main():
     ap.add_argument("--min-free-mb", type=int, default=3000,
                     help="full batch only: abort unless the GPU has this much free memory")
     ap.add_argument("--list", action="store_true", help="print the run plan and exit")
+    ap.add_argument("--addendum1", action="store_true",
+                    help="PREREGISTRATION_B29_ADDENDUM1.md: cap 80, arm A + backbone, cut splits (8 runs)")
     args = ap.parse_args()
 
     if not any(DATA.glob("s*.csv")):
         raise SystemExit("FATAL: no shot CSVs in data/ -- real data required, aborting.")
-    runs = plan(args.arms, args.pops, args.seeds, args.families, args.smoke)
+    if args.addendum1:
+        runs, run_fn, name_fn = add1_plan(args.seeds, args.smoke), one_add1_run, add1_dir
+        runs_out = DATA / ".smoke_b29a1_runs.json" if args.smoke else ADD1_RUNS_OUT
+    else:
+        runs, run_fn, name_fn = plan(args.arms, args.pops, args.seeds, args.families, args.smoke), one_run, arm_dir
+        runs_out = DATA / ".smoke_b29_runs.json" if args.smoke else RUNS_OUT
     if args.list:
         for r in runs:
-            print(arm_dir(*r, smoke=args.smoke).name)
+            print(name_fn(*r, smoke=args.smoke).name)
         print(f"{len(runs)} runs")
         return
     if not args.smoke:
@@ -221,11 +306,10 @@ def main():
 
     t0 = time.time()
     records = []
-    runs_out = DATA / ".smoke_b29_runs.json" if args.smoke else RUNS_OUT
     keep_awake(True)
     try:
         for i, r in enumerate(runs, 1):
-            rec = one_run(*r, smoke=args.smoke)
+            rec = run_fn(*r, smoke=args.smoke)
             rec["batch_hours_so_far"] = round((time.time() - t0) / 3600, 2)
             records.append(rec)
             print(f"[b29] {i}/{len(runs)} {rec}", flush=True)
@@ -237,7 +321,8 @@ def main():
     for r in bad:
         print(f"[b29] FAILED: {r['out']} ({r['status']})", flush=True)
     if not args.smoke and not bad:
-        print("[b29] next: py ces_prediction/experiments/b29_causal/analyze_b29.py", flush=True)
+        nxt = "analyze_b29_addendum1.py" if args.addendum1 else "analyze_b29.py"
+        print(f"[b29] next: py ces_prediction/experiments/b29_causal/{nxt}", flush=True)
     sys.exit(1 if bad else 0)
 
 

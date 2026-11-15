@@ -195,3 +195,43 @@ def test_runner_plan_and_env_pin_every_treatment(monkeypatch):
             assert env["CES_DROP_STUCK_TARGETS"] == "1" and env["CES_WINDOW_SIZE"] == "2"
             assert env["CES_MAX_SAMPLES_PER_FILE"] == "500" and env["CES_SEQ_EPOCHS"] == "30"
             assert env["CES_SEED"] == env["CES_INIT_SEED"] == "7"
+
+
+def test_addendum1_changes_the_epoch_cap_and_nothing_else(monkeypatch):
+    """PREREGISTRATION_B29_ADDENDUM1.md: 8 runs, cap 30 -> 80, every other variable arm A's."""
+    monkeypatch.setenv("CES_ABLATE", "no_fast")
+    monkeypatch.setenv("CES_SEQ_EPOCHS", "5")
+    import run_b29
+    runs = run_b29.add1_plan(list(run_b29.SEEDS), False)
+    assert len(runs) == 8 and len(set(runs)) == 8
+    assert [m for m, _ in runs] == ["v2h"] * 4 + ["v2"] * 4          # arm A first: (ii) pairs against it
+    names = {run_b29.add1_dir(*r).name for r in runs}
+    assert len(names) == 8 and all(n.startswith(".b29a1_") and "_cut_s" in n for n in names)
+    registered = {run_b29.arm_dir(*r).name for r in
+                  run_b29.plan(list(run_b29.ARMS), list(run_b29.POPS), list(run_b29.SEEDS), ["split", "camp"], False)}
+    assert len(registered) == 48 and not (names & registered)        # the 48 registered dirs are untouched
+    assert run_b29.add1_plan(list(run_b29.SEEDS), True) == [("v2h", 42), ("v2", 42)]
+    for s in run_b29.SEEDS:
+        base = run_b29.run_env("v2h", "split", "cut", s, Path("x"), smoke=False)
+        assert base["CES_SEQ_EPOCHS"] == "30"                         # the registered env is unchanged
+        arm = run_b29.add1_env("v2h", s, Path("x"), smoke=False)
+        bb = run_b29.add1_env("v2", s, Path("x"), smoke=False)
+        assert "CES_ABLATE" not in arm and "CES_ABLATE" not in bb
+        assert {k for k in base if arm[k] != base[k]} == {"CES_SEQ_EPOCHS"} and arm.keys() == base.keys()
+        assert arm["CES_SEQ_EPOCHS"] == bb["CES_SEQ_EPOCHS"] == "80"
+        assert {k for k in arm if arm[k] != bb[k]} == {"CES_SEQ_MODEL"}
+        assert (arm["CES_SEQ_MODEL"], bb["CES_SEQ_MODEL"]) == ("v2h", "v2")
+        assert bb["CES_PER_SHOT_NORM"] == "1" and bb["CES_SEQ_NORM_EXPANDING"] == "0"
+        assert bb["CES_TI_SPIKE_CUT_EV"] == "3000" and bb["CES_SEED"] == bb["CES_INIT_SEED"] == str(s)
+        assert bb["CES_SPLIT_DIR"] == base["CES_SPLIT_DIR"] and bb["CES_CONTROL_METRICS"] == base["CES_CONTROL_METRICS"]
+
+
+def test_addendum1_identity_check_flags_any_field_but_the_cap():
+    import analyze_b29_addendum1 as a1
+    frozen = {k: 1 for k in a1.IDENTITY_FIELDS}
+    frozen.update({"epochs_run": 30, "best_epoch": 29, "best_val_masked_mse": 0.3})
+    retrain = dict(frozen, epochs_run=47, best_epoch=41, best_val_masked_mse=0.29, select_metric="mse")
+    assert a1.identity_mismatches(frozen, retrain) == []              # training length may differ
+    for field in a1.IDENTITY_FIELDS:
+        assert a1.identity_mismatches(frozen, dict(retrain, **{field: 2})) == [field]
+    assert "seq_model" in a1.identity_mismatches(frozen, {k: v for k, v in retrain.items() if k != "seq_model"})
