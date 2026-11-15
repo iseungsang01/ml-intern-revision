@@ -7213,3 +7213,35 @@ Next to KSTAR: on the KSTAR edge-side chord rotation increments have a noise-cor
 Expectation check: 4 of 12 met (C1 holds, C1 r in range, the two edge signs). Missed: both beam lags (45 and 50 ms against 10-40 and 5-30), the size of the D-alpha association (0.19 against 0.02-0.10), C2-C5.
 
 Limits. Charge exchange exists only while the viewed beam is on, so beam power, the existence of the measurement and its fit quality are tied. The D-alpha view is a mid-plane wide-angle chord: an association that is as large in the core as at the edge is what a global event (or D-alpha light reaching the spectrometer and the fit) would give, and the two are not separated here. Frame stamps are taken as exposure centres (convention not in the metadata, half a frame); lags below 5 ms are not resolved. Variables are centred per chord and per shot, not per lag. One run; no rerun for identity. Seven statements, two primary, no multiplicity correction beyond the split and the null.
+
+### B.29 arms B, C, D -- causal standardization of the fast channels and a memoryless MLP, 48/48 runs (2026-11-16)
+
+Registration `PREREGISTRATION_B29.md` (rules in sec. 3, written before any B.29 run); runner `run_b29.py --arms {norm0|expand|mlp22}`; analysis `analyze_b29.py` -> `docs/paper/b29_causal.{json,md}` (48/48 runs, every rule family complete). The remaining 37 runs took 1.73 h wall (02:00 to 03:44, GPU free at the start); 3 norm0 runs had finished earlier. Arm A and its addendum are recorded above and are unchanged.
+
+What each arm changes against the frozen per-discharge-standardized seq_v2 backbone, on its exact TEST rows: B `norm0` = fast channels standardized with train-file statistics (`CES_PER_SHOT_NORM=0`); C `expand` = per-discharge statistics from rows <= t pooled with 50 train-file pseudo-rows; D `mlp22` = memoryless MLP on the same 22 inputs. The standardizer touches the fast channels only (`seq_data.py::build_blocks`); CES history and targets are standardized the same way in every arm.
+
+T_i, cut population, paired TEST rows, shot-clustered 95 % interval (10,000 resamples):
+
+| arm, split family | arm vs causal GP (4 splits / initialisations) | lower bound > 0 | backbone vs arm | backbone lower bound > 0 |
+|---|---|---|---|---|
+| B, file-level | +0.068 [+0.014, +0.112], +0.094 [+0.067, +0.120], +0.141 [+0.106, +0.177], +0.101 [+0.061, +0.140] | 4/4 | +0.010, +0.043 [+0.022, +0.066], -0.004, +0.004 | 1/4 |
+| B, temporal | +0.108 [+0.073, +0.141], +0.106 [+0.070, +0.138], +0.112 [+0.077, +0.142], +0.103 [+0.067, +0.136] | 4/4 | +0.015, +0.003, +0.005, +0.009 | 0/4 |
+| C, file-level | +0.049 [-0.010, +0.101], +0.114 [+0.070, +0.146], +0.137 [+0.100, +0.175], +0.105 [+0.060, +0.146] | 3/4 | +0.030 [+0.006, +0.055], +0.021 [+0.005, +0.042], +0.001, -0.001 | 2/4 |
+| C, temporal | +0.126 [+0.089, +0.158], +0.125 [+0.088, +0.156], +0.125 [+0.090, +0.155], +0.121 [+0.081, +0.155] | 4/4 | -0.005, -0.019 [-0.039, -0.001], -0.010, -0.011 | 0/4 |
+
+Inclusive population: arm vs causal GP excludes 0 on 4/4 for B and C in both split families (B file-level +0.098 to +0.165, temporal +0.097 to +0.121; C file-level +0.117 to +0.154, temporal +0.091 to +0.110). Backbone vs arm: B file-level 1/4, C file-level 0/4; on the temporal split the backbone has the lower error with the interval excluding 0 on 3/4 for B (+0.010, +0.054, +0.065, +0.033) and 4/4 for C (+0.022, +0.077, +0.059, +0.037).
+
+Arm D, T_i, file-level: backbone vs MLP +0.196 [+0.142, +0.252], +0.178 [+0.144, +0.213], +0.177 [+0.138, +0.218], +0.167 [+0.125, +0.208] (cut, 4/4) and +0.072, +0.049, +0.032, +0.053 (inclusive, 4/4). MLP vs causal GP, cut: -0.147 [-0.247, -0.061], -0.055 [-0.114, +0.002], -0.048 [-0.117, +0.013], -0.075 [-0.143, -0.016]; MLP vs PCHIP, cut: -0.027 [-0.122, +0.047], +0.085, +0.096, +0.117; MLP vs persistence +0.204 to +0.298.
+
+Verdicts by the registered rules:
+
+- H29-2 supported (4/4 cut) and H29-2c supported (4/4 initialisations of the cut temporal split). H29-3 supported (3/4) and H29-3c supported (4/4).
+- Estimator named by the rule: B, the train-file-standardized seq_v2. The word "causal" is used for that estimator, and the numbers quoted with the word are arm B's, not the per-discharge backbone's.
+- Cost of causal standardization (cut): the backbone is separated from arm B on 1/4 file-level splits and 0/4 temporal initialisations, so the rule (>= 3/4) does not fire and the paper states no cut-population increment for the offline standardizer. In the inclusive population on the temporal split the backbone is lower on 3/4 (B) and 4/4 (C); that is reported beside the cut count, as registered.
+- H29-4 supported (4/4 cut, 4/4 inclusive): the recurrent state adds to a memoryless regression on the same 22 inputs. The MLP is not above the causal GP on any cut split (2/4 below it with the interval excluding 0).
+
+What this does not show: no history-only arm was trained under train-file standardization, so the fast-channel increment (+0.064 to +0.117, addendum 1) is measured with the per-discharge standardizer only. Arm B vs causal GP (+0.068 to +0.141) minus arm A vs causal GP (+0.011 to +0.061) is a difference across differently standardized models, not a paired increment.
+
+Guards. V_rot, backbone vs arm, lower bound > 0: cut B 0/4 (file-level), 1/4 (temporal); cut C 0/4, 2/4; cut D 2/4; inclusive B 2/4, 3/4; inclusive C 1/4, 3/4; inclusive D 2/4. The V_rot branch reads no fast channel, so in B and C this is not a design effect; on the inclusive temporal split the arms stopped at best epoch 1 to 5 (7 to 11 epochs run) and the backbone V_rot is lower by +0.082 to +0.152 on 3/4 (B) -- the shared early-stopping checkpoint, selected on a validation loss that the changed T_i branch moves, lands on an under-trained V_rot branch. No V_rot number of the paper comes from these arms. Epoch cap (30, patience 6): the cut runs still improving at the cap are B file-level splits 42 and 7 (best epoch 30), C file-level splits 42 and 7 (best 28, 29), B temporal initialisation 1 (best 25) and D split 123 (best 28); every other run stopped on patience. For B and C a longer run can only help an arm whose rule already passed. For D the three splits that stopped on patience give +0.196, +0.178, +0.177, so H29-4 (>= 3/4) does not rest on the cap-bound split.
+
+Expectation check (registered sec. 4): held -- H29-2, H29-2c, H29-3, H29-3c, H29-4, arm B vs causal GP range (three inside +0.06 to +0.14, one at +0.141), arm B vs backbone 0-1 of 4, arm C vs backbone file-level range, backbone vs MLP range. Missed -- arm B on the temporal split was guessed at -0.12 to -0.02 against the backbone and came out -0.015 to -0.003 (the 1.22 sigma campaign drift of the fast channels did not cost the sequence model what it cost the window model); the named estimator was guessed C or B at 0.4 each and is B; MLP vs PCHIP was guessed -0.15 to +0.05 and three splits are above it; the V_rot guard was guessed 0-1 of 4 and is 2-3 of 4 in the inclusive population; runs took 2 to 5 min, below the guessed 3 to 20 min.
