@@ -1,0 +1,6906 @@
+{
+ "registration": "ces_prediction/experiments/PREREGISTRATION_MAST_GATE.md",
+ "seed": 20261116,
+ "n_boot": 2000,
+ "counts": {
+  "gate_shots": 300,
+  "with_data": 264,
+  "no_data": 36,
+  "usable": 261,
+  "usable_fraction_of_with_data": 0.9886363636363636,
+  "unusable_shots_median_dt_ms": {
+   "22680": 9.999997913837433,
+   "22769": 9.999997913837433,
+   "22827": 9.999997913837433
+  },
+  "tune_shots": 133,
+  "test_shots": 131,
+  "usable_tune": 132,
+  "usable_test": 129,
+  "by_campaign": {
+   "M6": {
+    "with_data": 67,
+    "usable": 67
+   },
+   "M7": {
+    "with_data": 64,
+    "usable": 61
+   },
+   "M8": {
+    "with_data": 70,
+    "usable": 70
+   },
+   "M9": {
+    "with_data": 63,
+    "usable": 63
+   }
+  },
+  "chord_counts": {
+   "96": 99,
+   "160": 165
+  },
+  "per_target_population": {
+   "T_i|G": {
+    "shots_no_block": 41,
+    "shots_no_scored_chord": 51,
+    "shots_with_block_and_chords": 169,
+    "shots_with_block_and_chords_no_scored_row": 0,
+    "block_frames_median": 57.0,
+    "block_frames_p25_p75": [
+     44.0,
+     77.0
+    ],
+    "block_frames_min_max": [
+     20,
+     112
+    ],
+    "scored_chords_total": 4501,
+    "scored_chords_median_per_shot": 28.0,
+    "block_intervals_outside_5pm0p1_ms": 14,
+    "shots_with_such_intervals": 4,
+    "shots_with_non_increasing_block_time": 3,
+    "irregular_shots": {
+     "17911": "TUNE",
+     "26996": "TUNE",
+     "27354": "TEST",
+     "29379": "TEST"
+    },
+    "shots_with_nonfinite_block_time": 0,
+    "scored_rows_TUNE": 59204,
+    "shots_with_rows_TUNE": 81,
+    "scored_chords_TUNE": 2282,
+    "scored_rows_TEST": 58844,
+    "shots_with_rows_TEST": 88,
+    "scored_chords_TEST": 2219
+   },
+   "T_i|W": {
+    "shots_no_block": 33,
+    "shots_no_scored_chord": 10,
+    "shots_with_block_and_chords": 218,
+    "shots_with_block_and_chords_no_scored_row": 0,
+    "block_frames_median": 59.0,
+    "block_frames_p25_p75": [
+     46.75,
+     77.25
+    ],
+    "block_frames_min_max": [
+     20,
+     115
+    ],
+    "scored_chords_total": 9531,
+    "scored_chords_median_per_shot": 46.5,
+    "block_intervals_outside_5pm0p1_ms": 27,
+    "shots_with_such_intervals": 9,
+    "shots_with_non_increasing_block_time": 3,
+    "irregular_shots": {
+     "17678": "TEST",
+     "17911": "TUNE",
+     "17916": "TEST",
+     "17981": "TUNE",
+     "18051": "TEST",
+     "18702": "TUNE",
+     "26996": "TUNE",
+     "27354": "TEST",
+     "29379": "TEST"
+    },
+    "shots_with_nonfinite_block_time": 0,
+    "scored_rows_TUNE": 127854,
+    "shots_with_rows_TUNE": 106,
+    "scored_chords_TUNE": 4601,
+    "scored_rows_TEST": 138795,
+    "shots_with_rows_TEST": 112,
+    "scored_chords_TEST": 4930
+   },
+   "V_i|G": {
+    "shots_no_block": 41,
+    "shots_no_scored_chord": 51,
+    "shots_with_block_and_chords": 169,
+    "shots_with_block_and_chords_no_scored_row": 0,
+    "block_frames_median": 57.0,
+    "block_frames_p25_p75": [
+     44.0,
+     77.0
+    ],
+    "block_frames_min_max": [
+     20,
+     112
+    ],
+    "scored_chords_total": 4501,
+    "scored_chords_median_per_shot": 28.0,
+    "block_intervals_outside_5pm0p1_ms": 14,
+    "shots_with_such_intervals": 4,
+    "shots_with_non_increasing_block_time": 3,
+    "irregular_shots": {
+     "17911": "TUNE",
+     "26996": "TUNE",
+     "27354": "TEST",
+     "29379": "TEST"
+    },
+    "shots_with_nonfinite_block_time": 0,
+    "scored_rows_TUNE": 59204,
+    "shots_with_rows_TUNE": 81,
+    "scored_chords_TUNE": 2282,
+    "scored_rows_TEST": 58844,
+    "shots_with_rows_TEST": 88,
+    "scored_chords_TEST": 2219
+   },
+   "V_i|W": {
+    "shots_no_block": 33,
+    "shots_no_scored_chord": 10,
+    "shots_with_block_and_chords": 218,
+    "shots_with_block_and_chords_no_scored_row": 0,
+    "block_frames_median": 59.0,
+    "block_frames_p25_p75": [
+     46.75,
+     77.25
+    ],
+    "block_frames_min_max": [
+     20,
+     115
+    ],
+    "scored_chords_total": 9531,
+    "scored_chords_median_per_shot": 46.5,
+    "block_intervals_outside_5pm0p1_ms": 27,
+    "shots_with_such_intervals": 9,
+    "shots_with_non_increasing_block_time": 3,
+    "irregular_shots": {
+     "17678": "TEST",
+     "17911": "TUNE",
+     "17916": "TEST",
+     "17981": "TUNE",
+     "18051": "TEST",
+     "18702": "TUNE",
+     "26996": "TUNE",
+     "27354": "TEST",
+     "29379": "TEST"
+    },
+    "shots_with_nonfinite_block_time": 0,
+    "scored_rows_TUNE": 127854,
+    "shots_with_rows_TUNE": 106,
+    "scored_chords_TUNE": 4601,
+    "scored_rows_TEST": 138795,
+    "shots_with_rows_TEST": 112,
+    "scored_chords_TEST": 4930
+   }
+  }
+ },
+ "tuning": {
+  "T_i": {
+   "scale_median_reported_error": 26.907373428344727,
+   "n_tune_rows": 59204,
+   "n_tune_shots_with_rows": 81,
+   "running_mean": {
+    "grid_tau_ms": [
+     5.0,
+     10.0,
+     15.0,
+     25.0,
+     40.0,
+     70.0
+    ],
+    "tune_mse": [
+     6834.868350322848,
+     10393.711996453554,
+     15502.273133305434,
+     27029.342684852425,
+     42937.974920898596,
+     65068.22020033442
+    ],
+    "selected_tau_ms": 5.0,
+    "on_grid_edge": true
+   },
+   "slope_filter": {
+    "unit": "(median reported error of TUNE rows)^2 per 5 ms step",
+    "grid_q_level_over_scale2": [
+     0.01,
+     0.05011872336272722,
+     0.25118864315095796,
+     1.2589254117941662,
+     6.30957344480193,
+     31.622776601683793
+    ],
+    "grid_q_slope_over_scale2": [
+     0.0001,
+     0.001,
+     0.01,
+     0.1,
+     1.0,
+     10.0
+    ],
+    "tune_mse_rows_q_level_cols_q_slope": [
+     [
+      49328.933237045036,
+      26113.39689543185,
+      11924.95736446208,
+      6829.289793319058,
+      6269.090418108727,
+      7356.988158044191
+     ],
+     [
+      36668.194641554226,
+      23094.9099461273,
+      11511.34077663447,
+      6790.5581507842,
+      6260.687051543616,
+      7352.658311236905
+     ],
+     [
+      20315.868777453306,
+      16511.01558947394,
+      10223.393447285836,
+      6635.199546002394,
+      6222.6571818247985,
+      7331.44007195495
+     ],
+     [
+      10474.32694598245,
+      9966.30985875218,
+      8108.615931663182,
+      6248.422311840793,
+      6092.467265779198,
+      7235.694371657628
+     ],
+     [
+      6973.862566111866,
+      6922.254967104676,
+      6579.084884360535,
+      5868.335615087405,
+      5851.501790365036,
+      6914.627167917023
+     ],
+     [
+      6190.834909237487,
+      6184.14455871474,
+      6124.694894094538,
+      5846.64875527649,
+      5677.194977285847,
+      6338.706744411437
+     ]
+    ],
+    "selected_q_level_over_scale2": 31.622776601683793,
+    "selected_q_slope_over_scale2": 1.0,
+    "selected_q_level": 22895.103549314554,
+    "selected_q_slope": 724.0067448123918,
+    "on_grid_edge_q_level": true,
+    "on_grid_edge_q_slope": false
+   },
+   "gp_causal": {
+    "grid_length_ms": [
+     10.0,
+     20.0,
+     40.0,
+     80.0,
+     160.0
+    ],
+    "grid_amp_over_scale": [
+     0.5,
+     1.0,
+     2.0,
+     4.0
+    ],
+    "tune_mse_rows_length_cols_amp": [
+     [
+      67488.14904752979,
+      45232.47773315242,
+      26323.624509446017,
+      16109.913836689115
+     ],
+     [
+      61580.793486492636,
+      37901.27840057666,
+      19668.205831963704,
+      10604.50237059612
+     ],
+     [
+      61522.25557861197,
+      36844.832515232585,
+      18349.23465888852,
+      9402.623575351427
+     ],
+     [
+      69839.06776235733,
+      44749.376627007434,
+      22454.023434992494,
+      10849.999426163895
+     ],
+     [
+      81489.99342767427,
+      61489.030062527185,
+      35209.17355652867,
+      16642.508282749994
+     ]
+    ],
+    "selected_length_ms": 40.0,
+    "selected_amp_over_scale": 4.0,
+    "selected_amp": 107.6294937133789,
+    "on_grid_edge_length": false,
+    "on_grid_edge_amp": true
+   },
+   "gp_offline": {
+    "grid_length_ms": [
+     10.0,
+     20.0,
+     40.0,
+     80.0,
+     160.0
+    ],
+    "grid_amp_over_scale": [
+     0.5,
+     1.0,
+     2.0,
+     4.0
+    ],
+    "tune_mse_rows_length_cols_amp": [
+     [
+      15641.300019738355,
+      9452.02252738654,
+      5269.159717581397,
+      3542.496980579872
+     ],
+     [
+      15982.397297617214,
+      10030.621042709487,
+      5955.702232361627,
+      4034.1010475917265
+     ],
+     [
+      18283.48006680673,
+      12533.080238320912,
+      7911.823918555725,
+      5324.69602959802
+     ],
+     [
+      21327.384983140048,
+      16522.863449226392,
+      11249.425935246312,
+      7616.184892790358
+     ],
+     [
+      23591.061952154196,
+      20628.161126116058,
+      15763.466695609904,
+      11021.521073973174
+     ]
+    ],
+    "selected_length_ms": 10.0,
+    "selected_amp_over_scale": 4.0,
+    "selected_amp": 107.6294937133789,
+    "on_grid_edge_length": true,
+    "on_grid_edge_amp": true
+   }
+  },
+  "V_i": {
+   "scale_median_reported_error": 1.0978075561523437,
+   "n_tune_rows": 59204,
+   "n_tune_shots_with_rows": 81,
+   "running_mean": {
+    "grid_tau_ms": [
+     5.0,
+     10.0,
+     15.0,
+     25.0,
+     40.0,
+     70.0
+    ],
+    "tune_mse": [
+     70.27258997841118,
+     116.49390776574778,
+     175.08694130837316,
+     294.5520674972074,
+     445.039998178559,
+     637.8469263275384
+    ],
+    "selected_tau_ms": 5.0,
+    "on_grid_edge": true
+   },
+   "slope_filter": {
+    "unit": "(median reported error of TUNE rows)^2 per 5 ms step",
+    "grid_q_level_over_scale2": [
+     0.01,
+     0.05011872336272722,
+     0.25118864315095796,
+     1.2589254117941662,
+     6.30957344480193,
+     31.622776601683793
+    ],
+    "grid_q_slope_over_scale2": [
+     0.0001,
+     0.001,
+     0.01,
+     0.1,
+     1.0,
+     10.0
+    ],
+    "tune_mse_rows_q_level_cols_q_slope": [
+     [
+      752.0049065491684,
+      363.77626653412744,
+      134.91407321350994,
+      69.06240438980224,
+      56.20705514327825,
+      60.89715723741361
+     ],
+     [
+      520.2269325239326,
+      309.20550815153575,
+      128.88714632832423,
+      68.49234268773706,
+      56.12354370523115,
+      60.85864198552027
+     ],
+     [
+      251.69446286080066,
+      200.486987867454,
+      111.17179339996545,
+      66.28879533329369,
+      55.75261225755716,
+      60.67060850199239
+     ],
+     [
+      114.76397512875828,
+      108.79510867144722,
+      85.2328357380828,
+      61.401928688631784,
+      54.565497757058196,
+      59.837099190064805
+     ],
+     [
+      72.39016276129036,
+      71.8022692311301,
+      67.66156785223826,
+      57.53940032152988,
+      52.75491675519707,
+      57.235635834463714
+     ],
+     [
+      62.35166552888426,
+      62.27216912835923,
+      61.54886549516882,
+      57.65536039485649,
+      52.38448664523596,
+      53.46574432628753
+     ]
+    ],
+    "selected_q_level_over_scale2": 31.622776601683793,
+    "selected_q_slope_over_scale2": 1.0,
+    "selected_q_level": 38.1111831363034,
+    "selected_q_slope": 1.2051814303451813,
+    "on_grid_edge_q_level": true,
+    "on_grid_edge_q_slope": false
+   },
+   "gp_causal": {
+    "grid_length_ms": [
+     10.0,
+     20.0,
+     40.0,
+     80.0,
+     160.0
+    ],
+    "grid_amp_over_scale": [
+     0.5,
+     1.0,
+     2.0,
+     4.0
+    ],
+    "tune_mse_rows_length_cols_amp": [
+     [
+      538.0307548116916,
+      348.47622934081284,
+      202.9541345991375,
+      135.48130939628132
+     ],
+     [
+      485.85969022494606,
+      284.15556042666276,
+      143.52224229954263,
+      82.19713710765859
+     ],
+     [
+      493.771127781144,
+      285.11337841237145,
+      139.2362356569821,
+      74.94728614162636
+     ],
+     [
+      571.8742477873661,
+      364.4511255615325,
+      184.89524759370045,
+      94.85957077422616
+     ],
+     [
+      669.6950327392583,
+      508.6224226990657,
+      299.67446595710646,
+      155.55849488121916
+     ]
+    ],
+    "selected_length_ms": 40.0,
+    "selected_amp_over_scale": 4.0,
+    "selected_amp": 4.391230224609375,
+    "on_grid_edge_length": false,
+    "on_grid_edge_amp": true
+   },
+   "gp_offline": {
+    "grid_length_ms": [
+     10.0,
+     20.0,
+     40.0,
+     80.0,
+     160.0
+    ],
+    "grid_amp_over_scale": [
+     0.5,
+     1.0,
+     2.0,
+     4.0
+    ],
+    "tune_mse_rows_length_cols_amp": [
+     [
+      120.36911944186343,
+      62.67382145470968,
+      30.154707239706894,
+      20.525331361219425
+     ],
+     [
+      124.03599183093792,
+      67.38637632791752,
+      34.26460570203232,
+      22.400232275866234
+     ],
+     [
+      149.0779663270713,
+      93.21862605741642,
+      51.40828360183344,
+      31.23969554423391
+     ],
+     [
+      179.903925394091,
+      134.70223979096235,
+      84.67863790886945,
+      51.73618990772003
+     ],
+     [
+      200.82045900609333,
+      174.60220033320263,
+      130.17217181727452,
+      86.22877542064164
+     ]
+    ],
+    "selected_length_ms": 10.0,
+    "selected_amp_over_scale": 4.0,
+    "selected_amp": 4.391230224609375,
+    "on_grid_edge_length": true,
+    "on_grid_edge_amp": true
+   }
+  }
+ },
+ "gate_a": {
+  "T_i": {
+   "T_a_median_over_TEST_shots": {
+    "point": 0.4532174227657343,
+    "lo": 0.3408240275308071,
+    "hi": 0.565311457501046,
+    "ref": 0.0,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "n_shots_with_T_a": 88,
+   "T_a_per_shot_quartiles": [
+    -0.011886010274152774,
+    0.4532174227657343,
+    1.0402012116591854
+   ],
+   "share_of_shots_with_T_a_below_0": 0.26136363636363635,
+   "median_S1_S2_S4_over_shots": [
+    538.1281732378313,
+    1153.1005485274707,
+    2908.349614832827
+   ],
+   "verdict": "PASS",
+   "rho1_bound": null,
+   "coreported_ratio": {
+    "point": 0.5400696248322505,
+    "lo": 0.46320831429525255,
+    "hi": 0.6372194858597866,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "below"
+   },
+   "coreported_median_raw": 0.245731679298674,
+   "coreported_n_rows": 122399,
+   "errors_larger_than_scatter_reading_applies": true
+  },
+  "V_i": {
+   "T_a_median_over_TEST_shots": {
+    "point": 0.6415774976519842,
+    "lo": 0.2082854576802619,
+    "hi": 1.1481266837462918,
+    "ref": 0.0,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "n_shots_with_T_a": 88,
+   "T_a_per_shot_quartiles": [
+    -0.09467928065004945,
+    0.6415774976519842,
+    1.639465616051864
+   ],
+   "share_of_shots_with_T_a_below_0": 0.3068181818181818,
+   "median_S1_S2_S4_over_shots": [
+    3.9094244242709424,
+    11.857987522136717,
+    45.525949702101386
+   ],
+   "verdict": "PASS",
+   "rho1_bound": null,
+   "coreported_ratio": {
+    "point": 2.3144445427894738,
+    "lo": 1.942799095231813,
+    "hi": 2.7594305763458165,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "coreported_median_raw": 1.0530722669692105,
+   "coreported_n_rows": 122399,
+   "errors_larger_than_scatter_reading_applies": false
+  }
+ },
+ "gate_b": {
+  "T_i": {
+   "best_causal_arm": "slope_filter",
+   "test_mse_causal_arms_G": {
+    "persistence": 5944.844393801386,
+    "extrapolation": 7602.006237984016,
+    "running_mean": 6796.938398623025,
+    "slope_filter": 5494.341843542341,
+    "causal_gp": 10002.504685333828
+   },
+   "chi2_mean_G": {
+    "point": 2.713233576534315,
+    "lo": 2.0704544245405447,
+    "hi": 3.505846181325863,
+    "ref": 1.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "chi2_median_G": {
+    "point": 0.40918957222356855,
+    "lo": 0.3354503297203447,
+    "hi": 0.49449564726078743,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "below"
+   },
+   "chi2_mean_G_errors_rescaled": {
+    "point": 5.02385887259826,
+    "lo": 3.833680565137583,
+    "hi": 6.4914707662272315,
+    "ref": 1.5,
+    "side": "above",
+    "excludes_ref": true,
+    "variance_factor": 0.5400696248322505
+   },
+   "chi2_mean_W": {
+    "point": 2.472832351668264,
+    "lo": 1.9848572561643072,
+    "hi": 3.0651567731196114,
+    "ref": 1.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "chi2_median_W": {
+    "point": 0.3350586521132072,
+    "lo": 0.29510086430878174,
+    "hi": 0.3791435993931201,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "below"
+   },
+   "chi2_mean_W_errors_rescaled": {
+    "point": 4.578728811931135,
+    "lo": 3.6751877256211514,
+    "hi": 5.675484478638603,
+    "ref": 1.5,
+    "side": "above",
+    "excludes_ref": true,
+    "variance_factor": 0.5400696248322505
+   },
+   "verdict": "PASS"
+  },
+  "V_i": {
+   "best_causal_arm": "slope_filter",
+   "test_mse_causal_arms_G": {
+    "persistence": 60.43863834088315,
+    "extrapolation": 61.496550961419665,
+    "running_mean": 74.43723109109597,
+    "slope_filter": 55.113192619422136,
+    "causal_gp": 81.61655246627733
+   },
+   "chi2_mean_G": {
+    "point": 21.198309166761604,
+    "lo": 16.834573463971974,
+    "hi": 26.056633198197805,
+    "ref": 1.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "chi2_median_G": {
+    "point": 2.649689247245684,
+    "lo": 2.1239407283329483,
+    "hi": 3.2721896763746106,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "chi2_mean_W": {
+    "point": 18.974654018199562,
+    "lo": 15.673259561024162,
+    "hi": 22.936516822141066,
+    "ref": 1.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "chi2_median_W": {
+    "point": 1.8460698741945358,
+    "lo": 1.5688686725165368,
+    "hi": 2.1639138038014174,
+    "ref": 1.0,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "verdict": "PASS"
+  }
+ },
+ "readouts": {
+  "T_i|G": {
+   "n_rows": 58844,
+   "n_shots": 88,
+   "arms": {
+    "persistence": {
+     "mse": 5944.844393801386,
+     "rmse": 77.10281702896066,
+     "skill_vs_persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 4.724397421839379,
+      "lo": 3.675182404403652,
+      "hi": 5.961393807839499,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 4.724397421839379,
+      "lo": 3.675182404403652,
+      "hi": 5.961393807839499,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.7651538989133873,
+      "lo": 0.6043258600336496,
+      "hi": 0.9590727476513183,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 6.1744407609352905,
+      "lo": 5.1180299847685875,
+      "hi": 7.632838859295539,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "extrapolation": {
+     "mse": 7602.006237984016,
+     "rmse": 87.18948467552734,
+     "skill_vs_persistence": {
+      "point": -0.27875613462826876,
+      "lo": -0.40389404837105536,
+      "hi": -0.1550588974412627,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 2.3333999851869796,
+      "lo": 1.7425694853518994,
+      "hi": 3.1158122443737675,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 2.3333999851869796,
+      "lo": 1.7425694853518994,
+      "hi": 3.1158122443737675,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.30973375651425084,
+      "lo": 0.25673044962430863,
+      "hi": 0.3766433580643844,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 7.533566930021139,
+      "lo": 6.015420709216607,
+      "hi": 9.359591569807023,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "running_mean": {
+     "mse": 6796.938398623025,
+     "rmse": 82.44354673728579,
+     "skill_vs_persistence": {
+      "point": -0.14333327306432264,
+      "lo": -0.18889479530451522,
+      "hi": -0.1027627943312494,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 7.086672730951319,
+      "lo": 5.426135338350686,
+      "hi": 9.069070173951134,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 7.086672730951319,
+      "lo": 5.426135338350686,
+      "hi": 9.069070173951134,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.0449317799848845,
+      "lo": 0.8238691886211297,
+      "hi": 1.332624738917407,
+      "ref": 1.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean_over_median": {
+      "point": 6.781947746917824,
+      "lo": 5.5025329943663746,
+      "hi": 8.435009692045814,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "slope_filter": {
+     "mse": 5494.341843542341,
+     "rmse": 74.12382777179239,
+     "skill_vs_persistence": {
+      "point": 0.07578037714978303,
+      "lo": -0.00636717322606628,
+      "hi": 0.14770059612911604,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 2.713233576534315,
+      "lo": 2.0704544245405447,
+      "hi": 3.505846181325863,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 2.713233576534315,
+      "lo": 2.0704544245405447,
+      "hi": 3.505846181325863,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.40918957222356855,
+      "lo": 0.3354503297203447,
+      "hi": 0.49449564726078743,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 6.630749561359516,
+      "lo": 5.317552877559192,
+      "hi": 8.260184991475123,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "causal_gp": {
+     "mse": 10002.504685333828,
+     "rmse": 100.01252264258625,
+     "skill_vs_persistence": {
+      "point": -0.6825511355290166,
+      "lo": -0.996973381550955,
+      "hi": -0.42639146885369633,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 4.397449803546691,
+      "lo": 3.5668027395336313,
+      "hi": 5.421890763120039,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 4.397449803546691,
+      "lo": 3.5668027395336313,
+      "hi": 5.421890763120039,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.33174445713158,
+      "lo": 1.0513650729179236,
+      "hi": 1.6539376085476705,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 3.302022231065469,
+      "lo": 2.7975549093310246,
+      "hi": 3.9626447910182674,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_interp": {
+     "mse": 2709.1349776405345,
+     "rmse": 52.049351366184524,
+     "skill_vs_persistence": {
+      "point": 0.5442883281410502,
+      "lo": 0.4349341704995021,
+      "hi": 0.6255736334268,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 1.827959706280437,
+      "lo": 1.4496832207284582,
+      "hi": 2.276408729195718,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 1.827959706280437,
+      "lo": 1.4496832207284582,
+      "hi": 2.276408729195718,
+      "ref": 1.5,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_median": {
+      "point": 0.250297186286212,
+      "lo": 0.21458885049604942,
+      "hi": 0.29475560838893905,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 7.303157232419647,
+      "lo": 6.149944358756148,
+      "hi": 8.706369024268414,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_gp": {
+     "mse": 3721.992737062582,
+     "rmse": 61.00813664637351,
+     "skill_vs_persistence": {
+      "point": 0.3739125045992022,
+      "lo": 0.09308248135228916,
+      "hi": 0.5676881981855801,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 1.813201563032404,
+      "lo": 1.4430884474103376,
+      "hi": 2.245576085394912,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 1.813201563032404,
+      "lo": 1.4430884474103376,
+      "hi": 2.245576085394912,
+      "ref": 1.5,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_median": {
+      "point": 0.26673752421040997,
+      "lo": 0.22826830121705421,
+      "hi": 0.3128369105330109,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 6.797699605257265,
+      "lo": 5.820824996427668,
+      "hi": 7.932240032966061,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    }
+   }
+  },
+  "T_i|W": {
+   "n_rows": 138795,
+   "n_shots": 112,
+   "arms": {
+    "persistence": {
+     "mse": 12854.182515598977,
+     "rmse": 113.37628727207016,
+     "skill_vs_persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 3.7908082642614733,
+      "lo": 3.1039645387711507,
+      "hi": 4.54269787661295,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 3.7908082642614733,
+      "lo": 3.1039645387711507,
+      "hi": 4.54269787661295,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.5569030683012948,
+      "lo": 0.47893053435895083,
+      "hi": 0.649414261603954,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 6.806944475677725,
+      "lo": 5.857223409412077,
+      "hi": 7.916559083702754,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "extrapolation": {
+     "mse": 18348.261646724015,
+     "rmse": 135.4557553104482,
+     "skill_vs_persistence": {
+      "point": -0.4274156776953921,
+      "lo": -0.5059064047479861,
+      "hi": -0.3505143756300774,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 2.1029479818387387,
+      "lo": 1.6228933167480677,
+      "hi": 2.7100044444654663,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 2.1029479818387387,
+      "lo": 1.6228933167480677,
+      "hi": 2.7100044444654663,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.2534030225360444,
+      "lo": 0.22448686597740294,
+      "hi": 0.284446080466829,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 8.298827538805748,
+      "lo": 6.719689182798041,
+      "hi": 10.254416697533355,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "running_mean": {
+     "mse": 13250.562426384608,
+     "rmse": 115.11108733038971,
+     "skill_vs_persistence": {
+      "point": -0.030836648717617265,
+      "lo": -0.059948386537266446,
+      "hi": -0.005677202132315744,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 5.478383376685385,
+      "lo": 4.452106774745514,
+      "hi": 6.603263853452546,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 5.478383376685385,
+      "lo": 4.452106774745514,
+      "hi": 6.603263853452546,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.7590150538258318,
+      "lo": 0.6436779768780919,
+      "hi": 0.8934828493882667,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 7.2177532567654294,
+      "lo": 6.199256962888404,
+      "hi": 8.464684166483309,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "slope_filter": {
+     "mse": 12346.367815005628,
+     "rmse": 111.11421067984791,
+     "skill_vs_persistence": {
+      "point": 0.0395057950964266,
+      "lo": -0.018715931113763545,
+      "hi": 0.0860549913130548,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 2.472832351668264,
+      "lo": 1.9848572561643072,
+      "hi": 3.0651567731196114,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 2.472832351668264,
+      "lo": 1.9848572561643072,
+      "hi": 3.0651567731196114,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.3350586521132072,
+      "lo": 0.29510086430878174,
+      "hi": 0.3791435993931201,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 7.380296960165534,
+      "lo": 6.1644761220748885,
+      "hi": 8.787614550885737,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "causal_gp": {
+     "mse": 20319.606668848533,
+     "rmse": 142.5468578006844,
+     "skill_vs_persistence": {
+      "point": -0.5807778241976926,
+      "lo": -0.802498956884517,
+      "hi": -0.3769876965115919,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 3.9253164136808802,
+      "lo": 3.3195842651665,
+      "hi": 4.620711143003284,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 3.9253164136808802,
+      "lo": 3.3195842651665,
+      "hi": 4.620711143003284,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.0383787003038916,
+      "lo": 0.8840874033245542,
+      "hi": 1.2150559559236864,
+      "ref": 1.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean_over_median": {
+      "point": 3.7802358739948136,
+      "lo": 3.2998702229026415,
+      "hi": 4.358207547155474,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_interp": {
+     "mse": 8048.642229721432,
+     "rmse": 89.71422534760823,
+     "skill_vs_persistence": {
+      "point": 0.3738503230404473,
+      "lo": 0.30230027762090933,
+      "hi": 0.44409317942408477,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 1.752191745814998,
+      "lo": 1.4492719655403898,
+      "hi": 2.1171889660639294,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 1.752191745814998,
+      "lo": 1.4492719655403898,
+      "hi": 2.1171889660639294,
+      "ref": 1.5,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_median": {
+      "point": 0.2149627492611929,
+      "lo": 0.1935475487132576,
+      "hi": 0.23944678224667906,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 8.151141310934657,
+      "lo": 6.981095745294798,
+      "hi": 9.568108643039459,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_gp": {
+     "mse": 13168.430784709191,
+     "rmse": 114.75378331327116,
+     "skill_vs_persistence": {
+      "point": -0.02444716097106059,
+      "lo": -0.2348587821201968,
+      "hi": 0.16261869088442513,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 1.903439775578872,
+      "lo": 1.573440073675353,
+      "hi": 2.3177003733484733,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 1.903439775578872,
+      "lo": 1.573440073675353,
+      "hi": 2.3177003733484733,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.2409667576157012,
+      "lo": 0.21708859161728497,
+      "hi": 0.26854579010705515,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 7.899179930098563,
+      "lo": 6.7857455689851305,
+      "hi": 9.261978894696211,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    }
+   }
+  },
+  "V_i|G": {
+   "n_rows": 58844,
+   "n_shots": 88,
+   "arms": {
+    "persistence": {
+     "mse": 60.43863834088315,
+     "rmse": 7.774229115538283,
+     "skill_vs_persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 32.3643624372164,
+      "lo": 26.138140272309233,
+      "hi": 38.99224816733515,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 32.3643624372164,
+      "lo": 26.138140272309233,
+      "hi": 38.99224816733515,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 3.849298841667234,
+      "lo": 3.0295362295626354,
+      "hi": 4.816061820440259,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 8.407859137067813,
+      "lo": 6.9594559761187496,
+      "hi": 10.134166879681969,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "extrapolation": {
+     "mse": 61.496550961419665,
+     "rmse": 7.841973664927705,
+     "skill_vs_persistence": {
+      "point": -0.017503912225316887,
+      "lo": -0.11566578669384157,
+      "hi": 0.08141668150593198,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 15.379054375579933,
+      "lo": 11.673016241594754,
+      "hi": 19.710625373797946,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 15.379054375579933,
+      "lo": 11.673016241594754,
+      "hi": 19.710625373797946,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.5784523092756961,
+      "lo": 1.3057112693433297,
+      "hi": 1.9156201484725217,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 9.743122605102283,
+      "lo": 7.839932109474317,
+      "hi": 11.979237063878369,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "running_mean": {
+     "mse": 74.43723109109597,
+     "rmse": 8.627701379341776,
+     "skill_vs_persistence": {
+      "point": -0.23161661371751374,
+      "lo": -0.2904991608933635,
+      "hi": -0.1791022160192026,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 49.80601823691276,
+      "lo": 39.57329772217062,
+      "hi": 60.30145520126101,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 49.80601823691276,
+      "lo": 39.57329772217062,
+      "hi": 60.30145520126101,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 5.404845268688012,
+      "lo": 4.24356760606901,
+      "hi": 6.916333509161392,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 9.215068287977617,
+      "lo": 7.5407820949820294,
+      "hi": 11.184081551211333,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "slope_filter": {
+     "mse": 55.113192619422136,
+     "rmse": 7.423826009506294,
+     "skill_vs_persistence": {
+      "point": 0.0881132644224164,
+      "lo": 0.03531924946038508,
+      "hi": 0.14676402299759914,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 21.198309166761604,
+      "lo": 16.834573463971974,
+      "hi": 26.056633198197805,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 21.198309166761604,
+      "lo": 16.834573463971974,
+      "hi": 26.056633198197805,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 2.649689247245684,
+      "lo": 2.1239407283329483,
+      "hi": 3.2721896763746106,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 8.000300106435862,
+      "lo": 6.670858952510887,
+      "hi": 9.690631067440346,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "causal_gp": {
+     "mse": 81.61655246627733,
+     "rmse": 9.034187980459413,
+     "skill_vs_persistence": {
+      "point": -0.35040356147581453,
+      "lo": -0.499279239226749,
+      "hi": -0.23812946938605656,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 30.152242600625385,
+      "lo": 25.14867373222246,
+      "hi": 35.79842305859307,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 30.152242600625385,
+      "lo": 25.14867373222246,
+      "hi": 35.79842305859307,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 6.318253306548614,
+      "lo": 5.084637938484941,
+      "hi": 7.9084504604977255,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 4.772243393498296,
+      "lo": 3.996352781765449,
+      "hi": 5.741448307343408,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_interp": {
+     "mse": 22.59571107034308,
+     "rmse": 4.753494616631334,
+     "skill_vs_persistence": {
+      "point": 0.6261379857219844,
+      "lo": 0.5184336279483622,
+      "hi": 0.7162434634044413,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 11.616031570781676,
+      "lo": 8.789893596833728,
+      "hi": 14.984811379699,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 11.616031570781676,
+      "lo": 8.789893596833728,
+      "hi": 14.984811379699,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.0826502063143488,
+      "lo": 0.9038587493624217,
+      "hi": 1.2975341535340486,
+      "ref": 1.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean_over_median": {
+      "point": 10.729256322155955,
+      "lo": 8.490512115960389,
+      "hi": 13.254998251582174,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_gp": {
+     "mse": 25.574220704090923,
+     "rmse": 5.057096074239733,
+     "skill_vs_persistence": {
+      "point": 0.576856438097622,
+      "lo": 0.43499043947291904,
+      "hi": 0.6959307140756795,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 10.920765273561615,
+      "lo": 8.262142198384831,
+      "hi": 14.209126789721415,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 10.920765273561615,
+      "lo": 8.262142198384831,
+      "hi": 14.209126789721415,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.2169911847542152,
+      "lo": 1.0018366771974085,
+      "hi": 1.4466754936740744,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 8.97357796044117,
+      "lo": 7.138683917943931,
+      "hi": 11.175659160111996,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    }
+   }
+  },
+  "V_i|W": {
+   "n_rows": 138795,
+   "n_shots": 112,
+   "arms": {
+    "persistence": {
+     "mse": 103.6983030116358,
+     "rmse": 10.183236372177355,
+     "skill_vs_persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 26.633589430651092,
+      "lo": 22.381390238948843,
+      "hi": 31.455885103161872,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 26.633589430651092,
+      "lo": 22.381390238948843,
+      "hi": 31.455885103161872,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 2.4680948241797407,
+      "lo": 2.0776399504864838,
+      "hi": 2.9278584089345014,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 10.791153228686275,
+      "lo": 9.335191659808885,
+      "hi": 12.430636225782964,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "extrapolation": {
+     "mse": 125.79978429294414,
+     "rmse": 11.21605029825313,
+     "skill_vs_persistence": {
+      "point": -0.21313252617864298,
+      "lo": -0.322977911405458,
+      "hi": -0.10358061804300554,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 14.180542278549707,
+      "lo": 11.628442205407644,
+      "hi": 17.134484460922238,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 14.180542278549707,
+      "lo": 11.628442205407644,
+      "hi": 17.134484460922238,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.1398355766911088,
+      "lo": 0.9859728164547266,
+      "hi": 1.3088662198825707,
+      "ref": 1.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean_over_median": {
+      "point": 12.440866532447759,
+      "lo": 10.614438090146923,
+      "hi": 14.565501387535875,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "running_mean": {
+     "mse": 115.17544005859101,
+     "rmse": 10.731982112293656,
+     "skill_vs_persistence": {
+      "point": -0.11067815686113391,
+      "lo": -0.15847983289518405,
+      "hi": -0.07376701766703515,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 39.33497527260627,
+      "lo": 32.780023128880735,
+      "hi": 46.52094491768444,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 39.33497527260627,
+      "lo": 32.780023128880735,
+      "hi": 46.52094491768444,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 3.493783871804856,
+      "lo": 2.9078005229033934,
+      "hi": 4.183189586636219,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 11.258559978492944,
+      "lo": 9.663024463397441,
+      "hi": 13.094216080740132,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "slope_filter": {
+     "mse": 97.07013886371564,
+     "rmse": 9.852417919663967,
+     "skill_vs_persistence": {
+      "point": 0.06391776871388566,
+      "lo": 0.0069868833891411465,
+      "hi": 0.12955918266230648,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean": {
+      "point": 18.974654018199562,
+      "lo": 15.673259561024162,
+      "hi": 22.936516822141066,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 18.974654018199562,
+      "lo": 15.673259561024162,
+      "hi": 22.936516822141066,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 1.8460698741945358,
+      "lo": 1.5688686725165368,
+      "hi": 2.1639138038014174,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 10.278405104508002,
+      "lo": 8.885293120729754,
+      "hi": 11.946037627453101,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "causal_gp": {
+     "mse": 151.32141709298932,
+     "rmse": 12.301277051306068,
+     "skill_vs_persistence": {
+      "point": -0.45924680248634164,
+      "lo": -0.6730309359604315,
+      "hi": -0.28600064272710984,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean": {
+      "point": 27.916950565716824,
+      "lo": 24.300207272931498,
+      "hi": 32.115622022553545,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 27.916950565716824,
+      "lo": 24.300207272931498,
+      "hi": 32.115622022553545,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 5.046646173389386,
+      "lo": 4.318201549387113,
+      "hi": 5.918694226399559,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_over_median": {
+      "point": 5.531782813092972,
+      "lo": 4.950322530506085,
+      "hi": 6.22373850187783,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_interp": {
+     "mse": 71.75991415789798,
+     "rmse": 8.471122367071438,
+     "skill_vs_persistence": {
+      "point": 0.3079933607992996,
+      "lo": -0.07719705976822915,
+      "hi": 0.5349383628761734,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 15.0878464672203,
+      "lo": 8.959352527906013,
+      "hi": 26.120006426532697,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 15.0878464672203,
+      "lo": 8.959352527906013,
+      "hi": 26.120006426532697,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.7882598888660252,
+      "lo": 0.6835927225547577,
+      "hi": 0.9034628660771215,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "chi2_mean_over_median": {
+      "point": 19.140700523180715,
+      "lo": 11.698535432602688,
+      "hi": 32.99088911864778,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "offline_gp": {
+     "mse": 81.33378943508355,
+     "rmse": 9.018524792618999,
+     "skill_vs_persistence": {
+      "point": 0.21566904112252228,
+      "lo": -0.06620444951629834,
+      "hi": 0.39846287437278666,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean": {
+      "point": 14.576478071755732,
+      "lo": 9.028489952104605,
+      "hi": 24.38719109440917,
+      "ref": 1.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_mean_vs_1p5": {
+      "point": 14.576478071755732,
+      "lo": 9.028489952104605,
+      "hi": 24.38719109440917,
+      "ref": 1.5,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "chi2_median": {
+      "point": 0.9883249210428037,
+      "lo": 0.8683474394640601,
+      "hi": 1.128105298991321,
+      "ref": 1.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "chi2_mean_over_median": {
+      "point": 14.748669958029353,
+      "lo": 9.423307378352266,
+      "hi": 24.459645974193315,
+      "ref": 2.2,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    }
+   }
+  }
+ },
+ "regime": {
+  "T_i": {
+   "regime_number_median_over_TEST_shots": {
+    "point": 0.2969991098430944,
+    "lo": 0.1967697988277196,
+    "hi": 0.3519567480767373,
+    "ref": -0.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "regime_number_quartiles": [
+    0.09564472969653715,
+    0.2969991098430944,
+    0.4929926666922214
+   ],
+   "n_shots": 88,
+   "R1": {
+    "slope_filter_skill": {
+     "point": 0.07578037714978303,
+     "lo": -0.00636717322606628,
+     "hi": 0.14770059612911604,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "running_mean_skill": {
+     "point": -0.14333327306432264,
+     "lo": -0.18889479530451522,
+     "hi": -0.1027627943312494,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "holds": false
+   },
+   "R2": {
+    "spearman": {
+     "point": 0.5230530802014723,
+     "lo": 0.3255556980713883,
+     "hi": 0.6817501263227567,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "n_shots": 88,
+    "holds": true
+   }
+  },
+  "V_i": {
+   "regime_number_median_over_TEST_shots": {
+    "point": 0.4632992769047605,
+    "lo": 0.4162049857964627,
+    "hi": 0.5489872379680423,
+    "ref": -0.5,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "regime_number_quartiles": [
+    0.2981823966104016,
+    0.4632992769047605,
+    0.6055216844158415
+   ],
+   "n_shots": 88,
+   "R1": {
+    "slope_filter_skill": {
+     "point": 0.0881132644224164,
+     "lo": 0.03531924946038508,
+     "hi": 0.14676402299759914,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "running_mean_skill": {
+     "point": -0.23161661371751374,
+     "lo": -0.2904991608933635,
+     "hi": -0.1791022160192026,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "holds": true
+   },
+   "R2": {
+    "spearman": {
+     "point": 0.7587439681589238,
+     "lo": 0.6236032419173059,
+     "hi": 0.8564391169218587,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "n_shots": 88,
+    "holds": true
+   }
+  }
+ },
+ "audit": {
+  "T_i|G": {
+   "best_causal_arm": "slope_filter",
+   "chi2_mean_over_median": {
+    "point": 6.630749561359516,
+    "lo": 5.317552877559192,
+    "hi": 8.260184991475123,
+    "ref": 2.2,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_dropped": 59,
+   "top_0p1pct_share_of_sse": {
+    "point": 0.17159168705062633,
+    "lo": 0.05901166593547103,
+    "hi": 0.2926054281958005,
+    "ref": 0.001,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_n_shots": 14,
+   "skill_with_top_rows_dropped": {
+    "persistence": {
+     "point": 0.0,
+     "lo": 0.0,
+     "hi": 0.0,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "extrapolation": {
+     "point": -0.24109485299971833,
+     "lo": -0.3481538898074812,
+     "hi": -0.1354190657320561,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "running_mean": {
+     "point": -0.1784381983884349,
+     "lo": -0.22122437447818985,
+     "hi": -0.13873665820300984,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "slope_filter": {
+     "point": 0.12136777189445125,
+     "lo": 0.08358680530625198,
+     "hi": 0.16060542635023964,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": -0.8403064660165851,
+     "lo": -1.1696128573906066,
+     "hi": -0.5750218383380794,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "offline_interp": {
+     "point": 0.5130867826353469,
+     "lo": 0.39627981305618754,
+     "hi": 0.5986677165047943,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 0.3048105514587389,
+     "lo": 0.0050598850444660065,
+     "hi": 0.5132565378355332,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   },
+   "chi2_mean_with_top_rows_dropped": {
+    "persistence": {
+     "point": 4.654851469234191,
+     "lo": 3.6347504944779585,
+     "hi": 5.85932739705165,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "extrapolation": {
+     "point": 2.2985250109216677,
+     "lo": 1.7126975038349577,
+     "hi": 3.0634211682354886,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "running_mean": {
+     "point": 7.001479005833525,
+     "lo": 5.376236999859566,
+     "hi": 8.944899758872502,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "slope_filter": {
+     "point": 2.641394988670698,
+     "lo": 2.0113741163154666,
+     "hi": 3.394913781158905,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": 4.246185846983857,
+     "lo": 3.458353213541199,
+     "hi": 5.199186381342507,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_interp": {
+     "point": 1.7811252116553127,
+     "lo": 1.4017113255478575,
+     "hi": 2.219614997659853,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 1.7710005869657954,
+     "lo": 1.400725763904957,
+     "hi": 2.1903899951210506,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  },
+  "T_i|W": {
+   "best_causal_arm": "slope_filter",
+   "chi2_mean_over_median": {
+    "point": 7.380296960165534,
+    "lo": 6.1644761220748885,
+    "hi": 8.787614550885737,
+    "ref": 2.2,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_dropped": 139,
+   "top_0p1pct_share_of_sse": {
+    "point": 0.36370216669453576,
+    "lo": 0.23619778972796798,
+    "hi": 0.46842048711053513,
+    "ref": 0.001,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_n_shots": 35,
+   "skill_with_top_rows_dropped": {
+    "persistence": {
+     "point": 0.0,
+     "lo": 0.0,
+     "hi": 0.0,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "extrapolation": {
+     "point": -0.48722575683305447,
+     "lo": -0.5695255811951243,
+     "hi": -0.4051582989308335,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "running_mean": {
+     "point": -0.06464779742079685,
+     "lo": -0.09554562169845052,
+     "hi": -0.0369633948854013,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "slope_filter": {
+     "point": 0.11649775993231615,
+     "lo": 0.08030565710688674,
+     "hi": 0.1517601442859306,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": -0.9040341998505608,
+     "lo": -1.135720818488344,
+     "hi": -0.6768179586351432,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "offline_interp": {
+     "point": 0.30994862116813315,
+     "lo": 0.23366942439511212,
+     "hi": 0.3874970583904079,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": -0.14853269854571782,
+     "lo": -0.40922004052091193,
+     "hi": 0.0790591052401016,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    }
+   },
+   "chi2_mean_with_top_rows_dropped": {
+    "persistence": {
+     "point": 3.754325875051182,
+     "lo": 3.0693814018166665,
+     "hi": 4.4988796608823085,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "extrapolation": {
+     "point": 2.073872244170651,
+     "lo": 1.5943563242107683,
+     "hi": 2.6751020829357057,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "running_mean": {
+     "point": 5.43973701249521,
+     "lo": 4.406571894102352,
+     "hi": 6.553561023075867,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "slope_filter": {
+     "point": 2.428251095810948,
+     "lo": 1.9415052454969943,
+     "hi": 3.0207103820774606,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": 3.8555997728759195,
+     "lo": 3.2558325741795655,
+     "hi": 4.5244027031716225,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_interp": {
+     "point": 1.7248594386827822,
+     "lo": 1.4178949876269373,
+     "hi": 2.085447996989116,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 1.8704733004879985,
+     "lo": 1.547742083435765,
+     "hi": 2.273253863041601,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  },
+  "V_i|G": {
+   "best_causal_arm": "slope_filter",
+   "chi2_mean_over_median": {
+    "point": 8.000300106435862,
+    "lo": 6.670858952510887,
+    "hi": 9.690631067440346,
+    "ref": 2.2,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_dropped": 59,
+   "top_0p1pct_share_of_sse": {
+    "point": 0.22646812927469648,
+    "lo": 0.05050394296455296,
+    "hi": 0.38445984097248204,
+    "ref": 0.001,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_n_shots": 9,
+   "skill_with_top_rows_dropped": {
+    "persistence": {
+     "point": 0.0,
+     "lo": 0.0,
+     "hi": 0.0,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "extrapolation": {
+     "point": -0.024349356141955436,
+     "lo": -0.15127868206125494,
+     "hi": 0.08965726997321598,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "running_mean": {
+     "point": -0.28586501375123485,
+     "lo": -0.3229116716238374,
+     "hi": -0.24839475961620205,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "slope_filter": {
+     "point": 0.12918991596182372,
+     "lo": 0.08422487098377181,
+     "hi": 0.1768371971001477,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": -0.4498528901237666,
+     "lo": -0.5819117525256723,
+     "hi": -0.3427990660918232,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "offline_interp": {
+     "point": 0.6596910539193356,
+     "lo": 0.5926312126407643,
+     "hi": 0.7126402958277628,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 0.5902168038359306,
+     "lo": 0.4459266877987678,
+     "hi": 0.6796321369016058,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   },
+   "chi2_mean_with_top_rows_dropped": {
+    "persistence": {
+     "point": 30.709633113023692,
+     "lo": 24.749364487970208,
+     "hi": 37.08694176971964,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "extrapolation": {
+     "point": 14.53485250001921,
+     "lo": 11.148634610592856,
+     "hi": 18.64012111345875,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "running_mean": {
+     "point": 47.83980337765088,
+     "lo": 38.14138094243523,
+     "hi": 58.172525139813864,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "slope_filter": {
+     "point": 19.65974887056887,
+     "lo": 15.755612342048632,
+     "hi": 24.068631024111838,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": 27.643290676408036,
+     "lo": 23.357488428872376,
+     "hi": 32.34149916939269,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_interp": {
+     "point": 10.242280429930567,
+     "lo": 7.959840635935849,
+     "hi": 13.004817225076081,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 9.58153320179008,
+     "lo": 7.502375610964713,
+     "hi": 12.0401171813562,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  },
+  "V_i|W": {
+   "best_causal_arm": "slope_filter",
+   "chi2_mean_over_median": {
+    "point": 10.278405104508002,
+    "lo": 8.885293120729754,
+    "hi": 11.946037627453101,
+    "ref": 2.2,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_dropped": 139,
+   "top_0p1pct_share_of_sse": {
+    "point": 0.40700085078007736,
+    "lo": 0.2499622954489211,
+    "hi": 0.5214121409976878,
+    "ref": 0.001,
+    "excludes_ref": true,
+    "side": "above"
+   },
+   "top_rows_n_shots": 21,
+   "skill_with_top_rows_dropped": {
+    "persistence": {
+     "point": 0.0,
+     "lo": 0.0,
+     "hi": 0.0,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "extrapolation": {
+     "point": -0.2011318871555685,
+     "lo": -0.3229442073259905,
+     "hi": -0.09147636100360396,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "running_mean": {
+     "point": -0.1977234110624424,
+     "lo": -0.23383002371932002,
+     "hi": -0.16265216352147335,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "slope_filter": {
+     "point": 0.09368499404858377,
+     "lo": 0.03669152478642135,
+     "hi": 0.15696755759784922,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": -0.7787336774851537,
+     "lo": -0.9599128539648809,
+     "hi": -0.6085785392109437,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "below"
+    },
+    "offline_interp": {
+     "point": 0.27248538445013926,
+     "lo": -0.2772966299077284,
+     "hi": 0.5782046627059187,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    },
+    "offline_gp": {
+     "point": 0.0990484956476464,
+     "lo": -0.3325311856543225,
+     "hi": 0.3936425595200527,
+     "ref": 0.0,
+     "excludes_ref": false,
+     "side": "includes"
+    }
+   },
+   "chi2_mean_with_top_rows_dropped": {
+    "persistence": {
+     "point": 25.732283555023653,
+     "lo": 21.600803685890817,
+     "hi": 30.56011887917358,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "extrapolation": {
+     "point": 13.598099371996728,
+     "lo": 11.030968978782914,
+     "hi": 16.610364041055334,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "running_mean": {
+     "point": 38.32544422953022,
+     "lo": 31.90045287809467,
+     "hi": 45.535676240910384,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "slope_filter": {
+     "point": 18.1029869253702,
+     "lo": 14.853123864994824,
+     "hi": 21.94527304049756,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "causal_gp": {
+     "point": 26.52906331414223,
+     "lo": 23.140201797546105,
+     "hi": 30.60616923177732,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_interp": {
+     "point": 14.257440050343758,
+     "lo": 8.259294370453473,
+     "hi": 25.050861393733594,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "offline_gp": {
+     "point": 13.74599088757293,
+     "lo": 8.312483252250562,
+     "hi": 23.489383143884588,
+     "ref": 1.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  }
+ },
+ "radius": {
+  "T_i|G": {
+   "n_rows_without_radius": 0,
+   "tertile_edges_m": [
+    0.9335411787033081,
+    1.0631959438323975
+   ],
+   "inner": {
+    "n_rows": 19972,
+    "n_shots": 69,
+    "arms": {
+     "persistence": {
+      "mse": 6248.145733898114,
+      "rmse": 79.04521322571098,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 3.06354970153426,
+       "lo": 2.4026731356307933,
+       "hi": 3.855123550946287,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 3.06354970153426,
+       "lo": 2.4026731356307933,
+       "hi": 3.855123550946287,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.5559830997805336,
+       "lo": 0.42268163094720174,
+       "hi": 0.7278906159351093,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.510148964498296,
+       "lo": 4.509551242840813,
+       "hi": 6.666441477055695,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 8795.520882945004,
+      "rmse": 93.78443838369458,
+      "skill_vs_persistence": {
+       "point": -0.4077009816250916,
+       "lo": -0.6150669031563663,
+       "hi": -0.22267953278672534,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 1.2162251544163827,
+       "lo": 0.9471427733799745,
+       "hi": 1.5355654068379925,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.2162251544163827,
+       "lo": 0.9471427733799745,
+       "hi": 1.5355654068379925,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.2300663562662075,
+       "lo": 0.19058736675512422,
+       "hi": 0.2842789401037845,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.286410295511008,
+       "lo": 4.5082530986520375,
+       "hi": 6.2473409560379585,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 6740.448513477232,
+      "rmse": 82.10023455190145,
+      "skill_vs_persistence": {
+       "point": -0.07879182089307313,
+       "lo": -0.13239099629561057,
+       "hi": -0.028829783830574652,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 4.8118087160020675,
+       "lo": 3.695556773146425,
+       "hi": 6.1133191801679505,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.8118087160020675,
+       "lo": 3.695556773146425,
+       "hi": 6.1133191801679505,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.7318918762197846,
+       "lo": 0.5529373760972521,
+       "hi": 0.9786363564408204,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.574480291890954,
+       "lo": 5.159744680943037,
+       "hi": 8.283718464946752,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 6213.3557956405275,
+      "rmse": 78.82484250311273,
+      "skill_vs_persistence": {
+       "point": 0.005568042062278122,
+       "lo": -0.18422852005406107,
+       "hi": 0.15955496046145848,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 1.4235496777654781,
+       "lo": 1.108887317605639,
+       "hi": 1.7951539556256706,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.4235496777654781,
+       "lo": 1.108887317605639,
+       "hi": 1.7951539556256706,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.2943201562726039,
+       "lo": 0.23712685342680406,
+       "hi": 0.3593491432205507,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 4.836738658316572,
+       "lo": 4.121257670477576,
+       "hi": 5.792512451518593,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 10202.794812585891,
+      "rmse": 101.00888482002902,
+      "skill_vs_persistence": {
+       "point": -0.632931632377361,
+       "lo": -1.1120020078648032,
+       "hi": -0.276686976980723,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 2.9609823035980622,
+       "lo": 2.351972957198847,
+       "hi": 3.7395591749502715,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.9609823035980622,
+       "lo": 2.351972957198847,
+       "hi": 3.7395591749502715,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.0098406013107089,
+       "lo": 0.7479379554807907,
+       "hi": 1.3687500099808434,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 2.9321283970508767,
+       "lo": 2.3426832926522523,
+       "hi": 3.702893078443856,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 2545.4990654098983,
+      "rmse": 50.45293911567391,
+      "skill_vs_persistence": {
+       "point": 0.5925992808394687,
+       "lo": 0.5257681750265546,
+       "hi": 0.6444594880289706,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 0.9792887134605779,
+       "lo": 0.7802204312007183,
+       "hi": 1.2135519694655055,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 0.9792887134605779,
+       "lo": 0.7802204312007183,
+       "hi": 1.2135519694655055,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_median": {
+       "point": 0.18966351285593752,
+       "lo": 0.1629937941265036,
+       "hi": 0.22744725635564914,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.163295241739063,
+       "lo": 4.437168246628402,
+       "hi": 5.983036292080863,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 3088.9262635828695,
+      "rmse": 55.57810957187073,
+      "skill_vs_persistence": {
+       "point": 0.5056251254152901,
+       "lo": 0.2971742923732872,
+       "hi": 0.632233231898645,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 0.9869846882417022,
+       "lo": 0.7914299847447563,
+       "hi": 1.2182464928080694,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 0.9869846882417022,
+       "lo": 0.7914299847447563,
+       "hi": 1.2182464928080694,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_median": {
+       "point": 0.2079220051807104,
+       "lo": 0.17714400841798636,
+       "hi": 0.2440108200180424,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 4.746898662235814,
+       "lo": 4.163246449372211,
+       "hi": 5.44216982443255,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "middle": {
+    "n_rows": 20308,
+    "n_shots": 78,
+    "arms": {
+     "persistence": {
+      "mse": 6527.56366189219,
+      "rmse": 80.79333921736487,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 4.738755799478281,
+       "lo": 3.709397141019537,
+       "hi": 5.935625543837399,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.738755799478281,
+       "lo": 3.709397141019537,
+       "hi": 5.935625543837399,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.763225346824461,
+       "lo": 0.5796209838248085,
+       "hi": 0.9863273350662478,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.208855378289969,
+       "lo": 4.964206633893269,
+       "hi": 7.957273314343286,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 8195.224096058428,
+      "rmse": 90.52747702249538,
+      "skill_vs_persistence": {
+       "point": -0.25547976558268015,
+       "lo": -0.39136935837813486,
+       "hi": -0.11580331443917477,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 2.073306007929709,
+       "lo": 1.5908227126617465,
+       "hi": 2.6054130802127387,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.073306007929709,
+       "lo": 1.5908227126617465,
+       "hi": 2.6054130802127387,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.2948895660146408,
+       "lo": 0.23731586101421934,
+       "hi": 0.3701068529910169,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.030787952079568,
+       "lo": 5.842839047197024,
+       "hi": 8.505102529751506,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 7548.068880265585,
+      "rmse": 86.87962292888699,
+      "skill_vs_persistence": {
+       "point": -0.1563378422995838,
+       "lo": -0.20422574255529752,
+       "hi": -0.11228977208145698,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 7.289357162629707,
+       "lo": 5.583883402976454,
+       "hi": 9.291466235299843,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 7.289357162629707,
+       "lo": 5.583883402976454,
+       "hi": 9.291466235299843,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.0271929030366722,
+       "lo": 0.7881409030462676,
+       "hi": 1.3416886068985252,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.096385830821367,
+       "lo": 5.518708070471958,
+       "hi": 9.222544281975525,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 5711.381771193634,
+      "rmse": 75.57368438281698,
+      "skill_vs_persistence": {
+       "point": 0.12503622070565334,
+       "lo": 0.0731490985027151,
+       "hi": 0.1779870225921495,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 2.38840989073341,
+       "lo": 1.886851835821043,
+       "hi": 2.9621873178912312,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.38840989073341,
+       "lo": 1.886851835821043,
+       "hi": 2.9621873178912312,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.40207838364922543,
+       "lo": 0.32446710676857987,
+       "hi": 0.5058599164960053,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.940159898814821,
+       "lo": 4.894492246230279,
+       "hi": 7.293296142904819,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 12126.946617761689,
+      "rmse": 110.12241650890925,
+      "skill_vs_persistence": {
+       "point": -0.8578059511787843,
+       "lo": -1.2190732078116,
+       "hi": -0.5529080268914689,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 4.4357686977959006,
+       "lo": 3.6477749123770518,
+       "hi": 5.297688116418628,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.4357686977959006,
+       "lo": 3.6477749123770518,
+       "hi": 5.297688116418628,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.53271301891956,
+       "lo": 1.1754124008408504,
+       "hi": 1.9890978596322126,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 2.8940634306889117,
+       "lo": 2.404299833565528,
+       "hi": 3.511009857060753,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 2995.1364557145307,
+      "rmse": 54.72783985975082,
+      "skill_vs_persistence": {
+       "point": 0.5411555350735087,
+       "lo": 0.432692087037807,
+       "hi": 0.6247839824050178,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 1.6757100068114668,
+       "lo": 1.3055852311075233,
+       "hi": 2.0878138056000033,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.6757100068114668,
+       "lo": 1.3055852311075233,
+       "hi": 2.0878138056000033,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.2366898004331192,
+       "lo": 0.19716692324848567,
+       "hi": 0.28948094918068357,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.079772781696048,
+       "lo": 5.978515296677468,
+       "hi": 8.403196739196067,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 4597.757125551401,
+      "rmse": 67.8067631254538,
+      "skill_vs_persistence": {
+       "point": 0.29563963467824406,
+       "lo": -0.07830836503595502,
+       "hi": 0.5641316900026355,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 1.7076756456988667,
+       "lo": 1.3454973288800443,
+       "hi": 2.1028762789300197,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.7076756456988667,
+       "lo": 1.3454973288800443,
+       "hi": 2.1028762789300197,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.26500011906459503,
+       "lo": 0.21707699413742668,
+       "hi": 0.32385439731191545,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.4440561450563445,
+       "lo": 5.5258279531488395,
+       "hi": 7.6443334034662715,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "outer": {
+    "n_rows": 18564,
+    "n_shots": 69,
+    "arms": {
+     "persistence": {
+      "mse": 4981.0759569989805,
+      "rmse": 70.57673807281674,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 6.495506058816489,
+       "lo": 4.698162739845152,
+       "hi": 8.64305746550433,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 6.495506058816489,
+       "lo": 4.698162739845152,
+       "hi": 8.64305746550433,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.0693616459750088,
+       "lo": 0.8544408687346108,
+       "hi": 1.3344843388260403,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.074190226725497,
+       "lo": 4.76465420392127,
+       "hi": 7.6745750920827644,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 5669.020741812064,
+      "rmse": 75.29289967727412,
+      "skill_vs_persistence": {
+       "point": -0.13811168324916645,
+       "lo": -0.28095454478499515,
+       "hi": 5.187970090758549e-05,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 3.819836324892377,
+       "lo": 2.564104446498542,
+       "hi": 5.616149981827013,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 3.819836324892377,
+       "lo": 2.564104446498542,
+       "hi": 5.616149981827013,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.46303057080439236,
+       "lo": 0.3822064355978471,
+       "hi": 0.561258277601944,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 8.24964174235068,
+       "lo": 5.8904331048356715,
+       "hi": 11.378816452913194,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 6036.0171620864285,
+      "rmse": 77.69180884807888,
+      "skill_vs_persistence": {
+       "point": -0.2117898249684662,
+       "lo": -0.279710692033106,
+       "hi": -0.15387382615283685,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 9.312349776202439,
+       "lo": 6.6413714914954145,
+       "hi": 12.451769763893692,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 9.312349776202439,
+       "lo": 6.6413714914954145,
+       "hi": 12.451769763893692,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.5158737023444053,
+       "lo": 1.204843351240229,
+       "hi": 1.912770633452247,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.1432227248221505,
+       "lo": 4.789208201174167,
+       "hi": 7.803526266911269,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 4483.363956123279,
+      "rmse": 66.95792676093906,
+      "skill_vs_persistence": {
+       "point": 0.09992058044735441,
+       "lo": 0.04980967031007469,
+       "hi": 0.15414097207983823,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 4.456073817724575,
+       "lo": 3.126616080693848,
+       "hi": 6.206977467228814,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.456073817724575,
+       "lo": 3.126616080693848,
+       "hi": 6.206977467228814,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.6159986314852604,
+       "lo": 0.5004597908711557,
+       "hi": 0.744335668738464,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.233902138679022,
+       "lo": 5.346265373794254,
+       "hi": 9.634477843078335,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 7463.000204337103,
+      "rmse": 86.38865784544348,
+      "skill_vs_persistence": {
+       "point": -0.498270708731261,
+       "lo": -0.6812687649081975,
+       "hi": -0.33492620293538167,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 5.900948446326323,
+       "lo": 4.399048114078181,
+       "hi": 7.870314176738833,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 5.900948446326323,
+       "lo": 4.399048114078181,
+       "hi": 7.870314176738833,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.5013467402648755,
+       "lo": 1.2359516298011681,
+       "hi": 1.8303559968038887,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 3.930436779238117,
+       "lo": 3.184149594797597,
+       "hi": 4.807073789739555,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 2572.3120096564576,
+      "rmse": 50.717965354068156,
+      "skill_vs_persistence": {
+       "point": 0.48358305878831964,
+       "lo": 0.23618150036354268,
+       "hi": 0.6414101133130328,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 2.9075516027151536,
+       "lo": 2.139641764624192,
+       "hi": 3.9232798932183597,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.9075516027151536,
+       "lo": 2.139641764624192,
+       "hi": 3.9232798932183597,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.3715609662094051,
+       "lo": 0.3118787754677173,
+       "hi": 0.4329682268779494,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.8252342606852565,
+       "lo": 6.025040944541251,
+       "hi": 10.201760757340269,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 3445.0362840840157,
+      "rmse": 58.69443145720057,
+      "skill_vs_persistence": {
+       "point": 0.30837507521977325,
+       "lo": -0.1452897199916455,
+       "hi": 0.6037962906560245,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 2.81752303214086,
+       "lo": 2.0672013373835316,
+       "hi": 3.810284250657856,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.81752303214086,
+       "lo": 2.0672013373835316,
+       "hi": 3.810284250657856,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.3685228364063228,
+       "lo": 0.3126547463902709,
+       "hi": 0.43418811949716446,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.645450305376299,
+       "lo": 5.906651978709937,
+       "hi": 9.796034719232019,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   }
+  },
+  "T_i|W": {
+   "n_rows_without_radius": 0,
+   "tertile_edges_m": [
+    0.9335411787033081,
+    1.1057883501052856
+   ],
+   "inner": {
+    "n_rows": 46426,
+    "n_shots": 112,
+    "arms": {
+     "persistence": {
+      "mse": 18284.721389132294,
+      "rmse": 135.22100942210236,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 2.790096258074481,
+       "lo": 2.21003253692503,
+       "hi": 3.4946739714969217,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.790096258074481,
+       "lo": 2.21003253692503,
+       "hi": 3.4946739714969217,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.42035782507075997,
+       "lo": 0.35670940446883076,
+       "hi": 0.49841288452422816,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.637431473066587,
+       "lo": 5.557226446562694,
+       "hi": 7.978381670180897,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 28361.64640999732,
+      "rmse": 168.40916367584433,
+      "skill_vs_persistence": {
+       "point": -0.5511117619136552,
+       "lo": -0.6541705708646255,
+       "hi": -0.4552376055193985,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 1.3961703643147383,
+       "lo": 0.9770705644820755,
+       "hi": 1.9615132306633911,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.3961703643147383,
+       "lo": 0.9770705644820755,
+       "hi": 1.9615132306633911,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.20219110434073867,
+       "lo": 0.17826191745818068,
+       "hi": 0.23253663890379894,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.905201734107298,
+       "lo": 5.084982177899494,
+       "hi": 9.331986016381904,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 17907.13496006514,
+      "rmse": 133.81754354368167,
+      "skill_vs_persistence": {
+       "point": 0.02065037913520351,
+       "lo": -0.01053664149592462,
+       "hi": 0.047431083068149416,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 4.170712199065415,
+       "lo": 3.3040953073198134,
+       "hi": 5.1679953470316,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.170712199065415,
+       "lo": 3.3040953073198134,
+       "hi": 5.1679953470316,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.539974377421346,
+       "lo": 0.4520314608082765,
+       "hi": 0.6474877459091657,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.723907602769413,
+       "lo": 6.381723156022546,
+       "hi": 9.304289075471353,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 16817.32734672709,
+      "rmse": 129.68163843323035,
+      "skill_vs_persistence": {
+       "point": 0.08025246932542074,
+       "lo": -0.03488924221736201,
+       "hi": 0.1603700151264945,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 1.6209217228106327,
+       "lo": 1.1543173514026408,
+       "hi": 2.2627600628252877,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.6209217228106327,
+       "lo": 1.1543173514026408,
+       "hi": 2.2627600628252877,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.25057194515620285,
+       "lo": 0.21933544295382898,
+       "hi": 0.2897494831121205,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.4688874957656335,
+       "lo": 4.898432570144527,
+       "hi": 8.526635248450535,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 28067.899137063752,
+      "rmse": 167.53476993467282,
+      "skill_vs_persistence": {
+       "point": -0.5350465856015829,
+       "lo": -0.8125411272127401,
+       "hi": -0.27400248809164657,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 3.0569565859752306,
+       "lo": 2.525640155349712,
+       "hi": 3.7449559506879675,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 3.0569565859752306,
+       "lo": 2.525640155349712,
+       "hi": 3.7449559506879675,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.9392832031074047,
+       "lo": 0.7703599540280885,
+       "hi": 1.1435169615951506,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 3.2545632412694974,
+       "lo": 2.7477358509545695,
+       "hi": 3.8692013138439836,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 12039.45184531828,
+      "rmse": 109.72443595352077,
+      "skill_vs_persistence": {
+       "point": 0.341556724376777,
+       "lo": 0.25082237698869886,
+       "hi": 0.42847836250890464,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 1.1275538010351072,
+       "lo": 0.8843316390212225,
+       "hi": 1.425409891024428,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.1275538010351072,
+       "lo": 0.8843316390212225,
+       "hi": 1.425409891024428,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_median": {
+       "point": 0.17377319860321383,
+       "lo": 0.15504613022864597,
+       "hi": 0.19698007697180286,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.488651933085,
+       "lo": 5.310895632123076,
+       "hi": 7.852783850716837,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 19885.196157159877,
+      "rmse": 141.0148792048551,
+      "skill_vs_persistence": {
+       "point": -0.08753071670968127,
+       "lo": -0.39486914811938006,
+       "hi": 0.18464227659491358,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 1.3521747059660736,
+       "lo": 1.077300147981862,
+       "hi": 1.674236179350169,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.3521747059660736,
+       "lo": 1.077300147981862,
+       "hi": 1.674236179350169,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.20190388839178816,
+       "lo": 0.1804614047630029,
+       "hi": 0.22827855424558596,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.697120678241823,
+       "lo": 5.52714624748804,
+       "hi": 8.024945293699453,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "middle": {
+    "n_rows": 47441,
+    "n_shots": 110,
+    "arms": {
+     "persistence": {
+      "mse": 13371.66473025532,
+      "rmse": 115.63591453460866,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 4.127849149753264,
+       "lo": 3.32851587031125,
+       "hi": 5.026307601586767,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.127849149753264,
+       "lo": 3.32851587031125,
+       "hi": 5.026307601586767,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.6223072984083308,
+       "lo": 0.5157390302617976,
+       "hi": 0.7553735697993496,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.633136330412681,
+       "lo": 5.53140761063534,
+       "hi": 8.016960796361195,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 17817.63085945162,
+      "rmse": 133.4826987270321,
+      "skill_vs_persistence": {
+       "point": -0.3324915946431608,
+       "lo": -0.4022538071244425,
+       "hi": -0.2596947933658344,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 1.9738938486230122,
+       "lo": 1.469242194752775,
+       "hi": 2.6680615038542808,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.9738938486230122,
+       "lo": 1.469242194752775,
+       "hi": 2.6680615038542808,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.2515072714692388,
+       "lo": 0.22050061767494009,
+       "hi": 0.28603571094722385,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.848257575584387,
+       "lo": 6.1474159778464985,
+       "hi": 10.346372937926356,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 14260.233065693688,
+      "rmse": 119.41621776665717,
+      "skill_vs_persistence": {
+       "point": -0.06645158649751881,
+       "lo": -0.11064922653411763,
+       "hi": -0.035220026812003556,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 6.25055388845184,
+       "lo": 4.965492675445047,
+       "hi": 7.701733892085717,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 6.25055388845184,
+       "lo": 4.965492675445047,
+       "hi": 7.701733892085717,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.8560041189575399,
+       "lo": 0.6975233937935192,
+       "hi": 1.0440814390675595,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.302013798793279,
+       "lo": 5.980766306965277,
+       "hi": 9.011629310608596,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 13207.161820337285,
+      "rmse": 114.92241652670415,
+      "skill_vs_persistence": {
+       "point": 0.012302350772062542,
+       "lo": -0.04416744184828289,
+       "hi": 0.06819633593563591,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 2.3548805567250244,
+       "lo": 1.8468448937999917,
+       "hi": 2.9803819169260244,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.3548805567250244,
+       "lo": 1.8468448937999917,
+       "hi": 2.9803819169260244,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.35250369665524645,
+       "lo": 0.3044954983274788,
+       "hi": 0.40816944113825426,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.680442160094936,
+       "lo": 5.429091044721604,
+       "hi": 8.270469807555232,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 24017.108653390525,
+      "rmse": 154.97454195251078,
+      "skill_vs_persistence": {
+       "point": -0.7961195661037161,
+       "lo": -1.161132389786506,
+       "hi": -0.5259738511125155,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 4.430132968867967,
+       "lo": 3.745982536322107,
+       "hi": 5.223077524251603,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.430132968867967,
+       "lo": 3.745982536322107,
+       "hi": 5.223077524251603,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.4649634774006906,
+       "lo": 1.2218577531444377,
+       "hi": 1.768010064136665,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 3.024056938763024,
+       "lo": 2.6169861150893623,
+       "hi": 3.5262231951889467,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 8222.634684015336,
+      "rmse": 90.67874438927426,
+      "skill_vs_persistence": {
+       "point": 0.3850702324737145,
+       "lo": 0.2864680836374651,
+       "hi": 0.47567963793299767,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 1.635819932054435,
+       "lo": 1.3178237774475596,
+       "hi": 2.001351573740667,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.635819932054435,
+       "lo": 1.3178237774475596,
+       "hi": 2.001351573740667,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.21565697677549664,
+       "lo": 0.19308452495020817,
+       "hi": 0.24332483166364935,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.585286395614075,
+       "lo": 6.426941056905633,
+       "hi": 8.957274104794074,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 13720.088765195002,
+      "rmse": 117.13278262380264,
+      "skill_vs_persistence": {
+       "point": -0.02605689283783308,
+       "lo": -0.2740133135981048,
+       "hi": 0.17252613385105714,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 1.8382277863928744,
+       "lo": 1.4898164347391878,
+       "hi": 2.2419640256526194,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 1.8382277863928744,
+       "lo": 1.4898164347391878,
+       "hi": 2.2419640256526194,
+       "ref": 1.5,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_median": {
+       "point": 0.2598109604019563,
+       "lo": 0.22958319570774124,
+       "hi": 0.2940632946846807,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.075251111611815,
+       "lo": 6.050554888318292,
+       "hi": 8.348678013460122,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "outer": {
+    "n_rows": 44928,
+    "n_shots": 100,
+    "arms": {
+     "persistence": {
+      "mse": 6696.150297646498,
+      "rmse": 81.83000853993906,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 4.468993337058421,
+       "lo": 3.5008997369256907,
+       "hi": 5.645654293965487,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.468993337058421,
+       "lo": 3.5008997369256907,
+       "hi": 5.645654293965487,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.6610664760030631,
+       "lo": 0.5751237594216613,
+       "hi": 0.7650851492582765,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.760278276518917,
+       "lo": 5.522998879367727,
+       "hi": 8.171466160561724,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 8561.319298060884,
+      "rmse": 92.52739755370236,
+      "skill_vs_persistence": {
+       "point": -0.2785434790897594,
+       "lo": -0.5149684783100984,
+       "hi": -0.11805612194255209,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 2.969563785013964,
+       "lo": 2.1640603042777973,
+       "hi": 4.120778507663503,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.969563785013964,
+       "lo": 2.1640603042777973,
+       "hi": 4.120778507663503,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.325933859035444,
+       "lo": 0.2858511837849178,
+       "hi": 0.37623554870011783,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.110939850808922,
+       "lo": 7.007514955896241,
+       "hi": 12.015104205068486,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 7372.583855156989,
+      "rmse": 85.86375169509535,
+      "skill_vs_persistence": {
+       "point": -0.10101827579172484,
+       "lo": -0.18762608307597198,
+       "hi": -0.04240963960775998,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 6.014294186057545,
+       "lo": 4.723365486491594,
+       "hi": 7.523420230541518,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 6.014294186057545,
+       "lo": 4.723365486491594,
+       "hi": 7.523420230541518,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.940760440784489,
+       "lo": 0.8030619457877766,
+       "hi": 1.1100119374706134,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.393013487091673,
+       "lo": 5.31485958477127,
+       "hi": 7.668082256329731,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 6817.394888842884,
+      "rmse": 82.56751715319339,
+      "skill_vs_persistence": {
+       "point": -0.018106611382215254,
+       "lo": -0.10123042840747754,
+       "hi": 0.05457497308442957,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 3.477696889578846,
+       "lo": 2.663873726195807,
+       "hi": 4.509230237570896,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 3.477696889578846,
+       "lo": 2.663873726195807,
+       "hi": 4.509230237570896,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.4379349620654943,
+       "lo": 0.38054979922853754,
+       "hi": 0.5074534941004673,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.9411264019125,
+       "lo": 6.334184332189195,
+       "hi": 9.966008005098555,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 8408.650966880576,
+      "rmse": 91.69869664766547,
+      "skill_vs_persistence": {
+       "point": -0.25574406085777057,
+       "lo": -0.5146447615424423,
+       "hi": -0.07243746294425386,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 4.28957636663743,
+       "lo": 3.405400485565635,
+       "hi": 5.445522947389951,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 4.28957636663743,
+       "lo": 3.405400485565635,
+       "hi": 5.445522947389951,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.7922683174622722,
+       "lo": 0.6941761515955431,
+       "hi": 0.9136725428380298,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.4142974950423906,
+       "lo": 4.4465450295314755,
+       "hi": 6.540620837898718,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 3741.0455586509115,
+      "rmse": 61.16408716437213,
+      "skill_vs_persistence": {
+       "point": 0.441313980069148,
+       "lo": 0.34280887951228145,
+       "hi": 0.5358898673167003,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 2.5205374643194065,
+       "lo": 1.974719557453782,
+       "hi": 3.2068033717204045,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.5205374643194065,
+       "lo": 1.974719557453782,
+       "hi": 3.2068033717204045,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.2679418249370962,
+       "lo": 0.23784593789089983,
+       "hi": 0.30114673830164135,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.407032533689524,
+       "lo": 7.560208858433747,
+       "hi": 11.668862283516143,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 5645.19904874002,
+      "rmse": 75.1345396521468,
+      "skill_vs_persistence": {
+       "point": 0.15694857525462846,
+       "lo": -0.110196462556165,
+       "hi": 0.44864536360798485,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 2.541944808093488,
+       "lo": 1.9866042463525033,
+       "hi": 3.262061956369245,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 2.541944808093488,
+       "lo": 1.9866042463525033,
+       "hi": 3.262061956369245,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.2725637606665168,
+       "lo": 0.24065920209150626,
+       "hi": 0.30751765472617093,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.32605567914647,
+       "lo": 7.49340486328926,
+       "hi": 11.584242849797835,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   }
+  },
+  "V_i|G": {
+   "n_rows_without_radius": 0,
+   "tertile_edges_m": [
+    0.9335411787033081,
+    1.0631959438323975
+   ],
+   "inner": {
+    "n_rows": 19972,
+    "n_shots": 69,
+    "arms": {
+     "persistence": {
+      "mse": 45.02397774732512,
+      "rmse": 6.709990890256493,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 22.204412707380612,
+       "lo": 17.897533131025902,
+       "hi": 27.00547140761459,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.204412707380612,
+       "lo": 17.897533131025902,
+       "hi": 27.00547140761459,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 2.3210896097406417,
+       "lo": 1.7454359935221841,
+       "hi": 3.0799419465465183,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.566374608803548,
+       "lo": 7.801876496746254,
+       "hi": 11.665439859404419,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 43.630210037763284,
+      "rmse": 6.605316800711627,
+      "skill_vs_persistence": {
+       "point": 0.030956121144685822,
+       "lo": -0.08158382642704518,
+       "hi": 0.14699609597036126,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 7.451549944752808,
+       "lo": 5.848319699027199,
+       "hi": 9.417456792705114,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 7.451549944752808,
+       "lo": 5.848319699027199,
+       "hi": 9.417456792705114,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.9644325433911807,
+       "lo": 0.7884636736011045,
+       "hi": 1.1956731318144427,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.726356805164762,
+       "lo": 6.326721952750929,
+       "hi": 9.261547765961696,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 56.43097396817604,
+      "rmse": 7.512055242620094,
+      "skill_vs_persistence": {
+       "point": -0.25335380816122166,
+       "lo": -0.30518960395254147,
+       "hi": -0.20566285710943893,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 36.334408689930996,
+       "lo": 29.112619414102827,
+       "hi": 44.33509555395114,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 36.334408689930996,
+       "lo": 29.112619414102827,
+       "hi": 44.33509555395114,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 3.1505279427265784,
+       "lo": 2.3746319014192094,
+       "hi": 4.2970184913352965,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 11.53280001017414,
+       "lo": 9.289263650991526,
+       "hi": 13.905258112505244,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 39.63842720868486,
+      "rmse": 6.295905590833209,
+      "skill_vs_persistence": {
+       "point": 0.11961516525403404,
+       "lo": 0.06052737972368717,
+       "hi": 0.17853465496213192,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 11.241564609730649,
+       "lo": 8.949395448199724,
+       "hi": 13.995125305185844,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 11.241564609730649,
+       "lo": 8.949395448199724,
+       "hi": 13.995125305185844,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.7224424622013337,
+       "lo": 1.3297051357743244,
+       "hi": 2.168948379232323,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.526525475552657,
+       "lo": 5.394396109660348,
+       "hi": 7.9896760682589045,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 62.31720348407001,
+      "rmse": 7.894124617971901,
+      "skill_vs_persistence": {
+       "point": -0.38408924759590524,
+       "lo": -0.5255798697803882,
+       "hi": -0.2594960519146789,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 19.203553950113463,
+       "lo": 15.966998294957722,
+       "hi": 23.12575521990463,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 19.203553950113463,
+       "lo": 15.966998294957722,
+       "hi": 23.12575521990463,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.205627209027419,
+       "lo": 3.235488961237062,
+       "hi": 5.614242338590635,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 4.56615695963086,
+       "lo": 3.836536467227922,
+       "hi": 5.367737829315844,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 13.30628637756324,
+      "rmse": 3.6477782796605442,
+      "skill_vs_persistence": {
+       "point": 0.7044622211693907,
+       "lo": 0.6637537028434727,
+       "hi": 0.7382573075347066,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 5.289486852150957,
+       "lo": 4.210313784559546,
+       "hi": 6.674123031969134,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 5.289486852150957,
+       "lo": 4.210313784559546,
+       "hi": 6.674123031969134,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.7000872134869018,
+       "lo": 0.568933881421697,
+       "hi": 0.8474693697648855,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.555468447717793,
+       "lo": 6.246651122565869,
+       "hi": 9.3888609901967,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 14.992110280470747,
+      "rmse": 3.871964653825077,
+      "skill_vs_persistence": {
+       "point": 0.6670194187504583,
+       "lo": 0.6034523192493981,
+       "hi": 0.7195266085362227,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 5.070491377489599,
+       "lo": 4.0572538362277095,
+       "hi": 6.297976078422854,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 5.070491377489599,
+       "lo": 4.0572538362277095,
+       "hi": 6.297976078422854,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.7788013251457059,
+       "lo": 0.6180773154921834,
+       "hi": 0.9846963383054594,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.510635272148466,
+       "lo": 5.3761012212878985,
+       "hi": 7.9209745974707895,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "middle": {
+    "n_rows": 20308,
+    "n_shots": 78,
+    "arms": {
+     "persistence": {
+      "mse": 76.26184687916167,
+      "rmse": 8.732802922267378,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 37.12654045204857,
+       "lo": 28.511263820861156,
+       "hi": 46.6767079598822,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 37.12654045204857,
+       "lo": 28.511263820861156,
+       "hi": 46.6767079598822,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.534394009945695,
+       "lo": 3.4048779542153964,
+       "hi": 5.95057547069947,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 8.187762327361845,
+       "lo": 6.2798081512935395,
+       "hi": 10.786223186008062,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 79.59846496338224,
+      "rmse": 8.921797182372073,
+      "skill_vs_persistence": {
+       "point": -0.04375212797439221,
+       "lo": -0.16620799021094024,
+       "hi": 0.08473017288467427,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 16.240435094241192,
+       "lo": 12.02803126633273,
+       "hi": 21.337877545832033,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 16.240435094241192,
+       "lo": 12.02803126633273,
+       "hi": 21.337877545832033,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.7505869587426541,
+       "lo": 1.3677898627100984,
+       "hi": 2.262698018675808,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.277137027175025,
+       "lo": 7.152481092859601,
+       "hi": 12.271134437643083,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 94.54293715078316,
+      "rmse": 9.723319245544864,
+      "skill_vs_persistence": {
+       "point": -0.2397147593420892,
+       "lo": -0.3050156685562563,
+       "hi": -0.1767985302642319,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 58.81575925799326,
+       "lo": 44.64477619709402,
+       "hi": 74.5365751373388,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 58.81575925799326,
+       "lo": 44.64477619709402,
+       "hi": 74.5365751373388,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 6.362091923434123,
+       "lo": 4.7372415694482735,
+       "hi": 8.436679515095287,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.244720127565486,
+       "lo": 6.978319323630918,
+       "hi": 12.29290798065911,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 69.5332114436897,
+      "rmse": 8.338657652385645,
+      "skill_vs_persistence": {
+       "point": 0.08823069084772672,
+       "lo": 0.020558906746297005,
+       "hi": 0.16435012790931383,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 22.993667388254835,
+       "lo": 17.80475245345284,
+       "hi": 29.168521851473425,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.993667388254835,
+       "lo": 17.80475245345284,
+       "hi": 29.168521851473425,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 3.1027721306791536,
+       "lo": 2.315124416160176,
+       "hi": 3.994896272551309,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.410685161472635,
+       "lo": 5.806816829986517,
+       "hi": 9.718068329606274,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 106.59397357042607,
+      "rmse": 10.324435750704543,
+      "skill_vs_persistence": {
+       "point": -0.39773658693745295,
+       "lo": -0.578465482050194,
+       "hi": -0.25078190972642933,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 34.89115223182095,
+       "lo": 28.523152212863373,
+       "hi": 42.56680534634103,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 34.89115223182095,
+       "lo": 28.523152212863373,
+       "hi": 42.56680534634103,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 8.24587422393545,
+       "lo": 6.331355427695753,
+       "hi": 10.749180622852032,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 4.231346644912648,
+       "lo": 3.431206607516164,
+       "hi": 5.270201166035939,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 23.846878045403365,
+      "rmse": 4.883326534791972,
+      "skill_vs_persistence": {
+       "point": 0.6873026418677063,
+       "lo": 0.6096782988537006,
+       "hi": 0.7440254585621924,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 11.612985388712342,
+       "lo": 8.437786168009309,
+       "hi": 15.62246490566854,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 11.612985388712342,
+       "lo": 8.437786168009309,
+       "hi": 15.62246490566854,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.1387863681748729,
+       "lo": 0.9178168321161627,
+       "hi": 1.4512650546235917,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 10.197685635563424,
+       "lo": 7.511771874874321,
+       "hi": 13.929266337685045,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 28.576788085852485,
+      "rmse": 5.345726151408477,
+      "skill_vs_persistence": {
+       "point": 0.6252806710656649,
+       "lo": 0.45309599235651876,
+       "hi": 0.7353139888840702,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 10.754217488219968,
+       "lo": 7.916627050587426,
+       "hi": 14.243447097251693,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 10.754217488219968,
+       "lo": 7.916627050587426,
+       "hi": 14.243447097251693,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.3492694888064278,
+       "lo": 1.0389806216936088,
+       "hi": 1.6999198851882626,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.970399966379745,
+       "lo": 6.10647217638478,
+       "hi": 10.5632225522706,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "outer": {
+    "n_rows": 18564,
+    "n_shots": 69,
+    "arms": {
+     "persistence": {
+      "mse": 59.71271086723421,
+      "rmse": 7.72740000693857,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 38.08533878278139,
+       "lo": 28.25134471780564,
+       "hi": 48.50179378020856,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 38.08533878278139,
+       "lo": 28.25134471780564,
+       "hi": 48.50179378020856,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 5.279354369794339,
+       "lo": 4.331594614104158,
+       "hi": 6.506463089768978,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.2140144637165236,
+       "lo": 5.758427273873411,
+       "hi": 8.960155019509058,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 60.915474220168285,
+      "rmse": 7.8048365915096705,
+      "skill_vs_persistence": {
+       "point": -0.020142501244137412,
+       "lo": -0.14211131245535993,
+       "hi": 0.08864487024131668,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 22.96552274758524,
+       "lo": 15.601341092146516,
+       "hi": 32.223692500533296,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.96552274758524,
+       "lo": 15.601341092146516,
+       "hi": 32.223692500533296,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 2.50006521398397,
+       "lo": 2.0223448056388573,
+       "hi": 3.0971527329611983,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.185969477567593,
+       "lo": 6.790156693978935,
+       "hi": 12.07139902421736,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 71.81464374994266,
+      "rmse": 8.474352113875295,
+      "skill_vs_persistence": {
+       "point": -0.2026692928012599,
+       "lo": -0.30095812764185426,
+       "hi": -0.12092700514066028,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 54.443228170990395,
+       "lo": 40.9002308061325,
+       "hi": 68.10894101189433,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 54.443228170990395,
+       "lo": 40.9002308061325,
+       "hi": 68.10894101189433,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 7.6332746643569855,
+       "lo": 6.0641773468534,
+       "hi": 9.655415251805719,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.132355452268611,
+       "lo": 5.8108209959310955,
+       "hi": 8.721117626837804,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 55.986941407399904,
+      "rmse": 7.4824422087577735,
+      "skill_vs_persistence": {
+       "point": 0.06239491400948449,
+       "lo": 0.015335716231938745,
+       "hi": 0.13172155905349214,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 29.94620657739174,
+       "lo": 21.590881480218194,
+       "hi": 39.28531236943204,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 29.94620657739174,
+       "lo": 21.590881480218194,
+       "hi": 39.28531236943204,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 3.739523005840689,
+       "lo": 2.990105658908131,
+       "hi": 4.656884932951024,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 8.008028438552012,
+       "lo": 6.211586359276523,
+       "hi": 10.098252402479014,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 75.05574283955849,
+      "rmse": 8.66347175441569,
+      "skill_vs_persistence": {
+       "point": -0.2569475032952051,
+       "lo": -0.45769691686502045,
+       "hi": -0.13597755249924495,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 36.74723467871763,
+       "lo": 27.661537066968254,
+       "hi": 47.69997019204918,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 36.74723467871763,
+       "lo": 27.661537066968254,
+       "hi": 47.69997019204918,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 7.339142147612901,
+       "lo": 6.136965259665979,
+       "hi": 8.865343597113466,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.007020430946399,
+       "lo": 3.9156108230746614,
+       "hi": 6.450932373879688,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 31.220990699446446,
+      "rmse": 5.587574670592461,
+      "skill_vs_persistence": {
+       "point": 0.47714665360171815,
+       "lo": 0.2973325957500262,
+       "hi": 0.6831431602154252,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 18.425750003552455,
+       "lo": 11.767047874409611,
+       "hi": 26.91213119062582,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 18.425750003552455,
+       "lo": 11.767047874409611,
+       "hi": 26.91213119062582,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.6984192101005573,
+       "lo": 1.4062142698956532,
+       "hi": 2.0716439584244504,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 10.848764482863764,
+       "lo": 7.531283989098783,
+       "hi": 15.047821266805665,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 33.67429455626333,
+      "rmse": 5.802955674159792,
+      "skill_vs_persistence": {
+       "point": 0.4360615341826456,
+       "lo": 0.25395213929494664,
+       "hi": 0.666076850100136,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 17.39695158454355,
+       "lo": 10.952311685854886,
+       "hi": 25.80511969762636,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 17.39695158454355,
+       "lo": 10.952311685854886,
+       "hi": 25.80511969762636,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.7774598024856534,
+       "lo": 1.485677861495278,
+       "hi": 2.1366411126058176,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.787535875756587,
+       "lo": 6.62812521344708,
+       "hi": 13.684196316567139,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   }
+  },
+  "V_i|W": {
+   "n_rows_without_radius": 0,
+   "tertile_edges_m": [
+    0.9335411787033081,
+    1.1057883501052856
+   ],
+   "inner": {
+    "n_rows": 46426,
+    "n_shots": 112,
+    "arms": {
+     "persistence": {
+      "mse": 135.75607640461024,
+      "rmse": 11.651440958293968,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 21.3416189349747,
+       "lo": 16.60447814329547,
+       "hi": 26.944508190077052,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 21.3416189349747,
+       "lo": 16.60447814329547,
+       "hi": 26.944508190077052,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.4465903720700033,
+       "lo": 1.1903798921542257,
+       "hi": 1.77499638555421,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 14.753049202474534,
+       "lo": 12.003232151976674,
+       "hi": 17.936374753945476,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 182.90643328361503,
+      "rmse": 13.524290490950534,
+      "skill_vs_persistence": {
+       "point": -0.34731673253782724,
+       "lo": -0.5257209224186963,
+       "hi": -0.15641761958593925,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 8.75563467706027,
+       "lo": 6.198201352458209,
+       "hi": 12.324727161062667,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 8.75563467706027,
+       "lo": 6.198201352458209,
+       "hi": 12.324727161062667,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.7055823523363474,
+       "lo": 0.6019628976465466,
+       "hi": 0.8279199035109512,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 12.409089666242823,
+       "lo": 9.050820277602964,
+       "hi": 16.79741786454344,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 142.16934902293872,
+      "rmse": 11.923478897659807,
+      "skill_vs_persistence": {
+       "point": -0.04724114594483586,
+       "lo": -0.11967666604347776,
+       "hi": 0.0010461010092208723,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 33.19038451288993,
+       "lo": 26.34883329854509,
+       "hi": 41.24660266488351,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 33.19038451288993,
+       "lo": 26.34883329854509,
+       "hi": 41.24660266488351,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.9682398282915865,
+       "lo": 1.5856403338983835,
+       "hi": 2.458593402752544,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 16.862977791532074,
+       "lo": 13.759095516811795,
+       "hi": 20.2336067986454,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 119.0052575194155,
+      "rmse": 10.908953089981434,
+      "skill_vs_persistence": {
+       "point": 0.12338909114661101,
+       "lo": 0.024128748528500634,
+       "hi": 0.23701335786240746,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 12.404533128441726,
+       "lo": 8.945785670155848,
+       "hi": 16.949504217883156,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 12.404533128441726,
+       "lo": 8.945785670155848,
+       "hi": 16.949504217883156,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.1665407413489635,
+       "lo": 0.9645396715558575,
+       "hi": 1.413465325277066,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 10.633604715851915,
+       "lo": 7.937870938729014,
+       "hi": 13.89807230468495,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 176.15135703199005,
+      "rmse": 13.272202418287254,
+      "skill_vs_persistence": {
+       "point": -0.2975578088083872,
+       "lo": -0.6708553843977952,
+       "hi": -0.06003178981113671,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 21.281927930188406,
+       "lo": 17.432185152427493,
+       "hi": 26.043407755260496,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 21.281927930188406,
+       "lo": 17.432185152427493,
+       "hi": 26.043407755260496,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.091862269083311,
+       "lo": 3.301824880456667,
+       "hi": 5.0314924316748115,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 5.201037212563887,
+       "lo": 4.396765213374059,
+       "hi": 6.19791991107706,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 87.23836114105936,
+      "rmse": 9.340147811520938,
+      "skill_vs_persistence": {
+       "point": 0.3573889033073382,
+       "lo": 0.20290979914579996,
+       "hi": 0.4946573897416963,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 6.427029792561957,
+       "lo": 4.356813485239451,
+       "hi": 8.957807155111848,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 6.427029792561957,
+       "lo": 4.356813485239451,
+       "hi": 8.957807155111848,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.5091019741974618,
+       "lo": 0.434816498064679,
+       "hi": 0.5908287170963319,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 12.62424841839083,
+       "lo": 9.029457821097395,
+       "hi": 17.30745049780916,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 100.00328967774918,
+      "rmse": 10.000164482534734,
+      "skill_vs_persistence": {
+       "point": 0.26336048944360113,
+       "lo": 0.10399758005127549,
+       "hi": 0.39479886924221075,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 6.597492942604516,
+       "lo": 4.754973932300331,
+       "hi": 8.84207227940921,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 6.597492942604516,
+       "lo": 4.754973932300331,
+       "hi": 8.84207227940921,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.6936715958766021,
+       "lo": 0.5920530486894111,
+       "hi": 0.8178179330652113,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.51097461943382,
+       "lo": 7.249450011580607,
+       "hi": 12.543066476944697,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "middle": {
+    "n_rows": 47441,
+    "n_shots": 110,
+    "arms": {
+     "persistence": {
+      "mse": 110.0390987382192,
+      "rmse": 10.489952275307033,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 32.21777335497534,
+       "lo": 25.165367121503177,
+       "hi": 40.540575420220826,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 32.21777335497534,
+       "lo": 25.165367121503177,
+       "hi": 40.540575420220826,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 3.1761337578948283,
+       "lo": 2.61592648420546,
+       "hi": 3.9155905725016327,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 10.14370798298167,
+       "lo": 8.055310795158356,
+       "hi": 12.589051647904286,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 118.13060064189106,
+      "rmse": 10.868790210593406,
+      "skill_vs_persistence": {
+       "point": -0.07353297142974036,
+       "lo": -0.1565238648247338,
+       "hi": 0.010520465970973595,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 14.9526157659428,
+       "lo": 11.608411309367392,
+       "hi": 19.10467421065947,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 14.9526157659428,
+       "lo": 11.608411309367392,
+       "hi": 19.10467421065947,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.3015184396587787,
+       "lo": 1.1026135559477102,
+       "hi": 1.539409527121816,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 11.48859310042734,
+       "lo": 9.27086888289334,
+       "hi": 14.355365566685485,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 130.48354914730953,
+      "rmse": 11.422939601841092,
+      "skill_vs_persistence": {
+       "point": -0.1857926013891411,
+       "lo": -0.2349946121537116,
+       "hi": -0.1474937738217981,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 50.11705377504285,
+       "lo": 38.910070164682935,
+       "hi": 63.028440176290694,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 50.11705377504285,
+       "lo": 38.910070164682935,
+       "hi": 63.028440176290694,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.531750494453226,
+       "lo": 3.66274890119527,
+       "hi": 5.633470051653965,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 11.059093795297235,
+       "lo": 8.760494880033182,
+       "hi": 13.745923106204547,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 106.52992680952165,
+      "rmse": 10.321333577087879,
+      "skill_vs_persistence": {
+       "point": 0.03189022782752704,
+       "lo": -0.005850209946324003,
+       "hi": 0.07630380624966167,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 22.042238694123988,
+       "lo": 16.97915807118263,
+       "hi": 28.14524468809154,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.042238694123988,
+       "lo": 16.97915807118263,
+       "hi": 28.14524468809154,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 2.2718553098773815,
+       "lo": 1.8629241457931405,
+       "hi": 2.808574539891369,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.702307448141877,
+       "lo": 7.684356156770167,
+       "hi": 12.266234454444518,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 189.44451575217403,
+      "rmse": 13.763884471767918,
+      "skill_vs_persistence": {
+       "point": -0.7216109357898199,
+       "lo": -0.953768353756665,
+       "hi": -0.5545469865910687,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 34.87794395643462,
+       "lo": 29.49765454759344,
+       "hi": 41.07173512412937,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 34.87794395643462,
+       "lo": 29.49765454759344,
+       "hi": 41.07173512412937,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 7.361274686646393,
+       "lo": 5.980824121102156,
+       "hi": 8.919852247610876,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 4.738030496227021,
+       "lo": 4.082061267434052,
+       "hi": 5.657345675215522,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 61.987031969468,
+      "rmse": 7.873184360185401,
+      "skill_vs_persistence": {
+       "point": 0.4366817551192973,
+       "lo": 0.056870030180723036,
+       "hi": 0.6498368915232922,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean": {
+       "point": 14.766082077823599,
+       "lo": 8.446379064017941,
+       "hi": 25.578722293942583,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 14.766082077823599,
+       "lo": 8.446379064017941,
+       "hi": 25.578722293942583,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 0.8680481701252336,
+       "lo": 0.7331785972482403,
+       "hi": 1.0202789644153094,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 17.010671280711634,
+       "lo": 9.991511755119086,
+       "hi": 29.43948352338522,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 89.00778361732384,
+      "rmse": 9.434393653930487,
+      "skill_vs_persistence": {
+       "point": 0.19112583947028183,
+       "lo": -0.1644798196459638,
+       "hi": 0.4401264323138284,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 14.618969467350915,
+       "lo": 8.705135147759993,
+       "hi": 24.888423346011958,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 14.618969467350915,
+       "lo": 8.705135147759993,
+       "hi": 24.888423346011958,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.1470864250168251,
+       "lo": 0.9850565338609142,
+       "hi": 1.3354775148320315,
+       "ref": 1.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean_over_median": {
+       "point": 12.744435945300712,
+       "lo": 7.772845607619791,
+       "hi": 21.5858794650374,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   },
+   "outer": {
+    "n_rows": 44928,
+    "n_shots": 100,
+    "arms": {
+     "persistence": {
+      "mse": 63.87619035122195,
+      "rmse": 7.99225815093719,
+      "skill_vs_persistence": {
+       "point": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 26.20547673207573,
+       "lo": 21.653987627336598,
+       "hi": 31.478964081337107,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 26.20547673207573,
+       "lo": 21.653987627336598,
+       "hi": 31.478964081337107,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 3.114855589145566,
+       "lo": 2.6114893982027394,
+       "hi": 3.7287840628570836,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 8.41306313634403,
+       "lo": 7.112985278712664,
+       "hi": 9.903206529174224,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "extrapolation": {
+      "mse": 74.88722320740105,
+      "rmse": 8.653740417149168,
+      "skill_vs_persistence": {
+       "point": -0.17238086359933424,
+       "lo": -0.30614432490978,
+       "hi": -0.03535124995345874,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 18.97106983355623,
+       "lo": 14.865437181600935,
+       "hi": 24.069520115045897,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 18.97106983355623,
+       "lo": 14.865437181600935,
+       "hi": 24.069520115045897,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.6691546185663948,
+       "lo": 1.4083003334149793,
+       "hi": 1.9654883310764795,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 11.365675547691394,
+       "lo": 9.366437791362603,
+       "hi": 13.74057358883442,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "running_mean": {
+      "mse": 71.11714187356833,
+      "rmse": 8.433097999760724,
+      "skill_vs_persistence": {
+       "point": -0.1133591637593312,
+       "lo": -0.1824456166708658,
+       "hi": -0.07556440778097208,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 34.299277809476315,
+       "lo": 28.617471153090918,
+       "hi": 40.4953014117535,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 34.299277809476315,
+       "lo": 28.617471153090918,
+       "hi": 40.4953014117535,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.491226288046374,
+       "lo": 3.767269310830017,
+       "hi": 5.394606742864582,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 7.6369516051252155,
+       "lo": 6.5199804878423295,
+       "hi": 8.873403866050568,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "slope_filter": {
+      "mse": 64.41474314953955,
+      "rmse": 8.025879587281356,
+      "skill_vs_persistence": {
+       "point": -0.008431197843146165,
+       "lo": -0.07606278191037005,
+       "hi": 0.07563241600694333,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 22.524670662994943,
+       "lo": 18.399706390369044,
+       "hi": 27.60402152652612,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.524670662994943,
+       "lo": 18.399706390369044,
+       "hi": 27.60402152652612,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 2.3845826902102427,
+       "lo": 2.0245048029077943,
+       "hi": 2.804371528349312,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 9.44595914223004,
+       "lo": 7.95416744054623,
+       "hi": 11.11165465809582,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "causal_gp": {
+      "mse": 85.4081177006632,
+      "rmse": 9.241651243185018,
+      "skill_vs_persistence": {
+       "point": -0.3370884711666169,
+       "lo": -0.4922588163694677,
+       "hi": -0.18015091915484366,
+       "ref": 0.0,
+       "excludes_ref": true,
+       "side": "below"
+      },
+      "chi2_mean": {
+       "point": 27.422850526275933,
+       "lo": 22.712034054065352,
+       "hi": 33.06782339284648,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 27.422850526275933,
+       "lo": 22.712034054065352,
+       "hi": 33.06782339284648,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 4.35566102307754,
+       "lo": 3.7758734390880155,
+       "hi": 4.975234314404034,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 6.29591016862465,
+       "lo": 5.325938182477105,
+       "hi": 7.455756701806478,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_interp": {
+      "mse": 66.08489911741222,
+      "rmse": 8.129261904835655,
+      "skill_vs_persistence": {
+       "point": -0.03457796643860145,
+       "lo": -1.0133867944016304,
+       "hi": 0.5881679008908944,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 24.37719607848848,
+       "lo": 12.359172855693636,
+       "hi": 45.69591961358715,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 24.37719607848848,
+       "lo": 12.359172855693636,
+       "hi": 45.69591961358715,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.1890888015197631,
+       "lo": 1.0060929123424427,
+       "hi": 1.4020637549598607,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 20.500736401967806,
+       "lo": 10.611868626938982,
+       "hi": 38.23263801296285,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     },
+     "offline_gp": {
+      "mse": 53.938575397831556,
+      "rmse": 7.344288624355088,
+      "skill_vs_persistence": {
+       "point": 0.15557619981324244,
+       "lo": -0.5267537153194738,
+       "hi": 0.5552964270119738,
+       "ref": 0.0,
+       "excludes_ref": false,
+       "side": "includes"
+      },
+      "chi2_mean": {
+       "point": 22.776632303138015,
+       "lo": 12.015054962672695,
+       "hi": 41.409650499447295,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_vs_1p5": {
+       "point": 22.776632303138015,
+       "lo": 12.015054962672695,
+       "hi": 41.409650499447295,
+       "ref": 1.5,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_median": {
+       "point": 1.2664466668449097,
+       "lo": 1.0820874443298387,
+       "hi": 1.4818632811702233,
+       "ref": 1.0,
+       "excludes_ref": true,
+       "side": "above"
+      },
+      "chi2_mean_over_median": {
+       "point": 17.984675469896644,
+       "lo": 9.704777729257051,
+       "hi": 32.38404649798997,
+       "ref": 2.2,
+       "excludes_ref": true,
+       "side": "above"
+      }
+     }
+    }
+   }
+  }
+ },
+ "sensitivity_irregular_shots_dropped": {
+  "T_i": {
+   "G": {
+    "test_shots_dropped": 2,
+    "n_rows": 57407,
+    "skill_vs_persistence": {
+     "persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "extrapolation": {
+      "point": -0.27886970800469557,
+      "lo": -0.4045507143044254,
+      "hi": -0.15482679112959757,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "running_mean": {
+      "point": -0.1432073832745655,
+      "lo": -0.18901368232782179,
+      "hi": -0.10247732727453818,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "slope_filter": {
+      "point": 0.07629817273532247,
+      "lo": -0.0061158084786147255,
+      "hi": 0.14876889305945024,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "causal_gp": {
+      "point": -0.6837503100057374,
+      "lo": -0.9985375552239989,
+      "hi": -0.4263969307064801,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "offline_interp": {
+      "point": 0.5441169487281933,
+      "lo": 0.4336694790023325,
+      "hi": 0.6256372417478977,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "offline_gp": {
+      "point": 0.3731235617984845,
+      "lo": 0.09243734361545713,
+      "hi": 0.5673132613211432,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "chi2_mean_best_causal_arm_vs_1p5": {
+     "point": 2.761692818948943,
+     "lo": 2.1021382031383684,
+     "hi": 3.569577621713533,
+     "ref": 1.5,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "T_a_median": {
+     "point": 0.4532174227657343,
+     "lo": 0.34082434361465835,
+     "hi": 0.5602852455320299,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   },
+   "W": {
+    "test_shots_dropped": 5,
+    "n_rows": 131555,
+    "skill_vs_persistence": {
+     "persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "extrapolation": {
+      "point": -0.4259632801007758,
+      "lo": -0.5063129030685319,
+      "hi": -0.3491609535414218,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "running_mean": {
+      "point": -0.030547507862462853,
+      "lo": -0.06027698409633392,
+      "hi": -0.004519623373105512,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "slope_filter": {
+      "point": 0.0409160720752868,
+      "lo": -0.017753674654180478,
+      "hi": 0.08925899665367441,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "causal_gp": {
+      "point": -0.5792721770149571,
+      "lo": -0.805137789813069,
+      "hi": -0.37172173912285783,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "offline_interp": {
+      "point": 0.38260186239246674,
+      "lo": 0.31113653515528983,
+      "hi": 0.45185281760444485,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "offline_gp": {
+      "point": -0.02094705578143019,
+      "lo": -0.23628466839585913,
+      "hi": 0.17063904381663728,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     }
+    },
+    "chi2_mean_best_causal_arm_vs_1p5": {
+     "point": 2.558144803617772,
+     "lo": 2.049034399098418,
+     "hi": 3.197795857926601,
+     "ref": 1.5,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  },
+  "V_i": {
+   "G": {
+    "test_shots_dropped": 2,
+    "n_rows": 57407,
+    "skill_vs_persistence": {
+     "persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "extrapolation": {
+      "point": -0.01830986407131241,
+      "lo": -0.11858773447185073,
+      "hi": 0.08097936105728722,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "running_mean": {
+      "point": -0.2311922925662988,
+      "lo": -0.2903655807954589,
+      "hi": -0.17850728027322543,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "slope_filter": {
+      "point": 0.08686644955394551,
+      "lo": 0.034284326785815104,
+      "hi": 0.14475391298897577,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "causal_gp": {
+      "point": -0.3489389220939447,
+      "lo": -0.49783058768961297,
+      "hi": -0.23613605596180823,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "offline_interp": {
+      "point": 0.6261145333300464,
+      "lo": 0.5183126811689395,
+      "hi": 0.7162906554987035,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "offline_gp": {
+      "point": 0.5766909665714248,
+      "lo": 0.43462568020041253,
+      "hi": 0.6962554513913187,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     }
+    },
+    "chi2_mean_best_causal_arm_vs_1p5": {
+     "point": 21.654737277439178,
+     "lo": 17.307836697921328,
+     "hi": 26.564437966151857,
+     "ref": 1.5,
+     "excludes_ref": true,
+     "side": "above"
+    },
+    "T_a_median": {
+     "point": 0.6532988007066372,
+     "lo": 0.21230413169005735,
+     "hi": 1.1697978842670327,
+     "ref": 0.0,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   },
+   "W": {
+    "test_shots_dropped": 5,
+    "n_rows": 131555,
+    "skill_vs_persistence": {
+     "persistence": {
+      "point": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "extrapolation": {
+      "point": -0.21781022628532676,
+      "lo": -0.3305812663442764,
+      "hi": -0.10693460870116925,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "running_mean": {
+      "point": -0.10812850864624624,
+      "lo": -0.15622966578502054,
+      "hi": -0.07042564100315926,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "slope_filter": {
+      "point": 0.06364756877743416,
+      "lo": 0.006287479064922869,
+      "hi": 0.13024153533614186,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "above"
+     },
+     "causal_gp": {
+      "point": -0.4421785483396754,
+      "lo": -0.6531924609449352,
+      "hi": -0.2725752792578254,
+      "ref": 0.0,
+      "excludes_ref": true,
+      "side": "below"
+     },
+     "offline_interp": {
+      "point": 0.30065237184929117,
+      "lo": -0.08498726399573905,
+      "hi": 0.5298690468546314,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     },
+     "offline_gp": {
+      "point": 0.22092990909829513,
+      "lo": -0.06855504348577587,
+      "hi": 0.4060931740278993,
+      "ref": 0.0,
+      "excludes_ref": false,
+      "side": "includes"
+     }
+    },
+    "chi2_mean_best_causal_arm_vs_1p5": {
+     "point": 19.633253436242253,
+     "lo": 16.181248904759386,
+     "hi": 23.667042728706658,
+     "ref": 1.5,
+     "excludes_ref": true,
+     "side": "above"
+    }
+   }
+  }
+ },
+ "expectations": [
+  {
+   "expectation": "usable shots",
+   "expected": "85-95 % of the shots with data",
+   "found": "261 / 264 = 98.9 %",
+   "met": false
+  },
+  {
+   "expectation": "median block length (T_i, G)",
+   "expected": "45-60 frames",
+   "found": "57",
+   "met": true
+  },
+  {
+   "expectation": "gate (a) T_i: T_a interval includes 0 (pass)",
+   "expected": "includes 0",
+   "found": "+0.453 [+0.341, +0.565], excludes 0 (above)",
+   "met": false
+  },
+  {
+   "expectation": "gate (a) T_i: co-reported ratio below 1",
+   "expected": "< 1 (pilot 0.68)",
+   "found": "0.540 [0.463, 0.637], excludes 1 (below)",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: extrapolation vs persistence",
+   "expected": "about -0.4",
+   "found": "-0.279 [-0.404, -0.155]",
+   "met": false
+  },
+  {
+   "expectation": "T_i G: running mean best tau",
+   "expected": "5 ms",
+   "found": "5 ms",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: running mean no better than 0",
+   "expected": "interval not above 0",
+   "found": "-0.143 [-0.189, -0.103], excludes 0 (below)",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: slope-state filter vs persistence",
+   "expected": "+0.05 to +0.25",
+   "found": "+0.076 [-0.006, +0.148]",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: offline interpolation vs persistence",
+   "expected": "+0.35 to +0.60",
+   "found": "+0.544 [+0.435, +0.626]",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: mean reduced chi-square, best causal arm",
+   "expected": "2 to 5",
+   "found": "2.71 [2.07, 3.51] (slope_filter)",
+   "met": true
+  },
+  {
+   "expectation": "T_i: gate (b) passes",
+   "expected": "PASS",
+   "found": "PASS",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: median reduced chi-square, best causal arm",
+   "expected": "< 1",
+   "found": "0.409 [0.335, 0.494]",
+   "met": true
+  },
+  {
+   "expectation": "V_i G: slope-state filter vs persistence",
+   "expected": "+0.2 to +0.5",
+   "found": "+0.088 [+0.035, +0.147]",
+   "met": false
+  },
+  {
+   "expectation": "V_i G: offline interpolation vs persistence",
+   "expected": "+0.55 to +0.75",
+   "found": "+0.626 [+0.518, +0.716]",
+   "met": true
+  },
+  {
+   "expectation": "V_i G: mean reduced chi-square, best causal arm",
+   "expected": "> 10",
+   "found": "21.20 [16.83, 26.06] (slope_filter)",
+   "met": true
+  },
+  {
+   "expectation": "V_i: gate (b) passes",
+   "expected": "PASS",
+   "found": "PASS",
+   "met": true
+  },
+  {
+   "expectation": "T_i G: mean-to-median reduced chi-square ratio, best causal arm",
+   "expected": "> 4",
+   "found": "6.63 [5.32, 8.26]",
+   "met": true
+  },
+  {
+   "expectation": "V_i G: mean-to-median reduced chi-square ratio, best causal arm",
+   "expected": "> 4",
+   "found": "8.00 [6.67, 9.69]",
+   "met": true
+  }
+ ],
+ "ss_chisq": "not reported: the column count of ss_chisq equals the chord count in 17 of 264 gate files (chords / ss_chisq columns: 96 / 160, 160 / 160, 160 / 224), so its columns are not mapped to chords",
+ "deviations_ambiguities": [
+  "Block, scored chords and scored rows are built separately per target and population from that target's good-sample rule (the registration defines the block through 'good chords' without saying which target fixes it).",
+  "Frames are addressed by block position on the nominal 5 ms grid: 't - 5 ms', 't - 15 ms', 't + 5 ms' are block positions j - 1, j - 3, j + 1, and every time-dependent weight (extrapolation, running-mean age, filter dt, GP kernel) uses position x 5 ms. Stored frame times enter the usable-shot rule only. Reason: a few usable shots carry block frame intervals outside 5.0 +- 0.1 ms, some of them negative (time stamps out of order), which the registration did not anticipate; these shots stay in the row set as registered, their count is in the counts table, and section 5b repeats the gate statistics with them dropped.",
+  "Running mean: all good visible samples of the block before the hidden frame, weights exp(-age / tau), normalised to sum 1.",
+  "Slope-state filter: discrete model per frame interval, F = [[1, dt], [0, 1]], Q = diag(q_level dt, q_slope dt) with dt in 5 ms steps; exact diffuse initialisation (level from the first good sample, slope fixed by the second); bad visible samples get no update. Grid (not fixed numerically in the registration): q_level / scale^2 = 10^(-2 .. +1.5), q_slope / scale^2 = 10^(-4 .. +1), 6 log-spaced values each.",
+  "GP window: 'last 8 visible samples' = the 8 visible block frames before the hidden frame (fewer at the block start), offline 4 visible frames on each side; bad samples inside the window are dropped, the window is not extended. Constant-kernel variance = 1e6 x amplitude^2 (not stated in the registration), applied through the Sherman-Morrison identity.",
+  "Target scale for the GP amplitude and the filter grid: median reported error of the hidden sample over TUNE scored rows, population G.",
+  "Population W uses the hyperparameters tuned on population G (the registration tunes on G only) and the best causal arm chosen in population G.",
+  "Gate (a): the chords entering S_k are the scored chords with at least 12 triples at that spacing (the chord set may differ between k). Co-reported ratio: rows = all good d_1 triples of scored chords in TEST shots, population G.",
+  "Regime number: Pearson correlation of consecutive 10 ms increments (both increments from good visible samples), chords with at least 8 such pairs. R2 per-shot skills are 1 - SSE_arm / SSE_persistence within the shot.",
+  "Radius tertiles: edges are the 1/3 and 2/3 quantiles of major radius over the TEST scored rows of that target and population (pooled over shots).",
+  "Top-0.1 % rows: ceil(0.001 N) rows with the largest squared residual of the best causal arm; the same rows are dropped from every arm. The interval of the share keeps that row set fixed.",
+  "Bootstrap medians over rows are weighted medians with the shot multiplicities (lower median); point estimates use numpy.median. Intervals are percentile intervals (2.5, 97.5).",
+  "Section 6 expectations stated without an interval rule are judged on the point estimate; 'about -0.4' is judged as within +-0.1; 'no better than 0' as the interval not lying above 0.",
+  "If gate (a) passes and the co-reported ratio interval lies below 1, the rescaled floor is the mean reduced chi-square divided by the point estimate of the ratio (interval scaled by the same factor)."
+ ]
+}
