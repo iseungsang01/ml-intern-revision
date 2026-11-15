@@ -7038,3 +7038,25 @@ Tertiles of the regime number, `T_i`, cut (pooled skill, discharge-cluster inter
 **Expectation check.** Met: included discharges (280, 170); T1 for `T_i` (+0.338, in +0.15 … +0.45, excludes 0); running-mean skill against persistence falls across tertiles. Not met: ρ(regime, D1b) −0.688 against an expected −0.2 … −0.5 (stronger); T1 for `V_rot` +0.574 against +0.05 … +0.35 (larger); T2 for `T_i` −0.081 against +0.05 … +0.25 (sign not as predicted, interval includes 0); "backbone vs causal GP rises across tertiles" (+0.096 / +0.137 / +0.132, not monotone, intervals overlap).
 
 **Limits.** (1) The regime number is computed from the same discharge whose TEST rows are scored; this is within-discharge description, and D1b in particular shares the frame-to-frame noise with the regime number by construction (persistence error and the increment autocorrelation both respond to the noise level). (2) Only 3.2 % (`T_i`) and 9.4 % (`V_rot`) of included discharges have a positive regime number; the relation is established in the noise-limited range. (3) `V_rot` uses the post hoc 1000 km/s rule; its cut and inclusive rows are almost the same rows, so the two `V_rot` lines are not independent evidence. (4) T2 says nothing about the fast-channel share: no history-only backbone is involved. (5) The paper is not edited in this step.
+
+
+### B.29 arm A (history-only seq_v2) -- partial read-out, 8/48 runs (2026-11-15)
+
+Registration `PREREGISTRATION_B29.md`; runner `b29_causal/run_b29.py --arms v2h`; analysis `analyze_b29.py` -> `docs/paper/b29_causal.{json,md}`. The batch was interrupted at 7/48 (the session stopped background jobs under memory pressure), the eighth run was resumed from its finished training and only evaluated. Arms B, C, D (40 runs) are not run; their rules are unread.
+
+T_i, backbone vs history-only seq_v2 (the fast-channel increment on the main model), paired TEST rows, shot-clustered 95 % interval:
+
+| split | cut | inclusive |
+|---|---|---|
+| 42 | +0.067 [+0.029, +0.108] | +0.024 [-0.014, +0.057] |
+| 1 | +0.077 [+0.047, +0.106] | +0.016 [-0.008, +0.033] |
+| 7 | +0.117 [+0.093, +0.142] | +0.024 [+0.012, +0.039] |
+| 123 | +0.059 [+0.011, +0.103] | +0.023 [+0.005, +0.053] |
+
+History-only seq_v2 vs causal GP (T_i): cut +0.011 [-0.028, +0.047], +0.061 [+0.030, +0.091], +0.024 [-0.005, +0.050], +0.049 [+0.021, +0.076] (2/4 exclude 0); inclusive +0.133, +0.155, +0.102, +0.129 (4/4 exclude 0). Guard, V_rot backbone vs arm: 0/4 exclude 0 in both populations (-0.005 to +0.010), as the V_rot branch never reads the fast channels.
+
+Verdict by the registered rule. H29-1: lower bound > 0 on 4/4 cut splits -> the title is kept; inclusive 2/4, so the increment is stated as conditional on the cut population. H29-1b: 2/4 cut, so on the cut population the backbone margin over the causal GP (+0.078 to +0.138) is mostly the fast-channel increment (+0.059 to +0.117) and the history-only recurrent estimator is not separated from the causal GP on 2 of 4 splits; on the inclusive population the order is reversed (history-only vs causal GP 4/4, fast increment +0.016 to +0.024).
+
+Expectation check: registered prediction for the cut increment was +0.05 to +0.14; all four splits fall inside it.
+
+Caveat to resolve before quoting as final: in the cut population the history-only arm stopped at the epoch cap in 3 of 4 splits (30 epochs, best epoch 29, 30, 30), so it may be undertrained and the cut increment may be overstated; the inclusive arms early-stopped (best epoch 7 to 17). The cap is the registered one (the backbone's). A longer-cap rerun of arm A on the cut splits is the check.
