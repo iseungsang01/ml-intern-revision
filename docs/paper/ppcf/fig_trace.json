@@ -1,0 +1,67 @@
+{
+ "device": "cuda",
+ "rule": "Example time traces through CES gaps (KSTAR, T_i), with a row-level check.\n\nSelection rule, fixed before any trace was drawn: the two discharges of this data set whose\nedge has been analysed in the literature (31921, 31923) and the file-level split whose TEST\nset holds both (split seed 1); in each discharge the 0.6 s window with the most grid rows\nthat lack a T_i value between the first and the last observed T_i of a contiguous segment.",
+ "s31921.csv": {
+  "scored_rows": 437,
+  "max_value_mismatch_eV": 4.57763671875e-05,
+  "model": {
+   "max_abs_dev_of_error_eV": 5.5442504617531085e-05,
+   "max_rel_dev": 1.4379445717654916e-07,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 244.16622986005106,
+   "rmse_stored": 244.16623181177522
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 4.57763671875e-05,
+   "max_rel_dev": 1.7526717289331943e-05,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 282.7786540712677,
+   "rmse_stored": 282.77865440227555
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 283.3812317072798,
+   "rmse_stored": 283.3812317072798
+  },
+  "window_s": [
+   7.921999931335449,
+   8.571999549865723
+  ],
+  "rows_without_ti_in_window": 40,
+  "rows_in_window": 65
+ },
+ "s31923.csv": {
+  "scored_rows": 389,
+  "max_value_mismatch_eV": 0.0001220703125,
+  "model": {
+   "max_abs_dev_of_error_eV": 0.00013952046083431924,
+   "max_rel_dev": 1.359813707959813e-07,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 314.6739503113692,
+   "rmse_stored": 314.6739453494785
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 0.0001220703125,
+   "max_rel_dev": 5.447884176971785e-05,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 448.055890290386,
+   "rmse_stored": 448.05589034094294
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 378.86071972577236,
+   "rmse_stored": 378.86071972577236
+  },
+  "window_s": [
+   6.3420000076293945,
+   6.992000102996826
+  ],
+  "rows_without_ti_in_window": 33,
+  "rows_in_window": 65
+ },
+ "check_passed": true
+}

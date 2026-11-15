@@ -11,7 +11,7 @@ artifacts), docs/paper/mast_gate.md, docs/paper/mast_gate_addendum1.md, the revi
 MAST records at the end of THESIS_RESULTS.md, PREREGISTRATION_MAST_GATE.md,
 docs/paper/ppcf/kstar_regime.json (rounded to three decimals), kstar_level.json, the two
 figure sources computed for this paper (fig_missing.json, fig_gap.json), docs/paper/mast_gate_addendum2.md,
-docs/paper/b29_causal.md and PREREGISTRATION_B29.md.
+docs/paper/b29_causal.md, PREREGISTRATION_B29.md, docs/paper/mast_edge.md (+ .json for\ncounts), docs/paper/b29_addendum1.md, PREREGISTRATION_B29_ADDENDUM1.md and fig_trace.json.
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -54,6 +54,11 @@ DERIVED = {
     "+0.14": "same, upper end",
     "0.047": "smallest median relative T_i error of the three inner bins (addendum 2 md: 0.047)",
     "7,957": "act shots after excluding the 13 pilot shots (select_shots.py output; experiments/README.md mast row)",
+    "0.93": "normalized radius range of the edge mode in Heo et al. 2025 (rho_N about 0.93 to 0.97, sec. 3 of that paper)",
+    "0.97": "same",
+    "0.95": "bin edge of the normalized radius (PREREGISTRATION_MAST_EDGE.md)",
+    "0.6": "length of the example-trace window in seconds (fig_trace.py, WINDOW_S)",
+    "0.82": "figure width fraction",
 }
 
 
@@ -87,6 +92,9 @@ def main():
         (ROOT / "docs/paper/mast_gate_addendum2.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b29_causal.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B29.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/mast_edge.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b29_addendum1.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B29_ADDENDUM1.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))
@@ -118,6 +126,19 @@ def main():
                 extra += ["%+.3f" % v for v in [sk["median"], *sk["ci95"]]]
         a, b = fg[t]["all"]["rows_per_repeat"], fg[t]["10"]["rows_per_repeat"]
         extra += ["%.1f" % (100 * b[0] / a[0]), "%.1f" % (100 * b[1] / a[1])]
+    # example traces (fig_trace.py): scored rows of the two discharges
+    ft = json.loads((HERE / "fig_trace.json").read_text(encoding="utf-8"))
+    extra += [str(ft[k]["scored_rows"]) for k in ("s31921.csv", "s31923.csv")]
+    # MAST confirmation set: counts printed with a thousands separator in the paper
+    me = json.loads((ROOT / "docs/paper/mast_edge.json").read_text(encoding="utf-8"))
+    cnt = me["counts"]["Not Checked"]
+    extra += [f"{cnt[k]:,}" for k in ("with_file", "ok")] + [f"{v:,}" for v in me["counts"]["campaigns"].values()]
+    extra.append(f"{me['primary']['pre_rule']['shots_with_W_block']:,}")
+    for cell in ("T_i|W", "T_i|G"):
+        for bn in me["primary"]["cells"][cell]["bins"].values():
+            extra.append(f"{bn['regime_number']['n_shots']:,}")
+    for bn in me["primary"]["pre_rule"]["bins"].values():
+        extra.append(f"{bn['shots']:,}")
     src = norm(src) + "\n" + " ".join(extra)
     have = tokens(src)
     have_abs = {t.lstrip("+-") for t in have}
