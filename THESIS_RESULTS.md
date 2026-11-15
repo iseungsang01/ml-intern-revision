@@ -7126,3 +7126,40 @@ Non-finite share 0.001-0.002 in every bin. Emissivity medians rise from 92 to 18
 **Verdict.** (1) The sign of the MAST regime number is not a property of one campaign or one array layout: above 0 in 4 / 4 campaigns for both targets, and in both column-count layouts. The size rises from M6 to M9 for `T_i` (+0.109 to +0.359). (2) The `T_i` residual above the fit floor is campaign-dependent: above 1.5 in M7 and M8 only. The error ratio falls from 0.70-0.79 (M6, M7) to 0.36 (M9), so the reported `T_i` errors are larger relative to the frame-to-frame scatter in the later campaigns and the pooled reduced chi-square mixes calibrations. By the registered wording rule the `T_i` residual statement is written for campaigns M7-M8, with M6 and M9 named. (3) At the nominal normalized radius of the KSTAR chord the MAST `T_i` regime number is small and its interval includes 0 on good fits (+0.103 [-0.079, +0.257]), above 0 on the wide population (+0.136 [+0.036, +0.230]); in the outermost bin the wide population is at or below 0. The measurement weakens outward from rho 0.7 (fail share 0.26 to 0.43 to 0.65). So the two-device contrast is not at matched radius in the pooled numbers, and at the matched bin MAST `T_i` sits between the MAST core (+0.27 to +0.35) and KSTAR (-0.416), with `V_i` still above 0. By the registered wording rule the paper must state that the pooled comparison is not at matched normalized radius and quote the matched bin.
 
 **Limits.** Post hoc; many strata; no multiplicity correction. Strata are confounded (campaign, heating, RMP, shape) and half the catalogue tags are missing. rho uses one EFIT scalar pair per discharge and a nominal KSTAR geometry. The bin 0.7-0.9 has 26 shots and 3,256 rows in population G. The paper is not edited in this step.
+
+
+### MAST edge confirmation -- the post hoc gate reading tested on 3,686 unread discharges (2026-11-15)
+
+Registration `PREREGISTRATION_MAST_EDGE.md` (commit 56905e0, before any value of these shots was read); code `mast/run_edge.py`; output `docs/paper/mast_edge.json` / `.md`. CPU, 198 s, shots streamed one at a time. The hypothesis was read post hoc in the 300-shot gate (addendum 2, stratum f); the shots here are the level-1 `act` shots outside the gate and pilot lists. Gate hyperparameters (addendum 1), no retuning. Before the run the script was checked on the gate TEST shots only and reproduced the addendum-2 values (fail share 0.231 / 0.226 / 0.262 / 0.430 / 0.653; `T_i` regime number W 0.165 / 0.287 / 0.341; rows 19,052 / 12,380 / 8,567).
+
+**Counts.** Quality "Not Checked": 4,547 listed, 4,030 with a file, 121 not on 5 ms frames, 223 without EFIT geometry, 3,686 analysed (M6 623, M7 1,520, M8 938, M9 605); 3,409 with a population-W beam block. Quality "Bad": 3,110 listed, 9 with a file, 1 analysable -- no co-reported table.
+
+**Read-outs by normalized radius (primary set).**
+
+| rho | fail share (rel. error >= 0.1) | median relative `T_i` error | `T_i` regime number, W | `T_i` regime number, G | `V_i` regime number, W |
+|---|---|---|---|---|---|
+| 0-0.3 | 0.215 [0.207, 0.223] | 0.044 | +0.256 [+0.231, +0.268] | +0.351 [+0.333, +0.367] | +0.389 [+0.379, +0.404] |
+| 0.3-0.5 | 0.214 [0.206, 0.221] | 0.041 | +0.320 [+0.308, +0.333] | +0.386 [+0.367, +0.401] | +0.425 [+0.412, +0.437] |
+| 0.5-0.7 | 0.270 [0.262, 0.277] | 0.044 | +0.299 [+0.285, +0.311] | +0.342 [+0.317, +0.367] | +0.330 [+0.315, +0.342] |
+| 0.7-0.8 | 0.400 [0.391, 0.408] | 0.065 | +0.158 [+0.139, +0.177] | +0.204 [+0.175, +0.236] | +0.124 [+0.106, +0.148] |
+| 0.8-0.9 | 0.544 [0.535, 0.554] | 0.108 | +0.003 [-0.020, +0.025] | +0.133 [+0.073, +0.187] | +0.021 [-0.004, +0.037] |
+| 0.9-0.95 | 0.661 [0.651, 0.673] | 0.186 | -0.012 [-0.041, +0.017] | +0.245 [+0.189, +0.330] | -0.053 [-0.088, -0.018] |
+| 0.95-1.0 | 0.732 [0.720, 0.745] | 0.347 | +0.008 [-0.031, +0.054] | +0.246 [+0.154, +0.350] | -0.039 [-0.078, +0.008] |
+| 0.9-1.0 (merged) | 0.695 [0.683, 0.706] | - | -0.049 [-0.078, -0.016] | +0.234 [+0.172, +0.339] | -0.072 [-0.107, -0.044] |
+
+**Statements.**
+
+- E1 (primary) holds: fail share minus the 0.5-0.7 value is +0.275 [+0.268, +0.282] (0.8-0.9), +0.392 [+0.382, +0.401] (0.9-0.95), +0.463 [+0.451, +0.474] (0.95-1.0).
+- E2 (primary) holds: `T_i` regime number (W) minus the 0.5-0.7 value is -0.296 [-0.320, -0.271] (0.8-0.9) and -0.347 [-0.380, -0.312] (0.9-1.0). Co-reported G: -0.209 [-0.272, -0.153] and -0.108 [-0.176, -0.003].
+- E2b holds: in 0.9-1.0 the `T_i` regime number (W) is -0.049 [-0.078, -0.016], below 0. In population G the chords that still pass the strict rule stay positive there (+0.234 [+0.172, +0.339]).
+- E3 does not hold: causal-GP skill (G) minus the core is -0.025 [-0.182, +0.064] (0.8-0.9) and -0.020 [-0.163, +0.051] (0.9-1.0). The causal-GP skill is +0.067 [+0.054, +0.080] in the core and its interval includes 0 in every bin outside 0.7.
+- E4 holds as registered: the fixed 15 ms running mean (W) is -0.968 [-1.021, -0.918] in the core and -0.124 [-0.285, +0.001] in 0.9-1.0 (difference +0.845 [+0.682, +0.975]); the edge interval includes 0. Averaging stops costing at the edge; it does not gain (point value negative; G: -0.741 [-1.776, -0.175]; tau = 40 ms W: -0.819 [-1.266, -0.507]).
+- E5 holds: `V_i` regime number (W) minus the 0.5-0.7 value is -0.309 [-0.335, -0.289] and -0.402 [-0.434, -0.371].
+
+**Per campaign (re-read, not separately registered).** E1 holds in 4 / 4. E2 holds in M6, M7, M8 (`T_i` regime number W in 0.9-1.0: -0.207, -0.176, -0.104, intervals below 0) and not in M9 (+0.200 [+0.163, +0.294]; 0.8-0.9 difference -0.110 [-0.162, -0.059], 0.9-1.0 difference -0.060 [-0.106, +0.035]). E5 holds in 4 / 4.
+
+**Expectation check.** 13 of 22 met. Not met: analysed shots with a W block 3,409 (expected 2,000-3,000); fail share in 0.8-0.9 0.544 (0.38-0.52); `T_i` regime number W in 0.8-0.9 +0.003 (+0.02 to +0.22); E3; causal-GP skill in the core +0.067 (+0.08 to +0.16); 15 ms running mean in the core -0.968 (-0.45 to -0.20); the three `V_i` regime numbers (lower than expected in every bin).
+
+**Verdict.** The post hoc gate reading is confirmed on discharges that took no part in it: the fit-failure share and the reported relative error rise outside rho = 0.7, and the regime number of both targets falls from about +0.3 / +0.4 in the core to 0 at rho 0.8-0.9 and below 0 at 0.9-1.0 (population W). At either candidate for the normalized radius of the KSTAR chord MAST is no longer trend-dominated, but it does not reach the KSTAR value (-0.416); the two-device contrast of the pooled numbers is in large part a radius (signal-strength) dependence. Averaging does not become a gain at the MAST edge.
+
+**Limits.** rho is one EFIT scalar pair per discharge, a geometric midplane ratio, not a flux coordinate. No confinement-mode label exists, so nothing here is a statement about a pedestal. The regime number at the edge is that of the chords passing the fit rule: G and W disagree in sign in 0.9-1.0. The merged-bin regime number (-0.049) is recomputed over the chords of both sub-bins and is lower than either sub-bin median (-0.012, +0.008). M9 does not show the fall. Seven statements, two primary, no multiplicity correction. The normalized radius of the KSTAR chord is not EFIT-mapped. Not checked: sensitivity to the bin edges, to the 90 % scored-chord rule, and a second run for byte identity.
