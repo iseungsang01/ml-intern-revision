@@ -341,6 +341,10 @@ def fmt(e, nd=3):
     return f"{e['point']:+.{nd}f} [{e['lo']:+.{nd}f}, {e['hi']:+.{nd}f}]"
 
 
+def pf(x):
+    return "n/a" if x is None else (f"<= {x:.3f}" if x <= 1.0 / (N_NULL + 1) + 1e-9 else f"{x:.3f}")
+
+
 def side(e, ref="0"):
     if not e or e.get("side") in (None, "n/a"):
         return "n/a"
@@ -591,12 +595,12 @@ def render_md(res):
     L.append(f"| C1 rotation follows the beam with a delay (V_i, ss_sum_power, all radii, G) | "
              f"{'holds' if c1['holds'] else 'does not hold'} | l* = {c1['l_star_ms']} ms; r = {fmt(c1['r'])}, "
              f"{side(c1['r'])}; lag of the maximum on the confirmation set {c1['lag_of_max_confirmation_ms']} ms; "
-             f"noise-corrected {fmt(c1['r_corr']) if c1['r_corr'] else 'not quotable'}; circular-shift p (positive lags) {c1['null_p_pos']} |")
+             f"noise-corrected {fmt(c1['r_corr']) if c1['r_corr'] else 'not quotable'}; circular-shift p (positive lags) {pf(c1['null_p_pos'])} |")
     c2 = st["C2"]
     L.append(f"| C2 T_i follows the beam, no later than rotation | {'holds' if c2['holds'] else 'does not hold'} | "
              f"l* = {c2['l_star_ms']} ms; r = {fmt(c2['r'])}, {side(c2['r'])}; association {c2['association']}, "
              f"not later than rotation {c2['not_later_than_rotation']}; lag of the maximum on the confirmation set "
-             f"{c2['lag_of_max_confirmation_ms']} ms; circular-shift p {c2['null_p_pos']} |")
+             f"{c2['lag_of_max_confirmation_ms']} ms; circular-shift p {pf(c2['null_p_pos'])} |")
     c3 = st["C3"]
     parts = []
     for b, row in c3["bins"].items():
@@ -612,8 +616,8 @@ def render_md(res):
              f"{c4.get('core_lag_of_max_confirmation_ms')} ms, outer {c4.get('outer_lag_of_max_confirmation_ms')} ms |")
     c5 = st["C5"]
     L.append(f"| C5 direction check (V_i, beam) | {'holds' if c5['holds'] else 'does not hold'} | "
-             f"max abs r over positive lags {c5['max_abs_r_pos']:.4f} (p {c5['null_p_pos']}), over negative lags "
-             f"{c5['max_abs_r_neg']:.4f} (p {c5['null_p_neg']}) |")
+             f"max abs r over positive lags {c5['max_abs_r_pos']:.4f} (p {pf(c5['null_p_pos'])}), over negative lags "
+             f"{c5['max_abs_r_neg']:.4f} (p {pf(c5['null_p_neg'])}) |")
     L.append("")
     L.append("## 3. Increments, population G: r at the discovery lag, per radius")
     L.append("")
@@ -633,7 +637,7 @@ def render_md(res):
                 L.append(f"| {b} | {e['shots_confirmation']} | {e['l_star_ms']:.0f} | {fmt(e['r_at_l_star'])} | "
                          f"{side(e['r_at_l_star'])} | {fmt(e['r_lag0'])} | {e['lag_of_max_confirmation_ms']:.0f} | "
                          f"{fmt(e['signal_fraction'])} | {fmt(e['r_corr_at_l_star']) if e['r_corr_at_l_star'] else 'not quotable'} | "
-                         f"{e.get('null_p_pos')} / {e.get('null_p_neg')} |")
+                         f"{pf(e.get('null_p_pos'))} / {pf(e.get('null_p_neg'))} |")
             L.append("")
     L.append("## 4. Lag profiles, all radii, population G (confirmation set)")
     L.append("")
