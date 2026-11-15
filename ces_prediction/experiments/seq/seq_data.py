@@ -189,14 +189,57 @@ def fit_stats(grid, dims, train_names):
     return {g: KSTAR_CES_Dataset._channel_stats(a) for g, a in groups.items()}
 
 
-def build_blocks(arr, dims, stats, per_shot_norm=False):
+# ---- B.29 arm C: causal (expanding-window) per-discharge standardization ----------------
+#
+# `CES_PER_SHOT_NORM=1` standardizes the fast channels with the statistics of the WHOLE
+# discharge, rows after the scored row included -- an offline standardizer in front of a causal
+# operator. `CES_SEQ_NORM_EXPANDING=1` (only meaningful with `CES_PER_SHOT_NORM=1`) replaces
+# it with the registered causal rule of PREREGISTRATION_B29.md sec. 2. Unset (the default, and
+# every frozen run) => nothing changes.
+EXPANDING_PRIOR_ROWS = 50   # N0: 500 ms of pseudo-rows from the train-file distribution
+
+
+def expanding_norm_enabled():
+    return os.getenv("CES_SEQ_NORM_EXPANDING", "0") == "1"
+
+
+def expanding_standardize(fast, prior_mean, prior_std, n0=EXPANDING_PRIOR_ROWS):
+    """(rows, C) raw fast channels -> (rows, C) z, row i using rows <= i of this discharge only.
+
+    u = (x - prior_mean) / prior_std is the train-file z-score. The running statistics pool the
+    k = i + 1 rows seen so far with `n0` pseudo-rows of the train-file distribution (mean 0,
+    second moment 1 in u):
+
+        m_i = sum_{j<=i} u_j / (n0 + k)
+        v_i = (n0 + sum_{j<=i} u_j^2) / (n0 + k) - m_i^2
+        z_i = (u_i - m_i) / sqrt(v_i)
+
+    so the first rows are (almost) the train-file z-score and the limit k >> n0 is the
+    per-discharge z-score. Only cumulative sums are used: no row after i can reach z_i.
+    """
+    u = (np.asarray(fast, dtype=np.float64) - prior_mean) / prior_std
+    k = np.arange(1, u.shape[0] + 1, dtype=np.float64)[:, None]
+    m = np.cumsum(u, axis=0) / (n0 + k)
+    v = (n0 + np.cumsum(u * u, axis=0)) / (n0 + k) - m * m
+    sd = np.sqrt(np.maximum(v, 0.0))
+    sd[sd < 1e-6] = 1.0
+    return (u - m) / sd
+
+
+def build_blocks(arr, dims, stats, per_shot_norm=False, expanding=None):
     """One file -> list of blocks {x (L,22), y (L,2), mask (L,2), time (L,)}.
 
     `per_shot_norm` z-scores the fast diagnostics with THIS shot's own statistics instead
     of the train-file-only global ones (§8s). Targets always keep the global stats: a
     per-shot target scale would make the physical-unit inverse transform shot-dependent
-    and break every baseline comparison.
+    and break every baseline comparison. `expanding` (None => env CES_SEQ_NORM_EXPANDING)
+    makes the per-shot statistics causal (`expanding_standardize`).
     """
+    if expanding is None:
+        expanding = expanding_norm_enabled()
+    if expanding and not per_shot_norm:
+        raise SystemExit("FATAL: CES_SEQ_NORM_EXPANDING=1 is a per-discharge standardizer; "
+                         "it requires CES_PER_SHOT_NORM=1.")
     time = arr[:, 0].astype(np.float64)
     tgt = arr[:, 1:3].astype(np.float64)
     fast = arr[:, 3:3 + dims["n_fast"]].astype(np.float64)
@@ -204,14 +247,18 @@ def build_blocks(arr, dims, stats, per_shot_norm=False):
     extra = arr[:, 3 + dims["n_fast"]:3 + dims["n_fast"] + extra_k].astype(np.float64) \
         if extra_k else None     # [extra_vt | extra_ti], appended after the base layout
 
-    if per_shot_norm:
-        mean = fast.mean(axis=0)
-        std = fast.std(axis=0)
-        std[std < 1e-6] = 1.0
+    g_mean = np.concatenate([stats[g]["mean"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
+    g_std = np.concatenate([stats[g]["std"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
+    if per_shot_norm and expanding:
+        fast_z = expanding_standardize(fast, g_mean, g_std)
     else:
-        mean = np.concatenate([stats[g]["mean"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
-        std = np.concatenate([stats[g]["std"] for g in ("bes", "ecei", "mc")]).astype(np.float64)
-    fast_z = (fast - mean) / std
+        if per_shot_norm:
+            mean = fast.mean(axis=0)
+            std = fast.std(axis=0)
+            std[std < 1e-6] = 1.0
+        else:
+            mean, std = g_mean, g_std
+        fast_z = (fast - mean) / std
     # B.6 arm A2 (PREREGISTRATION_B6.md sec. 4.1): the mandated ablation removes the two
     # decimated MC channels from the inputs. Zeroing after normalization is the project's
     # ablation convention (CES_ABLATE); channel count and routing stay identical.

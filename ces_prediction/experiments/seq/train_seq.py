@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(1, str(HERE.parents[1]))  # ces_prediction/
 
-from seq_data import load_grid_files, fit_stats, build_blocks  # noqa: E402
+from seq_data import load_grid_files, fit_stats, build_blocks, expanding_norm_enabled  # noqa: E402
 
 # v1 = the §8d shared-encoder model; v2 = v1 + the iter009 V_rot routing (§8t).
 
@@ -236,6 +236,7 @@ def main():
     n_obs = sum(int(b["mask"].sum()) for b in train_blocks)
     print(f"[seq] blocks train={len(train_blocks)} val={len(val_blocks)} "
           f"train-labels={n_obs:,} drop_stuck={int(drop_stuck)} per_shot={int(per_shot)} "
+          f"expanding={int(per_shot and expanding_norm_enabled())} "
           f"model={variant} train_ctx={train_ctx or 'full'} device={device.type} "
           f"({_time.time() - t0:.0f}s load)")
 
@@ -320,6 +321,8 @@ def main():
         "dist": getattr(model, "dist", None),
         "train_ctx": train_ctx or None,
         "per_shot_input_norm": per_shot,
+        # B.29 arm C: causal expanding-window per-discharge standardizer (eval must match).
+        "per_shot_norm_expanding": bool(per_shot and expanding_norm_enabled()),
         # B.6 provenance: the arm's input treatment must reload identically at eval.
         "extra_vt_channels": int(dims.get("extra_vt", 0) or 0),
         "extra_ti_channels": int(dims.get("extra_ti", 0) or 0),

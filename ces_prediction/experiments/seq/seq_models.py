@@ -22,8 +22,16 @@ from model_seq_ssm import SeqCESSSM
 from model_seq_v4k import SeqCESV4K
 from model_seq_v2d import SeqCESLSTMv2Dist
 from model_seq_b28 import SeqCESB28
+from model_seq_v2h import SeqCESLSTMv2Hist
+from model_seq_mlp import SeqCESMLP
 
 SEQ_MODELS = {
+    # B.29 (PREREGISTRATION_B29.md): `v2h` = seq_v2 whose T_i encoder is trained WITHOUT the
+    # fast channels (history-only; the fast-channel increment on the main model). `mlp22` = a
+    # memoryless regression on the same 22 inputs at the scored row (seq_v2 routing).
+    "v2h": SeqCESLSTMv2Hist,
+    "mlp22": SeqCESMLP,
+
     # B.28 (PREREGISTRATION_B28.md): the two-term equation read off the frozen seq_v2 T_i branch
     # (EWMA of past observations with a gap-dependent gain + saturating fast-channel increment
     # term), V_rot branch = seq_v2's. `b28x` adds the ONE cross term c * dECEI * dBES.

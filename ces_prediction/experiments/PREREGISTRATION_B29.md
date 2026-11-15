@@ -207,3 +207,15 @@ No change to the backbone, the loss, the populations, the splits or the harness.
 any control. No surrogate (B.28) refit, no artificial-masking curve, no `V_rot`-branch routing
 ablation, no GBM, no AR(p)/Kalman rows (CPU items of the review loop, separate). No CPU substitute
 for the GPU batch.
+
+## 8. Plumbing smoke (2026-11-15, after the registration commit 6bddfc1, before any batch run)
+
+`py ces_prediction/experiments/b29_causal/run_b29.py --smoke` on CPU: split 42, cut population,
+40 train files, 1 epoch, 1,200 TEST samples (per-file cap 50), one run per arm plus arm C on the
+temporal split, into `data/.smoke_b29_*`. All five runs completed train → eval → bootstrap
+(0.8–1.5 min each); `metrics.json` records the registered treatment of each arm (`v2h` 347,970
+parameters; `norm0` per-shot off; `expand` per-shot on + expanding on; `mlp22` 44,994 parameters).
+The smoke TEST rows are not the backbone's rows (different caps), so no pairing was computed and no
+smoke number is a result or is quoted anywhere. `py -m pytest -q`: 107 passed. The analysis script
+was exercised on a scratch tree outside the repository only. No rule, arm or prediction above was
+changed after the smoke.

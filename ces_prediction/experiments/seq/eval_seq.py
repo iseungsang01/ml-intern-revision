@@ -179,6 +179,12 @@ def compare():
     if env_ti != run_ti:
         raise SystemExit(f"FATAL: CES_SEQ_EXTRA_TI gives {env_ti} channels but this run "
                          f"was trained with {run_ti} -- refusing to score a mismatched arm.")
+    # B.29 guard: the expanding-window standardizer at eval must match the training treatment
+    # (runs older than B.29 never used it and do not carry the key).
+    from seq_data import expanding_norm_enabled  # noqa: PLC0415
+    env_exp = os.getenv("CES_PER_SHOT_NORM", "0") == "1" and expanding_norm_enabled()
+    if env_exp != bool(metrics.get("per_shot_norm_expanding", False)):
+        raise SystemExit("FATAL: CES_SEQ_NORM_EXPANDING does not match the training treatment.")
     env_zero_mc = os.getenv("CES_SEQ_ZERO_MC", "0") == "1"
     if env_zero_mc != bool(metrics.get("zero_mc", False)):
         raise SystemExit("FATAL: CES_SEQ_ZERO_MC does not match the training treatment.")
