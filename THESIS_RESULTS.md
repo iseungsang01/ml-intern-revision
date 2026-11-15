@@ -6805,3 +6805,100 @@ Inclusive (secondary): EWMA vs PCHIP +0.098 … +0.254 (CI > 0 on 2/4); backbone
 **(b) Verdict.** ≤ 2/4 branch: report as *PCHIP +0.13 to +0.21 (4/4), causal GP +0.02 to +0.07 (2/4), below the offline GP*; do not claim the surrogate outperforms CES-only causal smoothers and give it no own row in Tables 1–2. It stays the interpretive description of the backbone (0.72–0.78 of the PCHIP skill, §8bz-4), not a deployable estimator.
 
 **Lesson.** The PCHIP margin is not one thing: roughly half is what a VAL-tuned running mean of past CES already gives (equal to the causal GP), the other half is the fast-channel increment, which is the part that is specifically this model's. The causal GP is the reference that isolates the latter, and the paper's claim should be anchored there.
+
+## Review-loop round 2 analyses R2-a … R2-e (2026-11-15, CPU only, frozen artifacts and CSVs; no neural network trained)
+
+Registration (decision rule per item, committed before any number): `docs/paper/review_loop/analyses/R2/REGISTRATION.md` (commit da2c3ba). Scripts, logs and json: `docs/paper/review_loop/analyses/R2/`. Shared: skill of A over R = 1 − ΣSE_A/ΣSE_R on identical rows; per split shot-cluster bootstrap B = 10,000, seed 12345; pooled readout = the registered two-level reader `analyze_b27c.hier` (repeats r2–r9, B = 20,000, seed 2728). Canonical row identity (shot, row) was taken from the stage-4 surrogate npz (it stores `*_row`) after its shot ids, dt_ms and PCHIP squared errors were found bit-identical to the backbone npz on 8/8 cells × 2 targets, so no row matching was needed (A1 had to match and dropped 61–140 ambiguous rows per split). The paper was not edited.
+
+### Review-loop round 2 analysis R2-a: the `V_rot` running-mean arm under the 1000 km/s rule — the backbone's interval over it excludes 0 in both populations
+
+**Question.** Under the A1 rule F(1000), is the backbone's `V_rot` error distinguishable from a validation-tuned running mean of the CES past? (Round 2 §6 a: if not, Claim 2 narrows to "a running mean of the CES past".)
+
+**Design.** EWMA of the past observed held-free `V_rot` of the same segment (gap < 0.5 s), one update per observation, α ∈ {0.05, …, 1.00}; α* = argmin SSE on the VAL files of the same split/fold (observed rows with a past observation, F(1000) applied). Primary arm *gated*: values with |V_rot| > 1000 km/s never enter the mean; sensitivity arm *ungated*. Rows and stored errors: 40 B.27 folds (r2–r9) and the 4 canonical splits × 2 populations. Check: persistence re-derived from the series equals the stored persistence error on 623,860 (cut) / 621,681 (inclusive) rows, 0 mismatches; rows dropped per repeat 36–41 (cut) / 35–41 (inclusive), as in A1; with no rule the script returns the registered +0.313 [+0.072, +0.701] vs PCHIP. Script `r2ac_vrot_running_mean.py` (0.4 min), output `r2ac_vrot_running_mean.json`.
+
+**Result (two-level median [95 %], F(1000)).**
+
+| comparison | cut | inclusive |
+|---|---|---|
+| backbone vs running mean, gated (primary) | +0.121 [+0.074, +0.187], excludes 0 | +0.115 [+0.068, +0.189], excludes 0 |
+| backbone vs running mean, ungated | +0.202 [+0.085, +0.466], excludes 0 | +0.198 [+0.074, +0.479], excludes 0 |
+| running mean (gated) vs persistence | +0.161 [+0.060, +0.244], excludes 0 | +0.157 [+0.057, +0.240], excludes 0 |
+| running mean (gated) vs causal GP | +0.031 [−0.104, +0.186], includes 0 | +0.015 [−0.106, +0.165], includes 0 |
+| running mean (gated) vs PCHIP | −0.034 [−0.190, +0.080], includes 0 | −0.032 [−0.181, +0.084], includes 0 |
+| running mean (gated) vs offline GP | −0.221 [−0.383, −0.114], excludes 0 | −0.231 [−0.374, −0.126], excludes 0 |
+
+- Per-repeat pooled backbone vs gated running mean: 0.107–0.152 (cut), 0.102–0.162 (inclusive), 8/8 repeats positive in both. α* (gated) over the 40 folds: 0.15–0.45, median 0.30; ungated 0.05–0.70 (the ungated optimum is driven by whether a fit-failure value sits in the VAL files).
+- Per canonical split, backbone vs gated running mean: cut +0.158 [+0.031, +0.317], +0.158 [+0.038, +0.285], +0.136 [+0.027, +0.228], +0.097 [+0.038, +0.158]; inclusive +0.151 [+0.020, +0.312], +0.170 [+0.055, +0.297], +0.132 [+0.023, +0.226], +0.084 [+0.043, +0.130] — excludes 0 on 4/4 splits in both populations. vs the ungated arm 3/4 in both (s7 includes 0).
+- The gated running mean vs persistence per split: +0.203, +0.163, +0.039, +0.093 (cut), interval includes 0 on 4/4; vs causal GP −0.083, −0.033, −0.092, −0.012, includes 0 on 4/4.
+
+**Verdict against the registered rule.** The primary interval excludes 0 above 0 in both populations, so the second branch applies: Claim 2 is **not** narrowed to "a running mean of the CES past". The backbone's `V_rot` branch (CES history only) has a squared error 11.5–12.1 % below a VAL-tuned running mean that is given a range gate the backbone does not have; the per-split count is 4/4 × 2. The running mean is itself statistically the causal GP on `V_rot` (interval includes 0 in both populations), as it was on `T_i` (A2). Reading for the paper: under F(1000) the ordered causal ladder for `V_rot` is persistence < running mean ≈ causal GP < backbone, with backbone − running mean +0.12 [+0.07, +0.19]; the offline GP stays ahead of every causal arm. Caveat: F(1000) is a post hoc scoring rule (round 1), and the running mean is one fixed-α family (no gap-dependent gain).
+
+### Review-loop round 2 analysis R2-c: Table 1's `V_rot` RMSE column (seed 42) under the 1000 km/s rule
+
+**Design.** Seed-42 test rows of `.b1_seqv2_s42_i42` (cut, n = 10,463) and `.b5i_seqv2_s42` (inclusive, n = 10,461); F(1000) drops 2 rows in each. Two-point extrapolation recomputed with `baselines_interpolation.predict_ar_local` from the row index (51.04 km/s without the rule, the table's 51.0); windowed control from `.b1_w2cut_s42` / `.wsweep_hf_w2_s42` (PCHIP errors bit-identical to the backbone file). Same script and json as R2-a (`table1_vrot_seed42`).
+
+**Result (RMSE, km/s; cut).**
+
+| arm | no rule (Table 1 now) | F(1000) | SSE share of the 2 dropped rows |
+|---|---:|---:|---:|
+| Causal GP | 28.84 | 24.67 | 0.268 |
+| Running mean, gated (α* = 0.25) | 25.68 | 25.68 | 0.001 |
+| Running mean, ungated (α* = 0.30) | 26.09 | 25.53 | 0.043 |
+| Persistence | 33.40 | 28.75 | 0.259 |
+| Two-point extrap. | 51.04 | 44.25 | 0.249 |
+| seq_v2 | 23.60 | 23.56 | 0.004 |
+| Surrogate file's `V_rot` branch (= seq_v2 branch retrained) | 23.63 | 23.60 | 0.003 |
+| Windowed control | 26.07 | 26.03 | 0.003 |
+| GP (offline) | 24.72 | 23.14 | 0.124 |
+| Linear interp. | 28.96 | 26.00 | 0.194 |
+| PCHIP | 30.21 | 26.59 | 0.225 |
+
+Inclusive differs only in the model rows: seq_v2 23.71 → 23.66, surrogate file 23.98 → 23.96, windowed control 25.92 → 25.88; every reference arm is identical to the cut column (the 3 keV cut touches `T_i` only).
+
+**Verdict (re-derivation, no decision rule; stated expectation checked).** Every RMSE falls or stays, as expected. The stated expectation "the ordering of the causal arms is unchanged" **fails in one place**: without the rule the windowed control (26.07) is below the causal GP (28.84); under the rule the causal GP (24.67) is below the windowed control (26.03) and below the running mean (25.68). The order under the rule is offline GP 23.14 < seq_v2 23.56 < causal GP 24.67 < running mean 25.68 < linear 26.00 ≈ windowed control 26.03 < PCHIP 26.59 < persistence 28.75 < two-point 44.25. Two rows of 10,463 carry 22–27 % of the squared error of persistence, PCHIP, causal GP and two-point extrapolation and 0.4 % of the backbone's; the table's backbone-vs-reference gaps in the `V_rot` column shrink from 5.2 to 1.1 km/s (causal GP) and from 6.6 to 3.0 km/s (PCHIP), and the offline GP moves from 1.1 km/s above the backbone to 0.4 km/s below it.
+
+### Review-loop round 2 analysis R2-b: the surrogate with every fast-channel coefficient set to 0 — the fast term is a measured increment on 4/4 cut splits and on 0/4 inclusive splits
+
+**Question.** How much of the 20-parameter surrogate's `T_i` skill is left when a_c = 0, i.e. for the 4-parameter CES-only filter y = m(t) + b₀ with gain K(s)? (Round 2 §6 b, the cheapest measurement of the fast-channel share.)
+
+**Design.** Frozen `T_i` rows of the 8 canonical cells. *S0-zero*: the trained `.b28_b28h_{pop}_s{s}` checkpoint with a_c := 0. *S0-refit* (primary): K₀, K_∞, s_K, b₀ refit on the split's TRAIN files only (≈ 141–144 k observed rows with a past observation, masked MSE, full-batch L-BFGS from the module defaults, 23–64 closure calls, a_c verified to stay 0), forward code = `SeqCESB28`. Check: the unmodified checkpoint run through the script reproduces the stored surrogate errors to ≤ 0.0016 eV on 8/8 cells. Script `r2b_surrogate_no_fast.py` (5.2 min), output `r2b_surrogate_no_fast.json`.
+
+**Result (cut; split 42 / 1 / 7 / 123; point [95 %]).**
+
+| quantity | s42 | s1 | s7 | s123 |
+|---|---|---|---|---|
+| full surrogate vs S0-refit (fast share in the equation) | +0.070 [+0.041, +0.101] | +0.046 [+0.025, +0.068] | +0.060 [+0.034, +0.087] | +0.037 [+0.012, +0.064] |
+| full surrogate vs S0-zero | +0.062 [+0.042, +0.083] | +0.056 [+0.039, +0.074] | +0.067 [+0.044, +0.091] | +0.040 [+0.018, +0.064] |
+| backbone vs S0-refit | +0.121 [+0.075, +0.168] | +0.126 [+0.096, +0.156] | +0.130 [+0.102, +0.160] | +0.109 [+0.053, +0.155] |
+| S0-refit vs causal GP | −0.050 [−0.104, −0.005] | +0.008 [−0.017, +0.031] | +0.009 [−0.017, +0.030] | −0.005 [−0.033, +0.023] |
+| S0-refit vs PCHIP | +0.059 [−0.054, +0.149] | +0.140 [+0.072, +0.195] | +0.145 [+0.075, +0.199] | +0.174 [+0.096, +0.232] |
+| RMSE eV: S0-refit / surrogate / backbone / causal GP | 168.4 / 162.3 / 157.8 / 164.3 | 206.5 / 201.7 / 193.1 / 207.4 | 186.2 / 180.6 / 173.7 / 187.1 | 213.7 / 209.7 / 201.7 / 213.2 |
+| retention of the backbone's PCHIP skill: S0-refit / surrogate | 0.34 / 0.72 | 0.56 / 0.72 | 0.57 / 0.77 | 0.66 / 0.78 |
+
+- Inclusive: full surrogate vs S0-refit +0.013 [−0.048, +0.095], +0.008 [−0.039, +0.065], −0.029 [−0.044, −0.012], −0.034 [−0.066, +0.008] (0/4 above 0; s7 excludes 0 **below** 0); backbone vs S0-refit +0.154 [+0.017, +0.343], +0.142 [+0.048, +0.278], +0.048 [+0.016, +0.079], +0.073 [+0.042, +0.114] (4/4); S0-refit vs causal GP −0.000, +0.031, +0.080 [+0.033, +0.127], +0.082 [−0.000, +0.159] (1/4).
+- Refit gains, read at the gaps that occur (the fitted K₀ at s = 0 is an extrapolation; cut s_K = 3.6–6.2 ms): cut K(10 ms) = 0.30–0.32, K(20 ms) = 0.24–0.27, K(50 ms) = 0.23–0.26; inclusive 0.19–0.20 / 0.18–0.19 / 0.14–0.17. The CES-only optimum has a gain that is flat or falls with the gap; the jointly trained surrogate's gain rises with it (the same checkpoints with a_c := 0: K(10 ms) 0.31–0.35, K(50 ms) 0.41–0.47). The rising K(s) of the 20-parameter equation is therefore a property of the joint fit with the fast term, not of the CES series alone.
+- S0-refit and S0-zero agree to within 0.012 on every cut readout, so the conclusion does not depend on which 4-parameter set is used.
+
+**Verdict against the registered rule.** (i) Full surrogate vs S0-refit excludes 0 above 0 on **4/4 cut** splits: in the cut population the surrogate's fast term is a measured increment of +0.04 to +0.07 over the best 4-parameter CES-only filter. In the inclusive population it is not resolved (0/4, one split below 0), so the statement is cut-only. (ii) Backbone vs S0-refit excludes 0 on 4/4 cut and 4/4 inclusive splits (+0.11 to +0.13 cut): the "includes 0 on ≥ 2 cut splits" branch is not triggered. (iii) The 4-parameter CES-only filter is the causal GP (interval includes 0 on 3/4 cut splits, below it on s42), as the fixed-α running mean was in A2 — three CES-only causal smoothers now land on the same error. Size statement for the paper: of the backbone's +0.11 to +0.13 over a CES-only filter (cut), the 15 linear fast-channel gains recover +0.04 to +0.07, i.e. 0.34–0.58 of it per split; the rest needs the LSTM. Limits: this attributes inside the surrogate family; the fast channels' share of the backbone itself still needs the history-only seq_v2 (GPU), and in the inclusive population the linear fast term adds nothing measurable while the backbone's margin stays.
+
+### Review-loop round 2 analysis R2-d: a causal-GP arm for the per_shot = 0 artifacts (earlier protocol) — the `T_i` interval over the causal GP excludes 0 on 4/4 splits without per-discharge standardization
+
+**Question.** The 8-page paper discloses that the backbone's fast channels are standardized per discharge, an offline step. Do the existing `CES_PER_SHOT_NORM=0` seq_v2 runs keep a margin over the causal GP? (Round 2 §6 d.)
+
+**Design.** Artifacts `data/.seq_v2_nops_lstm_s{42,1,7,123}` and their per_shot = 1 siblings `data/.seq_v2_lstm_s{s}` (§8t). **These are the earlier protocol, not the confirmed one**: `runner_common.FULL_ENV` (W = 4 harness rows, test cap 40,000), held-free training and scoring, no 3 keV cut (inclusive-type population), no per-file cap of 500, splits `runner_common.SPLIT_SRC`, control stats `.sf_iter009_s{s}`. Their npz files stored only model, PCHIP and linear errors. The row population was re-derived with `eval_seq.compare()`'s harness calls (no model) and accepted because row count, shot ids, dt_ms and the PCHIP squared errors are bit-identical to the stored arrays on 4/4 splits × 2 targets (32,787–36,083 `T_i` rows, 10,729–14,698 `V_rot` rows); `gp_causal` and persistence were then computed per row with `baselines_interpolation`. The siblings' rows are bit-identical, so the two models are paired row for row. Added arms saved beside the artifacts as `r2d_added_arms_{target}.npz` (new files; nothing frozen was rewritten). Script `r2d_nops_causal_gp.py` (11.3 min), output `r2d_nops_causal_gp.json`.
+
+**Result (split 42 / 1 / 7 / 123; point [95 %]).**
+
+| quantity | s42 | s1 | s7 | s123 |
+|---|---|---|---|---|
+| `T_i`: per_shot = 0 vs causal GP | +0.114 [+0.037, +0.178] | +0.117 [+0.058, +0.180] | +0.100 [+0.045, +0.149] | +0.131 [+0.058, +0.195] |
+| `T_i`: per_shot = 1 vs causal GP | +0.122 [+0.054, +0.186] | +0.103 [+0.038, +0.168] | +0.131 [+0.080, +0.180] | +0.140 [+0.086, +0.197] |
+| `T_i`: per_shot = 1 vs per_shot = 0 | +0.009 [−0.019, +0.046] | −0.015 [−0.036, +0.001] | +0.034 [+0.017, +0.061] | +0.010 [−0.013, +0.046] |
+| `T_i`: per_shot = 0 vs PCHIP | +0.248 [+0.110, +0.334] | +0.219 [+0.129, +0.288] | +0.280 [+0.209, +0.333] | +0.301 [+0.150, +0.385] |
+| `T_i` RMSE eV: per_shot 0 / 1 / causal GP | 389.6 / 387.9 / 413.9 | 441.6 / 444.9 / 469.8 | 466.7 / 458.7 / 491.9 | 524.1 / 521.5 / 562.3 |
+| `V_rot`: per_shot = 0 vs causal GP (no fit-failure rule) | +0.213 [+0.014, +0.325] | +0.201 [+0.072, +0.318] | −0.051 [−0.525, +0.070] | +0.105 [+0.022, +0.183] |
+| `V_rot`: per_shot = 1 vs per_shot = 0 | −0.001 [−0.005, +0.007] | +0.006 [−0.004, +0.012] | +0.010 [+0.004, +0.023] | −0.002 [−0.009, −0.000] |
+
+`T_i` vs persistence +0.403 … +0.443 (4/4 exclude 0). `V_rot` vs persistence +0.382, +0.379, +0.301 [−0.280, +0.447], +0.389 (3/4); vs PCHIP 1/4.
+
+**Verdict against the registered rule.** The per_shot = 0 `T_i` interval vs the causal GP excludes 0 above 0 on **4/4** splits (+0.100 to +0.131), so the first branch holds: under the earlier protocol the `T_i` margin over the causal GP does not rest on the offline per-discharge standardization. The paired effect of the standardization itself is −0.015 to +0.034 with the interval including 0 on 3/4 splits (s7 +0.034 [+0.017, +0.061]). `V_rot` is unchanged by the standardization to within ±0.01, as it must be (its branch reads no fast channel). This is evidence from the earlier protocol only (W = 4 rows, no cut, no per-file cap); the confirmed-protocol rerun with `CES_PER_SHOT_NORM=0` and the expanding-window standardizer (GPU) remains the gate, and the paper should cite this result with the protocol label, not as a confirmed-protocol number.
