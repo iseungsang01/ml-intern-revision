@@ -9,7 +9,8 @@ by hand against the sources).
 Sources: docs/paper/short/main_short.tex (KSTAR numbers, traced there to the frozen
 artifacts), docs/paper/mast_gate.md, docs/paper/mast_gate_addendum1.md, the review-loop and
 MAST records at the end of THESIS_RESULTS.md, PREREGISTRATION_MAST_GATE.md,
-docs/paper/ppcf/kstar_regime.json (rounded to three decimals).
+docs/paper/ppcf/kstar_regime.json (rounded to three decimals), and the two figure
+sources computed for this paper, docs/paper/ppcf/fig_missing.json and fig_gap.json.
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -76,6 +77,22 @@ def main():
         r = kr[k]
         extra += ["%+.3f" % v for v in [r["median"], *r["ci95"], *r["quartiles"]]]
         extra.append(str(r["n_discharges"]))
+    # figure sources computed for this paper (fig_missing.py, fig_gap.py)
+    fm = json.loads((HERE / "fig_missing.json").read_text(encoding="utf-8"))
+    extra += [f"{fm['n_rows']:,}"]
+    for k in ("CES_TI", "CES_VT"):
+        r = fm[k]
+        extra += ["%.1f" % r["missing_pct"], "%.1f" % r["no_independent_pct"], "%.1f" % r["independent_pct"],
+                  "%.1f" % (100 * r["gap_le_50ms_share"]), f"{r['n_gaps']:,}"]
+    fg = json.loads((HERE / "fig_gap.json").read_text(encoding="utf-8"))["cut"]
+    for t in ("CES_TI", "CES_VT"):
+        for name, c in fg[t].items():
+            extra += [str(v) for v in c["rows_per_repeat"]]
+            extra += ["%.1f" % v for v in c["rmse"].values()]
+            for sk in c["skill"].values():
+                extra += ["%+.3f" % v for v in [sk["median"], *sk["ci95"]]]
+        a, b = fg[t]["all"]["rows_per_repeat"], fg[t]["10"]["rows_per_repeat"]
+        extra += ["%.1f" % (100 * b[0] / a[0]), "%.1f" % (100 * b[1] / a[1])]
     src = norm(src) + "\n" + " ".join(extra)
     have = tokens(src)
     have_abs = {t.lstrip("+-") for t in have}

@@ -18,6 +18,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage[skip=6pt]{caption}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
@@ -51,16 +52,16 @@ rotation samples are missing. We ask what limits an estimate that cannot wait fo
 next CES sample. The lag-1 autocorrelation of 10\,ms increments separates two regimes:
 $-0.416$ $[-0.429, -0.402]$ for \Ti{} on KSTAR (noise-limited) and $+0.297$
 $[+0.197, +0.352]$ on 88 public MAST discharges (trend-limited). On MAST the best
-CES-only estimator of this kind leaves a
-mean reduced chi-square of 2.57 $[1.94, 3.40]$ against the reported fit errors. On
-KSTAR, a recurrent network that also reads beam-emission and
-electron-cyclotron channels within 1.5\,cm of the chord has \Ti{} mean-squared-error
-skill $+0.113$ $[+0.085, +0.132]$ over a CES-only causal Gaussian process; the
-fast-channel share of this margin is not yet isolated. Among estimators that do not use
-the next CES sample it has the lowest mean squared error, and against an offline
-Gaussian process that does use it the \Ti{} interval includes zero. Rotation is
-estimated from its own history (fast-channel coupling $|r| \leq 0.044$), with skill
-$+0.265$ $[+0.198, +0.326]$ over persistence. The gain is carried by large-error rows.
+estimator that reads only the CES past leaves a mean reduced chi-square of 2.57
+$[1.94, 3.40]$ against reported fit errors. The main result is on KSTAR: among
+estimators that do not use the next CES sample, a recurrent network that also reads
+beam-emission and electron-cyclotron channels within 1.5\,cm of the chord has the
+lowest \Ti{} mean squared error, with skill $+0.113$ $[+0.085, +0.132]$ over a CES-only
+causal Gaussian process. Against an offline Gaussian process that uses the next sample
+the interval includes zero, and the share of the margin due to the fast channels is
+not isolated. Rotation is estimated from its own history (fast-channel coupling
+$|r| \leq 0.044$), with skill $+0.265$ $[+0.198, +0.326]$ over persistence. The gain is
+carried by large-error rows.
 \end{abstract}
 
 % =========================================================================
@@ -104,7 +105,9 @@ CES-only estimator that does not use the next sample; for rotation the same chan
 carry a bounded, small association, and the estimate comes from the rotation history
 alone (\S\ref{sec:fast}). (E) The gain is a property of the large-error rows, not of
 the typical row, and a 20-parameter filter read from the network reproduces most of it
-(\S\ref{sec:character}).
+(\S\ref{sec:character}). The headline result is link (D) for \Ti{}: among estimators
+that do not use the next CES sample, the full-input estimator has the lowest mean
+squared error, with skill $+0.113$ $[+0.085, +0.132]$ over the CES-only causal GP.
 
 \paragraph{Scope of the statements.}
 The KSTAR result is one chord, one campaign and one device. MAST enters as a second,
@@ -113,10 +116,11 @@ which KSTAR files lack, but no fast diagnostic co-located with the CES chords, s
 MAST number is used as support for link (D). The two devices pose different problems
 (natural gaps at 10\,ms on KSTAR, frames hidden by us at 5\,ms on MAST) and the
 comparison is a contrast of regimes, not a replication. One measurement that link (D)
-needs is still running: a network retrained without the fast channels, which isolates
-their share of the \Ti{} margin. Until it is read, the \Ti{} statement is a comparison
-between a full-input estimator and CES-only estimators, and is worded as such
-throughout.
+needs is not reported here: a network retrained without the fast channels, which would
+isolate their share of the \Ti{} margin (\S\ref{sec:limits}). The \Ti{} statement is
+therefore a comparison between a full-input estimator and CES-only estimators, and is
+worded as such throughout.
+% B29-SLOT (intro): replace the two sentences above with the history-only result when read.
 
 % =========================================================================
 \section{Related work}
@@ -174,15 +178,22 @@ channels~\citep{Yun2010DevelopmentKstar}, two Mirnov-coil signals, time, and the
 CES targets, which come from one outboard chord at $R = 2.198$\,m ($r/a$ is not mapped
 in the files). The BES and ECEI channels lie within about 1.5\,cm of that chord; the
 two Mirnov inputs are two positions of one poloidal array. \Ti{} is missing in 8.2\% of
-rows and \Vrot{} in 23.9\% (Fig.~\ref{fig:missing}). Rows group into contiguous
-segments at gaps of at least 0.5\,s, and no estimator bridges such a gap.
+rows and \Vrot{} in 23.9\% (Fig.~\ref{fig:missing}a). Rows group into contiguous
+segments at breaks of at least 0.5\,s, and no estimator bridges such a break. Inside a
+segment most gaps are short: the median gap is one row (10\,ms) for both targets, and
+92.9\% of \Ti{} gaps and 89.8\% of \Vrot{} gaps are 50\,ms or shorter
+(Fig.~\ref{fig:missing}b).
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.62\linewidth]{fig_missing}
-  \caption{CES missingness on the KSTAR 10\,ms grid. \Ti{} and \Vrot{} go missing
-  independently (8.2\% and 23.9\%); counting held values, 65.0\% of the grid carries no
-  independent \Vrot{} information.}
+  \includegraphics[width=\linewidth]{fig_missing}
+  \caption{CES missingness on the KSTAR 10\,ms grid (641 discharges, 247{,}207 rows).
+  (a) Share of grid rows per target that carry an independent measurement, a held
+  repeat of the previous value, or no value. \Ti{} and \Vrot{} go missing independently
+  (8.2\% and 23.9\%); counting held values, 65.0\% of the grid carries no independent
+  \Vrot{} measurement. (b) Lengths of the gaps (runs of consecutive rows without a
+  value inside a contiguous segment), as a share of the 8{,}233 \Ti{} gaps and 4{,}351
+  \Vrot{} gaps; logarithmic vertical axis.}
   \label{fig:missing}
 \end{figure}
 
@@ -273,13 +284,13 @@ rather than assumed.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.92\linewidth]{fig_arch_seq_v2}
+  \includegraphics[width=0.9\linewidth]{fig_arch}
   \caption{The two-branch recurrent estimator for one KSTAR grid row $t$. 22 inputs
   (15 fast channels; time step; per target the last observed value, its staleness and
   an observed flag) feed two LSTMs that run forward in time. The \Ti{} branch reads all
   22 (2 layers, 160 units), the \Vrot{} branch only the seven CES-derived channels (1
-  layer, 64 units). The dashed path from the fast channels to \Vrot{} does not exist by
-  construction. 357{,}570 parameters.}
+  layer, 64 units). The dashed path from the fast channels to the \Vrot{} branch does
+  not exist by construction. 357{,}570 parameters.}
   \label{fig:arch}
 \end{figure}
 
@@ -303,8 +314,7 @@ early stopping with a 30-epoch cap); splits are by whole discharge file.
 but the 15 fast channels are standardized with the mean and variance of the whole
 discharge, which is an offline step. The estimator is therefore described as one that
 \emph{does not use the next CES sample}, not as a causal estimator. A variant with a
-standardizer that uses only past rows is being trained and is not reported here
-(\S\ref{sec:limits}). A stateful step costs 0.97\,ms (median) and 1.49\,ms (99th
+standardizer that uses only past rows is not reported here (\S\ref{sec:limits}). A stateful step costs 0.97\,ms (median) and 1.49\,ms (99th
 percentile) on a CPU.
 
 \subsection{Scoring, intervals and registration}
@@ -342,12 +352,12 @@ reserved before the architecture was chosen, but the adoption of the full-grid
 recurrent design and of per-discharge standardization used results on the same four
 test splits, and the repeated cross-validation re-partitions the same discharges. On
 MAST, the shot list, the fit rule, the tuning/test division, the estimators and both
-decision rules were committed before any value of the 300 shots was read. Three things
-happened after that and are disclosed: the tuning grids of the first run placed several
-optima on a grid edge, so a second run with wider grids was registered and is reported
-beside the first; stored frame times in a few shots were unusable and the nominal grid
-was adopted after a first table had been seen (the decisions are the same either way);
-and in the second run one tuning sequence was started from the wrong grid and rerun.
+decision rules were committed before any value of the 300 shots was read. The tuning
+grids of that first registered run placed several optima on a grid edge, so a second
+run with wider grids was registered; the main text reports the second run, and the
+first run, which leads to the same two decisions, is in
+Appendix~\ref{app:mastfirst}. The order of events, including two execution defects
+that were found and corrected, is given in Appendix~\ref{app:registration}.
 
 % =========================================================================
 \section{What sets the limit: noise-limited and trend-limited increments}
@@ -376,11 +386,30 @@ of the plasma.
   \label{fig:regime}
 \end{figure}
 
-\paragraph{KSTAR is noise-limited.} Per discharge, over triples of consecutive measured
-rows, the regime number of \Ti{} (cut) has median $-0.416$ $[-0.429, -0.402]$ over 601
-discharges (interquartile range $-0.491$ to $-0.294$); for \Vrot{} with held values
-removed it is $-0.349$ $[-0.384, -0.322]$ over 382 discharges
-(Fig.~\ref{fig:regime}a). Both sit close to the white-noise value. This is a
+\begin{table}[t]
+  \centering
+  \caption{Regime number (lag-1 autocorrelation of 10\,ms increments): median over
+  discharges with 95\% interval, and interquartile range. KSTAR: per discharge over
+  triples of consecutive measured rows, \Ti{} in the cut population and \Vrot{} with
+  held values removed. MAST: visible (10\,ms) series of the test shots, population G.
+  White noise on a flat signal gives $-0.5$.}
+  \label{tab:regime}
+  \footnotesize
+  \begin{tabular}{llccc}
+    \toprule
+    Device & Target & Discharges & Regime number & Interquartile range \\
+    \midrule
+    KSTAR & \Ti{} & 601 & $-0.416$ $[-0.429, -0.402]$ & $-0.491$ to $-0.294$ \\
+    KSTAR & \Vrot{} & 382 & $-0.349$ $[-0.384, -0.322]$ & -- \\
+    MAST & \Ti{} & 88 & $+0.297$ $[+0.197, +0.352]$ & $+0.096$ to $+0.493$ \\
+    MAST & \Vi{} & 88 & $+0.463$ $[+0.416, +0.549]$ & $+0.298$ to $+0.606$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{KSTAR is noise-limited.} The regime numbers of \Ti{} and \Vrot{} on KSTAR
+sit close to the white-noise value (Table~\ref{tab:regime},
+Fig.~\ref{fig:regime}a). This is a
 descriptive statistic computed for this paper, not a registered test. It agrees with
 two independent readings of the same data: difference estimators put the \Ti{}
 measurement noise at 46.4--129.9\,eV, the order of the best estimator's error
@@ -389,19 +418,19 @@ is $\sqrt2$ (1.395--1.532 in eight split--population cells), the value for indep
 Gaussian line-fit errors on width and shift.
 
 \paragraph{MAST is trend-limited.} On the visible 10\,ms series of the MAST test shots
-the regime number is $+0.297$ $[+0.197, +0.352]$ for \Ti{} and $+0.463$
-$[+0.416, +0.549]$ for \Vi{} (medians over 88 shots; quartiles $+0.096$ to $+0.493$ and
-$+0.298$ to $+0.606$). Beam blocks last about 0.3\,s and the plasma is evolving during
-them, so successive increments point the same way.
+the regime number is positive for both targets, with intervals above zero
+(Table~\ref{tab:regime}). Beam blocks last about 0.3\,s and the plasma is evolving
+during them, so successive increments point the same way. The two devices differ in
+more than the plasma (exposure, chord geometry, block length), so the contrast is one
+of measurement regimes and is not attributed to a single cause.
 
 \paragraph{The regime decides the yardstick.} In the noise-limited regime, averaging
 the CES past removes noise: on KSTAR a running mean has \Ti{} skill $+0.26$ to $+0.34$
 over persistence on the four splits, the causal GP $+0.31$ to $+0.35$, and for \Vrot{}
 the running mean has $+0.161$ $[+0.060, +0.244]$ (pooled, cut). In the trend-limited
 regime, averaging lags the trend: on MAST the best running mean is the one with the
-shortest memory offered, and its skill over persistence is $-0.012$
-$[-0.017, -0.007]$ for \Ti{} and $-0.024$ $[-0.030, -0.018]$ for \Vi{}, both intervals
-below zero, while estimators that carry a slope or a kernel have positive skill
+shortest memory offered, and its skill over persistence has an interval below zero
+for both targets, while estimators that carry a slope or a kernel have positive skill
 (Table~\ref{tab:mast}, Fig.~\ref{fig:regime}b). Across MAST test shots the regime
 number is correlated with the difference between slope-filter and running-mean skill
 (Spearman $+0.423$ $[+0.205, +0.598]$ for \Ti{}, $+0.779$ $[+0.656, +0.870]$ for
@@ -455,65 +484,77 @@ must be kept in mind when the \Vi{} residual is read below.
   \caption{MAST test set, population G (58{,}844 rows, 88 shots): estimators that read
   only the CES series of the chord. Skill is against persistence (RMSE 77.1\,eV and
   7.77\,km/s); \chir{} is the mean squared residual in units of the variance predicted
-  by the reported fit errors. \emph{First run}: tuning grids as first registered.
-  \emph{Wider grids}: the registered second run. Entries are point estimates with 95\%
-  intervals; bold = interval excludes zero. The last two rows also use the following
-  sample.}
+  by the reported fit errors. Hyperparameters are from the registered run with wider
+  tuning grids; the first registered run is in Appendix~\ref{app:mastfirst}. Entries
+  are point estimates with 95\% intervals; bold = interval excludes zero. The last two
+  rows of each block also use the following sample.}
   \label{tab:mast}
   \footnotesize
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{llccc}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{llcc}
     \toprule
-    Target & Estimator & Skill, first run & Skill, wider grids & Mean \chir{}, wider grids \\
+    Target & Estimator & Skill over persistence & Mean \chir{} \\
     \midrule
     \multirow{6}{*}{\Ti{}}
-      & two-point extrapolation & $\mathbf{-0.279}$ $[-0.404, -0.155]$ & (no hyperparameter) & 2.33 $[1.74, 3.12]$ \\
-      & running mean & $\mathbf{-0.143}$ $[-0.189, -0.103]$ & $\mathbf{-0.012}$ $[-0.017, -0.007]$ & 4.99 $[3.89, 6.30]$ \\
-      & slope-state filter & $+0.076$ $[-0.006, +0.148]$ & $+0.076$ $[-0.006, +0.148]$ & 2.71 $[2.07, 3.51]$ \\
-      & causal GP & $\mathbf{-0.683}$ $[-0.997, -0.426]$ & $\mathbf{+0.136}$ $[+0.069, +0.208]$ & 2.57 $[1.94, 3.40]$ \\
-      & offline interpolation & $\mathbf{+0.544}$ $[+0.435, +0.626]$ & (no hyperparameter) & 1.83 $[1.45, 2.28]$ \\
-      & offline GP & $\mathbf{+0.374}$ $[+0.093, +0.568]$ & $\mathbf{+0.538}$ $[+0.425, +0.620]$ & 1.78 $[1.42, 2.23]$ \\
+      & two-point extrapolation & $\mathbf{-0.279}$ $[-0.404, -0.155]$ & 2.33 $[1.74, 3.12]$ \\
+      & running mean & $\mathbf{-0.012}$ $[-0.017, -0.007]$ & 4.99 $[3.89, 6.30]$ \\
+      & slope-state filter & $+0.076$ $[-0.006, +0.148]$ & 2.71 $[2.07, 3.51]$ \\
+      & causal GP & $\mathbf{+0.136}$ $[+0.069, +0.208]$ & 2.57 $[1.94, 3.40]$ \\
+      & offline interpolation & $\mathbf{+0.544}$ $[+0.435, +0.626]$ & 1.83 $[1.45, 2.28]$ \\
+      & offline GP & $\mathbf{+0.538}$ $[+0.425, +0.620]$ & 1.78 $[1.42, 2.23]$ \\
     \midrule
     \multirow{6}{*}{\Vi{}}
-      & two-point extrapolation & $-0.018$ $[-0.116, +0.081]$ & (no hyperparameter) & 15.38 $[11.67, 19.71]$ \\
-      & running mean & $\mathbf{-0.232}$ $[-0.290, -0.179]$ & $\mathbf{-0.024}$ $[-0.030, -0.018]$ & 34.21 $[27.60, 41.26]$ \\
-      & slope-state filter & $\mathbf{+0.088}$ $[+0.035, +0.147]$ & $\mathbf{+0.108}$ $[+0.049, +0.175]$ & 19.91 $[15.66, 24.78]$ \\
-      & causal GP & $\mathbf{-0.350}$ $[-0.499, -0.238]$ & $\mathbf{+0.110}$ $[+0.055, +0.168]$ & 16.69 $[12.96, 21.04]$ \\
-      & offline interpolation & $\mathbf{+0.626}$ $[+0.518, +0.716]$ & (no hyperparameter) & 11.62 $[8.79, 14.98]$ \\
-      & offline GP & $\mathbf{+0.577}$ $[+0.435, +0.696]$ & $\mathbf{+0.622}$ $[+0.498, +0.727]$ & 9.86 $[7.39, 12.91]$ \\
+      & two-point extrapolation & $-0.018$ $[-0.116, +0.081]$ & 15.38 $[11.67, 19.71]$ \\
+      & running mean & $\mathbf{-0.024}$ $[-0.030, -0.018]$ & 34.21 $[27.60, 41.26]$ \\
+      & slope-state filter & $\mathbf{+0.108}$ $[+0.049, +0.175]$ & 19.91 $[15.66, 24.78]$ \\
+      & causal GP & $\mathbf{+0.110}$ $[+0.055, +0.168]$ & 16.69 $[12.96, 21.04]$ \\
+      & offline interpolation & $\mathbf{+0.626}$ $[+0.518, +0.716]$ & 11.62 $[8.79, 14.98]$ \\
+      & offline GP & $\mathbf{+0.622}$ $[+0.498, +0.727]$ & 9.86 $[7.39, 12.91]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{MAST test set: residual of the best estimator that does not use the
+  following sample (the causal GP) against the reported fit errors. A residual that is
+  fit noise only gives a mean \chir{} of 1, a median of 0.455 and a mean-to-median
+  ratio of 2.2. Point estimates with 95\% intervals.}
+  \label{tab:mastfloor}
+  \footnotesize
+  \begin{tabular}{lcc}
+    \toprule
+    Quantity & \Ti{} & \Vi{} \\
+    \midrule
+    Mean \chir{}, population G & 2.57 $[1.94, 3.40]$ & 16.69 $[12.96, 21.04]$ \\
+    Mean \chir{}, population W & 2.38 $[1.87, 3.01]$ & 15.28 $[12.80, 18.32]$ \\
+    Mean \chir{}, G, errors rescaled (\S\ref{sec:floor:indep}) & 4.77 $[3.58, 6.30]$ & -- \\
+    Median \chir{}, G & 0.416 $[0.345, 0.501]$ & 2.343 $[1.908, 2.815]$ \\
+    Mean-to-median ratio, G & 6.19 $[4.94, 7.75]$ & 7.12 $[5.84, 8.65]$ \\
+    Share of squared error in the top 0.1\% of rows, G & 0.110 $[0.041, 0.187]$ & 0.210 $[0.047, 0.356]$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 Table~\ref{tab:mast} gives the estimators of \S\ref{sec:methods:ces} on the hidden
-frames. In the first run the GP amplitude was limited to four times the median
-reported error, which placed its optimum on the edge of the grid, and the causal GP
-had a larger error than persistence. With the wider grids of the second run the causal
-GP has the lowest test error of the estimators that do not use the following sample,
-for both targets: skill over persistence $+0.136$ $[+0.069, +0.208]$ for \Ti{} and
-$+0.110$ $[+0.055, +0.168]$ for \Vi{}. For \Vi{} the causal GP and the slope-state
-filter are within 0.2\% of each other in test error; for \Ti{} the slope-state filter
-was already at its optimum and does not move. After the allowed extensions one
-hyperparameter (the offline-GP amplitude for \Vi{}) is still on an edge, with a last
-step that changed the tuning error by 1.5\%; the offline GP is then within 0.006 of
+frames. The causal GP has the lowest test error of the estimators that do not use the
+following sample, for both targets; for \Vi{} the causal GP and the slope-state filter
+are within 0.2\% of each other in test error. One hyperparameter (the offline-GP
+amplitude for \Vi{}) is still on a grid edge after the allowed extensions, with a last
+step that changed the tuning error by 1.5\%; the offline GP is within 0.006 of
 two-point interpolation for both targets.
 
 The rule fixed in advance for this section was: residual structure above the fit noise
 remains if the 95\% interval of the mean \chir{} of the best estimator that does not
-use the following sample lies above 1.5. It does, in both runs. With the wider grids
-the mean \chir{} is 2.57 $[1.94, 3.40]$ for \Ti{} and 16.69 $[12.96, 21.04]$ for \Vi{}
-(population W: 2.38 $[1.87, 3.01]$ and 15.28 $[12.80, 18.32]$); with the \Ti{} errors
-rescaled by the calibration ratio of \S\ref{sec:floor:indep} the \Ti{} value is 4.77
-$[3.58, 6.30]$. Three qualifications apply. First, the \emph{median} \chir{} of the
-same estimator is 0.416 for \Ti{}, below the noise-only value: the typical row is
-already at the floor, and the mean is carried by a tail (mean-to-median ratio 6.19
-$[4.94, 7.75]$ for \Ti{} and 7.12 $[5.84, 8.65]$ for \Vi{}, against 2.2 for Gaussian
-residuals; the 0.1\% of rows with the largest squared residual carry 0.110
-$[0.041, 0.187]$ and 0.210 $[0.047, 0.356]$ of the squared error). Second, because the
-reported \Vi{} errors are smaller than the frame-to-frame scatter, part of the \Vi{}
-excess reflects the error calibration and not plasma structure; the independence test
-does not separate the two. Third, population G admits isolated fit spikes that pass
-the relative-error rule, and they contribute to the tail.
+use the following sample lies above 1.5. It does, for both targets, in both
+populations and in both registered runs (Table~\ref{tab:mastfloor},
+Appendix~\ref{app:mastfirst}). Three qualifications apply. First, the \emph{median}
+\chir{} for \Ti{} is below the noise-only value: the typical row is already at the
+floor, and the mean is carried by a tail. Second, because the reported \Vi{} errors
+are smaller than the frame-to-frame scatter, part of the \Vi{} excess reflects the
+error calibration and not plasma structure; the independence test does not separate
+the two. Third, population G admits isolated fit spikes that pass the relative-error
+rule, and they contribute to the tail.
 
 \paragraph{Radius.} The residual grows outward. By tertile of major radius among the
 scored chords (boundaries 0.934 and 1.063\,m), the mean \chir{} of the causal GP is
@@ -607,23 +648,43 @@ would answer it directly.
 Tables~\ref{tab:ladder} and~\ref{tab:headline} give the KSTAR result. For \Ti{}, the
 estimator that reads the fast channels and the CES past has a mean squared error below
 that of every estimator that does not use the next CES sample. Against the causal GP
-the pooled skill is $+0.113$ $[+0.085, +0.132]$ (cut) and $+0.118$ $[+0.076, +0.157]$
-(inclusive), with the interval excluding zero on all four splits in both populations
-and the fold-level interval $[+0.084, +0.138]$ (cut). Against persistence it is
-$+0.391$ $[+0.369, +0.408]$. It is also below PCHIP, which uses the following sample:
-$+0.221$ $[+0.188, +0.248]$ (cut). Against the offline GP, which uses the following
-sample and averages noisy anchors, the interval includes zero: $-0.010$
-$[-0.043, +0.014]$ (cut) and $+0.035$ $[-0.017, +0.075]$ (inclusive). Stated with its
-scope: among estimators that do not wait for the next CES sample this one has the
-lowest mean squared error, and it is statistically at the level of an offline GP that
-does wait. The skill is not confined to rows adjacent to an observation: more than
-15\,ms after the last observed value it is $+0.268$ (cut) and $+0.206$ (inclusive)
-over PCHIP, both intervals excluding zero.
+the pooled skill is $+0.113$ $[+0.085, +0.132]$ (cut), with the interval excluding
+zero in both populations, on all four splits, and in the fold-level interval
+$[+0.084, +0.138]$. It is also below PCHIP, which uses the following sample. Against
+the offline GP, which uses the following sample and averages noisy anchors, the
+interval includes zero in both populations. Stated with its scope: among estimators
+that do not wait for the next CES sample this one has the lowest mean squared error,
+and it is statistically at the level of an offline GP that does wait.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig_gap}
+  \caption{KSTAR, cut population: error against the time since the last observed CES
+  value of the target (descriptive; pooled over the repeated cross-validation, so the
+  RMSE level differs from the single split of Table~\ref{tab:ladder}). (a) \Ti{} RMSE
+  of four estimators. (b) Mean-squared-error skill of the recurrent estimator for
+  \Ti{} against three references, with 95\% intervals. (c) The same for \Vrot{} under
+  the 1{,}000\,km/s scoring rule. 97.4\% of scored \Ti{} rows and 99.1\% of scored
+  \Vrot{} rows are in the 10\,ms bin.}
+  \label{fig:gap}
+\end{figure}
+
+\paragraph{Dependence on the gap.} Figure~\ref{fig:gap} resolves the same rows by the
+time since the last observed value. This reading was not registered and is
+descriptive. Every estimator has a larger error after a longer gap (\Ti{} RMSE of the
+recurrent estimator 168.8\,eV at 10\,ms and 629.8\,eV beyond 50\,ms), which is the
+other face of the missingness not being at random: gaps occur where the plasma is
+changing. The skill over the causal GP does not shrink with the gap: $+0.115$
+$[+0.085, +0.136]$ at 10\,ms, $+0.115$ $[+0.044, +0.176]$ at 20\,ms and $+0.072$
+$[+0.008, +0.135]$ at 30--50\,ms, each interval excluding zero; beyond 50\,ms (464 to
+505 rows per repeat) it is $+0.109$ $[-0.009, +0.228]$ and the interval includes zero.
+The margin is therefore not confined to rows adjacent to an observation, but the
+long-gap bins are small and their intervals are wide.
 
 \paragraph{How much of the margin is due to the fast channels?} The comparison above
 is between a full-input estimator and CES-only estimators, and the margin could come
 from the fast channels or from a better use of the CES past. Four measurements bound
-the answer; the direct one is not finished.
+the answer; the direct one is not reported here (\S\ref{sec:limits}).
 \begin{enumerate}
 \item \emph{Sequence memory matters.} A memoryless regression (gradient-boosted trees)
 on the same 22 inputs of the target row, including the last CES value, has a larger
@@ -652,13 +713,13 @@ lower bound of at least $+0.127$ at zero lag for every window between 10 and 200
 \end{enumerate}
 These bound the fast-channel share from below within a linear filter and show that
 memory is necessary, but none of them is the direct measurement: a recurrent estimator
-of identical design whose \Ti{} branch is trained without the fast channels. That
-network is being trained under the same protocol, with the decision rule fixed in
-advance that the margin of the full estimator over it must have an interval above zero
-on at least three of four cut splits for the fast-channel share to be claimed. Until
-then the \Ti{} result is: a full-input estimator that does not use the next CES sample
-has a lower error than CES-only estimators of that kind; the fast-channel share of the
-margin is not isolated.
+of identical design whose \Ti{} branch is trained without the fast channels
+(\S\ref{sec:limits}). The \Ti{} result as stated here is: a full-input estimator that
+does not use the next CES sample has a lower error than CES-only estimators of that
+kind; the fast-channel share of the margin is not isolated.
+% B29-SLOT (sec. 7.1): insert the history-only comparison (registered rule: interval of
+% the full estimator's margin over it above zero on >= 3 of 4 cut splits) and retitle
+% section 7 to match the outcome.
 
 \paragraph{What the fast channels are responding to.} The response of the trained
 network to the fast channels is a same-instant co-movement: its Jacobian is a
@@ -691,34 +752,28 @@ standard CES at 10\,ms on the $R = 2.198$\,m chord; edge rotation inside an ELM
 cycle~\citep{Viezzer2020Dynamics} is a different measurement.
 
 \paragraph{The history-only estimate.} Rotation is estimated by the branch that reads
-the CES past only. Under the scoring rule described below, its pooled skill over
-persistence is $+0.265$ $[+0.198, +0.326]$ (cut) and $+0.257$ $[+0.183, +0.323]$
-(inclusive), with the interval excluding zero on all four splits in both populations.
-Over a validation-tuned running mean of the rotation past it is $+0.121$
-$[+0.074, +0.187]$ (cut) and $+0.115$ $[+0.068, +0.189]$ (inclusive), also on all four
-splits in both populations, so the estimate is not reducible to a running mean. Over
-the causal GP it is $+0.151$ $[+0.038, +0.290]$ (cut) and $+0.132$ $[+0.026, +0.267]$
-(inclusive) in the pooled readout; per split the point estimates are all positive
+the CES past only (Table~\ref{tab:headline}, \Vrot{} block). Among estimators that do
+not use the next CES sample this branch has the lowest mean squared error
+(Table~\ref{tab:ladder}). Its skill over persistence is $+0.265$ $[+0.198, +0.326]$
+(cut), with the interval excluding zero on all four splits in both populations, and
+the same holds over a validation-tuned running mean of the rotation past, so the
+estimate is not reducible to a running mean. Over the causal GP the pooled interval
+excludes zero in both populations; per split the point estimates are all positive
 ($+0.057$ to $+0.131$, cut) but the interval excludes zero on 1 of 4 cut splits and 2
-of 4 inclusive ones. Among estimators that do not use the next CES sample the
-recurrent branch has the lowest mean squared error (Table~\ref{tab:ladder}); the margin
-is established against persistence and the running mean on every split, and against
-the causal GP in the pooled readout only. Against PCHIP, which uses the following
-sample, the pooled skill is $+0.092$ $[+0.0003, +0.170]$ (cut) and $+0.090$
-$[-0.010, +0.177]$ (inclusive), and it includes zero in both populations at thresholds
-of 500 and 2{,}000\,km/s, so a margin over PCHIP is not established. Against the
-offline GP it is $-0.073$ $[-0.162, +0.005]$ (cut) and $-0.087$ $[-0.174, -0.008]$
-(inclusive): the offline smoother has the lower error in the inclusive population.
+of 4 inclusive ones, so that margin is established in the pooled readout only. Against
+PCHIP, which uses the following sample, the interval excludes zero in the cut
+population by a narrow margin and includes zero in the inclusive one and at
+thresholds of 500 and 2{,}000\,km/s, so a margin over PCHIP is not established.
+Against the offline GP the offline smoother has the lower error in the inclusive
+population. Resolved by gap (Fig.~\ref{fig:gap}c), the 653 to 677 rows per repeat that
+follow a gap of 20\,ms or more show skill $+0.470$ $[+0.036, +0.628]$ over the causal
+GP and $+0.305$ $[+0.059, +0.598]$ over PCHIP, with wide intervals.
 
-\paragraph{The scoring rule and its history.} As first registered, without any rule
-for rotation fit failures, the pooled skill over PCHIP was $+0.313$
-$[+0.072, +0.701]$. That interval rested on 36--41 of about 71{,}700 rows per repeat
-(0.05\%) whose target, persistence anchor or PCHIP anchor exceeds
-$|\Vrot| = 1{,}000$\,km/s; those rows carry 63--78\% of PCHIP's squared error. The rule
-that removes them from every estimator was set after that first analysis, once their
-share was known, and is applied at scoring only: the history inputs still contain those values
-and no model was retrained. All rotation numbers in this paper are under the rule; the
-registered value without it is reported here for the record and is not used.
+\paragraph{The scoring rule.} All rotation numbers are under a scoring rule that drops,
+from every estimator, the 36--41 rows per repeat (0.05\%) whose target or anchor
+exceeds $|\Vrot| = 1{,}000$\,km/s. The rule was set after a first analysis without it
+had been seen; that analysis and the reason for the rule are in
+Appendix~\ref{app:vrotrule}.
 
 \subsection{Two stress tests}
 \label{sec:fast:stress}
@@ -825,13 +880,17 @@ late sample more.
 
 \begin{itemize}
 \item \emph{The fast-channel share of the \Ti{} margin is not isolated.} The direct
-comparison (the same network trained without the fast channels) is running and is not
-in this draft. The evidence so far is indirect (\S\ref{sec:fast:ti}).
+comparison, the same network with a \Ti{} branch trained without the fast channels, is
+not reported here. Its decision rule is fixed in advance: the fast-channel share is
+claimed only if the margin of the full estimator over that network has an interval
+above zero on at least three of four cut splits. The evidence in this paper is
+indirect (\S\ref{sec:fast:ti}).
+% B29-SLOT (limitations 1): remove or rewrite when the history-only result is read.
 \item \emph{The estimator is not causal as trained.} The fast channels are
 standardized with whole-discharge statistics. Variants with train-file statistics and
-with a standardizer that uses past rows only are being trained under the same
-protocol; whether the margin over the causal GP survives them is not known under this
-protocol.
+with a standardizer that uses past rows only are not reported here; whether the margin
+over the causal GP survives them is not known under this protocol.
+% B29-SLOT (limitations 2): arms B/C (train-file and expanding-window standardizers).
 \item \emph{Tail statistic.} The skill is carried by large-error rows; typical rows
 are not improved over interpolation (\S\ref{sec:character:median}).
 \item \emph{Post hoc choices.} The 1{,}000\,km/s rotation scoring rule and the form of
@@ -866,19 +925,19 @@ help, and the best CES-only estimator of that kind leaves a mean residual of 2.5
 $[1.94, 3.40]$ (\Ti{}) and 16.69 $[12.96, 21.04]$ (\Vi{}) times what the reported fit
 errors predict, most of it in a tail and at mid-radius and outward.
 
-On KSTAR, an estimator that also reads BES and ECEI channels at the location of the
-chord has, among estimators that do not use the next CES sample, the lowest mean
-squared error for \Ti{}: skill $+0.113$ $[+0.085, +0.132]$ over the CES-only causal
-GP, with the interval against an offline GP that uses the next sample including zero.
-The share of that margin due to the fast channels is bounded from below inside a
-linear filter but not yet isolated by a retrained network. Rotation shows a bounded
+The main result is on KSTAR. Among estimators that do not use the next CES sample, an
+estimator that also reads BES and ECEI channels at the location of the chord has the
+lowest mean squared error for \Ti{}, with skill $+0.113$ $[+0.085, +0.132]$ over the
+CES-only causal GP; against an offline GP that uses the next sample the interval
+includes zero. The share of that margin due to the fast channels is bounded from below
+inside a linear filter and is not isolated by a retrained network here. Rotation shows a bounded
 association with the same channels ($|r| \leq 0.044$) and is estimated from its own
 history, with skill $+0.265$ $[+0.198, +0.326]$ over persistence and $+0.121$
 $[+0.074, +0.187]$ over a running mean. In both cases the gain belongs to the rows
 where the plasma moved, and a 20-parameter filter reproduces most of the \Ti{} part.
 
 The measurements that would change these statements are named: the retrained
-history-only network and the causally standardized variants (in progress),
+history-only network and the causally standardized variants (\S\ref{sec:limits}),
 per-exposure fit uncertainties for KSTAR CES, and additional chords.
 
 \section*{Data and code availability}
@@ -890,6 +949,94 @@ redistributable. [TO BE COMPLETED BY AUTHORS: data-access statement for KSTAR.]
 \section*{Acknowledgments}
 [TO BE COMPLETED BY AUTHORS: data provider and permission for the KSTAR 2022 CES, BES,
 ECEI and Mirnov data; funding; co-authorship and affiliations.]
+
+% =========================================================================
+\appendix
+
+\section{Registration history and order of events}
+\label{app:registration}
+
+\paragraph{KSTAR.} Test files were reserved before the architecture was chosen. The
+adoption of the full-grid recurrent design and of per-discharge standardization used
+results on the same four test splits, and the repeated cross-validation re-partitions
+the same discharges. The form of the 20-parameter filter was read from the response of
+the trained network on those test rows. The rotation scoring rule was set after a
+first analysis (Appendix~\ref{app:vrotrule}). The regime number of
+\S\ref{sec:regime} and the gap-resolved reading of Fig.~\ref{fig:gap} were computed for
+this paper and were not registered.
+
+\paragraph{MAST.} In order: (i) a pilot of 13 shots was inspected and those shots were
+excluded; (ii) the list of 300 shots, the fit rule, the tuning/test division, the
+estimators, the independence test and both decision rules were committed before any
+value of the 300 shots was read; (iii) the first run was executed. During it the
+stored frame times of a few shots were found to be irregular or non-increasing, which
+produced negative time steps in the slope-state filter; the nominal 5\,ms grid was
+adopted after a first test-set table had been seen. Both decisions were the same
+before and after that change, and dropping the affected shots (4 in population G) changes
+neither. (iv) Several tuned hyperparameters of the first run sat on the edge of their
+grid, so a second run with wider grids and a stopping rule (extend an edge-bound grid
+at most twice more) was registered before it was computed, with the first run kept on
+record. (v) In the second run the \Vi{} tuning was at first started from the grids on
+which the \Ti{} tuning had ended, which was not the registered procedure; it was
+rerun from the registered grids. The \Ti{} numbers are identical in the two
+executions; for \Vi{} only the offline-GP selection differs. One hyperparameter (the
+offline-GP amplitude for \Vi{}) remains on an edge after the allowed extensions.
+
+\section{The first registered MAST run}
+\label{app:mastfirst}
+
+Table~\ref{tab:mastfirst} gives the first registered run beside the run with wider
+grids reported in the main text. In the first run the GP amplitude was limited to four
+times the median reported error, which placed its optimum on the edge of the grid, and
+the causal GP had a larger error than persistence; the slope-state filter was then the
+best estimator that does not use the following sample. For \Ti{} the slope-state
+filter was already at its optimum and does not move between the runs. The two
+decisions are the same in both runs: the independence statistic does not depend on the
+tuning, and the mean \chir{} of the best such estimator is 2.71 $[2.07, 3.51]$ (\Ti{})
+and 21.20 $[16.83, 26.06]$ (\Vi{}) in the first run against 2.57 $[1.94, 3.40]$ and
+16.69 $[12.96, 21.04]$ in the second, all four intervals above 1.5.
+
+\begin{table}[h]
+  \centering
+  \caption{MAST test set, population G: skill over persistence in the first registered
+  run and in the run with wider tuning grids. Estimators without a hyperparameter are
+  identical in the two runs. Bold = interval excludes zero.}
+  \label{tab:mastfirst}
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{llcc}
+    \toprule
+    Target & Estimator & First run & Wider grids \\
+    \midrule
+    \multirow{4}{*}{\Ti{}}
+      & running mean & $\mathbf{-0.143}$ $[-0.189, -0.103]$ & $\mathbf{-0.012}$ $[-0.017, -0.007]$ \\
+      & slope-state filter & $+0.076$ $[-0.006, +0.148]$ & $+0.076$ $[-0.006, +0.148]$ \\
+      & causal GP & $\mathbf{-0.683}$ $[-0.997, -0.426]$ & $\mathbf{+0.136}$ $[+0.069, +0.208]$ \\
+      & offline GP & $\mathbf{+0.374}$ $[+0.093, +0.568]$ & $\mathbf{+0.538}$ $[+0.425, +0.620]$ \\
+    \midrule
+    \multirow{4}{*}{\Vi{}}
+      & running mean & $\mathbf{-0.232}$ $[-0.290, -0.179]$ & $\mathbf{-0.024}$ $[-0.030, -0.018]$ \\
+      & slope-state filter & $\mathbf{+0.088}$ $[+0.035, +0.147]$ & $\mathbf{+0.108}$ $[+0.049, +0.175]$ \\
+      & causal GP & $\mathbf{-0.350}$ $[-0.499, -0.238]$ & $\mathbf{+0.110}$ $[+0.055, +0.168]$ \\
+      & offline GP & $\mathbf{+0.577}$ $[+0.435, +0.696]$ & $\mathbf{+0.622}$ $[+0.498, +0.727]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{The rotation scoring rule}
+\label{app:vrotrule}
+
+As first registered, without any rule for rotation fit failures, the pooled skill of
+the rotation branch over PCHIP was $+0.313$ $[+0.072, +0.701]$. That interval rested on
+36--41 of about 71{,}700 rows per repeat (0.05\%) whose target, persistence anchor or
+PCHIP anchor exceeds $|\Vrot| = 1{,}000$\,km/s; those rows carry 63--78\% of PCHIP's
+squared error. The rule that removes them from every estimator was set after that
+first analysis, once their share was known, and is applied at scoring only: the
+history inputs still contain those values and no model was retrained. Under the rule
+the pooled skill over PCHIP is $+0.092$ $[+0.0003, +0.170]$ (cut) and $+0.090$
+$[-0.010, +0.177]$ (inclusive), and it includes zero in both populations at thresholds
+of 500 and 2{,}000\,km/s. All rotation numbers in this paper are under the rule; the
+registered value without it is reported here for the record and is not used.
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
