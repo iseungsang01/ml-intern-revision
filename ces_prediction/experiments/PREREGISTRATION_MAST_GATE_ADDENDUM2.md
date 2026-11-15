@@ -132,3 +132,40 @@ filter, first run). So most scored chords of population G are expected inside rh
   from bin to bin), population G.
 - Wording if S5 fails: the device contrast is written for the MAST core only, and the sentence
   comparing the two devices states that the comparison is not at matched normalized radius.
+
+## 9. Stratum (f), second readout: does the CXRS measurement weaken outward (added 2026-11-15, before any value of stratum (f) is computed)
+
+Added after section 8 was committed (f33d9be). The script for strata (a)-(e) has finished and its
+output has been produced; nothing by normalized radius has been computed.
+
+Sample. Selecting on population G removes the weak chords before they can be counted, so this
+readout uses the samples **before the fit rule**: usable TEST shots, the beam block defined on
+population W (first to last frame with at least 10 samples good at relative T_i error < 0.5, at
+least 20 frames), every low-field chord column that has at least one finite T_i value inside the
+block, every frame of the block. Bins as in section 8.
+
+Per bin, with intervals from 2,000 bootstrap resamples of TEST shots (shares as ratios of shot
+sums, medians as shot-weighted medians):
+
+1. share of finite T_i samples that fail the fit rule (T_i > 0, error > 0, T_i < 5000 eV, relative
+   error below the cut), for the cut 0.1 and for the cut 0.5;
+2. share of non-finite T_i samples;
+3. median reported relative T_i error and median reported V_i error (km/s), over finite samples
+   with T_i > 0 and error > 0;
+4. the error ratio of section 8 (frame-to-frame scatter against reported error), populations G and W;
+5. median `act_ss_cx_emissivity` (signal-strength proxy), only in shots whose emissivity array has
+   as many columns as there are chords; the number of such shots is reported.
+
+- **S7.** The fail share at the cut 0.1 and the median relative T_i error increase with rho (point
+  estimates non-decreasing over the bins that have an interval) and are largest in rho 0.9-1.0.
+  Prediction: holds for both.
+- **S8.** The T_i regime number decreases with rho: outward the increments move toward the
+  noise-limited side. Read on population W (coverage at large rho), population G co-reported:
+  point estimates non-increasing over the bins that have an interval, and the difference
+  (bin 0.7-0.9 minus bin 0.0-0.3) has an interval below 0. Prediction: holds. Reason for the
+  direction: the KSTAR chord is an edge chord (nominal rho 0.8, per-discharge median T_i 509 eV) and
+  is noise-limited (-0.416); in the pilot the wider population had a lower regime number than the
+  strict one.
+- Both outcomes are reportable. If S8 holds, part of the two-device regime contrast is read as a
+  difference of radius (signal strength), and the paper compares the devices at matched rho. If S8
+  does not hold, a difference between the devices remains at the same normalized radius.
