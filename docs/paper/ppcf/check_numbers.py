@@ -41,6 +41,7 @@ DERIVED = {
     "0.455": "median of a chi-square variable with one degree of freedom (registration)",
     "2.2": "mean-to-median ratio of chi-square(1), 1 / 0.455 (registration)",
     "0.010": "10 ms",
+    "1.9": "mean BES departure of group D1 minus D2, 4.39 - 2.48 (b32_two_sources.md)",
     "14708": "first shot of campaign M6 in the FAIR-MAST catalogue (mast_hardware_timeline.md)",
     "30473": "last shot of campaign M9 in the FAIR-MAST catalogue (mast_hardware_timeline.md)",
     "2006": "campaign M6 starts 2006-01 (catalogue time stamps)",
@@ -123,6 +124,11 @@ def main():
         (ROOT / "docs/paper/mast_ped_confirmation.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_PED.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B31.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/fast_departure.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b32_two_sources.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b32_posthoc.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b32_posthoc_model.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B32.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))

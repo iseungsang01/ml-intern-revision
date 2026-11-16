@@ -337,6 +337,31 @@ with the statistics of the training discharges only is causal throughout
 the 99th percentile; the causal GP, refitted at every row, takes 0.64 and 2.28\,ms,
 and hold 0.007\,ms. All fit inside the 10\,ms frame. The timing covers the estimator
 only, not the acquisition or the reduction of the fast channels.
+Table~\ref{tab:design} lists the design choices, the alternative each was compared
+with in earlier batches on the same four splits, and the choices that were not varied.
+
+\begin{table}[t]
+  \centering
+  \caption{Design choices of the recurrent estimator for \Ti{}, the alternative each
+  was compared with, and what was measured (differences in mean-squared-error skill).
+  ``Not measured'' marks a choice that was not varied.}
+  \label{tab:design}
+  \footnotesize
+  \begin{tabular}{p{0.27\linewidth}p{0.25\linewidth}p{0.40\linewidth}}
+    \toprule
+    Choice & Alternative & Measurement \\
+    \midrule
+    Recurrent over every grid row & window of the last two rows & paired skill $+0.081$ $[+0.067, +0.096]$; positive in all 16 pairs \\
+    No limit on the context & context limited during training & saturates at 50\,ms \\
+    LSTM & temporal convolution, attention & within 0.023 of each other at equal context \\
+    LSTM cell, two layers & GRU, plain recurrent cell, more layers & not measured \\
+    357{,}570 parameters & widths from 34 to 879 thousand parameters & skill over PCHIP $+0.230$ to $+0.236$; not measured above that range or with a learning rate matched to the width \\
+    Squared-error loss & Huber loss & lower median error, same mean squared error; not adopted \\
+    \Vrot{} branch without fast channels & a branch that reads them & linear association bounded (\S\ref{sec:vrot}); branch not trained \\
+    Fast channels standardized from training discharges & whole-discharge statistics & both above the causal GP on four of four splits (\S\ref{sec:fast}) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Scoring, intervals and registration}
 \label{sec:methods:eval}
@@ -727,7 +752,8 @@ in the 10\,ms bin.
 \paragraph{What the fast channels are responding to.} The response of the trained
 network to the fast channels is a same-instant co-movement: its Jacobian is a
 high-pass kernel of about 100\,ms (the current value minus the mean of the preceding
-ten steps), flat to about two standard deviations and switched off beyond three.
+ten steps), flat to about two standard deviations and reduced beyond three
+(\S\ref{sec:twosources}).
 Truncating the network's context costs $-0.066$ in skill at 20\,ms and saturates at
 50\,ms. The autocorrelation $1/e$ times of \Ti{} (159\,ms), BES (161\,ms) and ECEI
 (147\,ms) are close, which a common local evolution would produce and so would the
@@ -951,6 +977,93 @@ the model statements, and the interval of the gain share is wide. And a measured
 labels do not decide that. By the rule registered with these statements, one of the
 three measurement statements having failed, the mechanism is still described as not
 identified.
+
+\subsection{What a large departure of the beam emission is: the heating beam and edge bursts}
+\label{sec:twosources}
+The response of the estimator to a fast channel is linear in the departure of the
+channel from its 100\,ms mean up to about two standard deviations and weaker beyond
+three (\S\ref{sec:fast}). Two things move the beam emission that far within one row,
+and the ion temperature is expected to follow neither in proportion. \emph{The
+heating beam.} BES is line emission of beam atoms excited in the plasma, so its level
+follows the beam without a delay that a 10\,ms frame resolves. The temperature
+follows an energy balance: beam ions already in the plasma keep heating it while they
+slow down~\citep{Stix1972HeatingToroidal}, heat leaves over the confinement time, and
+electrons and ions exchange energy over $m_i/2m_e$ electron collision
+times~\citep{Wesson2011Tokamaks}. For $T_e = 0.5$\,keV and
+$n_e = 3\times10^{19}$\,m$^{-3}$, taken for illustration, the slowing-down time of a
+beam deuteron on electrons is about 30\,ms and the exchange time about 16\,ms. A blip
+of about 10\,ms therefore removes the beam light and only part of the heating.
+\emph{An edge burst} raises the light at the edge for less than a millisecond. A row
+holds one raw sample, so a sample that falls on a burst departs upward by several
+standard deviations, while \Ti{} falls after a burst (Fig.~\ref{fig:bursts}).
+
+Both are found in the files. In the first row after a blip 0.357 $[0.319, 0.396]$ of
+the BES channel values lie beyond three standard deviations of their 100\,ms mean,
+against 0.004 $[0.003, 0.004]$ in all other rows: 0.353 $[0.319, 0.388]$ of all such
+values sit in rows that hold 0.0058 of the values. Outside those rows, in the twelve
+discharges with a raw stream, 0.564 of the 110 channel values above $+3$ standard
+deviations have a detected burst within 1\,ms of the time stamp (0.015 of all rows;
+ratio 37.2 $[25.0, 70.5]$), and 0.727 of the 110 values below $-3$ fall on a short
+dip of the raw beam-emission level (0.016 of all rows; ratio 46.4 $[25.0, 121.9]$).
+These two counts were made per channel value after the fact; the registered count,
+per row, found ten rows above $+3$, eight of them at a burst, fewer than the twenty
+that the registered test required.
+
+What \Ti{} does with such a departure was read on the first row after a blip
+(1{,}203 blips of 449 discharges), in three groups of the mean departure $d$ of the
+nine BES channels, with two registered statements. The statement that the ratio of
+\Ti{} to its level before the blip does not depend on $d$ does not hold: the ratio is
+0.886 $[0.844, 0.917]$ for $d > -2$, 0.786 $[0.730, 0.820]$ for $-3 < d \leq -2$ and
+0.784 $[0.755, 0.811]$ for $d \leq -3$ (last minus first, $-0.103$
+$[-0.147, -0.053]$). The statement that for $d \leq -3$ the change is smaller in size
+than a proportional reading at 50\,eV per standard deviation, the summed BES gain of
+the filter of \S\ref{sec:character}, holds: $-164.5$\,eV against $-219.3$\,eV, a
+difference of $+54.8$ $[+28.7, +81.2]$\,eV. Read after the fact, the two groups below
+$-2$ do not differ ($-0.002$ $[-0.052, +0.057]$) although their mean departures differ
+by 1.9 standard deviations. In rows that are not after a blip the mean change of
+\Ti{} from its last value is within 5\,eV of the proportional reading for departures
+within one standard deviation and far from it beyond three: $-54.0$
+$[-113.5, +2.7]$\,eV at a mean departure of $-4.59$ and $+65.3$
+$[-17.5, +154.1]$\,eV at $+4.18$, where proportionality gives $-229.5$ and
+$+209.0$\,eV. The measured relation thus has the form the estimator learned:
+proportional for small departures, and not growing in proportion beyond two to three
+standard deviations.
+
+Beyond three the estimator is not switched off. In the first row after a blip with
+$d \leq -3$ the causal variant predicts a change of $-147.1$ to $-179.5$\,eV on the
+four splits, where $-179.9$ to $-243.2$\,eV was measured and the history-only twin
+predicts $-12.3$ to $+4.8$\,eV; its skill over the twin in these rows is $+0.494$ to
+$+0.677$ (four of four intervals exclude zero; read after the fact on the rows of
+\S\ref{sec:thin}). The gate of the filter of \S\ref{sec:character} removes the term
+of a channel beyond its threshold; that is a property of the filter, not of the
+network.
+
+MAST allows the first reading to be checked on a step of the heating that leaves the
+measurement beam untouched: it has two beams, the charge-exchange system views one,
+and both powers are public. Two statements on the response of \Ti{} to a switch of
+the other beam, its direction and its delay, were registered and hold, but the
+registered definition counted one switch at several adjacent frames and had no
+control for the evolution of the discharge. The numbers quoted are therefore a
+reading after the fact, with one event per switch and with windows without a switch
+at the same time of the discharge as control. After a switch-on (542 events) \Ti{}
+is above control by $+0.068$ $[+0.044, +0.104]$ of its level in the first 5\,ms frame
+after the switch and by $+0.278$ $[+0.181, +0.356]$ at 50 to 80\,ms; half of the
+latter is reached after 15\,ms. At normalized radii of 0.7 and above (93 events) the
+two values are $+0.170$ $[+0.093, +0.213]$ and $+0.560$ $[+0.366, +0.723]$. After a
+switch-off (78 events) they are $-0.034$ $[-0.067, +0.002]$ and $-0.075$
+$[-0.165, -0.018]$, and a delay is not established. On that device the ion
+temperature answers a step of the heating over tens of milliseconds; this is not a
+measurement of the KSTAR response.
+
+By the rule registered with these statements, the first having failed, the weaker
+response of the estimator beyond three standard deviations is not attributed to the
+beam: \Ti{} after a blip does fall with the departure of the beam emission, up to
+between two and three standard deviations. What the checks establish is narrower.
+Departures beyond three standard deviations are mostly the return of the beam after
+a blip, or samples on bursts and dips of the raw stream; the measured change of \Ti{}
+does not grow in proportion to them; and whether the value in the first row after a
+blip is the temperature or the response of the CES analysis to a returning beam is
+not decided by the files.
 
 \subsection{The same question on a second device: the MAST pedestal top}
 \label{sec:mastped}
@@ -1247,7 +1360,10 @@ network and before any of them was trained; of the expectations, the ranges for 
 causal variant on the file-level splits and for the memoryless network were met, and
 the expected loss of the causal variant on the split by time ($-0.12$ to $-0.02$
 against the headline network) was not: it is $-0.015$ to $-0.003$. The third panel of
-Fig.~\ref{fig:trace} was added after the first two had been seen.
+Fig.~\ref{fig:trace} was added after the first two had been seen. The statements of
+\S\ref{sec:twosources} (two on the first row after a blip, one on rows at bursts,
+two on MAST) were registered before those readouts; of 15 numerical expectations 5
+were met.
 
 \paragraph{MAST.} In order: (i) a pilot of 13 shots was inspected and those shots were
 excluded; (ii) a development list of 300 shots, the fit rule, the tuning/test
