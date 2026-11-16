@@ -21,6 +21,7 @@ python ces_prediction/evaluate.py    # clean eval: model vs persistence/mean, ph
 python ces_prediction/inspect_split.py        # validate fixed split / manifest
 python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
 python ces_prediction/analyze_foundations.py    # checks every derivation in docs/theory_foundations.md (data + frozen npz)
+python ces_prediction/analyze_file_rules.py     # how the 10 ms files relate to the raw 1 us deliveries (grid, snapshots, beam blips)
 ```
 
 Controlled experiment batches live under `ces_prediction/experiments/` — 19 directories, each with
@@ -90,6 +91,11 @@ Key non-obvious behaviors:
   blocks are detected by `time` delta `< 0.5`.
 - **Feature columns are inferred** from CSV headers: `BES_*`, `ECEI_*`, `MC*` prefixes plus
   required `time`, `CES_TI`, `CES_VT`.
+- **What a CSV row is** (`docs/paper/file_rules.md`): the first row (t = 0) and the last (t = 30 s)
+  of every file carry no CES value and are not grid rows — drop them in any tally over rows. The
+  fast channels of a row are single raw samples at the time stamp; the CES value is the frame whose
+  10 ms exposure starts at the stamp. A time step of 20-40 ms inside a discharge is a beam blip
+  (the frame without beam is absent); `T_i` and the ECEI level stay low for about 90 ms after it.
 - Training adds a soft penalty discouraging predictions below normalized-zero `CES_TI`
   (`0.1 * relu(...)`) on top of MSE, plus grad clipping and `ReduceLROnPlateau`.
 

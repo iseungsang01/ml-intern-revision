@@ -80,8 +80,9 @@ real-time estimation, recurrent neural network, KSTAR, MAST
 
 Ion temperature \Ti{} and toroidal rotation \Vrot{} are measured in a tokamak by
 charge-exchange spectroscopy (CES)~\citep{Ko2010ChargeExchange}, which infers \Ti{}
-from the Doppler broadening and \Vrot{} from the Doppler shift of a charge-exchange
-line excited by a neutral beam. The measurement integrates photons over an exposure and
+from the Doppler broadening and \Vrot{} from the Doppler shift of a line that an
+impurity ion emits after charge exchange with the atoms of a neutral beam (on KSTAR
+the C\,VI line of carbon at 529\,nm). The measurement integrates photons over an exposure and
 then fits a line shape, so it is slower than most other diagnostics and it fails
 intermittently, most often where the signal is weakest. Towards the plasma edge the
 charge-exchange emission is low. Where a radial breakdown of accuracy has been
@@ -89,10 +90,10 @@ published for a neural-network analysis of charge-exchange spectra, the accuracy
 lowest on the outermost, low-signal channels~\citep{Tian2026RealTimeCxrs}. The KSTAR
 chord studied here is such a place: it was chosen by the data provider as the pedestal
 top within the beam-emission coverage ($R = 2.198$\,m), the median \Ti{} per discharge
-is 528\,eV, and on the 10\,ms grid 8.2\% of \Ti{} samples and 23.9\% of \Vrot{} samples
+is 528\,eV, and on the 10\,ms grid 7.7\% of \Ti{} samples and 23.5\% of \Vrot{} samples
 are missing. The missingness is not completely at
-random~\citep{Little2002StatisticalAnalysis}: the missing rate is 19.9\% in the
-lowest quintile of beam-emission intensity against 3.7\% in the highest. Beam-emission spectroscopy (BES) and
+random~\citep{Little2002StatisticalAnalysis}: the missing rate is 18.0\% in the
+lowest quintile of beam-emission intensity against 3.4\% in the highest. Beam-emission spectroscopy (BES) and
 electron-cyclotron-emission imaging (ECEI) view the same location without gaps, but
 neither measures \Ti{} or \Vrot{}.
 
@@ -173,9 +174,11 @@ twelve discharges for which a raw beam-emission stream exists
 
 \subsection{KSTAR}
 \label{sec:data:kstar}
-We use 641 KSTAR discharge files of the 2022 campaign (shots 30801--32751) aligned to a
-10\,ms grid, 247{,}207 rows in total. Two files hold three rows each and enter no
-split, so the split and cross-validation universe is 639 discharges; statistics
+We use 641 KSTAR discharge files of the 2022 campaign (shots 30801--32751) on a
+10\,ms grid, 245{,}925 rows in total; every file also opens and closes with a row
+without a CES value, at 0 and 30\,s, which is not part of the grid. Two files hold a
+single grid row each and enter no split, so the split and cross-validation universe
+is 639 discharges; statistics
 computed per discharge use the discharges with enough samples for them (603 with at
 least 20 measured \Ti{} values for the level, 601 with at least eight pairs of
 consecutive increments for the regime number, 382 for rotation). Each row holds nine BES
@@ -195,30 +198,50 @@ region; for the other discharges the position is not established. The same analy
 temperature of those discharges is available only between beam blips, and the
 conventional CES analysis on KSTAR relies on modulation of the heating
 beam~\citep{Lee2026NeuralNetworkbased}: the missing samples and the beam-emission
-level are both tied to the beam, and the files carry no beam timing. For the comparison with MAST we therefore carry two candidate ranges,
+level are both tied to the beam. The files record the beam blips as absent rows
+(below) but not the beam power. For the comparison with MAST we therefore carry two candidate ranges,
 0.8--0.9 and 0.9--1.0. The level of the measurement agrees with an edge position: the
 median \Ti{} per discharge is 528\,eV (10th to 90th percentile 213 to 1{,}020\,eV over
-603 discharges). \Ti{} is missing in 8.2\% of rows and \Vrot{} in 23.9\%
+603 discharges). \Ti{} is missing in 7.7\% of rows and \Vrot{} in 23.5\%
 (Fig.~\ref{fig:missing}a). Rows group into contiguous segments at breaks of at least
 0.5\,s, and no estimator bridges such a break. Inside a segment most gaps are short:
-the median gap is one row for both targets, and 92.9\% of \Ti{} gaps and 89.8\% of
+the median gap is one row for both targets, and 91.6\% of \Ti{} gaps and 85.6\% of
 \Vrot{} gaps are 50\,ms or shorter (Fig.~\ref{fig:missing}b).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{fig_missing}
-  \caption{CES missingness on the KSTAR 10\,ms grid (641 discharges, 247{,}207 rows).
+  \caption{CES missingness on the KSTAR 10\,ms grid (641 discharges, 245{,}925 rows).
   (a) Share of grid rows per target that carry an independent measurement, a held
   repeat of the previous value, or no value. (b) Lengths of the gaps (runs of
   consecutive rows without a value inside a contiguous segment), as a share of the
-  8{,}233 \Ti{} gaps and 4{,}351 \Vrot{} gaps; logarithmic vertical axis.}
+  6{,}954 \Ti{} gaps and 3{,}077 \Vrot{} gaps; logarithmic vertical axis.}
   \label{fig:missing}
 \end{figure}
 
+\paragraph{What a row holds.} For twelve discharges the raw BES, ECEI and Mirnov
+signals (0.5 to 2\,MHz) were delivered as well, and setting them against the 10\,ms
+files shows how the files were assembled. Every fast-channel value of a row is the
+single raw sample at the time stamp of the row, to the five decimals the files print
+(BES on 6{,}502 of 6{,}502 rows, ECEI on 6{,}484 of 6{,}484 and Mirnov on 5{,}917 of
+5{,}940): the fast channels are snapshots, not averages over the CES exposure. The
+time stamps lie on a 10\,ms grid and 99.37\% of the steps between rows are 10\,ms. A
+step of 20, 30 or 40\,ms is one, two or three absent frames (1{,}637 absent frames in
+1{,}414 steps), and each of the 45 such steps inside the raw deliveries coincides with
+a beam blip: for a single absent frame the beam emission is below half its level from
+1.7\,ms before the absent time stamp to 8.8\,ms after it (medians of 41 blips). The
+frame exposed without beam is the one left out. The files therefore record the blips,
+and the time stamp of a row lies within about 2\,ms of the start of its exposure: an
+estimate formed at the time stamp uses fast-channel samples taken no later than 2\,ms
+into the exposure it estimates, and CES values whose exposures had ended by then.
+\Ti{} is present in 0.874 $[0.851, 0.893]$ of the first rows after a blip against
+0.963 $[0.953, 0.973]$ of the rows before it.
+
 \paragraph{Held rotation values.} 54\% of the observed \Vrot{} values repeat the
-previous observation bit for bit (runs of up to 1{,}214 rows, in 499 of 641 files), so
-only 35.0\% of the grid carries an independent \Vrot{} measurement; \Ti{} has one such
-row in 226{,}991. The files do not record why. Held values are removed everywhere,
+previous observation bit for bit (runs of up to 1{,}214 rows, in 499 of 641 files);
+\Ti{} has one such row in 226{,}991. A fitted value does not repeat to the last digit
+by chance, so these rows carry the previous value forward and are not measurements,
+and only 35.2\% of the grid carries an independent \Vrot{} measurement. Held values are removed everywhere,
 from targets, history inputs, normalization statistics and the anchors of every
 reference estimator.
 
@@ -361,7 +384,7 @@ measurement noise at 46.4 to 129.9\,eV depending on the estimator, against an RM
 157.8\,eV for the best estimator, which large-error rows dominate
 (\S\ref{sec:character}); and the ratio of the 10\,ms scatter of \Ti{} divided by
 \Ti{} to the 10\,ms scatter of \Vrot{} divided by the thermal Doppler width of the
-observed ion at that \Ti{} is $\sqrt2$ (1.395--1.532 in eight split--population
+carbon line at that \Ti{} is $\sqrt2$ (1.395--1.532 in eight split--population
 cells), the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
 a running mean has \Ti{} skill $+0.26$ to $+0.34$ over persistence on the four splits
 and the causal GP $+0.31$ to $+0.35$. PCHIP passes exactly through noisy anchors, so
@@ -805,7 +828,8 @@ gives the same picture: over the history-only network $+0.054$ to $+0.156$ at 50
 
 \paragraph{Is the fast-channel share a beam effect?} BES is the emission of the
 heating beam, so its level follows the beam as well as the plasma, and a CES fit
-depends on the beam. Without beam timing the two cannot be separated; what can be
+depends on the beam. The files record the blips (\S\ref{sec:data:kstar}) but not the
+beam power between them, so the two cannot be separated in general; what can be
 read, after the fact and on the same rows, is where the share sits. By quintile of
 the BES level of the row relative to its discharge median, the skill of the network
 over its history-only twin at the natural cadence is largest in the lowest and in the
@@ -815,8 +839,13 @@ excludes zero in the lowest quintile on four of four splits and in the highest o
 three of four. The share is therefore not confined to rows of low beam emission.
 With CES thinned to 50\,ms it is above zero on four of four splits in the quintile of
 rows whose BES level changed least from the previous row ($+0.070$ to $+0.174$; a
-median change of 0.5\% of the discharge median). This does not identify the
-mechanism; it bounds one reading of it.
+median change of 0.5\% of the discharge median). The ten rows after a blip, in which
+the beam emission and \Ti{} are both returning to their levels (\S\ref{sec:bursts}),
+are 0.055 to 0.060 of the scored rows; without them the share is $+0.058$ to $+0.105$
+at the natural cadence and $+0.061$ to $+0.151$ at 50\,ms (four of four splits each;
+causal variant $+0.026$ to $+0.107$ and $+0.047$ to $+0.149$, four of four), and
+inside them it is $+0.086$ to $+0.184$ and $+0.144$ to $+0.252$ (four of four). This
+does not identify the mechanism; it bounds one reading of it.
 
 \paragraph{Sensitivity to suspicious rows.} The same rows were read again, after the
 fact, leaving out those in which the scored value or the last visible sample is below
@@ -837,10 +866,11 @@ readouts are not stable under these exclusions.
 \subsection{Which rows carry the gain: edge bursts in the raw beam-emission stream}
 \label{sec:bursts}
 For twelve discharges of the data set the 500\,kHz BES stream was delivered. It
-allows two things the 10\,ms files do not. The state of the beam can be read: the
+allows two things. The state of the beam can be read directly: the
 level falls below half its median only during blips of about 10\,ms, 1.5\,s apart in
-the two discharges of Fig.~\ref{fig:bursts}, and the beam is on otherwise. And short
-bursts of beam emission can be detected (a 0.2\,ms mean above its 50\,ms running
+the two discharges of Fig.~\ref{fig:bursts} and each an absent row of the 10\,ms
+file, and the beam is on otherwise. And short bursts of beam emission, which the
+10\,ms snapshots do not resolve, can be detected (a 0.2\,ms mean above its 50\,ms running
 median by six robust standard deviations). The detector and the row labels were fixed
 on one discharge, 31921, and the statements below were registered before any other
 discharge was labelled or any model error was broken down. A row is
@@ -902,7 +932,20 @@ between beam blips, which are 1.5\,s apart here; how the values in the 10\,ms fi
 were obtained between blips (background subtraction, fit) is not recorded in the
 files, and values of 100 to 300\,eV after a burst are what cold passive emission
 mixed into the fit would give. The estimator may therefore be following the response
-of the CES analysis to a burst and not the ion temperature. Six discharges carry
+of the CES analysis to a burst and not the ion temperature. The blips give one check
+of what the values between them follow. Over the 1{,}394 blips of all discharges the
+CES \Ti{} of the first row after a blip is 0.819 $[0.796, 0.838]$ of its level before
+and returns over about 90\,ms. The ECEI level, which does not use the beam, falls to
+0.926 $[0.910, 0.939]$ and returns over the same time: the mean deficit of \Ti{} over
+the six rows after a blip is 2.33 $[1.99, 2.75]$ times that of the ECEI level, and
+blips with a deeper ECEI dip have a deeper \Ti{} dip (rank correlation $+0.251$
+$[+0.199, +0.304]$). The beam emission is back to 0.954 of its level by the fourth
+row, where \Ti{} is still at 0.877. The time course of the CES value after a blip is
+thus that of a change of the plasma which an independent diagnostic also sees, not
+that of the beam emission. This does not make a value of 100 to 300\,eV after a burst
+a temperature: in one discharge two beam interruptions of 23 and 26\,ms removed no
+frame, and the rows exposed during them still carry values (979\,eV; 1{,}711 and
+1{,}133\,eV, against medians of 1{,}063 and 1{,}195\,eV before). Six discharges carry
 the model statements, and the interval of the gain share is wide. And a measured
 \Ti{} of 100 to 300\,eV after a burst may be the plasma or a weak-signal fit; the
 labels do not decide that. By the rule registered with these statements, one of the
@@ -1076,8 +1119,9 @@ made after the results were seen. The
 step time was measured on a desktop CPU; no variant was run on a plant control
 system.
 \item \emph{Beam.} BES follows the heating beam and the CES fit depends on it; the
-files carry no beam timing, so a contribution of the beam state to the fast-channel
-share is bounded (\S\ref{sec:thin}) but not excluded.
+files record the beam blips as absent rows but not the beam power, so a contribution
+of the beam state to the fast-channel share is bounded (\S\ref{sec:thin}) but not
+excluded.
 \item \emph{Edge bursts.} Bursts are defined on beam emission, in twelve discharges
 chosen for the raw delivery by an earlier rule; six of them carry the model
 statements; one of the registered statements failed; a burst is not shown to be an
@@ -1156,9 +1200,9 @@ Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) a
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.
 
-The measurements that would change these statements are named: beam timing, which
-with per-exposure fit uncertainties would separate a change of the plasma from a
-change of the fit; training with imposed CES dropout; an equilibrium mapping and per-exposure fit uncertainties for
+The measurements that would change these statements are named: the beam power and
+per-exposure fit uncertainties, which would separate a change of the plasma from a
+change of the fit; training with imposed CES dropout; an equilibrium mapping for
 the KSTAR chord; and further KSTAR chords, on which the MAST result predicts a less
 noise-dominated series inward of the present one.
 

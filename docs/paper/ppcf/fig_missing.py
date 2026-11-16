@@ -3,6 +3,9 @@
 (a) share of grid rows per target: measured (independent), held (bit-identical repeat of
 the previous observation), missing.  (b) distribution of gap lengths: runs of consecutive
 rows without a value, inside contiguous segments (breaks at time steps >= 0.5 s).
+Every file opens with a row at t = 0 and closes with a row at t = 30 s that carry no CES value
+(the provider's note says to ignore them); they are not rows of the grid and are left out here.
+Until 2026-11-16 they were counted, as missing rows and as single-row gaps.
 Run from the repo root:  py docs/paper/ppcf/fig_missing.py
 """
 import json
@@ -48,6 +51,10 @@ def main():
     gaps = {c: [] for c, _ in TARGETS}
     for f in files:
         df = pd.read_csv(f, usecols=["time", "CES_TI", "CES_VT"])
+        if not (df["time"].iloc[0] == 0.0 and df["time"].iloc[-1] == 30.0
+                and df.iloc[[0, -1]][["CES_TI", "CES_VT"]].isna().all().all()):
+            raise SystemExit(f"FATAL: {f.name} does not open and close with an empty row")
+        df = df.iloc[1:-1]
         t = df["time"].to_numpy(float)
         seg = np.concatenate(([0], np.cumsum(~(np.diff(t) < GAP)))) if len(t) > 1 else np.zeros(len(t), int)
         tot += len(t)

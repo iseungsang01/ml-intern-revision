@@ -70,6 +70,12 @@ def missingness_ledger(files: list[str]) -> dict:
            for c in ("CES_TI", "CES_VT")}
     for f in files:
         df = pd.read_csv(f, usecols=["time", "CES_TI", "CES_VT"])
+        # Every file opens with a row at t = 0 and closes with a row at t = 30 s that carry no CES
+        # value (the provider's note: ignore them).  They are not rows of the 10 ms grid; until
+        # 2026-11-16 this ledger counted them as missing rows.
+        if (len(df) >= 2 and df["time"].iloc[0] == 0.0 and df["time"].iloc[-1] == 30.0
+                and df.iloc[[0, -1]][["CES_TI", "CES_VT"]].isna().all().all()):
+            df = df.iloc[1:-1]
         n = len(df)
         for col, a in acc.items():
             a["n_rows"] += n

@@ -4,7 +4,8 @@ Asked for by the seventh independent grading of the PPCF draft: does the fast-ch
 when (a) the value cut is tighter (2.5 keV) or looser (4 keV, inclusive population), (b) very low
 values are left out, (c) rows with a jump of more than 1 keV from the last visible sample are left
 out, (d) rows within 30 ms after a row whose BES level is below half of the discharge median (a
-beam blip seen in the 10 ms snapshot) are left out.
+beam blip seen in the 10 ms snapshot) are left out.  Added 2026-11-16: (e) the ten rows after an
+absent frame, which is where a beam blip sits in the files.
 
 CPU, reads data/.b30/rows_*.npz and the shot files.  Run from the repo root:
     py ces_prediction/experiments/b30_thinned/sensitivity_b30.py
@@ -24,6 +25,11 @@ import run_b30 as R  # noqa: E402
 OUT_JSON = R.REPO / "docs" / "paper" / "b30_sensitivity.json"
 OUT_MD = R.REPO / "docs" / "paper" / "b30_sensitivity.md"
 LOW_EV, JUMP_EV, BLIP_S = 150.0, 1000.0, 0.030
+# A beam blip leaves one to three absent frames in the 10 ms files (a step of 20 to 40 ms in the
+# time column: 1,414 such steps; all 45 inside the raw deliveries coincide with a blip in the raw
+# BES).  T_i stays below its level before the blip for about 90 ms and the ECEI level with it
+# (ces_prediction/analyze_file_rules.py), so the ten rows after the absent frame are set apart.
+GAP_S = 0.100
 PAIRS = {"cut": [("bb80", "hist80"), ("causal", "hist80"), ("bb", "gp"), ("causal", "gp"), ("bb", "hold")],
          "incl": [("bb", "hist30"), ("causal", "hist30"), ("bb", "gp"), ("causal", "gp"), ("bb", "hold")]}
 
@@ -45,6 +51,7 @@ def main():
         grid, dims = load_grid_files(R.DATA, True, R.POPS[pop])
         names = sorted(grid)
         after_blip = {}
+        after_gap = {}
         for i, nm in enumerate(names):
             arr = grid[nm]
             t = arr[:, 0].astype(np.float64)
@@ -54,6 +61,12 @@ def main():
             for j in low:
                 flag |= (t >= t[j]) & (t <= t[j] + BLIP_S)
             after_blip[i] = flag
+            dt = np.diff(t)
+            g = np.flatnonzero((dt > 0.015) & (dt < 0.045))
+            flag2 = np.zeros(len(t), bool)
+            for j in g:
+                flag2 |= (t >= t[j + 1]) & (t < t[j + 1] + GAP_S - 1e-6)
+            after_gap[i] = flag2
         for s in R.SEEDS:
             z = np.load(R.ROWS_DIR / f"rows_{pop}_s{s}.npz")
             tab = {c.split("__")[1]: z[c] for c in z.files if c.startswith("CES_TI__")}
@@ -62,13 +75,17 @@ def main():
             se = {e: (tab[e] - tab["y"]).astype(np.float64) ** 2 for e in ests}
             y, h = tab["y"].astype(np.float64), tab["hold"].astype(np.float64)
             blip = np.array([after_blip[int(f)][int(r)] for f, r in zip(tab["file"], tab["row"])])
+            gap = np.array([after_gap[int(f)][int(r)] for f, r in zip(tab["file"], tab["row"])])
             sets = {"all": np.ones(len(y), bool),
+                    "not within 100 ms after a beam blip (absent frame)": ~gap,
+                    "only within 100 ms after a beam blip (absent frame)": gap,
                     "values <= 2.5 keV": (y <= 2500) & (h <= 2500),
                     "values >= 150 eV": (y >= LOW_EV) & (h >= LOW_EV),
                     "jump <= 1 keV": np.abs(y - h) <= JUMP_EV,
                     "not within 30 ms after a low-BES row": ~blip}
             sets["all four exclusions"] = (sets["values <= 2.5 keV"] & sets["values >= 150 eV"]
                                            & sets["jump <= 1 keV"] & ~blip)
+            sets["all four exclusions and no row within 100 ms after a blip"] = sets["all four exclusions"] & ~gap
             if pop == "incl":
                 sets["values <= 4 keV"] = (y <= 4000) & (h <= 4000)
             for k in (1, 5):

@@ -7394,3 +7394,61 @@ Rows left out when the scored value or the last visible sample is below 150 eV, 
 | jump <= 1 keV only, 50 ms | 0.983 to 0.992 | +0.079 to +0.135 (4/4) | +0.078 to +0.133 (4/4) | +0.015 to +0.070 (3/4) | -0.001 to +0.063 (1/4) | +0.126 to +0.224 (4/4) |
 
 Reading. The fast-channel share does not rest on the suspicious rows: with all four exclusions it is +0.084 to +0.145 (network) and +0.044 to +0.152 (causal variant) at the natural cadence, 4/4. The margin over the causal GP is unchanged at 10 ms and partly rests on the jump rows at 50 ms (+0.038 to +0.087, 3/4; causal variant 1/4 when only the jump rows are removed). The distance to hold loses about a quarter with the jump rows out. In the inclusive population the readouts are not stable under these exclusions (network vs history-only 1/4 to 2/4, causal variant vs history-only 0/4 with values above 2.5 keV or jumps out), which agrees with the earlier finding that its margins are carried by the failed-fit rows.
+
+### How the 10 ms files relate to the raw deliveries -- grid, snapshots, beam blips as absent rows, and what follows a blip (descriptive, 2026-11-16)
+
+Not registered; no model. Prompted by the author: the things listed as questions for the provider (the time convention of a row, why V_rot repeats, the observed line) are in the files or are known, and are to be read there instead of asked. Script `ces_prediction/analyze_file_rules.py`, output `docs/paper/file_rules.json` / `.md`; 641 discharge files and the raw 1 us deliveries of twelve discharges (`data/raw_mus/.cache`). Intervals: 2,000 resamples of discharges.
+
+**1. Grid.** Every file opens with a row at t = 0 and closes with a row at t = 30 s; both carry no CES value (the provider's note of 2026-04-15: ignore the first and the last row). Without them the grid has 245,925 rows (247,207 as delivered) in 698 segments. Every time stamp lies 2 ms after a multiple of 10 ms. Steps between rows: 10 ms 243,733 (99.37 %), 20 ms 1,266, 30 ms 73, 40 ms 75, 50 ms 1, 60 ms 3, 76 between 60 and 500 ms, 57 of 500 ms or more.
+
+**Correction of the ledger.** `analyze_data_evidence.py`, `docs/paper/ppcf/fig_missing.py`, `experiments/protocol_audit_stats.py` and `experiments/proofs/p07/p07_mnar_check.py` counted the two edge rows of every file as grid rows without a value, that is as missing rows and as single-row gaps.
+
+| quantity | as recorded before | grid rows only |
+|---|---|---|
+| T_i missing | 8.18 % | 7.70 % |
+| V_rot missing | 23.91 % | 23.51 % |
+| V_rot held, share of the grid (share of observed 54.0 % unchanged) | 41.10 % | 41.31 % |
+| V_rot independent / without an independent value | 34.99 % / 65.01 % | 35.18 % / 64.82 % |
+| T_i gaps: number, single-row share, share of 50 ms or shorter | 8,233, 0.637, 92.9 % | 6,954, 0.570, 91.6 % |
+| V_rot gaps: number, single-row share, share of 50 ms or shorter | 4,351, 0.669, 89.8 % | 3,077, 0.532, 85.6 % |
+| T_i missing rate, lowest / highest quintile of the BES level | 19.9 % / 3.7 % as printed (0.198 / 0.037 in p07_results.json) | 18.0 % [15.9, 20.0] / 3.4 % [2.7, 4.1] |
+
+No training run, evaluation or scored row is affected: an edge row has no target and stands alone in its own segment (it enters the per-discharge input statistics as one of a few hundred rows). Corrected in `fig_missing.py` (figure and `fig_missing.json` regenerated) and in the ledger of `analyze_data_evidence.py`. **Not regenerated:** `protocol_audit_stats.py` -> `docs/paper/paper_numbers.json` -> the 8-page version (`docs/paper/short`, both languages), which still print 8.2 %, 23.9 %, 41.1 %, 35.0 %, 65.0 %, 19.9 % / 3.7 % and 247,207 rows; that chain has to be rerun as a whole, not patched by hand.
+
+**2. The fast channels of a row are raw snapshots.** For each row inside a raw delivery, all channels of a diagnostic at once equal a raw sample within one raw sample of the time stamp, at the five decimals the files print: BES 6,502 of 6,502 rows (500 kHz; 1 MHz in 31747), ECEI 6,484 of 6,484 (500 kHz), Mirnov 5,917 of 5,940 (2 MHz; 99.6 %). No averaging over the CES exposure, no anti-alias filter. The raw BES clock is offset by 1 us in ten of the twelve discharges, hence "within one sample".
+
+**3. Beam blips are absent rows.** A blip = at least 3 ms in which the mean raw BES level (0.1 ms bins) is below half of its 200 ms running median. All 45 groups of absent frames inside the raw deliveries coincide with one (41 single frames, three groups of three frames in 31902, one of two frames in 32097). Single frames: the blip starts 1.7 ms before the absent time stamp (range -1.9 to +2.4 ms) and ends 8.8 ms after it (+8.1 to +9.3); duration 10.5 ms. Groups: 26.4 to 27.2 ms. The frame exposed without beam is the one left out, so **the time stamp of a row is the start of its 10 ms exposure to within about 2 ms**. A stamp at the end of the exposure is excluded: in 31902 at 7.58 s it would make a frame fully with beam absent and a frame fully without beam present with an ordinary value (947 eV). Consequence for the estimator: at the time stamp it reads fast-channel samples taken no later than 2 ms into the exposure it estimates, and CES values whose exposures had ended. The files therefore carry the beam timing of the blips (1,414 steps of 20 to 40 ms, 1,637 absent frames); they do not carry the beam power.
+
+Two beam interruptions in 32027 (25.7 and 23.2 ms) removed no frame. The rows exposed during them carry values: 979 eV against a median of 1,063 eV in the 70 ms before, and 1,711 / 1,133 eV against 1,195 eV. A value in the files is thus not always taken with the beam that BES sees.
+
+**4. What follows a blip, all files.** 1,394 absent-frame events with six contiguous rows before them, 508 discharges. Ratio to the median of the six rows before:
+
+| row after | T_i | ECEI level | fresh V_rot | BES level | T_i present |
+|---|---|---|---|---|---|
+| +1 | 0.819 [0.796, 0.838] | 0.926 [0.910, 0.939] | 0.975 [0.964, 0.990] | 0.656 [0.649, 0.660] | 0.874 [0.851, 0.893] |
+| +2 | 0.841 [0.826, 0.857] | 0.923 [0.911, 0.936] | 0.977 [0.965, 0.990] | 0.876 [0.870, 0.882] | 0.897 [0.878, 0.914] |
+| +4 | 0.877 [0.866, 0.892] | 0.947 [0.936, 0.958] | 0.987 [0.976, 0.998] | 0.954 [0.949, 0.960] | 0.923 [0.906, 0.937] |
+| +6 | 0.941 [0.929, 0.954] | 0.980 [0.970, 0.988] | 0.990 [0.979, 1.000] | 0.996 [0.992, 1.000] | 0.945 [0.931, 0.957] |
+| +8 | 0.983 [0.971, 0.994] | 0.998 [0.991, 1.002] | 0.997 [0.984, 1.013] | 1.017 [1.013, 1.021] | 0.956 [0.943, 0.967] |
+| +10 | 0.999 [0.991, 1.009] | 1.003 [0.997, 1.012] | 1.000 [0.990, 1.014] | 1.027 [1.022, 1.032] | 0.960 [0.948, 0.970] |
+
+(the six rows before: every ratio 0.997 to 1.002, T_i present 0.956 to 0.964.) Mean deficit over rows +1 to +6: T_i 0.124 [0.112, 0.137], ECEI 0.053 [0.045, 0.062], ratio 2.33 [1.99, 2.75]. Across events the T_i ratio and the ECEI ratio (rows +1 to +4) have rank correlation +0.251 [+0.199, +0.304]; median T_i ratio 0.799 where the ECEI ratio is below 0.85 and 0.949 where it is above 1.05. Raw BES (41 blips, 1 ms): 0.12 of its level during the blip, 0.74 three milliseconds after the beam returns, 0.87 at 10 ms, 0.96 at 20 ms, 0.98 at 30 ms.
+
+Reading. The beam emission is back to 0.954 by the fourth row while T_i is still at 0.877; the T_i deficit keeps a constant proportion to the ECEI deficit and ends with it at about 90 ms. ECEI does not use the beam. The time course of the CES value after a blip is therefore that of a change of the plasma (10 ms without beam power) which an independent diagnostic sees too, not that of the beam emission. This is one check, on one kind of perturbation, that the 10 ms values between blips follow the plasma. It does not settle whether a value of 100 to 300 eV after an edge burst is a temperature (the 32027 rows above are a counter-example to "every value is an active measurement").
+
+**5. B.30 row tables with the blip rows set apart** (`sensitivity_b30.py`, post hoc; T_i, cut, four splits; the ten rows after an absent frame are 0.055 to 0.060 of the scored rows):
+
+| rows | network vs history-only | causal variant vs history-only | network vs causal GP | causal variant vs causal GP |
+|---|---|---|---|---|
+| all, 10 ms | +0.064 to +0.113 (4/4) | +0.027 to +0.115 (4/4) | +0.077 to +0.134 (4/4) | +0.068 to +0.126 (4/4) |
+| without the blip rows, 10 ms | +0.058 to +0.105 (4/4) | +0.026 to +0.107 (4/4) | +0.066 to +0.127 (4/4) | +0.055 to +0.106 (4/4) |
+| blip rows only, 10 ms | +0.086 to +0.184 (4/4) | +0.040 to +0.187 (2/4) | +0.182 to +0.288 (4/4) | +0.131 to +0.291 (3/4) |
+| without the blip rows, 50 ms | +0.061 to +0.151 (4/4) | +0.047 to +0.149 (4/4) | +0.101 to +0.124 (4/4) | +0.069 to +0.125 (4/4) |
+| blip rows only, 50 ms | +0.144 to +0.252 (4/4) | +0.090 to +0.240 (4/4) | +0.139 to +0.234 (4/4) | +0.084 to +0.223 (4/4) |
+| four earlier exclusions and no blip row, 10 ms (0.836 to 0.846 of rows) | +0.080 to +0.140 (3/4) | +0.043 to +0.148 (4/4) | +0.076 to +0.130 (3/4) | +0.064 to +0.112 (4/4) |
+
+The fast-channel share does not rest on the rows after a blip; inside them it is larger, as expected where the fast channels see a response that a CES-only estimator cannot anticipate.
+
+**What was a question and no longer is.** The time convention of a row and the beam timing: read from the files (3). Why V_rot repeats: a fitted value does not repeat to the last digit by chance (T_i does so once in 226,991 values), so a repeat is the previous value carried forward; nothing to ask. The observed line: carbon C VI at 529 nm, as in the KSTAR CES reference already cited and in `analyze_foundations.py`. **What the files cannot say:** whether the blip frame is subtracted as background when the values between blips are fitted, and the beam power.
+
+PPCF draft (`docs/paper/ppcf/main_ppcf.tex`, 25 pages, check_numbers 768 tokens, 0 missing): corrected shares and gap counts, a paragraph "What a row holds", the held-value inference stated, the line named, "the files carry no beam timing" replaced in four places, the blip rows in the beam paragraph, the blip response in the burst section.

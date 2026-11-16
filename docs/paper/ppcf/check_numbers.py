@@ -12,7 +12,8 @@ MAST records at the end of THESIS_RESULTS.md, PREREGISTRATION_MAST_GATE.md,
 docs/paper/ppcf/kstar_regime.json (rounded to three decimals), kstar_level.json, the two
 figure sources computed for this paper (fig_missing.json, fig_gap.json), docs/paper/mast_gate_addendum2.md,
 docs/paper/b29_causal.md, PREREGISTRATION_B29.md, docs/paper/mast_edge.md (+ .json for\ncounts), docs/paper/b29_addendum1.md, PREREGISTRATION_B29_ADDENDUM1.md, docs/paper/mast_coupling.md,
-PREREGISTRATION_MAST_COUPLING.md and fig_trace.json.
+PREREGISTRATION_MAST_COUPLING.md, fig_trace.json and docs/paper/file_rules.md (how the 10 ms files
+relate to the raw deliveries; ces_prediction/analyze_file_rules.py).
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -76,6 +77,7 @@ DERIVED = {
     "7.00": "same interval",
     "0.65": "65 rows x 10 ms",
     "0.45": "minor radius quoted in Heo et al. 2025, sec. 2 (a about 0.45 m); (2.198 - 1.77) / 0.45 = 0.951",
+    "529": "C VI (n = 8-7) line at 529.05 nm observed by the KSTAR CES (Ko et al. 2010; analyze_foundations.py)",
 }
 
 
@@ -117,6 +119,7 @@ def main():
         (ROOT / "docs/paper/b30_posthoc.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b31_bursts.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b30_sensitivity.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/file_rules.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/mast_ped_confirmation.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_PED.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B31.md").read_text(encoding="utf-8"),
