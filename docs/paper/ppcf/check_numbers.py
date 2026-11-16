@@ -129,6 +129,12 @@ def main():
         (ROOT / "docs/paper/b32_posthoc.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b32_posthoc_model.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B32.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b34_error_model.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b36_layer.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b37_plan.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b37_addendum1.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B34.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B37.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))

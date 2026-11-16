@@ -1213,6 +1213,43 @@ not a replacement for it. The rising gain $K(s)$ is a property of the joint fit:
 the filter is refit with every fast-channel gain set to zero, the optimal gain is
 flat or falls with the gap (0.30--0.32 at 10\,ms, 0.23--0.26 at 50\,ms).
 
+\paragraph{A second stage: which rows will be wrong, and a correction.} Every
+estimator above gives one value. Whether the size and the sign of its error can be
+known at the row was tested on the frozen causal variant, without retraining it.
+Fifteen quantities known at the row (nine summaries of the 100\,ms fast-channel
+window, the age of the last CES sample, the hold value, and the differences of the
+network from hold and from the causal GP with their absolute values) feed
+gradient-boosted regressions. These were fitted on the validation discharges of each
+split (127 or 128) and applied once to its test rows, with four statements registered
+beforehand; all four hold in the cut population. (i) The tenth of rows with the
+largest predicted error holds 0.472 to 0.545 of the squared error (four of four
+splits above the registered 0.30). (ii) A 90\% interval whose half-width follows the
+predicted size covers 0.867 to 0.888 of the rows, with a median half-width 0.499 to
+0.752 of that of a constant interval (three of four). (iii) A switch that uses hold
+where the network is predicted to be the worse of the two has a median absolute error
+0.827 to 0.940 of that of the network and 0.881 to 0.937 of that of hold, at a
+mean-squared-error skill of $+0.000$ to $+0.011$ over the network (four of four).
+(iv) A correction of the signed residual has skill $+0.053$ to $+0.082$ over the
+causal variant (four of four intervals exclude zero) and a median absolute error
+0.831 to 0.936 of it; in a statement registered afterwards it has $+0.020$ to
+$+0.053$ over a linear combination of the network, the causal GP and hold fitted on
+the same rows (three of four), so it is a correction and not only an average of
+estimators. The same models fitted on half of the test discharges, about 48, had
+missed their registered bars (the correction $+0.005$ to $+0.023$, every interval
+including zero): what limits the second stage is the number of discharges it is
+fitted on. With values above 3\,keV kept, the correction does not lower the mean
+squared error by an amount that can be told from zero ($-0.008$ to $+0.041$, one of
+four), while its median error is 0.644 to 0.904 of that of the network. One step of
+the correction takes 1.257\,ms at the median. The causal variant is therefore not the
+best estimator that its inputs allow, and the statement above that a typical row is
+not improved holds for a single stage only. Three limits apply: the validation
+discharges were used to stop the training of the network; the second stage is a
+boosted tree fitted after the network, not trained with it; and trained on the
+training discharges it has not been run. Whether a CES value will be unusable
+(missing or above 3\,keV) is itself predictable from the fast-channel window: the area
+under the ROC curve is 0.961 to 0.974, against 0.903 to 0.949 from the history of
+unusable rows alone (difference $+0.025$ to $+0.059$, four of four splits).
+
 % =========================================================================
 \section{Limitations}
 \label{sec:limits}
@@ -1243,7 +1280,10 @@ edge-localized mode.
 cadence; the sparse cadence is imposed on measured samples; one of the five
 registered statements, on the distance to hold at 50\,ms, failed.
 \item \emph{Tail statistic.} The skill is carried by large-error rows; typical rows
-are not improved over interpolation.
+are not improved over interpolation by the network alone. The second stage that
+lowers the median error (\S\ref{sec:character}) was fitted on validation discharges,
+holds for the mean with values above 3\,keV excluded only, and was not trained with
+the network.
 \item \emph{Post hoc choices.} The 1{,}000\,km/s rotation scoring rule and the form of
 the 20-parameter filter were chosen after results were seen. The recurrent design and
 per-discharge standardization were adopted using the same four test splits; with a
@@ -1304,7 +1344,7 @@ natural cadence, with overlapping intervals); its distance to hold falls by more
 than the registered margin. On the discharges with a raw beam-emission stream, the
 gaps and the large steps of \Ti{} sit in phases with edge bursts consistent with
 edge-localized modes, and those phases, 0.115 of the scored rows, carry 0.604 $[0.056, 0.786]$ of the
-fast-channel gain, an interval that does not establish a concentration. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame. On
+fast-channel gain, an interval that does not establish a concentration. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame. A second stage fitted on validation discharges names the tenth of rows that hold 0.472 to 0.545 of the squared error and corrects the estimate with skill $+0.053$ to $+0.082$ over the causal estimator, lowering its median error as well, with values above 3\,keV excluded. On
 public MAST data, in a registered test on 1{,}651 discharges, a causal estimate of a
 hidden frame at the pedestal top has skill $+0.148$ $[+0.122, +0.177]$ over hold, and
 Thomson scattering at the same radius added to the charge-exchange past gives
@@ -1363,7 +1403,10 @@ against the headline network) was not: it is $-0.015$ to $-0.003$. The third pan
 Fig.~\ref{fig:trace} was added after the first two had been seen. The statements of
 \S\ref{sec:twosources} (two on the first row after a blip, one on rows at bursts,
 two on MAST) were registered before those readouts; of 15 numerical expectations 5
-were met.
+were met. The second stage of \S\ref{sec:character} was registered twice: fitted on half of the
+test discharges, where three of its five statements failed, and then, with the same
+models and bars, fitted on validation discharges; the comparison with a linear
+combination and the inclusive population were registered after that result.
 
 \paragraph{MAST.} In order: (i) a pilot of 13 shots was inspected and those shots were
 excluded; (ii) a development list of 300 shots, the fit rule, the tuning/test
