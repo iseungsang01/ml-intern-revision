@@ -31,6 +31,8 @@ SOURCES = (
     "docs/paper/b30_posthoc.md", "docs/paper/b30_sensitivity.md", "docs/paper/b30_stack.md",
     "docs/paper/b30_stack_offline.md", "docs/paper/b31_bursts.md", "docs/paper/mast_ped_confirmation.md",
     "docs/paper/mast_edge.md", "docs/paper/mast_gate.md", "docs/paper/mast_gate_addendum1.md",
+    "docs/paper/fast_departure.md", "docs/paper/b32_two_sources.md", "docs/paper/b32_posthoc.md",
+    "docs/paper/b32_posthoc_model.md",
 )
 DERIVED = {
     "2022": "the campaign year",

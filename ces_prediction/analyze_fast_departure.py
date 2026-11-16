@@ -110,6 +110,12 @@ def main():
                           "share_beyond_2sd": ratio(a[:, 1], a[:, 0]), "share_beyond_3sd": ratio(a[:, 2], a[:, 0]),
                           "share_below_minus_3sd": ratio(a[:, 3], a[:, 0])}
         res["classes"][name] = cell
+    beyond = cnt["BES"][:, :, 2].sum(0)
+    values = cnt["BES"][:, :, 0].sum(0)
+    res["bes_beyond_3sd"] = {"channel_values": int(values.sum()), "beyond_3sd": int(beyond.sum()),
+                             "of_which_first_row_after_a_blip": int(beyond[0]),
+                             "share_in_first_row_after_a_blip": ratio(cnt["BES"][:, 0, 2], cnt["BES"][:, :, 2].sum(1)),
+                             "share_of_channel_values_in_that_row": float(values[0] / values.sum())}
     for b in range(nb):
         if rs[:, b, 0].sum() < 50:
             continue
@@ -133,6 +139,11 @@ def main():
         L.append(f"| {name} ({bq['channel_rows']:,} BES channel values) | {bq['median_departure_sd']:+.2f} | "
                  f"{c3(bq['share_beyond_2sd'])} | {c3(bq['share_beyond_3sd'])} | {c3(bq['share_below_minus_3sd'])} | "
                  f"{eq['median_departure_sd']:+.2f} | {c3(eq['share_beyond_3sd'])} |")
+    bb = res["bes_beyond_3sd"]
+    L += ["", f"Of the {bb['beyond_3sd']:,} BES channel values beyond three standard deviations, "
+          f"{bb['of_which_first_row_after_a_blip']:,} are in the first row after a blip: a share of "
+          f"{c3(bb['share_in_first_row_after_a_blip'])}, in rows that hold "
+          f"{bb['share_of_channel_values_in_that_row']:.4f} of the {bb['channel_values']:,} channel values."]
     L += ["", "## 2. Response curve without a model (rows not within ten rows after a blip)", "",
           "Change of the measured T_i from its last observed value, by the mean departure of the nine BES channels "
           "of the row. Values above 3 keV are left out.", "",

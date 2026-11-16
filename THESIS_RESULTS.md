@@ -7434,3 +7434,81 @@ The author's point: a gain of a few hundredths in skill is enough to pass a refe
 RMSE of the offline GP on these rows: 158.3, 198.2, 181.3, 206.1 eV.
 
 Reading. A single network has its interval below zero on one split and includes zero on three. The combination removes the split below zero and moves the point estimate above zero on three of four splits, with every interval including zero: the combination of causal estimators already in hand cannot be told apart from an estimator that reads the next CES sample, and is no longer behind it anywhere. The lower ends of the four intervals are -0.088, -0.024, -0.021 and -0.029, so a further gain of about 0.03 in skill would put three of the four intervals above zero. That is the size a structural change has to deliver (the network as a correction to the causal GP, another cell or depth, an ensemble across families, pretraining on MAST); none of these has been run.
+
+### B.32 two sources of a large fast-channel excursion -- the heating beam and an edge burst: KSTAR blip rows, the twelve raw streams, MAST beam steps (registered, with readings after the fact; 2026-11-16)
+
+Registration `PREREGISTRATION_B32.md` (863464b, before the readouts of its sections 3 to 5); code `experiments/b32_two_sources/run_b32.py`, output `docs/paper/b32_two_sources.{json,md}`. Read after the fact: `posthoc_b32.py` -> `docs/paper/b32_posthoc.{json,md}`, `posthoc_b32_model.py` -> `docs/paper/b32_posthoc_model.{json,md}`. CPU, no model trained, one run each. Seen before the registration and disclosed in it: `ces_prediction/analyze_fast_departure.py` -> `docs/paper/fast_departure.{json,md}`.
+
+Why. The author asked that the physics of the two things that can move a fast channel far within one row be written into the paper and checked on the data: the heating beam (BES is light of beam atoms and follows the beam at once; the ion temperature follows an energy balance) and an edge burst. The manuscript described the response of the trained estimator as flat to about two standard deviations and switched off beyond three.
+
+Seen before (all 641 files, descriptive). A channel is standardized per discharge; its departure d is its value minus its mean over the preceding ten rows. In the first row after a blip the BES channels lie a median 2.32 standard deviations below that mean and 0.357 [0.319, 0.396] of the channel values lie beyond three; in all other rows 0.004 [0.003, 0.004]. Of the 12,619 BES channel values beyond three standard deviations, 4,449 are in the first row after a blip (0.353 [0.319, 0.388]), in rows that hold 0.0058 of the channel values.
+
+**A. KSTAR, first row after a blip, by the BES departure of that row** (1,203 blips of 449 discharges with T_i observed in that row and in at least three of the six rows before; d = mean over the nine BES channels; proportional reading = 50 eV per standard deviation, the summed BES gain of the 20-parameter filter).
+
+| group | rows | mean d (sd) | median T_i ratio to the level before | mean T_i change (eV) | proportional reading (eV) | measured minus proportional (eV) |
+|---|---|---|---|---|---|---|
+| D1 (d <= -3) | 461 | -4.39 | 0.784 [0.755, 0.811] | -164.5 [-188.3, -141.3] | -219.3 | +54.8 [+28.7, +81.2] |
+| D2 (-3 < d <= -2) | 257 | -2.48 | 0.786 [0.730, 0.820] | -142.7 [-182.5, -97.8] | -123.9 | -18.8 [-59.0, +25.8] |
+| D3 (d > -2) | 485 | -1.16 | 0.886 [0.844, 0.917] | -61.6 [-102.3, -22.0] | -58.1 | -3.5 [-43.3, +34.9] |
+
+A1 (the ratio of D1 is not below that of D3) **does not hold**: D1 minus D3 = -0.103 [-0.147, -0.053]. A2 (in D1 the measured change is above the proportional reading by at least 30 eV) **holds**: +54.8 [+28.7, +81.2] eV. After the fact, from the same table: D1 minus D2 = -0.002 [-0.052, +0.057] and D2 minus D3 = -0.101 [-0.157, -0.047]. The T_i ratio falls with the departure up to between two and three standard deviations and is the same beyond, where the mean departure differs by 1.9 standard deviations (medians of the change: -124.2 [-144.0, -102.8], -111.3 [-145.2, -83.4], -69.9 [-95.2, -50.5] eV).
+
+**A', after the fact: rows that are not within ten rows after a blip** (change of T_i from its last observed value; the same proportional reading).
+
+| mean BES departure (sd) | rows | mean d | mean T_i change (eV) | proportional (eV) | measured minus proportional (eV) |
+|---|---|---|---|---|---|
+| below -3 | 187 | -4.59 | -54.0 [-113.5, +2.7] | -229.5 | +175.5 [+113.5, +234.5] |
+| -3 to -2 | 487 | -2.32 | -109.4 [-145.8, -73.4] | -115.9 | +6.4 [-30.5, +42.1] |
+| -2 to -1 | 5,966 | -1.31 | -45.9 [-59.0, -32.3] | -65.3 | +19.5 [+6.6, +33.0] |
+| -1 to -0.5 | 17,908 | -0.69 | -33.9 [-41.3, -27.0] | -34.7 | +0.8 [-6.5, +7.7] |
+| +0.5 to +1 | 18,763 | +0.70 | +36.7 [+31.2, +42.4] | +35.0 | +1.7 [-3.8, +7.3] |
+| +1 to +2 | 6,942 | +1.32 | +42.4 [+32.8, +51.8] | +65.9 | -23.6 [-33.2, -14.1] |
+| +2 to +3 | 979 | +2.37 | +32.9 [+7.7, +56.4] | +118.7 | -85.8 [-111.3, -62.1] |
+| above +3 | 299 | +4.18 | +65.3 [-17.5, +154.1] | +209.0 | -143.7 [-226.2, -57.5] |
+
+Within one standard deviation the measured mean change is within 5 eV of 50 eV per standard deviation. Downward it stays there to -3 and falls short below (-54.0 against -229.5). Upward it is flat from +0.7 (+36.7, +42.4, +32.9 eV) and the interval beyond +3 includes zero.
+
+**B. KSTAR, twelve discharges with a raw stream** (5,939 rows inside the raw window and not within ten rows after a blip). Rows with a mean BES departure above +3: 10, of which 8 have a detected burst within 1 ms of the time stamp; base share over all rows 0.015. **B1 is not testable** (fewer than the 20 rows registered). B2 (reported): 11 rows below -3, 8 with the raw BES level at the stamp below 0.8 of its 200 ms running median. After the fact, counted per channel value because the threshold of the 20-parameter filter acts per channel: 110 values above +3 in 8 discharges, 0.564 of them with a burst within 1 ms (base 0.015, ratio 37.2 [25.0, 70.5]) and 0.700 with a burst onset from 3 ms before to 1 ms after the stamp (base 0.027, ratio 26.1 [17.0, 49.1]); 110 values below -3 in 7 discharges, 0.727 at a dip of the raw level (base 0.016, ratio 46.4 [25.0, 121.9]) and none at a burst. A dip of the raw level is a short interruption of the beam (38 of the 110 values are in 32027, at the two interruptions that removed no frame) or a fall of the density at the chord; the level alone does not say which.
+
+**C. MAST, a step of the SW beam while the viewed SS beam stays steady.** Registered readout, all radii. Step down, 741 events in 122 shots: R_1 = 1.019 [0.988, 1.046], R_late = 0.850 [0.797, 0.900]; C1 holds, C2 statistic +0.112 [+0.015, +0.191] holds; half response at frame 8. Edge (151 events, 25 shots): R_late 0.976 [0.872, 1.215], C1 and C2 do not hold. Step up, 6,816 events in 949 shots: R_1 = 1.332 [1.315, 1.349], R_late = 2.395 [2.315, 2.485]; C1 and C2 hold by the letter.
+
+Two flaws of the registered definition, found on reading the output; both are mine. (i) It did not require the boundary to be the switch, so one switch satisfies the conditions at several adjacent boundaries (741 events in 122 shots, 6,816 in 949). The alignment is blurred by up to three frames on either side, which makes the delay statistic easier to pass. (ii) It has no control for the evolution of the discharge. The SW beam is switched on a median 12 frames after the start of the charge-exchange block, where T_i is still rising after the start of the SS beam: the registered ratio rises by 0.09 to 0.10 per frame before the step and after it, so the registered step-up numbers are not a response to the step.
+
+After the fact: one event per switch (frame 0 is the first frame on the other side of half the level; frames -9 to -2 are in the state before; the SS power is steady from -9 to +16), the ratio is taken to frames -5 to -2, and control windows in which the SW beam stays as it was are weighted to the events' distribution of the frame index since the start of the block (bins of five frames). Net = events minus control.
+
+| | events / shots | net, frame 0 | net, frame +1 | net, 50 to 80 ms | frames -9 to -6 (no response expected) | net delay statistic | half of the net response |
+|---|---|---|---|---|---|---|---|
+| SW switched on, all radii | 542 / 541 | +0.040 [+0.024, +0.059] | +0.068 [+0.044, +0.104] | +0.278 [+0.181, +0.356] | -0.024 [-0.041, -0.003] | +0.142 [+0.051, +0.204] | frame 3 |
+| SW switched on, core | 531 / 530 | +0.028 [+0.011, +0.047] | +0.065 [+0.034, +0.084] | +0.259 [+0.177, +0.342] | -0.018 [-0.034, +0.003] | +0.130 [+0.063, +0.207] | frame 4 |
+| SW switched on, edge | 93 / 92 | +0.093 [+0.029, +0.129] | +0.170 [+0.093, +0.213] | +0.560 [+0.366, +0.723] | +0.003 [-0.032, +0.028] | +0.220 [+0.054, +0.407] | frame 5 |
+| SW switched off, all radii | 78 / 78 | -0.023 [-0.051, +0.005] | -0.034 [-0.067, +0.002] | -0.075 [-0.165, -0.018] | +0.034 [-0.021, +0.061] | +0.008 [-0.065, +0.108] | frame 2 |
+| SW switched off, core | 77 / 77 | -0.022 [-0.047, +0.007] | -0.037 [-0.062, +0.015] | -0.065 [-0.158, -0.001] | +0.033 [-0.016, +0.058] | -0.009 [-0.072, +0.101] | frame 1 |
+| SW switched off, edge | 19 / 19 | -0.015 [-0.105, +0.044] | -0.072 [-0.154, +0.091] | -0.035 [-0.182, +0.184] | -0.020 [-0.070, +0.053] | -0.109 [-0.253, +0.093] | frame 1 |
+
+Without the control the switch-off ratio is 0.960 [0.921, 0.999] in the first frame after the switch and 0.803 [0.708, 0.866] at 50 to 80 ms (all radii). Windows in which both beams stay on fall to 0.903 at frame +10 and 0.828 at frame +16 at the same time of the discharge (core), which is why the control is needed.
+
+Reading of C. After a switch-on, T_i measured on the other beam is above control by a quarter to a third of its 50 to 80 ms value in the first frame after the switch (0.068 of 0.278; at the edge 0.170 of 0.560), and reaches half of it 15 to 25 ms after the switch; before the switch it differs from control by at most 0.024. After a switch-off (78 events) the response has the expected sign at 50 to 80 ms, the value of the first frame includes zero and a delay is not established (+0.008 [-0.065, +0.108]); a difference of the same size before the switch (+0.034 [-0.021, +0.061]) is not excluded. Edge switch-off: 19 events, below the 30 registered.
+
+**Model readout, after the fact** (frozen B.30 row tables, T_i, cut, natural cadence, test discharges of the four file-level splits; the first row after a blip; change from the last visible sample; range of the four splits).
+
+| group | rows per split | measured change (eV) | history-only twin predicts | causal variant predicts | whole-discharge variant predicts | causal GP predicts | causal variant vs twin (skill; intervals above zero) |
+|---|---|---|---|---|---|---|---|
+| D1 (d <= -3) | 52 to 85 | -243.2 to -179.9 | -12.3 to +4.8 | -179.5 to -147.1 | -175.8 to -142.5 | -12.1 to -3.6 | +0.494 to +0.677 (4/4) |
+| D2 (-3 < d <= -2) | 35 to 55 | -231.1 to -79.4 | -9.9 to +10.2 | -190.6 to -68.3 | -145.7 to -55.5 | -8.4 to +9.8 | +0.225 to +0.566 (2/4) |
+| D3 (d > -2) | 66 to 76 | -196.5 to -126.5 | -53.5 to -22.1 | -168.1 to -126.0 | -134.8 to -96.4 | -38.9 to -5.0 | +0.081 to +0.310 (2/4) |
+
+(The measured mean of D3 here is larger in size than in the registered table because the baseline is the last sample, not the median of six rows, the rows are those of the test discharges, and the mean is carried by few rows; on the registered rows the mean change from the last row is -174.2, -157.2 and -99.1 eV and that last row lies +7.5, +11.0 and +38.5 eV above the median of six.)
+
+**What follows.**
+
+1. *The estimator is not switched off beyond three standard deviations.* In the rows that hold a third of all departures beyond three standard deviations it predicts a change of -147.1 to -179.5 eV where -179.9 to -243.2 eV was measured, and the history-only twin predicts -12.3 to +4.8 eV. The manuscript's "switched off beyond three" over-read two things: the Jacobian record (the stage-3 record of B.28: the local BES gain at 3 to 5 standard deviations is 0.38 to 0.68 of the small-signal gain, that is, reduced) and the gate of the 20-parameter filter, which does remove the term and is a property of that filter, not of the network. The manuscript is corrected to "reduced".
+2. *Measured without a model, the T_i change stops growing in proportion beyond two to three standard deviations*: after a blip (ratios 0.786 and 0.784 at -2.48 and -4.39) and outside blip rows on both sides. A reduced gain at large departures is therefore what the measured relation has; it does not need a separate mechanism to explain it.
+3. *Where the large departures come from.* The return of the beam after a blip (0.357 of the channel values against 0.004), and, in the twelve discharges with a raw stream, bursts for the upward ones (0.564 against 0.015) and dips of the beam emission for the downward ones (0.727 against 0.016), read after the fact; the registered row-level test had 10 rows and was not testable.
+4. *By the registered rule*, A1 having failed, the paper says that T_i after a blip scales with the BES departure and does not attribute the reduced gain to the beam.
+5. *MAST.* The two registered statements hold by the letter under a definition that counts a switch several times and has no control; with one event per switch and a control, the delay is established after a switch-on (first frame 0.068 of 0.278 at 50 to 80 ms) and not after a switch-off (78 events). This is the time scale of a response to a heating step on another device, not a measurement of the KSTAR response.
+
+**Correction to the registration text.** Its section 1 says that collisional equilibration between electrons and ions "is slower still; it does not set this response". That is wrong at a pedestal top: for T_e = 0.5 keV and n_e = 3e19 m^-3 the equilibration time, (m_i / 2 m_e) electron collision times, is about 15 ms, and the slowing-down time of a 100 keV deuteron on electrons about 30 ms; both are comparable with the 90 ms over which T_i returns after a blip. No registered statement depends on the sentence.
+
+**Expectation check: 5 of 15 met.** A: ratio 0.78 to 0.86 in each group (missed: D1 and D2 inside, D3 0.886 outside), difference within 0.04 (missed, -0.103), D1 change -90 to -150 eV (missed, -164.5), proportional reading -180 to -260 eV (met). B: 20 to 150 rows above +3 (missed, 10), share with a burst 0.4 to 0.9 (met on 10 rows, 0.800), base share 0.02 to 0.15 (missed, 0.015). C as registered: 50 to 600 events of each kind (missed twice: 741 and 6,816, because of the multiple counting), R_late 0.90 to 0.98 after a step down (missed, 0.850) and 1.02 to 1.12 after a step up (missed, 2.395), R_1 within 0.02 of 1 (met after a step down, 1.019; missed after a step up), half response at 3 to 8 frames (met twice: 8 and 5).
+
+**Limits.** The files carry no beam power; in the first row after a blip the beam is still returning, so the BES departure of that row mixes the beam and the plasma, and the three groups differ in more than the departure (in D3 the last row before the blip lies +38.5 eV above the median of the six rows before). Whether the CES value in that row is a temperature is not decided here (weak-signal fits would also give a low value). The bursts are detected on beam emission and are not shown to be edge-localized modes. Twelve discharges, chosen for other reasons. On MAST a switch of one beam changes fuelling and torque as well as heating, shots with a switch differ from the control shots in more than the switch, and the edge has 93 switch-on and 19 switch-off events. One run each; the post hoc definitions were fixed by reasoning before their output was read, but after the registered output.

@@ -11,6 +11,8 @@ Descriptive, all 641 files (`ces_prediction/analyze_fast_departure.py`); no mode
 | rows 5 to 10 after a blip (75,303 BES channel values) | +0.45 | 0.033 [0.028, 0.038] | 0.004 [0.003, 0.006] | 0.001 [0.000, 0.002] | +0.07 | 0.003 [0.002, 0.004] |
 | all other rows (2,028,195 BES channel values) | -0.00 | 0.014 [0.013, 0.015] | 0.004 [0.003, 0.004] | 0.001 [0.001, 0.002] | -0.00 | 0.003 [0.003, 0.004] |
 
+Of the 12,619 BES channel values beyond three standard deviations, 4,449 are in the first row after a blip: a share of 0.353 [0.319, 0.388], in rows that hold 0.0058 of the 2,153,448 channel values.
+
 ## 2. Response curve without a model (rows not within ten rows after a blip)
 
 Change of the measured T_i from its last observed value, by the mean departure of the nine BES channels of the row. Values above 3 keV are left out.

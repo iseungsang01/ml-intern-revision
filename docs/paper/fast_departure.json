@@ -284,5 +284,16 @@
     151.7171815613391
    ]
   }
- ]
+ ],
+ "bes_beyond_3sd": {
+  "channel_values": 2153448,
+  "beyond_3sd": 12619,
+  "of_which_first_row_after_a_blip": 4449,
+  "share_in_first_row_after_a_blip": [
+   0.3525635945796022,
+   0.3187489074882591,
+   0.38753575252676636
+  ],
+  "share_of_channel_values_in_that_row": 0.005792570798087532
+ }
 }
