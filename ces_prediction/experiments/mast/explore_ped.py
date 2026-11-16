@@ -43,6 +43,38 @@ EDGE_BANDS = ((-0.02, 0.015, "edge -2..1.5 cm (gradient side)"),
               (0.20, 9.0, "edge > 20 cm"))
 SEED = 20261118
 N_BOOT = 400
+# D-alpha bursts: the detector frozen in PREREGISTRATION_B31.md for the KSTAR BES stream, applied
+# here to mid-plane D-alpha (0.2 ms mean above its 50 ms running median by 6 robust sigma, starts
+# closer than 2 ms merged).  Row labels: near = a burst in the 10 ms up to the end of the hidden
+# frame window; active = at least 3 bursts in the 200 ms up to it; quiet = none.
+BURST_BIN_MS, BURST_MED_MS, BURST_K, BURST_MERGE_MS = 0.2, 50.0, 6.0, 2.0
+
+
+def dalpha_bursts(t_ms, v):
+    """Burst start times (ms) of a D-alpha trace."""
+    from numpy.lib.stride_tricks import sliding_window_view
+    ok = np.isfinite(t_ms) & np.isfinite(v)
+    t_ms, v = t_ms[ok], v[ok]
+    if len(t_ms) < 2000:
+        return None
+    dt = float(np.median(np.diff(t_ms)))
+    if not (dt > 0):
+        return None
+    w = max(1, int(round(BURST_BIN_MS / dt)))
+    nb = len(v) // w
+    b = v[:nb * w].reshape(nb, w).mean(1)
+    tb = t_ms[:nb * w].reshape(nb, w).mean(1)
+    k = int(round(BURST_MED_MS / (w * dt))) | 1
+    pad = np.pad(b, (k // 2, k - 1 - k // 2), mode="edge")
+    res = b - np.median(sliding_window_view(pad, k), axis=1)
+    sig = 1.4826 * np.median(np.abs(res - np.median(res)))
+    if not (np.isfinite(sig) and sig > 0):
+        return None
+    d = np.diff(np.concatenate(([0], (res > BURST_K * sig).astype(int), [0])))
+    ev = tb[np.flatnonzero(d == 1)]
+    if len(ev):
+        ev = ev[np.concatenate(([True], np.diff(ev) > BURST_MERGE_MS))]
+    return ev
 
 
 def window_mean(t_ms, v, t_frames, off):
@@ -162,6 +194,16 @@ def add_extra(r, shot, r_axis):
                 sc = np.median(blk) if len(blk) and np.median(blk) > 0 else np.nan
             for k, wk in zip(OFFS[:3], w):
                 cols[f"{pre}{-k}"] = (wk[fi] / sc).astype(np.float32)
+    cols["nb10"] = np.full(n, np.nan, np.float32)
+    cols["nb200"] = np.full(n, np.nan, np.float32)
+    drv = rc.load_drivers(shot)
+    if "dalpha" in drv:
+        ev = dalpha_bursts(*drv["dalpha"])
+        if ev is not None:
+            end = frames + 2.5
+            hi = np.searchsorted(ev, end, side="right")
+            cols["nb10"] = (hi - np.searchsorted(ev, end - 10.0, side="right"))[fi].astype(np.float32)
+            cols["nb200"] = (hi - np.searchsorted(ev, end - 200.0, side="right"))[fi].astype(np.float32)
     r.update(cols)
     return r
 
@@ -303,6 +345,14 @@ def report(tg, t, resid, preds, rng):
         tight = (np.sqrt(t["s0"]) < 2.0) & (np.sqrt(t["s1"]) < 2.0)       # km/s
     cells += [("pedestal top, tight reported errors at both frames", top & tight),
               ("pedestal top, tight errors, H-mode rating >= 0.5", top & tight & (hm >= 0.5))]
+    act, qui, nea = t["nb200"] >= 3, t["nb200"] == 0, t["nb10"] >= 1
+    edge_rho = (t["rho"] >= 0.9) & (t["rho"] < 1.0)
+    cells += [("D-alpha: burst-active rows (all radii)", act), ("D-alpha: quiet rows (all radii)", qui),
+              ("D-alpha: rows with a burst in the last 10 ms", nea),
+              ("pedestal top, burst-active", top & act), ("pedestal top, quiet", top & qui),
+              ("rho 0.9-1, burst-active", edge_rho & act), ("rho 0.9-1, quiet", edge_rho & qui),
+              ("rho 0-0.7, burst-active", (t["rho"] < 0.7) & (t["rho"] > 0) & act),
+              ("rho 0-0.7, quiet", (t["rho"] < 0.7) & (t["rho"] > 0) & qui)]
     cells += [("pedestal top, H-mode rating >= 0.5", top & (hm >= 0.5)),
               ("pedestal top, H-mode rating < 0.5", top & (hm < 0.5)),
               ("pedestal top, T_e changed >= 15 %", top & (dte >= 0.15)),
@@ -320,6 +370,14 @@ def report(tg, t, resid, preds, rng):
         print(f"| {name} | {int(sel.sum())} | {len(np.unique(inv[sel]))} | {np.sqrt(mse):.1f} | "
               f"{1.0 - excess[sel].mean() / mse:.2f} | "
               + " | ".join(skill(sel, a, b) for a, b in PAIRS) + " |")
+    step = np.abs(t["y1"] - t["y3"]).astype(np.float64)       # 10 ms step between visible frames
+    print("\nmedian absolute 10 ms step of the visible series and share of the summed gain "
+          "(gb_ces minus gb_all squared error):")
+    tot = (se["gb_ces"] - se["gb_all"]).sum()
+    for name, sel in cells:
+        if sel.sum() >= 300 and ("burst" in name or "quiet" in name):
+            print(f"  {name}: rows {int(sel.sum())} ({sel.mean():.3f} of all), median step "
+                  f"{np.nanmedian(step[sel]):.2f}, gain share {(se['gb_ces'][sel] - se['gb_all'][sel]).sum() / tot:+.3f}")
     arms = ("slope_filter", "gb_ces", "gb_ts", "gb_da", "gb_all", "interp")
     print("\nmedian absolute error: persistence value, then the ratio of each estimator to it")
     print("| cell | rows | persistence | " + " | ".join(arms) + " |")
