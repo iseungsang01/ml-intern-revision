@@ -30,7 +30,10 @@ DERIVED = {
 
 
 def norm(s):
-    return s.replace("−", "-").replace(" ", " ").replace("{,}", ",").replace("\\,", " ").replace("$", " ")
+    for a_, b_ in ((chr(0x2212), "-"), (chr(0xA0), " "), ("{,}", ","), (chr(92) + ",", " "), ("$", " "),
+                   (chr(0x2013), " to "), (chr(0x2026), " to ")):
+        s = s.replace(a_, b_)
+    return s
 
 
 def tokens(s):
@@ -61,7 +64,9 @@ def poster_text():
 def main():
     src = [(ROOT / "docs/paper/ppcf/main_ppcf.tex").read_text(encoding="utf-8"),
            (ROOT / "docs/paper/ppcf/refs.bib").read_text(encoding="utf-8"),
-           (ROOT / "docs/paper/file_rules.md").read_text(encoding="utf-8")]
+           (ROOT / "docs/paper/file_rules.md").read_text(encoding="utf-8"),
+           # the record in use; its own numbers are checked by ces_prediction/check_records.py
+           (ROOT / "PROJECT_KNOWLEDGE.md").read_text(encoding="utf-8")]
     fm = json.loads((ROOT / "docs/paper/ppcf/fig_missing.json").read_text(encoding="utf-8"))
     extra = [f"{fm['n_rows']:,}"]
     for k in ("CES_TI", "CES_VT"):

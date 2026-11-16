@@ -314,25 +314,19 @@ The separate `CES_SPLIT_DIR` and `CES_OUTPUT_DIR` keep smoke-test splits, metric
 ## Documentation Responsibilities
 
 ```text
-THESIS_RESULTS.md
-  - the written-up result; section 8 records every controlled experiment
-  - add a section per experiment: design, result table, verdict
-
-PROJECT_KNOWLEDGE.md
-  - long-term memory: lasting lessons, rejected paths, reproducibility traps
-  - summarize into it after a major finding -- not a per-run log
-
-CLAUDE.md
-  - how to work in this repo: commands, the data/model contract, agreements
-
-RESEARCH_CONTEXT.md
-  - what you need to UNDERSTAND the experiments: the claim, the data's real
-    artifacts, the sample contract, the evaluation protocol, the results, the
-    experiment ledger, how to read a number, limitations, open questions
-  - no operational content (commands, env vars, artifact inventory) -- that is
-    CLAUDE.md and this README
-  - DERIVED, never the origin of a fact -- the three files above win on conflict
+PROJECT_KNOWLEDGE.md      the record in use: purpose, data facts, design choices and what was
+                          measured for each, the results that are used, rules, open work
+PAPER_DESIGN.md           the fixed design and methods of the paper: terms, populations, splits,
+                          estimators, training, scoring, sentence forms, change log
+THESIS_RESULTS.md         the chronological experiment log; reference until a number is promoted
+                          into PROJECT_KNOWLEDGE.md
+CLAUDE.md                 how to work in this repo: commands, the data/model contract, agreements
+docs/README.md            index of the documents under docs/, each marked "in use" or "reference"
+docs/reference/           superseded summaries kept verbatim (not maintained, not quoted)
 ```
+
+`python ces_prediction/check_records.py` checks every number of the first two files against its
+source.
 
 ## What Was Removed From The Active Path
 

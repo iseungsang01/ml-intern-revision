@@ -1,82 +1,18 @@
-# THESIS_RESULTS — KSTAR CES nowcasting vs. conventional interpolation
+# THESIS_RESULTS — experiment log (KSTAR CES nowcasting)
 
-> **Read §0 first.** §1–§7 and §9 below are the W = 4 / windowed-model write-up of 2026-07-14 and
-> 2026-08-19, superseded by the confirmed protocol (§8v, 2026-08-12). They are kept as history; do
-> not quote their numbers. Every current number is in §8x onward and is collected in §0.
-
-## 0. Current state (2026-11-11) — the two claims and where each number lives
-
-**Protocol (§8v, `experiments/PREREGISTRATION_W2.md`).** W = 2 · held-free training and scoring ·
-per-file cap 500 · file-level splits, four held-out TEST splits (seeds 42 / 1 / 7 / 123) · two
-co-primary populations: *cut* (`CES_TI` > 3 keV treated as missing, 0.53 % of `T_i` rows) and
-*inclusive* (no cut) · shot-clustered paired bootstrap, 10,000 resamples · every batch's hypotheses,
-decision rules and numerical predictions committed to the repository before it runs.
-
-**Main model.** `seq_v2` (`experiments/seq/model_seq_v2.py`): full-grid two-branch causal LSTM,
-357,570 parameters; the `V_rot` branch reads no fast channel by construction (§8t, §8x). The
-windowed GRU + attention (`model_iter009.py`) is only the W = 2 paired control.
-
-**Claim 1 — ion temperature: a causal nowcast with lower error than future-using interpolation,
-and the equation it computes.**
-- Four-split skill vs PCHIP: +0.17 … +0.26 (cut), +0.23 … +0.32 (inclusive), 95 % interval
-  excluding 0 on 8/8 split–population cells; vs causal GP +0.08 … +0.17, 8/8; vs offline GP
-  −0.05 … +0.11, interval including 0 on 7/8 (§8ab).
-- vs linear interpolation (per split, read 2026-11-11 from `bootstrap_summary.json` in
-  `data/.b1_seqv2_s{s}_i{s}` and `data/.b5i_seqv2_s{s}`): cut +0.136 / +0.215 / +0.215 / +0.226,
-  inclusive +0.209 / +0.210 / +0.270 / +0.288 (seeds 42 / 1 / 7 / 123), interval excluding 0 on
-  4/4 in both populations. Linear is the stronger offline interpolant here (Δt ≤ 15 ms for ≥ 96 %
-  of rows); the skill vs linear is 0.01–0.05 below the skill vs PCHIP.
-- Shot-level repeated 5-fold replicate, overlap-corrected interval [+0.19, +0.25] (cut) /
-  [+0.19, +0.31] (inclusive): 100 runs / 50 folds, §8by secondary (ii) ([+0.186, +0.253] cut;
-  inclusive [+0.188, +0.307] in `docs/paper/b27_kfold_interval_R10.json`); the first 20-run pass is
-  §8bw ([+0.194, +0.253] / [+0.193, +0.306]).
-- Two-level bootstrap over eight new partitions (B.27c, cut): vs PCHIP +0.221 [+0.188, +0.248],
-  vs persistence +0.391 [+0.369, +0.408], vs causal GP +0.113 [+0.085, +0.132], vs offline GP
-  −0.010 [−0.043, +0.014] (includes 0) (§8by).
-- Stress tests: reweighted onto the genuinely missing rows, skill vs persistence +0.28 … +0.44
-  (8/8; values in `docs/paper/paper_numbers.json` → `mnar`, pass counts in §8ab); vs PCHIP excludes 0
-  on 2/4 cut and 4/4 inclusive splits; across a campaign split +0.17 … +0.20 vs PCHIP
-  (4/4 initialisations, both populations) (§8ab).
-- Where the margin comes from: in the cut population, zeroing BES/ECEI/MC in the windowed control
-  drops it below PCHIP (paired −0.25 … −0.43, 4/4 significant); in the inclusive population a
-  history-only model keeps +0.15 … +0.23 over PCHIP (spike robustness) (§8ab). Energy equation:
-  r(BES, dT_i/dt) = +0.070, r(ECEI, dT_i/dt) = +0.078 (§8ar).
-- What the network computes (B.28, §8bz–§8bz-4): a 20-parameter physical filter — observation
-  filter with gap-dependent gain (K₀ ≈ 0.28, K_∞ ≈ 0.51, s_K ≈ 42 ms) plus a linear response to each
-  fast channel's deviation from its preceding 100 ms baseline, switched off beyond θ ≈ 3.0σ
-  (Σa_BES ≈ +50, Σa_ECEI ≈ +48 eV per σ); trained from scratch it keeps 0.72–0.78 of the backbone's
-  PCHIP-relative skill on 4/4 cut splits (registered bar 0.70).
-- Median: a hold-or-jump filter with Student-t noise at the TRAIN bulk scale reaches 0.906–0.920×
-  persistence on 8/8 cells (§8bp). The backbone itself is a mean estimator; its aggregate skill is
-  a tail statistic (§8ax).
-
-**Claim 2 — rotation: a lower mean error too, carried by the CES history alone.**
-- B.27c two-level bootstrap over eight new partitions, vs PCHIP: +0.313 [+0.072, +0.701] (cut),
-  +0.319 [+0.046, +0.683] (inclusive); vs persistence cut [+0.277, +0.763]; vs causal GP cut
-  [+0.045, +0.701]; vs offline GP cut [−0.119, +0.635] (includes 0). The fold-level overlap-corrected
-  interval vs PCHIP, [−0.021, +0.405], still includes 0 (§8by). The four-split PR4 gate was 1/4
-  (cut) and 2/4 (inclusive) (§8ab); vs linear per split 1/4 in both populations (2026-11-11 read).
-- Why the gain is history-only: momentum equation r(BES, dV_rot/dt) = −0.006,
-  r(ECEI, dV_rot/dt) = −0.003 (§8ar). 100 Hz MC values equal a raw 2 MHz sample at the grid time on
-  24/24 coils; 15 registered features of the raw Mirnov stream change `V_rot` skill by −0.128
-  [−0.544, −0.105] (cut) / −0.164 [−0.473, −0.133] (inclusive), 0/3 test discharges, six training
-  discharges (§8bd). NBI power is a step input: the band carried by a 300 ms moving average holds
-  0.34 % of the 10 ms `V_rot` increment variance, so NBI is a lever only for forecasts of 100 ms
-  and longer (§8bd addendum).
-- Median: the backbone's median row is worse than persistence (4.3 vs 3.7 km/s, cut, §8ax); the
-  physics filter's ratio to persistence is 0.94–1.00 (0.938–1.003 per split) with the interval including 1 on 3/4 splits;
-  the T_i / V_rot scatter ratio is the √2 of a Gaussian line fit on 8/8 cells — the 10 ms photon
-  floor (§8bp, §8bq–§8bt). The remaining 10 ms lever is per-exposure CES fit uncertainty, which the
-  641 shot files do not contain.
-
-**Closed axes.** Model size (26× width sweep flat, §8aa), operator family (§8ag), 4-init ensemble
-+0.02 (§8aw), context beyond 50 ms (§8al), Huber loss cut-conditional (§8bu), soft gate negative
-(§8bg). **Limits.** One device and one campaign; the offline claim is bounded above by the offline
-GP; the value cut is a proxy for fit quality.
-
-**Paper.** Only the 8-page version is kept: `docs/paper/short/main_short.tex` (English) and
-`main_short_ko.tex` (Korean), numbers traced to this file. The 33/38-page full paper was removed on
-2026-11-11 (last present in commit 2318fd9).
+> **This file is the log, not the record in use (2026-11-16).** Every analysis that was run is
+> recorded here in the order it was run, with its design, numbers and verdict. A number in this
+> file is reference material until it has been promoted into `PROJECT_KNOWLEDGE.md` section 4;
+> the paper, the poster and the next experiment take their numbers from there, and their
+> definitions from `PAPER_DESIGN.md`. Conclusions written in older sections ("closed axes",
+> "the model-size axis is closed", "the bottleneck is the provider's answer") are not grounds
+> for a next step; `PROJECT_KNOWLEDGE.md` section 3 states what was actually measured.
+>
+> - Sections 1 to 7 and 9 are the W = 4 / windowed-model write-up (2026-07-14, 2026-08-19),
+>   superseded by the confirmed protocol (section 8v, 2026-08-12). Do not quote their numbers.
+> - Section 0 as written on 2026-11-11 was moved to
+>   `docs/reference/THESIS_RESULTS_section0_2026-11-11.md`.
+> - New records are appended at the end of this file.
 
 ## Provenance — every number in this document (regenerated 2026-07-14)
 
@@ -7482,3 +7418,19 @@ Fitted weights (mean of the two folds): network or causal variant 0.62 to 0.86, 
 Reading. (a) The recurrent estimator is not the best causal estimator in hand: mixing it with the CES-only causal GP at about 0.7 : 0.3 lowers the squared error by 0.021 to 0.037 on four of four splits. The size is that of the four-initialisation ensemble (+0.02), so part of it may be averaging of estimator variance and not information the GP has and the network lacks; the two are not separated here. (b) What the next CES sample adds on top of the network is of the same size (+0.001 to +0.072, three of four), in line with the pooled interval against the offline GP. (c) The closed "model size" axis is narrower than its name: the width ladder covered 34k to 879k parameters of one recipe (depth, learning-rate scaling with width, more data and other inputs were not varied; recorded under "What it does not show" of the size-scaling batch). A flat width curve and a positive stacking readout together say the single network is limited by how it is trained and combined, not by how wide it is.
 
 What this names as the next model work (none run here): the network as a correction to the causal GP (the GP estimate as an input and as the anchor of the output), an ensemble across families, and the same estimator on MAST, where five times as many discharges exist and no network has been trained (every MAST record so far says "no neural network trained").
+
+### The causal estimators and their combinations against the offline GP on the same rows (post hoc, 2026-11-16)
+
+The author's point: a gain of a few hundredths in skill is enough to pass a reference the network could not be told apart from. Script `experiments/b30_thinned/stack_offline_b30.py`, output `docs/paper/b30_stack_offline.json` / `.md`; not registered. The offline GP (Matern-3/2, up to 16 samples on each side, `baselines_interpolation.predict_gp`) is computed on the stored B.30 rows (T_i, cut, natural cadence, a visible sample on both sides) and each causal estimator and each two-fold stack of the previous record is scored against it. Skill over the offline GP, four file-level splits (42, 1, 7, 123), 95 % intervals over 2,000 resamples of discharges:
+
+| estimator | split 42 | split 1 | split 7 | split 123 | intervals above 0 / below 0 |
+|---|---|---|---|---|---|
+| causal GP | -0.151 [-0.206, -0.111] | -0.121 [-0.159, -0.091] | -0.139 [-0.184, -0.104] | -0.122 [-0.161, -0.090] | 0 / 4 |
+| causal variant | -0.073 [-0.154, -0.009] | -0.014 [-0.054, +0.024] | +0.005 [-0.048, +0.047] | -0.014 [-0.073, +0.033] | 0 / 1 |
+| network | -0.062 [-0.132, -0.005] | +0.030 [-0.015, +0.067] | +0.003 [-0.051, +0.041] | -0.006 [-0.076, +0.046] | 0 / 1 |
+| causal variant + causal GP + hold + history-only network | -0.034 [-0.088, +0.007] | +0.011 [-0.024, +0.043] | +0.025 [-0.021, +0.064] | +0.018 [-0.029, +0.057] | 0 / 0 |
+| network + causal GP + hold | -0.021 [-0.073, +0.020] | +0.034 [-0.005, +0.067] | +0.018 [-0.030, +0.055] | +0.018 [-0.027, +0.053] | 0 / 0 |
+
+RMSE of the offline GP on these rows: 158.3, 198.2, 181.3, 206.1 eV.
+
+Reading. A single network has its interval below zero on one split and includes zero on three. The combination removes the split below zero and moves the point estimate above zero on three of four splits, with every interval including zero: the combination of causal estimators already in hand cannot be told apart from an estimator that reads the next CES sample, and is no longer behind it anywhere. The lower ends of the four intervals are -0.088, -0.024, -0.021 and -0.029, so a further gain of about 0.03 in skill would put three of the four intervals above zero. That is the size a structural change has to deliver (the network as a correction to the causal GP, another cell or depth, an ensemble across families, pretraining on MAST); none of these has been run.

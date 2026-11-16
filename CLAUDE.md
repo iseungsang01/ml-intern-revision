@@ -22,10 +22,11 @@ python ces_prediction/inspect_split.py        # validate fixed split / manifest
 python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
 python ces_prediction/analyze_foundations.py    # checks every derivation in docs/theory_foundations.md (data + frozen npz)
 python ces_prediction/analyze_file_rules.py     # how the 10 ms files relate to the raw 1 us deliveries (grid, snapshots, beam blips)
+python ces_prediction/check_records.py          # numbers of PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md against their sources
 ```
 
-Controlled experiment batches live under `ces_prediction/experiments/` — 19 directories, each with
-its own runner and each behind a numbered section of `THESIS_RESULTS.md` §8, plus two shared files
+Controlled experiment batches live under `ces_prediction/experiments/` — one directory per batch, each with
+its own runner and each behind a record in `THESIS_RESULTS.md`, plus two shared files
 (`runner_common.py` for the frozen splits/controls/env, `paired_model_compare.py` for the paired
 bootstrap). The mapping (directory ↔ §8 section ↔ verdict) and the non-negotiables for a new batch
 are in `ces_prediction/experiments/README.md`; read that before adding one.
@@ -144,17 +145,25 @@ worked example). The file must define `MultimodalCESPredictor` with the contract
 Until 2026-08-09 the runners instead **copied a variant over `model.py` and restored it afterwards**
 (`swap_in_iter009` / `.wsweep_backup`). That is gone: no runner writes to tracked source, and an
 interrupted batch can no longer leave a corrupted `model.py` behind. Don't reintroduce it.
-See PROJECT_KNOWLEDGE.md "Checkpoint / Architecture Provenance".
+See `docs/reference/PROJECT_KNOWLEDGE_until_2026-11-16.md` "Checkpoint / Architecture Provenance".
 
 ## Working agreements
 
-- Read `PROJECT_KNOWLEDGE.md` (long-term lessons, failed paths) and `THESIS_RESULTS.md` §8
-  (per-experiment records) before changing training/model/data code.
+- **Three records, three roles (2026-11-16).** `PROJECT_KNOWLEDGE.md` is the record in use: purpose,
+  data facts, the design choices with what was measured for each, the results that are used, rules
+  and open work. `PAPER_DESIGN.md` fixes the terms, populations, estimators, training, scoring and
+  sentence forms that the paper, the poster and every new analysis follow. `THESIS_RESULTS.md` is
+  the chronological log. Read the first two before changing training/model/data code or writing
+  paper text; open the log for the detail of one experiment.
+- A number or conclusion that is only in the log, in `docs/reference/` or in a document that
+  `docs/README.md` marks as reference is **not** grounds for a next step and is not quoted. If it
+  is needed, re-measure it and promote it into `PROJECT_KNOWLEDGE.md` section 4.
 - Change **one controlled variable at a time**; don't bundle architecture + data + loss +
   optimizer changes.
-- **Record every meaningful run in `THESIS_RESULTS.md` §8** (design, result, verdict), and
-  summarize lasting lessons into `PROJECT_KNOWLEDGE.md` — that file is long-term memory, not a
-  per-run log.
+- **Record every meaningful run at the end of `THESIS_RESULTS.md`** (design, result, verdict). What
+  will be used goes into `PROJECT_KNOWLEDGE.md` section 4 as one line with its source; a change of
+  design or method goes into the change log of `PAPER_DESIGN.md`. Then run
+  `python ces_prediction/check_records.py` (every number of the two files against its source).
 - **Pin the data treatment explicitly in every run** — never let `CES_DROP_STUCK_TARGETS` and
   friends fall back to a default. A silent default produced a wrong window-sweep conclusion once
   (THESIS_RESULTS.md §8f).

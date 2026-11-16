@@ -216,6 +216,9 @@ def arrow(x, y, w, h, kind="down", color=ACCENT, name=None):
 
 def line_arrow(x1, y1, x2, y2, color=MUTED, w=1.25, head=True, name=None):
     c = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Cm(x1), Cm(y1), Cm(x2), Cm(y2))
+    st = c._element.find(qn("p:style"))      # 기본 선 스타일(그림자 포함)을 떼고 색과 굵기만 준다
+    if st is not None:
+        c._element.remove(st)
     c.line.color.rgb = color
     c.line.width = Pt(w)
     if head:
@@ -290,7 +293,7 @@ FLOW = [("문제", "pedestal top의 CES는 약하고 자주 빈다"),
         ("질문", "hold·보간보다 오차가 낮은가, 10 ms 안에 도는가"),
         ("방법", "CES 이력과 BES·ECEI를 읽는 순환 신경망"),
         ("검증", "641 방전, 등록 시험, 재생 실험, 두 번째 장치")]
-FLOW_H = 2.7
+FLOW_H = 2.4
 y = TOP
 H1 = HEAD_H + PAD + CP + text_h(goal_paras, BODY_PT, INNER, 15.2) + 0.4 + FLOW_H + CP + PAD
 section(XL, y, COL_W, H1, "Ⅰ. 연구 목표", "sec1")
@@ -325,28 +328,64 @@ B_paras = [
     "12개 방전의 원시 신호(0.5–2 MHz)를 10 ms 파일과 대조하여 한 행의 뜻을 확인하였다. 빠른 진단의 값은 그 행 시각의 원시 표본 하나였고(BES 6,502행 중 6,502행 일치) 평균값이 아니었다.",
     "CES 값은 시각 표지에서 시작하는 10 ms 노출의 값이었다. 빔이 약 10 ms 꺼지는 blip의 프레임은 파일에 없었으며, 원시 자료 구간의 45건이 모두 일치하였다. 따라서 estimator는 추정 대상 프레임이 시작되는 시각까지의 정보만 읽는다.",
 ]
-SCH_H = 4.5
+SCH_H = 4.1
 hB = CP + SUB_H + 0.12 + text_h(B_paras, SMALL_PT, INNER, SP) + 0.3 + SCH_H + CP
 K_paras = [
     "빔이 약 10 ms 꺼진 blip 1,394건의 직후에 T_i는 직전의 **0.819 [0.796, 0.838]**, 빔을 쓰지 않는 ECEI 세기는 0.926 [0.910, 0.939]이었다.",
     "둘 다 약 90 ms에 회복하였고, 빔 방출은 넷째 행에 0.954로 돌아왔다.",
     "blip 사이의 CES 값은 빔 세기가 아니라 플라스마의 변화를 따랐다.",
 ]
-K_IMG_W = 12.2
+K_IMG_W = 9.4
 kt_w = INNER - K_IMG_W - 0.5
 k_img_h = pic_h("poster_blip.png", K_IMG_W)
 k_body = max(k_img_h, text_h(K_paras, SMALL_PT, kt_w, SP, 4))
 hK = CP + SUB_H + 0.12 + k_body + CP
-C_paras = [
-    "순환 신경망(LSTM, 357,570 parameters)은 CES 이력과 빠른 진단을 시간 순서대로 읽는다. V_rot 가지는 빠른 진단을 읽지 않는다.",
-    "기준선은 hold(직전 값 유지), 인과 GP(CES 이력에만 맞춘 Gaussian process), 그리고 다음 표본까지 쓰는 보간(PCHIP, GP)이다. 보간은 실시간으로 쓸 수 없는 참고 기준이다.",
+# 설계 선택의 흐름: 무엇을 골랐고, 무엇과 견줬고, 무엇을 쟀는가 (PROJECT_KNOWLEDGE.md 3절)
+WHY_HEAD = ("선택", "견준 대안", "측정한 것")
+WHY_ROWS = [
+    ("모든 행을 순서대로 읽는 순환 모델", "과거 W개 행만 읽는 윈도 모델 (W = 2–8)",
+     "윈도 모델은 W = 2에서 이미 평평하였다. 순환 모델의 짝지은 T_i skill은 16쌍 모두 양이었고 pooled **+0.081 [+0.067, +0.096]**이었다."),
+    ("순환 연산자 LSTM", "합성곱(TCN), attention",
+     "같은 문맥 길이에서 세 계열이 0.023 안이었다. GRU·단순 RNN과는 견주지 않았다."),
+    ("357,570 parameters (2층, 160 유닛)", "폭 34k–879k parameters",
+     "PCHIP 대비 skill이 +0.230 … +0.236으로 평평하였다. 깊이와 더 큰 크기는 재지 않았다."),
+    ("한 스텝 0.49 ms", "10 ms 프레임",
+     "계산 시간은 크기의 제약이 아니다. 인과 GP와 섞으면 skill이 **+0.021 … +0.037** 더 높아(네 분할 모두 0 제외) 구조는 더 나아질 수 있다."),
 ]
-BH, R2 = 2.0, 2.5
+WHY_COLS = (4.5, 4.3, INNER - 8.8 - 0.3)
+WHY_PT, WHY_PITCH = 9.6, 12.8
+
+
+def why_table(x, y, draw=True):
+    """머리줄 + 행마다 세 칸. 높이를 돌려준다."""
+    xs = (x, x + WHY_COLS[0] + 0.15, x + WHY_COLS[0] + WHY_COLS[1] + 0.3)
+    yy = y
+    if draw:
+        for j, hname in enumerate(WHY_HEAD):
+            text(xs[j], yy, WHY_COLS[j], hname, size=9.0, color=MUTED, bold=True, pitch=12, name=f"why.head{j}")
+    yy += 12 * PT2CM + 0.1
+    if draw:
+        line_arrow(x, yy, x + INNER, yy, color=RULE, w=0.9, head=False, name="why.rule0")
+    yy += 0.1
+    for i, row in enumerate(WHY_ROWS):
+        hs = [text_h(c, WHY_PT, WHY_COLS[j], WHY_PITCH) for j, c in enumerate(row)]
+        if draw:
+            for j, c in enumerate(row):
+                text(xs[j], yy, WHY_COLS[j], c, size=WHY_PT, color=INK if j == 0 else BODY, pitch=WHY_PITCH,
+                     bold=(j == 0), name=f"why.r{i}c{j}")
+        yy += max(hs) + 0.1
+        if draw:
+            line_arrow(x, yy, x + INNER, yy, color=RULE, w=0.6, head=False, name=f"why.rule{i + 1}")
+        yy += 0.1
+    return yy - y
+
+
+BH, R2 = 1.8, 2.2
 ARCH_H = R2 + BH
-hC = CP + SUB_H + 0.15 + ARCH_H + 0.28 + text_h(C_paras, SMALL_PT, INNER, SP) + CP
+hC = CP + SUB_H + 0.15 + ARCH_H + 0.3 + why_table(0, 0, draw=False) + CP - 0.1
 D_paras = [
     "측정된 값을 가리고 추정한 뒤 가린 값과 비교하였다. skill이 0보다 크면 기준선보다 평균 제곱 오차(MSE)가 작다. 구간은 방전 단위 bootstrap의 95 % 구간이며, 구간이 0을 포함하지 않을 때만 차이로 읽었다.",
-    "주요 진술은 결과를 보기 전에 등록하였다. 한 스텝의 계산 시간은 CPU 한 스레드에서 중앙값 **0.49 ms**(99번째 백분위수 최대 1.83 ms)로 10 ms 프레임 안이었다.",
+    "기준선은 hold(직전 값 유지), 인과 GP(CES 이력에만 맞춘 Gaussian process), 그리고 다음 표본까지 쓰는 보간(PCHIP, GP)이다. 보간은 실시간으로 쓸 수 없는 참고 기준이다. 주요 진술은 결과를 보기 전에 등록하였다.",
 ]
 FORM_H = 0.9
 hD = CP + SUB_H + 0.12 + FORM_H + 0.2 + text_h(D_paras, SMALL_PT, INNER, SP) + CP
@@ -366,7 +405,7 @@ ty = cy + CP
 ty += subhead(ix, ty, INNER, "2. 한 행이 담는 것 (원시 1 µs 자료와 대조)", "sec2.B.head") + 0.12
 ty += text(ix, ty, INNER, B_paras, size=SMALL_PT, pitch=SP, name="sec2.B.text") + 0.3
 sx0, sw = ix + 1.25, 3.5
-fy = ty + 1.4                        # frame row
+fy = ty + 1.25                       # frame row
 slots = [("CES 프레임", PANEL, None, False, BODY),
          ("직전 프레임\n(hold가 쓰는 값)", HEAD, None, False, INK),
          ("**추정 대상 프레임**\n(시각 표지 t에서 노출 시작)", WHITE, NAVY, False, INK),
@@ -408,7 +447,7 @@ cy += hK + GAP2
 # ---- 4. 비교한 estimator
 card(cx, cy, CARD_W, hC, "sec2.cardC")
 ty = cy + CP
-ty += subhead(ix, ty, INNER, "4. 비교한 estimator", "sec2.C.head") + 0.15
+ty += subhead(ix, ty, INNER, "4. 모델 설계와 선택 이유", "sec2.C.head") + 0.15
 c1, c2, c3 = ix, ix + 7.05, ix + 13.75
 w1, w2, w3 = 6.0, 5.65, INNER - 13.75
 nodes = [
@@ -427,14 +466,14 @@ line_arrow(c1 + w1 + 0.05, ty + R2 + BH / 2 - 0.35, c2 - 0.08, ty + BH / 2 + 0.5
 line_arrow(c1 + w1 + 0.05, ty + R2 + BH / 2 + 0.2, c2 - 0.08, ty + R2 + BH / 2 + 0.2, color=LINE_O, w=1.5, name="arch.a3")
 line_arrow(c2 + w2 + 0.05, ty + BH / 2, c3 - 0.08, ty + BH / 2, color=LINE_B, w=1.5, name="arch.a4")
 line_arrow(c2 + w2 + 0.05, ty + R2 + BH / 2, c3 - 0.08, ty + R2 + BH / 2, color=LINE_O, w=1.5, name="arch.a5")
-ty += ARCH_H + 0.28
-text(ix, ty, INNER, C_paras, size=SMALL_PT, pitch=SP, name="sec2.C.text")
+ty += ARCH_H + 0.3
+why_table(ix, ty)
 cy += hC + GAP2
 
 # ---- 5. 채점
 card(cx, cy, CARD_W, hD, "sec2.cardD")
 ty = cy + CP
-ty += subhead(ix, ty, INNER, "5. 채점", "sec2.D.head") + 0.12
+ty += subhead(ix, ty, INNER, "5. 채점과 기준선", "sec2.D.head") + 0.12
 f = box(ix + 3.4, ty, INNER - 6.8, FORM_H, fill=PANEL, radius=0.2, name="sec2.D.formula")
 label_in(f, "skill = 1 − MSE(estimator) / MSE(기준선)", 12.5, color=INK, bold=True, pitch=16)
 ty += FORM_H + 0.2
