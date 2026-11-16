@@ -33,6 +33,7 @@ SOURCES = (
     "docs/paper/mast_edge.md", "docs/paper/mast_gate.md", "docs/paper/mast_gate_addendum1.md",
     "docs/paper/fast_departure.md", "docs/paper/b32_two_sources.md", "docs/paper/b32_posthoc.md",
     "docs/paper/b32_posthoc_model.md",
+    "docs/paper/b33_clusters.md",
 )
 DERIVED = {
     "2022": "the campaign year",
