@@ -33,12 +33,12 @@
 \newcommand{\chir}{\ensuremath{\chi^2_\mathrm{red}}}
 
 \hypersetup{
-  pdftitle={Estimating charge-exchange ion temperature without the next measurement at a weak edge chord: what co-located fast diagnostics add on KSTAR},
+  pdftitle={Nowcasting charge-exchange ion temperature at the pedestal-top chord of KSTAR: a causal estimator with co-located fast diagnostics against hold and interpolation},
   pdfauthor={Seungsang Lee},
 }
 
-\title{Estimating charge-exchange ion temperature without the next measurement at a
-weak edge chord: what co-located fast diagnostics add on KSTAR}
+\title{Nowcasting charge-exchange ion temperature at the pedestal-top chord of KSTAR:
+a causal estimator with co-located fast diagnostics against hold and interpolation}
 \author{Seungsang Lee\\
   {\small Department of Nuclear Engineering, Seoul National University, Seoul, Republic of Korea}\\
   {\small\texttt{lss010330@snu.ac.kr}}}
@@ -51,23 +51,27 @@ weak edge chord: what co-located fast diagnostics add on KSTAR}
 \begin{abstract}
 \noindent
 Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} and toroidal
-rotation every 10\,ms, but on an edge chord, where the signal is weak, 8.2\% of \Ti{}
-and 23.9\% of rotation samples are missing. We ask how well a missing sample can be
-estimated without waiting for the next one. The chord is fit-noise-limited: the lag-1
-autocorrelation of 10\,ms increments is $-0.416$ $[-0.429, -0.402]$. On 3{,}686 public
-MAST discharges, in a registered test, the share of failed fits rises from
-0.270 at mid-radius to 0.695 at the edge and the same number falls from $+0.299$ to
-$-0.049$ $[-0.078, -0.016]$. The main result is on KSTAR: among estimators that do not
-use the next CES sample, a recurrent network that also reads co-located beam-emission
-and electron-cyclotron channels has the lowest \Ti{} mean squared error, with skill
-$+0.113$ $[+0.085, +0.132]$ over a CES-only causal Gaussian process; retrained without
-those channels it loses $+0.064$ to $+0.117$ on four splits when failed fits are
-excluded. Against an offline Gaussian process the interval includes zero. With the
-fast channels standardized from training discharges only the estimator is causal, and
-its skill over the causal Gaussian process is $+0.068$ to $+0.141$ on four splits and
-$+0.103$ to $+0.112$ on later discharges. Rotation
-is estimated from its own history (fast-channel coupling $|r| \leq 0.044$). The gain
-is carried by large-error rows.
+rotation every 10\,ms. On the chord at the pedestal top the signal is weak, 8.2\% of
+\Ti{} and 23.9\% of rotation samples are missing, and an application that needs the
+value at the present time cannot use interpolation, which waits for the next sample.
+We ask which estimator of the present value has the lowest error there against hold
+and interpolation, whether it fits inside the 10\,ms frame, and what it does when CES
+samples drop out. On 641 discharges, a recurrent network that reads the CES past and
+co-located beam-emission and electron-cyclotron channels has the lowest \Ti{} mean
+squared error among estimators that do not use the next sample. With every input
+standardized from training discharges it is causal, and its skill over a CES-only
+causal Gaussian process is $+0.068$ to $+0.141$ on four splits and $+0.103$ to
+$+0.112$ on later discharges; retrained without the fast channels the network loses
+$+0.064$ to $+0.117$ when values above 3\,keV are excluded. When measured samples are
+withheld so that one is visible only every 50\,ms, the network fills the 10\,ms grid
+with a lower error than the causal Gaussian process on four of four splits and than
+interpolation between the sparse samples on three of four, and the fast-channel share
+rises to $+0.076$ to $+0.156$; its distance to hold falls by 0.06 to 0.07. One step
+takes 0.5\,ms on a CPU. The gain is in the mean squared error: the median error is
+not below that of hold. Rotation is estimated from its own history. On 3{,}686 public
+MAST discharges the share of failed fits rises from 0.270 at mid-radius to 0.695 at
+the edge; the KSTAR chord itself is fit-noise-limited (lag-1 autocorrelation of
+10\,ms increments $-0.416$).
 \end{abstract}
 
 % =========================================================================
@@ -95,26 +99,33 @@ neither measures \Ti{} or \Vrot{}.
 
 Two kinds of estimate can fill such a sample. An \emph{offline} estimate may use the
 CES samples on both sides and suits post-discharge analysis. An estimate that
-\emph{does not use the next CES sample} is the one a monitoring application needs,
-because the next exposure may be 10\,ms away or may not arrive. This paper is about
-the second kind, and it asks one question: at a weak edge chord, do fast diagnostics
-at the same location lower the error of such an estimate, and by how much?
+\emph{does not use the next CES sample} is the one a monitoring or control
+application needs, because the next exposure may be 10\,ms away or may not arrive;
+interpolation is then not available, and the simplest reference is to hold the last
+value. This paper is about the second kind. It asks which estimator of the present
+value has the lowest error at the pedestal-top chord against hold and interpolation,
+what fast diagnostics at the same location contribute to it, whether it fits inside
+the 10\,ms frame, and what it does when CES samples drop out.
 
-The answer has three parts. First, the chord is \emph{fit-noise-limited}: successive
+The answer has four parts. First, the chord is \emph{fit-noise-limited}: successive
 10\,ms increments of \Ti{} are anticorrelated almost as white noise on a flat signal
-would be, so averaging the CES past helps and CES-only estimators saturate near a
-causal Gaussian process (GP). That this is a property of a weak edge measurement, and
+would be, so much of what any estimator gains over hold is the averaging of the CES
+past, which a causal Gaussian process (GP) already does. That this is a property of a weak edge measurement, and
 not of the device, is tested on public MAST data with many chords: on discharges that
 took no part in forming the hypothesis, the share of failed fits rises and the same
 statistic falls from the core to the edge (\S\ref{sec:regime}). Second, the main
 result: among estimators that do not use the next CES sample, one that also reads the
 co-located BES and ECEI channels has the lowest \Ti{} mean squared error; the same
-network retrained without those channels has a larger error when failed fits are
+network retrained without those channels has a larger error when values above 3\,keV are
 excluded; and against an offline GP that does use the next sample the interval
 includes zero (\S\ref{sec:fast}). Third, the same channels carry a bounded, small
 association with rotation, which is estimated from its own history
-(\S\ref{sec:vrot}). The gain belongs to the large-error rows and not to the typical
-row (\S\ref{sec:character}).
+(\S\ref{sec:vrot}). Fourth, when measured CES samples are withheld so that one is
+visible only every 20 to 100\,ms, the estimator keeps a lower error than a causal GP,
+and at 50\,ms than interpolation between the sparse samples on three of four splits,
+while the fast-channel share grows (\S\ref{sec:thin}); one step of the estimator takes
+0.5\,ms on a CPU. The gain belongs to the large-error rows and not to the typical row
+(\S\ref{sec:character}).
 
 \paragraph{Relation to earlier work.} GP regression~\citep{rasmussen2006} is the
 standard tool for fusion profile fitting~\citep{chilenski2015,michoski2024} and has
@@ -133,16 +144,17 @@ densifies or fills Thomson
 scattering~\citep{Imrek2026TemporalSuperresolution,Pastore2023ModelBased} and restores
 electron channels~\citep{Wang2025TimeSeries,Jia2026TimeSeries,Yang2026FusionmaeSelfsupervised}.
 The present work extends that programme to a sparse ion channel, to estimation
-conditioned on the irregular past of the target itself, and to a per-target test of
-whether the fast channels are informative at all.
+conditioned on the irregular past of the target itself, and to a direct test, for the
+ion temperature, of whether the fast channels are informative at all.
 
 \paragraph{Scope.} The KSTAR result is one chord, one campaign and one device. MAST
 enters as a second, public device for the dependence of the measurement on radius
 only: it has many chords and per-sample fit errors but no fast diagnostic co-located
 with them, so no MAST number supports the statement about fast diagnostics. Gaps on
 KSTAR are natural; on MAST they are frames hidden by us. The fast-channel share of
-the \Ti{} margin holds in the population that excludes failed fits and is small in
-the one that keeps them. The headline network standardizes the fast channels with
+the \Ti{} margin holds in the population that excludes values above 3\,keV and is
+small in the one that keeps them at the natural cadence; it is established in both
+when CES is made sparser (\S\ref{sec:thin}). The headline network standardizes the fast channels with
 whole-discharge statistics, an offline step, and is described as an estimator that
 does not use the next CES sample; the same network with the fast channels
 standardized from training discharges only is causal, and its numbers are quoted
@@ -243,23 +255,14 @@ marginal-likelihood selection). Three estimators also use the following CES samp
 serve as offline references: linear and PCHIP interpolation and an \emph{offline GP}
 with neighbours on both sides.
 
-The learned estimator is wired after the two balances that the targets obey,
-\begin{align}
-  \partial_t\bigl(\tfrac{3}{2}n_i T_i\bigr) + \nabla\!\cdot\!\mathbf{q}_i
-    &= Q_{ei}\,(T_e-T_i) + S_i,
-  \label{eq:energy}\\
-  \partial_t\bigl(n_i m_i \langle R^2\rangle \omega_\varphi\bigr)
-    + \nabla\!\cdot\!\Pi_\varphi
-    &= T_\mathrm{NBI} + T_\mathrm{NTV} + T_\mathrm{int} + \cdots .
-  \label{eq:momentum}
-\end{align}
-BES responds to density and ECEI to electron temperature at the location of the chord,
-quantities that appear in the exchange and flux terms of~\eqref{eq:energy}. None of
-the available channels measures a term of~\eqref{eq:momentum}: there is no torque or
-beam-power signal, and a Mirnov signal sampled at 100\,Hz cannot resolve mode
-rotation. The expectation is therefore asymmetric (Fig.~\ref{fig:arch}): the \Ti{}
-branch reads the 15 fast channels and the CES past; the \Vrot{} branch reads the CES
-past only. The asymmetry is tested as a measurement in \S\ref{sec:vrot}.
+The learned estimator has two branches (Fig.~\ref{fig:arch}). BES responds to density
+and ECEI to electron temperature at the location of the chord, the two quantities
+that enter the local ion heat balance through collisional exchange and transport, so
+the \Ti{} branch reads the 15 fast channels (BES, ECEI and two Mirnov channels) and
+the CES past. No available channel measures a torque: there is no beam-power signal,
+and a Mirnov signal sampled at 100\,Hz cannot resolve mode rotation. The \Vrot{}
+branch therefore reads the CES past only. The asymmetry is tested as a measurement in
+\S\ref{sec:vrot}.
 
 \begin{figure}[t]
   \centering
@@ -277,14 +280,19 @@ per-target masked squared-error loss, which is minimized by the conditional mean
 a small penalty on \Ti{} below the normalized zero. A row with one observed target
 still supervises it. The network keeps every row of a contiguous segment as context,
 since the fast diagnostics have no gaps; the CES-derived inputs at $t$ use rows before
-$t$ only, and the target row never enters the input. Training uses AdamW (learning
+$t$ only, and the target row never enters the input. Targets and the CES-derived
+inputs are standardized with the mean and variance of the training discharges.
+Training uses AdamW (learning
 rate $10^{-3}$, weight decay $10^{-4}$, batches of 16 segments, gradient clipping at
 1.0) with early stopping; splits are by whole discharge file. The recurrent operator
 runs forward in time, but the 15 fast channels are standardized with the mean and
 variance of the whole discharge, which is an offline step; a variant standardized
 with the statistics of the training discharges only is causal throughout
-(\S\ref{sec:fast}). A stateful step costs
-0.97\,ms (median) on a CPU.
+(\S\ref{sec:fast}). One stateful step of the network, timed in five separate sessions on a desktop CPU
+(one thread, one row at a time), takes 0.49\,ms at the median and at most 1.83\,ms at
+the 99th percentile; the causal GP, refitted at every row, takes 0.64 and 2.28\,ms,
+and hold 0.007\,ms. All fit inside the 10\,ms frame. The timing covers the estimator
+only, not the acquisition or the reduction of the fast channels.
 
 \subsection{Scoring, intervals and registration}
 \label{sec:methods:eval}
@@ -328,10 +336,12 @@ value. Its median over discharges is $-0.416$ $[-0.429, -0.402]$ for \Ti{} (601
 discharges; interquartile range $-0.491$ to $-0.294$) and $-0.349$
 $[-0.384, -0.322]$ for \Vrot{} (382 discharges). This is a descriptive statistic, not a registered
 test. It agrees with two independent readings: difference estimators put the \Ti{}
-measurement noise at 46.4 to 129.9\,eV, the order of the best estimator's error
-(157.8\,eV), and the ratio of the relative 10\,ms scatter of \Ti{} to that of \Vrot{}
-is $\sqrt2$ (1.395--1.532 in eight split--population cells), the value for independent
-Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
+measurement noise at 46.4 to 129.9\,eV depending on the estimator, against an RMSE of
+157.8\,eV for the best estimator, which large-error rows dominate
+(\S\ref{sec:character}); and the ratio of the 10\,ms scatter of \Ti{} divided by
+\Ti{} to the 10\,ms scatter of \Vrot{} divided by the thermal Doppler width of the
+observed ion at that \Ti{} is $\sqrt2$ (1.395--1.532 in eight split--population
+cells), the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
 a running mean has \Ti{} skill $+0.26$ to $+0.34$ over persistence on the four splits
 and the causal GP $+0.31$ to $+0.35$. PCHIP passes exactly through noisy anchors, so
 any smoother of the CES past gains on it, and the deciding CES-only comparison for a
@@ -595,14 +605,14 @@ network after 25, 20, 20 and 42, and the increment is $+0.067$, $+0.064$, $+0.11
 and $+0.069$, every interval excluding zero. Training the history-only network 16 to
 28 epochs longer changed its own test error by $-0.006$ to $+0.014$; the cap was not
 what produced the increment (the first runs are in Appendix~\ref{app:more}). With
-failed fits excluded, then, the full network has a lower \Ti{} error than the same
+values above 3\,keV excluded, then, the full network has a lower \Ti{} error than the same
 network without the fast channels by $+0.064$ to $+0.117$.
 
 The two populations differ in where the margin over the causal GP comes from. With
-failed fits excluded, the history-only network is separated from the causal GP on two
+values above 3\,keV excluded, the history-only network is separated from the causal GP on two
 of four splits ($+0.011$ to $+0.074$), and the margin of the full network over the
 causal GP ($+0.078$ to $+0.138$ on the same splits) is largely the fast-channel
-increment. With failed fits kept, the increment is $+0.016$ to $+0.024$ and its
+increment. With values above 3\,keV kept, the increment is $+0.016$ to $+0.024$ and its
 interval excludes zero on two of four splits, while the history-only network alone
 has $+0.102$ to $+0.155$ over the causal GP on four of four: there the margin comes
 mainly from how the recurrent state handles a CES history that contains failed fits.
@@ -625,7 +635,7 @@ calls causal. The headline network is separated from it on one of the four file-
 cut splits ($+0.043$ $[+0.022, +0.066]$; the other three $-0.004$ to $+0.010$) and on
 none of the initialisations of the split by time ($+0.003$ to $+0.015$): with failed
 fits excluded, whole-discharge standardization is not what carries the margin over
-the causal GP. With failed fits kept, on the split by time, the headline network has
+the causal GP. With values above 3\,keV kept, on the split by time, the headline network has
 the lower error on three of four initialisations ($+0.010$ to $+0.065$). The
 fast-channel increment of Table~\ref{tab:honly} was measured with whole-discharge
 standardization only; no history-only network was trained under the causal
@@ -669,11 +679,77 @@ Truncating the network's context costs $-0.066$ in skill at 20\,ms and saturates
 50\,ms. The autocorrelation $1/e$ times of \Ti{} (159\,ms), BES (161\,ms) and ECEI
 (147\,ms) agree, as expected if the three follow the same local evolution. The
 physical mechanism is not identified: per-discharge standardization removes the
-absolute $T_e$ and $n_e$ that the exchange term of~\eqref{eq:energy} would need, and
+absolute $T_e$ and $n_e$ that a collisional-exchange term would need, and
 the files carry no beam-power or D-alpha signal with which events could be labelled.
 At 10\,ms no statement about individual edge-localized modes is possible.
 
 % =========================================================================
+\subsection{When CES is sparser: a thinned replay}
+\label{sec:thin}
+The natural gaps are few and are also the places where the fit failed. To score every
+row at every age of the last sample, measured CES samples were withheld from every
+estimator so that a sample was visible only every $k$-th frame ($k = 1, 2, 3, 5, 10$;
+every phase), the 10\,ms grid was filled, and the withheld measurements were used as
+the answer. Nothing was retrained. The design, five statements on \Ti{} and their
+numerical expectations were registered before the first thinned prediction; at
+$k = 1$ the errors reproduce the stored ones (absolute error of the network within
+0.5\,eV on at least 99.9\% of the stored rows). Table~\ref{tab:thin} gives the
+result.
+
+\begin{table}[t]
+  \centering
+  \caption{KSTAR thinned replay, \Ti{}, cut population: skill when a CES sample is
+  visible only every $k$-th frame. Range of the point estimates on the four
+  file-level splits and, in brackets, the number of splits whose 95\% interval
+  excludes zero. Hold, the causal GP and the networks read only visible samples
+  before the row; PCHIP interpolates the visible samples on both sides and is not
+  causal. The networks are frozen (trained at $k = 1$); the network and its
+  history-only twin are the pair trained under the 80-epoch cap. The rows are every
+  measured row of the test discharges with a visible sample before and after it,
+  which is close to, not identical with, the population of
+  Tables~\ref{tab:ladder}--\ref{tab:honly}.}
+  \label{tab:thin}
+  \footnotesize
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lcccc}
+    \toprule
+    & 10\,ms ($k = 1$) & 20\,ms ($k = 2$) & 50\,ms ($k = 5$) & 100\,ms ($k = 10$) \\
+    \midrule
+    Network vs hold & $+0.358$ to $+0.411$ (4) & $+0.344$ to $+0.372$ (4) & $+0.298$ to $+0.345$ (4) & $+0.263$ to $+0.309$ (4) \\
+    Network vs causal GP & $+0.077$ to $+0.134$ (4) & $+0.124$ to $+0.137$ (4) & $+0.108$ to $+0.129$ (4) & $+0.087$ to $+0.136$ (4) \\
+    Network vs PCHIP of the visible samples & $+0.175$ to $+0.271$ (4) & $+0.108$ to $+0.200$ (4) & $+0.062$ to $+0.155$ (3) & $-0.011$ to $+0.107$ (2) \\
+    Network vs history-only twin & $+0.064$ to $+0.113$ (4) & $+0.069$ to $+0.146$ (4) & $+0.076$ to $+0.156$ (4) & $+0.079$ to $+0.145$ (4) \\
+    History-only twin vs hold & $+0.314$ to $+0.372$ (4) & $+0.260$ to $+0.316$ (4) & $+0.201$ to $+0.281$ (4) & $+0.163$ to $+0.237$ (4) \\
+    Causal variant vs causal GP & $+0.068$ to $+0.126$ (4) & $+0.091$ to $+0.137$ (4) & $+0.070$ to $+0.134$ (4) & $+0.051$ to $+0.145$ (4) \\
+    \midrule
+    RMSE of hold (eV) & 203.7 to 269.7 & -- & 219.9 to 283.6 & 233.4 to 292.6 \\
+    RMSE of the network (eV) & 163.2 to 207.2 & -- & 184.2 to 229.5 & 200.5 to 243.2 \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+(i) The network keeps an interval above zero over the causal GP at every cadence, on
+four of four splits, and so does the causal variant. (ii) The fast-channel share,
+measured against the history-only twin, is larger when CES is sparser: $+0.064$ to
+$+0.113$ at 10\,ms and $+0.076$ to $+0.156$ at 50\,ms, larger on each split. In the
+population that keeps values above 3\,keV it is not established at 10\,ms ($+0.009$
+to $+0.024$, two of four splits) and is established at 50\,ms ($+0.033$ to $+0.047$,
+four of four). (iii) Against PCHIP interpolation between the visible samples, which
+is not causal, the network has the lower error on three of four splits at 50\,ms and
+on two of four at 100\,ms. (iv) The registered statement that failed concerns hold:
+the skill over hold falls by 0.060 to 0.072 between 10 and 50\,ms, where a margin of
+0.05 had been registered. Resolved by the age of the last visible sample at $k = 10$,
+the skill over hold is only $+0.082$ to $+0.227$ at an age of 10\,ms, when the sample
+before the last one is more than 100\,ms old: at the natural cadence most of the
+distance to hold is the averaging of the last few samples, and what remains under
+thinning is the fast-channel term ($+0.077$ to $+0.168$ at ages of 10, 50 and
+100\,ms). The networks were trained at the natural cadence, so the table describes a
+frozen estimator under a dropout it rarely saw; training with imposed dropout is the
+next step. At the median the picture of \S\ref{sec:character} is unchanged: the
+median absolute error of the network is not below that of hold at any cadence (50.6
+to 58.0\,eV against 49.8 to 56.6\,eV at 50\,ms), and it is 3 to 12\% below that of
+the history-only twin at 100\,ms.
+
 \section{Rotation}
 \label{sec:vrot}
 
@@ -681,7 +757,7 @@ Corrected for target noise, the correlation of fast-channel increments with \Vro
 increments has a 95\% bound $|r| \leq 0.044$ over every lag from 0 to 200\,ms and
 every window from 10 to 200\,ms, against the \Ti{} lower bound of $+0.127$. This
 bounds a linear association and does not prove its absence. It is the measured
-counterpart of the asymmetry between~\eqref{eq:energy} and~\eqref{eq:momentum}. The
+counterpart of the asymmetry built into the two branches. The
 Mirnov signal at 100\,Hz equals a single raw sample of the 2\,MHz stream at the grid
 time on 24 of 24 coils checked, so mode rotation in the kHz band is aliased away, and
 no torque or beam-power channel exists. On MAST, where beam power is public, rotation
@@ -693,10 +769,8 @@ one-sided in time; away from beam steps it is $+0.016$ $[+0.010, +0.022]$
 cycle~\citep{Viezzer2020Dynamics} is a different measurement.
 
 Rotation is therefore estimated by the branch that reads the CES past only
-(Table~\ref{tab:headline}). Removing the fast channels from the \Ti{} branch leaves
-the rotation error where it was: the skill of the full network over the retrained
-one is $-0.017$ to $+0.005$ on the four cut splits, with no interval above zero (one
-lies below it).
+(Table~\ref{tab:headline}); whether fast channels fed to that branch would lower its
+error was not tested.
 Among estimators that do not use the next CES sample this branch has the lowest mean
 squared error (Table~\ref{tab:ladder}). Its skill over persistence is $+0.265$
 $[+0.198, +0.326]$ (cut), with the interval excluding zero on all four splits in both
@@ -707,7 +781,9 @@ pooled interval excludes zero in both populations, but per split it excludes zer
 pooled readout only. Against PCHIP, which uses the following sample, the interval
 excludes zero in the cut population by a narrow margin and includes zero in the
 inclusive one, so a margin over PCHIP is not established; against the offline GP the
-offline smoother has the lower error in the inclusive population.
+offline smoother has the lower error in the inclusive population. In the thinned
+replay of \S\ref{sec:thin} the skill of this branch over hold is $+0.361$ to $+0.417$
+at 10\,ms and $+0.282$ to $+0.352$ at 100\,ms, on four of four splits.
 
 % =========================================================================
 \section{The character of the gain}
@@ -724,8 +800,9 @@ against 3.7\,km/s). The aggregate skill is thus a deficit on the bulk offset by 
 gain on the tail. Under a symmetric 1\% trim and under a Huber loss at the noise
 bound the \Ti{} skill over PCHIP stays $+0.210$ and $+0.156$ (cut, both intervals
 excluding zero). This is what a noise-limited regime implies: the typical missing
-sample is already estimated to within its fit noise by the simplest reference, and a
-fast-diagnostic term can only act on the rows where the plasma moved.
+sample is already estimated to within its fit noise by the simplest reference. Which
+rows carry the gain, and whether they are changes of the plasma or fit excursions,
+cannot be decided without per-exposure fit errors.
 
 \paragraph{A 20-parameter reading of the ion-temperature branch.} The weights of the
 trained networks carry no stable reading, but the input--output
@@ -763,15 +840,20 @@ flat or falls with the gap (0.30--0.32 at 10\,ms, 0.23--0.26 at 50\,ms).
 
 \begin{itemize}
 \item \emph{The fast-channel share is conditional on the population.} It is
-established with failed fits excluded (four of four splits, under both training caps)
-and is small with failed fits kept (two of four).
+established with values above 3\,keV excluded (four of four splits, under both
+training caps) and is small with them kept (two of four) at the natural cadence;
+with CES thinned to 50\,ms it is established in both populations.
 \item \emph{Causality.} The headline numbers are those of the network standardized
 with whole-discharge statistics, which is not causal. The causal variant keeps an
 interval above zero over the causal GP on every split and is not separated from the
-headline network with failed fits excluded; with failed fits kept, on the split by
+headline network with values above 3\,keV excluded; with values above 3\,keV kept, on the split by
 time, the headline network has the lower error on three of four initialisations. The
-fast-channel increment was measured with whole-discharge standardization only. No
-variant was run on a real-time system.
+fast-channel increment was measured with whole-discharge standardization only. The
+step time was measured on a desktop CPU; no variant was run on a plant control
+system.
+\item \emph{Thinned replay.} The networks are frozen and were trained at the natural
+cadence; the sparse cadence is imposed on measured samples; one of the five
+registered statements, on the distance to hold at 50\,ms, failed.
 \item \emph{Tail statistic.} The skill is carried by large-error rows; typical rows
 are not improved over interpolation.
 \item \emph{Post hoc choices.} The 1{,}000\,km/s rotation scoring rule and the form of
@@ -811,8 +893,8 @@ discharges shows the two features that make such a chord: towards the edge the s
 of failed fits rises from 0.270 to 0.695 and the same autocorrelation falls from
 $+0.299$ to $-0.049$ $[-0.078, -0.016]$, under a fit rule that keeps the weak samples
 and in three of four campaigns. In this regime the typical missing sample is already
-at its fit noise, CES-only estimators saturate near a causal GP, and information from
-outside the CES series can act only on the rows where the plasma moved.
+at its fit noise, and what an estimator gains over hold at the natural cadence is
+mostly the averaging of the CES past.
 
 At that chord, among estimators that do not use the next CES sample, a recurrent
 estimator that also reads BES and ECEI channels at the same location has the lowest
@@ -821,14 +903,19 @@ causal GP; against an offline GP that uses the next sample the interval includes
 zero. With the fast channels standardized from training discharges only, the
 estimator is causal and its skill over the causal GP is $+0.068$ to $+0.141$ on four
 splits and $+0.103$ to $+0.112$ on later discharges. Retrained without the fast channels, the same network has a larger error by
-$+0.064$ to $+0.117$ on four splits when failed fits are excluded, which is most of
+$+0.064$ to $+0.117$ on four splits when values above 3\,keV are excluded, which is most of
 its margin over the causal GP, and by $+0.016$ to $+0.024$ when they are kept.
+When CES samples are withheld so that one is visible only every 50\,ms, the frozen
+network keeps $+0.108$ to $+0.129$ over the causal GP, has a lower error than
+interpolation between the sparse samples on three of four splits, and the
+fast-channel share rises to $+0.076$ to $+0.156$; its distance to hold falls by more
+than the registered margin. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame.
 Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) and is
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.
 
 The measurements that would change these statements are named: a history-only
-network under the causal standardizer; an equilibrium mapping and per-exposure fit uncertainties for
+network under the causal standardizer; training with imposed CES dropout; an equilibrium mapping and per-exposure fit uncertainties for
 the KSTAR chord; and further KSTAR chords, on which the MAST result predicts a less
 noise-dominated series inward of the present one.
 

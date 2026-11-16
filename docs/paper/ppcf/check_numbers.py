@@ -60,6 +60,14 @@ DERIVED = {
     "0.95": "bin edge of the normalized radius (PREREGISTRATION_MAST_EDGE.md)",
     "0.6": "length of the example-trace window in seconds (fig_trace.py, WINDOW_S)",
     "0.82": "figure width fraction",
+    "99.9": "share 0.9990 of the stored rows as a percentage (B.30 k = 1 check, THESIS_RESULTS)",
+    "0.06": "fall of the network-vs-hold skill from k = 1 to k = 5, 0.060 to 0.072 (B.30 record), rounded",
+    "0.07": "same, upper end rounded",
+    "0.49": "network step, median 0.487 ms over five sessions (THESIS_RESULTS latency ladder, 5 sessions, CPU, batch 1, 1 thread)",
+    "1.83": "same row, maximum 99th percentile 1.829 ms",
+    "0.64": "causal GP per-row refit, median 0.638 ms (same table)",
+    "2.28": "same row, maximum 99th percentile 2.277 ms",
+    "0.007": "persistence, median 0.007 ms (same table)",
 }
 
 
