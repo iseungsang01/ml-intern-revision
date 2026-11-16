@@ -69,6 +69,12 @@ DERIVED = {
     "2.28": "same row, maximum 99th percentile 2.277 ms",
     "0.007": "persistence, median 0.007 ms (same table)",
     "1.77": "major radius quoted in Heo et al. 2025, sec. 2 (R0 about 1.77 m)",
+    "413": "train files of the temporal split manifest (data/.b5_camp_cut_split_s42: 413 / 128 / 97); 416 files in the campaign-ordered list",
+    "0.96": "normalized radius printed for BES_0X06-0Y06 in Heo et al. 2025, Fig. 7 (discharge 31921)",
+    "0.94": "normalized radius of the edge CES T_i in Heo et al. 2025, sec. 3 (T_i,edge at rho_N about 0.94)",
+    "6.65": "interval 6.65-7.00 s of discharge 31921 in Heo et al. 2025, Figs 7 and 8",
+    "7.00": "same interval",
+    "0.65": "65 rows x 10 ms",
     "0.45": "minor radius quoted in Heo et al. 2025, sec. 2 (a about 0.45 m); (2.198 - 1.77) / 0.45 = 0.951",
 }
 

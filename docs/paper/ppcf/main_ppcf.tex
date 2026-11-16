@@ -67,9 +67,8 @@ causal Gaussian process on four of four splits and than interpolation between th
 sparse samples on three of four, and its fast-channel share is $+0.054$ to $+0.156$.
 On the discharges with a raw 500\,kHz beam-emission stream, rows in phases with edge
 bursts consistent with edge-localized modes are 12\% of the scored rows and carry
-60\% of the fast-channel share. One step takes 0.5\,ms on a CPU. The gain is in the
-mean squared error: the median error is not below that of hold. The series is
-fit-noise-limited (lag-1
+0.604 $[0.056, 0.786]$ of the squared-error reduction due to the fast channels. One step takes 0.5\,ms on a CPU. The gain is in the
+mean squared error: the median error is not below that of hold. Over all rows the 10\,ms increments are anticorrelated almost as white noise (lag-1
 autocorrelation of 10\,ms increments $-0.416$); on 3{,}686 public MAST discharges
 the share of failed fits rises from 0.270 at mid-radius to 0.695 at the edge.
 \end{abstract}
@@ -93,8 +92,8 @@ lowest on the outermost, low-signal channels~\citep{Tian2026RealTimeCxrs}. The K
 chord studied here is such a place: it was chosen by the data provider as the pedestal
 top within the beam-emission coverage ($R = 2.198$\,m), the median \Ti{} per discharge
 is 528\,eV, and on the 10\,ms grid 8.2\% of \Ti{} samples and 23.9\% of \Vrot{} samples
-are missing, independently of each other. The missingness is not at random in the
-sense of~\citep{Little2002StatisticalAnalysis}: the missing rate is 19.9\% in the
+are missing. The missingness is not completely at
+random~\citep{Little2002StatisticalAnalysis}: the missing rate is 19.9\% in the
 lowest quintile of beam-emission intensity against 3.7\% in the highest. Beam-emission spectroscopy (BES) and
 electron-cyclotron-emission imaging (ECEI) view the same location without gaps, but
 neither measures \Ti{} or \Vrot{}.
@@ -185,8 +184,11 @@ established: no equilibrium is in the files. The nominal major and minor radii (
 and 0.5\,m) give $(2.198 - 1.8)/0.5 = 0.80$. A published edge analysis of two
 discharges of this data set~\citep{Heo2025ExperimentalIdentification} quotes a major
 radius of 1.77\,m and a minor radius of 0.45\,m, which give $(2.198 - 1.77)/0.45 =
-0.95$, and finds the mode it studies in BES channels at a normalized radius of
-0.93--0.97, without stating which channels. The same analysis notes that the CES ion
+0.95$, finds the mode it studies in BES channels at a normalized radius of
+0.93--0.97, labels the BES channels of column 06 (three of the nine channels used
+here) at 0.96 in discharge 31921, and takes the edge CES \Ti{} at 0.94 as a proxy for
+the pedestal height. In those two discharges the chord is therefore in the pedestal
+region; for the other discharges the position is not established. The same analysis notes that the CES ion
 temperature of those discharges is available only between beam blips, and the
 conventional CES analysis on KSTAR relies on modulation of the heating
 beam~\citep{Lee2026NeuralNetworkbased}: the missing samples and the beam-emission
@@ -274,8 +276,9 @@ that enter the local ion heat balance through collisional exchange and transport
 the \Ti{} branch reads the 15 fast channels (BES, ECEI and two Mirnov channels) and
 the CES past. No available channel measures a torque: there is no beam-power signal,
 and a Mirnov signal sampled at 100\,Hz cannot resolve mode rotation. The \Vrot{}
-branch therefore reads the CES past only. The asymmetry is tested as a measurement in
-\S\ref{sec:vrot}.
+branch therefore reads the CES past only. The linear association of the fast channels
+with rotation is bounded in \S\ref{sec:vrot}; a rotation branch that reads them was
+not trained.
 
 \begin{figure}[t]
   \centering
@@ -473,7 +476,8 @@ predict, most of it in a tail, and for \Ti{} in two of four campaigns
 quantity cannot be formed there. What can be said for KSTAR is that three CES-only
 estimators built in different ways lie within 3\% of each other in \Ti{} RMSE (164.3
 to 169.2\,eV, Table~\ref{tab:ladder}); whether what remains above them is fit noise or plasma
-signal is the question the fast diagnostics can answer.
+signal is a question the fast diagnostics bear on (\S\ref{sec:fast}) and do not
+settle.
 
 % =========================================================================
 \section{What co-located fast diagnostics add to the ion temperature}
@@ -557,11 +561,11 @@ gaps in three discharges.
   \includegraphics[width=0.88\linewidth]{fig_trace}
   \caption{Example traces through gaps (cut population). Circles: measured CES \Ti{};
   shaded: grid rows without a usable \Ti{}. Lines: estimates at every grid row from
-  information before that row (the recurrent estimator also reads the fast channels
-  of the segment). (a, b) Selection fixed before any trace was drawn: the two
+  CES values before that row; the recurrent estimator shown is the network with
+  whole-discharge standardization of the fast channels, which it reads up to the row. (a, b) Selection fixed before any trace was drawn: the two
   discharges of this data set whose edge is analysed
   in~\citep{Heo2025ExperimentalIdentification}, in the split whose test set holds
-  both, and in each the 0.6\,s window with the most rows lacking \Ti{}. In these
+  both, and in each the window of 65 rows (0.65\,s) with the most rows lacking \Ti{}. In these
   windows the measured \Ti{} itself moves by more than 1\,keV between adjacent rows;
   the raw BES stream of these discharges places the windows in a phase with edge
   bursts (Fig.~\ref{fig:bursts}), and without per-exposure fit errors it cannot be
@@ -640,7 +644,8 @@ the mean and variance of the whole discharge. Variants that do not were register
 and scored on the same test rows, with this rule: the word causal is used for a
 variant whose \Ti{} skill over the causal GP has an interval above zero on at least
 three of four cut splits, both on the file-level splits and on a split by time (train
-on the 416 earliest discharges, test on the 97 latest; four initialisations). With
+on the 416 earliest discharge files, 413 of which have usable rows, test on the 97
+latest; four initialisations). With
 the fast channels standardized by the statistics of the training discharges, the
 skill over the causal GP is $+0.068$ $[+0.014, +0.112]$, $+0.094$ $[+0.067, +0.120]$,
 $+0.141$ $[+0.106, +0.177]$ and $+0.101$ $[+0.061, +0.140]$ on the file-level splits
@@ -763,15 +768,16 @@ $k = 1$ the errors reproduce the stored ones (absolute error of the network with
   \end{tabular}}
 \end{table}
 
-(i) The network keeps an interval above zero over the causal GP at every cadence, on
-four of four splits, and so does the causal variant. (ii) The fast-channel share,
+The five registered statements are read at 50\,ms. (i) The network keeps an interval
+above zero over the causal GP on four of four splits (and at every other cadence).
+(ii) So does the causal variant. (iii) The fast-channel share,
 measured against the history-only twin, is larger when CES is sparser: $+0.064$ to
 $+0.113$ at 10\,ms and $+0.076$ to $+0.156$ at 50\,ms, larger on each split. In the
 population that keeps values above 3\,keV it is not established at 10\,ms ($+0.009$
 to $+0.024$, two of four splits) and is established at 50\,ms ($+0.033$ to $+0.047$,
-four of four). (iii) Against PCHIP interpolation between the visible samples, which
+four of four). (iv) Against PCHIP interpolation between the visible samples, which
 is not causal, the network has the lower error on three of four splits at 50\,ms and
-on two of four at 100\,ms. (iv) The registered statement that failed concerns hold:
+on two of four at 100\,ms. (v) The registered statement that failed concerns hold:
 the skill over hold falls by 0.060 to 0.072 between 10 and 50\,ms, where a margin of
 0.05 had been registered. Resolved by the age of the last visible sample at $k = 10$,
 the skill over hold is only $+0.082$ to $+0.227$ at an age of 10\,ms, when the sample
@@ -826,7 +832,8 @@ discharge was labelled or any model error was broken down. A row is
   analysis~\citep{Heo2025ExperimentalIdentification}; both are test discharges of one
   split. Top: BES level from the 500\,kHz stream (1\,ms means over the discharge
   median); ticks mark bursts, the vertical band a beam blip. Bottom: measured \Ti{}
-  (dots), the causal estimate at every grid row (line) and hold (dashed); shading
+  (dots), the estimate of the train-file-standardized (causal) variant at every grid
+  row (line) and hold (dashed); shading
   marks rows without a usable \Ti{}. (a) 31921, published as FIRE mode at 5.40\,s and
   H-mode at 8.05\,s. (b) 31923. Each window starts 0.2 to 0.3\,s before the rise of the
   BES level.}
@@ -859,8 +866,14 @@ $+0.197$ $[+0.109, +0.249]$ in burst-active rows and $+0.135$ $[+0.109, +0.153]$
 quiet rows. The fast-channel share is thus concentrated in phases with edge bursts
 and is not confined to them.
 
-Three limits apply. The bursts are defined on beam emission and are consistent with
-edge-localized modes; without D-alpha they are not shown to be. Six discharges carry
+Four limits apply. The bursts are defined on beam emission and are consistent with
+edge-localized modes; without D-alpha they are not shown to be. The detector is a
+threshold on the mean of nine channels: the published analysis of 31921 reports
+intermittent bursts at 6.65--7.00\,s~\citep{Heo2025ExperimentalIdentification},
+where the detector finds none, so a quiet row is quiet at this threshold only. A
+burst also changes the light that a CES fit has to separate from the
+charge-exchange line, so a fitted \Ti{} near a burst can be moved by the burst
+itself. Six discharges carry
 the model statements, and the interval of the gain share is wide. And a measured
 \Ti{} of 100 to 300\,eV after a burst may be the plasma or a weak-signal fit; the
 labels do not decide that. By the rule registered with these statements, one of the
@@ -1059,12 +1072,14 @@ noise-dominated series inward of the present one.
 \section*{Data and code availability}
 The MAST data are public (FAIR-MAST, CC BY-SA 4.0); the shot lists, the registration
 documents, the analysis code and all evaluation artifacts are at
-\url{https://github.com/iseungsang01/ml-intern-revision}. The KSTAR shot files are not
-redistributable. [TO BE COMPLETED BY AUTHORS: data-access statement for KSTAR.]
+\url{https://github.com/iseungsang01/ml-intern-revision}. The KSTAR data were made available to the author through the author's laboratory
+for this study; they are not public and cannot be redistributed by the author.
+Requests for them should be addressed to the Korea Institute of Fusion Energy.
 
 \section*{Acknowledgments}
-[TO BE COMPLETED BY AUTHORS: data provider and permission for the KSTAR 2022 CES, BES,
-ECEI and Mirnov data; funding; co-authorship and affiliations.]
+[TO BE COMPLETED BY THE AUTHOR before submission: the persons who provided and
+processed the KSTAR 2022 CES, BES, ECEI and Mirnov data, named with their consent; the
+facility acknowledgment required for KSTAR data; funding.]
 
 % =========================================================================
 \appendix
@@ -1255,7 +1270,7 @@ activity) of the rows that are actually missing and inside the scored domain,
 53.6--67.0\% (cut) of the missing \Ti{} rows, gives \Ti{} skill over PCHIP of $+0.14$
 to $+0.28$, with intervals excluding zero on 2 of 4 cut and 4 of 4 inclusive splits,
 and over persistence $+0.28$ to $+0.44$ with intervals excluding zero in all eight
-cells. \emph{Later discharges.} With a strictly temporal split (train on 416 shots,
+cells. \emph{Later discharges.} With a strictly temporal split (train on 416 discharge files, 413 with usable rows,
 validate on 128, test on the 97 latest), the \Ti{} skill is $+0.17$ to $+0.20$ over
 PCHIP and $+0.11$ to $+0.16$ over the causal GP, with intervals excluding zero for all
 four initialisations in both populations. The fast diagnostics drift by 1.22 (BES) and
