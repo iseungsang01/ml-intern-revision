@@ -7377,3 +7377,20 @@ Expectation check: every T_i expectation of the registration is met (rows 2.33 m
 Registered rule applied: P1 and P2 hold, so the paper states that on a second device, at the pedestal top located from the Thomson profile, a causal estimate with a co-located measurement has a lower error than hold and than the same estimate without it. Nothing from MAST is written as support for the KSTAR numbers.
 
 What this does not show. Gaps are frames hidden by us. Thomson scattering on MAST has one to two samples per frame: it is independent of the charge-exchange system, not faster. The trees are a flexible reference, not a real-time form (on the first-pass rows a 337-parameter network kept 0.86 to 0.90 of the tree skill; that was not repeated here). The pedestal-top band, the edge definition and the model were chosen on the discovery half.
+
+### B.30 sensitivity to suspicious rows (post hoc, 2026-11-16)
+
+Not registered; asked for by the seventh independent grading of the PPCF draft (4a65579: 3 % as it stands, 28 % with the author placeholders completed; 48 % estimated for Fusion Engineering and Design). Script `ces_prediction/experiments/b30_thinned/sensitivity_b30.py`, output `docs/paper/b30_sensitivity.json` / `.md`; same row tables and bootstrap as B.30.
+
+Rows left out when the scored value or the last visible sample is below 150 eV, above 2.5 keV, when the two differ by more than 1 keV, or when the row is within 30 ms after a row whose BES level is below half of the discharge median (a beam blip seen in the 10 ms snapshot). T_i, cut population, four file-level splits:
+
+| rows kept | share | network vs history-only | causal variant vs history-only | network vs causal GP | causal variant vs causal GP | network vs hold |
+|---|---|---|---|---|---|---|
+| all, 10 ms | 1.000 | +0.064 to +0.113 (4/4) | +0.027 to +0.115 (4/4) | +0.077 to +0.134 (4/4) | +0.068 to +0.126 (4/4) | +0.358 to +0.411 (4/4) |
+| all four exclusions, 10 ms | 0.885 to 0.898 | +0.084 to +0.145 (4/4) | +0.044 to +0.152 (4/4) | +0.084 to +0.136 (4/4) | +0.069 to +0.126 (4/4) | +0.294 to +0.354 (4/4) |
+| jump <= 1 keV only, 10 ms | 0.985 to 0.993 | +0.065 to +0.116 (3/4) | +0.053 to +0.120 (3/4) | +0.050 to +0.124 (3/4) | +0.019 to +0.128 (3/4) | +0.236 to +0.298 (4/4) |
+| all, 50 ms | 1.000 | +0.076 to +0.156 (4/4) | +0.054 to +0.156 (4/4) | +0.108 to +0.129 (4/4) | +0.070 to +0.134 (4/4) | +0.298 to +0.345 (4/4) |
+| all four exclusions, 50 ms | 0.886 to 0.900 | +0.084 to +0.156 (3/4) | +0.084 to +0.147 (4/4) | +0.038 to +0.087 (3/4) | +0.019 to +0.088 (3/4) | +0.170 to +0.254 (4/4) |
+| jump <= 1 keV only, 50 ms | 0.983 to 0.992 | +0.079 to +0.135 (4/4) | +0.078 to +0.133 (4/4) | +0.015 to +0.070 (3/4) | -0.001 to +0.063 (1/4) | +0.126 to +0.224 (4/4) |
+
+Reading. The fast-channel share does not rest on the suspicious rows: with all four exclusions it is +0.084 to +0.145 (network) and +0.044 to +0.152 (causal variant) at the natural cadence, 4/4. The margin over the causal GP is unchanged at 10 ms and partly rests on the jump rows at 50 ms (+0.038 to +0.087, 3/4; causal variant 1/4 when only the jump rows are removed). The distance to hold loses about a quarter with the jump rows out. In the inclusive population the readouts are not stable under these exclusions (network vs history-only 1/4 to 2/4, causal variant vs history-only 0/4 with values above 2.5 keV or jumps out), which agrees with the earlier finding that its margins are carried by the failed-fit rows.

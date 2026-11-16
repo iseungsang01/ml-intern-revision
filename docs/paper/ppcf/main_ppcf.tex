@@ -144,7 +144,7 @@ time and tolerates dropped inputs. Cross-diagnostic reconstruction synthesizes T
 profiles from simultaneous diagnostics~\citep{Jalalvand2025MultimodalSuperresolution},
 densifies or fills Thomson
 scattering~\citep{Imrek2026TemporalSuperresolution,Pastore2023ModelBased} and restores
-electron channels~\citep{Wang2025TimeSeries,Jia2026TimeSeries,Yang2026FusionmaeSelfsupervised}.
+missing diagnostic channels~\citep{Wang2025TimeSeries,Jia2026TimeSeries,Yang2026FusionmaeSelfsupervised}.
 The present work extends that programme to a sparse ion channel, to estimation
 conditioned on the irregular past of the target itself, and to a direct test, for the
 ion temperature, of whether the fast channels are informative at all.
@@ -228,8 +228,10 @@ reference estimator.
 are failed line fits. Because they also corrupt the anchors of every interpolant, all
 KSTAR results are given in two co-primary populations fixed in advance: \emph{cut}, in
 which values above 3\,keV are treated as missing for every estimator, and
-\emph{inclusive}, in which they are kept. The threshold is immaterial between 2.5 and
-4\,keV (mean \Ti{} skill over PCHIP $+0.230$ and $+0.232$ against $+0.236$ at 3\,keV).
+\emph{inclusive}, in which they are kept. For the skill over PCHIP the threshold is immaterial between 2.5
+and 4\,keV (mean over the four file-level splits $+0.230$ and $+0.232$ against
+$+0.236$ at 3\,keV; the pooled readout of Table~\ref{tab:headline} is a different
+average); the fast-channel share is read at 2.5\,keV in \S\ref{sec:thin}.
 For rotation, a scoring rule drops the rows whose target or anchor exceeds
 $|\Vrot| = 1{,}000$\,km/s; it was set after the influence of those rows was known
 (Appendix~\ref{app:vrotrule}).
@@ -775,8 +777,9 @@ $k = 1$ the errors reproduce the stored ones (absolute error of the network with
 The five registered statements are read at 50\,ms. (i) The network keeps an interval
 above zero over the causal GP on four of four splits (and at every other cadence).
 (ii) So does the causal variant. (iii) The fast-channel share,
-measured against the history-only twin, is larger when CES is sparser: $+0.064$ to
-$+0.113$ at 10\,ms and $+0.076$ to $+0.156$ at 50\,ms, larger on each split. In the
+measured against the history-only twin, has a larger point estimate when CES is sparser: $+0.064$ to
+$+0.113$ at 10\,ms and $+0.076$ to $+0.156$ at 50\,ms, on each split, with intervals
+that overlap (Fig.~\ref{fig:thin}b). In the
 population that keeps values above 3\,keV it is not established at 10\,ms ($+0.009$
 to $+0.024$, two of four splits) and is established at 50\,ms ($+0.033$ to $+0.047$,
 four of four). (iv) Against PCHIP interpolation between the visible samples, which
@@ -815,6 +818,22 @@ With CES thinned to 50\,ms it is above zero on four of four splits in the quinti
 rows whose BES level changed least from the previous row ($+0.070$ to $+0.174$; a
 median change of 0.5\% of the discharge median). This does not identify the
 mechanism; it bounds one reading of it.
+
+\paragraph{Sensitivity to suspicious rows.} The same rows were read again, after the
+fact, leaving out those in which the scored value or the last visible sample is below
+150\,eV or above 2.5\,keV, those with a jump of more than 1\,keV between the two, and
+those within 30\,ms after a row whose BES level is below half of the discharge median
+(a beam blip). With all four exclusions (0.885 to 0.898 of the rows kept) the
+fast-channel share at the natural cadence is $+0.084$ to $+0.145$ for the network and
+$+0.044$ to $+0.152$ for the causal variant, and the margins over the causal GP are
+$+0.084$ to $+0.136$ and $+0.069$ to $+0.126$, every interval excluding zero on four
+of four splits. At 50\,ms the fast-channel share stays ($+0.084$ to $+0.156$ on three
+of four splits; causal variant $+0.084$ to $+0.147$ on four of four), and the margin
+over the causal GP shrinks to $+0.038$ to $+0.087$ (three of four), most of the loss
+coming from the rows with a jump of more than 1\,keV. The fast-channel share thus
+does not rest on the rows that are suspected first; the margin over the causal GP at
+a sparse cadence partly does. In the population that keeps values above 3\,keV the
+readouts are not stable under these exclusions.
 
 \subsection{Which rows carry the gain: edge bursts in the raw beam-emission stream}
 \label{sec:bursts}
@@ -963,7 +982,7 @@ Rotation is therefore estimated by the branch that reads the CES past only
 (Table~\ref{tab:headline}); whether fast channels fed to that branch would lower its
 error was not tested.
 Among estimators that do not use the next CES sample this branch has the lowest mean
-squared error (Table~\ref{tab:ladder}). Its skill over persistence is $+0.265$
+squared error on the first split (Table~\ref{tab:ladder}). Its skill over persistence is $+0.265$
 $[+0.198, +0.326]$ (cut), with the interval excluding zero on all four splits in both
 populations, and the same holds over a validation-tuned running mean of the rotation
 past, so the estimate is not reducible to a running mean. Over the causal GP the
