@@ -122,6 +122,7 @@ def shot_rows(shot, geo, params, target, pop, frac):
         return v
 
     y, y1, y3, y5, y7 = at(0), at(-1), at(-3), at(-5), at(-7)
+    yn = at(1)                      # next visible frame: offline interpolation reference only
     s0, s1, s3 = at(0, S2), at(-1, S2), at(-3, S2)
     # neighbours: mean of the good chords within two columns, at the last visible frame
     Yn = np.where(G, Y, 0.0)
@@ -171,8 +172,10 @@ def shot_rows(shot, geo, params, target, pop, frac):
     hh = np.broadcast_to(np.arange(nh)[:, None], rows.shape)[sel]
     cc = np.broadcast_to(np.arange(nc)[None, :], rows.shape)[sel]
     out = {"shot": np.full(n, shot, np.int32), "frame": hid[hh].astype(np.int16),
-           "rho": rho[cc].astype(np.float32)}
-    for k, v in (("y", y), ("y1", y1), ("y3", y3), ("y5", y5), ("y7", y7), ("s0", s0), ("s1", s1),
+           "rho": rho[cc].astype(np.float32), "R": p["R"][cc].astype(np.float32),
+           "t0": (t_a + rg.STEP_MS * hid[hh]).astype(np.float32)}   # hidden-frame time, ms
+    for k, v in (("y", y), ("y1", y1), ("y3", y3), ("y5", y5), ("y7", y7), ("yn", yn), ("s0", s0),
+                 ("s1", s1),
                  ("s3", s3), ("sf", sf), ("rm", rm), ("nb1", nb1), ("nb3", nb3)):
         out[k] = v[sel].astype(np.float32)
     for k in FAST_NAMES:

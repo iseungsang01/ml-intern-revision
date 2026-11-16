@@ -38,3 +38,26 @@ share of the persistence squared error that the reported errors account for.
 A cell (radius range, event class, target) where the fast-signal increment over the same model
 without fast signals has a shot-bootstrap interval above 0 on the discovery half and where the cell
 can be defined on KSTAR from signals a KSTAR discharge has.
+
+## Second pass: the question restated at the pedestal top (2026-11-16, written before its output)
+
+Stated aim of the work (2026-11-16): nowcasting at the pedestal top; the estimator and the inputs
+with the lowest error there against hold and interpolation, in a form that runs inside the frame
+interval. The first pass (`docs/paper/mast_fast_exploration.md`) found that mid-plane D-alpha, a
+global edge signal, does not add to T_i outside rho 0.9. The second pass asks the same question of
+measurements at the chord radius.
+
+- New inputs (`mast/fetch_extra.py`, same shot list, same discovery / confirmation split): Thomson
+  scattering T_e and n_e interpolated to the chord major radius (core system `ayc`, or `atm` in the
+  earlier campaigns; a chord takes a value only between valid points within 3 cm), CO2
+  interferometer line density, saddle-coil locked-mode amplitude, H-mode rating.
+- Position: distance of the chord to the edge of the Thomson density profile at that time
+  (outermost radius where n_e is at least half of the 90th percentile of the outboard profile,
+  median over the profiles within three frames). "Pedestal top" in this pass = 1.5 to 5 cm inside
+  that radius. This replaces, for the Thomson rows, the normalized radius built from one outer
+  radius per shot.
+- Population: the loose one of the first pass (relative error < 0.5, chord good in at least half
+  of the block frames). Estimators: hold, slope-state filter, offline interpolation (mean of the
+  two neighbouring visible frames; not causal, reference), gradient-boosted trees per input group.
+- Code `mast/explore_ped.py`. Everything is still exploratory and on the discovery half; the
+  band limits, the edge definition and the 15 % T_e-change class are choices of this pass.
