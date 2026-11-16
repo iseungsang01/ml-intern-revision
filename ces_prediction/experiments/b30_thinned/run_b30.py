@@ -284,7 +284,11 @@ def cell(tab, sel, pop, weights):
     return out
 
 
-def analyze():
+def analyze(pops=None):
+    """All populations: json + md.  A subset (e.g. `analyze cut` while incl is still running):
+    the same statistics printed to stdout, nothing written under docs/."""
+    partial = bool(pops)
+    pops = pops or list(POPS)
     rng = np.random.default_rng(BOOT_SEED)
     cache = {}
 
@@ -294,8 +298,8 @@ def analyze():
         return cache[n]
 
     res = {"registration": "ces_prediction/experiments/PREREGISTRATION_B30.md", "ks": list(KS),
-           "check": {}, "cells": {}}
-    for pop in POPS:
+           "pops": pops, "check": {}, "cells": {}}
+    for pop in pops:
         for s in SEEDS:
             p = ROWS_DIR / f"rows_{pop}_s{s}.npz"
             if not p.exists():
@@ -322,7 +326,10 @@ def analyze():
                 res["cells"][key]["gp_unscaled_k5"] = {
                     "rmse": float(np.sqrt(se_g0.mean())),
                     "bb_vs_gp_unscaled": skill_ci(se_bb, se_g0, tab["file"][k5], weights)}
-    res["verdicts"] = verdicts(res)
+    res["verdicts"] = verdicts(res) if "cut" in pops else {}
+    if partial:
+        print(render(res))
+        return
     OUT_JSON.write_text(json.dumps(res, indent=1), encoding="utf-8")
     OUT_MD.write_text(render(res), encoding="utf-8", newline="\n")
     print(json.dumps(res["verdicts"], indent=1))
@@ -382,7 +389,7 @@ def render(res):
                  + "; k = 5: " + "; ".join(f3(x) for x in d["k5"])
                  + ("; k = 1: " + "; ".join(f3(x) for x in d["k1"]) if "k1" in d else ""))
     for t in TARGETS:
-        for pop in POPS:
+        for pop in res["pops"]:
             pairs = [f"{a}_vs_{b}" for a, b in PAIRS[pop]]
             ests = ["hold", "gp", "pchip", *NETS[pop]]
             L += ["", f"## {t}, {pop}: by cadence", "",
@@ -428,4 +435,4 @@ if __name__ == "__main__":
     if sys.argv[1] == "rows":
         rows(sys.argv[2], int(sys.argv[3]))
     else:
-        analyze()
+        analyze(sys.argv[2:])
