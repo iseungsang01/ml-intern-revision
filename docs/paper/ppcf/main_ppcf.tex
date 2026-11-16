@@ -51,9 +51,10 @@ a causal estimator with co-located fast diagnostics against hold and interpolati
 \begin{abstract}
 \noindent
 Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} and toroidal
-rotation every 10\,ms. On the chord at the pedestal top the signal is weak, 8.2\% of
-\Ti{} and 23.9\% of rotation samples are missing, and an application that needs the
-value at the present time cannot use interpolation, which waits for the next sample.
+rotation every 10\,ms. On the chord at the pedestal top the signal is weak: 8.2\% of
+\Ti{} samples are missing, 23.9\% of rotation samples are missing and a further 41.1\%
+repeat the previous value, and an application that needs the value at the present
+time cannot use interpolation, which waits for the next sample.
 We ask which estimator of the present value has the lowest error there against hold
 and interpolation, whether it fits inside the 10\,ms frame, and what it does when CES
 samples drop out. On 641 discharges, a recurrent network that reads the CES past and
@@ -74,6 +75,9 @@ the edge; the KSTAR chord itself is fit-noise-limited (lag-1 autocorrelation of
 10\,ms increments $-0.416$).
 \end{abstract}
 
+\noindent\textbf{Keywords:} charge-exchange spectroscopy, ion temperature, pedestal,
+real-time estimation, recurrent neural network, KSTAR, MAST
+
 % =========================================================================
 \section{Introduction}
 \label{sec:intro}
@@ -90,10 +94,9 @@ lowest on the outermost, low-signal channels~\citep{Tian2026RealTimeCxrs}. The K
 chord studied here is such a place: it was chosen by the data provider as the pedestal
 top within the beam-emission coverage ($R = 2.198$\,m), the median \Ti{} per discharge
 is 528\,eV, and on the 10\,ms grid 8.2\% of \Ti{} samples and 23.9\% of \Vrot{} samples
-are missing, independently of each other. The missing rate is not random: it rises
-from 0.77\% to 4.45\% across quintiles of the neighbouring-step change and is 19.9\% in
-the lowest quintile of beam-emission intensity against 3.7\% in the
-highest~\citep{Little2002StatisticalAnalysis}. Beam-emission spectroscopy (BES) and
+are missing, independently of each other. The missingness is not at random in the
+sense of~\citep{Little2002StatisticalAnalysis}: the missing rate is 19.9\% in the
+lowest quintile of beam-emission intensity against 3.7\% in the highest. Beam-emission spectroscopy (BES) and
 electron-cyclotron-emission imaging (ECEI) view the same location without gaps, but
 neither measures \Ti{} or \Vrot{}.
 
@@ -328,7 +331,7 @@ registry. Choices made after results were seen are labelled where they are used,
 the order of events is in Appendix~\ref{app:registration}.
 
 % =========================================================================
-\section{The edge chord is fit-noise-limited, and the regime follows radius}
+\section{The chord is fit-noise-limited; on MAST the same statistic falls towards the edge}
 \label{sec:regime}
 
 Let $y_t$ be the CES series on a chord and $d_t = y_t - y_{t-1}$ its 10\,ms increment.
@@ -407,12 +410,15 @@ registered as primary. (i) \emph{The measurement weakens towards the edge.} The 
 of failed fits is 0.270 $[0.262, 0.277]$ at $\rho = 0.5$--0.7 and exceeds it by
 $+0.275$ $[+0.268, +0.282]$ at 0.8--0.9, by $+0.392$ $[+0.382, +0.401]$ at 0.9--0.95
 and by $+0.463$ $[+0.451, +0.474]$ at 0.95--1.0; the median relative \Ti{} error rises
-from 0.044 to 0.108, 0.186 and 0.347. Inside $\rho = 0.7$ both are flat. (ii)
+from 0.044 to 0.108, 0.186 and 0.347. Inside $\rho = 0.5$ the failure share is flat
+(0.215 and 0.214), and the relative error is flat inside 0.7. (ii)
 \emph{The regime number falls towards the edge.} Under the loose rule, which keeps
 the weak samples, the \Ti{} number is $+0.299$ $[+0.285, +0.311]$ at 0.5--0.7 and
 lower by $-0.296$ $[-0.320, -0.271]$ at 0.8--0.9 and by $-0.347$ $[-0.380, -0.312]$ at
-0.9--1.0, where it is $-0.049$ $[-0.078, -0.016]$, an interval below zero. Both
-statements hold. Rotation behaves the same way: the \Vi{} number falls from $+0.330$
+0.9--1.0, where it is $-0.049$ $[-0.078, -0.016]$, an interval below zero; taken
+separately, the two halves of that bin have intervals that include zero
+(Table~\ref{tab:edge}), so the sign at the very edge rests on the merged bin, which
+was the registered one. Both statements hold. Rotation behaves the same way: the \Vi{} number falls from $+0.330$
 at 0.5--0.7 by $-0.309$ $[-0.335, -0.289]$ and $-0.402$ $[-0.434, -0.371]$, to
 $+0.021$ $[-0.004, +0.037]$ and $-0.072$ $[-0.107, -0.044]$.
 
@@ -464,8 +470,8 @@ mean squared residual of 2.57 $[1.94, 3.40]$ (\Ti{}) times what the reported err
 predict, most of it in a tail, and for \Ti{} in two of four campaigns
 (Appendix~\ref{app:mast}). The KSTAR files carry no per-sample fit error, so the same
 quantity cannot be formed there. What can be said for KSTAR is that three CES-only
-estimators built in different ways arrive at the same \Ti{} error
-(Table~\ref{tab:ladder}); whether what remains above them is fit noise or plasma
+estimators built in different ways lie within 3\% of each other in \Ti{} RMSE (164.3
+to 169.2\,eV, Table~\ref{tab:ladder}); whether what remains above them is fit noise or plasma
 signal is the question the fast diagnostics can answer.
 
 % =========================================================================
@@ -541,8 +547,8 @@ fold-level interval $[+0.084, +0.138]$. Its error is also below that of PCHIP, w
 uses the following sample. Against the offline GP, which uses the following sample
 and averages noisy anchors, the interval includes zero in both populations. Stated
 with its scope: among estimators that do not wait for the next CES sample this one
-has the lowest mean squared error, and it is statistically at the level of an offline
-GP that does wait. Figure~\ref{fig:trace} shows what the estimates look like through
+has the lowest mean squared error, and it is not separated from an offline GP that
+does wait. Figure~\ref{fig:trace} shows what the estimates look like through
 gaps in three discharges.
 
 \begin{figure}[tp]
@@ -675,8 +681,8 @@ bound of at least $+0.127$ at zero lag for every window between 10 and 200\,ms.
 \paragraph{Dependence on the gap.} Resolved by the time since the last observed
 value (a descriptive reading; Appendix~\ref{app:more}), every estimator has a larger
 error after a longer gap (\Ti{} RMSE of the recurrent estimator 168.8\,eV at 10\,ms
-and 629.8\,eV beyond 50\,ms), and the skill over the causal GP does not shrink with
-the gap in the cut population: $+0.115$ $[+0.085, +0.136]$ at 10\,ms, $+0.115$
+and 629.8\,eV beyond 50\,ms), and the skill over the causal GP keeps an interval
+above zero up to 50\,ms in the cut population: $+0.115$ $[+0.085, +0.136]$ at 10\,ms, $+0.115$
 $[+0.044, +0.176]$ at 20\,ms and $+0.072$ $[+0.008, +0.135]$ at 30--50\,ms; beyond
 50\,ms it is $+0.109$ $[-0.009, +0.228]$ and the interval includes zero. In the
 inclusive population the 20\,ms bin ($+0.088$ $[-0.014, +0.214]$) and the bin beyond
@@ -689,7 +695,8 @@ high-pass kernel of about 100\,ms (the current value minus the mean of the prece
 ten steps), flat to about two standard deviations and switched off beyond three.
 Truncating the network's context costs $-0.066$ in skill at 20\,ms and saturates at
 50\,ms. The autocorrelation $1/e$ times of \Ti{} (159\,ms), BES (161\,ms) and ECEI
-(147\,ms) agree, as expected if the three follow the same local evolution. The
+(147\,ms) are close, which a common local evolution would produce and so would the
+time scale of the discharge scenario. The
 physical mechanism is not identified: per-discharge standardization removes the
 absolute $T_e$ and $n_e$ that a collisional-exchange term would need, and
 the files carry no beam-power or D-alpha signal with which events could be labelled.
@@ -705,8 +712,19 @@ every phase), the 10\,ms grid was filled, and the withheld measurements were use
 the answer. Nothing was retrained. The design, five statements on \Ti{} and their
 numerical expectations were registered before the first thinned prediction; at
 $k = 1$ the errors reproduce the stored ones (absolute error of the network within
-0.5\,eV on at least 99.9\% of the stored rows). Table~\ref{tab:thin} gives the
-result.
+0.5\,eV on at least 99.9\% of the stored rows). Table~\ref{tab:thin} and Fig.~\ref{fig:thin} give the result.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig_thin}
+  \caption{KSTAR thinned replay, \Ti{}, cut population. (a) Skill over hold against
+  the interval between visible CES samples; markers are the mean of the four
+  file-level splits and bars their range. PCHIP interpolates the visible samples on
+  both sides and is not causal. (b) Fast-channel share: skill of the network over its
+  history-only twin and of the causal variant over the same twin, one marker per
+  split with its 95\% interval.}
+  \label{fig:thin}
+\end{figure}
 
 \begin{table}[t]
   \centering
@@ -718,8 +736,10 @@ result.
   causal. The networks are frozen (trained at $k = 1$); the network and its
   history-only twin are the pair trained under the 80-epoch cap. The rows are every
   measured row of the test discharges with a visible sample before and after it,
-  which is close to, not identical with, the population of
-  Tables~\ref{tab:ladder}--\ref{tab:honly}.}
+  which differs from the population of
+  Tables~\ref{tab:ladder}--\ref{tab:honly} (on the first split the network RMSE is
+  163.2\,eV here and 157.8\,eV there): skills are formed inside each table and
+  absolute errors are not comparable across them.}
   \label{tab:thin}
   \footnotesize
   \resizebox{\linewidth}{!}{%
@@ -834,10 +854,15 @@ $[-0.259, -0.135]$). For rotation the median row is worse than persistence (4.3
 against 3.7\,km/s). The aggregate skill is thus a deficit on the bulk offset by a
 gain on the tail. Under a symmetric 1\% trim and under a Huber loss at the noise
 bound the \Ti{} skill over PCHIP stays $+0.210$ and $+0.156$ (cut, both intervals
-excluding zero). This is what a noise-limited regime implies: the typical missing
-sample is already estimated to within its fit noise by the simplest reference. Which
-rows carry the gain, and whether they are changes of the plasma or fit excursions,
-cannot be decided without per-exposure fit errors.
+excluding zero). The median is a property of the estimator as much as of the regime: a network
+trained on squared error moves every row a little in order to avoid large errors. A
+separately registered scalar filter with heavy-tailed (Student-$t$) measurement
+noise, run causally on the CES history, has a median absolute \Ti{} error 0.906 to
+0.920 of that of hold in all eight split--population cells, and it is not the
+mean-squared-error estimator. The estimator with the lowest mean error and the one
+with the lowest median error are therefore different, and an application has to say
+which it needs. Which rows carry the mean gain, and whether they are changes of the
+plasma or fit excursions, cannot be decided without per-exposure fit errors.
 
 \paragraph{A 20-parameter reading of the ion-temperature branch.} The weights of the
 trained networks carry no stable reading, but the input--output
@@ -1080,9 +1105,9 @@ run the GP amplitude was limited by its tuning grid and the causal GP had a larg
 error than persistence (skill $-0.683$ $[-0.997, -0.426]$ for \Ti{} and $-0.350$
 $[-0.499, -0.238]$ for \Vi{}); the best such estimator was then the slope-state
 filter, with a mean \chir{} of 2.71 $[2.07, 3.51]$ and 21.20 $[16.83, 26.06]$, and the
-decision was the same. The median \chir{} for \Ti{}, 0.416 $[0.345, 0.501]$, is below the
-noise-only value and the mean-to-median ratio is 6.19 $[4.94, 7.75]$: the typical row
-is at the floor and the mean is carried by a tail. Resolved by campaign after the
+decision was the same. The median \chir{} for \Ti{}, 0.416 $[0.345, 0.501]$, is not above
+the noise-only value of 0.455 and the mean-to-median ratio is 6.19 $[4.94, 7.75]$: the
+typical row is at the floor and the mean is carried by a tail. Resolved by campaign after the
 pooled result was known (M6 to M9), the \Ti{} mean \chir{} is 1.73 $[1.12, 2.74]$,
 3.98 $[2.40, 5.90]$, 3.00 $[1.97, 4.62]$ and 1.07 $[0.70, 1.52]$, above 1.5 in M7 and
 M8 only, and the calibration ratio of the reported \Ti{} errors is 0.701, 0.792, 0.530
