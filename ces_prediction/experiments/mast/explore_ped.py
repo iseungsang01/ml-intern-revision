@@ -103,9 +103,10 @@ def load_extra(shot):
                 ok = (np.isfinite(te) & np.isfinite(er) & np.isfinite(ne) & np.isfinite(R)
                       & (te > 0) & (er > 0) & (ne > 0) & (er / te < 1.0))
             keep = np.isfinite(t) & (ok.sum(1) >= 6)
-            o = np.argsort(t[keep], kind="stable")
-            out["ts"] = (t[keep][o], R[keep][o], np.where(ok, te, np.nan)[keep][o],
-                         np.where(ok, ne, np.nan)[keep][o], g)
+            if keep.any():
+                o = np.argsort(t[keep], kind="stable")
+                out["ts"] = (t[keep][o], R[keep][o], np.where(ok, te, np.nan)[keep][o],
+                             np.where(ok, ne, np.nan)[keep][o], g)
         for key, tn, vn in (("dens", "ane_time", "ane_density"), ("lock", "asm_out_time", "asm_out_signal"),
                             ("hm", "asm_hm_time", "asm_hm_rating")):
             if vn in z.files and z[vn].shape == z[tn].shape:
@@ -295,6 +296,13 @@ def report(tg, t, resid, preds, rng):
     cells = [("all", np.ones(len(resid), bool)), ("Thomson available", has_ts)]
     cells += [(lab, has_ts & (d >= a) & (d < b)) for a, b, lab in EDGE_BANDS]
     top = has_ts & (d >= 0.015) & (d < 0.05)
+    if tg == "T_i":
+        with np.errstate(all="ignore"):
+            tight = (np.sqrt(t["s0"]) / np.abs(t["y"]) < 0.1) & (np.sqrt(t["s1"]) / np.abs(t["y1"]) < 0.1)
+    else:
+        tight = (np.sqrt(t["s0"]) < 2.0) & (np.sqrt(t["s1"]) < 2.0)       # km/s
+    cells += [("pedestal top, tight reported errors at both frames", top & tight),
+              ("pedestal top, tight errors, H-mode rating >= 0.5", top & tight & (hm >= 0.5))]
     cells += [("pedestal top, H-mode rating >= 0.5", top & (hm >= 0.5)),
               ("pedestal top, H-mode rating < 0.5", top & (hm < 0.5)),
               ("pedestal top, T_e changed >= 15 %", top & (dte >= 0.15)),
@@ -312,10 +320,28 @@ def report(tg, t, resid, preds, rng):
         print(f"| {name} | {int(sel.sum())} | {len(np.unique(inv[sel]))} | {np.sqrt(mse):.1f} | "
               f"{1.0 - excess[sel].mean() / mse:.2f} | "
               + " | ".join(skill(sel, a, b) for a, b in PAIRS) + " |")
-    if top.sum() >= 300:
-        print("median absolute error, pedestal top: " + ", ".join(
-            f"{k} {np.median(np.sqrt(v[top])):.2f}" for k, v in se.items()))
+    arms = ("slope_filter", "gb_ces", "gb_ts", "gb_da", "gb_all", "interp")
+    print("\nmedian absolute error: persistence value, then the ratio of each estimator to it")
+    print("| cell | rows | persistence | " + " | ".join(arms) + " |")
+    print("|" + "---|" * (3 + len(arms)))
+    for name, sel in cells:
+        if sel.sum() < 300:
+            continue
+        m0 = np.median(np.sqrt(se["persistence"][sel]))
+        print(f"| {name} | {int(sel.sum())} | {m0:.2f} | "
+              + " | ".join(f"{np.median(np.sqrt(se[a_][sel])) / m0:.3f}" for a_ in arms) + " |")
+
+
+def rereport():
+    """Tables again from the stored row tables and predictions (no fit)."""
+    rng = np.random.default_rng(SEED)
+    for tg in rg.TARGETS:
+        z = np.load(OUT / f".ped_rows_{tg}.npz")
+        t = {k: z[k] for k in z.files}
+        pz = np.load(OUT / f".ped_preds_{tg}.npz")
+        preds = {k: pz[k] for k in pz.files if k != "fold"}
+        report(tg, t, (t["y"] - t["y1"]).astype(np.float64), preds, rng)
 
 
 if __name__ == "__main__":
-    {"build": build, "fit": fit}[sys.argv[1]]()
+    {"build": build, "fit": fit, "report": rereport}[sys.argv[1]]()
