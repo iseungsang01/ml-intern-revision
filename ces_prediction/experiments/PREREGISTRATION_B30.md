@@ -116,3 +116,20 @@ skill over hold at every lag; the innovation share of its error rises from 0.41 
   the paper's harness; k = 1 numbers are therefore close to, not identical with, the paper's.
 - Output: `docs/paper/b30_thinned.json` / `.md`, record in `THESIS_RESULTS.md` section 8.
   Runner: `ces_prediction/experiments/b30_thinned/run_b30.py`.
+
+## Amendment 1 (2026-11-16, before any thinned number was read)
+
+The first run stopped at the k = 1 check of split 42 (cut), as registered: hold and the causal GP
+reproduced the stored squared errors on 0.9997 and 0.9992 of the stored T_i rows, the network on
+0.55. Cause, measured with the unmodified evaluation path (`eval_seq.build_pred_lookup`) on six
+TEST discharges of that split: the stored errors were computed with CUDA inference and this batch
+runs on the CPU; the absolute error of the network differs by a median of 0.011 to 0.025 eV and a
+90th percentile of 0.038 to 0.066 eV per discharge, which fails a 1e-3 relative tolerance on the
+squared error for rows with an error of a few tens of eV. The inference path is the same.
+
+Change (the check only; nothing else in sections 2 to 8 moves): the check is stated on the
+absolute error. For each stored scored row, | |error| of this batch - |error| stored | <= 0.5 eV
+(T_i) on at least 99 % of the stored rows of every split, for the network, hold and the causal GP.
+The share under the first rule and the 99th percentile of the deviation are reported beside it.
+No thinned prediction had been read when this was written: the run stops before the first k = 2
+pass when the check fails.
