@@ -50,27 +50,26 @@ a causal estimator with co-located fast diagnostics against hold and interpolati
 % =========================================================================
 \begin{abstract}
 \noindent
-Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} and toroidal
-rotation every 10\,ms. On the chord at the pedestal top the signal is weak, 8.2\% of
-\Ti{} samples are missing, and an application that needs the present value cannot
-use interpolation. We ask which estimator of the
-present value has the lowest error against hold and interpolation, whether it
-fits inside the 10\,ms frame, and what it does when CES samples drop out. On 641
-discharges, a recurrent network that reads the CES past and co-located beam-emission
-and electron-cyclotron channels has the lowest \Ti{} mean squared error among
-estimators that do not use the next sample. With every input standardized from
-training discharges it is causal; its skill is $+0.068$ to $+0.141$ over a CES-only
-causal Gaussian process on four splits and $+0.027$ to $+0.115$ over the same network trained without the fast channels when
-values above 3\,keV are excluded. When measured samples are withheld so that one is
-visible only every 50\,ms, it fills the 10\,ms grid with a lower error than the
-causal Gaussian process on four of four splits and than interpolation between the
-sparse samples on three of four, and its fast-channel share is $+0.054$ to $+0.156$.
-On the discharges with a raw 500\,kHz beam-emission stream, rows in phases with edge
+Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} every 10\,ms.
+On the chord at the pedestal top the signal is weak, 8.2\% of \Ti{} samples are
+missing, and an application that needs the present value cannot use interpolation.
+We ask which estimator of the present value has the lowest error against hold and
+interpolation, whether it runs within one frame, and what happens when samples drop out. On 641 discharges, a recurrent network that reads the CES past and
+co-located beam-emission and electron-cyclotron channels has the lowest \Ti{} mean
+squared error among estimators that do not use the next sample. Standardized from training discharges it is causal; its skill is $+0.068$ to $+0.141$
+over a CES-only causal Gaussian process on four splits and $+0.027$ to $+0.115$ over
+the same network trained without the fast channels when values above 3\,keV are
+excluded. When measured samples are withheld so that one is visible only every
+50\,ms, it fills the 10\,ms grid with a lower error than the causal Gaussian process
+on four of four splits and than interpolation between the sparse samples on three of
+four. Where a raw 500\,kHz beam-emission stream exists, rows in phases with edge
 bursts consistent with edge-localized modes are 12\% of the scored rows and carry
-0.604 $[0.056, 0.786]$ of the squared-error reduction due to the fast channels. One step takes 0.5\,ms on a CPU. The gain is in the
-mean squared error: the median error is not below that of hold. Over all rows the 10\,ms increments are anticorrelated almost as white noise (lag-1
-autocorrelation of 10\,ms increments $-0.416$); on 3{,}686 public MAST discharges
-the share of failed fits rises from 0.270 at mid-radius to 0.695 at the edge.
+0.604 $[0.056, 0.786]$ of the error reduction due to the fast channels. One step
+takes 0.5\,ms on a CPU. The gain is in the mean squared error: the median error is
+not below that of hold. On public MAST data, in a registered test on 1{,}651
+discharges, a causal estimate of a hidden frame at the pedestal top has skill
+$+0.148$ $[+0.122, +0.177]$ over hold, and Thomson scattering at the same radius
+added to the charge-exchange past gives $+0.047$ $[+0.033, +0.068]$.
 \end{abstract}
 
 \noindent\textbf{Keywords:} charge-exchange spectroscopy, ion temperature, pedestal,
@@ -125,8 +124,10 @@ association with rotation, which is estimated from its own history
 visible only every 20 to 100\,ms, the estimator keeps a lower error than a causal GP,
 and at 50\,ms than interpolation between the sparse samples on three of four splits,
 while the fast-channel share grows (\S\ref{sec:thin}); one step of the estimator takes
-0.5\,ms on a CPU. The gain belongs to the large-error rows and not to the typical row
-(\S\ref{sec:character}).
+0.5\,ms on a CPU. On MAST, in a registered test, a measurement at the chord radius
+lowers the error of a causal estimate at the pedestal top as well
+(\S\ref{sec:mastped}). On KSTAR the gain belongs to the large-error rows and not to
+the typical row (\S\ref{sec:character}).
 
 \paragraph{Relation to earlier work.} GP regression~\citep{rasmussen2006} is the
 standard tool for fusion profile fitting~\citep{chilenski2015,michoski2024} and has
@@ -149,9 +150,12 @@ conditioned on the irregular past of the target itself, and to a direct test, fo
 ion temperature, of whether the fast channels are informative at all.
 
 \paragraph{Scope.} The KSTAR result is one chord, one campaign and one device. MAST
-enters as a second, public device for the dependence of the measurement on radius
-only: it has many chords and per-sample fit errors but no fast diagnostic co-located
-with them, so no MAST number supports the statement about fast diagnostics. Gaps on
+enters as a second, public device in two ways: for the dependence of the measurement
+on radius (\S\ref{sec:regime}), and for a registered test of whether an independent
+measurement at the chord radius lowers the error of a causal estimate at the pedestal
+top (\S\ref{sec:mastped}). MAST has no diagnostic faster than its charge-exchange
+system at the chord, so its numbers bear on the direction of the KSTAR statement and
+not on its size. Gaps on
 KSTAR are natural; on MAST they are frames hidden by us. The fast-channel share of
 the \Ti{} margin holds in the population that excludes values above 3\,keV and is
 small in the one that keeps them at the natural cadence; it is established in both
@@ -880,6 +884,63 @@ labels do not decide that. By the rule registered with these statements, one of 
 three measurement statements having failed, the mechanism is still described as not
 identified.
 
+\subsection{The same question on a second device: the MAST pedestal top}
+\label{sec:mastped}
+MAST has no diagnostic faster than its charge-exchange system at the chord, but it
+has an independent measurement at the same radius: Thomson scattering gives $T_e$ and
+$n_e$ along the mid-plane once or twice per 5\,ms frame. The question of this paper
+can therefore be put on a second device in a weaker form: when a frame is hidden,
+does a measurement at the location of the chord lower the error of a causal estimate
+at the pedestal top? A chord was placed by its distance to the edge of the Thomson
+density profile at that time (the outermost radius where $n_e$ is at least half of
+the 90th percentile of the outboard profile), and the pedestal top was taken as 1.5
+to 5\,cm inside it. The inputs, the band and the estimator (gradient-boosted trees on
+the charge-exchange past, optionally with Thomson $T_e$ and $n_e$ at the chord
+radius, mid-plane D-alpha, line density and a saddle-coil signal) were chosen on the
+odd-numbered discharges of the set of \S\ref{sec:regime}. Six statements were then
+registered, and the models were trained once on those discharges and applied once to
+the 1{,}651 even-numbered ones (Table~\ref{tab:mastped}).
+
+\begin{table}[t]
+  \centering
+  \caption{MAST, registered confirmation on 1{,}651 discharges: skill for a hidden
+  5\,ms \Ti{} frame with 95\% intervals. Hold is the last visible frame; offline
+  interpolation is the mean of the two neighbouring visible frames and is not causal.
+  The pedestal top is 1.5 to 5\,cm inside the edge of the Thomson density profile.}
+  \label{tab:mastped}
+  \footnotesize
+  \begin{tabular}{lcc}
+    \toprule
+    & Pedestal top (74{,}060 rows) & More than 20\,cm inside (750{,}310 rows) \\
+    \midrule
+    All inputs vs hold & $+0.148$ $[+0.122, +0.177]$ & $+0.286$ $[+0.266, +0.305]$ \\
+    Charge-exchange past vs hold & $+0.101$ $[+0.080, +0.122]$ & $+0.141$ $[+0.131, +0.151]$ \\
+    Thomson added to the past & $+0.047$ $[+0.033, +0.068]$ & $+0.145$ $[+0.125, +0.166]$ \\
+    D-alpha added to the past & $+0.023$ $[+0.012, +0.038]$ & $+0.083$ $[+0.066, +0.099]$ \\
+    All inputs vs offline interpolation & $-0.161$ $[-0.299, -0.021]$ & $-0.102$ $[-0.170, -0.043]$ \\
+    Offline interpolation vs hold & $+0.266$ $[+0.160, +0.352]$ & $+0.352$ $[+0.314, +0.390]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+All six statements hold. At the pedestal top (74{,}060 hidden frames in 1{,}434
+discharges) the estimate with all inputs has skill $+0.148$ $[+0.122, +0.177]$ over
+hold; Thomson scattering added to the charge-exchange past gives $+0.047$
+$[+0.033, +0.068]$ and D-alpha $+0.023$ $[+0.012, +0.038]$; the median absolute error
+is 0.797 $[0.782, 0.809]$ of that of hold; and the estimate does not reach offline
+interpolation. The Thomson increment is larger in the core than at the pedestal top
+(difference $+0.098$ $[+0.071, +0.122]$): the pedestal top is where a co-located
+measurement helps least, and it still helps. For rotation the same estimate has
+$+0.206$ $[+0.170, +0.246]$ over hold at the pedestal top, of which Thomson
+scattering added to the past gives $+0.107$ $[+0.080, +0.138]$.
+
+This is not a replication of the KSTAR numbers. The gaps are frames hidden by us, the
+added measurement is as slow as the target, and the trees are a reference estimator,
+not a real-time form. What it shows is that the direction of the KSTAR result, a
+measurement at the location of the chord adding to the charge-exchange past at the
+pedestal top, is not specific to one device or to one pair of diagnostics, and that
+on MAST the typical row improves as well.
+
 \section{Rotation}
 \label{sec:vrot}
 
@@ -1022,7 +1083,9 @@ geometric ratio from one axis and one boundary radius per discharge and is not a
 coordinate; the catalogue carries no confinement-mode label, so the radial result is
 not a statement about the pedestal. The fall of the regime number at the edge holds
 under the loose fit rule and in three of four campaigns, and the MAST edge does not
-reach the KSTAR value. No learned estimator and no fast diagnostic was used on MAST.
+reach the KSTAR value. The learned estimators on MAST are gradient-boosted trees, a reference and not a
+real-time form, and Thomson scattering there is independent of the charge-exchange
+system, not faster than it.
 \item \emph{Intervals.} The unit of replication is the discharge. The pooled KSTAR
 interval conditions on the trained models; the fold-level interval, which does not,
 is wider.
@@ -1058,7 +1121,11 @@ fast-channel share rises to $+0.076$ to $+0.156$; its distance to hold falls by 
 than the registered margin. On the discharges with a raw beam-emission stream, the
 gaps and the large steps of \Ti{} sit in phases with edge bursts consistent with
 edge-localized modes, and those phases, 12\% of the scored rows, carry 60\% of the
-fast-channel share. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame.
+fast-channel share. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame. On
+public MAST data, in a registered test on 1{,}651 discharges, a causal estimate of a
+hidden frame at the pedestal top has skill $+0.148$ $[+0.122, +0.177]$ over hold, and
+Thomson scattering at the same radius added to the charge-exchange past gives
+$+0.047$ $[+0.033, +0.068]$.
 Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) and is
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.

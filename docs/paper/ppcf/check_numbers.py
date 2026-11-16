@@ -116,6 +116,8 @@ def main():
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_COUPLING.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b30_posthoc.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b31_bursts.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/mast_ped_confirmation.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_PED.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B31.md").read_text(encoding="utf-8"),
         thesis,
     ])
