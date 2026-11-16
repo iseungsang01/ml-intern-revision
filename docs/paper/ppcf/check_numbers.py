@@ -109,6 +109,8 @@ def main():
         (ROOT / "docs/paper/mast_coupling.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_COUPLING.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b30_posthoc.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b31_bursts.md").read_text(encoding="utf-8"),
+        (ROOT / "ces_prediction/experiments/PREREGISTRATION_B31.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))

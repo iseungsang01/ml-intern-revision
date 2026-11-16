@@ -1,0 +1,22 @@
+{
+ "31921": {
+  "window_s": [
+   7.2,
+   8.6
+  ],
+  "bursts_in_window": 42,
+  "rows_in_window": 139,
+  "rows_missing": 61,
+  "blips_ms_in_window": 9
+ },
+ "31923": {
+  "window_s": [
+   5.9,
+   7.98
+  ],
+  "bursts_in_window": 52,
+  "rows_in_window": 207,
+  "rows_missing": 56,
+  "blips_ms_in_window": 9
+ }
+}

@@ -51,28 +51,27 @@ a causal estimator with co-located fast diagnostics against hold and interpolati
 \begin{abstract}
 \noindent
 Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} and toroidal
-rotation every 10\,ms. On the chord at the pedestal top the signal is weak: 8.2\% of
-\Ti{} samples are missing, 23.9\% of rotation samples are missing and a further 41.1\%
-repeat the previous value, and an application that needs the value at the present
-time cannot use interpolation, which waits for the next sample.
-We ask which estimator of the present value has the lowest error there against hold
-and interpolation, whether it fits inside the 10\,ms frame, and what it does when CES
-samples drop out. On 641 discharges, a recurrent network that reads the CES past and
-co-located beam-emission and electron-cyclotron channels has the lowest \Ti{} mean
-squared error among estimators that do not use the next sample. With every input
-standardized from training discharges it is causal; its skill is $+0.068$ to $+0.141$
-over a CES-only causal Gaussian process on four splits, $+0.103$ to $+0.112$ on later
-discharges, and $+0.027$ to $+0.115$ over the same network trained without the fast
-channels when values above 3\,keV are excluded. When measured samples are withheld so
-that one is visible only every 50\,ms, this estimator fills the 10\,ms grid with a
-lower error than the causal Gaussian process on four of four splits and than
-interpolation between the sparse samples on three of four, and its fast-channel share
-is $+0.054$ to $+0.156$; the distance to hold falls by 0.06 to 0.07. One step
-takes 0.5\,ms on a CPU. The gain is in the mean squared error: the median error is
-not below that of hold. Rotation is estimated from its own history. On 3{,}686 public
-MAST discharges the share of failed fits rises from 0.270 at mid-radius to 0.695 at
-the edge; the KSTAR chord itself is fit-noise-limited (lag-1 autocorrelation of
-10\,ms increments $-0.416$).
+rotation every 10\,ms. On the chord at the pedestal top the signal is weak, 8.2\% of
+\Ti{} samples are missing, and an application that needs the present value cannot
+use interpolation. We ask which estimator of the
+present value has the lowest error against hold and interpolation, whether it
+fits inside the 10\,ms frame, and what it does when CES samples drop out. On 641
+discharges, a recurrent network that reads the CES past and co-located beam-emission
+and electron-cyclotron channels has the lowest \Ti{} mean squared error among
+estimators that do not use the next sample. With every input standardized from
+training discharges it is causal; its skill is $+0.068$ to $+0.141$ over a CES-only
+causal Gaussian process on four splits and $+0.027$ to $+0.115$ over the same network trained without the fast channels when
+values above 3\,keV are excluded. When measured samples are withheld so that one is
+visible only every 50\,ms, it fills the 10\,ms grid with a lower error than the
+causal Gaussian process on four of four splits and than interpolation between the
+sparse samples on three of four, and its fast-channel share is $+0.054$ to $+0.156$.
+On the discharges with a raw 500\,kHz beam-emission stream, rows in phases with edge
+bursts consistent with edge-localized modes are 12\% of the scored rows and carry
+60\% of the fast-channel share. One step takes 0.5\,ms on a CPU. The gain is in the
+mean squared error: the median error is not below that of hold. The series is
+fit-noise-limited (lag-1
+autocorrelation of 10\,ms increments $-0.416$); on 3{,}686 public MAST discharges
+the share of failed fits rises from 0.270 at mid-radius to 0.695 at the edge.
 \end{abstract}
 
 \noindent\textbf{Keywords:} charge-exchange spectroscopy, ion temperature, pedestal,
@@ -162,7 +161,9 @@ whole-discharge statistics, an offline step, and is described as an estimator th
 does not use the next CES sample; the same network with the fast channels
 standardized from training discharges only is causal, and its numbers are quoted
 separately (\S\ref{sec:fast}). The equilibrium of the KSTAR
-discharges is not in the files, and no statement about pedestal dynamics is made.
+discharges is not in the files; statements about edge events are limited to the
+twelve discharges for which a raw beam-emission stream exists
+(\S\ref{sec:bursts}).
 
 % =========================================================================
 \section{Data}
@@ -562,14 +563,15 @@ gaps in three discharges.
   in~\citep{Heo2025ExperimentalIdentification}, in the split whose test set holds
   both, and in each the 0.6\,s window with the most rows lacking \Ti{}. In these
   windows the measured \Ti{} itself moves by more than 1\,keV between adjacent rows;
-  without per-exposure fit errors it cannot be decided whether those values are fit
-  excursions below the 3\,keV cut or changes of the plasma. (c) Added after (a, b)
+  the raw BES stream of these discharges places the windows in a phase with edge
+  bursts (Fig.~\ref{fig:bursts}), and without per-exposure fit errors it cannot be
+  decided how much of each excursion is the plasma and how much the fit. (c) Added after (a, b)
   had been seen: the test discharge of the same split whose row-to-row scatter of
   measured \Ti{} is the median of 46 candidates, same window rule. On its 393 scored
   rows the RMSE is 63.8\,eV (recurrent estimator), 63.6\,eV (causal GP) and 80.7\,eV
   (persistence). On the 437 (a), 389 (b) and 393 (c) rows scored in the frozen evaluation, the
-  recomputed squared errors of all three estimators equal the stored ones. No event
-  is identified in these windows.}
+  recomputed squared errors of all three estimators equal the stored ones. The 10\,ms
+  files identify no event in these windows; see Fig.~\ref{fig:bursts}.}
   \label{fig:trace}
 \end{figure}
 
@@ -699,8 +701,9 @@ Truncating the network's context costs $-0.066$ in skill at 20\,ms and saturates
 time scale of the discharge scenario. The
 physical mechanism is not identified: per-discharge standardization removes the
 absolute $T_e$ and $n_e$ that a collisional-exchange term would need, and
-the files carry no beam-power or D-alpha signal with which events could be labelled.
-At 10\,ms no statement about individual edge-localized modes is possible.
+the 10\,ms files carry no beam-power or D-alpha signal with which events could be
+labelled; the raw stream of twelve discharges gives a partial answer
+(\S\ref{sec:bursts}).
 
 % =========================================================================
 \subsection{When CES is sparser: a thinned replay}
@@ -802,6 +805,67 @@ With CES thinned to 50\,ms it is above zero on four of four splits in the quinti
 rows whose BES level changed least from the previous row ($+0.070$ to $+0.174$; a
 median change of 0.5\% of the discharge median). This does not identify the
 mechanism; it bounds one reading of it.
+
+\subsection{Which rows carry the gain: edge bursts in the raw beam-emission stream}
+\label{sec:bursts}
+For twelve discharges of the data set the 500\,kHz BES stream was delivered. It
+allows two things the 10\,ms files do not. The state of the beam can be read: the
+level falls below half its median only during blips of about 10\,ms, 1.5\,s apart in
+the two discharges of Fig.~\ref{fig:bursts}, and the beam is on otherwise. And short
+bursts of beam emission can be detected (a 0.2\,ms mean above its 50\,ms running
+median by six robust standard deviations). The detector and the row labels were fixed
+on one discharge, 31921, and the statements below were registered before any other
+discharge was labelled or any model error was broken down. A row is
+\emph{burst-active} when at least three bursts fall in the preceding 200\,ms and
+\emph{quiet} when none does; rows within 30\,ms after a blip are left out.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig_bursts}
+  \caption{The two discharges of this data set with a published edge
+  analysis~\citep{Heo2025ExperimentalIdentification}; both are test discharges of one
+  split. Top: BES level from the 500\,kHz stream (1\,ms means over the discharge
+  median); ticks mark bursts, the vertical band a beam blip. Bottom: measured \Ti{}
+  (dots), the causal estimate at every grid row (line) and hold (dashed); shading
+  marks rows without a usable \Ti{}. (a) 31921, published as FIRE mode at 5.40\,s and
+  H-mode at 8.05\,s. (b) 31923. Each window starts 0.2 to 0.3\,s before the rise of the
+  BES level.}
+  \label{fig:bursts}
+\end{figure}
+
+Figure~\ref{fig:bursts} shows the two discharges with a published edge
+analysis~\citep{Heo2025ExperimentalIdentification}, which places 31921 in FIRE mode
+at 5.40\,s and in H-mode at 8.05\,s. In 31921 bursts occur 0 to 0.8 times per second
+between 5.1 and 7.3\,s and 30 to 35 times per second after 7.3\,s, and \Ti{} has no
+missing row before 7.4\,s. In both discharges the late phase begins with a rise of
+the BES level and of \Ti{} from a few hundred eV to about 2\,keV; afterwards \Ti{}
+falls after a burst and recovers between bursts while the BES level recovers. The
+excursions of more than 1\,keV between adjacent rows in Fig.~\ref{fig:trace}(a, b) are
+in this phase: they follow the bursts and are not isolated outliers.
+
+On the eleven other discharges, \Ti{} is missing more often in rows with a burst in
+the preceding 10\,ms than in quiet rows in five of the six discharges that have
+enough rows of both kinds (0.24 to 0.37 against 0.00 to 0.01 in three of them), and
+the median step of \Ti{} between adjacent measured rows is larger in burst-active
+rows in seven of seven (231.5 against 32.7\,eV and 322.7 against 28.4\,eV in the two
+with the largest contrast). Both registered statements hold. The third, that the hold
+error is larger in burst-active rows on at least 80\% of the eligible test
+discharges, does not: it is larger on three of four (811.3 against 46.0\,eV on
+31923; 132.2 against 146.3\,eV on the one against). Pooled over the six test
+discharges with a raw stream, burst-active rows are 0.115 $[0.039, 0.198]$ of the
+scored rows and carry 0.604 $[0.056, 0.786]$ of the squared-error reduction of the
+network against its history-only twin; the skill of the network over the twin is
+$+0.197$ $[+0.109, +0.249]$ in burst-active rows and $+0.135$ $[+0.109, +0.153]$ in
+quiet rows. The fast-channel share is thus concentrated in phases with edge bursts
+and is not confined to them.
+
+Three limits apply. The bursts are defined on beam emission and are consistent with
+edge-localized modes; without D-alpha they are not shown to be. Six discharges carry
+the model statements, and the interval of the gain share is wide. And a measured
+\Ti{} of 100 to 300\,eV after a burst may be the plasma or a weak-signal fit; the
+labels do not decide that. By the rule registered with these statements, one of the
+three measurement statements having failed, the mechanism is still described as not
+identified.
 
 \section{Rotation}
 \label{sec:vrot}
@@ -915,6 +979,10 @@ system.
 \item \emph{Beam.} BES follows the heating beam and the CES fit depends on it; the
 files carry no beam timing, so a contribution of the beam state to the fast-channel
 share is bounded (\S\ref{sec:thin}) but not excluded.
+\item \emph{Edge bursts.} Bursts are defined on beam emission, in twelve discharges
+chosen for the raw delivery by an earlier rule; six of them carry the model
+statements; one of the registered statements failed; a burst is not shown to be an
+edge-localized mode.
 \item \emph{Thinned replay.} The networks are frozen and were trained at the natural
 cadence; the sparse cadence is imposed on measured samples; one of the five
 registered statements, on the distance to hold at 50\,ms, failed.
@@ -934,8 +1002,8 @@ relative to the pedestal in a given discharge is not known. There is no per-expo
 fit uncertainty, so fit failures are handled by value rules and the excursions of
 more than 1\,keV between adjacent rows in Fig.~\ref{fig:trace}(a, b) are scored as
 measured; there is no beam-power,
-D-alpha or equilibrium signal, so no event is labelled and no transport quantity is
-derived.
+D-alpha or equilibrium signal, so events are labelled only on the twelve discharges
+with a raw beam-emission stream and no transport quantity is derived.
 \item \emph{MAST.} Gaps are made by hiding frames; the normalized radius is a
 geometric ratio from one axis and one boundary radius per discharge and is not a flux
 coordinate; the catalogue carries no confinement-mode label, so the radial result is
@@ -974,7 +1042,10 @@ When CES samples are withheld so that one is visible only every 50\,ms, the froz
 network keeps $+0.108$ to $+0.129$ over the causal GP, has a lower error than
 interpolation between the sparse samples on three of four splits, and the
 fast-channel share rises to $+0.076$ to $+0.156$; its distance to hold falls by more
-than the registered margin. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame.
+than the registered margin. On the discharges with a raw beam-emission stream, the
+gaps and the large steps of \Ti{} sit in phases with edge bursts consistent with
+edge-localized modes, and those phases, 12\% of the scored rows, carry 60\% of the
+fast-channel share. One step takes 0.5\,ms on a CPU, inside the 10\,ms frame.
 Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) and is
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.
