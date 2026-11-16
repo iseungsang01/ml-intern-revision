@@ -7267,3 +7267,51 @@ Reading (exploratory). (1) Most of the distance to persistence comes from filter
 Not shown: nothing is confirmed (no frozen model has been scored on the even-numbered shots); the exposure convention of the stored frame time is unknown, so the D-alpha window may reach up to half a frame past the end of the hidden exposure; whether an ELM changes the fitted charge-exchange value through the spectral background rather than through the plasma has not been examined; normalized radius uses one magnetic-axis and one outer-radius value per shot.
 
 Next (same protocol note): `mast/fetch_extra.py` downloads Thomson scattering (core `ayc` / `atm`, edge `aye`), CO2 interferometer density and the saddle-coil locked-mode / H-mode rating signals for the same shot list; the question is restated at the pedestal top (stated aim of the work, 2026-11-16): which estimator and which inputs give the lowest error there against interpolation and hold baselines, in a form that runs inside 10 ms.
+
+### B.30 thinned-CES replay -- frozen estimators when a CES sample is visible only every k-th frame (2026-11-16)
+
+Registration `ces_prediction/experiments/PREREGISTRATION_B30.md` (f15bcf1) with amendment 1 (eca897e, written before any thinned number was read); runner `ces_prediction/experiments/b30_thinned/run_b30.py`; output `docs/paper/b30_thinned.json` / `.md`. CPU inference only, nothing trained, no frozen artifact written.
+
+Design. On the TEST discharges of the four file-level splits, CES samples that exist are withheld so that a sample is visible only every k-th row of a block (k = 1, 2, 3, 5, 10, i.e. every 10 to 100 ms; every phase, so each row is predicted once at each age of the last visible frame). Every estimator reads the visible samples only (the networks also the fast channels at every row) and is scored against the withheld measurement on one common row set. Estimators: hold (last visible sample), causal GP on the visible past (length-scale grid multiplied by k), offline PCHIP on the visible samples of both sides (not causal, reference), the paper's network (`bb`), the network and its history-only twin under the 80-epoch cap (cut population; the single-variable pair) or the 30-epoch cap (inclusive), and the train-file-standardized variant (`causal`). Skill a vs b = 1 - SSE_a / SSE_b, 95 % interval from 2,000 discharge-level bootstrap resamples.
+
+Check (amendment 1). At k = 1 the absolute error of the network is within 0.5 eV of the stored one on 0.9990 to 0.9998 of the stored T_i rows of the eight split x population cells (99th percentile of the deviation 0.12 to 0.16 eV), hold on 0.9997 to 0.9998, the causal GP on 0.9993 to 0.9998. Under the first rule (squared error within 1e-3 relative) the network reproduces 0.53 to 0.59 of the rows: the stored errors come from CUDA inference, this batch from the CPU.
+
+Result, T_i, cut population (range of the four point estimates; in brackets the number of splits whose interval excludes 0):
+
+| pair | k = 1 | k = 2 | k = 3 | k = 5 | k = 10 |
+|---|---|---|---|---|---|
+| network vs hold | +0.358 to +0.411 (4/4) | +0.344 to +0.372 (4/4) | +0.322 to +0.357 (4/4) | +0.298 to +0.345 (4/4) | +0.263 to +0.309 (4/4) |
+| network vs causal GP | +0.077 to +0.134 (4/4) | +0.124 to +0.137 (4/4) | +0.121 to +0.135 (4/4) | +0.108 to +0.129 (4/4) | +0.087 to +0.136 (4/4) |
+| network vs offline PCHIP | +0.175 to +0.271 (4/4) | +0.108 to +0.200 (4/4) | +0.092 to +0.187 (4/4) | +0.062 to +0.155 (3/4) | -0.011 to +0.107 (2/4) |
+| network vs history-only (80-epoch pair) | +0.064 to +0.113 (4/4) | +0.069 to +0.146 (4/4) | +0.072 to +0.145 (4/4) | +0.076 to +0.156 (4/4) | +0.079 to +0.145 (4/4) |
+| history-only vs hold | +0.314 to +0.372 (4/4) | +0.260 to +0.316 (4/4) | +0.237 to +0.288 (4/4) | +0.201 to +0.281 (4/4) | +0.163 to +0.237 (4/4) |
+| causal variant vs causal GP | +0.068 to +0.126 (4/4) | +0.091 to +0.137 (4/4) | +0.084 to +0.134 (4/4) | +0.070 to +0.134 (4/4) | +0.051 to +0.145 (4/4) |
+| network vs causal variant | -0.002 to +0.042 (1/4) | -0.001 to +0.050 (1/4) | -0.009 to +0.056 (1/4) | -0.005 to +0.059 (1/4) | -0.021 to +0.060 (1/4) |
+| causal GP vs hold | +0.305 to +0.345 (4/4) | +0.249 to +0.283 (4/4) | +0.229 to +0.262 (4/4) | +0.194 to +0.249 (4/4) | +0.155 to +0.219 (4/4) |
+| offline PCHIP vs hold | +0.190 to +0.223 (4/4) | +0.214 to +0.265 (4/4) | +0.203 to +0.253 (4/4) | +0.225 to +0.252 (4/4) | +0.226 to +0.271 (4/4) |
+
+RMSE (eV) at k = 1 / 5 / 10: hold 203.7 to 269.7 / 219.9 to 283.6 / 233.4 to 292.6; network 163.2 to 207.2 / 184.2 to 229.5 / 200.5 to 243.2; offline PCHIP 179.6 to 242.7 / 190.1 to 249.7 / 199.3 to 257.4. Rows at k = 1: 32,818 to 36,094 per split, 94 to 96 discharges.
+
+Registered statements (T_i, cut):
+
+- **H30-1 holds** (4/4 and 4/4). Network vs history-only at k = 5: +0.093 [+0.059, +0.130], +0.109 [+0.082, +0.138], +0.156 [+0.137, +0.174], +0.076 [+0.030, +0.122]; at k = 1: +0.065, +0.069, +0.113, +0.064. The fast-channel share is larger when CES is sparser.
+- **H30-2 does not hold** (0/4). Network vs hold at k = 5 is 0.060 to 0.072 below its k = 1 value (+0.298, +0.339, +0.326, +0.345 against +0.358, +0.411, +0.396, +0.410); the registered margin was 0.05. Every interval stays above 0.
+- **H30-3 holds** (4/4). Network vs causal GP at k = 5: +0.129, +0.125, +0.108, +0.129.
+- **H30-4 holds** (4/4). Causal variant vs causal GP at k = 5: +0.134, +0.070, +0.108, +0.100.
+- **H30-5 holds** (3/4). Network vs offline PCHIP at k = 5: +0.062 [-0.011, +0.123], +0.144 [+0.101, +0.179], +0.106 [+0.055, +0.146], +0.155 [+0.070, +0.220].
+
+Registered rule applied: H30-1 holds, so the paper may state that the fast-channel share grows when CES is sparser, with the table; H30-2 fails, so the replay is reported as a limit of the frozen network (trained at the natural cadence) and retraining with imposed dropout is named as the next step. No headline number of the paper is replaced.
+
+By age of the last visible sample under k = 10 (T_i, cut): network vs history-only +0.092 to +0.162 at 10 ms, +0.124 to +0.168 at 50 ms, +0.077 to +0.160 at 100 ms (4/4 at each); network vs hold +0.082 to +0.227 at 10 ms (3/4), +0.314 to +0.344 at 50 ms, +0.240 to +0.283 at 100 ms (4/4). With one fresh sample and the earlier ones more than 100 ms old the distance to hold at an age of 10 ms is a fraction of its k = 1 value: at the natural cadence that distance is mostly the averaging of the last few samples, and what remains under thinning is the fast-channel term.
+
+Co-reported (decides nothing). Top 1 % of the hold squared error removed: network vs hold +0.220 to +0.314, +0.161 to +0.240, +0.135 to +0.209 at k = 1, 5, 10 (4/4 each); network vs history-only +0.074 to +0.115, +0.088 to +0.134, +0.121 to +0.157 (4/4 each); network vs offline PCHIP 4/4, 3/4, 2/4; network vs causal GP 3/4 at each k. Median absolute error (eV) at k = 1 / 5 / 10: hold 43.2 to 49.5 / 49.8 to 56.6 / 55.6 to 62.8; network 44.3 to 52.8 / 50.6 to 58.0 / 56.8 to 63.8; history-only 43.5 to 50.4 / 53.3 to 58.0 / 63.5 to 68.3; offline PCHIP 36.7 to 43.3 / 42.1 to 48.0 / 46.5 to 52.6. The network is not below hold at the median at any cadence; against its history-only twin the median is within -2 to +5 % at k = 1 and 3 to 12 % lower at k = 10. Causal GP with the unscaled grid at k = 5: network vs it +0.096 to +0.124 (4/4).
+
+Inclusive population (co-reported), T_i: network vs hold +0.410 to +0.443 (k = 1), +0.403 to +0.420 (k = 5), +0.379 to +0.415 (k = 10); vs causal GP +0.119 to +0.152, +0.166 to +0.238, +0.201 to +0.255; vs offline PCHIP +0.186 to +0.301, +0.232 to +0.268, +0.221 to +0.267 (4/4 in every cell). Network vs history-only (30-epoch pair) +0.009 to +0.024 (2/4), +0.033 to +0.047 (4/4), +0.044 to +0.070 (4/4): not established at the natural cadence, established from k = 5. Causal variant vs causal GP 4/4 at every k. With the top 1 % of the hold squared error removed the network vs hold is -0.152 to +0.148 (1/4) at k = 1, and the median absolute error of the network is 56.8 to 74.6 eV against 43.8 to 49.9 for hold: in this population the distance to hold is carried by the failed-fit rows, as recorded before.
+
+V_rot (reported, decides nothing), cut: network vs hold +0.361 to +0.417, +0.285 to +0.392, +0.282 to +0.352 at k = 1, 5, 10 (4/4 each); vs causal GP 3/4, 1/4, 2/4; vs offline PCHIP 0/4, 1/4, 1/4.
+
+Expectation check (sec. 7). Held: fast-channel share at k = 1; network vs causal GP at k = 5 (+0.108 to +0.129 inside +0.10 to +0.30); network vs offline PCHIP at k = 5 (inside +0.05 to +0.25); network vs hold at k = 10 (inside +0.25 to +0.50); the event given probability 0.3 (H30-2 failing) occurred. Missed: network vs hold at k = 1 lies above +0.40 on two splits and at k = 5 one split is at +0.298; the fast-channel share at k = 5 and k = 10 has one split just below +0.08 (+0.076, +0.079); network vs offline PCHIP at k = 1 is above the guessed range on three splits (+0.239 to +0.271 against +0.05 to +0.20); the hold RMSE at k = 1 is 203.7 to 269.7 eV against 180 to 200 guessed (grid population); the hold MSE grows by 1.10 to 1.17 at k = 5, not by the 1.8 of the robust OU fit, because the tail rows carry the mean.
+
+What this does not show. The networks are frozen and were trained at the natural cadence; nothing was retrained at a sparse cadence, so the table is a lower bound on what a network trained for dropout would do and H30-2 marks where the frozen one degrades. `bb`, `bb80` and the history-only twins standardize the fast channels with whole-discharge statistics; `causal` does not and is not separated from `bb` on three of four splits at any k. The thinned cadence is imposed on measured samples. The row population is the grid population of the registration, not the window population of the paper's harness. At the median the network is not below hold.
+
+Run note: the session memory guard stopped the launching shell at about 11:45 while three inclusive splits were in their last passes; the three Python processes were already running, were not restarted, and finished at 11:52 to 11:53. All eight row tables are complete.
