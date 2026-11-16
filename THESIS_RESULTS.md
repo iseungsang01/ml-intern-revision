@@ -7564,3 +7564,58 @@ Registration `PREREGISTRATION_B35.md` (e7c2a9a); code `experiments/b35_blip_resp
 Reading. The fall of the CES value after a blip does not grow with the length of the interruption, so the dose prediction of an energy balance is not confirmed by T_i; the ECEI level, which does not use the beam, moves in the predicted direction with an interval that includes zero. With 131 long interruptions the T_i interval is wide (-0.025 to +0.169), so a deeper fall of up to 0.025 is not excluded and a shallower one is the point estimate. N2 has a flaw that I did not foresee in the registration: the thirds are formed on the level before the blip, which contains measurement noise, so the lowest third returns towards and above its level (ratio 1.05 to 1.07 from row 10 on) and its integral time is shortened by that overshoot. The difference between the thirds is therefore not evidence of a collisional time scale. What stands is the unconditional number: T_i and the ECEI level return with the same integral time, 41.0 and 40.2 ms. Neither failure shows that the value after a blip is not a temperature. The measurement that would decide the dose question is the raw stream (interruptions of 23 and 26 ms that removed no frame exist in one discharge) or the beam power. Expectation check: 3 of 6 met (the two event counts, N2 holding); missed: N1, both recovery-time ranges.
 
 Limits. After a longer interruption the first row is also later relative to its start. 131 events. The level of T_i stands in for the electron temperature.
+
+### B.36 a layer on top of the causal variant -- the sign of the error is weakly predictable; a boosted layer is not separated from zero (registered, 2026-11-16)
+
+Registration `PREREGISTRATION_B36.md` (77448f6); code `experiments/b36_layer/run_b36.py`, output `docs/paper/b36_layer.{json,md}`. CPU, no network trained, one run. The author's point after B.34: if the rows that will be wrong are known, a further layer can be stacked. A layer lowers the error only if the sign of the error is predictable as well as its size.
+
+Design as B.34 (frozen row tables, T_i, cut, natural cadence; boosted model fitted on one parity fold of the test discharges, applied to the other). Layer A: the signed residual on the 15 inputs. Layer B: with the history-only twin's value added. Linear stack: least squares on the causal variant, the causal GP, hold and the twin.
+
+| split | L1: layer A over causal | L2: layer B over causal | gated layer (top tenth only) | linear stack over causal | layer A over the stack | correlation of predicted and actual residual in the top tenth |
+|---|---|---|---|---|---|---|
+| 42 | +0.010 [-0.011, +0.030] | +0.005 [-0.018, +0.027] | +0.006 [-0.012, +0.024] | +0.036 [+0.017, +0.056] | -0.027 [-0.053, -0.001] | +0.171 [+0.115, +0.232] |
+| 1 | +0.007 [-0.026, +0.038] | +0.015 [-0.016, +0.046] | -0.004 [-0.029, +0.018] | +0.028 [+0.015, +0.044] | -0.022 [-0.059, +0.012] | +0.222 [+0.177, +0.275] |
+| 7 | +0.017 [-0.011, +0.047] | +0.019 [-0.011, +0.050] | +0.017 [-0.005, +0.043] | +0.021 [+0.012, +0.031] | -0.003 [-0.031, +0.024] | +0.237 [+0.168, +0.300] |
+| 123 | +0.023 [-0.016, +0.061] | +0.020 [-0.020, +0.058] | +0.021 [-0.006, +0.048] | +0.032 [+0.021, +0.046] | -0.010 [-0.051, +0.027] | +0.243 [+0.173, +0.317] |
+
+**L1 and L2 do not hold** (0 of 4 each). Every point estimate of the layer is above zero (+0.005 to +0.023) and every interval includes zero. The linear stack of the same estimators has +0.021 to +0.036 with every interval above zero, and the boosted layer is not above it (-0.027 to -0.001). In the tenth of rows named by the error model the predicted and the actual residual correlate at +0.171 to +0.243: the sign is predictable, weakly.
+
+Reading. On these inputs the size of the error is known far better than its direction. A flexible layer fitted on about 48 discharges does not lower the error by an amount that can be told from zero, and a four-weight linear mix does (+0.021 to +0.036), so the gain in hand comes from averaging estimators, not from a correction of the rows that will be wrong. By the registered rule no GPU batch on stacked depth is triggered by this readout; the same layer fitted on validation discharges is part V of B.37. Expectation check: L1 range met (+0.000 to +0.030) but it holds on no split where one to three were expected; L2 range met for three splits (+0.010 to +0.040), holds on none; gated within 0.005 of layer A on three of four; layers over the stack inside -0.02 to +0.02 on two of four; correlation inside 0.05 to 0.30 (met).
+
+Limits. Fitted on test discharges of the same split; default settings; cut population; says nothing about a layer trained end to end on the training discharges.
+
+### B.37 four readouts on frozen estimators -- a layer, an interval and a switch fitted on validation discharges all pass; a missing CES value is predictable; frame means do not help the frozen network (registered, 2026-11-16)
+
+Registration `PREREGISTRATION_B37.md` (ecf3d34, before any of the readouts); code `experiments/b37_plan/run_b37.py`, output `docs/paper/b37_plan.{json,md}`. CPU, no network trained (the causal variant is run forward), one run per part. The author asked that every proposal of the day be put into the plan and run.
+
+**V. The models of B.34 and B.36 fitted on validation discharges (127 or 128 discharges, 45,068 to 49,830 rows) and applied once to the test rows.** Check before the readout: on five test files per split the recomputed network, hold and GP values agree with the row table on every row (0 of 1,165, 1,545, 2,493 and 957 rows deviate by more than 0.5 eV).
+
+| split | V1: share of squared error in the tenth of rows named | V2: coverage of the adaptive 90 % interval | V2: median half-width over constant | V3: median error, switch over causal | V3: switch over hold | V3: skill of the switch over causal | V4: layer over causal (skill) | median error, layer over causal |
+|---|---|---|---|---|---|---|---|---|
+| 42 | 0.545 [0.459, 0.624] | 0.887 [0.872, 0.900] | 0.538 [0.472, 0.635] | 0.923 [0.891, 0.951] | 0.937 [0.893, 0.988] | +0.000 [-0.017, +0.017] | +0.057 [+0.028, +0.088] | 0.895 [0.867, 0.922] |
+| 1 | 0.472 [0.400, 0.537] | 0.867 [0.845, 0.887] | 0.752 [0.643, 0.856] | 0.827 [0.773, 0.874] | 0.934 [0.882, 0.978] | +0.011 [-0.003, +0.027] | +0.082 [+0.053, +0.110] | 0.831 [0.790, 0.873] |
+| 7 | 0.515 [0.432, 0.598] | 0.888 [0.875, 0.900] | 0.576 [0.493, 0.701] | 0.938 [0.913, 0.965] | 0.881 [0.844, 0.922] | +0.009 [-0.009, +0.027] | +0.053 [+0.032, +0.074] | 0.936 [0.912, 0.961] |
+| 123 | 0.529 [0.444, 0.601] | 0.885 [0.866, 0.899] | 0.499 [0.419, 0.650] | 0.940 [0.913, 0.957] | 0.936 [0.885, 0.983] | +0.008 [-0.006, +0.024] | +0.064 [+0.040, +0.091] | 0.924 [0.892, 0.957] |
+
+**V1 holds** (4 of 4). **V2 holds** (3 of 4; on split 1 the coverage is 0.867): the adaptive interval has a median half-width of 105.8 to 139.0 eV against a constant 184.8 to 212.3 eV. Reported, not registered: with the scale taken from out-of-fold predictions inside the validation rows the coverage is 0.881 to 0.901. **V3 holds** (4 of 4): the switch between hold and the causal variant has a median error 0.827 to 0.940 of that of the causal variant and 0.881 to 0.937 of that of hold, every interval below 1, with a mean-squared-error skill of +0.000 to +0.011 over the causal variant. **V4 holds** (4 of 4): the boosted layer on the signed residual has skill +0.053 to +0.082 over the causal variant, every interval above zero, and its median error is 0.831 to 0.936 of that of the causal variant.
+
+Reading of V. The author's point holds once the layer is fitted on enough discharges. On 48 discharges (B.36) the layer was +0.005 to +0.023 with every interval including zero; on about 127 it is +0.053 to +0.082. The same holds for the interval and the switch, which missed their bars in B.34. Two things follow. First, the causal variant is not the best estimator that its own inputs allow: a second stage on its residual lowers the mean and the median error together, which no estimator of this project had done (limit L1). Second, the binding quantity was the number of discharges the second stage sees, so a stage trained on the 414 training discharges is the natural next measurement. By the registered rules a variance output and a stacked stage are to be registered as GPU batches, and the manuscript gains an interval beside the value. Not yet measured: the layer against the linear stack on the same fit, its step time, and the inclusive population.
+
+**F. Predicting an unusable CES value** (missing or above 3 keV; fitted on the non-test files).
+
+| split | base rate | AUC, history / with the fast-channel window | F1: difference | onsets of a gap: base rate | AUC, history / full | difference |
+|---|---|---|---|---|---|---|
+| 42 | 0.069 | 0.949 / 0.974 | +0.025 [+0.017, +0.034] | 0.022 | 0.858 / 0.940 | +0.082 [+0.059, +0.109] |
+| 1 | 0.079 | 0.919 / 0.961 | +0.042 [+0.030, +0.054] | 0.032 | 0.818 / 0.929 | +0.111 [+0.088, +0.138] |
+| 7 | 0.071 | 0.903 / 0.962 | +0.059 [+0.041, +0.077] | 0.030 | 0.784 / 0.933 | +0.149 [+0.116, +0.179] |
+| 123 | 0.082 | 0.928 / 0.963 | +0.035 [+0.027, +0.046] | 0.036 | 0.861 / 0.947 | +0.086 [+0.065, +0.108] |
+
+**F1 holds** (4 of 4). Whether the next CES value will be unusable is predicted from the fast-channel window with an area under the ROC curve of 0.961 to 0.974, and at the onset of a gap (the preceding row usable) 0.929 to 0.947 against 0.784 to 0.861 from the history alone. Missingness is information the fast channels carry.
+
+**Q. Skill with the fit noise taken out (reported).** The lower bound of the fit-noise standard deviation from the lag-1 autocovariance of the increments is 120.9 to 162.6 eV plain and 85.6 to 114.2 eV with increments clipped at their 1st and 99th percentiles (RMSE of the causal variant 164.5 to 208.0 eV). With the clipped value subtracted, the skill of the causal variant over the causal GP is +0.087 to +0.175 (raw +0.065 to +0.130), over hold +0.428 to +0.494 (raw +0.353 to +0.407) and over the twin +0.041 to +0.153 (raw +0.028 to +0.113). The plain value rests on few large excursions and is not used.
+
+**S. Means of the raw stream instead of snapshots** (7 discharges, 3,537 rows). **S1 does not hold**: the frozen network fed means over the 10 ms before the stamp has skill -0.034 [-0.061, -0.026] against itself as delivered, negative in all seven discharges; with 1 ms means +0.008 [-0.004, +0.034]. The standard deviation of the BES input is not lower after averaging (0.929 to 1.383 of the delivered one): the variance of the beam emission at the chord sits at time scales longer than a frame, so a snapshot is not a noisy copy of the frame mean. The network was trained on snapshots; this does not show that a frame mean carries less.
+
+Expectation check. V: 5 of 8 met (V1 range and count, V2 coverage, V2 count; width ratio 0.752 on one split outside 0.45 to 0.75; missed: V3 expected to fail, V4 expected at +0.005 to +0.035 on one to three splits). F: 3 of 5 (history AUC, F1 holding, onset difference; missed: difference above +0.05 on one split, onset AUC 0.93 to 0.95 where 0.70 to 0.85 was expected). Q: 2 of 3 (missed: clipped sigma 30 to 60 eV). S: 3 of 3.
+
+Limits. Validation discharges were used for early stopping of the network, so its errors there may be slightly smaller than on test discharges; the models are applied to test discharges only. Boosted trees with default settings. Cut population, natural cadence. S: seven discharges, a network trained on snapshots.
