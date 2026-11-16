@@ -59,14 +59,14 @@ and interpolation, whether it fits inside the 10\,ms frame, and what it does whe
 samples drop out. On 641 discharges, a recurrent network that reads the CES past and
 co-located beam-emission and electron-cyclotron channels has the lowest \Ti{} mean
 squared error among estimators that do not use the next sample. With every input
-standardized from training discharges it is causal, and its skill over a CES-only
-causal Gaussian process is $+0.068$ to $+0.141$ on four splits and $+0.103$ to
-$+0.112$ on later discharges; retrained without the fast channels the network loses
-$+0.064$ to $+0.117$ when values above 3\,keV are excluded. When measured samples are
-withheld so that one is visible only every 50\,ms, the network fills the 10\,ms grid
-with a lower error than the causal Gaussian process on four of four splits and than
-interpolation between the sparse samples on three of four, and the fast-channel share
-rises to $+0.076$ to $+0.156$; its distance to hold falls by 0.06 to 0.07. One step
+standardized from training discharges it is causal; its skill is $+0.068$ to $+0.141$
+over a CES-only causal Gaussian process on four splits, $+0.103$ to $+0.112$ on later
+discharges, and $+0.027$ to $+0.115$ over the same network trained without the fast
+channels when values above 3\,keV are excluded. When measured samples are withheld so
+that one is visible only every 50\,ms, this estimator fills the 10\,ms grid with a
+lower error than the causal Gaussian process on four of four splits and than
+interpolation between the sparse samples on three of four, and its fast-channel share
+is $+0.054$ to $+0.156$; the distance to hold falls by 0.06 to 0.07. One step
 takes 0.5\,ms on a CPU. The gain is in the mean squared error: the median error is
 not below that of hold. Rotation is estimated from its own history. On 3{,}686 public
 MAST discharges the share of failed fits rises from 0.270 at mid-radius to 0.695 at
@@ -168,16 +168,25 @@ discharges is not in the files, and no statement about pedestal dynamics is made
 \subsection{KSTAR}
 \label{sec:data:kstar}
 We use 641 KSTAR discharge files of the 2022 campaign (shots 30801--32751) aligned to a
-10\,ms grid, 247{,}207 rows in total. Each row holds nine BES
+10\,ms grid, 247{,}207 rows in total. Two files hold three rows each and enter no
+split, so the split and cross-validation universe is 639 discharges; statistics
+computed per discharge use the discharges with enough samples for them (603 with at
+least 20 measured \Ti{} values for the level, 601 with at least eight pairs of
+consecutive increments for the regime number, 382 for rotation). Each row holds nine BES
 channels~\citep{Nam2012AnalysisEdge}, four ECEI
 channels~\citep{Yun2010DevelopmentKstar}, two Mirnov-coil signals, time, and the two
 CES targets from one outboard chord at $R = 2.198$\,m. The BES and ECEI channels lie
 within about 1.5\,cm of that chord. The normalized radius of the chord is not
-established: no equilibrium is in the files; the nominal major and minor radii (1.8
-and 0.5\,m) give $(2.198 - 1.8)/0.5 = 0.80$; and a published edge analysis of two
-discharges of this data set finds the mode it studies in BES channels at a normalized
-radius of 0.93--0.97~\citep{Heo2025ExperimentalIdentification}, without stating which
-channels. For the comparison with MAST we therefore carry two candidate ranges,
+established: no equilibrium is in the files. The nominal major and minor radii (1.8
+and 0.5\,m) give $(2.198 - 1.8)/0.5 = 0.80$. A published edge analysis of two
+discharges of this data set~\citep{Heo2025ExperimentalIdentification} quotes a major
+radius of 1.77\,m and a minor radius of 0.45\,m, which give $(2.198 - 1.77)/0.45 =
+0.95$, and finds the mode it studies in BES channels at a normalized radius of
+0.93--0.97, without stating which channels. The same analysis notes that the CES ion
+temperature of those discharges is available only between beam blips, and the
+conventional CES analysis on KSTAR relies on modulation of the heating
+beam~\citep{Lee2026NeuralNetworkbased}: the missing samples and the beam-emission
+level are both tied to the beam, and the files carry no beam timing. For the comparison with MAST we therefore carry two candidate ranges,
 0.8--0.9 and 0.9--1.0. The level of the measurement agrees with an edge position: the
 median \Ti{} per discharge is 528\,eV (10th to 90th percentile 213 to 1{,}020\,eV over
 603 discharges). \Ti{} is missing in 8.2\% of rows and \Vrot{} in 23.9\%
@@ -628,8 +637,8 @@ the fast channels standardized by the statistics of the training discharges, the
 skill over the causal GP is $+0.068$ $[+0.014, +0.112]$, $+0.094$ $[+0.067, +0.120]$,
 $+0.141$ $[+0.106, +0.177]$ and $+0.101$ $[+0.061, +0.140]$ on the file-level splits
 and $+0.103$ to $+0.112$ on the split by time, every interval excluding zero; in the
-inclusive population it is $+0.098$ to $+0.165$ and $+0.097$ to $+0.121$
-(Appendix~\ref{app:more}). This variant takes nothing from the discharge being
+inclusive population it is $+0.098$ to $+0.165$ and $+0.097$ to $+0.121$ (the cut
+values per split are in Appendix~\ref{app:more}). This variant takes nothing from the discharge being
 estimated except rows before the estimated one, and it is the estimator this paper
 calls causal. The headline network is separated from it on one of the four file-level
 cut splits ($+0.043$ $[+0.022, +0.066]$; the other three $-0.004$ to $+0.010$) and on
@@ -637,9 +646,12 @@ none of the initialisations of the split by time ($+0.003$ to $+0.015$): with fa
 fits excluded, whole-discharge standardization is not what carries the margin over
 the causal GP. With values above 3\,keV kept, on the split by time, the headline network has
 the lower error on three of four initialisations ($+0.010$ to $+0.065$). The
-fast-channel increment of Table~\ref{tab:honly} was measured with whole-discharge
-standardization only; no history-only network was trained under the causal
-standardizer.
+history-only network reads no fast channel, so its inputs are the same under either
+standardization and the causal variant can be paired with it directly: on the rows
+of \S\ref{sec:thin} the skill of the causal variant over the history-only network is
+$+0.027$ to $+0.115$ at the natural cadence, every interval excluding zero. This
+pairing was made after the results were seen, and the causal variant was trained
+under the 30-epoch cap while the history-only network had the 80-epoch cap.
 
 \paragraph{Three supporting measurements.} (i) \emph{Memory is necessary.} A
 memoryless regression (gradient-boosted trees) on the same 22 inputs of the target
@@ -748,7 +760,28 @@ frozen estimator under a dropout it rarely saw; training with imposed dropout is
 next step. At the median the picture of \S\ref{sec:character} is unchanged: the
 median absolute error of the network is not below that of hold at any cadence (50.6
 to 58.0\,eV against 49.8 to 56.6\,eV at 50\,ms), and it is 3 to 12\% below that of
-the history-only twin at 100\,ms.
+the history-only twin at 100\,ms. With the 1\% of rows of largest hold error removed,
+the intervals of the network over hold and over its history-only twin stay above
+zero on four of four splits at 10, 50 and 100\,ms, and over the causal GP on three of
+four. The causal variant, read on the same rows after the registered statements,
+gives the same picture: over the history-only network $+0.054$ to $+0.156$ at 50\,ms
+(four of four splits) and over PCHIP of the visible samples $+0.066$ to $+0.127$
+(three of four).
+
+\paragraph{Is the fast-channel share a beam effect?} BES is the emission of the
+heating beam, so its level follows the beam as well as the plasma, and a CES fit
+depends on the beam. Without beam timing the two cannot be separated; what can be
+read, after the fact and on the same rows, is where the share sits. By quintile of
+the BES level of the row relative to its discharge median, the skill of the network
+over its history-only twin at the natural cadence is largest in the lowest and in the
+highest quintile, where the hold error is also largest: the lowest quintile carries
+0.24 to 0.41 of the summed gain and the highest 0.33 to 0.52, and the interval
+excludes zero in the lowest quintile on four of four splits and in the highest on
+three of four. The share is therefore not confined to rows of low beam emission.
+With CES thinned to 50\,ms it is above zero on four of four splits in the quintile of
+rows whose BES level changed least from the previous row ($+0.070$ to $+0.174$; a
+median change of 0.5\% of the discharge median). This does not identify the
+mechanism; it bounds one reading of it.
 
 \section{Rotation}
 \label{sec:vrot}
@@ -782,8 +815,10 @@ pooled readout only. Against PCHIP, which uses the following sample, the interva
 excludes zero in the cut population by a narrow margin and includes zero in the
 inclusive one, so a margin over PCHIP is not established; against the offline GP the
 offline smoother has the lower error in the inclusive population. In the thinned
-replay of \S\ref{sec:thin} the skill of this branch over hold is $+0.361$ to $+0.417$
-at 10\,ms and $+0.282$ to $+0.352$ at 100\,ms, on four of four splits.
+replay of \S\ref{sec:thin}, whose rows are not under the 1{,}000\,km/s rule and are
+therefore a different population from Table~\ref{tab:headline}, the skill of this
+branch over hold is $+0.361$ to $+0.417$ at 10\,ms and $+0.282$ to $+0.352$ at
+100\,ms, on four of four splits.
 
 % =========================================================================
 \section{The character of the gain}
@@ -848,9 +883,13 @@ with whole-discharge statistics, which is not causal. The causal variant keeps a
 interval above zero over the causal GP on every split and is not separated from the
 headline network with values above 3\,keV excluded; with values above 3\,keV kept, on the split by
 time, the headline network has the lower error on three of four initialisations. The
-fast-channel increment was measured with whole-discharge standardization only. The
+fast-channel share of the causal variant ($+0.027$ to $+0.115$) comes from a pairing
+made after the results were seen. The
 step time was measured on a desktop CPU; no variant was run on a plant control
 system.
+\item \emph{Beam.} BES follows the heating beam and the CES fit depends on it; the
+files carry no beam timing, so a contribution of the beam state to the fast-channel
+share is bounded (\S\ref{sec:thin}) but not excluded.
 \item \emph{Thinned replay.} The networks are frozen and were trained at the natural
 cadence; the sparse cadence is imposed on measured samples; one of the five
 registered statements, on the distance to hold at 50\,ms, failed.
@@ -902,7 +941,8 @@ estimator that also reads BES and ECEI channels at the same location has the low
 causal GP; against an offline GP that uses the next sample the interval includes
 zero. With the fast channels standardized from training discharges only, the
 estimator is causal and its skill over the causal GP is $+0.068$ to $+0.141$ on four
-splits and $+0.103$ to $+0.112$ on later discharges. Retrained without the fast channels, the same network has a larger error by
+splits and $+0.103$ to $+0.112$ on later discharges. The causal estimator keeps $+0.027$ to $+0.115$ over the same network trained
+without the fast channels. With whole-discharge standardization, retrained without the fast channels, the network has a larger error by
 $+0.064$ to $+0.117$ on four splits when values above 3\,keV are excluded, which is most of
 its margin over the causal GP, and by $+0.016$ to $+0.024$ when they are kept.
 When CES samples are withheld so that one is visible only every 50\,ms, the frozen
@@ -914,8 +954,9 @@ Rotation shows a bounded association with the same channels ($|r| \leq 0.044$) a
 estimated from its own history, with skill $+0.265$ $[+0.198, +0.326]$ over
 persistence.
 
-The measurements that would change these statements are named: a history-only
-network under the causal standardizer; training with imposed CES dropout; an equilibrium mapping and per-exposure fit uncertainties for
+The measurements that would change these statements are named: beam timing, which
+with per-exposure fit uncertainties would separate a change of the plasma from a
+change of the fit; training with imposed CES dropout; an equilibrium mapping and per-exposure fit uncertainties for
 the KSTAR chord; and further KSTAR chords, on which the MAST result predicts a less
 noise-dominated series inward of the present one.
 

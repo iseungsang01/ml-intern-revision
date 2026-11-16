@@ -68,6 +68,8 @@ DERIVED = {
     "0.64": "causal GP per-row refit, median 0.638 ms (same table)",
     "2.28": "same row, maximum 99th percentile 2.277 ms",
     "0.007": "persistence, median 0.007 ms (same table)",
+    "1.77": "major radius quoted in Heo et al. 2025, sec. 2 (R0 about 1.77 m)",
+    "0.45": "minor radius quoted in Heo et al. 2025, sec. 2 (a about 0.45 m); (2.198 - 1.77) / 0.45 = 0.951",
 }
 
 
@@ -106,6 +108,7 @@ def main():
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B29_ADDENDUM1.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/mast_coupling.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_MAST_COUPLING.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b30_posthoc.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))
