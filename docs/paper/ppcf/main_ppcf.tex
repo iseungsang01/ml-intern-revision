@@ -51,10 +51,10 @@ a causal estimator with co-located fast diagnostics against hold and interpolati
 \begin{abstract}
 \noindent
 Charge-exchange spectroscopy (CES) on KSTAR gives ion temperature \Ti{} every 10\,ms.
-On the chord at the pedestal top the signal is weak, 8.2\% of \Ti{} samples are
+On the chord at the pedestal top the signal is weak, 7.7\% of \Ti{} samples are
 missing, and an application that needs the present value cannot use interpolation.
 We ask which estimator of the present value has the lowest error against hold and
-interpolation, whether it runs within one frame, and what happens when samples drop out. On 641 discharges, a recurrent network that reads the CES past and
+interpolation, whether it runs within one frame, and what happens when samples drop out. On 639 discharges, a recurrent network that reads the CES past and
 co-located beam-emission and electron-cyclotron channels has the lowest \Ti{} mean
 squared error among estimators that do not use the next sample. Standardized from training discharges it is causal; its skill is $+0.068$ to $+0.141$
 over a CES-only causal Gaussian process on four splits and, in a pairing made after
@@ -107,7 +107,7 @@ value has the lowest error at the pedestal-top chord against hold and interpolat
 what fast diagnostics at the same location contribute to it, whether it fits inside
 the 10\,ms frame, and what it does when CES samples drop out.
 
-The answer has four parts. First, the chord is \emph{fit-noise-limited}: successive
+The answer is as follows. First, the chord is \emph{fit-noise-limited}: successive
 10\,ms increments of \Ti{} are anticorrelated almost as white noise on a flat signal
 would be, so much of what any estimator gains over hold is the averaging of the CES
 past, which a causal Gaussian process (GP) already does. That this is a property of a weak edge measurement, and
@@ -933,7 +933,7 @@ were obtained between blips (background subtraction, fit) is not recorded in the
 files, and values of 100 to 300\,eV after a burst are what cold passive emission
 mixed into the fit would give. The estimator may therefore be following the response
 of the CES analysis to a burst and not the ion temperature. The blips give one check
-of what the values between them follow. Over the 1{,}394 blips of all discharges the
+of what the values between them follow. Over the 1{,}394 blips of all discharges that have six contiguous rows before them, the
 CES \Ti{} of the first row after a blip is 0.819 $[0.796, 0.838]$ of its level before
 and returns over about 90\,ms. The ECEI level, which does not use the beam, falls to
 0.926 $[0.910, 0.939]$ and returns over the same time: the mean deficit of \Ti{} over

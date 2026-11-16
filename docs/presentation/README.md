@@ -12,6 +12,7 @@
 | **`KSTAR_CES_연구흐름.pptx`** | PowerPoint, 23 슬라이드 (16:9) | **논문 집필용 참조** 덱 — 슬라이드 한 장 = `main_ko.tex`의 한 절(§3.1–§11) + **§6.12(추가 예정) B.9** 골격 1장, 노트에 `\label` (2026-08-27 초록체 재작성) |
 | **`KSTAR_CES_졸논정리_논문흐름.pptx`** | PowerPoint, 65 슬라이드 (16:9) | **`docs/졸논 정리.pptx` 형식**(분할 테마 · 구역 표지 · 제목+불릿)을 그대로 물려받아 `main_ko.tex`의 절 순서대로 채운 덱 (2026-09-04) |
 | **`KSTAR_CES_물리근거.pptx`** | PowerPoint, 25 슬라이드 (16:9) | **결과를 받치는 물리** 덱 (2026-10-13, 2026-11-01 증보) — 열 개의 증명(§8bb)과 하나의 시간영역 모형, 기록 정정 2건, 지목된 측정 8건; 04절 물리 필터(B.16–B.26, §8bg–§8bt): 측정 모형의 발견, 이중 판독 표, V_rot 광자 잡음 바닥, 노출별 맞춤 불확도 요청. 빌더 `build_pptx_physics.py`(의사결정 덱의 KIT 복사), `check_deck_rules.py` 15규칙 통과. 같은 내용의 보고 페이지는 `physics_report.html`(아티팩트 게시) |
+| **`KSTAR_CES_포스터_초안.pptx`** | PowerPoint, 1장 (세로 45 × 60 cm, 200 % 인쇄 시 90 × 120 cm) | **포스터 초안** (2026-11-16) — 2018년 R&E 포스터의 틀(제목 띠 · 두 단 · Ⅰ 연구 목표 · Ⅱ 연구 과정 및 방법 · Ⅲ 연구 결과 및 결론 · Ⅳ 고찰 · 그림 → 화살표 → 해석)에 PPCF 원고의 내용을 채움. 빌드 `make_figures_poster.py` → `build_poster.py`, 숫자 대조 `check_poster_numbers.py`(71개 토큰, 불일치 0), 미리보기 `KSTAR_CES_포스터_초안.png` |
 | **`KSTAR_CES_1pager.pdf`** | A4 PDF, 1 페이지 | **한 장 요약** (배포용; 2026-08-27 초록체 재작성 · B.9 반영) |
 | `KSTAR_CES_1pager.png` | PNG | 1-pager 미리보기 이미지 |
 

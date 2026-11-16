@@ -7452,3 +7452,33 @@ The fast-channel share does not rest on the rows after a blip; inside them it is
 **What was a question and no longer is.** The time convention of a row and the beam timing: read from the files (3). Why V_rot repeats: a fitted value does not repeat to the last digit by chance (T_i does so once in 226,991 values), so a repeat is the previous value carried forward; nothing to ask. The observed line: carbon C VI at 529 nm, as in the KSTAR CES reference already cited and in `analyze_foundations.py`. **What the files cannot say:** whether the blip frame is subtracted as background when the values between blips are fitted, and the beam power.
 
 PPCF draft (`docs/paper/ppcf/main_ppcf.tex`, 25 pages, check_numbers 768 tokens, 0 missing): corrected shares and gap counts, a paragraph "What a row holds", the held-value inference stated, the line named, "the files carry no beam timing" replaced in four places, the blip rows in the beam paragraph, the blip response in the burst section.
+
+### Step time of the offline references, and a stacking readout: the recurrent estimator is not the best estimator already in hand (post hoc, 2026-11-16)
+
+Two questions from the author. (1) Does the offline GP take longer than one 10 ms frame, and would that say anything about accuracy? (2) Is the recurrent estimator the best model, or was the search stopped too early on the grounds that size does not help?
+
+**1. Step time** (`experiments/b9_latency/bench_offline.py`, the harness of the latency ladder: real neighbour sets of the frozen TEST files, 200 warm-up + 2,000 timed calls, one thread, CPU, five sessions in separate processes; artifacts `data/.b9_offline*.json`). The machine was running another project's GPU job during the sessions, so the absolutes are about 2.7 times those of the ladder (causal GP 1.723 ms here, 0.638 ms there); the ratios inside these sessions are what to quote.
+
+| arm | uses | median (ms) | max p99 (ms) | inside 10 ms |
+|---|---|---:|---:|---|
+| persistence | past | 0.014 | 0.075 | pass |
+| causal GP | past | 1.723 | 3.909 | pass |
+| offline GP | past and following CES | 2.357 | 4.328 | pass |
+| offline PCHIP | past and following CES | 0.447 | 0.952 | pass |
+| offline linear interpolation | past and following CES | 0.023 | 0.067 | pass |
+
+The offline GP costs 1.37 times the causal GP and fits inside a frame. It is not a real-time estimator because it reads the next CES sample, which does not exist at the time of the estimate; its cost has nothing to do with that, and the accuracy interval (network vs offline GP -0.010 [-0.043, +0.014], pooled, cut) does not depend on it.
+
+**2. Stacking readout** (`experiments/b30_thinned/stack_b30.py`, output `docs/paper/b30_stack.json` / `.md`; not registered). On the stored B.30 row tables (T_i, natural cadence, every measured test row with a visible sample on both sides), least-squares weights of estimators that are already scored on the same rows are fitted on one half of the test discharges and applied to the other half, and the reverse. Skill of the combination over its reference, cut population, four file-level splits, 95 % intervals over 2,000 resamples of discharges:
+
+| combination | reference | skill of the combination (four splits) | intervals excluding 0 |
+|---|---|---|---|
+| causal variant + causal GP + hold + history-only network | causal variant | +0.037 [+0.013, +0.064], +0.024 [+0.008, +0.039], +0.021 [+0.010, +0.031], +0.032 [+0.020, +0.045] | 4/4 |
+| network + causal GP + hold | network | +0.038 [+0.020, +0.060], +0.005 [-0.006, +0.015], +0.016 [+0.007, +0.025], +0.024 [+0.005, +0.045] | 3/4 |
+| network + two-sided PCHIP (not causal) | network | +0.072 [+0.037, +0.109], +0.001 [-0.019, +0.024], +0.024 [+0.006, +0.045], +0.024 [+0.001, +0.051] | 3/4 |
+
+Fitted weights (mean of the two folds): network or causal variant 0.62 to 0.86, causal GP 0.27 to 0.39, hold -0.11 to 0.00, history-only network -0.06 to +0.20.
+
+Reading. (a) The recurrent estimator is not the best causal estimator in hand: mixing it with the CES-only causal GP at about 0.7 : 0.3 lowers the squared error by 0.021 to 0.037 on four of four splits. The size is that of the four-initialisation ensemble (+0.02), so part of it may be averaging of estimator variance and not information the GP has and the network lacks; the two are not separated here. (b) What the next CES sample adds on top of the network is of the same size (+0.001 to +0.072, three of four), in line with the pooled interval against the offline GP. (c) The closed "model size" axis is narrower than its name: the width ladder covered 34k to 879k parameters of one recipe (depth, learning-rate scaling with width, more data and other inputs were not varied; recorded under "What it does not show" of the size-scaling batch). A flat width curve and a positive stacking readout together say the single network is limited by how it is trained and combined, not by how wide it is.
+
+What this names as the next model work (none run here): the network as a correction to the causal GP (the GP estimate as an input and as the anchor of the output), an ensemble across families, and the same estimator on MAST, where five times as many discharges exist and no network has been trained (every MAST record so far says "no neural network trained").
