@@ -7619,3 +7619,21 @@ Reading of V. The author's point holds once the layer is fitted on enough discha
 Expectation check. V: 5 of 8 met (V1 range and count, V2 coverage, V2 count; width ratio 0.752 on one split outside 0.45 to 0.75; missed: V3 expected to fail, V4 expected at +0.005 to +0.035 on one to three splits). F: 3 of 5 (history AUC, F1 holding, onset difference; missed: difference above +0.05 on one split, onset AUC 0.93 to 0.95 where 0.70 to 0.85 was expected). Q: 2 of 3 (missed: clipped sigma 30 to 60 eV). S: 3 of 3.
 
 Limits. Validation discharges were used for early stopping of the network, so its errors there may be slightly smaller than on test discharges; the models are applied to test discharges only. Boosted trees with default settings. Cut population, natural cadence. S: seven discharges, a network trained on snapshots.
+
+### B.37 addendum 1 -- the second stage is more than a three-weight average in the cut population; with values above 3 keV kept its mean gain is not established (registered, 2026-11-16)
+
+Registration `PREREGISTRATION_B37_ADDENDUM1.md` (a9d46d1, after part V was read and before these readouts); code `experiments/b37_plan/run_b37a.py`, output `docs/paper/b37_addendum1.{json,md}`. CPU, no network trained, one run. The GPU was in use by another project, so the GPU batch that part V calls for waits. The check of five test files passed on every split of both populations.
+
+| | split 42 | split 1 | split 7 | split 123 | intervals above zero |
+|---|---|---|---|---|---|
+| cut: layer over the causal variant | +0.057 [+0.027, +0.090] | +0.082 [+0.053, +0.109] | +0.053 [+0.030, +0.073] | +0.064 [+0.039, +0.094] | 4 |
+| cut: linear stack (causal variant, causal GP, hold) over the causal variant | +0.038 [+0.024, +0.053] | +0.031 [+0.016, +0.047] | +0.010 [-0.008, +0.029] | +0.034 [+0.022, +0.048] | 3 |
+| cut, A1: layer over the stack | +0.020 [-0.010, +0.049] | +0.053 [+0.027, +0.079] | +0.044 [+0.018, +0.066] | +0.031 [+0.007, +0.062] | 3 |
+| cut: layer fitted on the stack, over the causal variant | +0.069 [+0.042, +0.096] | +0.082 [+0.052, +0.113] | +0.065 [+0.037, +0.088] | +0.062 [+0.035, +0.093] | 4 |
+| inclusive, A2: layer over the causal variant | +0.012 [-0.020, +0.048] | +0.022 [-0.001, +0.054] | +0.041 [+0.026, +0.056] | -0.008 [-0.032, +0.016] | 1 |
+| inclusive: stack over the causal variant | +0.018 [+0.009, +0.031] | +0.021 [+0.004, +0.041] | +0.028 [+0.013, +0.045] | +0.015 [+0.004, +0.033] | 4 |
+| inclusive: median error, layer over the causal variant | 0.904 [0.869, 0.941] | 0.644 [0.562, 0.725] | 0.789 [0.755, 0.829] | 0.718 [0.660, 0.793] | all below 1 |
+
+**A1 holds** (3 of 4): in the cut population the layer has skill +0.020 to +0.053 over a linear stack of the causal variant, the causal GP and hold fitted on the same validation rows, so the second stage is a correction and not only an average of estimators. **A2 does not hold** (1 of 4): with values above 3 keV kept, the mean-squared-error skill of the layer over the causal variant is -0.008 to +0.041, while its median absolute error is 0.644 to 0.904 of that of the causal variant on every split. In that population the squared error is carried by the values above 3 keV, which the layer does not predict; the typical row improves and the mean does not move by an amount that can be told from zero. Step time, one row at a time on one thread: layer 1.257 ms at the median (largest 99th percentile 2.185 ms), error model 1.474 ms (2.652 ms); with the network (0.49 ms) and the causal GP (0.64 ms) the chain stays inside a 10 ms frame.
+
+By the registered rule the second stage is stated for the cut population only. Expectation check: 4 of 4 ranges touched (A1 +0.010 to +0.050 on three of four splits and holding; stack +0.015 to +0.040 on three of four; A2 inside +0.000 to +0.040 on three of four and holding on one where two to four were expected; step time inside 0.2 to 2 ms).

@@ -36,6 +36,7 @@ SOURCES = (
     "docs/paper/b33_clusters.md",
     "docs/paper/b34_error_model.md", "docs/paper/b35_blip_response.md",
     "docs/paper/b36_layer.md", "docs/paper/b37_plan.md",
+    "docs/paper/b37_addendum1.md",
 )
 DERIVED = {
     "2022": "the campaign year",
