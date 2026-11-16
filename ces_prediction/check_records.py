@@ -34,6 +34,7 @@ SOURCES = (
     "docs/paper/fast_departure.md", "docs/paper/b32_two_sources.md", "docs/paper/b32_posthoc.md",
     "docs/paper/b32_posthoc_model.md",
     "docs/paper/b33_clusters.md",
+    "docs/paper/b34_error_model.md", "docs/paper/b35_blip_response.md",
 )
 DERIVED = {
     "2022": "the campaign year",
