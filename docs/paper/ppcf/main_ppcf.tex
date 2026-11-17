@@ -420,7 +420,34 @@ the median of the estimator is the largest of the four
 
 \emph{Reading.} Among estimators that do not wait for the next CES value, the one
 that reads the fast channels has the lowest mean squared error, and it is not
-separated from an offline GP that does wait. \emph{Limits.} The four splits and the
+separated from an offline GP that does wait. Figure~\ref{fig:tracemain} shows what
+the estimates look like through gaps in three discharges, one of them typical.
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=0.84\linewidth]{fig_trace_causal}
+  \caption{Example traces through gaps (first initialisation of the second split).
+  Circles: reported \Ti{}; shaded: grid rows without a usable \Ti{}; dotted: an absent
+  frame (beam blip). Lines: estimates at every grid row from CES values before that
+  row; the recurrent estimator also reads the fast channels up to the row. (a, b)
+  Selection fixed before any trace was drawn: the two discharges of this data set
+  whose edge is analysed in~\citep{Heo2025ExperimentalIdentification}, in the split
+  whose test set holds both, and in each the window of 65 rows with the most rows
+  lacking \Ti{}. The raw BES stream places these windows in a phase with edge bursts
+  (\Supp{sec:bursts}); the reported \Ti{} itself moves by more than 1\,keV between
+  adjacent rows, and without per-frame fit errors it cannot be decided how much of an
+  excursion is the plasma and how much the fit. (c) Added after (a, b) had been seen:
+  the test discharge of the same split whose row-to-row scatter of the reported
+  \Ti{} is the median of 46 candidates. Root-mean-square errors on the scored rows of
+  each discharge (estimator, causal GP, hold): (a) 277.4, 283.4 and 282.8\,eV on 437
+  rows; (b) 358.0, 378.9 and 448.1\,eV on 389; (c) 71.5, 63.6 and 80.7\,eV on 393. On
+  the typical discharge (c) the estimator is not below the causal GP. In (c) the
+  estimate falls in the row after the absent frame, as the reported value does. The
+  recomputed errors of all three estimators equal the stored ones on these rows.}
+  \label{fig:tracemain}
+\end{figure}
+
+\emph{Limits.} The four splits and the
 re-partitions draw on the same 639 discharges, and the recurrent design was adopted
 on these splits; no untouched KSTAR hold-out exists. On a split by time (train on
 the earliest discharges, test on the 97 latest), an earlier run of the same

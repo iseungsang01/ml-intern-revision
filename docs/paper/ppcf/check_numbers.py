@@ -200,6 +200,11 @@ def main():
     typ = ft["typical_discharge"]["file"]
     extra += [str(ft[k]["scored_rows"]) for k in ("s31921.csv", "s31923.csv", typ)]
     extra += ["%.1f" % ft[typ][k]["rmse_stored"] for k in ("model", "causal_gp", "persistence")]
+    # example traces of the main text (fig_trace_causal.py): the causal variant of B.39
+    fc = json.loads((HERE / "fig_trace_causal.json").read_text(encoding="utf-8"))
+    for k in ("s31921.csv", "s31923.csv", fc["typical_discharge"]["file"]):
+        extra.append(str(fc[k]["scored_rows"]))
+        extra += ["%.1f" % fc[k][e]["rmse_stored"] for e in ("model", "causal_gp", "persistence")]
     # MAST confirmation set: counts printed with a thousands separator in the paper
     me = json.loads((ROOT / "docs/paper/mast_edge.json").read_text(encoding="utf-8"))
     cnt = me["counts"]["Not Checked"]
