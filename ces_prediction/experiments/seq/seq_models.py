@@ -24,8 +24,15 @@ from model_seq_v2d import SeqCESLSTMv2Dist
 from model_seq_b28 import SeqCESB28
 from model_seq_v2h import SeqCESLSTMv2Hist
 from model_seq_mlp import SeqCESMLP
+from model_seq_v2sub import SeqCESLSTMv2Sub
 
 SEQ_MODELS = {
+    # B.39 (PREREGISTRATION_B39.md): seq_v2 whose T_i encoder reads a subset of the fast channels.
+    # v2e = ECEI only, v2b = BES only, v2n = BES + ECEI without the Mirnov channels.
+    "v2e": functools.partial(SeqCESLSTMv2Sub, groups=("ecei",)),
+    "v2b": functools.partial(SeqCESLSTMv2Sub, groups=("bes",)),
+    "v2n": functools.partial(SeqCESLSTMv2Sub, groups=("bes", "ecei")),
+
     # B.29 (PREREGISTRATION_B29.md): `v2h` = seq_v2 whose T_i encoder is trained WITHOUT the
     # fast channels (history-only; the fast-channel increment on the main model). `mlp22` = a
     # memoryless regression on the same 22 inputs at the scored row (seq_v2 routing).
