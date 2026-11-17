@@ -1242,10 +1242,18 @@ squared error by an amount that can be told from zero ($-0.008$ to $+0.041$, one
 four), while its median error is 0.644 to 0.904 of that of the network. One step of
 the correction takes 1.257\,ms at the median. The causal variant is therefore not the
 best estimator that its inputs allow, and the statement above that a typical row is
-not improved holds for a single stage only. Three limits apply: the validation
-discharges were used to stop the training of the network; the second stage is a
-boosted tree fitted after the network, not trained with it; and trained on the
-training discharges it has not been run. Whether a CES value will be unusable
+not improved holds for a single stage only. In a further registered batch the same
+models were fitted on cross-fitted predictions of the training discharges together
+with the validation rows (the causal variant retrained on three of four folds of the
+training discharges and run on the fourth; 16 runs): the correction then has skill
+$+0.078$ to $+0.113$ over the causal variant and $+0.022$ to $+0.035$ over the
+correction fitted on validation discharges alone (three of four intervals exclude
+zero), the interval covers 0.891 to 0.905 of the rows, and the median absolute error
+of the corrected estimate is 0.861 to 0.924 of that of hold, with the interval below
+1 on four of four splits (40.3, 45.8, 42.8 and 38.4\,eV against 44.2, 49.5, 49.8 and
+43.2\,eV). Two limits apply: the second stage is a boosted tree fitted after the
+network, not trained with it, and it holds for the mean with values above 3\,keV
+excluded only. Whether a CES value will be unusable
 (missing or above 3\,keV) is itself predictable from the fast-channel window: the area
 under the ROC curve is 0.961 to 0.974, against 0.903 to 0.949 from the history of
 unusable rows alone (difference $+0.025$ to $+0.059$, four of four splits).
