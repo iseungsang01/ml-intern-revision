@@ -41,6 +41,7 @@ SOURCES = (
     "docs/paper/b41_events.md",
     "docs/paper/b40_noise.md",
     "docs/paper/b44_strata.md",
+    "docs/paper/b43_target_checks.md",
 )
 DERIVED = {
     "2022": "the campaign year",

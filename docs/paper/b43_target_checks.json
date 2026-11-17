@@ -1,0 +1,1103 @@
+{
+ "registration": "ces_prediction/experiments/PREREGISTRATION_B43.md",
+ "seed": 20261118,
+ "n_boot": 2000,
+ "S": {
+  "200ms": {
+   "discharges_with_enough_pairs": 15,
+   "ecei": {
+    "discharges": 15,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.26772367608454095,
+     0.18530837942267295,
+     0.3716878697026173
+    ],
+    "median_null": [
+     0.0029845051299011408,
+     -0.17808219491626606,
+     0.10295254517870192
+    ],
+    "diff": [
+     0.26473917095463984,
+     0.1255329398527906,
+     0.4948861505364031
+    ],
+    "share_rho_positive": 0.9333333333333333,
+    "rho_quantiles_10_25_50_75_90": [
+     0.06189181888935703,
+     0.18236577306228383,
+     0.26772367608454095,
+     0.38035396946796224,
+     0.5992441704636828
+    ],
+    "thirds_edges_eV": [
+     496.26753743489576,
+     662.9763387044271
+    ],
+    "thirds": [
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       186.46630859375,
+       439.760498046875
+      ],
+      "median_rho": [
+       0.2512968080888826,
+       -0.2739300901614945,
+       0.604315196998124
+      ],
+      "median_null": [
+       -0.22707675110514872,
+       -0.3185741088180113,
+       0.10295254517870192
+      ],
+      "diff": [
+       0.47837355919403135,
+       -0.04685333905634578,
+       0.9228893058161353
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       524.5210571289062,
+       660.7464294433594
+      ],
+      "median_rho": [
+       0.26772367608454095,
+       0.0011259148256033682,
+       0.3890200692333072
+      ],
+      "median_null": [
+       0.0029845051299011408,
+       -0.13684634317217162,
+       0.21457713264867856
+      ],
+      "diff": [
+       0.26473917095463984,
+       -0.05667104622203619,
+       0.5106386532767787
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       667.4361572265625,
+       932.6871948242188
+      ],
+      "median_rho": [
+       0.3390880149775477,
+       0.15304067498498747,
+       0.6504617627932228
+      ],
+      "median_null": [
+       0.10628908042170655,
+       -0.17808219491626606,
+       0.1453080935120618
+      ],
+      "diff": [
+       0.23279893455584116,
+       0.007732581472925659,
+       0.5438229739291851
+      ]
+     }
+    ]
+   },
+   "bes": {
+    "discharges": 15,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.508143586419253,
+     0.351594746716698,
+     0.7237089201877933
+    ],
+    "median_null": [
+     0.048192027644082445,
+     -0.01557223264540338,
+     0.13763066202090596
+    ],
+    "diff": [
+     0.4599515587751705,
+     0.28464772374081904,
+     0.7301549132191522
+    ],
+    "share_rho_positive": 0.8666666666666667,
+    "rho_quantiles_10_25_50_75_90": [
+     0.06575618528174498,
+     0.3794559099437149,
+     0.508143586419253,
+     0.7278672032193159,
+     0.7716322701688556
+    ],
+    "thirds_edges_eV": [
+     496.26753743489576,
+     662.9763387044271
+    ],
+    "thirds": [
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       186.46630859375,
+       439.760498046875
+      ],
+      "median_rho": [
+       0.2277003484320558,
+       -0.15836236933797912,
+       0.5796445338698859
+      ],
+      "median_null": [
+       0.048192027644082445,
+       -0.01557223264540338,
+       0.2891012743125419
+      ],
+      "diff": [
+       0.17950832078797335,
+       -0.2959930313588851,
+       0.36716697936210135
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       524.5210571289062,
+       660.7464294433594
+      ],
+      "median_rho": [
+       0.7237089201877933,
+       0.4571428571428571,
+       0.7797373358348969
+      ],
+      "median_null": [
+       0.02417840375586854,
+       -0.13733583489681053,
+       0.24052532833020643
+      ],
+      "diff": [
+       0.6995305164319248,
+       0.33447350771294426,
+       0.9170731707317075
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       667.4361572265625,
+       932.6871948242188
+      ],
+      "median_rho": [
+       0.508143586419253,
+       0.4073170731707318,
+       0.8587242026266417
+      ],
+      "median_null": [
+       0.06277665995975855,
+       -0.2681050656660413,
+       0.2306620209059234
+      ],
+      "diff": [
+       0.4453669264594944,
+       0.1766550522648084,
+       1.126829268292683
+      ]
+     }
+    ]
+   }
+  },
+  "100ms": {
+   "discharges_with_enough_pairs": 16,
+   "ecei": {
+    "discharges": 16,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.3514610572180663,
+     0.3028225784595932,
+     0.4426548249041314
+    ],
+    "median_null": [
+     -0.02951324505126316,
+     -0.13685636856368563,
+     0.06708879565505234
+    ],
+    "diff": [
+     0.3809743022693295,
+     0.27692653597632194,
+     0.4963582444125536
+    ],
+    "share_rho_positive": 0.9375,
+    "rho_quantiles_10_25_50_75_90": [
+     0.1954775151494599,
+     0.29252745747764897,
+     0.3514610572180663,
+     0.45743353995835623,
+     0.5433511963042137
+    ],
+    "thirds_edges_eV": [
+     524.5210571289062,
+     660.7464294433594
+    ],
+    "thirds": [
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       186.46630859375,
+       439.760498046875
+      ],
+      "median_rho": [
+       0.31092895644152335,
+       -0.07292953308558763,
+       0.6637082204155375
+      ],
+      "median_null": [
+       -0.13685636856368563,
+       -0.22062646683645312,
+       0.15754290876242094
+      ],
+      "diff": [
+       0.44778532500520896,
+       0.12898611784119046,
+       0.8005645889792231
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       524.5210571289062,
+       648.7301025390625
+      ],
+      "median_rho": [
+       0.3959347602161563,
+       0.1697316572287615,
+       0.5846021216057175
+      ],
+      "median_null": [
+       -0.018716148438486815,
+       -0.058788706228501915,
+       0.06708879565505234
+      ],
+      "diff": [
+       0.4146509086546431,
+       0.10264286157370915,
+       0.6433908278342194
+      ]
+     },
+     {
+      "discharges": 6,
+      "median_ti_range_eV": [
+       660.7464294433594,
+       932.6871948242188
+      ],
+      "median_rho": [
+       0.3357521490665067,
+       0.22122337307015832,
+       0.373931410662339
+      ],
+      "median_null": [
+       -0.05278830773046861,
+       -0.35983974985342976,
+       0.09048915454639533
+      ],
+      "diff": [
+       0.3885404567969753,
+       0.23759490499935343,
+       0.5810631229235881
+      ]
+     }
+    ]
+   },
+   "bes": {
+    "discharges": 16,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.58101500312693,
+     0.17272574619033623,
+     0.7630206772550193
+    ],
+    "median_null": [
+     -0.005041018440108286,
+     -0.15184081272826497,
+     0.04193624003750586
+    ],
+    "diff": [
+     0.5860560215670383,
+     0.1880373993068674,
+     0.7979127679831903
+    ],
+    "share_rho_positive": 0.9375,
+    "rho_quantiles_10_25_50_75_90": [
+     0.11125482528219867,
+     0.21801043791557312,
+     0.58101500312693,
+     0.7652950787992221,
+     0.8644551104145579
+    ],
+    "thirds_edges_eV": [
+     524.5210571289062,
+     660.7464294433594
+    ],
+    "thirds": [
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       186.46630859375,
+       439.760498046875
+      ],
+      "median_rho": [
+       0.16307588075880758,
+       -0.018992773261065944,
+       0.5533798535896228
+      ],
+      "median_null": [
+       0.00449412827461608,
+       -0.15184081272826497,
+       0.04369193886724602
+      ],
+      "diff": [
+       0.15858175248419148,
+       -0.023486901535682024,
+       0.5096879147223768
+      ]
+     },
+     {
+      "discharges": 5,
+      "median_ti_range_eV": [
+       524.5210571289062,
+       648.7301025390625
+      ],
+      "median_rho": [
+       0.7630206772550193,
+       0.5219643694327238,
+       0.8961801109688432
+      ],
+      "median_null": [
+       0.03078470824949698,
+       -0.18575113461977993,
+       0.12010407432942644
+      ],
+      "diff": [
+       0.7322359690055223,
+       0.480028129395218,
+       1.0542984947921767
+      ]
+     },
+     {
+      "discharges": 6,
+      "median_ti_range_eV": [
+       660.7464294433594,
+       932.6871948242188
+      ],
+      "median_rho": [
+       0.6833817590859843,
+       0.23310533515731877,
+       0.7721182834318304
+      ],
+      "median_null": [
+       -0.10059151284609369,
+       -0.16846790957869417,
+       0.04364063166880068
+      ],
+      "diff": [
+       0.783973271932078,
+       0.3944889583740473,
+       0.9405861930105246
+      ]
+     }
+    ]
+   }
+  },
+  "500ms": {
+   "discharges_with_enough_pairs": 8,
+   "ecei": {
+    "discharges": 8,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.2955390174042858,
+     -0.08286140674886518,
+     0.537678461570414
+    ],
+    "median_null": [
+     0.03698073893791946,
+     -0.14393333246376952,
+     0.27358785921312456
+    ],
+    "diff": [
+     0.2585582784663663,
+     -0.2639289252000891,
+     0.66626708908069
+    ],
+    "share_rho_positive": 0.75,
+    "rho_quantiles_10_25_50_75_90": [
+     -0.08322967966774902,
+     0.011278358140817762,
+     0.2955390174042858,
+     0.5550835603883196,
+     0.6298150821423667
+    ],
+    "thirds_edges_eV": [
+     547.8150634765625,
+     714.4022216796874
+    ],
+    "thirds": [
+     {
+      "discharges": 3,
+      "median_ti_range_eV": [
+       381.5199279785156,
+       524.5210571289062
+      ],
+      "median_rho": [
+       0.537678461570414,
+       -0.08286140674886518,
+       0.6072988568420365
+      ],
+      "median_null": [
+       0.1810675184512239,
+       -0.14393333246376952,
+       0.27358785921312456
+      ],
+      "diff": [
+       0.35661094311919006,
+       -0.2639289252000891,
+       0.6816117940341835
+      ]
+     },
+     {
+      "discharges": 2
+     },
+     {
+      "discharges": 3,
+      "median_ti_range_eV": [
+       760.0579833984375,
+       830.2730102539062
+      ],
+      "median_rho": [
+       0.27405643046939476,
+       0.04265827977071207,
+       0.6823529411764706
+      ],
+      "median_null": [
+       0.24705882352941175,
+       -0.10710604057538498,
+       0.3667384483884959
+      ],
+      "diff": [
+       0.026997606939983015,
+       -0.3240801686177838,
+       0.43529411764705883
+      ]
+     }
+    ]
+   },
+   "bes": {
+    "discharges": 8,
+    "discharges_dropped_nan_rho": 0,
+    "median_rho": [
+     0.48687423687423687,
+     0.22352941176470587,
+     0.7509157509157509
+    ],
+    "median_null": [
+     -0.02625152625152625,
+     -0.10012210012210011,
+     0.06166056166056166
+    ],
+    "diff": [
+     0.5131257631257631,
+     0.21742405273338336,
+     0.7844932844932845
+    ],
+    "share_rho_positive": 1.0,
+    "rho_quantiles_10_25_50_75_90": [
+     0.21607649956534336,
+     0.3699849170437406,
+     0.48687423687423687,
+     0.6643772893772893,
+     0.7615384615384615
+    ],
+    "thirds_edges_eV": [
+     547.8150634765625,
+     714.4022216796874
+    ],
+    "thirds": [
+     {
+      "discharges": 3,
+      "median_ti_range_eV": [
+       381.5199279785156,
+       524.5210571289062
+      ],
+      "median_rho": [
+       0.4877899877899878,
+       0.1986863711001642,
+       0.6355311355311355
+      ],
+      "median_null": [
+       -0.033577533577533576,
+       -0.16422466422466422,
+       0.13902572523262177
+      ],
+      "diff": [
+       0.5213675213675214,
+       0.05966064586754244,
+       0.7997557997557997
+      ]
+     },
+     {
+      "discharges": 2
+     },
+     {
+      "discharges": 3,
+      "median_ti_range_eV": [
+       760.0579833984375,
+       830.2730102539062
+      ],
+      "median_rho": [
+       0.4188034188034188,
+       0.22352941176470587,
+       0.7509157509157509
+      ],
+      "median_null": [
+       -0.018925518925518924,
+       -0.06470588235294117,
+       0.013431013431013432
+      ],
+      "diff": [
+       0.43772893772893773,
+       0.28823529411764703,
+       0.7374847374847375
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "S1": {
+  "diff": [
+   0.26473917095463984,
+   0.1255329398527906,
+   0.4948861505364031
+  ],
+  "holds": true
+ },
+ "after_fact_S": {
+  "pairs_per_discharge_quantiles_10_50_90": [
+   2.0,
+   13.0,
+   32.0
+  ],
+  "discharges_with_ge": {
+   "10": 400,
+   "20": 236,
+   "40": 15
+  },
+  "by_min_pairs": {
+   "10": {
+    "discharges": 400,
+    "median_rho": [
+     0.32151543275981054,
+     0.2802197802197803,
+     0.35337243401759527
+    ],
+    "median_null": [
+     -0.0061488061488061485,
+     -0.030075187969924807,
+     0.016483516483516484
+    ],
+    "diff": [
+     0.3276642389086167,
+     0.27490322083370183,
+     0.3699287447971658
+    ],
+    "share_rho_positive": 0.8
+   },
+   "20": {
+    "discharges": 236,
+    "median_rho": [
+     0.30624574153985923,
+     0.2532467532467532,
+     0.34372537371736706
+    ],
+    "median_null": [
+     -0.006051054438151212,
+     -0.034529914529914524,
+     0.01811965811965812
+    ],
+    "diff": [
+     0.31229679597801047,
+     0.25770765463970335,
+     0.3637932525698132
+    ],
+    "share_rho_positive": 0.8135593220338984
+   }
+  }
+ },
+ "F": {
+  "discharges": 641,
+  "files_misaligned": 0,
+  "grid_rows": 245925,
+  "b32_reader_files_compared": 613,
+  "b32_reader_files_differing": 0,
+  "discharges_with_ti": 638,
+  "F": {
+   "rows_with_ti": 226990,
+   "rows_above_3keV": 1197,
+   "fifth_edges_rel": [
+    0.9331435906699136,
+    0.9851786711148064,
+    1.0213705854467119,
+    1.0738032573931349
+   ],
+   "rows_by_fifth": [
+    45398,
+    45398,
+    45398,
+    45398,
+    45398
+   ],
+   "above_by_fifth": [
+    613,
+    175,
+    124,
+    92,
+    193
+   ],
+   "share_above_by_fifth": [
+    [
+     0.013502797480065202,
+     0.010987942367774192,
+     0.016308277797864264
+    ],
+    [
+     0.003854795365434601,
+     0.002838535121109993,
+     0.0050138037727821844
+    ],
+    [
+     0.002731397858936517,
+     0.0020259798968925726,
+     0.0034942800406824095
+    ],
+    [
+     0.0020265209921141903,
+     0.0015112676345898416,
+     0.0026373176435451184
+    ],
+    [
+     0.00425128860302216,
+     0.0034076116304099452,
+     0.005207712170140612
+    ]
+   ],
+   "ratio_lowest_over_highest": [
+    3.1761658031088085,
+    2.4895877176253003,
+    4.0356299488665135
+   ],
+   "resamples_highest_zero": 0
+  },
+  "F1": {
+   "holds": true
+  },
+  "missing_rel_median": {
+   "rows": 245925,
+   "share_by_fifth": [
+    [
+     0.2028260648571719,
+     0.1825065352835248,
+     0.2235435722667673
+    ],
+    [
+     0.05458981396767307,
+     0.04463553729759115,
+     0.06541049963353747
+    ],
+    [
+     0.035681610247026534,
+     0.029161115690168573,
+     0.04311280148271605
+    ],
+    [
+     0.03682016875063536,
+     0.030044255024448144,
+     0.04435303745264862
+    ],
+    [
+     0.055037104808376536,
+     0.045600628462386876,
+     0.06491360380065107
+    ]
+   ],
+   "fifth_edges_rel": [
+    0.9206118247941266,
+    0.980860380102006,
+    1.0187159426689993,
+    1.0719105645782756
+   ]
+  },
+  "missing_zscore_check": {
+   "rows": 245923,
+   "share_by_fifth": [
+    [
+     0.17956694114059166,
+     0.15934922745370353,
+     0.20073741833545378
+    ],
+    [
+     0.08236418347430059,
+     0.06961180632901269,
+     0.0964917694988598
+    ],
+    [
+     0.05324794144556267,
+     0.043987295225214426,
+     0.06337234397851084
+    ],
+    [
+     0.03610930383864672,
+     0.02971975677612978,
+     0.04370795428943253
+    ],
+    [
+     0.033668801463860934,
+     0.027559110087609338,
+     0.040517636727999545
+    ]
+   ]
+  },
+  "after_blip": {
+   "above_3keV_rows": 1197,
+   "above_within_10_rows_after": 50,
+   "share_of_above_within_10_rows_after": [
+    0.04177109440267335,
+    0.02847452143661451,
+    0.055774241941954565
+   ],
+   "reference_share_of_all_ti_rows_within_10_rows_after": [
+    0.0572976783118199,
+    0.05487147120520873,
+    0.060047489138582065
+   ],
+   "ratio_to_reference": [
+    0.7290189695880996,
+    0.49845632245459753,
+    0.9767246272273151
+   ]
+  }
+ },
+ "H": {
+  "first_grid_stamp_s": 3.51200008392334,
+  "last_grid_stamp_s": 7.992000102996826,
+  "absent_stamps_3_to_5p5_s": [
+   5.002000102996826
+  ],
+  "non_10ms_steps_3_to_5p5_s": [
+   [
+    4.992000102996826,
+    0.019999980926513672
+   ]
+  ],
+  "absent_within_30ms_of_3p5": [],
+  "absent_within_30ms_of_5p0": [
+   5.002000102996826
+  ],
+  "early": {
+   "window_s": [
+    3.6,
+    3.95
+   ],
+   "rows": 35,
+   "measured": 35,
+   "blocks": 4,
+   "mean_eV": [
+    395.70511823381696,
+    385.983544921875,
+    404.46648995535713
+   ]
+  },
+  "late": {
+   "window_s": [
+    4.1,
+    4.9
+   ],
+   "rows": 80,
+   "measured": 80,
+   "blocks": 8,
+   "mean_eV": [
+    410.47534294128417,
+    404.97607202529906,
+    415.33901703834533
+   ]
+  },
+  "ratio_late_over_early": [
+   1.0373263423364154,
+   1.0106979595168581,
+   1.0670316940242903
+  ],
+  "means_100ms_3p5_to_5p0": [
+   {
+    "from_s": 3.5,
+    "rows": 9,
+    "measured": 9,
+    "mean_eV": 265.7520874871148,
+    "sd_eV": 102.66362299384173
+   },
+   {
+    "from_s": 3.6,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 397.8630676269531,
+    "sd_eV": 49.306774295889625
+   },
+   {
+    "from_s": 3.7,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 408.12952880859376,
+    "sd_eV": 34.03103910810686
+   },
+   {
+    "from_s": 3.8,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 387.73118896484374,
+    "sd_eV": 30.836933553644773
+   },
+   {
+    "from_s": 3.9,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 393.19614868164064,
+    "sd_eV": 28.96339033823562
+   },
+   {
+    "from_s": 4.0,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 418.51629333496095,
+    "sd_eV": 30.64510444413903
+   },
+   {
+    "from_s": 4.1,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 418.6635803222656,
+    "sd_eV": 24.013637757307475
+   },
+   {
+    "from_s": 4.2,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 416.60202941894534,
+    "sd_eV": 44.519832088107314
+   },
+   {
+    "from_s": 4.3,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 411.74314270019534,
+    "sd_eV": 18.753028689279585
+   },
+   {
+    "from_s": 4.4,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 415.980078125,
+    "sd_eV": 22.6448372534458
+   },
+   {
+    "from_s": 4.5,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 403.4464874267578,
+    "sd_eV": 38.43851544230027
+   },
+   {
+    "from_s": 4.6,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 396.4051086425781,
+    "sd_eV": 28.819880934643134
+   },
+   {
+    "from_s": 4.7,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 415.99827575683594,
+    "sd_eV": 37.31035698919522
+   },
+   {
+    "from_s": 4.8,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 404.9640411376953,
+    "sd_eV": 47.30549831544053
+   },
+   {
+    "from_s": 4.9,
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 400.71881408691405,
+    "sd_eV": 24.190621898357524
+   }
+  ],
+  "s31921": {
+   "5.40": {
+    "rows": 10,
+    "measured": 10,
+    "mean_eV": 396.30731811523435,
+    "sd_eV": 46.3527827766484,
+    "values_above_3keV_removed": 0
+   },
+   "8.05": {
+    "rows": 9,
+    "measured": 6,
+    "mean_eV": 734.5731760660807,
+    "sd_eV": 400.726081025716,
+    "values_above_3keV_removed": 0
+   }
+  },
+  "H1": {
+   "blip_near_3p5": false,
+   "blip_near_5p0": true,
+   "ratio_interval_above_1": true,
+   "holds": false
+  }
+ },
+ "D": {
+  "discharge": "s31343.csv",
+  "estimator": "recurrent estimator of the figure (data/.b1_seqv2_s1_i1, whole-discharge standardization), CPU",
+  "window_s": [
+   5.7220001220703125,
+   6.381999969482422
+  ],
+  "window_s_in_fig_trace_json": [
+   5.7220001220703125,
+   6.381999969482422
+  ],
+  "measured_range_eV": [
+   765.6719970703125,
+   1029.4736328125
+  ],
+  "measured_range_in_fig_trace_json": [
+   765.7,
+   1029.5
+  ],
+  "check_vs_stored_errors": {
+   "scored_rows": 393,
+   "max_value_mismatch_eV": 6.103515625e-05,
+   "model": {
+    "max_abs_dev_of_error_eV": 0.13378907046439714,
+    "max_rel_dev": 0.07278614251247147,
+    "share_within_1e-3": 0.5165394402035624,
+    "rmse_mine": 63.75989700842054,
+    "rmse_stored": 63.76463911914058
+   },
+   "persistence": {
+    "max_abs_dev_of_error_eV": 6.103515625e-05,
+    "max_rel_dev": 1.1873519706034353e-06,
+    "share_within_1e-3": 1.0,
+    "rmse_mine": 80.68969469660678,
+    "rmse_stored": 80.68969521194867
+   },
+   "causal_gp": {
+    "max_abs_dev_of_error_eV": 0.0,
+    "max_rel_dev": 0.0,
+    "share_within_1e-3": 1.0,
+    "rmse_mine": 63.57247435836144,
+    "rmse_stored": 63.57247435836144
+   }
+  },
+  "rows_below_measured_range": [
+   {
+    "time_s": 5.762,
+    "estimate_eV": 654.0967407226562,
+    "measured_at_row_eV": 788.9757690429688,
+    "previous_measured_eV": 1023.033447265625,
+    "previous_measured_time_s": 5.742,
+    "next_measured_eV": 858.768798828125,
+    "next_measured_time_s": 5.772,
+    "ms_since_last_absent_frame": 10.0,
+    "last_absent_frame_s": 5.752,
+    "mean_bes_departure_sd": -5.048870157275241,
+    "rows_since_blip_b32": 1,
+    "ecei_over_100ms_before": 0.9409903616957914
+   }
+  ],
+  "min_estimate_in_window_eV": 654.0967407226562,
+  "context": {
+   "window_mean_bes_departure_sd_quantiles_10_50_90": [
+    -0.3955943620350778,
+    -0.014398891921189509,
+    0.5139854879026349
+   ],
+   "window_absent_frames": [
+    5.752000102996826
+   ]
+  },
+  "check_passed": true
+ },
+ "D_sentence": "1 row(s) at 5.762 s with estimates 654 eV (measured range 766 to 1029 eV); time since the last absent frame 10 ms; mean BES departure -5.05 sd; ECEI level over the 100 ms before 0.941.",
+ "checks": [
+  "641 files, 9 BES and 4 ECEI channels; every file opens at t = 0 and closes at t = 30 s, and these two rows are dropped in every tally.",
+  "Missing T_i by fifth of the BES level, file_rules.md definition (per-discharge z-score, 245,923 rows): lowest 17.96 %, highest 3.37 % (to reproduce 18.0 % and 3.4 % within 0.5 points): reproduced. All five: 18.0, 8.2, 5.3, 3.6, 3.4 %.",
+  "Part F covers 641 files (245,925 grid rows; 638 with at least one T_i value); raw and held-free grids misaligned in 0 files. The B.32 reader (kstar_file, None for files under 12 rows) was compared on 613 files: times, rows-after-blip and missing T_i differ in 0.",
+  "Part D: CPU recomputation against the stored squared errors of the frozen evaluation for s31343.csv (393 rows): network max deviation 1.34e-01 eV, persistence and causal GP share within 1e-3 1.000 / 1.000; window and measured range equal to fig_trace.json: True."
+ ],
+ "expectations": [
+  {
+   "expectation": "S1: median correlation +0.15 to +0.40",
+   "observed": "+0.268",
+   "met": true
+  },
+  {
+   "expectation": "S1: null within 0.03 of zero",
+   "observed": "+0.003",
+   "met": true
+  },
+  {
+   "expectation": "S1 holds",
+   "observed": "holds",
+   "met": true
+  },
+  {
+   "expectation": "F1: ratio 2 to 8",
+   "observed": "3.18",
+   "met": true
+  },
+  {
+   "expectation": "F1 holds",
+   "observed": "holds",
+   "met": true
+  },
+  {
+   "expectation": "H1: both blips found",
+   "observed": "near 3.5 s: none (file begins at 3.512 s); near 5.0 s: 5.002",
+   "met": false
+  },
+  {
+   "expectation": "H1: ratio 1.05 to 1.40",
+   "observed": "1.037",
+   "met": false
+  },
+  {
+   "expectation": "H1 holds",
+   "observed": "does not hold",
+   "met": false
+  },
+  {
+   "expectation": "D: the rows follow an absent frame by 10 to 30 ms",
+   "observed": "10 ms",
+   "met": true
+  }
+ ],
+ "interpretations": [
+  "Choice fixed before the run: part S uses only whole blocks; the trailing partial block of a segment is dropped. Block means of T_i are over the measured rows of the block, block means of the ECEI and BES levels over all its rows. The pairs of a discharge are taken over all its segments in time order, and the null shifts that vector circularly by floor(n/2).",
+  "Choice fixed before the run: the 100 ms and 500 ms versions (reported, no statement) use blocks of 10 and 50 rows, at least half the rows measured, and at least 80 and 16 pairs (the same 8 s of data per discharge as 40 pairs of 200 ms).",
+  "Choice fixed before the run: thirds of the discharge median T_i are taken over the discharges that enter the S read-out (median over the measured T_i rows of the cut grid).",
+  "Choice fixed before the run: in part F 'missing' for the check is an empty CES_TI cell in the file (held values not counted as missing), over all grid rows. The 18.0 % and 3.4 % of file_rules.md were computed with the BES level standardized per discharge (z-score), not divided by the discharge median; the check is made with that definition, and the missing shares under the B.40 definition are reported beside the shares above 3 keV.",
+  "Choice fixed before the run: 'within ten rows after an absent frame' is the B.32 rule (rows 1 to 10 after a step of more than 15 and less than 45 ms, inside the segment); the same share over all rows with a T_i value is given as the reference.",
+  "Choice fixed before the run: part H windows include their end stamps (3.60 <= t <= 3.95 s, 4.10 <= t <= 4.90 s); 100 ms blocks start at the window start (the early window has a last block of 50 ms); blocks are resampled with replacement within each window independently, and a resampled mean is the sum of T_i over the measured rows of the drawn blocks over their count. Values above 3 keV are removed (cut grid).",
+  "Correction after the first run (no definition, threshold or population changed): the first run took the rows of part F from the B.32 reader, which returns nothing for the 28 files with fewer than 12 grid rows, so 613 files (245,727 rows) entered. The registration says all grid rows, so the run was repeated with the same B.32 rule applied to all 641 files (checked identical to the reader on the 613). F1 changed from 3.18 [2.51, 4.03] to 3.18 [2.49, 4.04]; the missing-share check from 17.95 / 3.37 % to 17.96 / 3.37 %. Part D's expectation check now rounds the time since the absent frame to 0.1 ms (the first run read 9.9999 ms as below 10).",
+  "Observation on H1 (verdict kept as registered): the 10 ms file of 31923 begins at 3.512 s, so no absent frame can lie before or at 3.5 s in it; the published blip at 3.5 s coincides with the start of the delivered grid (12 ms after 3.5 s). The rule was applied as written and H1 does not hold on that clause; the clause near 5.0 s and the ratio interval are met.",
+  "Deviation: the registration names 'the estimate of the causal variant' in panel (c). The figure (fig_trace.py and the caption) draws the recurrent estimator with whole-discharge standardization (data/.b1_seqv2_s1_i1), not the causal variant. Part D describes the estimate that is drawn, recomputed on the CPU with the figure's own functions and checked against the stored errors; the causal variant was not run."
+ ],
+ "runtime_s": 34.398789167404175
+}
