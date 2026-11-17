@@ -245,9 +245,42 @@ and only 35.2\% of the grid carries an independent \Vrot{} measurement. Held val
 from targets, history inputs, normalization statistics and the anchors of every
 reference estimator.
 
+\paragraph{What the target is.} The quantity estimated in this paper is the ion
+temperature that the KSTAR CES analysis reports for the chord: the temperature of
+C$^{6+}$ ions from the Doppler width of the C\,VI ($n = 8 \to 7$, 529\,nm)
+charge-exchange line excited by the heating beam, with the background taken from
+frames in which the beam is
+off~\citep{Ko2010KstarCesSystem,Ko2010ChargeExchange}, one value per 10\,ms
+frame~\citep{Kim2024KineticProfile}. Whether that value equals the main-ion
+temperature is a property of the diagnostic and is not tested here. Three things are
+known. (i) At a pedestal top the impurity and the main-ion temperature are close but
+not identical: at ASDEX Upgrade the deuterium temperature was about 100\,eV above the
+impurity temperature before, and 50 to 60\,eV after, extended corrections, and using
+the impurity temperature as the ion temperature was found to be generally
+valid~\citep{CanoMegias2025MultiIon}; larger differences are reported at the
+separatrix~\citep{Haskey2018MainIon}. Cross-section effects on the apparent width
+decrease with ion temperature~\citep{vonHellermann1995CrossSection}. An offset that
+is constant in time, or a constant factor, changes no skill of this paper, because
+every estimator is scored against the same reported values; a bias that varies
+within a discharge would. (ii) Failed spectral fits are the main source of outliers
+in KSTAR CES temperature profiles~\citep{Kim2024KineticProfile}; here they are
+handled by the value rule of the next paragraph. (iii) The files carry no per-frame
+fit error. From the series itself, the part of the reported value that is
+independent from frame to frame is 39.1 to 42.8\,eV on a typical row (a robust lower
+and upper estimate; 5.5 to 9.5\% of the level) and 137.0 to 139.9\,eV in the mean
+square, because it grows with the level (22.5, 33.4 and 90.7\,eV in the lowest,
+middle and highest third) and has heavy tails. The estimate, registered beforehand,
+assumes white noise and signal increments that are not negatively correlated. Two
+registered checks of it failed: on MAST, where fit errors are reported, even the
+upper estimate is 0.753 $[0.724, 0.783]$ of the reported error variance, so MAST does
+not validate it; and it does not fall with the beam-emission level as photon noise
+of the charge-exchange signal would (lowest over highest fifth 0.216
+$[0.158, 0.278]$). Whether this component is fit noise or a fluctuation faster than
+a frame is therefore not decided by the files.
+
 \paragraph{Fit failures and two populations.} 1{,}197 \Ti{} rows (0.53\%) exceed
 3\,keV; they are isolated (951 runs in 274 discharges, 85\% of runs single rows) and
-are failed line fits. Because they also corrupt the anchors of every interpolant, all
+are treated as failed line fits. Because they also corrupt the anchors of every interpolant, all
 KSTAR results are given in two co-primary populations fixed in advance: \emph{cut}, in
 which values above 3\,keV are treated as missing for every estimator, and
 \emph{inclusive}, in which they are kept. For the skill over PCHIP the threshold is immaterial between 2.5
@@ -923,10 +956,9 @@ analysis~\citep{Heo2025ExperimentalIdentification}, which places 31921 in FIRE m
 at 5.40\,s and in H-mode at 8.05\,s. In 31921 bursts occur 0 to 0.8 times per second
 between 5.1 and 7.3\,s and 30 to 35 times per second after 7.3\,s, and \Ti{} has no
 missing row before 7.4\,s. In both discharges the late phase begins with a rise of
-the BES level and of \Ti{} from a few hundred eV to about 2\,keV; afterwards \Ti{}
-falls after a burst and recovers between bursts while the BES level recovers. The
+the BES level and of \Ti{} from a few hundred eV to about 2\,keV. The
 excursions of more than 1\,keV between adjacent rows in Fig.~\ref{fig:trace}(a, b) are
-in this phase: they follow the bursts and are not isolated outliers.
+in this phase, among the bursts, and are not isolated outliers.
 
 On the eleven other discharges, \Ti{} is missing more often in rows with a burst in
 the preceding 10\,ms than in quiet rows in five of the six discharges that have
@@ -952,14 +984,13 @@ threshold on the mean of nine channels: the published analysis of 31921 reports
 intermittent bursts at 6.65--7.00\,s~\citep{Heo2025ExperimentalIdentification},
 where the detector finds none, so a quiet row is quiet at this threshold only. A
 burst also changes the light that a CES fit has to separate from the
-charge-exchange line, so a fitted \Ti{} near a burst can be moved by the burst
-itself. The published analysis uses the CES ion temperature of these discharges only
-between beam blips, which are 1.5\,s apart here; how the values in the 10\,ms files
-were obtained between blips (background subtraction, fit) is not recorded in the
-files, and values of 100 to 300\,eV after a burst are what cold passive emission
-mixed into the fit would give. The estimator may therefore be following the response
-of the CES analysis to a burst and not the ion temperature. The blips give one check
-of what the values between them follow. Over the 1{,}394 blips of all discharges that have six contiguous rows before them, the
+charge-exchange line~\citep{Viezzer2011PassiveEdge}, and the published analysis uses
+the CES ion temperature of these discharges only between beam blips, which are
+1.5\,s apart here; how the 10\,ms values between blips are obtained is not recorded
+in the files. Whether a value in a frame that contains a burst is the temperature is
+therefore not decided here; what the paper estimates is the reported value
+(\S\ref{sec:data:kstar}). The blips give one check of what the values between them
+follow. Over the 1{,}394 blips of all discharges that have six contiguous rows before them, the
 CES \Ti{} of the first row after a blip is 0.819 $[0.796, 0.838]$ of its level before
 and returns over about 90\,ms. The ECEI level, which does not use the beam, falls to
 0.926 $[0.910, 0.939]$ and returns over the same time: the mean deficit of \Ti{} over
@@ -968,13 +999,11 @@ blips with a deeper ECEI dip have a deeper \Ti{} dip (rank correlation $+0.251$
 $[+0.199, +0.304]$). The beam emission is back to 0.954 of its level by the fourth
 row, where \Ti{} is still at 0.877. The time course of the CES value after a blip is
 thus that of a change of the plasma which an independent diagnostic also sees, not
-that of the beam emission. This does not make a value of 100 to 300\,eV after a burst
-a temperature: in one discharge two beam interruptions of 23 and 26\,ms removed no
-frame, and the rows exposed during them still carry values (979\,eV; 1{,}711 and
-1{,}133\,eV, against medians of 1{,}063 and 1{,}195\,eV before). Six discharges carry
-the model statements, and the interval of the gain share is wide. And a measured
-\Ti{} of 100 to 300\,eV after a burst may be the plasma or a weak-signal fit; the
-labels do not decide that. By the rule registered with these statements, one of the
+that of the beam emission. A value is reported in frames without a beam as well: in
+one discharge two beam interruptions of 23 and 26\,ms removed no frame, and the rows
+exposed during them carry values (979\,eV; 1{,}711 and 1{,}133\,eV, against medians
+of 1{,}063 and 1{,}195\,eV before). Six discharges carry the model statements, and
+the interval of the gain share is wide. By the rule registered with these statements, one of the
 three measurement statements having failed, the mechanism is still described as not
 identified.
 
@@ -995,7 +1024,11 @@ beam deuteron on electrons is about 30\,ms and the exchange time about 16\,ms. A
 of about 10\,ms therefore removes the beam light and only part of the heating.
 \emph{An edge burst} raises the light at the edge for less than a millisecond. A row
 holds one raw sample, so a sample that falls on a burst departs upward by several
-standard deviations, while \Ti{} falls after a burst (Fig.~\ref{fig:bursts}).
+standard deviations. A fall of \Ti{} after a burst, which would make a proportional
+reading wrong in sign, was registered as a statement and does not hold: over 108
+isolated burst onsets of eleven discharges the median ratio of \Ti{} in the 30\,ms
+after an onset to its level before is 1.007 $[0.947, 1.056]$ (bursts inside trains
+are not covered by that measure).
 
 Both are found in the files. In the first row after a blip 0.357 $[0.319, 0.396]$ of
 the BES channel values lie beyond three standard deviations of their 100\,ms mean,
