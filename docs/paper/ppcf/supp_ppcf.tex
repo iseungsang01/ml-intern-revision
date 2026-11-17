@@ -63,7 +63,7 @@ and the thinned replay. \S\ref{sec:bursts} and \S\ref{sec:twosources}: edge burs
 raw beam-emission stream and the two sources of a large departure of the beam emission.
 \S\ref{sec:mastped}: the registered test at the MAST pedestal top. \S\ref{sec:vrot}:
 rotation. \S\ref{sec:character}: the median row, a 20-parameter filter read from the
-network, and a second stage that corrects the estimate. \S\ref{sec:target} to \S\ref{app:registered}: what the main text gives in summary (the files and
+network, and a second stage that corrects the estimate. Figures drawn for the first manuscript label hold as ``persistence'' in their legends. \S\ref{sec:target} to \S\ref{app:registered}: what the main text gives in summary (the files and
 the reported value, the structure and the design choices of the estimator, the numbers of each
 split for the row-level readouts, and the table of registered statements). \S\ref{app:registration} to
 \S\ref{app:vrotrule}: registration history and further readouts.
@@ -119,7 +119,7 @@ measurement noise at 46.4 to 129.9\,eV depending on the estimator, against an RM
 \Ti{} to the 10\,ms scatter of \Vrot{} divided by the thermal Doppler width of the
 carbon line at that \Ti{} is $\sqrt2$ (1.395--1.532 in eight split--population
 cells), the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
-a running mean has \Ti{} skill $+0.26$ to $+0.34$ over persistence on the four splits
+a running mean has \Ti{} skill $+0.26$ to $+0.34$ over hold on the four splits
 and the causal GP $+0.31$ to $+0.35$. PCHIP passes exactly through noisy anchors, so
 any smoother of the CES past gains on it, and the deciding CES-only comparison for a
 learned estimator is the causal GP.
@@ -203,12 +203,12 @@ account for. The two devices differ in exposure, chord geometry and beam-block l
 and the remainder is not attributed to a single cause.
 
 Two secondary statements concern the yardstick. A running mean with a 15\,ms memory,
-which costs $-0.968$ $[-1.021, -0.918]$ in skill against persistence in the core
+which costs $-0.968$ $[-1.021, -0.918]$ in skill against hold in the core
 ($\rho < 0.7$, loose rule), costs $-0.124$ $[-0.285, +0.001]$ at 0.9--1.0, an
 interval that includes zero (difference $+0.845$ $[+0.682, +0.975]$): the penalty of
 averaging disappears at the edge, but averaging does not become a gain as it is on
 KSTAR, and under the strict rule the penalty remains ($-0.741$ $[-1.776, -0.175]$).
-The statement that the skill of a causal GP over persistence shrinks at the edge did
+The statement that the skill of a causal GP over hold shrinks at the edge did
 not hold: the difference to the core is $-0.025$ $[-0.182, +0.064]$ and $-0.020$
 $[-0.163, +0.051]$, both including zero.
 
@@ -219,7 +219,7 @@ Across 280 KSTAR discharges, the rank correlation between the regime number of a
 discharge and the difference between causal-GP skill and running-mean skill is
 $+0.338$ $[+0.213, +0.451]$ for \Ti{} (cut; $+0.375$ $[+0.262, +0.477]$ inclusive)
 and $+0.574$ $[+0.442, +0.680]$ for \Vrot{} (170 discharges). Averaging gains $+0.393$
-$[+0.375, +0.412]$ over persistence in the most noise-dominated third of the
+$[+0.375, +0.412]$ over hold in the most noise-dominated third of the
 discharges and $+0.087$ $[-0.012, +0.166]$ in the least noise-dominated third. A
 second prediction did not hold: the margin of the recurrent estimator over the causal
 GP was expected to grow with the regime number, and its rank correlation is $-0.081$
@@ -262,7 +262,7 @@ settle.
     Causal GP & past 16 CES & 164.3 & 24.67 \\
     4-parameter CES-only filter & past CES & 168.4 & -- \\
     Running mean & past CES & 169.2 & 25.68 \\
-    Persistence & last CES & 197.2 & 28.75 \\
+    Hold & last CES & 197.2 & 28.75 \\
     \midrule
     \textbf{Two-branch recurrent estimator} & fast (\Ti{} only) + past CES, segment & \textbf{157.8} & \textbf{23.56} \\
     20-parameter surrogate filter & fast + past CES & 162.3 & -- \\
@@ -291,13 +291,13 @@ settle.
     Target & Reference & Pooled, cut & Pooled, inclusive & Four splits \\
     \midrule
     \multirow{4}{*}{\Ti{}}
-      & persistence & $\mathbf{+0.391}$ $[+0.369, +0.408]$ & $\mathbf{+0.404}$ $[+0.364, +0.438]$ & 4/4, 4/4 \\
+      & hold & $\mathbf{+0.391}$ $[+0.369, +0.408]$ & $\mathbf{+0.404}$ $[+0.364, +0.438]$ & 4/4, 4/4 \\
       & causal GP & $\mathbf{+0.113}$ $[+0.085, +0.132]$ & $\mathbf{+0.118}$ $[+0.076, +0.157]$ & 4/4, 4/4 \\
       & PCHIP (offline) & $\mathbf{+0.221}$ $[+0.188, +0.248]$ & $\mathbf{+0.248}$ $[+0.192, +0.294]$ & 4/4, 4/4 \\
       & GP (offline) & $-0.010$ $[-0.043, +0.014]$ & $+0.035$ $[-0.017, +0.075]$ & 1 of 8 cells \\
     \midrule
     \multirow{5}{*}{\Vrot{}}
-      & persistence & $\mathbf{+0.265}$ $[+0.198, +0.326]$ & $\mathbf{+0.257}$ $[+0.183, +0.323]$ & 4/4, 4/4 \\
+      & hold & $\mathbf{+0.265}$ $[+0.198, +0.326]$ & $\mathbf{+0.257}$ $[+0.183, +0.323]$ & 4/4, 4/4 \\
       & running mean & $\mathbf{+0.121}$ $[+0.074, +0.187]$ & $\mathbf{+0.115}$ $[+0.068, +0.189]$ & 4/4, 4/4 \\
       & causal GP & $\mathbf{+0.151}$ $[+0.038, +0.290]$ & $\mathbf{+0.132}$ $[+0.026, +0.267]$ & 1/4, 2/4 \\
       & PCHIP (offline) & $\mathbf{+0.092}$ $[+0.0003, +0.170]$ & $+0.090$ $[-0.010, +0.177]$ & -- \\
@@ -336,7 +336,7 @@ gaps in three discharges.
   had been seen: the test discharge of the same split whose row-to-row scatter of
   measured \Ti{} is the median of 46 candidates, same window rule. On its 393 scored
   rows the RMSE is 63.8\,eV (recurrent estimator), 63.6\,eV (causal GP) and 80.7\,eV
-  (persistence). On the 437 (a), 389 (b) and 393 (c) rows scored in the frozen evaluation, the
+  (hold). On the 437 (a), 389 (b) and 393 (c) rows scored in the frozen evaluation, the
   recomputed squared errors of all three estimators equal the stored ones. The 10\,ms
   files identify no event in these windows; see Fig.~\ref{fig:bursts}.}
   \label{fig:trace}
@@ -378,7 +378,7 @@ is between a full-input estimator and CES-only estimators, so the margin could c
 from the fast channels or from a better use of the CES past. The direct measurement
 is the same network retrained with a \Ti{} branch that reads the CES history only,
 scored on the same rows (Table~\ref{tab:honly}). The rule fixed before the first runs
-was that the fast-channel share is claimed if the interval of the full network's
+was that the fast-channel increment is claimed if the interval of the full network's
 skill over the history-only one lies above zero on at least three of the four cut
 splits. In those first runs it did on four of four, but the history-only network had
 stopped at its 30-epoch cap on three of the four splits and might have been
@@ -492,7 +492,7 @@ $k = 1$ the errors reproduce the stored ones (absolute error of the network with
   \caption{KSTAR thinned replay, \Ti{}, cut population. (a) Skill over hold against
   the interval between visible CES samples; markers are the mean of the four
   file-level splits and bars their range. PCHIP interpolates the visible samples on
-  both sides and is not causal. (b) Fast-channel share: skill of the network over its
+  both sides and is not causal. (b) Fast-channel increment: skill of the network over its
   history-only twin and of the causal variant over the same twin, one marker per
   split with its 95\% interval.}
   \label{fig:thin}
@@ -534,7 +534,7 @@ $k = 1$ the errors reproduce the stored ones (absolute error of the network with
 
 The five registered statements are read at 50\,ms. (i) The network keeps an interval
 above zero over the causal GP on four of four splits (and at every other cadence).
-(ii) So does the causal variant. (iii) The fast-channel share,
+(ii) So does the causal variant. (iii) The fast-channel increment,
 measured against the history-only twin, has a larger point estimate when CES is sparser: $+0.064$ to
 $+0.113$ at 10\,ms and $+0.076$ to $+0.156$ at 50\,ms, on each split, with intervals
 that overlap (Fig.~\ref{fig:thin}b). In the
@@ -562,7 +562,7 @@ gives the same picture: over the history-only network $+0.054$ to $+0.156$ at 50
 (four of four splits) and over PCHIP of the visible samples $+0.066$ to $+0.127$
 (three of four).
 
-\paragraph{Is the fast-channel share a beam effect?} BES is the emission of the
+\paragraph{Is the fast-channel increment a beam effect?} BES is the emission of the
 heating beam, so its level follows the beam as well as the plasma, and a CES fit
 depends on the beam. The files record the blips (\S\ref{sec:data:kstar}) but not the
 beam power between them, so the two cannot be separated in general; what can be
@@ -588,13 +588,13 @@ fact, leaving out those in which the scored value or the last visible sample is 
 150\,eV or above 2.5\,keV, those with a jump of more than 1\,keV between the two, and
 those within 30\,ms after a row whose BES level is below half of the discharge median
 (a beam blip). With all four exclusions (0.885 to 0.898 of the rows kept) the
-fast-channel share at the natural cadence is $+0.084$ to $+0.145$ for the network and
+fast-channel increment at the natural cadence is $+0.084$ to $+0.145$ for the network and
 $+0.044$ to $+0.152$ for the causal variant, and the margins over the causal GP are
 $+0.084$ to $+0.136$ and $+0.069$ to $+0.126$, every interval excluding zero on four
-of four splits. At 50\,ms the fast-channel share stays ($+0.084$ to $+0.156$ on three
+of four splits. At 50\,ms the fast-channel increment stays ($+0.084$ to $+0.156$ on three
 of four splits; causal variant $+0.084$ to $+0.147$ on four of four), and the margin
 over the causal GP shrinks to $+0.038$ to $+0.087$ (three of four), most of the loss
-coming from the rows with a jump of more than 1\,keV. The fast-channel share thus
+coming from the rows with a jump of more than 1\,keV. The fast-channel increment thus
 does not rest on the rows that are suspected first; the margin over the causal GP at
 a sparse cadence partly does. In the population that keeps values above 3\,keV the
 readouts are not stable under these exclusions.
@@ -858,7 +858,7 @@ Rotation is therefore estimated by the branch that reads the CES past only
 (Table~\ref{tab:headline}); whether fast channels fed to that branch would lower its
 error was not tested.
 Among estimators that do not use the next CES sample this branch has the lowest mean
-squared error on the first split (Table~\ref{tab:ladder}). Its skill over persistence is $+0.265$
+squared error on the first split (Table~\ref{tab:ladder}). Its skill over hold is $+0.265$
 $[+0.198, +0.326]$ (cut), with the interval excluding zero on all four splits in both
 populations, and the same holds over a validation-tuned running mean of the rotation
 past, so the estimate is not reducible to a running mean. Over the causal GP the
@@ -880,10 +880,10 @@ branch over hold is $+0.361$ to $+0.417$ at 10\,ms and $+0.282$ to $+0.352$ at
 A mean-squared-error skill is decided by few rows. On KSTAR the 1\% of rows with the
 largest squared \Ti{} error of the recurrent estimator carry 48\% (cut) and 83\%
 (inclusive) of its total. On a typical row the estimator carries its last value: its
-median absolute \Ti{} error, 47.2\,eV, is close to that of persistence (46.1\,eV) and
+median absolute \Ti{} error, 47.2\,eV, is close to that of hold (46.1\,eV) and
 to the 10\,ms scatter of the target (46.4\,eV), while PCHIP reaches 39.4\,eV by
 averaging with the following sample (median-absolute-error skill $-0.198$
-$[-0.259, -0.135]$). For rotation the median row is worse than persistence (4.3
+$[-0.259, -0.135]$). For rotation the median row is worse than hold (4.3
 against 3.7\,km/s). The aggregate skill is thus a deficit on the bulk offset by a
 gain on the tail. Under a symmetric 1\% trim and under a Huber loss at the noise
 bound the \Ti{} skill over PCHIP stays $+0.210$ and $+0.156$ (cut, both intervals
@@ -1315,7 +1315,7 @@ reported \Vi{} errors are smaller than the frame-to-frame scatter.
 \begin{table}[h]
   \centering
   \caption{MAST development test set, strict rule (58{,}844 rows, 88 shots): skill
-  over persistence (RMSE 77.1\,eV and 7.77\,km/s) and mean \chir{}, from the run with
+  over hold (RMSE 77.1\,eV and 7.77\,km/s) and mean \chir{}, from the run with
   wider tuning grids. Bold = interval excludes zero. The last two rows of each block
   also use the following sample.}
   \label{tab:mast}
@@ -1323,7 +1323,7 @@ reported \Vi{} errors are smaller than the frame-to-frame scatter.
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{llcc}
     \toprule
-    Target & Estimator & Skill over persistence & Mean \chir{} \\
+    Target & Estimator & Skill over hold & Mean \chir{} \\
     \midrule
     \multirow{5}{*}{\Ti{}}
       & running mean & $\mathbf{-0.012}$ $[-0.017, -0.007]$ & 4.99 $[3.89, 6.30]$ \\
@@ -1347,7 +1347,7 @@ structure above the fit noise remains if the interval of the mean \chir{} of the
 estimator that does not use the following sample lies above 1.5. Pooled over the four
 campaigns it does for both targets (Table~\ref{tab:mast}). In the first registered
 run the GP amplitude was limited by its tuning grid and the causal GP had a larger
-error than persistence (skill $-0.683$ $[-0.997, -0.426]$ for \Ti{} and $-0.350$
+error than hold (skill $-0.683$ $[-0.997, -0.426]$ for \Ti{} and $-0.350$
 $[-0.499, -0.238]$ for \Vi{}); the best such estimator was then the slope-state
 filter, with a mean \chir{} of 2.71 $[2.07, 3.51]$ and 21.20 $[16.83, 26.06]$, and the
 decision was the same. The median \chir{} for \Ti{}, 0.416 $[0.345, 0.501]$, is not above
@@ -1403,7 +1403,7 @@ narrower intervals.
   \begin{tabular}{lcccc}
     \toprule
     Regime number & Discharges & Causal GP over & Running mean over & Recurrent estimator \\
-     & & running mean & persistence & over causal GP \\
+     & & running mean & hold & over causal GP \\
     \midrule
     $-0.85$ to $-0.48$ & 93 & $-0.006$ $[-0.027, +0.016]$ & $\mathbf{+0.393}$ $[+0.375, +0.412]$ & $\mathbf{+0.096}$ $[+0.058, +0.133]$ \\
     $-0.48$ to $-0.37$ & 94 & $-0.023$ $[-0.047, +0.005]$ & $\mathbf{+0.311}$ $[+0.289, +0.333]$ & $\mathbf{+0.137}$ $[+0.104, +0.166]$ \\
@@ -1428,7 +1428,7 @@ rows onto the covariate distribution (time since the last observation and local
 activity) of the rows that are actually missing and inside the scored domain,
 53.6--67.0\% (cut) of the missing \Ti{} rows, gives \Ti{} skill over PCHIP of $+0.14$
 to $+0.28$, with intervals excluding zero on 2 of 4 cut and 4 of 4 inclusive splits,
-and over persistence $+0.28$ to $+0.44$ with intervals excluding zero in all eight
+and over hold $+0.28$ to $+0.44$ with intervals excluding zero in all eight
 cells. \emph{Later discharges.} With a strictly temporal split (train on 416 discharge files, 413 with usable rows,
 validate on 128, test on the 97 latest), the \Ti{} skill is $+0.17$ to $+0.20$ over
 PCHIP and $+0.11$ to $+0.16$ over the causal GP, with intervals excluding zero for all
@@ -1506,7 +1506,7 @@ devices, signals and radii differ, so neither number supports the other.
 
 As first registered, without any rule for rotation fit failures, the pooled skill of
 the rotation branch over PCHIP was $+0.313$ $[+0.072, +0.701]$. That interval rested on
-36--41 of about 71{,}700 rows per repeat (0.05\%) whose target, persistence anchor or
+36--41 of about 71{,}700 rows per repeat (0.05\%) whose target, hold anchor or
 PCHIP anchor exceeds $|\Vrot| = 1{,}000$\,km/s; those rows carry 63--78\% of PCHIP's
 squared error. The rule that removes them from every estimator was set after that
 first analysis and is applied at scoring only: the history inputs still contain those
