@@ -35,3 +35,7 @@ G1: +0.005 to +0.040, holding on two to four splits. Skill over the causal varia
 ## 6. Limits known in advance
 
 A network trained on three quarters of the training discharges is slightly weaker than the full one, so its out-of-fold residuals are slightly larger than those of the network the correction is applied to. Boosted trees with default settings. Cut population.
+
+## Amendment 1 (2026-11-17, before any run)
+
+Section 2 says that the out-of-fold networks are trained under an epoch cap of 80. The existing causal variant (`data/.b29_norm0_cut_s{seed}`), whose test predictions the correction is applied to, was trained under a cap of 30 (B.29; it reached the cap on splits 42 and 7). The out-of-fold networks are therefore trained under the same cap of 30 and the same environment (`run_b29.run_env("norm0", "split", "cut", seed, ...)`, with only the split directory and the output directory changed), so that they differ from that network in the training discharges only. Folds: the sorted training files of a split are permuted with `numpy.random.default_rng(seed)` and fold k takes every fourth element of the permutation starting at k. Fold split directories: `data/.b38_split_s{seed}_f{k}`; runs: `data/.b38_norm0_cut_s{seed}_f{k}`. Nothing else changes.
