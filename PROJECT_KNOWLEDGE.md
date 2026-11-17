@@ -452,17 +452,17 @@ CES 분석은 빔이 꺼진 프레임에서 배경을 얻는다. 그때 갱신�
 | 일 | 무엇을 정하는가 | 필요한 것 | 상태 |
 |---|---|---|---|
 | 원고(본문 14쪽 + 보충 자료 20쪽, 2026-11-18 재구성)의 주 결과 표에 pooled와 초기화 셋 수치 넣기, 그 뒤 11차 독립 채점 | 본문 주장이 등록한 1차 판독으로 받쳐지는가 | B.39 완료 → `analyze_b39.py` → `docs/paper/ppcf/make_tables.py` → `check_numbers.py` → 컴파일 | B.39 대기 |
-| B.39의 신경망(상한 80)으로 B.41·B.42·B.44의 행 단위 판독을 다시 읽기 | 본문 4.3·4.4절이 상한 30의 얼린 estimator에 기대는 것을 없앰 | CPU(순방향 계산), 사전 등록 | 미실행 |
+| B.39의 신경망(상한 80)으로 B.41·B.42·B.44의 행 단위 판독과 희소 재생(50 ms)을 다시 읽기 (B.48) | 본문 4.3·4.4절이 상한 30의 얼린 estimator에 기대는 것을 없앰 | CPU(순방향 계산). 등록 `PREREGISTRATION_B48.md` | 하위 에이전트 실행 중(2026-11-18). 끝나면 `docs/paper/b48_reread.md`를 읽어 기록하고 본문 4.3·4.4절의 수치와 그림(`docs/paper/b48_events_fig.pdf`)을 바꾼다 |
 | 예시 trace 그림을 인과 변형으로 다시 그려 본문에 넣기 | 본문에 추정이 어떻게 보이는지의 그림이 없음 | CPU | 미실행 |
-| ablation 변형(BES만·ECEI만·Mirnov 제외)을 초기화 셋으로 | "증분은 BES가 나른다"가 초기화 하나에 기댐 | GPU 24회, 사전 등록. B.39 뒤 | 미실행 |
-| 지연·결측을 넣고 학습한 estimator | 4.23절과 희소 재생이 "지연 없이 학습한 얼린 estimator"라는 한계 | GPU, 사전 등록. B.39 뒤 | 미실행 |
+| B.47: (D) ablation 변형을 초기화 셋으로, (L) CES 이력에 2프레임 지연을 넣고 학습한 estimator와 쌍둥이, (I) inclusive 모집단에서 인과 변형과 쌍둥이를 같은 상한으로 | (D) "증분은 BES가 나른다"가 초기화 하나에 기댐. (L) 4.23절이 지연 없이 학습한 얼린 estimator라는 한계. (I) inclusive 수치가 비대칭 짝에서 온 것 | GPU 64회. 등록 `PREREGISTRATION_B47.md` | 러너는 하위 에이전트가 구현 중(2026-11-18). 검증 뒤 `py ces_prediction/experiments/b47_after_b39/run_b47.py --wait-for-b39 > data/.b47_batch.log 2>&1`을 백그라운드로 띄우면 B.39가 끝난 뒤 스스로 시작한다. 끝나면 `py ces_prediction/experiments/b47_after_b39/analyze_b47.py` |
+| CES 결측(드문 표본)을 넣고 학습한 estimator | 희소 재생이 자연 cadence로 학습한 얼린 estimator라는 한계(지연은 B.47의 L이 다룸) | GPU, 사전 등록. B.47 뒤 | 미실행 |
 | MAST에서 같은 순환 estimator 학습, 장치 간 전이, 층별 비교 | 같은 방식이 다른 장치에서도 되는가. 어느 가중치가 장치에 묶여 있는가 | GPU, 사전 등록 | 설계 중 |
 | 인과 변형을 주 estimator로 다시 학습(pooled, 같은 epoch 상한) | 원고의 주 수치를 인과 형태로 통일 | GPU | 미실행 |
 | 구조 개선: 인과 GP를 기준점으로 둔 잔차 학습, cell 교체(GRU·RNN), 깊이, 879k 초과, 계열 간 앙상블 | 4.9절의 이득을 한 모델로 얻는가. 더 큰 구조가 offline GP를 넘는가 | GPU | 미실행 |
 | encoder부터 다시 설계: (가) 빠른 채널 창을 군집화해 상태를 나눈 뒤 그 위에 encoder–decoder를 설계, (나) 이미 있는 시계열 encoder나 다른 장치에서 미리 학습한 encoder를 바꿔 쓰기 | 빠른 채널을 읽는 방식 자체가 지금보다 나은가. 4.14절의 서로 다른 행 종류(blip 뒤, 버스트, 그 밖)를 encoder가 나눠 읽게 하면 오차가 내려가는가 | 군집의 타당성 점검은 CPU, 학습은 GPU, 사전 등록 | (가)의 CPU 점검은 끝남: 군집별 보정은 이득 없음(4.15절). (나)는 미실행, MAST 전이 배치와 함께 |
 | CES 표적 검증: 문헌의 출판 값과 파일 값 대조, blip 뒤 0–1.5 s 경과 시간별 산포·결측 | L3을 파일만으로 얼마나 줄일 수 있는가 | CPU | 미실행 |
 | 둘째 단계를 신경망 안에서 학습(잔차 보정 단계와 분산 출력을 학습 방전에서 함께 학습) | 4.18절의 이득이 한 신경망 안에서 얻어지는가 | GPU, 사전 등록(B.38의 판정 규칙에 따라 등록 대상). B.39 뒤 | 미실행. 학습 방전의 교차 적합으로 맞춘 판독은 끝남(B.38) |
-| 인과 변형을 주 estimator로 한 대칭 재학습과 진단별 ablation(B.39: 상한 80, 초기화 셋, pooled, ECEI만·BES만·Mirnov 제외) | 10차 채점의 3·4번 지적. 제목의 causal과 빔 교란 | GPU 112회 | 실행 중(2026-11-17) |
+| 인과 변형을 주 estimator로 한 대칭 재학습과 진단별 ablation(B.39: 상한 80, 초기화 셋, pooled, ECEI만·BES만·Mirnov 제외) | 10차 채점의 3·4번 지적. 제목의 causal과 빔 교란 | GPU 112회 | 실행 중(2026-11-17 시작, 112회). 1단계 16회가 끝나 ablation을 읽었다(BES만 읽는 변형은 쌍둥이 대비 네 분할 모두 0 제외, ECEI만 읽는 변형은 한 분할; `docs/paper/b39_primary.md`, 4.24절). 2단계(초기화 셋)가 끝나면 `py ces_prediction/experiments/b39_primary/analyze_b39.py`와 `py docs/paper/ppcf/make_tables.py`를 돌리고 THESIS_RESULTS에 B.39를 기록한다. pooled 80회가 끝나면 같은 두 명령을 다시 돌리고 원고를 컴파일한다 |
 | CES 결측을 넣은 학습 | 4.4절을 "얼린 estimator"가 아니라 "그렇게 학습한 estimator"로 | GPU | 미실행 |
 | 버스트에 걸린 행에서 T_i가 움직이는 방향과 크기(원시 자료 12 방전; 4.14절은 겹침만 셌다) | 위쪽 큰 벗어남에서 이득이 줄어드는 것이 버스트 뒤의 T_i 하강과 맞는가 | CPU, 사전 등록 | 미실행 |
 | 8쪽판과 `paper_numbers.json`의 결측 수치 다시 만들기 | 옛 수치(8.2 %, 23.9 % 등) 제거 | CPU | 미실행 |
