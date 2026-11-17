@@ -7751,3 +7751,33 @@ Reading. The reported value moves, over a fifth of a second, with a diagnostic t
 Expectation check: 6 of 9 met; the three misses are all in H (both blips in the file, the ratio 1.05 to 1.40, H1 holding).
 
 Limits. S1 as registered rests on 15 discharges; the wider readouts are after the fact. One discharge for H, on a chord that is not the one of the publication. D is one row.
+
+### B.42 the frozen estimators with a dense but delayed CES history -- both margins are kept when the CES value arrives one or two frames later than assumed (registered; executed by a delegated agent, 2026-11-18)
+
+Registration `PREREGISTRATION_B42.md` (9b1ad31). Designed by the session lead, implemented and run by a delegated agent (`experiments/b42_delay/run_b42.py`), outputs `docs/paper/b42_delay.{json,md}`; the code of the delayed inputs and the outputs were read by the lead. CPU, nothing trained. The tenth grading: the delay of the CES analysis is taken as zero and the headline is a one-step prediction from a 10 ms old sample. Here a sample measured at row u is available at row t only if u <= t - 1 - L (L = 0 is the present protocol; L = 1, 2, 4 make the last value in hand 20, 30, 50 ms old). The CES-derived inputs of the frozen causal variant and of the frozen history-only twin are rebuilt from the available samples with the true staleness; hold and the causal GP use the same available samples.
+
+Checks before the readout, all passed: at L = 0 the rebuilt inputs equal those of `build_blocks` on the 96 test files of every split for both networks, and the causal variant, hold and the GP agree with the frozen row table within 0.5 eV on every row of five files per split (1,165, 1,545, 2,493 and 957 rows).
+
+| split | L | causal variant over the causal GP | over the history-only twin | root-mean-square error of the causal variant over that at L = 0 |
+|---|---|---|---|---|
+| 42 | 1 | +0.128 [+0.085, +0.168] | +0.080 [+0.039, +0.121] | 1.037 [1.022, 1.052] |
+| 42 | 2 | +0.161 [+0.117, +0.203] | +0.101 [+0.059, +0.145] | 1.077 [1.049, 1.106] |
+| 1 | 1 | +0.097 [+0.066, +0.128] | +0.038 [+0.013, +0.064] | 1.036 [1.023, 1.048] |
+| 1 | 2 | +0.075 [+0.043, +0.110] | +0.043 [+0.016, +0.073] | 1.081 [1.062, 1.102] |
+| 7 | 1 | +0.133 [+0.091, +0.177] | +0.125 [+0.099, +0.152] | 1.038 [1.028, 1.049] |
+| 7 | 2 | +0.125 [+0.079, +0.169] | +0.134 [+0.107, +0.161] | 1.083 [1.067, 1.101] |
+| 123 | 1 | +0.099 [+0.063, +0.141] | +0.069 [+0.028, +0.117] | 1.029 [1.019, 1.041] |
+| 123 | 2 | +0.088 [+0.052, +0.129] | +0.076 [+0.030, +0.127] | 1.064 [1.045, 1.085] |
+
+- **T1 holds** (over the causal GP: L = 1 on 4 of 4, L = 2 on 4 of 4). **T2 holds** (over the twin at L = 2: 4 of 4).
+- At L = 4 the skill over the GP is +0.162 [+0.112, +0.208], +0.053 [+0.017, +0.092], +0.125 [+0.076, +0.171], +0.075 [+0.032, +0.122] and the error is 1.152, 1.147, 1.148 and 1.121 times that at L = 0.
+- The skill over hold is not shown to change with the delay: at L = 2 it differs from L = 0 by +0.017 [-0.016, +0.048], -0.014 [-0.037, +0.009], -0.005 [-0.031, +0.022], -0.024 [-0.048, -0.001] (zero excluded on one split).
+- The fast-channel increment is not shown to grow with the delay: at L = 2 it is above that at L = 0 by +0.046 [+0.025, +0.068], +0.016 [-0.002, +0.034], +0.020 [+0.006, +0.038], +0.019 [-0.005, +0.053] (zero excluded on two splits).
+- The staleness channel hardly matters to the causal variant (with the staleness left as if there were no delay its skill over itself is -0.006 to +0.005 at every delay). It matters to the twin on one split at L = 4 (split 123: the twin with the staleness as if there were no delay over the twin with the true one +0.087 [+0.004, +0.193]), so the increment of +0.132 there is partly a failure of the twin; with the staleness as if there were no delay the increment at L = 4 is +0.103, +0.049, +0.133, +0.054, every interval above zero, and at L = 2 +0.097, +0.051, +0.133, +0.061, every interval above zero.
+- Median absolute error at L = 2 (eV): causal variant 49.2, 60.4, 51.6, 48.4; hold 50.4, 56.2, 56.1, 50.7; causal GP 52.1, 59.7, 57.3, 52.3. On split 1 the median of the causal variant is above that of hold at every delay, as at L = 0 (56.2 against 49.4). The intervals are those of each median; no interval of a ratio was computed.
+
+Reading. If the CES analysis delivers its value one or two frames later than assumed, the error of the causal variant grows by 3 to 4 % and by 6 to 8 %, and its margins over the causal GP and over the twin remain, so the result does not rest on a 10 ms old sample being in hand. The delay does not widen the advantage: neither the skill over hold nor the increment is shown to grow. By the registration the paper states the use (a CES value that arrives one to three frames late is bridged by the fast channels) with these numbers, marked as frozen estimators trained without delay.
+
+Expectation check: the six expectations were met on 2, 2, 2, 3, 4 and 3 of the four splits. The growth of the error was at or below the lower edge of the expected range (1.064 to 1.083 against 1.08 to 1.25) and the skill over the GP below the expected range on two splits at each delay.
+
+Limits. The networks were trained with the previous frame available; staleness of 20 to 50 ms occurred in training only at gaps, and the twin fails with it on one split at L = 4. A fixed delay. Training with an imposed delay is a GPU batch and was not run. The test rows of these splits have been read by earlier registered readouts.
