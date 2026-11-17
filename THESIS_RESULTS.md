@@ -7874,3 +7874,12 @@ Reading. Averaging three initialisations adds +0.006 to +0.016 in skill and, mor
 Expectation check: three of seven met with the rule "every split inside the range" (the gain from averaging, E1 and E2 holding); the four ranges missed are each missed by one split (E over the GP +0.078 on split 42 where at least +0.08 was expected; E over E_h +0.039 on split 1; E_h over the GP +0.012 on split 42; the median ratio 0.957 on split 7).
 
 Limits. Three members; another three initialisations would give another average, seen here only through the averages of two. Registered after the single-training statements failed. The members were trained independently. The pooled arm of B.39 has one training per fold and is not an average.
+
+### Note 2026-11-18 07:45 -- all running work stopped at the instruction of the author
+
+No result. State left behind, for whoever resumes:
+
+- B.39: 89 of 112 runs complete (arm A, 32 runs, recorded above; arm P, 57 of 80). The run in progress (`.b39p_v2h_cut_r7_f3`) was discarded; its directory holds a `run.log` only. `py ces_prediction/experiments/b39_primary/run_b39.py` resumes and skips finished runs. Arm P is not read: the pooled readout needs all 80.
+- B.47: the launcher waiting for B.39 was cancelled before any run was trained (0 of 64).
+- B.48: the delegated agent wrote `experiments/b48_reread/run_b48.py` and stopped without an output; the file is unverified and not committed.
+- Nothing is restarted without an instruction of the author. `PROJECT_KNOWLEDGE.md` (sections 1, 3, 5, 6, 7 and the head of section 4), `PAPER_DESIGN.md` (sections 4, 5, 9, 10, 11) and `experiments/README.md` were brought to this state the same day: the claims table follows the one-claim manuscript, the map at the head of section 4 says which numbers the main text, the supplement or neither uses, and the open-work list separates what was stopped from what is not yet registered.
