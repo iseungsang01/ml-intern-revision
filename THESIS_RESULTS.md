@@ -7689,3 +7689,29 @@ Reading.
 Expectation check: 6 of 11 met. Missed: the plain share against the twin above the expected 0.30 to 0.65 on two splits; the 90th-percentile ratio against hold (0.77 to 0.81 where 0.90 to 0.99 was expected); U1 (expected 0.75 to 0.95 and holding).
 
 Limits. Value rules are thresholds, not a fit-quality flag. Shares of a reduction are unstable where the total reduction is small (splits 42 and 1). Seven raw-stream test discharges. The event figure uses means in the blip panel and medians (after the fact) in the burst panel.
+
+### B.40 a bracket for the white-noise variance of the CES value -- tight on KSTAR, not validated on MAST, and growing with the beam-emission level (registered; executed by a delegated agent, 2026-11-18)
+
+Registration `PREREGISTRATION_B40.md` (9b1ad31). Designed by the session lead, implemented and run by a delegated agent (`experiments/b40_noise/run_b40.py`), outputs `docs/paper/b40_noise.{json,md}`, read by the lead before this record. CPU, no model. The author's question: the paper estimates the T_i value that the CES analysis reports; how far is that from the true ion temperature? This readout concerns the random part.
+
+Estimators over triples of consecutive measured rows: N_lo = minus the lag-1 autocovariance of the increments (at most the white-noise variance when the increments of the signal are not negatively correlated) and N_hi = variance of the second difference over 6 (at least that variance); robust (median absolute deviation) version primary.
+
+| quantity (KSTAR, cut; 210,908 triples of 614 discharges) | robust | moments | clipped at 1 % and 99 % |
+|---|---|---|---|
+| sqrt(N_lo) (eV) | 39.1 [35.9, 42.7] | 137.0 [127.6, 146.4] | 96.5 [89.9, 102.9] |
+| sqrt(N_hi) (eV) | 42.8 [39.6, 46.2] | 139.9 [131.3, 148.6] | 103.1 [97.3, 108.8] |
+| N_hi / N_lo | 1.195 [1.147, 1.247] | 1.043 [1.018, 1.072] | 1.143 [1.106, 1.187] |
+
+**K1 holds** (the bracket is tight: 1.195 [1.147, 1.247]; inclusive population 1.193). **K2 does not hold, with the opposite sign**: N_lo in the lowest fifth of the BES level over that in the highest fifth is 0.216 [0.158, 0.278] (after the fact, with N_lo divided by the squared T_i level: 0.614 [0.460, 0.796]). **M1 does not hold**: on MAST (2,746,400 triples of 2,593 shots, 5 ms frames) the median squared reported error lies inside the bracket in one of five radius bins; pooled N_lo over it is -2.751 [-2.910, -2.611] and N_hi over it 0.753 [0.724, 0.783].
+
+By third of the T_i level (edges 447 and 764 eV) the robust sqrt(N_lo) is 22.5, 33.4 and 90.7 eV, and relative to the median level 0.078 [0.068, 0.090], 0.055 [0.051, 0.060] and 0.092 [0.083, 0.100]. Per discharge (518 with at least 100 triples) the median is 34.0 eV and the quartiles 19.4 and 75.6 eV; N_lo is not positive in 71. On the test rows of the four splits the mean squared error of the causal variant is 1.85, 1.67, 1.78 and 1.64 times the moments N_lo.
+
+Reading.
+
+1. *Size of the random part.* On a typical row the reported T_i carries a white component of 39.1 to 42.8 eV, 5.5 to 9.5 % of the level. In the mean square it is 137.0 to 139.9 eV, because the component grows with the level (22.5 eV in the lowest third, 90.7 eV in the highest) and has heavy tails. Both numbers have to be given with their meaning: a typical row and the mean square. The estimators of this paper sit at 1.64 to 1.85 times the mean-square floor; quoting a mean squared error over the robust floor (17 to 31) would mix two different quantities and is not used.
+2. *What the white component is, is not decided.* It does not fall with the beam-emission level as photon noise of the charge-exchange signal would; it rises with it and with T_i. A component that grows with the level is what a relative fit error gives, and also what fluctuations faster than a frame give in the phases of high level. By the registered rule it is described as a white component at 10 ms whose origin the files do not decide.
+3. *MAST does not validate the bracket.* There the signal increments at 5 ms are positively correlated, so the lower estimator is negative, and even the upper estimator is below the reported fit-error variance (0.753): the reported errors are larger than the frame-to-frame scatter, or the noise of adjacent frames is correlated. The KSTAR bracket is therefore stated as an estimate under its two assumptions, without an external check.
+
+Expectation check: 2 of 8 met (the tightness of the bracket; a negative lower estimator in the innermost MAST bins). Missed: K2 and its direction, M1, sqrt(N_lo) just below the expected 40 to 60 eV, the ordering of the relative noise by level, the number of floors.
+
+Limits. White noise and non-negatively correlated signal increments are assumptions; a robust scale is a typical value under heteroscedastic noise; the low-BES fifth also has a lower T_i level (447 against 753 eV) and a loose bracket (1.971). Nothing here bounds a bias of the reported value.
