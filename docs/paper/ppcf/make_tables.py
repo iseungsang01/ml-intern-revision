@@ -122,6 +122,31 @@ def main():
         pm = P["median_abs_error_eV"]
         mac("PMed", "{:.1f}, {:.1f} and {:.1f}".format(pm["hold"], pm["twin"], pm["causal variant"]))
 
+    # B.49: the average of three initialisations as one estimator (read when its output exists)
+    avg_src = ROOT / "docs" / "paper" / "b49_average.json"
+    AV = json.loads(avg_src.read_text(encoding="utf-8"))["splits"] if avg_src.exists() else None
+    L.append("\\newif\\ifaverage")
+    L.append("\\averagetrue" if AV else "\\averagefalse")
+    if AV:
+        av = [AV[s] for s in SEEDS]
+        E1 = [x["E1_E_over_causal_gp"] for x in av]
+        E2 = [x["E2_E_over_twin_average"] for x in av]
+        EH = [x["E_over"]["persistence"] for x in av]
+        GA = [x["E_over_gp_minus_mean_member_over_gp"] for x in av]
+        for name, v in (("Eone", E1), ("Etwo", E2), ("EGain", GA)):
+            mac(name + "Range", rng(v))
+            mac(name + "Above", above(v))
+        mac("EoneVerdict", verdict(E1))
+        mac("EtwoVerdict", verdict(E2))
+        r90 = [x["ratio_E_to_causal_gp"]["p90"] for x in av]
+        r50 = [x["ratio_E_to_causal_gp"]["median"] for x in av]
+        mac("ENinetyRange", "{:.3f} to {:.3f}".format(min(v[0] for v in r90), max(v[0] for v in r90)))
+        mac("ENinetyBelow", WORD[sum(v[2] < 1 for v in r90)] + " of four")
+        mac("EMedRange", "{:.3f} to {:.3f}".format(min(v[0] for v in r50), max(v[0] for v in r50)))
+        pairs = [q for x in av for q in x["two_member"].values()]
+        mac("EPairsGp", f"{sum(q['over_causal_gp'][1] > 0 for q in pairs)} of {len(pairs)}")
+        mac("EPairsTwin", f"{sum(q['over_twin_average_of_same_two'][1] > 0 for q in pairs)} of {len(pairs)}")
+
     cols = "l" + "c" * (5 if pooled else 4)
     head = ("Pooled & " if pooled else "") + "Split 1 & Split 2 & Split 3 & Split 4"
 
@@ -145,18 +170,27 @@ def main():
          row("\\quad offline GP (uses the next sample)", OG, Pc.get("gp")),
          "    \\midrule",
          row("History-only twin over causal GP", TW, P.get("twin_over_gp")),
-         "    \\midrule",
+         "    \\midrule"]
+    if AV:
+        T += ["    \\multicolumn{%d}{l}{\\emph{Average of three initialisations over}} \\\\" % (len(cols)),
+              row("\\quad hold", EH), row("\\quad causal GP", E1),
+              row("\\quad the average of the three twins", E2), "    \\midrule"]
+    T += [
          "    \\multicolumn{%d}{l}{\\emph{Median absolute error (eV)}} \\\\" % (len(cols)),
          nrow("\\quad hold", med("hold"), "{:.1f}", P.get("median_abs_error_eV", {}).get("hold")),
          nrow("\\quad causal GP", med("causal GP"), "{:.1f}"),
          nrow("\\quad history-only twin", med("twin"), "{:.1f}", P.get("median_abs_error_eV", {}).get("twin")),
          nrow("\\quad recurrent estimator", med("causal variant"), "{:.1f}",
               P.get("median_abs_error_eV", {}).get("causal variant")),
+         *([nrow("\\quad average of three initialisations",
+                 [x["abs_error_eV"]["E"]["median"][0] for x in av], "{:.1f}")] if AV else []),
          "    \\multicolumn{%d}{l}{\\emph{Root-mean-square error (eV)}} \\\\" % (len(cols)),
          nrow("\\quad hold", rms("hold"), "{:.1f}"),
          nrow("\\quad causal GP", rms("causal GP"), "{:.1f}"),
          nrow("\\quad history-only twin", rms("twin"), "{:.1f}"),
          nrow("\\quad recurrent estimator", rms("causal variant"), "{:.1f}"),
+         *([nrow("\\quad average of three initialisations", [x["rmse_eV"]["E"] for x in av], "{:.1f}")]
+           if AV else []),
          "    \\midrule",
          "    Scored rows / test discharges & " + ("-- & " if pooled else "")
          + " & ".join(f"{x['rows']:,}".replace(",", "{,}") + f" / {x['discharges']}" for x in a) + " \\\\",

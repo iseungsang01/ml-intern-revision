@@ -59,6 +59,21 @@
 \newcommand{\SpreadRange}{0.006 to 0.067}
 \newcommand{\RowsFirst}{32{,}589}
 \newcommand{\ShotsFirst}{96}
+\newif\ifaverage
+\averagetrue
+\newcommand{\EoneRange}{$+0.078$ to $+0.153$}
+\newcommand{\EoneAbove}{four of four}
+\newcommand{\EtwoRange}{$+0.039$ to $+0.088$}
+\newcommand{\EtwoAbove}{four of four}
+\newcommand{\EGainRange}{$+0.006$ to $+0.016$}
+\newcommand{\EGainAbove}{four of four}
+\newcommand{\EoneVerdict}{holds}
+\newcommand{\EtwoVerdict}{holds}
+\newcommand{\ENinetyRange}{0.909 to 0.937}
+\newcommand{\ENinetyBelow}{four of four}
+\newcommand{\EMedRange}{0.957 to 1.093}
+\newcommand{\EPairsGp}{11 of 12}
+\newcommand{\EPairsTwin}{10 of 12}
 \newcommand{\TabPrimary}{%
   \resizebox{\linewidth}{!}{%
   \begin{tabular}{lcccc}
@@ -74,16 +89,23 @@
     \midrule
     History-only twin over causal GP & $-0.005$ $[-0.074, +0.046]$ & $\mathbf{+0.061}$ $[+0.019, +0.098]$ & $\mathbf{+0.057}$ $[+0.002, +0.097]$ & $+0.039$ $[-0.049, +0.082]$ \\
     \midrule
+    \multicolumn{5}{l}{\emph{Average of three initialisations over}} \\
+    \quad hold & $\mathbf{+0.360}$ $[+0.304, +0.403]$ & $\mathbf{+0.387}$ $[+0.356, +0.413]$ & $\mathbf{+0.414}$ $[+0.378, +0.444]$ & $\mathbf{+0.421}$ $[+0.374, +0.457]$ \\
+    \quad causal GP & $\mathbf{+0.078}$ $[+0.019, +0.125]$ & $\mathbf{+0.105}$ $[+0.076, +0.132]$ & $\mathbf{+0.153}$ $[+0.117, +0.191]$ & $\mathbf{+0.115}$ $[+0.065, +0.161]$ \\
+    \quad the average of the three twins & $\mathbf{+0.067}$ $[+0.015, +0.108]$ & $\mathbf{+0.039}$ $[+0.015, +0.062]$ & $\mathbf{+0.088}$ $[+0.057, +0.124]$ & $\mathbf{+0.066}$ $[+0.029, +0.105]$ \\
+    \midrule
     \multicolumn{5}{l}{\emph{Median absolute error (eV)}} \\
     \quad hold & 43.8 & 48.9 & 48.8 & 42.7 \\
     \quad causal GP & 42.2 & 48.1 & 46.1 & 41.4 \\
     \quad history-only twin & 44.6 & 50.6 & 47.5 & 42.7 \\
     \quad recurrent estimator & 42.1 & 53.0 & 45.2 & 41.6 \\
+    \quad average of three initialisations & 41.8 & 52.5 & 44.1 & 40.3 \\
     \multicolumn{5}{l}{\emph{Root-mean-square error (eV)}} \\
     \quad hold & 197.2 & 250.5 & 224.8 & 263.7 \\
     \quad causal GP & 164.3 & 207.4 & 187.1 & 213.2 \\
     \quad history-only twin & 164.7 & 200.9 & 181.7 & 209.0 \\
     \quad recurrent estimator & 158.7 & 196.7 & 173.4 & 202.4 \\
+    \quad average of three initialisations & 157.8 & 196.1 & 172.1 & 200.6 \\
     \midrule
     Scored rows / test discharges & 32{,}589 / 96 & 35{,}582 / 96 & 35{,}759 / 96 & 34{,}038 / 96 \\
     \bottomrule

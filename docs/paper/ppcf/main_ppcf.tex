@@ -68,7 +68,9 @@ skill of the estimator is \SoneRange{} over a causal Gaussian process on the CES
 and \StwoRange{} over the same estimator trained without the fast channels (values above
 3\,keV excluded). Both are positive in \SoneRunsPos{} of \RunsWord{} trainings; with the
 spread between initialisations included, the interval excludes zero on \SoneAbove{}
-splits for the first and on \StwoAbove{} for the second. \fi With one initialisation,
+splits for the first and on \StwoAbove{} for the second\ifaverage , and for the
+average of the three initialisations, read after that, on \EoneAbove{} and
+\EtwoAbove{}\fi. \fi With one initialisation,
 the increment is carried by the beam-emission channels: an estimator that reads BES and
 the CES history keeps it on \DtwoAbove{} splits, one that reads ECEI and the CES history
 on \DoneAbove{}, and most
@@ -398,7 +400,8 @@ beside hold, the causal GP and the two offline references
   \ifthreeinit Three initialisations per split: each interval draws an initialisation
   (of the estimator and, independently, of the twin) as well as the discharges, and
   the absolute errors of the estimator and of the twin are means over the three
-  initialisations.\else One initialisation per split.\fi}
+  initialisations.\else One initialisation per split.\fi\ifaverage\ For the average
+  of the three initialisations the interval resamples the discharges.\fi}
   \label{tab:primary}
   \footnotesize
   \TabPrimary
@@ -429,6 +432,22 @@ that differ between the splits (Table~\ref{tab:primary}). Against PCHIP, which u
 the following value, the skill is \OverPchipRange{} (\OverPchipAbove{}); against the
 offline GP, which uses the following value and averages noisy neighbours, it is
 \OverOffGpRange{} and the interval includes zero on every split.
+
+\ifaverage
+\emph{The average of three initialisations.} An estimator for use need not be one
+training. The mean of the estimates of the three initialisations is one estimator,
+at three steps of 0.49\,ms per frame. Its readout was registered after the two
+statements on a single training had failed, and is reported as such. Over the causal
+GP it has \EoneRange{} (\EoneAbove{} intervals above zero, discharges resampled) and
+over the same average of the three twins \EtwoRange{} (\EtwoAbove{}); both statements
+hold (Table~\ref{tab:primary}). Averaging adds \EGainRange{} to the mean skill of its
+members (\EGainAbove{}). Which trainings enter matters little: of the twelve averages
+of two members, \EPairsGp{} have an interval above zero over the causal GP and
+\EPairsTwin{} over the matching average of twins. The 90th percentile of the absolute
+error of the average is \ENinetyRange{} of that of the causal GP (\ENinetyBelow{}
+intervals below 1); its median is \EMedRange{} of it, above 1 on the second split
+(1.093 $[1.015, 1.182]$) and below 1 on the third (0.957 $[0.919, 0.996]$).
+\fi
 
 \emph{Median.} The median absolute error of the estimator is \MedCausal{}\,eV on the
 four splits, against \MedHold{}\,eV for hold, \MedGp{}\,eV for the causal GP and
@@ -775,7 +794,8 @@ GP, pooled over 639 discharges)\else\ (\SoneRange{} over the causal GP on four
 splits; positive in every training, with zero excluded on \SoneAbove{} splits once
 the spread between initialisations is included)\fi, and with a lower one than the
 same estimator trained without the fast channels\ifpooled\ (\Ptwo{})\else\
-(\StwoRange{}; \StwoAbove{})\fi; against an offline GP that
+(\StwoRange{}; \StwoAbove{})\fi\ifaverage ; the average of three initialisations
+has \EoneRange{} and \EtwoRange{}, with every interval above zero\fi; against an offline GP that
 uses the following value the interval includes zero. The increment is carried by the
 beam-emission channels. It is present in rows that plain value rules do not flag and
 in rows with no beam interruption behind them, largest per row after interruptions
@@ -826,7 +846,8 @@ in \Supp{app:registration}.
     \midrule
         The estimator has skill over the causal GP (four splits, three initialisations) & \SoneVerdict{} (\SoneAbove{}) & \S\ref{sec:res:main} \\
     The estimator has skill over its history-only twin (the same) & \StwoVerdict{} (\StwoAbove{}) & \S\ref{sec:res:main} \\
-    \ifpooled The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
+        \ifpooled The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
+    \ifaverage The average of three initialisations has skill over the causal GP; over the average of the three twins (registered after the two statements on a single training had failed) & \EoneVerdict{}; \EtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
     The ECEI network has skill over the twin & does not hold & \S\ref{sec:res:diag} \\
         The BES network has skill over the twin & holds & \S\ref{sec:res:diag} \\
     The same in rows with no beam interruption behind them; in quiet rows & hold & \S\ref{sec:res:diag} \\

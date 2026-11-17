@@ -45,6 +45,7 @@ SOURCES = (
     "docs/paper/b42_delay.md",
     "docs/paper/b39_primary.md",
     "docs/paper/b39_inits.md",
+    "docs/paper/b49_average.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
