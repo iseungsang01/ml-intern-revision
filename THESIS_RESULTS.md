@@ -7660,3 +7660,32 @@ The out-of-fold networks. Their skill over hold on their held-out folds is +0.27
 Expectation check: 4 of 6 met (G1 inside +0.005 to +0.040 and holding on three; G2; G3 coverage inside 0.88 to 0.91). Missed: the skill over the causal variant inside +0.06 to +0.11 on three of four splits (+0.113 on one); the out-of-fold networks within 0.03 of the full network (0.014 to 0.080 below on most folds, above on three).
 
 Limits. Boosted trees with default settings, fitted after the network; cut population; natural cadence; the test rows of these four splits have been read by several registered readouts.
+
+### B.41 where the gain sits -- rows that pass the value rules, the distribution of the absolute error, and averages conditioned on blips and bursts (registered; executed by a delegated agent, 2026-11-18)
+
+Registration `PREREGISTRATION_B41.md` (9b1ad31, before any readout). Designed by the session lead, implemented and run by a delegated agent from the registration (`experiments/b41_events/run_b41.py`, `fig_events.py`), outputs `docs/paper/b41_events.{json,md}`, figure `docs/paper/b41_events_fig.{pdf,png,json}`; the outputs, the figure and the core computations were read by the lead before this record. CPU, nothing trained. Two items of the tenth independent grading.
+
+Check before the readout: the share of plain rows reproduces the sensitivity table (0.898, 0.885, 0.893, 0.890 in its population; 0.885 to 0.897 in the registered one).
+
+| statement | split 42 | split 1 | split 7 | split 123 | verdict |
+|---|---|---|---|---|---|
+| G1: share of the squared-error reduction of the causal variant against the twin on plain rows, interval above 0.5 | 0.910 [0.659, 1.806] | 0.692 [0.176, 1.553] | 0.602 [0.463, 0.729] | 0.593 [0.352, 0.992] | does not hold (1 of 4) |
+| G2: the same against the causal GP | 0.690 [0.359, 2.237] | 0.295 [0.126, 0.471] | 0.417 [0.263, 0.549] | 0.366 [0.211, 0.536] | does not hold (0 of 4) |
+| Q1: 90th percentile of the absolute error, causal variant over the causal GP | 0.943 [0.914, 0.985] | 0.920 [0.891, 0.949] | 0.937 [0.903, 0.965] | 0.925 [0.893, 0.952] | holds (4 of 4, with the next row) |
+| Q1: over hold | 0.798 [0.754, 0.872] | 0.765 [0.721, 0.805] | 0.792 [0.757, 0.832] | 0.809 [0.762, 0.853] | |
+| skill of the causal variant over the twin inside the plain rows (reported) | +0.111 [+0.063, +0.153] | +0.044 [+0.005, +0.080] | +0.152 [+0.106, +0.193] | +0.087 [+0.037, +0.133] | four intervals above zero |
+| the same inside the flagged rows (reported) | +0.009 [-0.034, +0.046] | +0.015 [-0.011, +0.043] | +0.082 [+0.058, +0.103] | +0.038 [+0.001, +0.078] | two above zero |
+| median absolute error, causal variant over the causal GP (reported) | 1.056 [1.008, 1.109] | 1.154 [1.064, 1.271] | 0.999 [0.952, 1.044] | 1.028 [0.974, 1.087] | above 1 on two splits |
+
+**U1 does not hold**: over 108 isolated burst onsets of 11 discharges the median ratio of T_i in the rows 0 to 30 ms after an onset to the rows 50 to 10 ms before is 1.007 [0.947, 1.056]; ECEI 0.987 [0.926, 0.996], BES 1.016 [1.000, 1.033]. Blips (reported): in rows 1 to 3 after an absent frame the skill of the causal variant over the twin is +0.256 [+0.049, +0.423], +0.197 [+0.097, +0.341], +0.246 [+0.166, +0.354], +0.195 [-0.004, +0.332], and in rows 4 to 10 it is -0.083 to +0.140 with one interval above zero; in the first row the measured ratio is 0.81 to 0.90, the causal variant 0.84 to 0.90 and the twin 1.04 to 1.07. Rows 0 to 30 ms after a burst onset on the seven raw-stream test discharges (206 rows): +0.044 [-0.088, +0.170].
+
+Reading.
+
+1. *The fast-channel increment is on rows that pass the value rules; the margin over the causal GP is not.* Against the twin the plain rows hold 0.593 to 0.910 of the reduction by point estimate and the increment inside them is above zero on four of four splits (+0.044 to +0.152); the registered bar (an interval above 0.5) is met on one split because the shares have wide intervals. Against the causal GP the flagged rows, 0.103 to 0.115 of the rows, hold 0.583 to 0.705 of the reduction on three of four splits. So the two comparisons of the paper stand differently: "the fast channels add to the CES history" is a statement about ordinary rows, and "the estimator has a lower error than the causal GP" rests in large part on rows that plain value rules flag. By the registered rule the paper does not lead with the plain rows as holding most of the gain; it reports both shares.
+2. *The gain is in the upper part of the error distribution, not at the median.* At the 75th percentile and above the causal variant is below the GP and hold; at the median it is above the GP on two splits (1.056 and 1.154) and not separated on the other two. "A lower error from the 75th percentile up" is supported; "a lower error over the whole distribution" is not.
+3. *T_i does not fall after an isolated burst onset at this cadence.* The manuscript's sentence that T_i falls after a burst (read from the two discharges of its figure) is not supported by the registered measure and is to be corrected; bursts inside trains are excluded by the event rule and are not covered. After the fact, the rows whose exposure contains the onset show a ratio of about 1.07, which a burst mixed into the fit would give; this was not registered.
+4. *Bias.* The slope of the measurement on the causal variant's estimate is 1.013 to 1.024; on split 123 its mean signed error is -14 to -31 eV in all thirds.
+
+Expectation check: 6 of 11 met. Missed: the plain share against the twin above the expected 0.30 to 0.65 on two splits; the 90th-percentile ratio against hold (0.77 to 0.81 where 0.90 to 0.99 was expected); U1 (expected 0.75 to 0.95 and holding).
+
+Limits. Value rules are thresholds, not a fit-quality flag. Shares of a reduction are unstable where the total reduction is small (splits 42 and 1). Seven raw-stream test discharges. The event figure uses means in the blip panel and medians (after the fact) in the burst panel.

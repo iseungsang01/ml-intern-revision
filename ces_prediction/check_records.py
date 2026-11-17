@@ -38,6 +38,7 @@ SOURCES = (
     "docs/paper/b36_layer.md", "docs/paper/b37_plan.md",
     "docs/paper/b37_addendum1.md",
     "docs/paper/b38_stage2.md",
+    "docs/paper/b41_events.md",
 )
 DERIVED = {
     "2022": "the campaign year",
