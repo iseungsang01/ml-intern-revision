@@ -7715,3 +7715,24 @@ Reading.
 Expectation check: 2 of 8 met (the tightness of the bracket; a negative lower estimator in the innermost MAST bins). Missed: K2 and its direction, M1, sqrt(N_lo) just below the expected 40 to 60 eV, the ordering of the relative noise by level, the number of floors.
 
 Limits. White noise and non-negatively correlated signal increments are assumptions; a robust scale is a typical value under heteroscedastic noise; the low-BES fifth also has a lower T_i level (447 against 753 eV) and a loose bracket (1.971). Nothing here bounds a bias of the reported value.
+
+### B.44 in which discharges the margins hold -- thirds of the test discharges by temperature level and four further strata (registered; executed by a delegated agent, 2026-11-18)
+
+Registration `PREREGISTRATION_B44.md` (781fc22). Designed by the session lead, implemented and run by a delegated agent (`experiments/b44_strata/run_b44.py`), outputs `docs/paper/b44_strata.{json,md}`, read by the lead. CPU, nothing trained. The tenth grading: the paper does not say under which conditions its result holds. Check before the readout: on the B.30 population the recomputed skills agree with `b30_thinned.json` to four decimals on every split.
+
+| third of the discharge median T_i | split 42 | split 1 | split 7 | split 123 | intervals above zero |
+|---|---|---|---|---|---|
+| causal variant over the twin, low | +0.010 [-0.007, +0.031] | +0.007 [-0.031, +0.034] | +0.091 [+0.069, +0.112] | +0.025 [+0.012, +0.040] | 2 |
+| middle | +0.057 [-0.005, +0.120] | +0.012 [-0.030, +0.057] | +0.113 [+0.063, +0.165] | +0.103 [-0.014, +0.237] | 1 |
+| high | +0.090 [+0.007, +0.159] | +0.064 [+0.025, +0.107] | +0.150 [+0.084, +0.197] | +0.076 [+0.011, +0.130] | 4 |
+| causal variant over the causal GP, low | +0.077 [+0.030, +0.115] | +0.106 [+0.050, +0.146] | +0.098 [+0.053, +0.135] | +0.094 [+0.062, +0.132] | 4 |
+| middle | +0.066 [+0.011, +0.119] | +0.080 [+0.028, +0.132] | +0.143 [+0.084, +0.206] | +0.115 [+0.018, +0.185] | 4 |
+| high | +0.054 [-0.074, +0.157] | +0.105 [+0.070, +0.150] | +0.167 [+0.069, +0.236] | +0.088 [-0.014, +0.162] | 2 |
+
+**W1 does not hold** (every third above zero on 1 of 4 splits). **W2 does not hold** (2 of 4). No stratum (median T_i, relative white component, share of rows with a large upward BES departure, absent frames per second, shot number) has a highest-minus-lowest difference of either margin that excludes zero on three splits; for the skill over hold two strata do (relative white component +0.165 to +0.372, share of upward BES departures +0.100 to +0.231, four of four each).
+
+Reading. The two margins sit at different ends of the temperature range of the chord. The fast-channel increment (over the twin) is established in the hottest third of the discharges on four of four splits and in the coldest third on two. The margin over the causal GP is established in the coldest and the middle third on four of four splits and in the hottest third on two (about 32 discharges per cell; the large errors of hot discharges sit in few of them). Neither margin is shown to depend on the level: the differences between the thirds include zero. The paper therefore states where each margin is established and does not claim either at every level. The skill over hold grows with the white component of a discharge, which is what averaging a noisy series gives and says nothing about the fast channels. The increment does not depend on the order in the campaign.
+
+Expectation check: 4 of 7 met (W1 failing, the low third not separated on two or more splits, W2 holding on two or three splits, no dependence on the shot number). Missed: the increment in the low third on split 7 (+0.091 where at most +0.06 was expected), and the expected growth of the increment with the share of upward BES departures (differences -0.071 to +0.049, every interval including zero).
+
+Limits. About 32 discharges per third. 243 of the 641 discharges have no row with an upward BES departure beyond three standard deviations, so the thirds of that stratum are close to a split into none against some. The strata are correlated with each other and are not confinement modes.
