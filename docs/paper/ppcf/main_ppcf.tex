@@ -66,9 +66,12 @@ the same estimator trained without the fast channels (pooled cross-validation, v
 above 3\,keV excluded). \else On four splits of 639 discharges the mean-squared-error
 skill of the estimator is \SoneRange{} over a causal Gaussian process on the CES history
 and \StwoRange{} over the same estimator trained without the fast channels (values above
-3\,keV excluded; every interval excludes zero). \fi The increment is carried by the
-beam-emission channels: an estimator that reads BES and the CES history keeps it on
-\DtwoAbove{} splits, one that reads ECEI and the CES history on \DoneAbove{}, and most
+3\,keV excluded). Both are positive in \SoneRunsPos{} of \RunsWord{} trainings; with the
+spread between initialisations included, the interval excludes zero on \SoneAbove{}
+splits for the first and on \StwoAbove{} for the second. \fi With one initialisation,
+the increment is carried by the beam-emission channels: an estimator that reads BES and
+the CES history keeps it on \DtwoAbove{} splits, one that reads ECEI and the CES history
+on \DoneAbove{}, and most
 of it is in frames with no interruption of the heating beam behind them. Both
 margins remain when the CES value arrives 20 or 30\,ms late and when only every fifth
 value is visible. The gain is in the upper part of the error distribution (the 90th
@@ -133,9 +136,12 @@ account for.
 
 \paragraph{What is found.} A two-branch recurrent estimator that reads the CES past
 and the BES and ECEI channels, standardized with statistics of the training discharges
-only, has a lower \Ti{} mean squared error than hold and than a causal GP on the CES
-history, and a lower one than its twin trained without the fast channels
-(\S\ref{sec:res:main}). Estimators that read one group of fast channels show that the
+only, has a lower \Ti{} mean squared error than hold on every split, and a lower one
+than a causal GP on the CES history and than its twin trained without the fast
+channels in \SoneRunsPos{} of \RunsWord{} trainings on four splits. Once the spread
+between initialisations enters the interval, zero is excluded on \SoneAbove{} splits
+against the causal GP and on \StwoAbove{} against the twin\ifpooled ; in the pooled
+cross-validation the skills are \Pone{} and \Ptwo{}\fi{} (\S\ref{sec:res:main}). Estimators that read one group of fast channels show that the
 increment is carried by BES and is not confined to the frames after an interruption
 of the heating beam (\S\ref{sec:res:diag}). The gain sits in the frames with
 large errors, among them the frames after an interruption of the heating beam, and not
@@ -389,25 +395,37 @@ beside hold, the causal GP and the two offline references
   causal recurrent estimator with 95\% intervals (bold: the interval excludes zero),
   and absolute errors, on the test rows of four file-level
   splits\ifpooled\ and in the pooled cross-validation of 639 discharges\fi.
-  \ifthreeinit Skills over the causal GP and over the twin: three initialisations per
-  split, the interval drawn over initialisations and discharges; the other rows are
-  for the first initialisation.\else One initialisation per split.\fi}
+  \ifthreeinit Three initialisations per split: each interval draws an initialisation
+  (of the estimator and, independently, of the twin) as well as the discharges, and
+  the absolute errors of the estimator and of the twin are means over the three
+  initialisations.\else One initialisation per split.\fi}
   \label{tab:primary}
   \footnotesize
   \TabPrimary
 \end{table}
 
-\emph{Result.} Over the causal GP the skill is \SoneRange{} on the four splits
-(\SoneAbove{} intervals above zero), and over hold \OverHoldRange{}
-(\OverHoldAbove{}).\ifpooled\ Pooled over eight re-partitions it is \Pone{} over the
-causal GP (fold-level interval \PoneFold{}) and \PHold{} over hold.\fi\ The
-fast-channel increment, the skill over the history-only twin, is \StwoRange{}
-(\StwoAbove{})\ifpooled ; pooled, \Ptwo{} (fold-level \PtwoFold{})\fi. The twin
-itself is separated from the causal GP on \TwinGpAbove{} splits (\TwinGpRange{}):
-the margin over the causal GP is in part the fast-channel increment and in part a
-better use of the CES past, in proportions that differ between the splits
-(Table~\ref{tab:primary}). \ifthreeinit Between the three initialisations of a split the
-skill over the causal GP differs by \SpreadRange{}. \fi Against PCHIP, which uses
+\emph{Result.} Over the causal GP the skill is \SoneRange{} on the four splits, and
+it is positive in \SoneRunsPos{} of the \RunsWord{} trainings (\SoneRuns{}). The
+registered interval, which draws an initialisation as well as the discharges, is
+above zero on \SoneAbove{} splits, so the statement registered for the four splits
+\SoneVerdict{}. Between the three initialisations of a split the skill differs by
+\SpreadRange{}; on the two splits whose interval includes zero, the initialisation
+with the largest error owes 0.79 and 0.82 of its excess squared error over the causal
+GP to three discharges. Over hold the skill is \OverHoldRange{} (\OverHoldAbove{}
+intervals above zero).\ifpooled\ Pooled over eight re-partitions the skill is \Pone{}
+over the causal GP (fold-level interval \PoneFold{}) and \PHold{} over hold.\fi
+
+The fast-channel increment, the skill over the history-only twin, is \StwoRange{},
+positive in \StwoRunsPos{} of the \RunsWord{} pairs of the same initialisation
+(\StwoRuns{}); the registered interval is above zero on \StwoAbove{} splits and the
+statement \StwoVerdict{}\ifpooled ; pooled, \Ptwo{} (fold-level \PtwoFold{})\fi. The
+twin itself varies with the initialisation: its skill over the causal GP is
+\TwinGpRuns{} over the \RunsWord{} trainings, and two of them stopped after 11 and 12
+epochs. An increment measured with one initialisation therefore depends on the twin
+it is paired with (on the third split $+0.123$ with the twin of the same seed and
+$+0.072$ and $+0.071$ with the other two). The margin over the causal GP is in part
+the fast-channel increment and in part a better use of the CES past, in proportions
+that differ between the splits (Table~\ref{tab:primary}). Against PCHIP, which uses
 the following value, the skill is \OverPchipRange{} (\OverPchipAbove{}); against the
 offline GP, which uses the following value and averages noisy neighbours, it is
 \OverOffGpRange{} and the interval includes zero on every split.
@@ -418,9 +436,13 @@ four splits, against \MedHold{}\,eV for hold, \MedGp{}\,eV for the causal GP and
 the median of the estimator is the largest of the four
 (\S\ref{sec:res:where}).
 
-\emph{Reading.} Among estimators that do not wait for the next CES value, the one
-that reads the fast channels has the lowest mean squared error, and it is not
-separated from an offline GP that does wait. Figure~\ref{fig:tracemain} shows what
+\emph{Reading.} In every training the estimator that reads the fast channels has a
+lower mean squared error than the causal GP and than its twin, and it is not
+separated from an offline GP that waits for the next value. Whether the margin of
+one training is separated from zero on one split of 96 discharges depends on the
+initialisation and on a few discharges\ifpooled ; the pooled readout over 639
+discharges is the one that carries the claim\else ; the pooled readout over 639
+discharges, which is the primary one, is not yet complete\fi. Figure~\ref{fig:tracemain} shows what
 the estimates look like through gaps in three discharges, one of them typical.
 
 \begin{figure}[tp]
@@ -724,6 +746,11 @@ leans on rows that value rules flag.
 the discharges on every split and not in the others; the files carry no
 confinement-mode label and no equilibrium, so the conditions cannot be named in
 physical terms.
+\item \emph{Initialisation.} The skill over the causal GP differs between
+initialisations of a split by \SpreadRange{}, and on single splits that spread
+decides whether an interval excludes zero. The readouts of
+\S\ref{sec:res:diag}--\S\ref{sec:res:use} were made with one initialisation, and
+their intervals do not include it.
 \item \emph{Selection.} The recurrent design was adopted on the four splits that
 score it, and the cross-validation re-partitions the same discharges. The row-level
 readouts of \S\ref{sec:res:where} and \S\ref{sec:res:use} use a frozen estimator of
@@ -745,8 +772,10 @@ estimator that reads the CES past and co-located BES and ECEI channels estimates
 reported ion temperature of the present 10\,ms frame with a lower mean squared error
 than hold and than a causal GP on the CES history\ifpooled\ (\Pone{} over the causal
 GP, pooled over 639 discharges)\else\ (\SoneRange{} over the causal GP on four
-splits)\fi, and with a lower one than the same estimator trained without the fast
-channels\ifpooled\ (\Ptwo{})\else\ (\StwoRange{})\fi; against an offline GP that
+splits; positive in every training, with zero excluded on \SoneAbove{} splits once
+the spread between initialisations is included)\fi, and with a lower one than the
+same estimator trained without the fast channels\ifpooled\ (\Ptwo{})\else\
+(\StwoRange{}; \StwoAbove{})\fi; against an offline GP that
 uses the following value the interval includes zero. The increment is carried by the
 beam-emission channels. It is present in rows that plain value rules do not flag and
 in rows with no beam interruption behind them, largest per row after interruptions
@@ -795,9 +824,9 @@ in \Supp{app:registration}.
     \toprule
     Statement & Outcome & Where \\
     \midrule
-    The estimator has skill over the causal GP (four splits) & holds & \S\ref{sec:res:main} \\
-    The estimator has skill over its history-only twin (four splits) & holds & \S\ref{sec:res:main} \\
-    \ifpooled The same two statements in the pooled cross-validation & hold & \S\ref{sec:res:main} \\ \fi
+        The estimator has skill over the causal GP (four splits, three initialisations) & \SoneVerdict{} (\SoneAbove{}) & \S\ref{sec:res:main} \\
+    The estimator has skill over its history-only twin (the same) & \StwoVerdict{} (\StwoAbove{}) & \S\ref{sec:res:main} \\
+    \ifpooled The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
     The ECEI network has skill over the twin & does not hold & \S\ref{sec:res:diag} \\
         The BES network has skill over the twin & holds & \S\ref{sec:res:diag} \\
     The same in rows with no beam interruption behind them; in quiet rows & hold & \S\ref{sec:res:diag} \\

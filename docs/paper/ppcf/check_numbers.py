@@ -146,6 +146,7 @@ def main():
         (ROOT / "docs/paper/b30_thinned.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b35_blip_response.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b39_primary.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b39_inits.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),

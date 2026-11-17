@@ -2,23 +2,23 @@
 \newif\ifpooled
 \pooledfalse
 \newif\ifthreeinit
-\threeinitfalse
-\newcommand{\SoneRange}{$+0.081$ to $+0.144$}
-\newcommand{\SoneAbove}{four of four}
-\newcommand{\SoneExcl}{four of four}
-\newcommand{\StwoRange}{$+0.022$ to $+0.123$}
-\newcommand{\StwoAbove}{four of four}
-\newcommand{\StwoExcl}{four of four}
-\newcommand{\TwinGpRange}{$+0.011$ to $+0.074$}
+\threeinittrue
+\newcommand{\SoneRange}{$+0.067$ to $+0.141$}
+\newcommand{\SoneAbove}{two of four}
+\newcommand{\SoneExcl}{two of four}
+\newcommand{\StwoRange}{$+0.041$ to $+0.089$}
+\newcommand{\StwoAbove}{two of four}
+\newcommand{\StwoExcl}{two of four}
+\newcommand{\TwinGpRange}{$-0.005$ to $+0.061$}
 \newcommand{\TwinGpAbove}{two of four}
 \newcommand{\TwinGpExcl}{two of four}
-\newcommand{\OverHoldRange}{$+0.362$ to $+0.413$}
+\newcommand{\OverHoldRange}{$+0.352$ to $+0.411$}
 \newcommand{\OverHoldAbove}{four of four}
 \newcommand{\OverHoldExcl}{four of four}
-\newcommand{\OverPchipRange}{$+0.177$ to $+0.262$}
+\newcommand{\OverPchipRange}{$+0.164$ to $+0.260$}
 \newcommand{\OverPchipAbove}{four of four}
 \newcommand{\OverPchipExcl}{four of four}
-\newcommand{\OverOffGpRange}{$-0.049$ to $+0.026$}
+\newcommand{\OverOffGpRange}{$-0.065$ to $+0.023$}
 \newcommand{\OverOffGpAbove}{none of four}
 \newcommand{\OverOffGpExcl}{none of four}
 \newcommand{\DoneRange}{$+0.001$ to $+0.084$}
@@ -42,11 +42,21 @@
 \newcommand{\FullNoMirRange}{$-0.022$ to $+0.024$}
 \newcommand{\FullNoMirAbove}{none of four}
 \newcommand{\FullNoMirExcl}{none of four}
+\newcommand{\SoneVerdict}{does not hold}
+\newcommand{\StwoVerdict}{does not hold}
+\newcommand{\DoneVerdict}{does not hold}
+\newcommand{\DtwoVerdict}{holds}
+\newcommand{\RunsWord}{twelve}
+\newcommand{\SoneRuns}{$+0.058$ to $+0.144$}
+\newcommand{\StwoRuns}{$+0.008$ to $+0.123$}
+\newcommand{\TwinGpRuns}{$-0.042$ to $+0.076$}
+\newcommand{\SoneRunsPos}{every one}
+\newcommand{\StwoRunsPos}{every one}
 \newcommand{\MedHold}{43.8, 48.9, 48.8 and 42.7}
 \newcommand{\MedGp}{42.2, 48.1, 46.1 and 41.4}
-\newcommand{\MedTwin}{45.5, 49.9, 48.1 and 43.0}
-\newcommand{\MedCausal}{41.4, 55.7, 45.6 and 42.6}
-\newcommand{\SpreadRange}{0.000 to 0.000}
+\newcommand{\MedTwin}{44.6, 50.6, 47.5 and 42.7}
+\newcommand{\MedCausal}{42.1, 53.0, 45.2 and 41.6}
+\newcommand{\SpreadRange}{0.006 to 0.067}
 \newcommand{\RowsFirst}{32{,}589}
 \newcommand{\ShotsFirst}{96}
 \newcommand{\TabPrimary}{%
@@ -56,24 +66,24 @@
     & Split 1 & Split 2 & Split 3 & Split 4 \\
     \midrule
     \multicolumn{5}{l}{\emph{Skill of the recurrent estimator over}} \\
-    \quad hold & $\mathbf{+0.362}$ $[+0.313, +0.404]$ & $\mathbf{+0.379}$ $[+0.348, +0.405]$ & $\mathbf{+0.407}$ $[+0.375, +0.436]$ & $\mathbf{+0.413}$ $[+0.367, +0.446]$ \\
-    \quad causal GP & $\mathbf{+0.081}$ $[+0.036, +0.122]$ & $\mathbf{+0.094}$ $[+0.067, +0.120]$ & $\mathbf{+0.144}$ $[+0.106, +0.179]$ & $\mathbf{+0.101}$ $[+0.063, +0.140]$ \\
-    \quad history-only twin & $\mathbf{+0.071}$ $[+0.037, +0.107]$ & $\mathbf{+0.022}$ $[+0.001, +0.044]$ & $\mathbf{+0.123}$ $[+0.096, +0.152]$ & $\mathbf{+0.060}$ $[+0.025, +0.099]$ \\
-    \quad PCHIP (uses the next sample) & $\mathbf{+0.177}$ $[+0.094, +0.242]$ & $\mathbf{+0.215}$ $[+0.152, +0.261]$ & $\mathbf{+0.262}$ $[+0.202, +0.313]$ & $\mathbf{+0.262}$ $[+0.188, +0.316]$ \\
-    \quad offline GP (uses the next sample) & $-0.049$ $[-0.124, +0.010]$ & $-0.005$ $[-0.047, +0.030]$ & $+0.026$ $[-0.028, +0.067]$ & $-0.010$ $[-0.068, +0.036]$ \\
+    \quad hold & $\mathbf{+0.352}$ $[+0.284, +0.401]$ & $\mathbf{+0.383}$ $[+0.347, +0.410]$ & $\mathbf{+0.405}$ $[+0.372, +0.438]$ & $\mathbf{+0.411}$ $[+0.320, +0.458]$ \\
+    \quad causal GP & $+0.067$ $[-0.014, +0.120]$ & $\mathbf{+0.100}$ $[+0.068, +0.129]$ & $\mathbf{+0.141}$ $[+0.101, +0.182]$ & $+0.098$ $[-0.017, +0.162]$ \\
+    \quad history-only twin & $+0.071$ $[-0.012, +0.146]$ & $\mathbf{+0.041}$ $[+0.006, +0.082]$ & $\mathbf{+0.089}$ $[+0.037, +0.145]$ & $+0.062$ $[-0.046, +0.147]$ \\
+    \quad PCHIP (uses the next sample) & $\mathbf{+0.164}$ $[+0.057, +0.238]$ & $\mathbf{+0.220}$ $[+0.156, +0.269]$ & $\mathbf{+0.260}$ $[+0.196, +0.314]$ & $\mathbf{+0.259}$ $[+0.148, +0.330]$ \\
+    \quad offline GP (uses the next sample) & $-0.065$ $[-0.170, +0.009]$ & $+0.002$ $[-0.040, +0.038]$ & $+0.023$ $[-0.034, +0.072]$ & $-0.013$ $[-0.157, +0.063]$ \\
     \midrule
-    History-only twin over causal GP & $+0.011$ $[-0.029, +0.046]$ & $\mathbf{+0.074}$ $[+0.047, +0.102]$ & $+0.024$ $[-0.005, +0.049]$ & $\mathbf{+0.044}$ $[+0.010, +0.076]$ \\
+    History-only twin over causal GP & $-0.005$ $[-0.074, +0.046]$ & $\mathbf{+0.061}$ $[+0.019, +0.098]$ & $\mathbf{+0.057}$ $[+0.002, +0.097]$ & $+0.039$ $[-0.049, +0.082]$ \\
     \midrule
     \multicolumn{5}{l}{\emph{Median absolute error (eV)}} \\
     \quad hold & 43.8 & 48.9 & 48.8 & 42.7 \\
     \quad causal GP & 42.2 & 48.1 & 46.1 & 41.4 \\
-    \quad history-only twin & 45.5 & 49.9 & 48.1 & 43.0 \\
-    \quad recurrent estimator & 41.4 & 55.7 & 45.6 & 42.6 \\
+    \quad history-only twin & 44.6 & 50.6 & 47.5 & 42.7 \\
+    \quad recurrent estimator & 42.1 & 53.0 & 45.2 & 41.6 \\
     \multicolumn{5}{l}{\emph{Root-mean-square error (eV)}} \\
     \quad hold & 197.2 & 250.5 & 224.8 & 263.7 \\
     \quad causal GP & 164.3 & 207.4 & 187.1 & 213.2 \\
-    \quad history-only twin & 163.4 & 199.6 & 184.8 & 208.5 \\
-    \quad recurrent estimator & 157.5 & 197.3 & 173.1 & 202.1 \\
+    \quad history-only twin & 164.7 & 200.9 & 181.7 & 209.0 \\
+    \quad recurrent estimator & 158.7 & 196.7 & 173.4 & 202.4 \\
     \midrule
     Scored rows / test discharges & 32{,}589 / 96 & 35{,}582 / 96 & 35{,}759 / 96 & 34{,}038 / 96 \\
     \bottomrule
@@ -85,14 +95,14 @@
     & Split 1 & Split 2 & Split 3 & Split 4 \\
     \midrule
     \multicolumn{5}{l}{\emph{Over the history-only twin}} \\
-    \quad BES and CES history & $\mathbf{+0.074}$ $[+0.039, +0.111]$ & $\mathbf{+0.026}$ $[+0.007, +0.049]$ & $\mathbf{+0.105}$ $[+0.071, +0.134]$ & $\mathbf{+0.063}$ $[+0.036, +0.096]$ \\
-    \quad ECEI and CES history & $+0.010$ $[-0.015, +0.034]$ & $+0.001$ $[-0.015, +0.015]$ & $\mathbf{+0.084}$ $[+0.066, +0.101]$ & $+0.038$ $[-0.001, +0.073]$ \\
-    \quad BES, ECEI and CES history (no Mirnov) & $+0.048$ $[-0.023, +0.098]$ & $\mathbf{+0.043}$ $[+0.009, +0.073]$ & $\mathbf{+0.135}$ $[+0.103, +0.170]$ & $\mathbf{+0.074}$ $[+0.039, +0.114]$ \\
-    \quad all fast channels and CES history & $\mathbf{+0.071}$ $[+0.037, +0.107]$ & $\mathbf{+0.022}$ $[+0.001, +0.045]$ & $\mathbf{+0.123}$ $[+0.095, +0.151]$ & $\mathbf{+0.060}$ $[+0.025, +0.099]$ \\
+    \quad BES and CES history & $\mathbf{+0.074}$ $[+0.039, +0.112]$ & $\mathbf{+0.026}$ $[+0.007, +0.047]$ & $\mathbf{+0.105}$ $[+0.072, +0.134]$ & $\mathbf{+0.063}$ $[+0.036, +0.095]$ \\
+    \quad ECEI and CES history & $+0.010$ $[-0.016, +0.034]$ & $+0.001$ $[-0.014, +0.015]$ & $\mathbf{+0.084}$ $[+0.066, +0.101]$ & $+0.038$ $[-0.000, +0.072]$ \\
+    \quad BES, ECEI and CES history (no Mirnov) & $+0.048$ $[-0.021, +0.100]$ & $\mathbf{+0.043}$ $[+0.009, +0.073]$ & $\mathbf{+0.135}$ $[+0.101, +0.170]$ & $\mathbf{+0.074}$ $[+0.037, +0.112]$ \\
+    \quad all fast channels and CES history & $\mathbf{+0.071}$ $[+0.036, +0.105]$ & $\mathbf{+0.022}$ $[+0.001, +0.043]$ & $\mathbf{+0.123}$ $[+0.095, +0.151]$ & $\mathbf{+0.060}$ $[+0.028, +0.099]$ \\
     \midrule
     \multicolumn{5}{l}{\emph{All fast channels over}} \\
-    \quad BES and CES history & $-0.003$ $[-0.025, +0.017]$ & $-0.004$ $[-0.024, +0.015]$ & $+0.021$ $[-0.009, +0.055]$ & $-0.003$ $[-0.029, +0.021]$ \\
-    \quad ECEI and CES history & $\mathbf{+0.062}$ $[+0.025, +0.102]$ & $\mathbf{+0.022}$ $[+0.001, +0.043]$ & $\mathbf{+0.043}$ $[+0.022, +0.065]$ & $+0.024$ $[-0.010, +0.069]$ \\
-    \quad BES, ECEI and CES history (no Mirnov) & $+0.024$ $[-0.007, +0.079]$ & $-0.022$ $[-0.045, +0.008]$ & $-0.014$ $[-0.033, +0.007]$ & $-0.015$ $[-0.033, +0.003]$ \\
+    \quad BES and CES history & $-0.003$ $[-0.026, +0.017]$ & $-0.004$ $[-0.023, +0.015]$ & $+0.021$ $[-0.009, +0.056]$ & $-0.003$ $[-0.031, +0.022]$ \\
+    \quad ECEI and CES history & $\mathbf{+0.062}$ $[+0.028, +0.098]$ & $\mathbf{+0.022}$ $[+0.003, +0.043]$ & $\mathbf{+0.043}$ $[+0.022, +0.066]$ & $+0.024$ $[-0.008, +0.070]$ \\
+    \quad BES, ECEI and CES history (no Mirnov) & $+0.024$ $[-0.007, +0.076]$ & $-0.022$ $[-0.045, +0.008]$ & $-0.014$ $[-0.033, +0.007]$ & $-0.015$ $[-0.033, +0.003]$ \\
     \bottomrule
   \end{tabular}}}

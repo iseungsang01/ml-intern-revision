@@ -80,6 +80,26 @@ def main():
         mac(name + "Range", rng(v))
         mac(name + "Above", above(v))
         mac(name + "Excl", excl(v))
+    def verdict(vals):
+        return "holds" if sum(v[1] > 0 for v in vals) >= 3 else "does not hold"
+
+    for name, v in (("Sone", S1), ("Stwo", S2), ("Done", D1), ("Dtwo", D2)):
+        mac(name + "Verdict", verdict(v))
+    # every training by itself (point estimates): causal variant over the causal GP, and over the twin
+    # of the same initialisation
+    runs_gp = [r["causal_over_gp"] for x in a for r in x["per_initialisation"].values()]
+    runs_tw = [r["causal_over_twin"] for x in a for r in x["per_initialisation"].values()]
+    twin_gp = [r["twin_over_gp"] for x in a for r in x["per_initialisation"].values()]
+    NUM = {4: "four", 8: "eight", 12: "twelve"}
+    mac("RunsWord", NUM[len(runs_gp)])
+    mac("SoneRuns", f"${min(runs_gp):+.3f}$ to ${max(runs_gp):+.3f}$")
+    mac("StwoRuns", f"${min(runs_tw):+.3f}$ to ${max(runs_tw):+.3f}$")
+    mac("TwinGpRuns", f"${min(twin_gp):+.3f}$ to ${max(twin_gp):+.3f}$")
+    mac("SoneRunsPos", "every one" if min(runs_gp) > 0 else f"{sum(v > 0 for v in runs_gp)} of {len(runs_gp)}")
+    mac("StwoRunsPos", "every one" if min(runs_tw) > 0 else f"{sum(v > 0 for v in runs_tw)} of {len(runs_tw)}")
+    if pooled:
+        mac("PoneVerdict", "holds" if P["P1_causal_over_gp"][1] > 0 else "does not hold")
+        mac("PtwoVerdict", "holds" if P["P2_causal_over_twin"][1] > 0 else "does not hold")
     med = lambda k: [x["median_abs_error_eV"][k] for x in a]      # noqa: E731
     rms = lambda k: [x["rmse_eV"][k] for x in a]                  # noqa: E731
     mac("MedHold", listing(med("hold")))
