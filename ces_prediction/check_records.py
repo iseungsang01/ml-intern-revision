@@ -5,7 +5,7 @@
 Records checked: PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md.  A token is a decimal number or an integer
 of three or more digits (sign kept).  It passes if the same token occurs in
 
-  tier 1  the manuscript (docs/paper/ppcf/main_ppcf.tex), the analysis outputs listed in SOURCES
+  tier 1  the manuscript (docs/paper/ppcf/main_ppcf.tex and supp_ppcf.tex), the analysis outputs listed in SOURCES
           (file rules, B.29 / B.30 / B.31, MAST), the figure data of the manuscript, or DERIVED;
   tier 2  the experiment log THESIS_RESULTS.md (design-choice numbers of earlier batches live only
           there).  Tokens that pass on tier 2 alone are listed, because the log holds almost every
@@ -26,7 +26,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 RECORDS = ("PROJECT_KNOWLEDGE.md", "PAPER_DESIGN.md")
 SOURCES = (
-    "docs/paper/ppcf/main_ppcf.tex", "docs/paper/ppcf/refs.bib", "docs/paper/file_rules.md",
+    "docs/paper/ppcf/main_ppcf.tex", "docs/paper/ppcf/supp_ppcf.tex", "docs/paper/ppcf/refs.bib", "docs/paper/file_rules.md",
     "docs/paper/b29_causal.md", "docs/paper/b29_addendum1.md", "docs/paper/b30_thinned.md",
     "docs/paper/b30_posthoc.md", "docs/paper/b30_sensitivity.md", "docs/paper/b30_stack.md",
     "docs/paper/b30_stack_offline.md", "docs/paper/b31_bursts.md", "docs/paper/mast_ped_confirmation.md",
@@ -43,6 +43,8 @@ SOURCES = (
     "docs/paper/b44_strata.md",
     "docs/paper/b43_target_checks.md",
     "docs/paper/b42_delay.md",
+    "docs/paper/b45_ablation_rows.md",
+    "docs/paper/b46_beam_off.md",
 )
 DERIVED = {
     "2022": "the campaign year",

@@ -104,7 +104,11 @@ def strip_tex(s):
 
 
 def main():
-    tex = strip_tex((HERE / "main_ppcf.tex").read_text(encoding="utf-8"))
+    # main text, supplementary material, and the tables and macros generated from B.39
+    gen = re.sub(r"(?m)^%.*$", "", (HERE / "b39_generated.tex").read_text(encoding="utf-8"))
+    gen = gen.replace("{,}", ",").replace("$", " ").replace("\\,", " ")
+    tex = "\n".join([strip_tex((HERE / "main_ppcf.tex").read_text(encoding="utf-8")),
+                     strip_tex((HERE / "supp_ppcf.tex").read_text(encoding="utf-8")), gen])
     thesis = (ROOT / "THESIS_RESULTS.md").read_text(encoding="utf-8")
     thesis = thesis[thesis.index("### Review-loop round 1 analysis A3"):]
     src = "\n".join([
@@ -139,12 +143,31 @@ def main():
         (ROOT / "docs/paper/b38_stage2.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b40_noise.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b41_events.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b30_thinned.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b35_blip_response.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b39_primary.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b45_ablation_rows.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b46_beam_off.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B34.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B37.md").read_text(encoding="utf-8"),
         thesis,
     ])
     kr = json.loads((HERE / "kstar_regime.json").read_text(encoding="utf-8"))
     extra = []
+    # B.39: root-mean-square errors and row counts are printed in the paper from the json
+    b39 = json.loads((ROOT / "docs/paper/b39_primary.json").read_text(encoding="utf-8"))
+    for a in b39["A"].values():
+        extra += ["%.1f" % v for v in a["rmse_eV"].values()] + ["%.1f" % v for v in a["median_abs_error_eV"].values()]
+        extra += [f"{a['rows']:,}", "%.3f" % a["spread_causal_over_gp"]]
+    if b39["P"].get("complete"):
+        extra += ["%.1f" % v for v in b39["P"]["median_abs_error_eV"].values()]
+        for k in ("P1_fold_level_nadeau_bengio", "P2_fold_level_nadeau_bengio"):
+            extra += ["%+.3f" % v for v in b39["P"][k]]
+        for v in b39["P"]["causal_over"].values():
+            extra += ["%+.3f" % x for x in v]
     for k in ("T_i", "V_rot"):
         r = kr[k]
         extra += ["%+.3f" % v for v in [r["median"], *r["ci95"], *r["quartiles"]]]
