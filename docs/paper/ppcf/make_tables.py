@@ -97,6 +97,14 @@ def main():
     mac("TwinGpRuns", f"${min(twin_gp):+.3f}$ to ${max(twin_gp):+.3f}$")
     mac("SoneRunsPos", "every one" if min(runs_gp) > 0 else f"{sum(v > 0 for v in runs_gp)} of {len(runs_gp)}")
     mac("StwoRunsPos", "every one" if min(runs_tw) > 0 else f"{sum(v > 0 for v in runs_tw)} of {len(runs_tw)}")
+    # phrases for the abstract, which carries no counts of splits
+    n_pos = sum(v > 0 for v in runs_gp + runs_tw)
+    mac("RunsPosPhrase", "every training" if n_pos == len(runs_gp + runs_tw)
+        else f"{n_pos} of {len(runs_gp + runs_tw)} comparisons of single trainings")
+    mac("SingleSummary", {0: "neither statement registered for a single training holds on the four splits",
+                          1: "one of the two statements registered for a single training holds on the four splits",
+                          2: "both statements registered for a single training hold on the four splits"}[
+        sum(verdict(v) == "holds" for v in (S1, S2))])
     if pooled:
         mac("PoneVerdict", "holds" if P["P1_causal_over_gp"][1] > 0 else "does not hold")
         mac("PtwoVerdict", "holds" if P["P2_causal_over_twin"][1] > 0 else "does not hold")
@@ -138,6 +146,11 @@ def main():
             mac(name + "Above", above(v))
         mac("EoneVerdict", verdict(E1))
         mac("EtwoVerdict", verdict(E2))
+        mac("AverageSummary", {
+            0: "neither statement for the average of three initialisations, registered afterwards, holds",
+            1: "one of the two statements for the average of three initialisations, registered afterwards, holds",
+            2: "both statements for the average of three initialisations, registered afterwards, hold"}[
+            sum(verdict(v) == "holds" for v in (E1, E2))])
         r90 = [x["ratio_E_to_causal_gp"]["p90"] for x in av]
         r50 = [x["ratio_E_to_causal_gp"]["median"] for x in av]
         mac("ENinetyRange", "{:.3f} to {:.3f}".format(min(v[0] for v in r90), max(v[0] for v in r90)))
