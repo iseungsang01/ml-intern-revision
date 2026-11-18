@@ -58,3 +58,33 @@ The readout stopped at check (a); checks (b), (c) and (d) had passed and no stat
 Check (a) is fixed as the rule that B.49 used for the same comparison: for every network, the absolute error with the file values lies within 0.5 eV of the stored one on at least 99 % of its rows. Check (d) is unchanged. Every change of an estimate and every change skill of this batch compares two estimates computed on the CPU, so the difference between the devices does not enter them.
 
 Details that the registration left open, fixed as implemented before any statement was read: the raw window of a discharge is the intersection of the windows of its three raw streams; the same rows are replaced in every variant, those with raw samples back to 10 ms plus one raw step before the stamp; the sample that the file holds is found by matching all channels of a diagnostic at five decimals at the offsets 0, -1 and +1 raw steps from the stamp, and where none matches (Mirnov only) the nearest sample is taken; a mean over 0.1 or 1 ms is the mean of the raw samples that end at the held sample; in part G the standardized fast channels are moved by one row within a block; check (c) passes if the share is not more than 0.0005 below the recorded one; "near 200 eV" in the expectations means 150 to 250 eV.
+
+## Addendum 2 (2026-11-18): part D, by diagnostic — registered after parts R and G were read, before any run of part D
+
+Seen in parts R and G: no statement holds. With all three diagnostics moved, the estimate changes by 12.6 eV (root mean square) at one raw sample and by 39 to 57 eV from 0.1 to 5 ms, while the change skill up to 2 ms is -0.005 to -0.023 with intervals that include zero and are wider than the margin; with the fast channels one row old the estimator has -0.027 [-0.050, -0.008] against the twin. The inputs do not move alike: at 0.1 ms and beyond the Mirnov channels change by 2.3 to 2.5 training standard deviations (a snapshot of a fast oscillation), BES by 0.10 to 0.24 and ECEI by 0.09 to 0.16. B.39 found the estimator not separated from a network without the Mirnov channels on any of four splits. Parts R and G moved the three diagnostics together, so they do not say which one makes the estimate depend on the instant, nor whose present-frame value carries the increment.
+
+Design: the same 40 networks, rows, quantities and intervals as parts R and G.
+
+- On the twelve discharges, at d = one raw sample, 0.5 ms and 2 ms: (i) only the Mirnov channels moved; (ii) BES and ECEI moved, the Mirnov channels at the file values.
+- On all discharges: one row old for (i) only BES, (ii) only ECEI, (iii) only Mirnov; and (iv) the Mirnov channels set to their training mean at every row (zero after standardization), BES and ECEI at the file values.
+
+Statements:
+
+- **D1.** At d = 0.5 ms the root-mean-square change of the estimate with only Mirnov moved is larger than with BES and ECEI moved: the interval of the ratio is above 1.
+- **D2.** With BES and ECEI moved 2 ms earlier and Mirnov at the file values, the estimate is equivalent to that with the file values (margin 0.01).
+- **D3.** With only BES one row old, the change skill has an interval below zero.
+- **D4.** With only ECEI one row old, equivalent. **D5.** With only Mirnov one row old, equivalent.
+- **D6.** With the Mirnov channels at their training mean, the estimator has skill over the twin with the interval above zero. **D7.** That estimate is equivalent to the one with the file values.
+
+Reported: every quantity of parts R and G for every variant; for the variants on all discharges also the rows 1 to 3 after an absent frame.
+
+What follows:
+
+- D1 and D6 hold: the limit on the instant of the sample names the Mirnov channels as its source and says that the increment does not need them; the next training batch trains the estimator without the Mirnov channels in the pooled cross-validation and repeats R1 to R3 on it. D7 holding as well: the paper says that the present estimator can be run with the Mirnov inputs held at their mean, with the numbers.
+- D1 fails: the dependence on the instant is in BES or ECEI, and the remedy named is averaging the raw samples, which needs raw streams for the training discharges.
+- D3 holds and D4, D5 hold: the paper says that the increment needs the BES value of the present frame. D3 fails: the loss in part G is not attributed to one diagnostic.
+- Failed statements are reported as failed.
+
+Expectations: D1 ratio 2 to 6, holds. D2 change skill -0.010 to +0.005, interval about 0.02 wide on each side, does not hold. D3 change skill -0.09 to -0.04, holds. D4 -0.010 to +0.002, holds. D5 -0.015 to +0.005, does not hold. D6 skill over the twin +0.030 to +0.055, holds. D7 change skill -0.020 to +0.010, does not hold.
+
+Limit added: a network that was trained with the Mirnov channels and is given their mean is not a network trained without them.
