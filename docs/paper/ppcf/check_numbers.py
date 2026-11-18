@@ -112,6 +112,12 @@ DERIVED = {
     "2.23": "T_i pedestal top at R ~ 2.22-2.23 m, read from Fig. 2 of Ko2016CharacteristicsToroidal",
     "2.26": "CES error bars grow beyond R ~ 2.26 m, read from Fig. 2 of Ko2016CharacteristicsToroidal",
     "2.7": "2.7 MW net beam power, 1.0 MW by NB1-B, Kim2018EnhancedFast sec. II",
+    # facility user guide, CES channel table (slide 63, column 2022 campaign on) and Kwak2019
+    "2192": "CES channel 17 at R = 2192 mm, KFE2026DiagnosticsDataUserGuide slide 63",
+    "2198": "CES channel 18 at R = 2198 mm (the chord of the files), same table",
+    "2203": "CES channel 19 at R = 2203 mm, same table",
+    "2269": "outermost CES channel at R = 2269 mm, same table",
+    "2017": "year of the discharge of Fig. 3(d) of Kwak2019MeasurementFast",
     # the beam-heating and optical-depth estimates are in docs/paper/b62_estimates.md (a source below)
     "10.5":"median beam-off duration of one-absent-frame blips in the raw streams (b61_blip_dose.md: 10.5 ms)",
 }
