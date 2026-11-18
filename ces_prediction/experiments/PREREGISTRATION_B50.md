@@ -46,6 +46,12 @@ Four splits; a statement holds if it holds on at least three.
 
 P1 holds, with +0.03 to +0.15 in the top fifth. P2 is uncertain: the increment in the top fifth is −0.02 to +0.08 and its interval is above zero on one to three splits. The odds-weighted skill over the causal GP is +0.03 to +0.15 (P3 holds) and over the twin 0.00 to +0.08 (P4 uncertain). The top fifth of the scored rows holds 0.70 to 0.95 of the unusable test rows. The effective number of rows is 3 to 15 % of the scored rows.
 
+## Addendum 1 (2026-11-18, before any readout was computed)
+
+The run stopped at check (b) on all four splits: 0.9759, 0.9778, 0.9768 and 0.9778 of the scored rows receive a p. The rows that do not are, on every split, the second to tenth row of a contiguous segment (nine rows in practically every test discharge): the inputs of the model of B.37 F need the ten rows before, so these rows cannot have a p by its definition. The threshold of 98 % was set by the session lead without counting them; that is a flaw of this registration and not of the join (the joined rows carry the reported value of the table exactly, on every row). No stratum, weight or skill had been computed when the run stopped.
+
+Check (b) is restated: every scored row with ten rows before it in its segment receives a p (the run stops if one does not); the scored rows without such a window are outside the population of this readout and are counted. Nothing else changes. The population is therefore the scored rows from the eleventh row of a segment on, and section 7 gains the limit that the first rows after a break of at least 0.5 s are not covered.
+
 ## 7. Limits known in advance
 
 Resemblance is measured in the inputs of the propensity model only. The unusable rows may differ from the scored rows in ways that no input records (a larger fit error, for one), and nothing in the files can test that. The weights concentrate on few rows. One initialisation. The test rows are those of every earlier readout.
