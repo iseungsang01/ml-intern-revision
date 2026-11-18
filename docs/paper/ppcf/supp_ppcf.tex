@@ -1198,6 +1198,10 @@ discharge in the campaign.
   \end{tabular}
 \end{table}
 
+\paragraph{Delay and the skill over hold.} The skill over hold at a delay of two
+frames differs from that without delay by $-0.024$ to $+0.013$ (zero excluded on one
+split): the delay does not widen the advantage.
+
 \paragraph{Populations.} The rows of Table~\ref{tab:delay} and of the replay with
 sparse values are those of the replay machinery (a later visible value exists and
 every estimator is finite). They differ slightly from the scored rows of
@@ -1239,6 +1243,53 @@ of the estimator is 645.2 to 717.2\,eV. A readout pooled over more discharges wo
 narrow these intervals; whether the rows without a value differ from these rows in
 ways that no input records cannot be tested in the files.
 
+\paragraph{The beam-emission array as a common mode and differences.} Registered
+readout. With $l_k$ the logarithm of BES channel $k$ (117 of 245{,}925 grid rows have
+a non-positive channel and are dropped), the common mode $c$ is the mean of $l_k$ over
+the nine channels; the radial difference $g$ is the mean over column 07 of the array minus
+the mean over column 05 ($g_1$, $g_2$ between adjacent columns; the level falls from
+column 05 to column 07), and the poloidal difference $h$ is the same between rows 03
+and 01. A change of the beam
+is a shift common to all $l_k$. \emph{Control.} At the 1{,}366 isolated absent frames
+of 498 discharges the median absolute change from the six rows before to the first
+row after is 0.424 $[0.416, 0.435]$ for $c$, 0.051 $[0.048, 0.055]$ for $g$ and 0.028
+$[0.027, 0.031]$ for $h$: the ratio of $g$ to $c$ is 0.121 $[0.113, 0.129]$.
+\emph{Association with \Ti{}.} With the design used for the ECEI level in
+\S\ref{sec:target} (200\,ms blocks, rank correlation of the changes per discharge,
+null by a circular shift; 309 discharges with at least ten pairs once the blocks with
+an absent frame or one of the ten rows after it are left out), the median rank
+correlation exceeds its null by $+0.428$ $[+0.357, +0.471]$ for $c$ and by $+0.284$
+$[+0.216, +0.336]$ for $g$ (both registered statements hold), by $+0.270$ and
+$+0.150$ for $g_1$ and $g_2$, and by $-0.022$ $[-0.069, +0.019]$ for $h$. With the
+change of $c$ removed from both series the value for $g$ is $+0.002$
+$[-0.041, +0.038]$ (this registered statement does not hold); with $g$ removed, $c$
+keeps $+0.292$ $[+0.244, +0.358]$. \emph{Second stage on the twin.} Gradient-boosted
+regressions of the residual of the history-only twin, fitted on the 127 or 128
+validation discharges of a split and applied once to its test rows; every model reads
+six inputs that do not depend on BES (the age of the last visible value, that value,
+the estimates of the twin and of the causal GP, the difference between hold and the
+twin, the time step), and for each component its value relative to the training mean, its departure
+from the mean of the ten rows before, and that departure one row earlier. Over the
+model without BES, the model with the differences ($g_1$, $g_2$ and the two poloidal
+differences) has $+0.044$ $[+0.010, +0.077]$, $+0.050$ $[+0.030, +0.071]$, $+0.044$
+$[+0.028, +0.059]$ and $+0.055$ $[+0.032, +0.077]$, and the model with the common
+mode $+0.071$ $[+0.026, +0.113]$, $+0.056$ $[+0.033, +0.080]$, $+0.073$
+$[+0.048, +0.097]$ and $+0.060$ $[+0.034, +0.086]$ (both registered statements hold,
+four of four). With both, $+0.074$, $+0.071$, $+0.075$ and $+0.071$; that is $+0.004$,
+$+0.015$, $+0.003$ and $+0.011$ over the common mode alone (interval above zero on
+one split) and $+0.031$, $+0.022$, $+0.033$ and $+0.017$ over the differences alone
+(on three). The squared-error reduction of the model with the differences is 0.600
+$[0.234, 0.798]$, 0.706 $[0.540, 0.871]$, 0.582 $[0.424, 0.794]$ and 0.775
+$[0.577, 1.080]$ of that of the model with both. In quiet rows the model with the
+differences has $+0.048$ to $+0.055$ over the model without BES (four of four). On
+the rows that both score, the BES network of the main text has $+0.080$, $+0.025$,
+$+0.104$ and $+0.063$ over the twin, and the second stage with both components
+$+0.111$, $+0.082$, $+0.135$ and $+0.091$. \emph{Limits.} A common factor is an
+idealisation: beam attenuation depends on the density along the beam path, and a
+beam interruption still appears in the radial difference at about an eighth of its
+size. The second stage shows what the components carry beyond the twin, not what the
+network uses.
+
 % =========================================================================
 \section{Registered statements used in the main text}
 \label{app:registered}
@@ -1276,7 +1327,10 @@ in \S\ref{app:registration}.
     With two frames of delay it has skill over the twin & holds & \S\ref{sec:res:use} \\
         With a value every 50\,ms the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:res:use} \\
     In the fifth of scored rows most at risk of losing the value the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:limits} \\
-    The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits} \\
+        The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits} \\
+    The 200\,ms changes of \Ti{} follow the radial difference of the BES array; its common mode & hold & \S\ref{sec:res:diag} \\
+    The same for the radial difference after the common mode is removed & does not hold & \S\ref{sec:res:diag} \\
+    A second stage on the twin that reads the differences between BES channels has skill over one without BES; one that reads the common mode & hold & \S\ref{sec:res:diag} \\
     The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
     The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
     The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data:kstar} \\

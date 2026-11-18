@@ -7923,3 +7923,33 @@ Reported. The top fifth of the scored rows spans the p of 0.973, 0.958, 0.958 an
 Reading. In the rows at risk of losing the value (the top fifth, which covers the propensity range of nearly all unusable rows) both margins hold on every split. The weights that make the scored rows resemble the unusable ones put most of their mass on about one per cent of the scored rows: measured values inside gappy stretches, with a stale last value and a scatter of the reported value of several hundred eV. There the margin over the causal GP is established on two splits and the increment on one. By the rule of the registration this is stated in the paper as a limit of the claim. Measurements that would decide it: the same weighted readout pooled over 639 discharges once the pooled arm of B.39 is complete (the weighted population of one split has an effective size of about a twentieth of its rows), and within the files a replay that hides measured values in runs placed by p. What no file can test: whether the unusable rows differ from these rows in ways that no input records.
 
 Expectation check: 3 of 9 met. Missed: P2 was expected on one to three splits and holds on four; P3 was expected to hold; the weighted skills fall outside the expected ranges on both sides; the top fifth covers more of the unusable rows than expected.
+
+### B.51 the beam-emission array split into its common mode and the differences between channels -- the differences reject a beam interruption to 0.121 of its size and carry most of what the array adds; they add little to the common mode (registered; executed by a delegated agent, 2026-11-18)
+
+Registration `PREREGISTRATION_B51.md` (667ecaa), before any of these readouts. CPU; no network trained (part B fits gradient-boosted regressions). Script `experiments/b51_bes_modes/run_b51.py`, outputs `docs/paper/b51_bes_modes.{json,md}`; the component definitions, the control, the partial correlation, the features and the fit were read by the lead. No deviation from the registration; choices where it left room are listed in the md. With l_k the logarithm of BES channel k: common mode c = mean over the nine channels; radial differences g1 = column 06 minus 05, g2 = 07 minus 06, g = g1 + g2; poloidal differences h1, h2 between the rows.
+
+Checks, all passed: 117 of 245,925 grid rows have a non-positive channel (dropped); the events of B.35 are reproduced (1,366 in 498 discharges); the B.43 readout for the ECEI level is reproduced by the same functions (400 discharges, +0.3215 and -0.0061); twin, hold and the causal GP recomputed on every test discharge equal the row table of B.48 (1.00000 within 0.5 eV); the scoring code reproduces B.48 to four decimals.
+
+Control (reported). At the isolated absent frames the median absolute change from the six rows before to the first row after is 0.424 [0.416, 0.435] for c, 0.051 [0.048, 0.055] for g and 0.028 [0.027, 0.031] for the poloidal difference: ratio of g to c 0.121 [0.113, 0.129].
+
+Part A (200 ms blocks, 309 discharges, 5,771 pairs after the blocks around absent frames are left out; difference of the median rank correlation to its shifted null):
+- **A1** (g): +0.284 [+0.216, +0.336], holds. **A2** (c): +0.428 [+0.357, +0.471], holds. **A3** (g after c is removed): +0.002 [-0.041, +0.038], does not hold.
+- Reported: g1 +0.270, g2 +0.150, poloidal -0.022 [-0.069, +0.019]; c after g is removed +0.292 [+0.244, +0.358].
+
+Part B (second stage on the residual of the twin, fitted on 127 or 128 validation discharges, applied to the test rows; model 0 = six inputs independent of BES, C = plus the common mode, D = plus the four differences, CD = both; splits 42, 1, 7, 123):
+
+| | splits 42, 1, 7, 123 | |
+|---|---|---|
+| **B1**: D over 0 | +0.044 [+0.010, +0.077], +0.050 [+0.030, +0.071], +0.044 [+0.028, +0.059], +0.055 [+0.032, +0.077] | holds, 4 of 4 |
+| **B2**: C over 0 | +0.071 [+0.026, +0.113], +0.056 [+0.033, +0.080], +0.073 [+0.048, +0.097], +0.060 [+0.034, +0.086] | holds, 4 of 4 |
+| CD over 0 | +0.074, +0.071, +0.075, +0.071 | four intervals above zero |
+| CD over C | +0.004, +0.015, +0.003, +0.011 | one interval above zero |
+| CD over D | +0.031, +0.022, +0.033, +0.017 | three |
+| reduction of D over that of CD | 0.600 [0.234, 0.798], 0.706 [0.540, 0.871], 0.582 [0.424, 0.794], 0.775 [0.577, 1.080] | |
+| D over 0 in quiet rows | +0.048 to +0.055 | four |
+
+For comparison, on the rows both score the BES network of B.39 has +0.080, +0.025, +0.104, +0.063 over the twin and the second stage with both components +0.111, +0.082, +0.135, +0.091.
+
+Reading. The differences between channels attenuate a beam interruption about eightfold and still carry 0.58 to 0.78 of what the array adds beyond the twin, also in quiet rows. They add little once the common mode is read (one split of four), and the association of the radial difference with T_i vanishes once the common mode is removed: the two modes carry largely the same information. A change that moved the beam alone would be suppressed in the differences, so a beam-only origin is not needed to explain the increment; it is not excluded, because a beam interruption still leaks into the differences at about an eighth of its size and because beam attenuation depends on the density. By the rule of the registration the caveat on the beam is restated with these numbers, the association A1 and, as the delegated agent advised, A3 and CD over C beside them. Limit: the second stage shows what the components carry beyond the twin, not what the network of B.39 uses; the measurement that would decide that is a network trained on the differences alone (GPU), and the beam power would decide what part of the common mode is the beam.
+
+Expectation check: 2 of 7 ranged expectations met (the control ratio and CD over 0). The associations and both second-stage skills were larger than expected, and B1 holds on four splits where one to three were expected.

@@ -73,7 +73,9 @@ and \StwoRange{} over the same estimator trained without the fast channels (valu
 initialisations enters the interval, \SingleSummary{}\ifaverage , and
 \AverageSummary{}\fi. \fi With one initialisation, the increment is carried by the
 beam-emission channels and is present in frames with no interruption of the heating
-beam behind them. Both margins remain when the last CES value in hand is 20 or 30\,ms
+beam behind them; a second-stage readout finds most of what that array adds in
+differences between its channels, in which a beam interruption is attenuated to 0.121
+of its size. Both margins remain when the last CES value in hand is 20 or 30\,ms
 old and when only every fifth value is visible. The gain is in the upper part of the error
 distribution (the 90th percentile of the absolute error is 0.920 to 0.937 of that of the
 Gaussian process); the median error is not lowered. One step takes 0.5\,ms on a CPU.
@@ -94,8 +96,7 @@ it is slow and fails intermittently, most often where the signal is weakest. Tow
 breakdown of the accuracy of a neural-network analysis of charge-exchange spectra is
 lowest on the outermost channels~\citep{Tian2026RealTimeCxrs}. The KSTAR chord studied
 here is such a place. It was selected by the data provider as the pedestal top within
-the beam-emission coverage ($R = 2.198$\,m); the median \Ti{} per discharge is
-528\,eV, and 7.7\% of the 10\,ms frames carry no \Ti{}. The missing rate is 18.0\% in
+the beam-emission coverage ($R = 2.198$\,m); 7.7\% of the 10\,ms frames carry no \Ti{}. The missing rate is 18.0\% in
 the lowest fifth of the beam-emission level against 3.4\% in the highest, so the
 values are not missing completely at random~\citep{Little2002StatisticalAnalysis}.
 Beam-emission spectroscopy (BES) and electron-cyclotron-emission imaging (ECEI) view
@@ -277,7 +278,7 @@ estimator and its twin three initialisations were trained per split, and each
 resample also draws one of them\fi . A statement about the four splits holds if its
 interval excludes zero on at least three of them. For every batch of runs and every readout the statements, decision rules
 and numerical expectations were committed to the public repository before the batch
-was run or the readout computed; there is no third-party registry. Statements that
+was run or the readout computed. Statements that
 failed are reported as failed (the list is in \Supp{app:registered}), and readings
 made after results were seen are marked ``after the fact''.
 
@@ -338,8 +339,7 @@ at three steps of 0.49\,ms per frame. Its readout was registered after the two
 statements on a single training had failed, and is reported as such. Over the causal
 GP it has \EoneRange{} (\EoneAbove{} intervals above zero, discharges resampled) and
 over the same average of the three twins \EtwoRange{} (\EtwoAbove{}); both statements
-hold. Which trainings enter matters little: of the twelve averages of two members,
-\EPairsGp{} have an interval above zero over the causal GP. The 90th percentile of
+hold. The 90th percentile of
 the absolute error of the average is \ENinetyRange{} of that of the causal GP
 (\ENinetyBelow{} intervals below 1); its median is \EMedRange{} of it.
 \fi
@@ -359,7 +359,7 @@ discharges, one of them typical.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.66\linewidth]{fig_trace_causal}
+  \includegraphics[width=0.62\linewidth]{fig_trace_causal}
   \caption{Example traces through gaps (first initialisation of the second split).
   Circles: reported \Ti{}; shaded: grid rows without a usable \Ti{}; dotted: an absent
   frame (beam blip). Lines: estimates from CES values before each row; the recurrent
@@ -408,30 +408,33 @@ scored on the same rows as the twin (Table~\ref{tab:ablation}).
 the twin (\DtwoAbove{} intervals above zero); the one that reads ECEI and the CES
 history has \DoneRange{} (\DoneAbove{}). The full estimator is not separated from
 the BES network (\FullBesRange{}, \FullBesExcl{} intervals excluding zero) and has
-\FullEceiRange{} over the ECEI network (\FullEceiExcl{}). Removing the two Mirnov
-channels changes nothing that can be told from zero (\FullNoMirRange{},
-\FullNoMirExcl{}). By the rule fixed beforehand, the increment is stated as resting
+\FullEceiRange{} over the ECEI network (\FullEceiExcl{}). By the rule fixed beforehand, the increment is stated as resting
 on the beam-emission channels.
 
-\emph{Is it the response to interruptions of the beam?} In a second registered
-readout every scored row was put into one class from the BES channels of its
-discharge: the ten rows after an absent frame (0.055 to 0.060 of the rows), rows
-shortly after low beam emission (below half of the discharge median) or after a
-departure of a BES channel by more than
-three standard deviations from its 100\,ms mean, and quiet rows with none of these
-(0.887 to 0.893). In the quiet rows the BES network has $+0.016$ to $+0.112$ over
-the twin (three of four intervals above zero), and those rows hold 0.472 to 0.920 of
-its squared-error reduction. In the rows after an absent frame it has $+0.069$ to
-$+0.215$ (three of four), and they hold 0.135 to 0.194 of the reduction. The two
-registered statements on the BES network hold; the third does not: after an absent
-frame the ECEI network has $-0.005$ to $+0.103$ over the twin (one of four),
-although the ECEI level itself falls there (\S\ref{sec:res:where}). The numbers of
-each split are in \Supp{sec:rows}. \emph{Reading.} The increment carried by BES is
-larger per row after a beam interruption, but most of it is in rows with no
-interruption and no large departure of the beam emission behind them; the caveat
-therefore takes the form that BES depends on the beam and on the density, and the two
-are not separated here. \emph{Limits.} One initialisation per ablation network; the classes are
-defined from BES.
+\emph{Beam or plasma?} Two registered readouts (numbers of each split in
+\Supp{sec:rows}). In the first, every scored row was classed from the BES channels of
+its discharge: the ten rows after an absent frame (0.055 to 0.060 of the rows), rows
+shortly after low beam emission or a large departure of a BES channel, and quiet rows
+with none of these (0.887 to 0.893). In the quiet rows the BES network has $+0.016$
+to $+0.112$ over the twin (three of four intervals above zero), and those rows hold
+0.472 to 0.920 of its squared-error reduction; the rows after an absent frame hold
+0.135 to 0.194 of it. In the second, the logarithms of the nine BES channels were
+split into their common mode, in which a change of the beam appears in full, and the
+differences between channels, in which it cancels: at an absent frame the radial
+difference changes by 0.121 $[0.113, 0.129]$ of the change of the common mode. A
+second stage on the residual of the twin, fitted on validation discharges, has
+$+0.044$ to $+0.055$ over the same stage without BES when it reads the differences
+alone and $+0.056$ to $+0.073$ with the common mode alone (four of four each). The
+differences recover 0.582 to 0.775 of what both recover and add to the common mode on
+one split only; the 200\,ms changes of \Ti{} follow the radial difference ($+0.284$
+$[+0.216, +0.336]$ above a shifted null) but not once the common mode is removed.
+\emph{Reading.} Most of the increment is in rows with no beam interruption behind
+them, and most of what the array adds is available from differences that attenuate a
+beam interruption about eightfold. The two modes carry largely the same information:
+a change of the beam alone is not needed to explain the increment, and it is not
+excluded. \emph{Limits.} One initialisation per ablation network; the classes are
+defined from BES; the second stage shows what the components carry, not what the
+network uses.
 
 \subsection{Where the gain is}
 \label{sec:res:where}
@@ -446,7 +449,7 @@ changed (numbers of each split in \Supp{sec:rows}).
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.70\linewidth]{../b48_events_fig}
+  \includegraphics[width=0.66\linewidth]{../b48_events_fig}
   \caption{Averages conditioned on two kinds of event, as ratios to the level before
   the event. (a) Beam blips in the test discharges of the four splits (means; the
   shaded band is the absent frame): the reported \Ti{} (``measured'' in the legend), the ECEI and BES levels,
@@ -516,9 +519,7 @@ value is visible only every fifth frame.
 $+0.097$ to $+0.137$ over the causal GP and $+0.038$ to $+0.129$ over its twin, and
 with two frames (30\,ms) $+0.075$ to $+0.165$ and $+0.043$ to $+0.138$, every
 interval above zero; the two registered statements hold, and the error of the
-estimator grows by 3 to 4\% and by 6 to 8\% (\Supp{sec:rows}). The delay
-does not widen the advantage: the skill over hold at $L = 2$ differs from that
-without delay by $-0.024$ to $+0.013$ (zero excluded on one split). With a value
+estimator grows by 3 to 4\% and by 6 to 8\% (\Supp{sec:rows}). With a value
 visible only every fifth frame (50\,ms), the estimator has $+0.070$ to $+0.127$
 over the causal GP and $+0.054$ to $+0.158$ over its twin (four of four intervals
 above zero each; both statements registered). The replay at other cadences was made
@@ -533,16 +534,15 @@ cadence; training with an imposed delay or dropout was not done.
 \label{sec:discussion}
 
 \paragraph{What the estimator follows.} The increment is carried by BES, and BES
-changes for two reasons that the 10\,ms files do not separate in general: the beam
-and the plasma. For the beam, the fall of the reported \Ti{} after an interruption is
-shared by the ECEI level with the same recovery time, so the estimator is following a
-change that an independent diagnostic also sees; a network that reads ECEI alone turns
-that fall into a lower error on one split of four, so it is mainly the beam light
-that announces it. For the plasma, a BES level at fixed beam follows
-the density at the chord, and the larger part of the increment is in quiet rows, with
-no interruption behind them. No mechanism is shown: the files carry no beam power, density or
-equilibrium. The measurement that would decide between the readings is the beam
-power, with which the BES level could be normalized.
+changes with the beam and with the plasma. For the beam, the fall of the reported
+\Ti{} after an interruption is shared by the ECEI level with the same recovery time,
+so the estimator follows a change that an independent diagnostic also sees. For the
+plasma, the larger part of the increment is in quiet rows, and most of what the array
+adds to the CES history is recovered from differences between its channels, which
+largely reject a beam interruption and which move with the reported \Ti{} over
+200\,ms. No mechanism is shown: the files carry no beam power, density or
+equilibrium. The beam power, with which the BES level could be normalized, would
+decide what part of the common mode is the beam.
 
 \paragraph{The typical row, and what lies outside the claim.} The frame-to-frame
 independent component of the reported value (39.1 to 42.8\,eV) is of the size of the
@@ -605,7 +605,8 @@ same estimator trained without the fast channels\ifpooled\ (\Ptwo{})\else\
 has \EoneRange{} and \EtwoRange{}, with every interval above zero\fi. Against an
 offline GP that uses the following value the interval includes zero. The increment
 is carried by the beam-emission channels, is present in rows with no beam
-interruption behind them, and remains when the CES value arrives one or two frames
+interruption behind them and largely available from differences between those
+channels, and remains when the CES value arrives one or two frames
 late or only every fifth value is visible. It is a gain in the mean: the 90th
 percentile of the absolute error falls and the median does not. The measurements
 that would change these statements are the beam power, per-exposure fit

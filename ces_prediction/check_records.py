@@ -48,6 +48,7 @@ SOURCES = (
     "docs/paper/b49_average.md",
     "docs/paper/b48_reread.md",
     "docs/paper/b50_missing_like.md",
+    "docs/paper/b51_bes_modes.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
