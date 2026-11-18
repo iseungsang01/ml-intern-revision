@@ -533,7 +533,7 @@ def main():
            one("median of $|e|$, ratio to the causal GP", rp['median_ratio']['causal GP']['value'], ratc),
            one("share of discharges with lower MSE than the causal GP", st5['B1']['value'], shc),
            one("share of discharges with lower MSE than the twin", st5['B2']['value'], shc),
-           one("without the tenth of discharges with the largest gain: over causal GP", st6['B1']['value']),
+           one("without the 64 discharges with the largest gain: over causal GP", st6['B1']['value']),
            one("the same, increment", st6['B2']['value']),
            "    \\bottomrule", "  \\end{tabular}}"]
     L += TWH

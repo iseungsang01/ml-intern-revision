@@ -3,7 +3,7 @@
     py docs/paper/ppcf/fig_paper.py   # -> docs/paper/ppcf/fig_{geometry,schematic,skill,where,blips,use}.pdf/.png
 
 Every plotted number is read from a JSON output of the repository (b39_primary, b54_pooled_rows,
-b56_kfx, b57_yardsticks, b58_blip_calibration, b62_beam_return, b42_delay); the geometry figure
+b56_kfx, b57_yardsticks, b58_blip_calibration, b62_beam_return, b48_reread [its re-read of B.42]); the geometry figure
 draws positions given in the text of Supplementary section S10 and its Table S7 (literature,
 typed below and marked as published or inferred there).  Sizes are set for a 16 cm text width
 and printed 1:1 (fonts 8 to 9 pt).  A filled marker means that the 95 % interval excludes the
@@ -130,8 +130,8 @@ def fig_geometry():
     a2.spines["left"].set_visible(False)
     a2.set_xlim(2.08, 2.35)
     a2.set_xlabel("major radius $R$ (m); the Mirnov coils are at the wall, outside the frame")
-    h = [Rectangle((0, 0), 1, 1, fc=MUTED, ec=MUTED, label="published position"),
-         Rectangle((0, 0), 1, 1, fc="white", ec=MUTED, hatch="////", label="inferred position")]
+    h = [Rectangle((0, 0), 1, 1, fc=FILT, ec=FILT, alpha=0.85, label="published position (filled)"),
+         Rectangle((0, 0), 1, 1, fc="white", ec=FILT, hatch="////", label="inferred position (hatched; colour = diagnostic)")]
     a2.legend(handles=h, loc="upper center", frameon=False, ncol=2, bbox_to_anchor=(0.5, -0.32))
     save(fig, "fig_geometry")
 
@@ -318,7 +318,7 @@ def fig_blips():
 # ------------------------------------------------------------------------------------------------
 def fig_use():
     Y = J("b57_yardsticks.json")["all"]
-    D = J("b42_delay.json")
+    D = J("b48_reread.json")["b42"]  # B.42 re-read with the estimator of B.39 (B.48)
     fig, (a, b) = plt.subplots(1, 2, figsize=(W - 0.3, 2.7), gridspec_kw={"width_ratios": [1.0, 1.0], "wspace": 0.42})
     rows = [("network $-$ twin, $\\rho_1$", Y["net_twin_rho1"], NET),
             ("network $-$ twin, $\\rho_3$", Y["net_twin_rho3"], NET),
@@ -332,12 +332,12 @@ def fig_use():
     a.set_title("(a) persistence", fontsize=8.5, loc="left", fontweight="bold", pad=8)
     seeds = ("42", "1", "7", "123")
     delays = D["delays_frames"]
-    for key, c, lab in (("causal_vs_gp", GP, "over causal GP"), ("causal_vs_twin", NET, "over its twin")):
+    for key, c, lab, mk, ls in (("causal_vs_gp", GP, "over causal GP", "o", "-"), ("causal_vs_twin", NET, "over its twin", "s", "--")):
         for j, s_ in enumerate(seeds):
             vals = [D["splits"][s_][str(d)]["skill"][key] for d in delays]
-            b.plot(delays, [v[0] for v in vals], "-", color=c, lw=0.9, alpha=0.7, label=lab if j == 0 else None)
+            b.plot(delays, [v[0] for v in vals], ls, marker=mk, ms=4, color=c, lw=0.9, alpha=0.8, label=lab if j == 0 else None)
             for d, v in zip(delays, vals):
-                b.plot(d, v[0], "o", ms=4, mec=c, mew=1.0, mfc=c if excl(v, 0) else "white")
+                b.plot(d, v[0], mk, ms=4, mec=c, mew=1.0, mfc=c if excl(v, 0) else "white")
     b.axhline(0, color=MUTED, lw=0.8)
     b.set_xticks(delays)
     b.set_xticklabels([str(d) for d in delays])
