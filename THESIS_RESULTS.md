@@ -8042,3 +8042,38 @@ What would change these statements: fit errors per exposure (whether the flagged
 
 Manuscript, by section 5 of the registration: abstract (pooled 90th-percentile ratio), the per-discharge sentence of the main result, the quiet-rows sentence, the section on where the gain is (value rules, distribution, thirds, rows after an absent frame), the sentence that nothing is established beyond 50 ms, and two limits (level, rows without a value) now carry the pooled numbers; supplement: a paragraph and Table S9 (pooled beside the four splits). Main text 10 pages, supplement 28. `check_numbers.py`: 0 not found.
 
+### B.55: the instant of the fast-channel sample -- no registered statement of equivalence holds; with the fast channels one frame old the increment is lost; it is the BES value of the present frame that carries it, and the Mirnov channels carry none (2026-11-18)
+
+Registration `PREREGISTRATION_B55.md` with addendum 1 (check (a) takes the rule of B.49; written after the readout stopped at that check, before any statement was read) and addendum 2 (part D, by diagnostic; registered after parts R and G were read, before any run of it). Question of the author: the estimator of a row reads the fast-channel sample at the stamp of the row; was the sample just before it ever used, and do the two differ. CPU, no training: the 40 estimator networks of the pooled cross-validation of B.39 applied to changed inputs. Designed by the session lead, implemented and run by a delegated agent (`experiments/b55_sample_timing/run_b55.py`, about five minutes in all), outputs read by the session lead. Output `docs/paper/b55_sample_timing.{json,md}`.
+
+Checks, all passed: (a) with the file values every network reproduces its stored errors within 0.5 eV on at least 99.869 % of its rows (median difference 0.026 eV, largest 2.566 eV; the stored errors are from the GPU, these from a CPU; the cause was not tested); (b) the file values equal a raw sample within one raw step of the stamp in the shares of the file rules; (c) the raw sample 10 ms before the stamp equals the file value of the previous row in the same shares; (d) P1 and P2 of B.39 reproduced. Every change skill compares two estimates computed on the CPU.
+
+Part R (twelve discharges with raw streams, 4,616 to 4,792 scored rows per re-partition, eight networks per discharge; RMS error with the file values 192.5 eV):
+
+| fast-channel sample | RMS change of the estimate (eV) | change skill | verdict |
+|---|---|---|---|
+| one raw sample earlier | 12.6 [9.3, 19.5] | -0.0049 [-0.0297, +0.0096] | R1 (equivalent within 0.01) does not hold |
+| 0.1 ms earlier | 38.7 | -0.0093 [-0.0431, +0.0151] | reported |
+| 0.5 ms earlier | 46.1 | -0.0234 [-0.0892, +0.0133] | R2 does not hold |
+| 1 ms earlier | 46.8 | -0.0064 [-0.0603, +0.0262] | reported |
+| 2 ms earlier | 53.1 | -0.0071 [-0.0585, +0.0380] | R3 does not hold |
+| 5 ms earlier | 57.0 | -0.0407 [-0.1083, +0.0230] | reported |
+| 10 ms earlier | 53.5 | -0.0792 [-0.1637, -0.0369] | reported (interval below zero) |
+| mean of the samples in the 1 ms up to the stamp | 40.0 | +0.0227 [-0.0206, +0.0652] | reported |
+
+Part G (all discharges of the pooled readout, fast channels one row old): change skill -0.0785 [-0.0964, -0.0613] (G2, equivalent, does not hold); skill over the causal GP +0.089 -> +0.017 [-0.004, +0.038]; over the twin +0.048 -> -0.027 [-0.050, -0.008] (G1, interval above zero, does not hold: the interval is below zero). Rows 1 to 3 after an absent frame: change skill -0.2474 [-0.3350, -0.1789], over the twin -0.060 [-0.120, -0.011].
+
+Part D (by diagnostic): D1 (at 0.5 ms the change of the estimate with only Mirnov moved is larger than with BES and ECEI moved): 36.1 against 28.0 eV, ratio 1.29 [0.64, 1.98], does not hold. D2 (BES and ECEI 2 ms earlier, equivalent): -0.0103 [-0.0472, +0.0161], does not hold. D3 (only BES one row old, change skill below zero): -0.0503 [-0.0603, -0.0404], holds; skill over the twin +0.000 [-0.024, +0.022]. D4 (only ECEI one row old, equivalent): -0.0198 [-0.0279, -0.0136], does not hold; over the twin +0.029 [+0.006, +0.050]. D5 (only Mirnov one row old, equivalent): -0.0010 [-0.0037, +0.0007], holds; over the twin +0.047 [+0.021, +0.072]. D6 (Mirnov at its training mean, skill over the twin above zero): +0.053 [+0.028, +0.078], holds. D7 (that estimate equivalent): +0.0051 [-0.0021, +0.0166], does not hold.
+
+Inputs: between samples 0.1 ms or more apart the Mirnov inputs differ by 2.286 to 2.549 training standard deviations, BES by 0.103 to 0.236, ECEI by 0.089 to 0.161; scatter between adjacent raw samples 0.241, 0.046, 0.023. The file value of BES sits at the stamp on 3,210 of 6,490 rows, one raw step before on 2,263, one after on 1,017.
+
+Against the expectations: the changes of the estimate were several times larger than expected (12.6 against 2 to 8 eV at one raw sample; 46.1 against 3 to 10 eV at 0.5 ms), R1 to R3 were expected to hold and do not, G1 was expected to hold and its interval is below zero, D1 was expected to hold and does not. The session lead's guess after parts R and G, that the Mirnov snapshot is the source of the dependence on the instant, is not supported.
+
+Reading. (1) The answer to the question: the sample at the stamp was used, never the one before; whether the two give the same error is not established. Up to 2 ms earlier the error changes by less than 0.025 in skill with intervals that include zero, but they are several times wider than the margin, and the estimate itself moves by 13 to 53 eV (root mean square), which is of the size of its median absolute error. (2) What the fast channels add is in the present frame: one frame old, the increment is gone, and the estimator is below its twin. BES alone accounts for the loss of the increment (+0.000 with BES one row old), ECEI for part (+0.029). (3) The Mirnov channels carry none of the increment: at their training mean the estimator keeps +0.053 over the twin. (4) The dependence on the instant is not that of one diagnostic.
+
+Limits. Twelve discharges, chosen for other purposes. The networks were trained with samples at the stamp: these readouts show how they respond to other inputs, not what a network trained on them reaches. A network given the mean of the Mirnov channels is not a network trained without them.
+
+What would change these statements, and what follows. Training with the fast channels one frame old (how much of the increment is predictable from earlier fast data; GPU); training without the Mirnov channels in the pooled cross-validation (GPU); inputs averaged over the exposure, which needs raw streams for the training discharges. For use: the estimator needs the BES sample of the present frame within the frame, while the CES value may be one or two frames late (B.42, B.48).
+
+Manuscript, by section 5 of the registration and addendum 2: abstract (the increment is lost when the fast channels are one frame old), the section on a late or sparse CES value (fast channels one frame old, BES alone, Mirnov at its mean), a limit on the sampling instant, the conclusion; supplement: a paragraph and Table S10. Main text 10 pages, supplement 29. `check_numbers.py`: 0 not found.
+

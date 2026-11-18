@@ -1423,6 +1423,74 @@ effective number of rows of 0.062 of the rows it uses.
   \end{tabular}
 \end{table}
 
+\paragraph{The instant of the fast-channel sample.} Registered; no network was
+trained. The 40 estimators of the pooled cross-validation were run again on a CPU
+with changed fast-channel inputs (with the file values they reproduce the stored
+errors within 0.5\,eV on at least 99.869\% of the rows of every network, and the
+pooled skills of the main text to four decimals). \emph{Inside the frame.} On the
+twelve discharges with raw streams the file value of a row is a raw sample within
+one raw step of the stamp (for BES at the stamp on 3{,}210 of 6{,}490 rows, one step
+before on 2{,}263 and one step after on 1{,}017). Replacing it by an earlier raw
+sample changes the estimate as in Table~\ref{tab:instant}: by 12.6\,eV (root mean
+square) one raw step earlier and by 38.7 to 57.0\,eV from 0.1 to 5\,ms earlier,
+beside a root-mean-square error of 192.5\,eV on these rows. The three registered
+statements of equivalence (one raw step, 0.5\,ms, 2\,ms; margin 0.01 in skill) do
+not hold: every interval includes zero and reaches beyond the margin, so neither a
+difference nor equivalence is established on twelve discharges. Between two samples
+0.1\,ms or more apart the Mirnov inputs differ by 2.286 to 2.549 training standard
+deviations (a snapshot of a fast oscillation), BES by 0.103 to 0.236 and ECEI by
+0.089 to 0.161; the scatter between adjacent raw samples is 0.241, 0.046 and 0.023.
+Moved alone by 0.5\,ms, the Mirnov channels change the estimate by 36.1\,eV and BES
+with ECEI by 28.0\,eV (ratio 1.29 $[0.64, 1.98]$; the registered statement that
+Mirnov changes it more does not hold), so the dependence on the instant is not that
+of one diagnostic. A mean of the raw samples in the 1\,ms before the stamp, given to
+the same networks, has a change skill of $+0.0227$ $[-0.0206, +0.0652]$.
+\emph{One frame old.} On all discharges of the pooled readout the fast-channel
+values of each row were replaced by those of the row before. The estimator then has
+$+0.017$ $[-0.004, +0.038]$ over the causal GP and $-0.027$ $[-0.050, -0.008]$
+against its twin (both registered statements fail: the increment does not remain,
+and the estimate is not equivalent); in the rows 1 to 3 after an absent frame it has
+$-0.060$ $[-0.120, -0.011]$ against the twin. \emph{By diagnostic} (registered after
+the two readouts above were seen). With BES alone one frame old the estimator has
+$+0.000$ $[-0.024, +0.022]$ over the twin, with ECEI alone $+0.029$
+$[+0.006, +0.050]$, with the Mirnov channels alone $+0.047$ $[+0.021, +0.072]$
+(equivalent to the file values), and with the Mirnov channels held at their training
+mean $+0.053$ $[+0.028, +0.078]$. The increment is that of the present frame, mostly
+of its BES value, and the Mirnov channels carry none of it. These networks were
+trained with samples at the stamp: the readout shows how they respond to other
+inputs, not what a network trained on them would reach.
+
+\begin{table}[h]
+  \centering
+  \caption{The estimator with fast-channel samples of another instant (nothing
+  retrained). Change skill: one minus the sum of squared errors with the changed
+  inputs over that with the file values, with its 95\% interval. Top: twelve
+  discharges with raw streams, each estimated by eight networks. Bottom:
+  all discharges of the pooled readout.}
+  \label{tab:instant}
+  \footnotesize
+  \begin{tabular}{lccc}
+    \toprule
+    Fast-channel input & Change of the estimate (eV, r.m.s.) & Change skill & Skill over the twin \\
+    \midrule
+    One raw step earlier & 12.6 & $-0.0049$ $[-0.0297, +0.0096]$ & $+0.021$ \\
+    0.1\,ms earlier & 38.7 & $-0.0093$ $[-0.0431, +0.0151]$ & $+0.016$ \\
+    0.5\,ms earlier & 46.1 & $-0.0234$ $[-0.0892, +0.0133]$ & $+0.003$ \\
+    1\,ms earlier & 46.8 & $-0.0064$ $[-0.0603, +0.0262]$ & $+0.019$ \\
+    2\,ms earlier & 53.1 & $-0.0071$ $[-0.0585, +0.0380]$ & $+0.019$ \\
+    5\,ms earlier & 57.0 & $-0.0407$ $[-0.1083, +0.0230]$ & $-0.014$ \\
+    10\,ms earlier & 53.5 & $-0.0792$ $[-0.1637, -0.0369]$ & $-0.051$ \\
+    Mean of the samples in the 1\,ms before the stamp & 40.0 & $+0.0227$ $[-0.0206, +0.0652]$ & $+0.048$ \\
+    \midrule
+    All fast channels one frame old & 48.4 & $-0.0785$ $[-0.0964, -0.0613]$ & $-0.027$ $[-0.050, -0.008]$ \\
+    BES alone one frame old & 37.6 & $-0.0503$ $[-0.0603, -0.0404]$ & $+0.000$ $[-0.024, +0.022]$ \\
+    ECEI alone one frame old & 22.4 & $-0.0198$ $[-0.0279, -0.0136]$ & $+0.029$ $[+0.006, +0.050]$ \\
+    Mirnov alone one frame old & 12.7 & $-0.0010$ $[-0.0037, +0.0007]$ & $+0.047$ $[+0.021, +0.072]$ \\
+    Mirnov at its training mean & 18.5 & $+0.0051$ $[-0.0021, +0.0166]$ & $+0.053$ $[+0.028, +0.078]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 % =========================================================================
 \section{Registered statements used in the main text}
 \label{app:registered}

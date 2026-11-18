@@ -153,6 +153,7 @@ def main():
         (ROOT / "docs/paper/b51_bes_modes.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b52_grading_readouts.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b54_pooled_rows.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b55_sample_timing.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
