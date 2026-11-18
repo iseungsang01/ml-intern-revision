@@ -54,3 +54,13 @@ L1: -0.01 to +0.02, does not hold. L2: +0.03 to +0.06, holds. N1: +0.035 to +0.0
 ## 7. Limits known in advance
 
 Three of the eight re-partitions; one training per fold. An ablation by removal shows what a network can do without a group, not what the estimator uses. The folds re-partition the discharges on which the design was adopted. Arm L delays the fast channels by one row, 10 ms where no frame is absent and more across an absent frame.
+
+## Addendum 1 (2026-11-18, before any run)
+
+The runner was written and checked without training by a delegated agent; the six checks of section 3 pass (`docs/paper/b59_checks.md`). Points that the registration left open, fixed here as implemented:
+
+- Arms N, E and B differ from the matching runs of B.39 arm A in five variables: the split directory, the control statistics of the split and the seed that names the split (all three are "the split" of section 3), the initialisation seed and the output directory. Against the pooled estimator of the same fold they differ in the model name only.
+- Arm L keeps the standardization constants of the estimator: the statistics are fitted on the training discharges as they are, and the fast channels are moved by one row after standardization. A shift by a row and a fixed affine standardization commute, so this equals standardizing the moved channels with the same constants; the statistics are not refitted on moved data.
+- The check that every run is scored on the rows of the estimator compares, for the stored estimator of one fold scored again on a CPU through the wrapper of arm L with no shift, the rows (identical) and the errors (skill over the stored scoring within 0.001 and 99 % of the rows within 0.5 eV; found +0.00004, largest difference 1.7 eV: the arithmetic of the two devices, as in B.55).
+- The interval is the pooled interval of `analyze_b39.py` (arm P) with the three re-partitions r2, r3, r4, 20,000 draws. N2 holds when the whole interval lies inside [-0.01, +0.01]. The rows after an absent frame are those located by B.54.
+- Seen while the runner was checked, on runs that already exist: on r2 to r4 alone the estimator of B.39 has +0.053 [+0.027, +0.076] over the twin; the stored estimator of one fold, given fast channels one row old with no retraining, loses 0.078 against itself there (the readout of B.55 on one fold).
