@@ -47,3 +47,7 @@ Floor 126 to 145 eV (root mean square). N1 holds; MSE over the floor 1.25 to 1.4
 ## 7. Limits known in advance
 
 The floor is a lower bound and rests on an assumption about the underlying value that cannot be tested without fit errors; heavy tails make it wide. The persistence test does not see a bias common to consecutive frames. The network's estimates are those of the CPU run of B.55, which differ from the stored ones by 0.026 eV at the median.
+
+## Addendum 1 (2026-11-18, before any run)
+
+Check (ii) compares point estimates (to three significant figures); the intervals of section 2 came from 4,000 two-level draws and this batch uses 2,000. The triples of the floor are consecutive grid rows whose stored time step is below 15 ms at t and at t+1, as in the look.
