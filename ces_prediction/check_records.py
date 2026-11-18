@@ -57,6 +57,8 @@ SOURCES = (
     "docs/paper/b56_kfx.md",
     "docs/paper/b57_yardsticks.md",
     "docs/paper/b53_components.md",
+    "docs/paper/b61_absolute_robust.md",
+    "docs/paper/b61_blip_dose.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )

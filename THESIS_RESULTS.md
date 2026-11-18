@@ -8221,3 +8221,33 @@ Reported. KFX against hold within 20 % +0.034 [+0.029, +0.039], against the twin
 
 Reading. With the same inputs, an estimator of the logarithm of the value does what the recurrent estimator does not: more frames within 10 % and within 20 % of the reported value than the CES history alone gives, in every third of the discharges, with no loss at small values. The gain is small (one to one and a half frames in a hundred) and its interval is narrow. The recurrent estimator keeps the advantage in the rows after a beam interruption and in squared error. By the registered rule the filter is named as the estimator to use where relative accuracy is the requirement.
 
+### Twelfth independent grading (2026-11-18): PPCF 20 % (range 10 to 32), Fusion Engineering and Design 35 % (22 to 50); major revision
+
+A new agent was given the two PDFs of the committed manuscript (main text 10 pages at commit df26086, supplement 30 pages at 2d020c8) copied to a separate folder, and nothing else; it was told to open no other file. The limit of that independence: a delegated agent starts with the repository's CLAUDE.md and the memory index in its context. The version graded did not contain B.56, B.57, B.60, B.53 or the literature on the two premises. Staged estimates for PPCF: rewriting only 27 %, further analysis of data in hand 34 %, further training of the same kind 45 %, with information the manuscript says it lacks (fit errors, beam power, equilibrium, latencies) 62 %. Weaknesses ranked: small effect absent in the typical frame and an estimator that is not the best its inputs allow; unvalidated target; beam confound not removed by measurement; the confirmatory design failed and later sections use a weaker standard; no demonstrated use; no plasma characterization; presentation; missing prior work; provenance. It found 28 errors or inconsistencies, among them a self-contradicting sentence of the session lead on the beam blip ("0.162 [0.006, 0.329] ... one third is not met"), a supplement table running off the page, and four names for the frame-to-frame scatter. These were passed to the restructuring of the main text. The report is not committed (session scratchpad).
+
+### B.61: absolute errors, scores that 1 % of the rows does not decide, sensitivity to discharges, and the dose of a beam interruption (2026-11-18)
+
+Registration `PREREGISTRATION_B61.md`, designed after the twelfth grading. CPU; parts A and B by one delegated agent with the code of B.54 (`experiments/b61_absolute_robust/run_b61.py` -> `docs/paper/b61_absolute_robust.{json,md}`), part C by another with the code of B.58 (`experiments/b61_blip_dose/run_b61c.py` -> `docs/paper/b61_blip_dose.{json,md}`). Checks passed (pooled skills and percentiles reproduced; first-row ratios of B.58 reproduced).
+
+Part A, absolute errors on the pooled rows (r2 to r9; the filters on r3 to r9):
+
+| estimator | root-mean-square error (eV) | against the causal GP | mean absolute error (eV) | against the causal GP |
+|---|---|---|---|---|
+| recurrent estimator | 184.6 [174.4, 194.6] | -8.8 [-11.3, -6.3] eV, -4.6 [-5.7, -3.3] % | 91.2 [85.5, 97.1] | -3.0 [-4.7, -1.5] eV, -3.2 [-4.8, -1.6] % |
+| twin | 189.2 | -2.2 [-3.1, -1.2] % | 94.0 | -0.3 [-2.0, +1.7] % |
+| causal GP | 193.4 [182.9, 203.9] | | 94.2 [88.3, 100.3] | |
+| hold | 233.4 | +20.7 % | 107.8 | +14.4 % |
+| offline GP | 181.3 | -6.3 [-7.0, -5.5] % | 84.8 | -10.0 % |
+| KFX (r3 to r9) | 188.1 | -2.8 [-3.6, -2.0] % | 88.7 | -5.9 [-6.7, -5.1] % |
+| KF0 (r3 to r9) | 192.9 | -0.3 [-1.0, +0.5] % | 92.9 | -1.4 [-2.3, -0.4] % |
+
+Robust skills: A1 Huber (threshold 200 eV), the estimator over the causal GP +0.074 [+0.052, +0.094], holds; A2 over the twin +0.052 [+0.031, +0.075], holds; A3 trimmed (the 1 % of rows with the largest squared error of hold removed), over the causal GP +0.067 [+0.029, +0.101], holds; A4 over the twin +0.070 [+0.037, +0.100], holds; A5 Huber, KFX over KF0 +0.067 [+0.058, +0.076], holds. Reported: the estimator against the offline GP, Huber -0.057 [-0.083, -0.030]; KFX over the recurrent estimator, mean squared error -0.038 [-0.060, -0.012], Huber +0.013 [-0.009, +0.033], trimmed +0.004 [-0.029, +0.038].
+
+Part B: with the 10, 32 and 64 discharges with the largest reduction removed (they hold 0.214, 0.493 and 0.769 of it) the estimator has +0.076 [+0.050, +0.099], +0.055 [+0.029, +0.078] and +0.030 [+0.002, +0.055] over the causal GP (B1 holds) and +0.041 [+0.016, +0.064], +0.034 [+0.006, +0.056] and +0.027 [-0.004, +0.051] over the twin (B2 does not hold). The four file-level test sets hold 301 distinct discharges: 224 in one, 72 in two, 4 in three, 1 in four.
+
+Part C: first-row ratio of T_i after one absent frame 0.814 [0.790, 0.835] (1,262 events), after two 0.926 [0.768, 1.049] (67 events), after three 0.830 [0.779, 0.963] (65 events). C1 (the T_i deficit is larger after two absent frames than after one): -0.112 [-0.238, +0.054], does not hold. C2 (the same for the ECEI level): +0.047 [-0.003, +0.098], does not hold. On the twelve discharges with raw streams the beam is off for 10.5 ms (median, 41 blips) in events of one absent frame and for about 27 ms in events of two (1 blip) and of three (3 blips).
+
+Reading. (1) Size: the estimator's root-mean-square error is 8.8 eV, or 4.6 %, below that of the causal GP; the fast channels account for about half. (2) The margins do not rest on the 1 % of rows with the largest errors: with a bounded loss and with those rows removed both the margin over the causal GP and the increment stay, and the increment is larger than in the plain score (+0.070 trimmed against +0.048). (3) They do rest on a tenth of the discharges for most of their size: without those 64 the margin over the causal GP is +0.030 with its interval just above zero and the increment is not separated from zero. (4) Under a bounded or trimmed score the filter and the recurrent estimator are not separated; the recurrent estimator's advantage over the filter is in the mean squared error, that is, in the largest errors. (5) No dose-response of the fall after a beam interruption is shown: with the events available the fall does not grow with the length of the interruption, and the events of two and three absent frames are few and irregular.
+
+By the registered rules: absolute errors beside the skills and in the abstract; the robust skills as a co-primary readout; the limit that the increment is not separated from zero without a tenth of the discharges; the dose statement. With the restructuring of the main text.
+
