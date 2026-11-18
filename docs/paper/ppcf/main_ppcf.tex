@@ -252,8 +252,9 @@ held out of the training discharges, under a cap of 80 epochs. The
 \emph{history-only twin} is the same network with the 15 fast channels removed from
 the input of the \Ti{} branch (347{,}970 parameters); the skill of the estimator over
 its twin is the \emph{fast-channel increment}. Three ablation networks read BES, ECEI,
-or BES and ECEI (no Mirnov) beside the CES history. One step takes 0.49\,ms at the
-median on one CPU thread.
+or BES and ECEI (no Mirnov) beside the CES history. One step of the estimator takes
+0.49\,ms at the median on one CPU thread (the causal GP 0.64\,ms); the timing covers
+the estimator only.
 
 \emph{A five-parameter filter} measures the increment without a network
 (\Supp{sec:filter}). Its state is $\log\Ti{}$, a random walk with variance $q$ per
@@ -454,7 +455,8 @@ cross-validation and of the filters (definitions and the four-split numbers in
 more than 1\,keV, or low beam emission in the 30\,ms before; 0.113 of the rows). In
 the rows not flagged the fast-channel increment is $+0.092$ $[+0.062, +0.125]$, in the
 flagged rows $+0.012$ $[-0.016, +0.036]$; the plain rows carry 0.874 $[0.681, 1.385]$
-of the reduction against the twin. Of the reduction against the causal GP they carry 0.463
+of the reduction against the twin (a share above one would mean that the other rows
+contribute negatively). Of the reduction against the causal GP they carry 0.463
 $[0.355, 0.610]$, and the registered statement that they carry more than half is not
 met: the margin over the causal GP leans on rows that a value rule would
 question, the increment does not.
@@ -490,26 +492,56 @@ statement met) and the increment \StatBtwo{}, not separated from zero (not met).
   \label{fig:events}
 \end{figure}
 
-\emph{Beam blips.} After events of one absent frame (1{,}262 events in 489 discharges;
-ratios to the median of the six rows before), the reported \Ti{} of the first row is
-0.814 $[0.790, 0.835]$, the ECEI level 0.929 $[0.918, 0.942]$ and the BES level 0.658
-$[0.653, 0.663]$ of their levels before. Over the next eight rows the deficit of \Ti{}
-is proportional to that of the ECEI level, which uses neither the beam nor the
-spectrometer (share left unexplained 0.009 $[0.005, 0.032]$), not to that of the BES
-level, which is back within two rows; how much of the first-row fall (0.186 of the
-level) follows the BES level stays open (registered statement not met; definitions fixed
-after an exploratory look; \Supp{sec:rows}). The first-row deficit after two absent
-frames differs from that after one by \DoseTi{} (\DoseTwoEvents{}; not met), so no dose
-supports reading the fall as a response to the interruption. On the raw streams (31
-interruptions) the ECEI level begins to fall while the beam is off and deepens after its
-return, so such a response is not excluded in shape (one verdict changed by a correction
-made after reading), and a first-frame excess of \Ti{} beyond that shape is at most 0.030
-$[0.008, 0.058]$ of the level (\Supp{sec:rows}). In rows 1 to
-3 after an absent frame the
-estimator has $+0.151$
-$[+0.093, +0.215]$ over its twin (Fig.~\ref{fig:events}a) and puts more frames within
-20\% of the reported value than the causal GP (\TTwentyBlip{}): the twin sees the
+\emph{Beam blips.} After a blip of one absent frame the reported \Ti{}, the ECEI level
+and the BES level all fall in the first row (Table~\ref{tab:blips}, ratios to the median
+of the six rows before). Over the next eight rows the deficit of \Ti{} is proportional to
+that of the ECEI level, which uses neither the beam nor the spectrometer, and not to that
+of the BES level, which is back within two rows. How much of the first-row fall follows
+the BES level stays open: the registered statement that this part is below one third of
+the deficit is not met (definitions fixed after an exploratory look; \Supp{sec:rows}).
+The fall is not deeper after two absent frames than after one, so no dose supports
+reading it as a response to the interruption (registered statements for \Ti{} and the
+ECEI level not met). On the raw streams of the interruptions kept by a rule fixed
+beforehand, the ECEI level begins to fall while the beam is off and deepens after its
+return (one of three verdicts changed by a correction made after it was read, so its
+interval reaches 1): a response to the loss of the beam is not excluded in shape. The
+reported \Ti{} shares that shape, with a first-frame excess that bounds what the
+measurement of the first frame adds; the rotation of the chord falls less. In rows 1 to 3
+after an absent frame the estimator gains over its twin (Fig.~\ref{fig:events}a) and
+puts more frames within 20\% of the reported value than the causal GP: the twin sees the
 longer time step but not the depth of the fall.
+
+\begin{table}[t]
+  \centering
+  \caption{Beam blips (one absent frame unless stated), with 95\% intervals.
+  Event sets and definitions: \Supp{sec:rows}.}
+  \label{tab:blips}
+  \footnotesize
+  \begin{tabular}{p{0.62\linewidth}l}
+    \toprule
+    \multicolumn{2}{l}{\emph{First row after a blip, ratio to the level before (1{,}262 events in 489 discharges)}} \\
+    \quad reported \Ti{} & 0.814 $[0.790, 0.835]$ \\
+    \quad ECEI level & 0.929 $[0.918, 0.942]$ \\
+    \quad BES level & 0.658 $[0.653, 0.663]$ \\
+    \multicolumn{2}{l}{\emph{Rows 1 to 8: share of the \Ti{} deficit profile left unexplained}} \\
+    \quad by the ECEI deficit & 0.009 $[0.005, 0.032]$ \\
+    \quad by the BES deficit & 0.333 $[0.286, 0.376]$ \\
+    \quad part of the first-row deficit (0.186) proportional to the BES deficit; one third is 0.062 & 0.030 $[0.001, 0.065]$ \\
+    \multicolumn{2}{l}{\emph{Dose}} \\
+    \quad first-row deficit of \Ti{}, two absent frames minus one (\DoseTwoEvents{}) & \DoseTi{} \\
+    \multicolumn{2}{l}{\emph{Raw streams, 31 interruptions: ECEI level}} \\
+    \quad last 3\,ms before the beam returns, ratio (first implementation: 0.969 $[0.945, 1.001]$) & 0.972 $[0.953, 0.999]$ \\
+    \quad step at the return & $-0.015$ $[-0.027, +0.012]$ \\
+    \quad 10 to 13\,ms after the return minus just after & $-0.018$ $[-0.059, -0.006]$ \\
+    \quad first-frame excess of \Ti{} beyond the ECEI shape, share of the level & 0.030 $[0.008, 0.058]$ \\
+    \quad the same, share of the first-row deficit & 0.160 $[0.046, 0.292]$ \\
+    \quad rotation of the chord, first row, ratio & 0.973 $[0.960, 0.989]$ \\
+    \multicolumn{2}{l}{\emph{Estimator, rows 1 to 3 after an absent frame}} \\
+    \quad skill over its twin & $+0.151$ $[+0.093, +0.215]$ \\
+    \quad share within 20\%, minus that of the causal GP & \TTwentyBlip{} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \emph{Reading.} The increment is in plain rows, grows with the level, is absent in the
 coldest third and leans on a tenth of the discharges; the network lowers large errors,
@@ -563,7 +595,8 @@ formulas~\citep{Heidbrink1994BehaviourFast} a 10\,ms loss of beam heating lowers
 temperature by a few per cent at most (\Supp{sec:rows}), less than the fall of \Ti{}
 after a blip; a displacement of the plasma at the blips is reported at
 KSTAR~\citep{Kim2018EnhancedFast} and cannot be tested without an equilibrium. The ECEI
-level depends on density as well; no mechanism is named.
+level is not a temperature (at the edge it depends on density as well), and no mechanism
+is named; the fall is not used as evidence on ion heat transport.
 
 \label{sec:limits}
 \begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
@@ -571,7 +604,8 @@ level depends on density as well; no mechanism is named.
 per-frame fit error; of a bias that varies within a discharge only a step at beam-off
 frames is bounded.
 \item \emph{Beam.} The files record the blips but not the beam power; the fall after a
-blip is bounded only as in \S\ref{sec:res:where}.
+blip is bounded only as in \S\ref{sec:res:where} (ECEI readout of 31 events, one verdict
+changed by a correction made after reading).
 \item \emph{Level and discharges.} The increment is not established in the coldest
 third of the discharges, for the network or the filter, and there the network puts
 fewer frames within 20\% of the reported value than the causal GP. Without the tenth of
@@ -608,8 +642,9 @@ further chords.
 The MAST data are public (FAIR-MAST, CC BY-SA 4.0); the shot lists, the registration
 documents, the analysis code and all evaluation artifacts are at
 \url{https://github.com/iseungsang01/ml-intern-revision}. The KSTAR data were made
-available through the author's laboratory and cannot be redistributed by the author;
-requests should be addressed to the Korea Institute of Fusion Energy.
+available to the author through the author's laboratory for this study and cannot be
+redistributed by the author; requests for them should be addressed to the Korea
+Institute of Fusion Energy.
 
 \section*{Acknowledgments}
 The KSTAR data used in this work were provided by the KSTAR team. This work received
