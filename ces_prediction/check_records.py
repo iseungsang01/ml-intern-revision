@@ -55,6 +55,7 @@ SOURCES = (
     "docs/paper/b58_blip_calibration.md",
     "docs/paper/b60_relative_error.md",
     "docs/paper/b56_kfx.md",
+    "docs/paper/b57_yardsticks.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )

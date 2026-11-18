@@ -8145,3 +8145,27 @@ Limits. The specification was chosen on r2 by an agent that saw its test rows; r
 
 By the registered rules: the filter and its increment enter the main result beside the network's; the network stays the estimator of the paper (KX3) and its margin over the filter is stated as a better use of the CES history; the sentence on the beam says that the filter's increment is available from the radial difference alone; the limit on the median is rewritten; the 20-parameter reading of the network is marked as superseded. Done with the restructuring of the main text.
 
+### B.57: yardsticks -- a floor of 135.7 eV (root mean square) under every estimator; the network removes 0.298 of the removable error that the causal GP leaves and closes 0.734 of the gap to the offline GP; 0.810 of the fast-channel correction is still there in the next frame, against 1.122 for a correction from the CES history alone (2026-11-18)
+
+Registration `PREREGISTRATION_B57.md` with addendum 1. Proposed by delegated agents, design fixed by the session lead, run by a delegated agent; CPU (`experiments/b57_yardsticks/run_b57.py`; the 40 stored twins run forward on a CPU for their signed estimates, the network's from the cache of B.55, the filters' from B.56). Output `docs/paper/b57_yardsticks.{json,md}`. Rows: the pooled cross-validation, r2 to r9.
+
+Checks, passed: (i) the twins on the CPU reproduce their stored errors (smallest share of rows within 0.5 eV: 0.9989); (ii) the floor and the removable-error skills of the look reproduced; (iii) with the value of frame t+1 replaced by that of frame t the persistence ratio is 1.
+
+Floor (minus the covariance of successive increments of the reported value on consecutive triples): 18,415 [15,969, 21,226] eV squared, root mean square 135.7 [126.4, 145.7] eV.
+
+| statement | value | verdict |
+|---|---|---|
+| N1: the mean squared error of every estimator is above the floor | network 1.331 [1.246, 1.427], twin 1.415 [1.325, 1.519], causal GP 1.472 [1.389, 1.568], hold 2.123 [2.031, 2.227], offline GP 1.279 [1.222, 1.342], KF0 1.469 [1.387, 1.562], KFX 1.362 [1.291, 1.444] times the floor | holds |
+| N2: the network closes more than half of the gap between the causal and the offline GP | 0.734 [0.529, 0.936] | holds |
+| N3: the fast-channel correction of the network lasts into the next frame (rho_1 above one half) | 0.810 [0.753, 0.866] | holds |
+| N4: the same for KFX against KF0 | 0.741 [0.670, 0.812] | holds |
+| N5: rho_3 minus rho_1 of the network's correction inside +-0.15 | +0.016 [-0.052, +0.088] | holds |
+
+Reported. Removable-error skill of the network: over the causal GP +0.298 [+0.191, +0.408], over the twin +0.202 [+0.105, +0.303], over hold +0.705 [+0.642, +0.767]; of KFX: +0.233 [+0.175, +0.288], +0.128 [+0.047, +0.195], +0.678 [+0.629, +0.725]. Gap closure: twin 0.354 [0.200, 0.509], KFX 0.447 [0.328, 0.567], KF0 0.041 [-0.076, 0.151]. Persistence of the reference pair (the twin minus KF0, a correction that reads the CES history only): rho_1 1.122 [1.038, 1.220], rho_3 1.242 [1.094, 1.397]. Slope of the correction against the value: network minus twin 0.693 [0.589, 0.790]; KFX minus KF0 1.081 [0.985, 1.172]; twin minus KF0 0.655 [0.573, 0.737].
+
+Reading. (1) Three quarters of the mean squared error of the network is scatter of the reported value that no estimator of the present frame can remove (1 over 1.331); the same holds for every other estimator, the offline GP included. (2) Against what can be removed, the network takes away 0.298 of what the causal GP leaves and the fast channels 0.202 of what the twin leaves: the plain skills +0.089 and +0.048 understate the gain by a factor of three to four because the floor is in both numerator and denominator. (3) The network closes about three quarters of the gap to an estimate that waits for the next value; the twin closes about a third. (4) What the fast channels add is mostly not a property of the fit of the frame it estimates: 0.810 of it is still there in the next, independently fitted frame, and the part that is not there does not decay further by the third frame. The benchmark is not 1, however: a correction made from the CES history alone has 1.122, so the fast-channel correction lasts 0.31 less than one that cannot know the fit of frame t; the frame-specific part is of the order of a fifth to a quarter and may be the fit of the frame or a fluctuation inside the frame that the fast sample sees. A bias shared by consecutive frames passes this test. (5) The network's correction is too large by about 30 % (slope 0.693), which is what the shrinking second stage corrects; the filter's is not (1.081, interval including 1).
+
+Limits. The floor is a lower bound under an assumption on the underlying value (its increments are not negatively correlated) that cannot be tested without fit errors. r2, on which the looks were made, is among the rows.
+
+By the registered rules the floor and the removable-error skill go beside each pooled skill, the sentence on the offline GP gives the gap closure, the paper says what share of the fast-channel correction lasts into the next frame (with the reference value) and what that does not exclude, and the names of the noise quantities are reduced to two. Done with the restructuring of the main text.
+
