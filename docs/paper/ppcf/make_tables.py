@@ -264,7 +264,7 @@ def main():
     mac("TTwenty", sk(rs["T20"]["value"]))
     mac("TTwentyHold", sk(rs["T20h"]["value"]))
     mac("TTen", sk(rs["T10"]["value"]))
-    mac("TTenLow", f"{rs['T10']['value'][1]:+.4f}")
+    mac("TTenLow", f"${rs['T10']['value'][1]:+.4f}$")
     mac("TTwentyCold", sk(rc["low third by median T_i"]["diff"]["c-gp|0.20"]))
     mac("TTwentyBlip", sk(rc["rows 1 to 3 after an absent frame"]["diff"]["c-gp|0.20"]))
     av_ = rc["all rows"]["value"]
@@ -343,7 +343,7 @@ def main():
           rrow("\\quad KFX over causal GP", kc["kfx_over_G"], a39["skill_huber|kfx|gp"], a39["skill_trim|kfx|gp"]),
           "    \\bottomrule", "  \\end{tabular}}",
           "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
-          "    \\emph{(b) Estimator} & RMSE (eV) & MSE / floor & Median $|e|$ (eV) & Within 20\\% of the value \\\\",
+          "    \\emph{(b) Estimator} & RMSE (eV) & MSE / floor, triple rows & Median $|e|$ (eV) & Within 20\\% of the value \\\\",
           "    \\midrule"]
     for label, fk, mk, rk, bk in (("hold", "mse_over_s2_H", "H", "hold", "hold"),
                                   ("causal GP", "mse_over_s2_G", "G", "gp", "gp"),
@@ -382,13 +382,13 @@ def main():
     # supplement: floor, removable error, gap closure (B.57)
     yq = Y["quiet"]
     TY = ["\\newcommand{\\TabFloor}{%", "  \\begin{tabular}{lcc}", "    \\toprule",
-          "    & All rows & Rows not after an absent frame \\\\", "    \\midrule",
-          "    \\multicolumn{3}{l}{\\emph{Mean squared error over the floor}} \\\\"]
+          "    & All rows of the set & Rows not after an absent frame \\\\", "    \\midrule",
+          "    \\multicolumn{3}{l}{\\emph{Mean squared error over the floor (triple rows)}} \\\\"]
     for label, k in (("hold", "H"), ("causal GP", "G"), ("PCHIP (uses the next value)", "P"),
                      ("offline GP (uses the next value)", "O"), ("history-only twin", "Tw"),
                      ("recurrent estimator", "A"), ("KF0", "K0"), ("KFX", "KX")):
         TY.append(f"    \\quad {label} & {rat(ya['mse_over_s2_' + k])} & {rat(yq['mse_over_s2_' + k])} \\\\")
-    TY.append("    \\multicolumn{3}{l}{\\emph{Removable-error skill}} \\\\")
+    TY.append("    \\multicolumn{3}{l}{\\emph{Removable-error skill (triple rows)}} \\\\")
     for label, k in (("recurrent estimator over the causal GP", "removable_A_over_G"),
                      ("recurrent estimator over its twin", "removable_A_over_Tw"),
                      ("recurrent estimator over hold", "removable_A_over_H"),
@@ -396,7 +396,7 @@ def main():
                      ("KFX over the twin", "removable_KX_over_Tw"),
                      ("KFX over hold", "removable_KX_over_H")):
         TY.append(f"    \\quad {label} & {sk(ya[k])} & {sk(yq[k])} \\\\")
-    TY.append("    \\multicolumn{3}{l}{\\emph{Share of the gap between the causal and the offline GP closed}} \\\\")
+    TY.append("    \\multicolumn{3}{l}{\\emph{Share of the gap between the causal and the offline GP closed (all scored rows)}} \\\\")
     for label, k in (("recurrent estimator", "gap_closure_A"), ("history-only twin", "gap_closure_Tw"),
                      ("KFX", "gap_closure_KX"), ("KF0", "gap_closure_K0")):
         TY.append(f"    \\quad {label} & {rat(ya[k])} & {rat(yq[k])} \\\\")

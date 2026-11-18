@@ -117,7 +117,7 @@ def main():
 def draw(res):
     plt.rcParams.update({"font.family": "serif", "font.size": 9, "mathtext.fontset": "stix",
                          "axes.spines.top": False, "axes.spines.right": False})
-    lab = {"model": "recurrent estimator", "gp_causal": "causal GP", "persistence": "persistence",
+    lab = {"model": "recurrent estimator", "gp_causal": "causal GP", "persistence": "hold",
            "pchip": "PCHIP (next sample)"}
     col = {"model": "#222222", "gp_causal": "#4c72b0", "persistence": "#c44e52", "pchip": "#55a868"}
     mk = {"model": "o", "gp_causal": "s", "persistence": "^", "pchip": "D"}

@@ -23,6 +23,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{longtable}
 \usepackage[skip=6pt]{caption}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
@@ -64,7 +65,7 @@ and the thinned replay. \S\ref{sec:bursts} and \S\ref{sec:twosources}: edge burs
 raw beam-emission stream and the two sources of a large departure of the beam emission.
 \S\ref{sec:mastped}: the registered test at the MAST pedestal top. \S\ref{sec:vrot}:
 rotation. \S\ref{sec:character}: the median row, a 20-parameter filter read from the
-network, and a second stage that corrects the estimate. Figures drawn for the first manuscript label hold as ``persistence'' in their legends. \S\ref{sec:target} to \S\ref{app:registered}: what the main text gives in summary (the files and
+network, and a second stage that corrects the estimate. \S\ref{sec:target} to \S\ref{app:registered}: what the main text gives in summary (the files and
 the reported value, the structure and the design choices of the estimator, the numbers of each
 split for the row-level readouts, the four-split ledger of the main batch with its ablations
 and the average of three initialisations (\S\ref{sec:splits}), the five-parameter filter
@@ -117,13 +118,13 @@ of the plasma, and with it which simple estimator is the right yardstick.
 value. Its median over discharges is $-0.416$ $[-0.429, -0.402]$ for \Ti{} (601
 discharges; interquartile range $-0.491$ to $-0.294$) and $-0.349$
 $[-0.384, -0.322]$ for \Vrot{} (382 discharges). This is a descriptive statistic, not a registered
-test. It agrees with two independent readings: the mean-square floor of
-\S\ref{sec:yardsticks} puts about three quarters of the mean squared error of every
-estimator in frame-to-frame scatter of the reported value; and the ratio of the 10\,ms scatter of \Ti{} divided by
+test. It agrees with two independent readings: on the rows between two scored frames
+the mean-square floor of \S\ref{sec:yardsticks} is two thirds to three quarters of the
+mean squared error of the causal estimators (half for hold); and the ratio of the 10\,ms scatter of \Ti{} divided by
 \Ti{} to the 10\,ms scatter of \Vrot{} divided by the thermal Doppler width of the
 carbon line at that \Ti{} (the Gaussian standard deviation in velocity,
-$\sqrt{\Ti{}/m_\mathrm{C}}$) is $\sqrt2$ (1.395--1.532 in eight split--population
-cells), the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
+$\sqrt{\Ti{}/m_\mathrm{C}}$) is close to $\sqrt2$, and mostly above it (1.395--1.532 in
+eight split--population cells), $\sqrt2$ being the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
 a running mean has \Ti{} skill $+0.26$ to $+0.34$ over hold on the four splits
 and the causal GP $+0.31$ to $+0.35$. PCHIP passes exactly through noisy anchors, so
 any smoother of the CES past gains on it, and the deciding CES-only comparison for a
@@ -321,31 +322,8 @@ uses the following sample. Against the offline GP, which uses the following samp
 and averages noisy anchors, the interval includes zero in both populations. Stated
 with its scope: among estimators that do not wait for the next CES sample this one
 has the lowest mean squared error, and it is not separated from an offline GP that
-does wait. Figure~\ref{fig:trace} shows what the estimates look like through
+does wait. Figure~\ref{fig:tracemain} shows the estimates of the causal variant through
 gaps in three discharges.
-
-\begin{figure}[tp]
-  \centering
-  \includegraphics[width=0.88\linewidth]{fig_trace}
-  \caption{Example traces through gaps (cut population). Circles: measured CES \Ti{};
-  shaded: grid rows without a usable \Ti{}. Lines: estimates at every grid row from
-  CES values before that row; the recurrent estimator shown is the network with
-  whole-discharge standardization of the fast channels, which it reads up to the row. (a, b) Selection fixed before any trace was drawn: the two
-  discharges of this data set whose edge is analysed
-  in~\citep{Heo2025ExperimentalIdentification}, in the split whose test set holds
-  both, and in each the window of 65 rows (0.65\,s) with the most rows lacking \Ti{}. In these
-  windows the measured \Ti{} itself moves by more than 1\,keV between adjacent rows;
-  the raw BES stream of these discharges places the windows in a phase with edge
-  bursts (Fig.~\ref{fig:bursts}), and without per-exposure fit errors it cannot be
-  decided how much of each excursion is the plasma and how much the fit. (c) Added after (a, b)
-  had been seen: the test discharge of the same split whose row-to-row scatter of
-  measured \Ti{} is the median of 46 candidates, same window rule. On its 393 scored
-  rows the RMSE is 63.8\,eV (recurrent estimator), 63.6\,eV (causal GP) and 80.7\,eV
-  (hold). On the 437 (a), 389 (b) and 393 (c) rows scored in the frozen evaluation, the
-  recomputed squared errors of all three estimators equal the stored ones. The 10\,ms
-  files identify no event in these windows; see Fig.~\ref{fig:bursts}.}
-  \label{fig:trace}
-\end{figure}
 
 \begin{table}[t]
   \centering
@@ -488,8 +466,9 @@ above zero up to 50\,ms in the cut population: $+0.115$ $[+0.085, +0.136]$ at 10
 $[+0.044, +0.176]$ at 20\,ms and $+0.072$ $[+0.008, +0.135]$ at 30--50\,ms; beyond
 50\,ms it is $+0.109$ $[-0.009, +0.228]$ and the interval includes zero. In the
 inclusive population the 20\,ms bin ($+0.088$ $[-0.014, +0.214]$) and the bin beyond
-50\,ms ($-0.003$ $[-0.127, +0.088]$) include zero. 97.4\% of the scored \Ti{} rows are
-in the 10\,ms bin.
+50\,ms ($-0.003$ $[-0.127, +0.088]$) include zero. 97.4\% of the scored \Ti{} rows of this readout (the earlier variant's)
+are in the 10\,ms bin; the rows of the main batch differ (the four splits and the pooled
+rows: \S\ref{sec:rows}).
 
 \paragraph{What the fast channels are responding to.} The response of the trained
 network to the fast channels is a same-instant co-movement: its Jacobian is a
@@ -655,7 +634,8 @@ discharge was labelled or any model error was broken down. A row is
   median); ticks mark bursts, the vertical band a beam blip. Bottom: measured \Ti{}
   (dots), the estimate of the train-file-standardized (causal) variant at every grid
   row (line) and hold (dashed); shading
-  marks rows without a usable \Ti{}. (a) 31921, published as FIRE mode at 5.40\,s and
+  marks rows without a usable \Ti{}. (a) 31921, published as FIRE (fast-ion-regulated
+  enhancement) mode at 5.40\,s and
   H-mode at 8.05\,s. (b) 31923. Each window starts 0.2 to 0.3\,s before the rise of the
   BES level.}
   \label{fig:bursts}
@@ -667,7 +647,7 @@ at 5.40\,s and in H-mode at 8.05\,s. In 31921 bursts occur 0 to 0.8 times per se
 between 5.1 and 7.3\,s and 30 to 35 times per second after 7.3\,s, and \Ti{} has no
 missing row before 7.4\,s. In both discharges the late phase begins with a rise of
 the BES level and of \Ti{} from a few hundred eV to about 2\,keV. The
-excursions of more than 1\,keV between adjacent rows in Fig.~\ref{fig:trace}(a, b) are
+excursions of more than 1\,keV between adjacent rows in Fig.~\ref{fig:tracemain}(a, b) are
 in this phase, among the bursts, and are not isolated outliers.
 
 On the eleven other discharges, \Ti{} is missing more often in rows with a burst in
@@ -697,7 +677,9 @@ burst also changes the light that a CES fit has to separate from the
 charge-exchange line~\citep{Viezzer2011PassiveEdge}, and the published analysis uses
 the CES ion temperature of these discharges only between beam blips, which are
 1.5\,s apart here; how the 10\,ms values between blips are obtained is not recorded
-in the files. Whether a value in a frame that contains a burst is the temperature is
+in the files. If the background is interpolated between beam-off frames this far
+apart~\citep{Lee2020TwoGaussian}, it is interpolated through the burst phases, and a
+frame's background need not be that of the frame. Whether a value in a frame that contains a burst is the temperature is
 therefore not decided here; what the paper estimates is the reported value
 (\S\ref{sec:data:kstar}). The blips give one check of what the values between them
 follow. Over the 1{,}394 blips of 508 discharges that have six contiguous rows before them (one,
@@ -715,7 +697,9 @@ the beam emission; whether the fall is a change of the plasma is not decided
 (\S\ref{sec:rows}, last paragraph). A value is reported in frames without a beam as well: in
 one discharge two beam interruptions of 23 and 26\,ms removed no frame, and the rows
 exposed during them carry values (979\,eV; 1{,}711 and 1{,}133\,eV, against medians
-of 1{,}063 and 1{,}195\,eV before). Six discharges carry the model statements, and
+of 1{,}063 and 1{,}195\,eV before), while elsewhere a beam-off time of about 27\,ms
+leaves two or three frames absent (\S\ref{sec:rows}); the files do not say whether
+another source or beam remained on during the two longer interruptions. Six discharges carry the model statements, and
 the interval of the gain share is wide. By the rule registered with these statements, one of the
 three measurement statements having failed, the mechanism is still described as not
 identified.
@@ -733,9 +717,12 @@ follows an energy balance: beam ions already in the plasma keep heating it while
 slow down~\citep{Stix1972HeatingToroidal}, heat leaves over the confinement time, and
 electrons and ions exchange energy over $m_i/2m_e$ electron collision
 times~\citep{Wesson2011Tokamaks}. For $T_e = 0.5$\,keV and
-$n_e = 3\times10^{19}$\,m$^{-3}$, taken for illustration, the slowing-down time of a
-beam deuteron on electrons is about 30\,ms and the exchange time about 16\,ms; these
-are pedestal-top values, and beam ions deposited deeper slow down over 50 to 100\,ms or
+$n_e = 2.5\times10^{19}$\,m$^{-3}$, assumed pedestal-top values (\S\ref{sec:rows}), the
+slowing-down time of a beam deuteron on electrons is about 33\,ms; it scales as
+$T_e^{3/2}/n_e$, so at the line-averaged densities published for discharges of the set
+(1.0 to 1.4$\times10^{19}$\,m$^{-3}$, Table~\ref{tab:plasma}) it would be two to two and a
+half times as long and a blip would remove an even smaller part of the heating. Beam
+ions deposited deeper slow down over 50 to 100\,ms or
 more~\citep{Heidbrink1994BehaviourFast}. A blip
 of about 10\,ms therefore removes the beam light and only part of the heating.
 \emph{An edge burst} raises the light at the edge for less than a millisecond. A row
@@ -1051,7 +1038,10 @@ of~\citep{Lee2026SpatiotemporalStructure}); the \Ti{} pedestal top of the H-mode
 BES\_0206 of the block used here is printed at normalized radius about 0.96 in
 figure~2(e) of~\citep{Heo2025ExperimentalIdentification}. $R = 2.198$\,m is thus about
 4\,cm inside that separatrix; no publication gives the pedestal-top position of the 2022
-discharges in metres.
+discharges in metres. These locations are given in different coordinates (normalized
+flux, $r/a$, the normalized radius of a BES mapping) and for different discharges: 4\,cm
+inside the separatrix is $r/a \approx 0.92$ if the separatrix is at $r/a = 1$ with
+$a = 0.5$\,m, below the 0.94 to 0.97 printed in the papers; they are not reconciled here.
 
 \paragraph{Where the fast channels are.} The files describe the BES and ECEI channels as
 lying within about 1.5\,cm of the chord. The published geometry gives the following
@@ -1094,9 +1084,9 @@ be released in full~\citep{Joung2026ExplainableTokamakagnostic}.
     \midrule
     Device & $R_0 = 1.8$\,m, $a = 0.5$\,m, $B_T \leq 3.5$\,T & \citep{Nam2026OverviewKstar} \\
     Discharges & 2022 campaign, shots 30801--32751 (639 used) & this work \\
-    Published discharges of the set & 31357/31359, 31873, 31921/31923, 32092: $I_p$ 0.5 to 0.6\,MA, $B_T$ 1.8\,T, line-averaged $n_e$ 1.0 to 1.4$\times10^{19}$\,m$^{-3}$ where given, NBI 2 to 4\,MW; FIRE (I-mode-like edge), ELMy H-mode, RMP ELM suppression, QH-mode & \citep{Heo2025ExperimentalIdentification,Na2026FireMode,Kim2024HighestFusion,Yang2024TailoringTokamak,Lee2026SpatiotemporalStructure} \\
+    Published discharges of the set & 31357/31359, 31873, 31921/31923, 32092: $I_p$ 0.5 to 0.6\,MA, $B_T$ 1.8\,T, line-averaged $n_e$ 1.0 to 1.4$\times10^{19}$\,m$^{-3}$ where given, NBI 2 to 4\,MW; FIRE (fast-ion-regulated enhancement) mode with an I-mode-like edge, ELMy H-mode, RMP ELM suppression, QH-mode & \citep{Heo2025ExperimentalIdentification,Na2026FireMode,Kim2024HighestFusion,Yang2024TailoringTokamak,Lee2026SpatiotemporalStructure} \\
     Neutral beams & NBI-1 and NBI-2, three deuterium sources each, up to 100\,kV and about 2\,MW per source; CES and BES view NBI-1; in 2022 the first source of NBI-1 could not be used; in 31923 the beam power falls at the interruptions by at least 1.1\,MW from about 3.5\,MW (read from a figure) & \citep{Kwak2025EstimationNeutral,Lampert2015CombinedHydrogen,Lee2026NeuralNetworkbased,Han2024CriterionLong,Heo2025ExperimentalIdentification} \\
-    CES & C\,VI 529.05\,nm, 32 chords, about 5\,mm apart at the edge; from the 2022 campaign on, channel 18 at $R = 2198$\,mm (the chord of the files), its neighbours at 2192 and 2203\,mm, the outermost channel at 2269\,mm; beam modulation at 1 or 2\,Hz with 99\% duty~\citep{KFE2026DiagnosticsDataUserGuide}; 10\,ms time resolution (papers on 2021 discharges and the 2022 diagnostics overview), with a 5\,ms exposure in one paper and a 10\,ms integration in another; background interpolated between beam-off frames (beam off for 10\,ms at 1 to 5\,Hz) & \citep{Lee2020TwoGaussian,Jang2021DevelopmentUltrafast,Lee2026NeuralNetworkbased,Kim2024KineticProfile,Lee2022OverviewRecent} \\
+    CES & C\,VI 529.05\,nm, 32 chords; from the 2022 campaign on, channel 18 at $R = 2198$\,mm (the chord of the files), its neighbours at 2192 and 2203\,mm (5 to 6\,mm apart; about 4\,mm read from a figure of 32092), the outermost channel at 2269\,mm; beam modulation at 1 or 2\,Hz with 99\% duty~\citep{KFE2026DiagnosticsDataUserGuide}; 10\,ms time resolution (papers on 2021 discharges and the 2022 diagnostics overview), with a 5\,ms exposure in one paper and a 10\,ms integration in another; background interpolated between beam-off frames (beam off for 10\,ms at 1 to 5\,Hz~\citep{Lee2020TwoGaussian}, 1\,Hz in~\citep{Lee2026NeuralNetworkbased}; in the files the blips are 1.5\,s apart in the two discharges of Fig.~\ref{fig:bursts}, and 1{,}414 steps with absent frames fall in 245{,}925 rows of 10\,ms, fewer than one per second) & \citep{Lee2020TwoGaussian,Jang2021DevelopmentUltrafast,Lee2026NeuralNetworkbased,Kim2024KineticProfile,Lee2022OverviewRecent} \\
     BES & $16\times4$ avalanche-photodiode array (radial $\times$ vertical), 2\,MHz, about 1\,cm pitch, on NBI-1, movable from discharge to discharge; names BES\_[vertical 01--04][radial 01--16]; in 31923 the view spans $R \approx 2.12$ to 2.34\,m (read from a figure), so columns 5 to 7 lie at $R \approx 2.16$ to 2.21\,m if the column number increases outward (printed for the earlier array~\citep{Nam2014EdgeElectron}; inferred for the 2022 array, with a public de-identified KSTAR BES file agreeing) & \citep{Lampert2015CombinedHydrogen,Heo2025ExperimentalIdentification,KFE2026DiagnosticsDataUserGuide,Joung2026PhysicsInformedPreprocessing} \\
     ECEI & $24\times8$ channels per array, second-harmonic X mode, 2\,$\mu$s; GT = first system (G port), transmitted-beam array; the four digits are the vertical (01--24) and radial (01--08) index; $f = \mathrm{LO} + 2.6 + 0.9\,(n_r - 1)$\,GHz at the cold resonance, radial channel 1 outermost; GT1103 to GT1403 are four vertically adjacent channels of radial column 3, about 2\,cm apart around the midplane; that column at $R \approx 2.19$\,m in 32092 (read from a figure), 2 to 3\,cm uncertain between discharges & \citep{Yun2014Quasi3d,Yun2011TwoDimensionalVisualization,Lee2026SpatiotemporalStructure,fluctana,syndia,KFE2026DiagnosticsDataUserGuide} \\
     ECE optical depth & not published per discharge; second-harmonic X mode at 1.8\,T and $R \approx 2.2$\,m: about 6.7 at $n_e = 2\times10^{19}$\,m$^{-3}$ and 0.5\,keV, 2.9 at $1.5\times10^{19}$ and 0.3\,keV, 1.2 at $1\times10^{19}$ and 0.2\,keV, 0.5 at separatrix values (estimate from published formulas, \texttt{docs/paper/b62\_estimates.md}); the KSTAR pedestal is described as optically thick or grey & \citep{Yun2011TwoDimensionalVisualization,Zhu2019NewTrends} \\
@@ -1107,13 +1097,17 @@ be released in full~\citep{Joung2026ExplainableTokamakagnostic}.
 
 \paragraph{What a row holds.} For twelve discharges the raw BES, ECEI and Mirnov
 signals (0.5 to 2\,MHz) were delivered as well, and setting them against the 10\,ms
-files shows how the files were assembled. Every fast-channel value of a row is the
-single raw sample at the time stamp of the row (BES on 6{,}502 of 6{,}502 rows, ECEI
-on 6{,}484 of 6{,}484): the fast channels are snapshots, not averages over the CES
+files shows how the files were assembled. Every fast-channel value of a row equals a
+single raw sample within one raw step of the time stamp of the row (BES on 6{,}502 of
+6{,}502 rows of the delivered windows, ECEI on 6{,}484 of 6{,}484; which step,
+counted on 6{,}490 of the BES rows by a later readout with its own window edges, is given
+in \S\ref{sec:rows}): the fast channels are snapshots, not averages over the CES
 frame. 99.37\% of the steps between rows are 10\,ms. A step of 20, 30 or 40\,ms is
 one, two or three absent frames (1{,}637 absent frames in 1{,}414 steps), and each of
 the 45 such steps inside the raw deliveries coincides with a beam blip: the heating
-beam is interrupted for about 10\,ms and the frame exposed without beam is left out.
+beam is interrupted (for about 10\,ms when one frame is absent) and the frames exposed
+without beam are left out. The converse does not always hold
+(\S\ref{sec:bursts}: two interruptions of 23 and 26\,ms that removed no frame).
 The files therefore record the blips, though not the beam power. In the raw stream the beam
 is off from 1.7\,ms before an absent stamp to 8.8\,ms after it, which places the
 frame: the time stamp of a row lies within about 2\,ms of the start of its 10\,ms
@@ -1164,11 +1158,13 @@ photon noise would), so whether the component is fit noise or a fluctuation fast
 than a frame is not decided by the files. This typical scatter of a row and the
 mean-square floor of \S\ref{sec:yardsticks} (\FloorRms\,eV root mean square) are the
 two noise quantities of the paper: the first is a robust value on a typical row, the
-second a mean square over all rows, which a few large excursions dominate. Published
+second a mean square over the rows between two scored frames, which a few large
+excursions dominate. Published
 values for other analyses or other discharges, not fit errors of the rows used here, are
 of similar size: a median uncertainty of 0.080\,keV for \Ti{} and 3.84\,km/s for the
-rotation over all channels and times of a 2022 discharge in the neural-network
-analysis~\citep{Kim2026AutomatedOutlier}, error bars of about 0.10 to 0.14\,keV at $r/a$
+rotation over all channels and times of a 2022 discharge (32364), quoted in a Bayesian
+profile-fitting paper~\citep{Kim2026AutomatedOutlier} for the values of the
+neural-network analysis~\citep{Lee2026NeuralNetworkbased}, error bars of about 0.10 to 0.14\,keV at $r/a$
 0.85 to 0.97 in the H-mode of 31921 (read from figure~10(a) of~\citep{Na2026FireMode};
 single frame or average not stated), and a scatter of about 0.05\,keV at normalized
 radius 0.94 in 31923 (read from figure~2(d) of~\citep{Heo2025ExperimentalIdentification});
@@ -1265,8 +1261,9 @@ the quiet rows carry 0.920, 0.472, 0.843 and 0.811 of its squared-error reductio
 the rows after an absent frame it has $+0.215$ $[+0.110, +0.309]$, $+0.069$
 $[-0.010, +0.168]$, $+0.163$ $[+0.088, +0.239]$ and $+0.104$ $[+0.031, +0.179]$
 (three of four), and those rows carry 0.194, 0.186, 0.153 and 0.135 of the reduction.
-The two registered statements on the BES network hold (outside the rows that follow a
-beam interruption: $+0.085$, $+0.019$, $+0.105$ and $+0.063$, three of four). The
+The two registered statements on the BES network hold (outside both the rows after an
+absent frame and the rows after low beam emission, where no network has a lower error
+than the twin: $+0.085$, $+0.019$, $+0.105$ and $+0.063$, three of four). The
 third does not: after an absent frame the ECEI network has $-0.002$
 $[-0.179, +0.115]$, $-0.005$ $[-0.045, +0.028]$, $+0.103$ $[+0.067, +0.141]$ and
 $+0.053$ $[-0.002, +0.103]$ over the twin (one of four), although the ECEI level
@@ -1461,8 +1458,9 @@ causal GP the filter without the fast channels has $-0.098$, $-0.032$, $-0.034$ 
 $-0.051$ (every interval below zero) and the filter with them $-0.038$, $+0.017$,
 $+0.013$ and $-0.017$ (every interval includes zero). \emph{Age of the last value.}
 The last visible value is 10\,ms old in 0.959 to 0.972 of the scored rows, 20 to
-50\,ms in 0.024 to 0.038 and older in 0.003 to 0.004 (on the four splits; 0.0025 on
-the pooled rows). Where it is 20\,ms old or older
+50\,ms in 0.024 to 0.038 and older in 0.003 to 0.004 (on the 96 test discharges of each
+of the four splits; on the pooled rows, a different row set that covers all 639
+discharges, 0.0025 is older than 50\,ms). Where it is 20\,ms old or older
 the estimator has $+0.056$ $[-0.074, +0.177]$, $+0.089$ $[+0.026, +0.153]$, $+0.109$
 $[+0.040, +0.185]$ and $+0.105$ $[+0.049, +0.178]$ over the causal GP (the statement
 holds, three of four); beyond 50\,ms it has $+0.004$, $+0.007$, $+0.144$ and
@@ -1486,8 +1484,12 @@ which changes a skill over the causal GP by less than 0.001.
 run: the stored row errors of the 80 trainings of the pooled cross-validation were
 read with the features of each row taken from the data files, under the definitions
 of the readouts above (applied to the first split, the code reproduces the numbers
-recorded there). In each re-partition 633 to 635 of the 639 discharges have scored
-rows; the interval draws a re-partition and resamples its discharges.
+recorded there). Every discharge is a test discharge once per re-partition, but its
+scored rows are a seeded subset of at most 500 (the per-discharge cap of the protocol),
+drawn anew with the seed of each re-partition; the scored rows therefore differ slightly
+between re-partitions (191{,}934 to 192{,}145), and in each re-partition 633 to 635 of
+the 639 discharges have scored rows (four never do). The interval draws a re-partition
+and resamples its discharges.
 Table~\ref{tab:pooledrows} gives every statement beside its counterpart on the four
 splits. Reported with them: the ratio of the medians of the absolute error is 1.042
 $[1.007, 1.082]$ against the causal GP, 1.013 $[0.974, 1.056]$ against hold and 0.999
@@ -1548,16 +1550,20 @@ effective number of rows of 0.062 of the rows it uses.
 \paragraph{Absolute errors, robust skills and discharges.} Registered; stored errors,
 pooled rows (r2 to r9; the filters on r3 to r9, where every estimator is recomputed).
 Root-mean-square errors: estimator \RmseNet\,eV, twin 189.2 $[179.4, 199.6]$, causal GP
-\RmseGp, hold 233.4 $[219.9, 247.2]$, offline GP 181.3 $[170.7, 191.6]$\,eV; the
-estimator is \RmseNetMinusGp\,eV (\RmseNetMinusGpPct\%) and the twin \RmseTwinMinusGp\,eV
-from the causal GP. Mean absolute errors: 91.2, 94.0, 94.2, 107.8 and 84.8\,eV. With a
+\RmseGp, hold 233.4 $[219.9, 247.2]$, offline GP 181.3 $[170.7, 191.6]$\,eV, on r2 to r9
+(main-text Table~\ref{tab:main}(b) gives them on r3 to r9, where the intervals differ in
+the last digit); the estimator is \RmseNetMinusGp\,eV (\RmseNetMinusGpPct\%) and the
+twin \RmseTwinMinusGp\,eV from the causal GP, paired intervals that are not the
+difference of the intervals above. Mean absolute errors: 91.2, 94.0, 94.2, 107.8 and 84.8\,eV. With a
 Huber loss (threshold 200\,eV) and with the rows whose squared error of hold is in its
 top 1\% removed, the estimator has \StatAone{} and \StatAthree{} over the causal GP and
 \StatAtwo{} and \StatAfour{} over the twin, and KFX has \StatAfive{} (Huber) over KF0;
 all five registered statements are met. Removing per re-partition the discharges with
 the largest reduction against the causal GP (a lower bound, since it selects on the
 outcome): without 10, 32 and 64 of them, which carry 0.214, 0.493 and 0.769 of the
-reduction, the skill over the causal GP is $+0.076$ $[+0.050, +0.099]$, $+0.055$
+reduction, the skill over the causal GP is $+0.076$ $[+0.050, +0.099]$ (the same
+removal as in the paragraph above, whose interval ends at $+0.098$ in an independent set
+of bootstrap draws), $+0.055$
 $[+0.029, +0.078]$ and \StatBone{} (met for 64) and over the twin $+0.041$
 $[+0.016, +0.064]$, $+0.034$ $[+0.006, +0.056]$ and \StatBtwo{} (not met for 64).
 
@@ -1612,6 +1618,7 @@ inputs, not what a network trained on them would reach.
     \toprule
     Fast-channel input & Change of the estimate (eV, r.m.s.) & Change skill & Skill over the twin \\
     \midrule
+    File values (reference, twelve discharges) & 0 & 0 & $+0.025$ $[-0.064, +0.109]$ \\
     One raw step earlier & 12.6 & $-0.0049$ $[-0.0297, +0.0096]$ & $+0.021$ \\
     0.1\,ms earlier & 38.7 & $-0.0093$ $[-0.0431, +0.0151]$ & $+0.016$ \\
     0.5\,ms earlier & 46.1 & $-0.0234$ $[-0.0892, +0.0133]$ & $+0.003$ \\
@@ -1621,6 +1628,7 @@ inputs, not what a network trained on them would reach.
     10\,ms earlier & 53.5 & $-0.0792$ $[-0.1637, -0.0369]$ & $-0.051$ \\
     Mean of the samples in the 1\,ms before the stamp & 40.0 & $+0.0227$ $[-0.0206, +0.0652]$ & $+0.048$ \\
     \midrule
+    File values (reference, all discharges) & 0 & 0 & \Ptwo{} \\
     All fast channels one frame old & 48.4 & $-0.0785$ $[-0.0964, -0.0613]$ & $-0.027$ $[-0.050, -0.008]$ \\
     BES alone one frame old & 37.6 & $-0.0503$ $[-0.0603, -0.0404]$ & $+0.000$ $[-0.024, +0.022]$ \\
     ECEI alone one frame old & 22.4 & $-0.0198$ $[-0.0279, -0.0136]$ & $+0.029$ $[+0.006, +0.050]$ \\
@@ -1628,6 +1636,31 @@ inputs, not what a network trained on them would reach.
     Mirnov at its training mean & 18.5 & $+0.0051$ $[-0.0021, +0.0166]$ & $+0.053$ $[+0.028, +0.078]$ \\
     \bottomrule
   \end{tabular}}
+\end{table}
+
+\paragraph{Event sets of the beam-interruption readouts.} The readouts on beam
+interruptions use different event sets, each with the rule of its registration
+(Table~\ref{tab:eventsets}); they are nested selections from the absent-frame steps of
+the 641 files and differ in how many absent frames an event has and which rows around
+it must be contiguous or measured.
+
+\begin{table}[h]
+  \centering
+  \caption{Event sets of the readouts on beam interruptions.}
+  \label{tab:eventsets}
+  \footnotesize
+  \begin{tabular}{p{0.15\linewidth}p{0.55\linewidth}p{0.20\linewidth}}
+    \toprule
+    Events (discharges) & Rule & Used in \\
+    \midrule
+    1{,}394 (508) & absent-frame steps (one to three absent frames) with six contiguous rows before them & \S\ref{sec:bursts} \\
+    1{,}262 (489) & the subset of these with one absent frame & main text \S\ref{sec:res:where}; this section \\
+    1{,}366 (498) & one to three absent frames, \Ti{} observed in at least three of the six rows before & this section (BES components) \\
+    1{,}203 (449) & \Ti{} observed in the first row after and in at least three of the six rows before & \S\ref{sec:twosources} \\
+    1{,}188 (460) & isolated absent frames with at least ten measured \Ti{} rows in both 200\,ms windows & \S\ref{sec:target} \\
+    41 (12); 31 (10) & interruptions of one absent frame in the raw streams; those kept for the ECEI readout & this section \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 \paragraph{Beam blips as a calibration of the response to the beam.} The definitions
@@ -1680,8 +1713,9 @@ streams of the discharges that have them, no model. The beam-off and beam-return
 bins of the raw BES. By a rule fixed before any statement was read (addendum 1), an
 interruption is kept for the ECEI readout only if the mean ECEI level of the 20\,ms before
 the beam goes off is positive and at least ten times the standard deviation of its 1\,ms
-bins; 31 interruptions of ten discharges remain (one discharge has an ECEI level of zero
-within noise). Window values are event medians of the ratio to the 20\,ms before the beam
+bins; 31 interruptions of ten discharges remain (ten are excluded: all four of one
+discharge whose ECEI level is zero within noise, all three of one discharge whose level
+is noisy, and three of two other discharges). Window values are event medians of the ratio to the 20\,ms before the beam
 goes off (Fig.~\ref{fig:beamreturn}). ECEI: 0.972 $[0.953, 0.999]$ in the last 3\,ms before
 the return, 0.956 $[0.929, 0.997]$ 0 to 3\,ms after it, 0.938 $[0.879, 0.986]$ 10 to
 13\,ms after and 0.944 $[0.888, 1.003]$ 20 to 23\,ms after; BES: 0.201
@@ -1760,7 +1794,11 @@ plasma displacement and ion-temperature fluctuations~\citep{Kim2018EnhancedFast}
 figure~1(a) the pedestal \Ti{} and rotation traces dip at each drop of the source, read
 from the figure) and changes of the rotation~\citep{Lee2016ValidationToroidal}; a
 switching-on beam also perturbs the electrons promptly~\citep{Zhao2023RefinedInterpretation}.
-With a fixed chord in a steep gradient, a displacement of the plasma changes the value
+The KSTAR CES group itself writes that on KSTAR the modulation for the charge-exchange
+background uses the main heating beam rather than a dedicated diagnostic beam, ``which
+may potentially cause plasma disturbances'', and that frequent modulation ``can disturb
+plasma conditions, affecting the accuracy of CES measurements'' (abstract and \S1
+of~\citep{Lee2026NeuralNetworkbased}). With a fixed chord in a steep gradient, a displacement of the plasma changes the value
 read at the chord, and the files carry no equilibrium to test it. Which part of the fall
 is a response to the lost heating, a displacement, or the measurement of the first frame
 is not decided here.
@@ -1887,9 +1925,11 @@ registered check). Per fold the parameters minimise the mean squared error in eV
 discharges that are not in the test fold: first $q$, $r$, $k$ without drive (KF0), then
 the gains with those held (Kc: $b_c$ only; Kg: $b_g$ only; KFX: both).
 
-\paragraph{Development and confirmation.} The specification was developed by a delegated
-agent on re-partition r2 of the pooled cross-validation before it was registered, with
-two declared forking paths: the agent saw the test error of a filter with an unclipped
+\paragraph{Development and confirmation.} The specification was developed by an AI
+coding agent (a language-model agent that wrote and ran the analysis code under the
+author's supervision; see the declaration of AI use in the main text) on re-partition r2
+of the pooled cross-validation before it was registered, with two declared forking
+paths: the agent saw the test error of a filter with an unclipped
 drive once on r2 and then added the clip, and a joint fit of all five parameters was
 abandoned there because it degenerated in three of five folds. r2 is therefore the
 development set and is not pooled into the confirmation; every statement is read on
@@ -1917,7 +1957,7 @@ network, has no increment in the coldest third.
 each split's training discharges; Table~\ref{tab:filtersplits}) KX1, KX2, KX5 and KX6
 hold on four of four, KX3 on two of four (does not hold), and KX4 on none (the 90\%
 intervals of 96 discharges are wider than the band of $\pm0.02$). On the split by time
-(95 test discharges) KFX has \KXtime{} over KF0, Kg $+0.018$ $[+0.009, +0.028]$ over
+(the 95 of its 97 test discharges that have scored rows; \S\ref{sec:fast}) KFX has \KXtime{} over KF0, Kg $+0.018$ $[+0.009, +0.028]$ over
 KF0, KF0 $+0.060$ $[+0.022, +0.091]$ over the causal GP and KFX $+0.085$
 $[+0.044, +0.118]$; the earlier causal variant (four initialisations, one drawn per
 resample) has $+0.024$ $[-0.004, +0.052]$ over KFX there.
@@ -1950,22 +1990,30 @@ clip is an ad hoc robustification; the filter reads two summaries of BES and no 
 
 Registered; CPU only, the 40 stored twins run forward for their signed estimates. Rows
 of the pooled cross-validation, re-partitions r2 to r9; interval: a re-partition drawn,
-then its discharges resampled (2,000 draws). \emph{Floor.} On 1{,}085{,}452 triples of
-consecutive scored rows 10\,ms apart, $s^2$, minus the covariance of successive
+then its discharges resampled (2,000 draws). \emph{Floor.} On the triple rows, scored
+rows $t$ whose frames $t-1$ and $t+1$ are scored, consecutive and 10\,ms apart
+(1{,}085{,}452 of the 1{,}536{,}645 scored rows), $s^2$, minus the covariance of successive
 increments of the reported value, is 18{,}415 $[15{,}969, 21{,}226]$\,eV$^2$ (root mean
 square \FloorRms\,eV). It is a lower bound of the mean frame-to-frame independent
 variance if the increments of the underlying value are not negatively correlated.
-\emph{Removable-error skill} of $A$ over $R$: $(\mathrm{MSE}_R - \mathrm{MSE}_A)/
-(\mathrm{MSE}_R - s^2)$. \emph{Gap closure} of $A$: $(\mathrm{MSE}_\mathrm{GP} -
-\mathrm{MSE}_A)/(\mathrm{MSE}_\mathrm{GP} - \mathrm{MSE}_\mathrm{offline\,GP})$.
+\emph{MSE over the floor} and \emph{removable-error skill} of $A$ over $R$,
+$(\mathrm{MSE}_R - \mathrm{MSE}_A)/(\mathrm{MSE}_R - s^2)$, use the MSE of each estimator
+on the same triple rows, where the errors are smaller than on all rows; the root-mean-square
+errors of the main text are on all rows, so the ratios do not follow from them. The
+reciprocal of the ratio is the share of an estimator's error that the floor accounts
+for. \emph{Gap closure} of $A$, on all scored rows: $(\mathrm{MSE}_\mathrm{GP} -
+\mathrm{MSE}_A)/(\mathrm{MSE}_\mathrm{GP} - \mathrm{MSE}_\mathrm{offline\,GP})$. The floor
+bounds what an estimate from the CES history can remove; an estimate that reads a
+present-frame signal correlated with the conditions of that frame's fit is not bounded
+by it, and the persistence below speaks to that.
 \emph{Persistence}: for a correction $d_t = A_t - B_t$, $\beta_h$ is the regression
 coefficient of $y_{t+h} - B_t$ on $d_t$, on rows whose frames $t$ to $t+h$ are
 consecutive and scored, and $\rho_h = \beta_h/\beta_0$. A correction that describes the
 plasma should keep $\rho_1$ near the reference of a correction that cannot know the fit
 of frame $t$ (the twin minus KF0); one that describes the fit of frame $t$ should not.
 
-\paragraph{Statements.} All five hold. Every estimator's mean squared error is above the
-floor (N1, Table~\ref{tab:floor}). The recurrent estimator closes more than half of the
+\paragraph{Statements.} All five hold. On the triple rows every estimator's mean squared
+error is above the floor (N1, Table~\ref{tab:floor}). The recurrent estimator closes more than half of the
 gap between the causal and the offline GP (N2: \GapNet{}). Its fast-channel correction
 lasts into the next frame (N3: $\rho_1$ = \RhoNet{}), as does the filter's (N4:
 \RhoKFX{}), and the part that does not last does not shrink further three frames later
@@ -1974,8 +2022,9 @@ lasts into the next frame (N3: $\rho_1$ = \RhoNet{}), as does the filter's (N4:
 \begin{table}[h]
   \centering
   \caption{Floor, removable-error skill and gap closure on the rows of the pooled
-  cross-validation (eight re-partitions), on all rows and outside the ten rows after an
-  absent frame, with 95\% intervals.}
+  cross-validation (eight re-partitions), with 95\% intervals. The first two blocks are on
+  the triple rows, the third on all scored rows (the row set of each block is named in
+  it); the second column leaves out the ten rows after an absent frame from that set.}
   \label{tab:floor}
   \footnotesize
   \TabFloor
@@ -1991,14 +2040,15 @@ lasts into the next frame (N3: $\rho_1$ = \RhoNet{}), as does the filter's (N4:
   \resizebox{\linewidth}{!}{\TabPersist}
 \end{table}
 
-\emph{Reading.} Three quarters of the mean squared error of the recurrent estimator,
-and of the offline GP, is scatter of the reported value that no estimator of the
-present frame removes; skills that carry the floor in numerator and denominator make
+\emph{Reading.} On the triple rows the floor is about three quarters of the mean squared
+error of the recurrent estimator and of the offline GP, two thirds of that of the causal
+GP and KF0, and half of that of hold (the reciprocals of the ratios); skills that carry the floor in numerator and denominator make
 the gain look several times smaller than its share of the removable error. \RhoNet{} of
 the fast-channel correction lasts into the next frame against \RhoRef{} for a
 correction from the CES history alone, so the part specific to the frame (its fit, or a
-fluctuation inside it that the fast sample sees) is about a fifth to a quarter, 0.31
-below the reference. A bias shared by consecutive frames passes this test. The network's
+fluctuation inside it that the fast sample sees) is about a fifth by the point value
+and a quarter at the lower end of its interval; measured against the reference, which
+lies above one, the shortfall is 0.31. A bias shared by consecutive frames passes this test. The network's
 correction overshoots ($\beta_0$ below one), the filter's does not, which is the
 measured basis of the shrinking second stage of \S\ref{sec:character}. \emph{Limits.}
 The floor is a lower bound under an assumption that cannot be tested without fit
@@ -2021,7 +2071,8 @@ filter was computed, use r3 to r9, on which every estimator is read again.
 Within 10\%: \ShareNetTen{} and \ShareGpTen{}. The estimator is above the causal GP
 within 20\% (T20): \TTwenty{}, does not hold. It is above hold (T20h): \TTwentyHold{},
 holds. Within 10\% it is not more than 0.02 below the causal GP (T10): \TTen{}, lower end
-\TTenLow{}, does not hold. Of 1{,}536{,}645 scored rows 20{,}865 (0.0136) have a
+\TTenLow{}, does not hold. Of the 1{,}536{,}645 scored rows of the eight re-partitions (191{,}934 to
+192{,}145 per re-partition; \S\ref{sec:rows}) 20{,}865 (0.0136) have a
 reported value below 50\,eV; within 20\% of them lie 0.001 of the estimates of the
 network, 0.047 of the causal GP and 0.075 of hold.
 
@@ -2095,63 +2146,68 @@ corresponding runs or readouts and that the main text uses, with their outcomes.
 order of events, the earlier batches and the statements on MAST and on rotation are
 in \S\ref{app:registration}.
 
-\begin{table}[h]
-  \centering
+{\footnotesize
+\begin{longtable}{p{0.56\linewidth}p{0.14\linewidth}p{0.20\linewidth}}
   \caption{Registered statements used in the main text. ``Holds'' means that the
   statement holds by the rule fixed with it (for the four splits: on at least three).
-  The statements on the pooled rows are in Table~\ref{tab:pooledrows}.}
-  \label{tab:registered}
-  \footnotesize
-  \begin{tabular}{p{0.60\linewidth}p{0.14\linewidth}p{0.16\linewidth}}
-    \toprule
-    Statement & Outcome & Where \\
-    \midrule
-        The estimator has skill over the causal GP (four splits, three initialisations) & \SoneVerdict{} (\SoneAbove{}) & \S\ref{sec:res:main} \\
-    The estimator has skill over its history-only twin (the same) & \StwoVerdict{} (\StwoAbove{}) & \S\ref{sec:res:main} \\
-        \ifpooled The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
-    \ifaverage The average of three initialisations has skill over the causal GP; over the average of the three twins (registered after the two statements on a single training had failed) & \EoneVerdict{}; \EtwoVerdict{} & \S\ref{sec:res:main} \\ \fi
-    The ECEI network has skill over the twin & does not hold & \S\ref{sec:res:diag} \\
-        The BES network has skill over the twin & holds & \S\ref{sec:res:diag} \\
-    The same in rows with no beam interruption behind them; in quiet rows & hold & \S\ref{sec:res:diag} \\
-    The ECEI network has skill over the twin after an absent frame & does not hold & \S\ref{sec:res:diag} \\
-    Plain rows carry more than half of the reduction against the twin & does not hold & \S\ref{sec:res:where} \\
-    Plain rows carry more than half of the reduction against the causal GP & does not hold & \S\ref{sec:res:where} \\
-    The 90th percentile of the absolute error is below that of the causal GP and of hold & holds & \S\ref{sec:res:where} \\
-    \Ti{} falls after an isolated burst onset & does not hold & \S\ref{sec:res:where} \\
-    The increment is present in every third of the discharges by level & does not hold & \S\ref{sec:res:where} \\
-    The margin over the causal GP is present in every third & does not hold & \S\ref{sec:res:where} \\
-    With one and with two frames of delay the estimator has skill over the causal GP & holds & \S\ref{sec:res:use} \\
-    With two frames of delay it has skill over the twin & holds & \S\ref{sec:res:use} \\
-        With a value every 50\,ms the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:res:use} \\
-    In the fifth of scored rows most at risk of losing the value the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:limits} \\
-        The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits} \\
-    The 200\,ms changes of \Ti{} follow the radial difference of the BES array; its common mode & hold & \S\ref{sec:res:diag} \\
-    The same for the radial difference after the common mode is removed & does not hold & \S\ref{sec:res:diag} \\
-        A second stage on the twin that reads the differences between BES channels has skill over one without BES; one that reads the common mode & hold & \S\ref{sec:res:diag} \\
-    The estimator has the lower mean squared error than the causal GP in more than half of the test discharges; than its twin & hold & \S\ref{sec:res:main} \\
-    The estimator has skill over a linear filter with the fast channels fitted on the training discharges; that filter over the one without the fast channels & hold & \S\ref{sec:res:main} \\
-    The estimator has skill over the causal GP where the last value is 20\,ms old or older; with the scored rows limited to 2{,}000\,eV, over the causal GP and over the twin & hold & \S\ref{sec:rows} \\
-    The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
-    The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
-    The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data:kstar} \\
-    That component falls with the beam-emission level; on MAST it agrees with the reported fit error & do not hold & \S\ref{sec:data:kstar} \\
-    The 200\,ms changes of \Ti{} and of the ECEI level are correlated beyond a shifted null & holds & \S\ref{sec:data:kstar} \\
-        Values above 3\,keV are more frequent at low beam emission & holds & \S\ref{sec:data:kstar} \\
-    The reported value steps across a beam-off frame by more than over the same span elsewhere; by more than the ECEI level does & do not hold & \S\ref{sec:data:kstar} \\
-    The frame-to-frame component depends on the age of the last beam-off frame & does not hold & \S\ref{sec:data:kstar} \\
-    Five-parameter filter (r3 to r9): KFX over KF0; Kg over KF0; the network over KFX; KF0 equivalent to the causal GP; median of KFX below that of hold; KFX over KF0 outside the rows after a blip & hold & \S\ref{sec:res:main}, \S\ref{sec:filter} \\
-    Every estimator above the floor; the network closes more than half of the gap to the offline GP; the fast-channel correction lasts into the next frame (network; filter); the part that does not last does not shrink further & hold & \S\ref{sec:res:main}, \S\ref{sec:res:use} \\
-    More frames within 20\% of the reported value than the causal GP (network) & does not hold & \S\ref{sec:res:main} \\
-    The same against hold (network) & holds & \S\ref{sec:res:main} \\
-    Within 10\% not more than 0.02 below the causal GP (network) & does not hold & \S\ref{sec:res:main} \\
-    KFX above the causal GP within 20\% and within 10\%; above KF0 within 20\%; in the coldest third not more than 0.02 below the causal GP & hold & \S\ref{sec:res:main}, \S\ref{sec:res:where} \\
-    A network that reads only the differences between BES channels has skill over the twin & does not hold & \S\ref{sec:res:diag} \\
-    A network that reads only the common mode has skill over the twin; under a fixed budget of 40 epochs the estimator has skill over its twin and over the causal GP & hold & \S\ref{sec:res:diag} \\
-    With the fast channels one frame old the increment remains & does not hold & \S\ref{sec:res:diag} \\
-    Samples taken one raw step, 0.5\,ms or 2\,ms earlier give an equivalent error & do not hold & \S\ref{sec:res:use} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+  ``Where'': the main-text section that uses the statement, then the supplementary
+  section that gives it in full. The statements on the pooled rows are in
+  Table~\ref{tab:pooledrows}.}
+  \label{tab:registered}\\
+  \toprule
+  Statement & Outcome & Where \\
+  \midrule
+  \endfirsthead
+  \toprule
+  Statement & Outcome & Where \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  The estimator has skill over the causal GP (four splits, three initialisations) & \SoneVerdict{} (\SoneAbove{}) & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
+  The estimator has skill over its history-only twin (the same) & \StwoVerdict{} (\StwoAbove{}) & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
+  The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\
+  The average of three initialisations has skill over the causal GP; over the average of the three twins (registered after the two statements on a single training had failed) & \EoneVerdict{}; \EtwoVerdict{} & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
+  The ECEI network has skill over the twin & does not hold & \S\ref{sec:res:diag}; \S\ref{sec:splits} \\
+  The BES network has skill over the twin & holds & \S\ref{sec:res:diag}; \S\ref{sec:splits} \\
+  The same outside the rows after an absent frame or low beam emission; in quiet rows & hold & \S\ref{sec:res:diag} (quiet rows); \S\ref{sec:rows} \\
+  The ECEI network has skill over the twin after an absent frame & does not hold & \S\ref{sec:rows} \\
+  Plain rows carry more than half of the reduction against the twin & does not hold & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  Plain rows carry more than half of the reduction against the causal GP & does not hold & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  The 90th percentile of the absolute error is below that of the causal GP and of hold & holds & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  \Ti{} falls after an isolated burst onset & does not hold & Fig.~\ref{fig:events}(b); \S\ref{sec:twosources} \\
+  The increment is present in every third of the discharges by level & does not hold & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  The margin over the causal GP is present in every third & does not hold & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  With one and with two frames of delay the estimator has skill over the causal GP & holds & \S\ref{sec:res:use}; \S\ref{sec:rows} \\
+  With two frames of delay it has skill over the twin & holds & \S\ref{sec:res:use}; \S\ref{sec:rows} \\
+  With a value every 50\,ms the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:res:use}; \S\ref{sec:rows} \\
+  In the fifth of scored rows most at risk of losing the value the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:rows} \\
+  The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits}; \S\ref{sec:rows} \\
+  The 200\,ms changes of \Ti{} follow the radial difference of the BES array; its common mode & hold & \S\ref{sec:rows} \\
+  The same for the radial difference after the common mode is removed & does not hold & \S\ref{sec:rows} \\
+  A second stage on the twin that reads the differences between BES channels has skill over one without BES; one that reads the common mode & hold & \S\ref{sec:rows} \\
+  The estimator has the lower mean squared error than the causal GP in more than half of the test discharges; than its twin & hold & \S\ref{sec:res:where}; \S\ref{sec:rows} \\
+  The estimator has skill over a linear filter with the fast channels fitted on the training discharges; that filter over the one without the fast channels & hold & \S\ref{sec:rows}; \S\ref{sec:splits} \\
+  The estimator has skill over the causal GP where the last value is 20\,ms old or older; with the scored rows limited to 2{,}000\,eV, over the causal GP and over the twin & hold & \S\ref{sec:rows} \\
+  The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
+  The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
+  The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data}; \S\ref{sec:target} \\
+  That component falls with the beam-emission level; on MAST it agrees with the reported fit error & do not hold & \S\ref{sec:target} \\
+  The 200\,ms changes of \Ti{} and of the ECEI level are correlated beyond a shifted null & holds & \S\ref{sec:target} \\
+  Values above 3\,keV are more frequent at low beam emission & holds & \S\ref{sec:data}; \S\ref{sec:target} \\
+  The reported value steps across a beam-off frame by more than over the same span elsewhere; by more than the ECEI level does & do not hold & \S\ref{sec:data}; \S\ref{sec:target} \\
+  The frame-to-frame component depends on the age of the last beam-off frame & does not hold & \S\ref{sec:target} \\
+  Five-parameter filter (r3 to r9): KFX over KF0; Kg over KF0; the network over KFX; KF0 equivalent to the causal GP; median of KFX below that of hold; KFX over KF0 outside the rows after a blip & hold & \S\ref{sec:res:main}; \S\ref{sec:filter} \\
+  Every estimator above the floor (triple rows); the network closes more than half of the gap to the offline GP; the fast-channel correction lasts into the next frame (network; filter); the part that does not last does not shrink further & hold & \S\ref{sec:res:main}, \S\ref{sec:res:use}; \S\ref{sec:yardsticks} \\
+  More frames within 20\% of the reported value than the causal GP (network) & does not hold & \S\ref{sec:res:main}; \S\ref{sec:relerr} \\
+  The same against hold (network) & holds & \S\ref{sec:res:main}; \S\ref{sec:relerr} \\
+  Within 10\% not more than 0.02 below the causal GP (network) & does not hold & \S\ref{sec:res:main}; \S\ref{sec:relerr} \\
+  KFX above the causal GP within 20\% and within 10\%; above KF0 within 20\%; in the coldest third not more than 0.02 below the causal GP & hold & \S\ref{sec:res:main}, \S\ref{sec:res:where}; \S\ref{sec:relerr} \\
+  A network that reads only the differences between BES channels has skill over the twin & does not hold & \S\ref{sec:res:diag}; \S\ref{sec:components} \\
+  A network that reads only the common mode has skill over the twin; under a fixed budget of 40 epochs the estimator has skill over its twin and over the causal GP & hold & \S\ref{sec:res:diag}; \S\ref{sec:components} \\
+  With the fast channels one frame old the increment remains & does not hold & \S\ref{sec:res:diag}; \S\ref{sec:rows} \\
+  Samples taken one raw step, 0.5\,ms or 2\,ms earlier give an equivalent error & do not hold & \S\ref{sec:limits}; \S\ref{sec:rows} \\
+\end{longtable}}
 
 % =========================================================================
 \section{Registration history and order of events}
@@ -2181,7 +2237,7 @@ network and before any of them was trained; of the expectations, the ranges for 
 causal variant on the file-level splits and for the memoryless network were met, and
 the expected loss of the causal variant on the split by time ($-0.12$ to $-0.02$
 against the whole-discharge variant) was not: it is $-0.015$ to $-0.003$. The third panel of
-Fig.~\ref{fig:trace} was added after the first two had been seen. The statements of
+Fig.~\ref{fig:tracemain} was added after the first two had been seen. The statements of
 \S\ref{sec:twosources} (two on the first row after a blip, one on rows at bursts,
 two on MAST) were registered before those readouts; of 15 numerical expectations 5
 were met. The second stage of \S\ref{sec:character} was registered twice: fitted on half of the
@@ -2432,6 +2488,7 @@ $+0.092$ $[+0.0003, +0.170]$ (cut) and $+0.090$ $[-0.010, +0.177]$ (inclusive), 
 includes zero in both populations at thresholds of 500 and 2{,}000\,km/s. All rotation
 numbers in this paper are under the rule.
 
+\clearpage
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
 

@@ -66,20 +66,22 @@ Charge-exchange spectroscopy (CES) on KSTAR reports the temperature of C\,VI ion
 are missing. We measure what the beam-emission (BES) value of the present frame adds to the
 CES history in a causal estimate of the reported temperature of that frame. In a
 cross-validation pooled over 639 discharges (values above 3\,keV treated as missing), a
-recurrent estimator that also reads BES and electron-cyclotron channels has a
+recurrent estimator that also reads BES, electron-cyclotron and Mirnov channels has a
 mean-squared-error skill of \Pone{} over a causal Gaussian process on the CES history
 and \Ptwo{} over the same estimator trained without the fast channels; its
-root-mean-square error is \RmseNetMinusGpAbs\,eV, about a twentieth, below that of the
-Gaussian process. Both margins remain under a Huber loss and with the hundredth of the
+root-mean-square error is lower than that of the Gaussian process by
+\RmseNetMinusGpAbs\,eV, about a twentieth. Both margins remain under a Huber loss and with the hundredth of the
 rows with the largest errors removed. The statements registered for a single training
 on single file-level splits were not met, and without the tenth of the discharges with
 the largest gain the increment is not separated from zero. A five-parameter robust
 filter on the logarithm of the value gains \KXone{} when two summaries of the BES array
 drive it, and the trained estimator loses its increment when BES is one frame old.
-About three quarters of every estimator's squared error is frame-to-frame scatter of the
-reported value that no estimator of the present frame can remove; of the rest, the
-recurrent estimator removes about three tenths of what the Gaussian process leaves, and \RhoNet{} of what
-the fast channels add is still there in the next, independently fitted frame. The increment grows with the temperature and is absent in the coldest
+On rows between two scored frames, a lower bound of the frame-to-frame scatter of the
+reported value, which no estimate from the CES history can remove, is two thirds to three
+quarters of the squared error of the causal estimators (half for hold); of the rest the
+recurrent estimator removes about three tenths of what the Gaussian process leaves, and
+\RhoNet{} of what the fast channels add is still there in the next, independently fitted
+frame. The increment grows with the temperature and is absent in the coldest
 third of the discharges. The recurrent estimator lowers large errors but neither lowers
 the median error nor raises the share of frames within a relative band of the reported
 value; the filter does both. An offline Gaussian process that waits for the next value
@@ -114,13 +116,14 @@ reach the edge~\citep{Lee2020CrossComparisons}. In the pedestal the impurity and
 main-ion temperatures can differ; the large differences are reported at the
 separatrix~\citep{Haskey2018MainIon,CanoMegias2025MultiIon}. \emph{Why a value per
 frame.} Requirement documents ask for the ion temperature at 10 to 100\,ms and about
-10\%: the 10\,ms figure for the edge is a specification for
-FIRE~\citep{Young2008PlasmaMeasurements}, and the ITER CXRS requirement is 100\,ms and
+10\%: the 10\,ms figure for the edge is from the specifications developed for the
+proposed burning-plasma device FIRE (Fusion Ignition Research Experiment; p.~288 and
+table~III of~\citep{Young2008PlasmaMeasurements}), and the ITER CXRS requirement is 100\,ms and
 10 to 30\%~\citep{Mazon2025Diagnostics}. Real-time charge-exchange analysis exists: at
 DIII-D from 5\,ms exposures, sent to the plasma control system and less accurate on edge
 views~\citep{Chrystal2026RealTime},
-and at JT-60U every 10\,ms from 60\,ms averages, used for feedback on the
-ion-temperature gradient~\citep{Kobayashi2007DevelopmentRealtime}. On KSTAR the
+and at JT-60U every 10\,ms from signals averaged over 60\,ms, used for feedback on the
+ion-temperature gradient (p.~S1049-2 of~\citep{Kobayashi2007DevelopmentRealtime}). On KSTAR the
 conventional analysis waits for a beam-off frame for its background; a two-Gaussian fit
 gives \Ti{} without beam modulation~\citep{Lee2020TwoGaussian}, and a neural-network
 analysis of KSTAR spectra reports a decline of its accuracy at $R \gtrsim 2.2$\,m and
@@ -143,13 +146,16 @@ KSTAR~\citep{Lee2026NeuralNetworkbased} and HL-3~\citep{Tian2026RealTimeCxrs}; t
 a spectrum that exists, whereas the problem here is a frame for which no usable value
 is in hand. Kinetic profiles are reconstructed in real
 time~\citep{Shousha2023MachineLearningbased} and densified from other
-diagnostics~\citep{Imrek2026TemporalSuperresolution}. The inputs of our recurrent
+diagnostics~\citep{Imrek2026TemporalSuperresolution}; at DIII-D Thomson-scattering data
+are reconstructed at high time resolution from other diagnostics, without target
+measurements at inference, to study the edge~\citep{Jalalvand2025MultimodalSuperresolution},
+whereas we estimate causally the reported value of a frame from its own history. The inputs of our recurrent
 estimator for the sparse target (the forward-filled last value, the time since it and a
 mask, for one channel) are those of the simple recurrent baseline of Che et
 al.~\citep{Che2018RecurrentNeural}, without the learned decays of GRU-D; the masked
-loss is standard, and the task is filtering, not smoothing. Tokamak extended-Kalman
-observers estimate the current density, $q$, $T_e$ and $n_e$, with \Ti{} entering
-only through a relation to $T_e$~\citep{Morosohk2023RealTime}; we found no
+loss is standard, and the task is filtering, not smoothing. State observers estimate
+kinetic and magnetic profiles in tokamaks; an extended-Kalman observer of $T_e$ at
+DIII-D takes \Ti{} as a multiple of $T_e$~\citep{Morosohk2023RealTime}. We found no
 frame-by-frame estimator of the charge-exchange \Ti{} of a chord. The closest precedent
 of our filter merges 60\,Hz Thomson scattering with 10\,kHz interferometry on
 TCV~\citep{Pastore2023ModelBased,Pastore2026ApplicationsNovel}; there the fast signal
@@ -177,21 +183,23 @@ discharges of this set~\citep{Heo2025ExperimentalIdentification} places the BES
 channels used here at a normalized radius of 0.96 and takes the edge CES \Ti{} at 0.94
 as a proxy for the pedestal height. In a published equilibrium of a 2022 discharge of
 this set the midplane separatrix lies near $R \approx 2.24$\,m (read from a
-figure~\citep{Lee2026SpatiotemporalStructure}), about 4\,cm outside the chord, and in
-other published discharges the pedestal top lay at $R \approx 2.19$ to 2.23\,m
-(\SuppTab{tab:plasma});
-no publication gives the pedestal-top position of the 2022 discharges in metres. The median \Ti{} per discharge is 528\,eV (10th to 90th
+figure~\citep{Lee2026SpatiotemporalStructure}), about 4\,cm outside the chord. These and
+other published locations (pedestal tops at $R \approx 2.19$ to 2.23\,m;
+\Supp{sec:target}) come from different discharges and coordinates; none gives the
+pedestal-top position of the 2022 discharges in metres. The median \Ti{} per discharge is 528\,eV (10th to 90th
 percentile 213 to 1{,}020\,eV), and 91.6\% of the gaps are 50\,ms or shorter. Rows
 group into contiguous segments at breaks of at least 0.5\,s, which no estimator
 bridges.
 
 \paragraph{What a row contains.} Raw BES, ECEI and Mirnov signals (0.5 to 2\,MHz) of
 twelve discharges, set against the files (\Supp{sec:target}), show that every
-fast-channel value of a row is the single raw sample at its time stamp, not an average
-over the CES frame. A step of 20, 30 or 40\,ms between rows is one to three absent
-frames; each of the 45 such steps inside the raw deliveries coincides with a beam blip,
-in which the heating beam is off for about 10\,ms and the frame exposed without beam is
-left out. The stamp of a row lies within about 2\,ms of the start of its 10\,ms frame (placed
+fast-channel value of a row is a single raw sample within one raw step of its time
+stamp, not an average over the CES frame. A step of 20, 30 or 40\,ms between rows is one
+to three absent frames; each of the 45 such steps inside the raw deliveries coincides
+with a beam blip, in which the heating beam is off (about 10\,ms for one absent frame)
+and the frames exposed without beam are left out. The converse does not always hold: in
+one discharge two interruptions of 23 and 26\,ms removed no frame, and the rows exposed
+during them carry values; the files do not say from which beam those values come. The stamp of a row lies within about 2\,ms of the start of its 10\,ms frame (placed
 from the beam interruptions; the 2022 exposure setting is not published,
 \Supp{sec:target}), so an estimate formed at the stamp uses fast-channel samples taken
 no later than 2\,ms into the frame it estimates and CES values of frames that had
@@ -200,8 +208,8 @@ repeat the previous one to the last digit are held values and are removed everyw
 
 \paragraph{What the target is.} The quantity estimated is the C\,VI temperature that
 the KSTAR CES analysis reports for the chord: the temperature of C$^{6+}$ ions from the
-Doppler width of the charge-exchange line excited by the heating beam, with the
-background taken from frames in which the beam is
+Doppler width of the charge-exchange line excited by the heating beam (for the values
+reported without it, above, the source is not known), with the background taken from frames in which the beam is
 off~\citep{Ko2010KstarCesSystem,Ko2010ChargeExchange}, one value per 10\,ms
 frame~\citep{Kim2024KineticProfile}. Whether it equals the main-ion temperature is not
 tested here. An offset that is constant in time, or a constant factor, changes no skill
@@ -244,9 +252,8 @@ held out of the training discharges, under a cap of 80 epochs. The
 \emph{history-only twin} is the same network with the 15 fast channels removed from
 the input of the \Ti{} branch (347{,}970 parameters); the skill of the estimator over
 its twin is the \emph{fast-channel increment}. Three ablation networks read BES, ECEI,
-or BES and ECEI (no Mirnov) beside the CES history. One step of the estimator takes
-0.49\,ms at the median on one CPU thread (the causal GP 0.64\,ms); the timing covers
-the estimator only.
+or BES and ECEI (no Mirnov) beside the CES history. One step takes 0.49\,ms at the
+median on one CPU thread.
 
 \emph{A five-parameter filter} measures the increment without a network
 (\Supp{sec:filter}). Its state is $\log\Ti{}$, a random walk with variance $q$ per
@@ -269,26 +276,34 @@ estimator; every estimator of a comparison is scored on the identical rows. The 
 is the mean-squared-error skill $1 - \mathrm{MSE}_A/\mathrm{MSE}_R$, given with a 95\%
 interval and whether it excludes zero. The primary readout is \emph{pooled}:
 shot-level 5-fold cross-validation on 639 discharges, repeated over eight
-re-partitions; the five test folds of a repeat are concatenated into one skill, and a
+re-partitions (r2--r9; r0 and r1 belong to an earlier batch); the five test folds of a repeat are concatenated into one skill, and a
 two-level bootstrap draws a repeat and then resamples its
 discharges; it holds the trained networks fixed, so the fold-level interval, which
 carries the training variance, is given beside it. Four file-level splits of 96 test discharges, with
 three initialisations of the estimator and its twin per split, are a secondary readout
 (\Supp{sec:splits}). Two yardsticks give the size. The \emph{floor} $s^2$ is minus the
-covariance of successive increments of the reported value on triples of consecutive
-scored frames: a lower bound of the frame-to-frame independent variance, which no
-estimator of the present frame removes, if the increments of the underlying value are
-not negatively correlated. Its root, 135.7\,eV, is a mean square that a few large
-excursions dominate; the typical frame-to-frame scatter of a row (39.1 to 42.8\,eV,
-\S\ref{sec:data}) is a robust value for a typical row. The \emph{removable-error skill} of $A$ over $R$ is
-$(\mathrm{MSE}_R - \mathrm{MSE}_A)/(\mathrm{MSE}_R - s^2)$. Because accuracy
+covariance of successive increments of the reported value on the \emph{triple rows},
+scored rows whose previous and next frames are scored 10\,ms apart (1{,}085{,}452 of the
+1{,}536{,}645 scored rows of r2--r9): a lower bound of the frame-to-frame independent
+variance if the increments of the underlying value are not negatively correlated. Its
+root, 135.7\,eV, is the root of a mean over these rows that a few large excursions
+dominate; the typical scatter of a row (39.1 to 42.8\,eV, \S\ref{sec:data}) is a robust
+value. The MSE over the floor and the \emph{removable-error skill} of $A$ over $R$,
+$(\mathrm{MSE}_R - \mathrm{MSE}_A)/(\mathrm{MSE}_R - s^2)$, use the MSE on the triple
+rows, where errors are smaller than on all rows; the reciprocal of the ratio is the share
+of the error that the floor accounts for. The floor bounds what an estimate from the CES
+history can remove; a present-frame signal correlated with the conditions of that
+frame's fit is not bounded by it, which the persistence test (\S\ref{sec:res:use})
+addresses. Because accuracy
 requirements are relative, we also give the share of frames whose absolute error is
 within 10\% and 20\% of the reported value, the median absolute error, and, as a co-primary readout, skills under a Huber loss
 (threshold 200\,eV) and with the hundredth of the rows with the largest error of hold
-removed, because a mean squared error is decided by few rows. For every batch of runs and every readout
-the statements, decision rules and expectations were committed to the author's
-public repository before it was run or computed (not a third-party registry); failed statements are reported as failed
-(\Supp{app:registered}), and readings made after results were seen are marked so.
+removed, because a mean squared error is decided by few rows. For every registered batch
+the statements, decision rules and expectations were committed to the author's public
+repository before it was run or computed (not a third-party registry); failed statements
+are reported as failed (\Supp{app:registered}). Descriptive statistics, readings made
+after results were seen and definitions fixed after an exploratory look are not
+registered tests and are labelled where they occur.
 
 % =========================================================================
 \section{Results}
@@ -300,23 +315,23 @@ public repository before it was run or computed (not a third-party registry); fa
 \emph{Question.} Does an estimator that reads the fast channels have a lower \Ti{}
 error than estimators that read the CES history only, how much of that is due to the
 fast channels, and how large is it against the error that can be removed?
-\emph{Design.} Registered. The recurrent estimator and its twin were trained on every
-fold of the pooled cross-validation and scored beside hold, the causal GP, the two
-offline references and the filters, with the floor and the relative shares on the same
-rows (Table~\ref{tab:main}).
+\emph{Design.} Registered. The estimator and its twin were trained on every fold of the
+pooled cross-validation and scored with the references on the same rows
+(Table~\ref{tab:main}).
 
 \begin{table}[t]
   \centering
   \caption{KSTAR, \Ti{}, values above 3\,keV excluded; pooled cross-validation of 639
-  discharges, 95\% intervals (bold: the interval excludes zero). Rows: the recurrent
-  estimator's skills and the MSE over the floor use all eight re-partitions (r2--r9);
-  the filter rows and the other columns of (b) use the seven not used to choose the
-  filter (r3--r9), on which every estimator is read again. (a) Skill under squared
+  discharges, 95\% intervals (bold: the interval excludes zero). (a) Skill under squared
   error, under a Huber loss and with the hundredth of the rows with the largest error
-  of hold removed. (b) Root-mean-square error, mean squared error over the floor
-  (\FloorRms\,eV root mean square), median absolute error, and share of frames within
-  20\% of the reported value (within 10\%: \Supp{sec:relerr}). Four splits:
-  \Supp{sec:splits}.}
+  of hold removed; the recurrent estimator on r2--r9, the filter rows on the seven
+  re-partitions not used to choose the filter (r3--r9). (b) On all scored rows of
+  r3--r9, where every estimator is read again (the text quotes r2--r9, whose intervals
+  differ in the last digit): root-mean-square error, median absolute error, share of
+  frames within 20\% of the reported value (within 10\%: \Supp{sec:relerr}). Mean
+  squared error over the floor (\FloorRms\,eV root mean square): r2--r9, triple rows only
+  (\S\ref{sec:methods:eval}), where errors are smaller, so it does not follow from the
+  RMSE column; its reciprocal is the share of the error that the floor accounts for.}
   \label{tab:main}
   \footnotesize
   \resizebox{\linewidth}{!}{\TabMain}\par\medskip
@@ -326,7 +341,7 @@ rows (Table~\ref{tab:main}).
 \emph{Result.} Pooled (r2--r9), the recurrent estimator has \Pone{} over the causal
 GP and \Ptwo{} over its twin (fold-level intervals \PoneFold{} and \PtwoFold{}), and
 \PHold{} over hold. Its root-mean-square error is \RmseNet\,eV, \RmseNetMinusGp\,eV
-(\RmseNetMinusGpPct\%) against the causal GP. Under the Huber loss the skill is
+(\RmseNetMinusGpPct\%; a paired interval) against the causal GP. Under the Huber loss the skill is
 \StatAone{} over the causal GP and \StatAtwo{} over the twin, with the hundredth of the
 rows trimmed \StatAthree{} and \StatAfour{}, and KFX has \StatAfive{} over KF0 under
 the Huber loss: the five registered statements are met, so the margins do not rest on
@@ -343,14 +358,14 @@ interval excludes zero on two of the four splits); the average of three
 initialisations, registered after they had failed, has both margins with zero excluded
 on every split (\Supp{sec:splits}).
 
-The mean squared error of every estimator lies above the floor (Table~\ref{tab:main}b):
-about three quarters of what remains for the recurrent estimator, and for the offline
-GP, is frame-to-frame scatter of the reported value. Against the error that can be
-removed, the skill of the estimator is \RemNetGp{} over the causal GP and \RemNetTwin{}
+On the triple rows the mean squared error of every estimator lies above the floor
+(Table~\ref{tab:main}b); the floor is about three quarters of it for the recurrent
+estimator and the offline GP, two thirds for the causal GP and KF0, and half for hold.
+Against the error that can be removed, the skill of the estimator is \RemNetGp{} over the causal GP and \RemNetTwin{}
 over its twin (KFX \RemKFXGp{} over the causal GP). The offline GP,
 which waits for the next value, has the lower error still (\POffGp{} for the estimator
-against it); the estimator closes \GapNet{} of the gap between the causal and the
-offline GP, its twin \GapTwin{} and KFX \GapKFX{}.
+against it); on all rows the estimator closes \GapNet{} of the gap between the causal
+and the offline GP, its twin \GapTwin{} and KFX \GapKFX{}.
 
 \emph{Relative accuracy.} Within 20\% of the reported value lie \ShareNetTwenty{} of the
 frames for the estimator and \ShareGpTwenty{} for the causal GP: the registered
@@ -361,10 +376,9 @@ above hold (\TTwentyHold{}). Within 10\% lie \ShareNetTen{} and \ShareGpTen{}
 not: KFX is above the causal GP within 20\% (\FTwenty{}; the network on these rows $-0.001$ $[-0.010, +0.006]$) and
 within 10\% (\FTen{}),
 above KF0 (\FTwentyX{}), and its median absolute error is \KXfive{} of that of hold.
-Where relative accuracy is the requirement, the filter is the estimator to use. A real-time edge analysis at DIII-D
-puts 79\% of its \Ti{} values within 20\% of an offline analysis of the same
-spectra~\citep{Chrystal2026RealTime}; ours is the reported value itself, with its own
-scatter, so the two are not the same comparison.
+Where relative accuracy is the requirement, the filter is the estimator to use (a
+real-time analysis at DIII-D puts 79\% of its edge \Ti{} values within 20\% of an offline
+analysis of the same spectra~\citep{Chrystal2026RealTime}, a different comparison).
 
 \emph{Reading.} The fast channels lower the error of a causal estimate of the reported
 \Ti{} in a network and in a five-parameter filter alike, by a fifth (over the twin) to
@@ -388,7 +402,8 @@ values.
 Which diagnostic carries the increment, and does it need a change of the beam?
 \emph{Design.} Registered readouts: the pooled estimators given fast channels of the
 row before (not retrained); ablation and component networks and a fixed budget of 40
-epochs on the four splits (\SuppTab{tab:ablation}); the filter with the radial
+epochs on the four splits (Supplementary Tables~\ref{S-tab:ablation}
+and~\ref{S-tab:components}); the filter with the radial
 difference alone; rows classed from BES.
 % B.59 (pooled ablations, lag-trained estimator): to be inserted
 
@@ -410,9 +425,7 @@ difference alone has \KXtwo{} over KF0, two thirds of the increment of KFX, alth
 beam interruption appears in that difference at 0.121 $[0.113, 0.129]$ of its size in
 the common mode. In quiet rows, with no absent frame, low beam emission or large BES
 departure behind them, the estimator has $+0.054$ $[+0.026, +0.082]$ over its twin,
-and they carry 0.874 $[0.734, 1.098]$ of its squared-error reduction (the BES network
-on the four splits, one initialisation, intervals over discharges only: $+0.016$ to
-$+0.112$, three of four above zero); outside the ten rows after an
+and they carry 0.874 $[0.734, 1.098]$ of its squared-error reduction; outside the ten rows after an
 absent frame KFX has \KXsix{} over KF0.
 
 \emph{Reading.} The increment is carried by the BES value of the present frame; when
@@ -441,8 +454,7 @@ cross-validation and of the filters (definitions and the four-split numbers in
 more than 1\,keV, or low beam emission in the 30\,ms before; 0.113 of the rows). In
 the rows not flagged the fast-channel increment is $+0.092$ $[+0.062, +0.125]$, in the
 flagged rows $+0.012$ $[-0.016, +0.036]$; the plain rows carry 0.874 $[0.681, 1.385]$
-of the reduction against the twin (a share above one would mean that the other rows
-contribute negatively). Of the reduction against the causal GP they carry 0.463
+of the reduction against the twin. Of the reduction against the causal GP they carry 0.463
 $[0.355, 0.610]$, and the registered statement that they carry more than half is not
 met: the margin over the causal GP leans on rows that a value rule would
 question, the increment does not.
@@ -474,7 +486,7 @@ statement met) and the increment \StatBtwo{}, not separated from zero (not met).
   measurement in the first row after the blip; the twin follows one row later.
   (b) Onsets of edge bursts in the raw 500\,kHz BES stream of eleven discharges
   (medians over 108 isolated onsets): the reported \Ti{} does not fall after an onset
-  (registered statement fails; \Supp{sec:bursts}).}
+  (registered statement fails; \Supp{sec:twosources}).}
   \label{fig:events}
 \end{figure}
 
@@ -483,29 +495,16 @@ ratios to the median of the six rows before), the reported \Ti{} of the first ro
 0.814 $[0.790, 0.835]$, the ECEI level 0.929 $[0.918, 0.942]$ and the BES level 0.658
 $[0.653, 0.663]$ of their levels before. Over the next eight rows the deficit of \Ti{}
 is proportional to that of the ECEI level, which uses neither the beam nor the
-spectrometer (share left unexplained 0.009 $[0.005, 0.032]$), and not to that of the
-BES level, which is back within two rows (0.333 $[0.286, 0.376]$). In a fit of the
-\Ti{} deficit on both, the part of the first-row deficit proportional to the BES deficit
-is 0.030 $[0.001, 0.065]$ of the level, against one third of the first-row deficit,
-0.062 (first-row deficit 0.186): the registered statement that it is below one third is
-not met, because the upper end exceeds 0.062, so how much of the first-row fall follows
-the signal level stays open (definitions fixed after an exploratory look;
-\Supp{sec:rows}). The fall does not grow with the length of the interruption in the
-events available: after two absent frames (\DoseTwoEvents{}) the first-row deficit of
-\Ti{} differs from that after one by \DoseTi{} (registered statements for \Ti{} and the
-ECEI level not met), so the reading of the fall as a response to the
-interruption is not supported by a dose. On the raw streams (31 interruptions kept by a
-rule fixed beforehand), the ECEI level is 0.972
-$[0.953, 0.999]$ of its level before in the last 3\,ms before the beam returns (0.969
-$[0.945, 1.001]$ with a first implementation corrected after its verdict was read, so
-the interval reaches 1), does not step at the return ($-0.015$ $[-0.027, +0.012]$; not
-met) and is lower 10 to 13\,ms after the return than just after it ($-0.018$
-$[-0.059, -0.006]$; met): a change that begins while the beam is off and deepens after
-its return is present, so a response to the loss of the beam is not excluded in shape.
-The reported \Ti{} shares that shape with a first-frame excess of 0.030
-$[0.008, 0.058]$ of the level (0.160 $[0.046, 0.292]$ of the first-row deficit), an
-upper bound of what the measurement of the first frame adds; the rotation of the chord
-is 0.973 $[0.960, 0.989]$ of its level in the first row (\Supp{sec:rows}). In rows 1 to
+spectrometer (share left unexplained 0.009 $[0.005, 0.032]$), not to that of the BES
+level, which is back within two rows; how much of the first-row fall (0.186 of the
+level) follows the BES level stays open (registered statement not met; definitions fixed
+after an exploratory look; \Supp{sec:rows}). The first-row deficit after two absent
+frames differs from that after one by \DoseTi{} (\DoseTwoEvents{}; not met), so no dose
+supports reading the fall as a response to the interruption. On the raw streams (31
+interruptions) the ECEI level begins to fall while the beam is off and deepens after its
+return, so such a response is not excluded in shape (one verdict changed by a correction
+made after reading), and a first-frame excess of \Ti{} beyond that shape is at most 0.030
+$[0.008, 0.058]$ of the level (\Supp{sec:rows}). In rows 1 to
 3 after an absent frame the
 estimator has $+0.151$
 $[+0.093, +0.215]$ over its twin (Fig.~\ref{fig:events}a) and puts more frames within
@@ -543,12 +542,12 @@ the pooled rows whose last value is older than 50\,ms (0.0025 of the rows) nothi
 established ($+0.054$ $[-0.095, +0.185]$ over the causal GP).
 
 \emph{Reading.} \RhoNet{} of what the fast channels add is still there in the next,
-independently fitted frame, so at most about a fifth can be a property of the fit of
-the frame or a fluctuation inside it (the reference is above one, not one); a bias
+independently fitted frame, so about a fifth (a quarter at the end of the interval, and
+more against the reference, which is above one) can be a property of the fit of the
+frame or a fluctuation inside it; a bias
 common to consecutive frames, through a slowly varying beam or background, is not
-seen by this test. Real-time streaming of BES into a plasma
-control system is published for DIII-D~\citep{Kim2026RealTimePlasma}; we found no
-published description of it for KSTAR. A CES value within about 30\,ms presupposes on KSTAR a real-time
+seen by this test. Real-time BES streaming to a plasma control system is published for
+DIII-D~\citep{Kim2026RealTimePlasma}, not for KSTAR. A CES value within about 30\,ms presupposes on KSTAR a real-time
 analysis that does not wait for the beam-off frame, the stated goal
 of~\citep{Lee2026NeuralNetworkbased}. \emph{Limits.} The replays use one
 initialisation and estimators trained without delay; training with imposed delay,
@@ -559,15 +558,12 @@ dropout or a jittered sampling instant was not done.
 \label{sec:discussion}
 
 The increment is carried by BES, which changes with the beam and with the plasma
-(\S\ref{sec:res:diag}). Loss of beam heating
-for about 10\,ms would, by published slowing-down
-formulas~\citep{Heidbrink1994BehaviourFast}, lower the temperature by a few per cent at
-most (an estimate, \Supp{sec:rows}): comparable with the fall of the ECEI level and
-smaller than the fall of \Ti{}, and no dose is seen; a displacement of the plasma at the
-blips is reported at KSTAR~\citep{Kim2018EnhancedFast} and cannot be tested without an
-equilibrium. The ECEI level is not a temperature (at the edge it depends on density as
-well), and no mechanism is named; the fall is not used as evidence on ion heat
-transport.
+(\S\ref{sec:res:diag}). By published slowing-down
+formulas~\citep{Heidbrink1994BehaviourFast} a 10\,ms loss of beam heating lowers the
+temperature by a few per cent at most (\Supp{sec:rows}), less than the fall of \Ti{}
+after a blip; a displacement of the plasma at the blips is reported at
+KSTAR~\citep{Kim2018EnhancedFast} and cannot be tested without an equilibrium. The ECEI
+level depends on density as well; no mechanism is named.
 
 \label{sec:limits}
 \begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
@@ -575,14 +571,11 @@ transport.
 per-frame fit error; of a bias that varies within a discharge only a step at beam-off
 frames is bounded.
 \item \emph{Beam.} The files record the blips but not the beam power; the fall after a
-blip is bounded only as in \S\ref{sec:res:where} (ECEI readout of 31 events, one verdict
-changed by a correction made after reading).
+blip is bounded only as in \S\ref{sec:res:where}.
 \item \emph{Level and discharges.} The increment is not established in the coldest
 third of the discharges, for the network or the filter, and there the network puts
 fewer frames within 20\% of the reported value than the causal GP. Without the tenth of
 the discharges with the largest reduction the increment is not separated from zero.
-\item \emph{Typical row.} The recurrent estimator lowers neither the median error nor
-the share of frames within 10\% (\ShareNetTen{} against \ShareGpTen{}); the filter does.
 \item \emph{Rows without a value.} Weighted to resemble them, the increment is not
 established ($+0.020$ $[-0.014, +0.049]$; \Supp{sec:rows}).
 \item \emph{Initialisation and sampling instant.} Ablation and component networks and the
@@ -603,8 +596,8 @@ plant control system (real-time BES at KSTAR: \S\ref{sec:res:use}).
 On the KSTAR edge CES chord selected as the pedestal top, the beam-emission value of the
 present frame carries information about the reported ion temperature of that frame
 beyond what the CES history gives, by a network (\Ptwo{} over its twin, pooled) and by
-a five-parameter filter (\KXone{}); its size is small against an error of which three
-quarters is scatter of the reported value, and most of it lasts into the next frame;
+a five-parameter filter (\KXone{}); its size is small against an error of which, between
+two scored frames, three quarters is scatter of the reported value, and most of it lasts into the next frame;
 an offline GP that waits for the next value has the lower error. Use needs the BES value
 of the present frame and a CES value at most two frames late; real-time control is a
 prospect, not a demonstrated use. The measurements that would change these statements are the beam power, per-frame
@@ -615,13 +608,16 @@ further chords.
 The MAST data are public (FAIR-MAST, CC BY-SA 4.0); the shot lists, the registration
 documents, the analysis code and all evaluation artifacts are at
 \url{https://github.com/iseungsang01/ml-intern-revision}. The KSTAR data were made
-available to the author through the author's laboratory for this study and cannot be
-redistributed by the author; requests for them should be addressed to the Korea
-Institute of Fusion Energy.
+available through the author's laboratory and cannot be redistributed by the author;
+requests should be addressed to the Korea Institute of Fusion Energy.
 
 \section*{Acknowledgments}
 The KSTAR data used in this work were provided by the KSTAR team. This work received
 no specific funding.
+% AUTHOR TO CONFIRM: AI-use declaration wording (IOP policy)
+\emph{Use of AI tools.} The analyses were designed and pre-registered by the author with
+an AI assistant and were run by AI agents under the author's supervision; AI tools were
+also used in editing the text. Every number traces to a script in the public repository.
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}

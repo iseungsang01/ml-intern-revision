@@ -119,6 +119,11 @@ DERIVED = {
     "2269": "outermost CES channel at R = 2269 mm, same table",
     "2017": "year of the discharge of Fig. 3(d) of Kwak2019MeasurementFast",
     # the beam-heating and optical-depth estimates are in docs/paper/b62_estimates.md (a source below)
+    # fifth pass (grading round 13)
+    "192,145": "largest number of scored rows of one re-partition (r6: 192,145; b57_yardsticks.md, line 'Rows: all')",
+    "288": "page of Young2008PlasmaMeasurements that states the edge specifications are those developed for FIRE",
+    "32364": "2022 discharge of the CESNN median uncertainty, Kim2026AutomatedOutlier sec. 3 (lit_kstar_facts.md)",
+    "0.92": "r/a of a point 4 cm inside the separatrix if the separatrix is at r/a = 1 and a = 0.5 m: (0.5 - 0.04) / 0.5",
     "10.5":"median beam-off duration of one-absent-frame blips in the raw streams (b61_blip_dose.md: 10.5 ms)",
 }
 
