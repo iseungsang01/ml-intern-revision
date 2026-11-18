@@ -75,7 +75,7 @@ initialisations enters the interval, \SingleSummary{}\ifaverage , and
 beam-emission channels, and most of it is in frames with no interruption of the heating
 beam behind them. Both margins remain when the CES value arrives 20 or 30\,ms late and
 when only every fifth value is visible. The gain is in the upper part of the error
-distribution (the 90th percentile of the absolute error is 0.920 to 0.943 of that of the
+distribution (the 90th percentile of the absolute error is 0.920 to 0.937 of that of the
 Gaussian process); the median error is not lowered. One step takes 0.5\,ms on a CPU.
 \end{abstract}
 
@@ -445,17 +445,19 @@ defined from BES.
 \emph{Question.} In which rows does the estimator gain: after known events, in rows
 that plain value rules would flag, at which level of temperature, and in which part
 of the error distribution? \emph{Design.} Registered readouts on the row-level
-errors of the frozen estimator of an earlier batch (same architecture and
-standardization, 30-epoch cap), its twin, hold and the causal GP, on the test rows
-of the four splits; the numbers of each split are in \Supp{sec:rows}.
+errors of the estimator of \S\ref{sec:res:main} (in each split the initialisation
+with the seed of the split), its twin, hold and the causal GP, on the test rows of
+the four splits. They were first made with an earlier training of the same estimator
+under a 30-epoch cap and repeated, by registration, with this one; no verdict
+changed (numbers of each split in \Supp{sec:rows}).
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.74\linewidth]{../b41_events_fig}
+  \includegraphics[width=0.74\linewidth]{../b48_events_fig}
   \caption{Averages conditioned on two kinds of event, as ratios to the level before
   the event. (a) Beam blips in the test discharges of the four splits (means; the
   shaded band is the absent frame): the reported \Ti{}, the ECEI and BES levels, the
-  recurrent estimator (``causal variant'' in the legend) and its history-only twin.
+  recurrent estimator and its history-only twin.
   The estimator falls with the measurement in the first row after the blip; the twin
   follows one row later. (b) Onsets of edge bursts in the raw 500\,kHz BES stream of
   eleven discharges (medians over 108 isolated onsets; the estimators on the 73
@@ -469,7 +471,7 @@ integral recovery time (41.0 $[35.7, 46.8]$ and 40.2 $[31.0, 49.2]$\,ms). An
 interruption of the heating is thus seen by a diagnostic that uses neither the beam
 nor the spectrometer, and the fall of the reported value is at least in part a change
 of the plasma. In the rows 1 to 3 after an absent frame the estimator has $+0.195$
-to $+0.256$ over its twin (three of four intervals above zero;
+to $+0.260$ over its twin (three of four intervals above zero;
 Fig.~\ref{fig:events}a): the fast channels tell it that the beam was interrupted
 before the CES history does. \emph{Edge bursts.} Over 108 isolated burst onsets
 timed in the raw BES stream of eleven discharges, the median ratio of \Ti{} in the
@@ -480,22 +482,22 @@ statement that \Ti{} falls after a burst does not hold (Fig.~\ref{fig:events}b; 
 visible one is below 150\,eV or above 2.5\,keV, if the two differ by more than
 1\,keV, or if the row lies within 30\,ms after a row of low beam emission (0.103 to
 0.115 of the rows). In the rows that are not flagged the fast-channel increment is
-$+0.044$ to $+0.152$ (four of four intervals above zero): it is present in plain
+$+0.044$ to $+0.159$ (four of four intervals above zero): it is present in plain
 rows. The two registered statements that the plain rows hold more than half of the
-squared-error reduction do not hold: their share is 0.593 to 0.910 against the twin
-(the interval is above one half on one split) and 0.295 to 0.690 against the causal
-GP, so on three splits the flagged tenth of the rows holds 0.583 to 0.705 of the
+squared-error reduction do not hold: their share is 0.593 to 0.818 against the twin
+(the interval is above one half on one split) and 0.295 to 0.639 against the causal
+GP, so on three splits the flagged tenth of the rows holds 0.566 to 0.705 of the
 margin over the causal GP. That margin leans on rows that a value rule would
 question; the increment over the twin does not.
 
 \emph{Distribution and level.} The 90th percentile of the absolute error of the
-estimator is 0.920 to 0.943 of that of the causal GP and 0.765 to 0.809 of that of
+estimator is 0.920 to 0.937 of that of the causal GP and 0.765 to 0.809 of that of
 hold (four of four intervals below 1). The median is not lowered: its ratio to that
-of the causal GP is 0.999 to 1.154, with the interval above 1 on two splits. With
+of the causal GP is 0.982 to 1.154, with the interval above 1 on one split. With
 the test discharges divided into thirds by their median \Ti{}, the fast-channel
 increment has an interval above zero on four of four splits in the hottest third
-($+0.064$ to $+0.150$), and the margin over the causal GP in the coldest and the
-middle third ($+0.066$ to $+0.143$). The registered statements that each margin is
+($+0.064$ to $+0.154$), and the margin over the causal GP in the coldest and the
+middle third ($+0.078$ to $+0.147$). The registered statements that each margin is
 present in every third do not hold; the differences between the thirds include zero,
 so neither margin is shown to depend on the level.
 \emph{Reading.} The estimator is an estimator of the mean: it lowers the large
@@ -509,29 +511,28 @@ for other reasons.
 
 \emph{Question.} The readouts above assume that the value of the previous frame is
 in hand when the present frame starts. What remains if the CES analysis delivers
-late, or if values drop out? \emph{Design.} Two registered replays of the frozen
-estimator of the earlier batch and its twin; nothing was retrained. In the first, a
+late, or if values drop out? \emph{Design.} Two registered replays of the same
+estimator and its twin; nothing was retrained. In the first, a
 value measured at row $u$ is available at row $t$ only if $u \le t - 1 - L$ ($L$
 frames of delay); the CES-derived inputs are rebuilt from the available values with
 their true age, and hold and the causal GP use the same values. In the second, a
 value is visible only every fifth frame.
 
 \emph{Result.} With one frame of delay (the last value 20\,ms old) the estimator has
-$+0.097$ to $+0.133$ over the causal GP and $+0.038$ to $+0.125$ over its twin, and
-with two frames (30\,ms) $+0.075$ to $+0.161$ and $+0.043$ to $+0.134$, every
+$+0.097$ to $+0.137$ over the causal GP and $+0.038$ to $+0.129$ over its twin, and
+with two frames (30\,ms) $+0.075$ to $+0.165$ and $+0.043$ to $+0.138$, every
 interval above zero; the two registered statements hold, and the error of the
 estimator grows by 3 to 4\% and by 6 to 8\% (\Supp{sec:rows}). The delay
 does not widen the advantage: the skill over hold at $L = 2$ differs from that
-without delay by $-0.024$ to $+0.017$ (zero excluded on one split). With a value
-visible only every fifth frame (50\,ms), the frozen estimator has $+0.070$ to
-$+0.134$ over the causal GP (four of four; the statement registered for this
-estimator) and, read on the same rows after the fact, $+0.054$ to $+0.156$ over its
-twin (four of four); the other statements of that replay were registered for the
-variant with whole-discharge standardization (\Supp{sec:thin}). \emph{Reading.} The
+without delay by $-0.024$ to $+0.013$ (zero excluded on one split). With a value
+visible only every fifth frame (50\,ms), the estimator has $+0.070$ to $+0.127$
+over the causal GP and $+0.054$ to $+0.158$ over its twin (four of four intervals
+above zero each; both statements registered). The replay at other cadences was made
+with the variant with whole-discharge standardization (\Supp{sec:thin}). \emph{Reading.} The
 result does not rest on a 10\,ms old value being in hand: a CES value that arrives
 one to three frames late, or every fifth frame, is bridged by the fast channels.
-\emph{Limits.} The estimators are frozen and were trained without delay and at the
-natural cadence; training with an imposed delay or dropout was not done.
+\emph{Limits.} The estimators were trained without delay and at the natural
+cadence; training with an imposed delay or dropout was not done.
 
 % =========================================================================
 \section{Discussion}
@@ -584,9 +585,8 @@ initialisations of a split by \SpreadRange{}, and on single splits that spread
 decides whether an interval excludes zero. The readouts of
 \S\ref{sec:res:diag}--\S\ref{sec:res:use} were made with one initialisation.
 \item \emph{Selection.} The recurrent design was adopted on the four splits that
-score it. The readouts of \S\ref{sec:res:where} and \S\ref{sec:res:use} use a frozen
-estimator trained under a 30-epoch cap, paired with a twin trained under an 80-epoch
-cap, and neither delay nor dropout was imposed in training.
+score it, and the row-level readouts were defined with an earlier training of the
+estimator. Neither delay nor dropout was imposed in training.
 \item \emph{Scope.} One chord, one campaign and one device; the step time was
 measured on a desktop CPU and nothing was run on a plant control system.
 \end{itemize}

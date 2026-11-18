@@ -1104,8 +1104,12 @@ and the choices that were not varied.
 
 The main text gives the readouts of \S\ref{sec:res:diag} and \S\ref{sec:res:where} as ranges over
 the four splits. The numbers of each split follow, in the order of the splits of
-Table~\ref{tab:primary}. The first paragraph uses the ablation networks of the main batch; the
-others use the frozen estimator of the earlier batch (30-epoch cap).
+Table~\ref{tab:primary}. The first paragraph uses the ablation networks of the main batch. The
+others use the estimator of the main batch, in each split the initialisation with
+the seed of the split; these readouts were first made with a training of the same
+estimator under a 30-epoch cap and were repeated with this one by registration, and
+no verdict changed. On the second and the fourth split the training stopped before
+30 epochs, and the numbers equal those of the earlier readout.
 
 \paragraph{Classes of rows from the beam emission.} In a second registered
 readout every scored row was put into one class from the BES channels of its
@@ -1136,31 +1140,31 @@ are not separated here.
 visible one is below 150\,eV or above 2.5\,keV, if the two differ by more than
 1\,keV, or if the row lies within 30\,ms after a row of low beam emission; 0.103 to
 0.115 of the rows are flagged. Inside the rows that are not flagged the fast-channel
-increment is $+0.111$ $[+0.063, +0.153]$, $+0.044$ $[+0.005, +0.080]$, $+0.152$
-$[+0.106, +0.193]$ and $+0.087$ $[+0.037, +0.133]$: it is present in plain rows. The
+increment is $+0.118$ $[+0.067, +0.164]$, $+0.044$ $[+0.005, +0.080]$, $+0.159$
+$[+0.110, +0.204]$ and $+0.087$ $[+0.037, +0.133]$: it is present in plain rows. The
 two registered statements that the plain rows hold more than half of the
-squared-error reduction do not hold. Against the twin their share is 0.910
-$[0.659, 1.806]$, 0.692 $[0.176, 1.553]$, 0.602 $[0.463, 0.729]$ and 0.593
+squared-error reduction do not hold. Against the twin their share is 0.818
+$[0.618, 1.153]$, 0.692 $[0.176, 1.553]$, 0.618 $[0.477, 0.747]$ and 0.593
 $[0.352, 0.992]$ (the interval is above one half on one split); against the causal
-GP it is 0.690 $[0.359, 2.237]$, 0.295 $[0.126, 0.471]$, 0.417 $[0.263, 0.549]$ and
-0.366 $[0.211, 0.536]$, so on three splits the flagged tenth of the rows holds 0.583
+GP it is 0.639 $[0.403, 1.348]$, 0.295 $[0.126, 0.471]$, 0.434 $[0.278, 0.564]$ and
+0.366 $[0.211, 0.536]$, so on three splits the flagged tenth of the rows holds 0.566
 to 0.705 of the margin over the causal GP. The margin over the causal GP leans on
 rows that a value rule would question; the increment over the twin does not.
 
 \paragraph{Distribution of the error.} The 90th percentile of the absolute error of the
-estimator is 0.920 to 0.943 of that of the causal GP and 0.765 to 0.809 of that of
+estimator is 0.920 to 0.937 of that of the causal GP and 0.765 to 0.809 of that of
 hold (four of four intervals below 1). The median is not lowered: its ratio to that
-of the causal GP is 1.056 $[1.008, 1.109]$, 1.154 $[1.064, 1.271]$, 0.999
-$[0.952, 1.044]$ and 1.028 $[0.974, 1.087]$. A least-squares line of the measurement
-on the estimate has a slope of 1.013 to 1.024 for the estimator, against 0.941 to
+of the causal GP is 0.982 $[0.948, 1.019]$, 1.154 $[1.064, 1.271]$, 0.988
+$[0.947, 1.032]$ and 1.028 $[0.974, 1.087]$. A least-squares line of the measurement
+on the estimate has a slope of 0.995 to 1.024 for the estimator, against 0.941 to
 0.966 for the causal GP and 0.767 to 0.858 for hold.
 
 \paragraph{Level of temperature.} With the test discharges divided into thirds by their
 median \Ti{} (about 32 discharges each), the fast-channel increment has an interval
-above zero in the hottest third on four of four splits ($+0.064$ to $+0.150$), in
-the middle third on one and in the coldest third on two; the margin over the causal
-GP has it in the coldest and the middle third on four of four ($+0.066$ to
-$+0.143$) and in the hottest on two. The registered statements that each margin is
+above zero in the hottest third on four of four splits ($+0.064$ to $+0.154$), in
+the middle third on two and in the coldest third on two; the margin over the causal
+GP has it in the coldest and the middle third on four of four ($+0.078$ to
+$+0.147$) and in the hottest on two. The registered statements that each margin is
 present in every third do not hold. The differences between the thirds include zero,
 so neither margin is shown to depend on the level; the paper states where each is
 established and claims neither at every level. Neither depends on the order of the
@@ -1170,7 +1174,7 @@ discharge in the campaign.
 
 \begin{table}[h]
   \centering
-  \caption{KSTAR, \Ti{}, values above 3\,keV excluded: the frozen estimator when the
+  \caption{KSTAR, \Ti{}, values above 3\,keV excluded: the estimator, not retrained, when the
   CES value arrives $L$ frames late. Range of the point estimates on the four splits
   and, in brackets, the number of splits whose 95\% interval is above zero. The last
   column is the root-mean-square error of the estimator over that without delay.}
@@ -1180,10 +1184,10 @@ discharge in the campaign.
     \toprule
     $L$ & Age of the last value & Over the causal GP & Over the twin & Error ratio \\
     \midrule
-    0 & 10\,ms & $+0.065$ to $+0.130$ (4) & $+0.028$ to $+0.113$ (4) & 1 \\
-    1 & 20\,ms & $+0.097$ to $+0.133$ (4) & $+0.038$ to $+0.125$ (4) & 1.029 to 1.038 \\
-    2 & 30\,ms & $+0.075$ to $+0.161$ (4) & $+0.043$ to $+0.134$ (4) & 1.064 to 1.083 \\
-    4 & 50\,ms & $+0.053$ to $+0.162$ (4) & $+0.043$ to $+0.138$ (4) & 1.121 to 1.152 \\
+    0 & 10\,ms & $+0.075$ to $+0.132$ (4) & $+0.028$ to $+0.116$ (4) & 1 \\
+    1 & 20\,ms & $+0.097$ to $+0.137$ (4) & $+0.038$ to $+0.129$ (4) & 1.029 to 1.038 \\
+    2 & 30\,ms & $+0.075$ to $+0.165$ (4) & $+0.043$ to $+0.138$ (4) & 1.064 to 1.082 \\
+    4 & 50\,ms & $+0.053$ to $+0.163$ (4) & $+0.043$ to $+0.143$ (4) & 1.121 to 1.158 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1223,7 +1227,7 @@ in \S\ref{app:registration}.
     The margin over the causal GP is present in every third & does not hold & \S\ref{sec:res:where} \\
     With one and with two frames of delay the estimator has skill over the causal GP & holds & \S\ref{sec:res:use} \\
     With two frames of delay it has skill over the twin & holds & \S\ref{sec:res:use} \\
-        With a value every 50\,ms the estimator has skill over the causal GP & holds & \S\ref{sec:res:use} \\
+        With a value every 50\,ms the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:res:use} \\
     The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
     The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
     The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data:kstar} \\

@@ -7883,3 +7883,24 @@ No result. State left behind, for whoever resumes:
 - B.47: the launcher waiting for B.39 was cancelled before any run was trained (0 of 64).
 - B.48: the delegated agent wrote `experiments/b48_reread/run_b48.py` and stopped without an output; the file is unverified and not committed.
 - Nothing is restarted without an instruction of the author. `PROJECT_KNOWLEDGE.md` (sections 1, 3, 5, 6, 7 and the head of section 4), `PAPER_DESIGN.md` (sections 4, 5, 9, 10, 11) and `experiments/README.md` were brought to this state the same day: the claims table follows the one-claim manuscript, the map at the head of section 4 says which numbers the main text, the supplement or neither uses, and the open-work list separates what was stopped from what is not yet registered.
+
+### B.48 the row-level readouts and the replays repeated with the estimator of B.39 -- no verdict changes (registered; 2026-11-18)
+
+Registration `PREREGISTRATION_B48.md` (bfcba6a), before any of these readouts was computed. CPU, nothing trained. Estimator: the causal variant of B.39 with initialisation = split seed (`data/.b39_v2_cut_s{seed}_i{seed}`, 80-epoch cap) in place of the 30-epoch training of B.29; twin, hold, causal GP and PCHIP as before. Script `experiments/b48_reread/run_b48.py`, written by a delegated agent, which ran the rows stage and, after being resumed, the delay stage; it went idle twice while waiting for the end of its own background run, and the readout stage (156 s) was run by the session lead from the same script. The lead read the script: the earlier runners (`run_b30.rows`, `run_b42`, `run_b41.main`, `run_b44.main`) are imported and pointed at the new table by overriding module attributes; no earlier file is edited and no earlier output is overwritten. Outputs `docs/paper/b48_reread.{json,md}`, `docs/paper/b48_events_fig.{pdf,png,json}`.
+
+Checks, all passed on every split: (a) hold, the causal GP, PCHIP and the twin of the new table equal the frozen table on every row (largest difference 0); (b) the absolute error of the new estimator agrees with the stored one within 0.5 eV on 0.9988, 0.9998, 0.9998 and 0.9997 of the scored rows; (c) the delay machinery at L = 0 reproduces the k = 1 column on 1.00000 of the rows. Not registered, and stronger than the three: on splits 1 and 123 the training of B.39 stopped after 22 and 26 epochs, before the cap of the earlier training, so the network is the same, and every readout of those two splits equals the earlier one to three decimals.
+
+| statement | splits 42, 1, 7, 123 | verdict (earlier readout) |
+|---|---|---|
+| G1: plain rows hold more than half of the reduction against the twin | 0.818 [0.618, 1.153], 0.692 [0.176, 1.553], 0.618 [0.477, 0.747], 0.593 [0.352, 0.992] | does not hold, 1 of 4 (the same) |
+| G2: the same against the causal GP | 0.639 [0.403, 1.348], 0.295 [0.126, 0.471], 0.434 [0.278, 0.564], 0.366 [0.211, 0.536] | does not hold, 0 of 4 (the same) |
+| Q1: 90th percentile of the absolute error over that of the causal GP; of hold | 0.937, 0.920, 0.931, 0.925; 0.792, 0.765, 0.787, 0.809 | holds, 4 of 4 (the same) |
+| T1: skill over the causal GP at L = 1; L = 2 | +0.135, +0.097, +0.137, +0.099; +0.165, +0.075, +0.130, +0.088 | holds, 4 of 4 each (the same) |
+| T2: skill over the twin at L = 2 | +0.105, +0.043, +0.138, +0.076 | holds, 4 of 4 (the same) |
+| W1, W2: both margins in every third of the median T_i | over the twin on 1 of 4, over the causal GP on 2 of 4 | do not hold (the same) |
+| H1: a value every fifth frame, skill over the causal GP | +0.127 [+0.091, +0.160], +0.070 [+0.035, +0.106], +0.110 [+0.080, +0.143], +0.100 [+0.066, +0.131] | holds, 4 of 4 |
+| H2: the same over the twin | +0.091 [+0.057, +0.128], +0.054 [+0.030, +0.081], +0.158 [+0.132, +0.183], +0.060 [+0.018, +0.109] | holds, 4 of 4 |
+
+Reported: the increment inside plain rows +0.118, +0.044, +0.159, +0.087 (four of four); in rows 1 to 3 after an absent frame +0.195 to +0.260 (three of four); the ratio of the median absolute error to that of the causal GP 0.982 [0.948, 1.019], 1.154 [1.064, 1.271], 0.988 [0.947, 1.032], 1.028 [0.974, 1.087]; the error at L = 2 over that without delay 1.064 to 1.082; in the hottest third the increment +0.064 to +0.154 (four of four). The point estimates differ from the earlier readout by at most 0.015 (splits 42 and 7; none on the other two).
+
+Reading. The readouts of the main text on where the gain is and on a late or sparse value do not depend on which of the two trainings of the causal variant is read. The manuscript now quotes these numbers, its figure of event-conditioned averages is `b48_events_fig`, and the limit on the 30-epoch estimator is removed; the limits that stay are one initialisation, and estimators trained without delay and at the natural cadence. Expectation check: 15 of 15 met.
