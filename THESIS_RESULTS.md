@@ -8169,3 +8169,33 @@ Limits. The floor is a lower bound under an assumption on the underlying value (
 
 By the registered rules the floor and the removable-error skill go beside each pooled skill, the sentence on the offline GP gives the gap closure, the paper says what share of the fast-channel correction lasts into the next frame (with the reference value) and what that does not exclude, and the names of the noise quantities are reduced to two. Done with the restructuring of the main text.
 
+### B.53: networks that read one component of the BES array, and training under a fixed budget -- the common-mode network has the increment (3 of 4), the differences-only network on two of four splits; without early stopping the increment stays (4 of 4) (2026-11-18)
+
+Registration `PREREGISTRATION_B53.md` with addendum 1. GPU, 20 runs, none failed (12 on 13:55 to 15:19, the batch was stopped once to change the order of the queue and resumed, finished about 16:10). Runner by a delegated agent, checked without training. Readout `experiments/b53_components/analyze_b53.py` -> `docs/paper/b53_components.{json,md}`. One initialisation per network; intervals resample the test discharges.
+
+Arm C (the twin with extra inputs to its T_i branch):
+
+| split | C1: differences over the twin | C2: common mode over the twin | both over the twin | BES network of B.39 over the twin |
+|---|---|---|---|---|
+| 42 | +0.012 [-0.082, +0.074] | +0.064 [-0.004, +0.117] | +0.068 [-0.003, +0.119] | +0.074 [+0.040, +0.110] |
+| 1 | +0.010 [-0.007, +0.027] | +0.038 [+0.021, +0.056] | +0.037 [+0.014, +0.062] | +0.026 [+0.006, +0.049] |
+| 7 | +0.087 [+0.070, +0.104] | +0.100 [+0.078, +0.121] | +0.092 [+0.064, +0.119] | +0.105 [+0.069, +0.133] |
+| 123 | +0.037 [+0.015, +0.065] | +0.049 [+0.021, +0.075] | +0.004 [-0.027, +0.039] | +0.063 [+0.035, +0.096] |
+
+C1 does not hold (2 of 4); C2 holds (3 of 4).
+
+Arm F (the estimator and the twin trained for exactly 40 epochs, final weights):
+
+| split | F1: estimator over the twin | F2: estimator over the causal GP | increment of B.39 at the same initialisation |
+|---|---|---|---|
+| 42 | +0.065 [+0.030, +0.097] | +0.075 [+0.025, +0.116] | +0.071 [+0.037, +0.106] |
+| 1 | +0.042 [+0.003, +0.075] | +0.113 [+0.073, +0.145] | +0.022 [+0.001, +0.045] |
+| 7 | +0.093 [+0.057, +0.134] | +0.144 [+0.106, +0.180] | +0.123 [+0.095, +0.150] |
+| 123 | +0.079 [+0.035, +0.126] | +0.116 [+0.061, +0.164] | +0.060 [+0.027, +0.100] |
+
+F1 and F2 hold (4 of 4 each).
+
+Reading. (1) The increment does not rest on early stopping: with a fixed budget and no stopping rule it is +0.042 to +0.093 with every interval above zero. (2) A network that reads only the common mode of the array has the increment on three splits; one that reads only the four differences has it on two (one initialisation, 96 discharges). By the registered rule the paper says that a network of this kind needs the common mode. Beside it stands B.56: a filter that reads the radial difference alone has +0.032 [+0.025, +0.039] pooled, so the differences do carry an increment that a five-parameter filter extracts with pooled power and that this network, on single splits, shows on two of four. (3) On the fourth split the network with both components is not above the twin while each alone is: a sign of the spread between trainings, not of the components.
+
+Manuscript: with the restructuring of the main text (the sentence on early stopping; the component networks beside the filter).
+
