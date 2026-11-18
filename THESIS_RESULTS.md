@@ -8005,3 +8005,40 @@ What would change these statements. An untouched hold-out (none exists: the pool
 
 Manuscript: `make_tables.py` gains the macros of the pooled comparisons; main text 10 pages (abstract, result, reading, limits of the main result and conclusion changed; three passages shortened), supplement 27 pages with a paragraph on the pooled cross-validation in the section on the whole-discharge variant. `check_numbers.py`: 0 not found.
 
+### B.54: the row-level readouts on the rows of the pooled cross-validation -- 14 of 18 statements hold; the increment is in the rows that value rules do not flag and is not established in the coldest third of the discharges; the median is above that of the causal GP (2026-11-18)
+
+Registration `PREREGISTRATION_B54.md` with addendum 1 (check (b) read on the fold manifests; written after the readout had stopped at that check and before any statement was read). CPU, no training, no network run; designed by the session lead, implemented and run by a delegated agent (`experiments/b54_pooled_rows/run_b54.py`, under three minutes), outputs and the core of the code read by the session lead. Output `docs/paper/b54_pooled_rows.{json,md}`.
+
+Rows: the stored T_i row errors of the 80 pooled runs of B.39 (1,536,645 rows over eight re-partitions), located in the data files; 633 to 635 of the 639 discharges have scored rows in a re-partition (four have none in any, four have a single row that is absent in one or two). Interval: a re-partition drawn, then its discharges resampled (20,000 draws for skills, 2,000 for ratios and shares).
+
+Checks, all passed: (a) P1 and P2 reproduced with their intervals; (b) as fixed by the addendum; (c) estimator and twin on identical rows in 40 of 40 folds; (d) the value in the file equals the stored value on every row (largest difference 2.4e-4 eV); (e) the code applied to split 42 reproduces the recorded flagged share, increment in the rows not flagged, quiet share and increment in the top fifth by risk, and twelve further numbers, to three decimals.
+
+| statement | pooled | verdict | four splits (one initialisation) |
+|---|---|---|---|
+| A1: 90th percentile of the absolute error over that of the causal GP | 0.946 [0.928, 0.965] | holds | 0.920 to 0.937 (4/4) |
+| B1: share of discharges with the lower MSE than the causal GP | 0.684 [0.640, 0.730] | holds | 0.647 to 0.731 (4/4) |
+| B2: the same against the twin | 0.661 [0.591, 0.723] | holds | 0.614 to 0.849 (4/4) |
+| C1: rows not flagged, over the twin | +0.092 [+0.062, +0.125] | holds | +0.044 to +0.159 (4/4) |
+| C2: rows not flagged, over the causal GP | +0.096 [+0.066, +0.123] | holds | not registered |
+| C3: rows not flagged hold more than half of the reduction against the causal GP | 0.463 [0.355, 0.610] | does not hold | 0.295 to 0.639 (0/4) |
+| C4: the same against the twin | 0.874 [0.681, 1.385] | holds | 0.593 to 0.818 (1/4) |
+| D1: over the causal GP in each third by median T_i | +0.066 [+0.032, +0.100], +0.091 [+0.044, +0.131], +0.110 [+0.061, +0.153] | holds | did not hold |
+| D2: over the twin in each third | +0.007 [-0.023, +0.031], +0.042 [+0.009, +0.074], +0.092 [+0.040, +0.137] | does not hold | did not hold |
+| E1: last value 20 ms old or older, over the causal GP | +0.069 [+0.010, +0.127] | holds | +0.056 to +0.109 (3/4) |
+| E2: last value older than 50 ms | +0.054 [-0.095, +0.185] | does not hold | every interval includes zero |
+| F1: fifth most at risk of losing the value, over the causal GP | +0.087 [+0.053, +0.117] | holds | +0.067 to +0.143 (4/4) |
+| F2: the same over the twin | +0.037 [+0.007, +0.065] | holds | +0.039 to +0.112 (4/4) |
+| F3: weighted by the odds of that risk, over the causal GP | +0.074 [+0.033, +0.115] | holds | 2/4 |
+| F4: the same over the twin | +0.020 [-0.014, +0.049] | does not hold | 1/4 |
+| G1: rows 1 to 3 after an absent frame, over the twin | +0.151 [+0.093, +0.215] | holds | +0.195 to +0.260 (3/4) |
+| H1: quiet rows, over the twin | +0.054 [+0.026, +0.082] | holds | (BES network: 3/4) |
+| H2: quiet rows hold more than half of the reduction against the twin | 0.874 [0.734, 1.098] | holds | -- |
+
+Reported. Ratio of the medians of the absolute error: 1.042 [1.007, 1.082] against the causal GP (above 1), 1.013 [0.974, 1.056] against hold, 0.999 [0.944, 1.060] against the twin; the estimator has the lower median absolute error than the causal GP in 0.480 [0.421, 0.535] of the discharges. Flagged rows (0.113 of the rows): +0.012 [-0.016, +0.036] over the twin, +0.084 [+0.049, +0.115] over the causal GP. The ten discharges with the largest reduction hold 0.214 of the reduction against the causal GP and the twentieth (32 discharges) 0.493; without those ten +0.076 [+0.050, +0.098] over the causal GP and +0.041 [+0.016, +0.064] over the twin. Every verdict was the expected one; the point estimates of eight quantities fell outside their expected ranges (the share of the ten discharges, the skill without them, C1, C2, C4, the coldest third of D2, F2, H2).
+
+Reading. (1) The fast-channel increment is a property of plain rows: +0.092 in the rows that no value rule flags against +0.012 (interval includes zero) in the flagged rows, and the quiet rows hold 0.874 of it. (2) The margin over the causal GP is spread differently: the flagged ninth of the rows holds about half of it. (3) The increment rises with the level of temperature and is not established in the coldest third (median T_i below 336 eV); the margin over the causal GP is present in every third. This was not readable on 96 discharges, where both statements failed. (4) The median absolute error is 4 % above that of the causal GP with the interval above 1: the estimator trades the typical row for the tail. (5) The concentration by discharge is of the same kind as on the splits when counted as a share of the discharges (a twentieth holds half of the reduction); the "ten discharges" of the splits were a tenth of them. Without the ten largest the margin stays above zero. (6) Weighted to resemble the rows without a usable value, the margin over the causal GP holds and the increment does not: where the value is about to be lost, what the fast channels add is not shown.
+
+What would change these statements: fit errors per exposure (whether the flagged rows are measurement failures); the same readouts for the average of three initialisations pooled; a network trained with dropout of the CES value for F4.
+
+Manuscript, by section 5 of the registration: abstract (pooled 90th-percentile ratio), the per-discharge sentence of the main result, the quiet-rows sentence, the section on where the gain is (value rules, distribution, thirds, rows after an absent frame), the sentence that nothing is established beyond 50 ms, and two limits (level, rows without a value) now carry the pooled numbers; supplement: a paragraph and Table S9 (pooled beside the four splits). Main text 10 pages, supplement 28. `check_numbers.py`: 0 not found.
+

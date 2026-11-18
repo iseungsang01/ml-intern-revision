@@ -1362,6 +1362,67 @@ section compute the causal GP separately; they differ on 16 rows of the first sp
 and 15 of the third (one discharge each but one row) and on none of the other two,
 which changes a skill over the causal GP by less than 0.001.
 
+\paragraph{The row-level readouts on the pooled rows.} Registered, with no network
+run: the stored row errors of the 80 trainings of the pooled cross-validation were
+read with the features of each row taken from the data files, under the definitions
+of the readouts above (applied to the first split, the code reproduces the numbers
+recorded there). In each re-partition 633 to 635 of the 639 discharges have scored
+rows; the interval draws a re-partition and resamples its discharges.
+Table~\ref{tab:pooledrows} gives every statement beside its counterpart on the four
+splits. Reported with them: the ratio of the medians of the absolute error is 1.042
+$[1.007, 1.082]$ against the causal GP, 1.013 $[0.974, 1.056]$ against hold and 0.999
+$[0.944, 1.060]$ against the twin, and the estimator has the lower median absolute
+error than the causal GP in 0.480 $[0.421, 0.535]$ of the discharges; the percentiles
+of the absolute error (50th, 90th, 99th) are 46.0, 205.9 and 715.4\,eV for the
+estimator, 46.1, 216.0 and 741.2\,eV for the twin, 44.1, 217.6 and 777.1\,eV for the
+causal GP, 45.4, 254.7 and 1031.4\,eV for hold and 37.5, 198.0 and 720.2\,eV for the
+offline GP. The ten discharges with the largest reduction hold 0.214 of the
+squared-error reduction against the causal GP and the twentieth with the largest
+reduction (32 discharges) 0.493; without those ten the estimator has $+0.076$
+$[+0.050, +0.098]$ over the causal GP and $+0.041$ $[+0.016, +0.064]$ over the twin (a
+lower bound, since the removal selects on the outcome). In the flagged rows (0.113 of
+the rows) the estimator has $+0.012$ $[-0.016, +0.036]$ over the twin and $+0.084$
+$[+0.049, +0.115]$ over the causal GP. The quiet rows are 0.891 of the rows and hold
+0.766 $[0.660, 0.896]$ of the reduction against the causal GP; in the ten rows after
+an absent frame the estimator has $+0.072$ $[+0.015, +0.128]$ over the twin. The
+thirds by median \Ti{} have edges at 336 and 667\,eV. The odds weighting has an
+effective number of rows of 0.062 of the rows it uses.
+
+\begin{table}[h]
+  \centering
+  \caption{The row-level statements on the rows of the pooled cross-validation
+  (point estimate and 95\% interval; a statement holds if the interval excludes its
+  reference, 1 for a ratio of percentiles, one half for a share, zero for a skill),
+  beside the same readout on the four splits (range of the four point estimates and
+  the number of splits whose interval excludes the reference; one initialisation).}
+  \label{tab:pooledrows}
+  \footnotesize
+  \begin{tabular}{p{0.46\linewidth}p{0.21\linewidth}p{0.07\linewidth}p{0.17\linewidth}}
+    \toprule
+    Statement & Pooled & Holds & Four splits \\
+    \midrule
+    90th percentile of the absolute error over that of the causal GP & 0.946 $[0.928, 0.965]$ & yes & 0.920 to 0.937 (4) \\
+    Share of discharges with the lower mean squared error than the causal GP & 0.684 $[0.640, 0.730]$ & yes & 0.647 to 0.731 (4) \\
+    The same against the twin & 0.661 $[0.591, 0.723]$ & yes & 0.614 to 0.849 (4) \\
+    Rows not flagged: skill over the twin & $+0.092$ $[+0.062, +0.125]$ & yes & $+0.044$ to $+0.159$ (4) \\
+    Rows not flagged: skill over the causal GP & $+0.096$ $[+0.066, +0.123]$ & yes & -- \\
+    Rows not flagged: share of the reduction against the causal GP & 0.463 $[0.355, 0.610]$ & no & 0.295 to 0.639 (0) \\
+    Rows not flagged: share of the reduction against the twin & 0.874 $[0.681, 1.385]$ & yes & 0.593 to 0.818 (1) \\
+    Over the causal GP in the coldest, middle, hottest third & $+0.066$ $[+0.032, +0.100]$, $+0.091$ $[+0.044, +0.131]$, $+0.110$ $[+0.061, +0.153]$ & yes & did not hold \\
+    Over the twin in the coldest, middle, hottest third & $+0.007$ $[-0.023, +0.031]$, $+0.042$ $[+0.009, +0.074]$, $+0.092$ $[+0.040, +0.137]$ & no & did not hold \\
+    Last value 20\,ms old or older: over the causal GP & $+0.069$ $[+0.010, +0.127]$ & yes & $+0.056$ to $+0.109$ (3) \\
+    Last value older than 50\,ms: over the causal GP & $+0.054$ $[-0.095, +0.185]$ & no & $-0.093$ to $+0.144$ (0) \\
+    Fifth of the rows most at risk: over the causal GP & $+0.087$ $[+0.053, +0.117]$ & yes & $+0.067$ to $+0.143$ (4) \\
+    Fifth of the rows most at risk: over the twin & $+0.037$ $[+0.007, +0.065]$ & yes & $+0.039$ to $+0.112$ (4) \\
+    Weighted by the odds of that risk: over the causal GP & $+0.074$ $[+0.033, +0.115]$ & yes & $-0.009$ to $+0.158$ (2) \\
+    Weighted by the odds of that risk: over the twin & $+0.020$ $[-0.014, +0.049]$ & no & $+0.005$ to $+0.095$ (1) \\
+    Rows 1 to 3 after an absent frame: over the twin & $+0.151$ $[+0.093, +0.215]$ & yes & $+0.195$ to $+0.260$ (3) \\
+    Quiet rows: over the twin & $+0.054$ $[+0.026, +0.082]$ & yes & -- \\
+    Quiet rows: share of the reduction against the twin & 0.874 $[0.734, 1.098]$ & yes & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 % =========================================================================
 \section{Registered statements used in the main text}
 \label{app:registered}
@@ -1374,7 +1435,8 @@ in \S\ref{app:registration}.
 \begin{table}[h]
   \centering
   \caption{Registered statements used in the main text. ``Holds'' means that the
-  statement holds by the rule fixed with it (for the four splits: on at least three).}
+  statement holds by the rule fixed with it (for the four splits: on at least three).
+  The statements on the pooled rows are in Table~\ref{tab:pooledrows}.}
   \label{tab:registered}
   \footnotesize
   \begin{tabular}{p{0.60\linewidth}p{0.14\linewidth}p{0.16\linewidth}}
