@@ -8332,3 +8332,20 @@ Reading. Trained with fast channels one row old, the network has no increment ov
 
 By the rules: the paper states the pooled ablations (BES carries the increment, ECEI alone not, Mirnov not needed) in the section on what carries the increment, and the lag-trained result beside the replay of B.55. The estimator of the paper is unchanged (the no-Mirnov network is not separated from it); the paper says that the Mirnov inputs can be dropped without loss.
 
+### B.64: the two-stage estimator under the pooled protocol -- all six statements hold; it becomes the paper's estimator (2026-11-19)
+
+Registration `PREREGISTRATION_B64.md` with addendum 1 (rows where the network's second-stage inputs are missing keep the first stage in both arms). GPU, 120 out-of-fold runs on the 15 folds of r2 to r4 (4.06 h; four runs reached the epoch cap, reported), second stage (B.38's model) on a CPU; run by an AI agent under the author's supervision. Output `docs/paper/b64_two_stage.{md,json}`. Check: the network over the twin from the stored errors reproduces +0.053 [+0.027, +0.076].
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| T1 two-stage network over the network | +0.093 [+0.078, +0.107] | met | met |
+| T2 two-stage network over the causal GP (network alone +0.092 [+0.068, +0.114]) | +0.176 [+0.155, +0.196] | met | met |
+| T3 two-stage network over the two-stage twin | +0.097 [+0.077, +0.116] | met | met, narrower than T1 |
+| T4 median absolute error, two-stage network over hold | 0.909 [0.889, 0.931] | met | met |
+| T5 share within 20 %, two-stage network minus causal GP | +0.021 [+0.018, +0.025] | met | uncertain |
+| T6 two-stage twin over the twin | +0.048 [+0.038, +0.059] | met | met |
+
+Reported: two-stage network over the offline GP +0.063 [+0.038, +0.086] (the network alone -0.033 [-0.062, -0.005]); over PCHIP +0.279, over KFX +0.130, over hold +0.436; RMSE 175.4 eV against 184.2 (network) and 193.3 (causal GP); median absolute error 41.2 eV (network 45.8, causal GP 44.1, offline GP 37.5); by temperature third over the network +0.050, +0.085, +0.144. With the boosted model's own handling of missing inputs on all rows the six readouts are unchanged to the third decimal. Second stage run time 2.2 us per row (CPU).
+
+Reading. A gradient-boosted second stage on the residual, fitted on the training discharges of each fold, raises the skill of the network by +0.093 and of the twin by +0.048; after it the fast-channel increment is +0.097, larger than before (+0.053). The two-stage estimator is the first causal estimator in this project whose interval over the offline GP (which uses the next value) is above zero. By the rules: the paper's estimator becomes the two-stage estimator with the network as its first stage; the abstract gives its skill over the causal GP and its eV difference and states that it lowers the median error below hold and raises the share within 20 %; T3 is stated as the fast-channel increment of the paper's estimator beside the first-stage increment; the statements rest on three re-partitions, the primary statements of B.39 on eight.
+

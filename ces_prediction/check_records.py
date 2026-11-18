@@ -63,6 +63,7 @@ SOURCES = (
     "docs/paper/b63_blip_magnetics.md",
     "docs/paper/b66_regimes.md",
     "docs/paper/b59_inputs.md",
+    "docs/paper/b64_two_stage.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
