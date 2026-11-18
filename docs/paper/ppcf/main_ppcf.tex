@@ -109,16 +109,21 @@ Two premises stand behind the question. \emph{What the value is.} CES reports th
 temperature of the C\,VI impurity as fitted. In the core it has been cross-checked
 against other measurements, on KSTAR against x-ray crystal spectroscopy, which does not
 reach the edge~\citep{Lee2020CrossComparisons}. In the pedestal the impurity and
-main-ion temperatures can differ; the large differences are reported at the
-separatrix~\citep{Haskey2018MainIon,CanoMegias2025MultiIon}. \emph{Why a value per
+main-ion temperatures can differ: at ASDEX Upgrade the deuterium temperature exceeded the
+impurity temperature at the pedestal top when the electron heating was
+raised~\citep{CanoMegias2025MultiIon}, and at DIII-D the main-ion temperature fell to
+about half the impurity temperature near the separatrix~\citep{Haskey2018MainIon}. \emph{Why a value per
 frame.} Requirement documents ask for the ion temperature at 10 to 100\,ms and about
 10\%: the 10\,ms figure for the edge is from the specifications developed in the
 FIRE design study (Fusion Ignition Research Experiment, a proposed burning-plasma
-device; p.~288 and table~III of~\citep{Young2008PlasmaMeasurements}), and the ITER CXRS requirement is
-100\,ms and 10 to 30\%~\citep{Mazon2025Diagnostics}. Real-time charge-exchange analysis
+device; p.~288 and table~III of~\citep{Young2008PlasmaMeasurements}), and the ITER
+requirement is 100\,ms and 10\% for the edge ion
+temperature~\citep{Donne2007ChapterDiagnostics} and 10 to 30\% for the
+CXRS~\citep{Mazon2025Diagnostics}. Real-time charge-exchange analysis
 exists at DIII-D, sent to the plasma control system and less accurate on edge
 views~\citep{Chrystal2026RealTime}, and at JT-60U, used for feedback on the
-ion-temperature gradient (p.~S1049-2 of~\citep{Kobayashi2007DevelopmentRealtime}). On
+ion-temperature gradient (\citep{Yoshida2009RealTime} and p.~S1049-2
+of~\citep{Kobayashi2007DevelopmentRealtime}). On
 KSTAR the conventional analysis waits for a beam-off frame for its background; a
 two-Gaussian fit gives \Ti{} without beam modulation~\citep{Lee2020TwoGaussian}, and a
 neural-network analysis of KSTAR spectra reports a decline of its accuracy at
@@ -138,8 +143,8 @@ grows with the temperature and mostly lasts into the next frame (\S\ref{sec:res:
 \S\ref{sec:res:use}).
 
 \paragraph{Relation to earlier work.} Gaussian-process (GP)
-regression~\citep{rasmussen2006} is the standard tool for fusion profile
-fitting~\citep{chilenski2015} and has been applied to KSTAR
+regression~\citep{rasmussen2006} is used for fusion profile
+fitting~\citep{chilenski2015,michoski2024} and has been applied to KSTAR
 CES~\citep{Kim2024KineticProfile}. Neural networks extract \Ti{} from charge-exchange
 spectra on KSTAR~\citep{Lee2026NeuralNetworkbased} and HL-3~\citep{Tian2026RealTimeCxrs};
 they read a spectrum that exists, whereas the problem here is a frame for which no usable
@@ -154,7 +159,7 @@ a mask, the simple recurrent baseline of Che et al.~\citep{Che2018RecurrentNeura
 extended-Kalman observer of $T_e$ at DIII-D takes \Ti{} as a multiple of
 $T_e$~\citep{Morosohk2023RealTime}; we found no frame-by-frame estimator of the
 charge-exchange \Ti{} of a chord. The closest precedent of our filter merges 60\,Hz
-Thomson scattering with 10\,kHz interferometry on
+Thomson scattering with interferometry in a 1\,kHz observer on
 TCV~\citep{Pastore2023ModelBased,Pastore2026ApplicationsNovel}; there the fast signal is a
 measurement with a physics forward model, in our filter a drive with fitted gains, and our
 update has a Huber weight~\citep{Huber1964RobustEstimation}.
@@ -170,14 +175,14 @@ The results are for one chord, one campaign and one device, with values above 3\
 
 We use 641 KSTAR discharge files of the 2022 campaign (shots 30801--32751) on a 10\,ms
 grid; 639 discharges have more than one grid row and enter the splits. Each row contains
-nine BES channels~\citep{Nam2012AnalysisEdge}, four ECEI
+nine BES channels~\citep{Lampert2015CombinedHydrogen,KFE2026DiagnosticsDataUserGuide}, four ECEI
 channels~\citep{Yun2010DevelopmentKstar}, two Mirnov-coil signals, time, and the CES values
 of one outboard chord. Figure~\ref{fig:geometry} places the chord and the channels on the
 major radius as far as publications allow (\Supp{sec:target}, \SuppTab{tab:plasma}). No
 equilibrium is in the files, and the published locations come from different discharges
 and coordinates: none gives the pedestal-top position of the 2022 discharges in metres.
-A published edge analysis of two discharges of this set takes the edge CES \Ti{} as a
-proxy for the pedestal height~\citep{Heo2025ExperimentalIdentification}.
+A published edge analysis that includes two discharges of this set takes the edge CES
+\Ti{} as a proxy for the pedestal height~\citep{Heo2025ExperimentalIdentification}.
 
 \begin{figure}[tbp]
   \centering
@@ -222,14 +227,17 @@ the last digit are held values, not measurements, and are removed everywhere.
 
 \paragraph{What the target is.} The quantity estimated is the C\,VI temperature that the
 KSTAR CES analysis reports for the chord: the temperature of C$^{6+}$ ions from the
-Doppler width of the charge-exchange line excited by the heating beam, with the background
-taken from frames in which the beam is off~\citep{Ko2010KstarCesSystem,Ko2010ChargeExchange},
-one value per 10\,ms frame~\citep{Kim2024KineticProfile}. Whether it equals the main-ion
+Doppler width of the charge-exchange line excited by the heating beam, the beam being
+modulated for the background~\citep{Ko2010KstarCesSystem,Ko2010ChargeExchange}, which is
+taken from frames in which the beam is
+off~\citep{Ko2015IonTemperature,KFE2026DiagnosticsDataUserGuide}, one value per 10\,ms
+frame~\citep{Kim2024KineticProfile}. Whether it equals the main-ion
 temperature is not tested here. An offset that is constant in time, or a constant factor,
 changes no skill of this paper, because every estimator is scored against the same
 reported values; a bias that varies within a discharge would. The files carry no per-frame
-fit error. Values above 3\,keV, most frequent at low beam emission as failed fits of a weak
-signal are~\citep{Kim2024KineticProfile}, are treated as missing for every estimator. The
+fit error. Values above 3\,keV are most frequent at low beam emission (\Supp{sec:target});
+taken as failed fits of the spectrum, a source of outliers in KSTAR
+CES~\citep{Kim2024KineticProfile}, they are treated as missing for every estimator. The
 frame-to-frame scatter of the reported value and the absence of a step at beam-off frames,
 where the analysis refreshes its background, are measured in \Supp{sec:target}.
 Figure~\ref{fig:trace} shows the reported value and the estimators of \S\ref{sec:methods}
