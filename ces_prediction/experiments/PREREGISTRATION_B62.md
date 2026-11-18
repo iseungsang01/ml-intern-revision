@@ -48,3 +48,7 @@ E1: ratio 0.97 to 1.01, fails (flat inside the interruption). E2: step -0.03 to 
 ## 7. Limits known in advance
 
 Twelve discharges chosen for other purposes. The ECEI level is not a temperature: at the edge the emission depends on density as well. A fit of d on eight points is sensitive to the template. No beam power: which sources are switched off is not known.
+
+## Addendum 1 (2026-11-18, before any statement was read and before any quantity of the events was computed)
+
+Found by the agent while it looked at the raw levels only: in one of the twelve discharges with raw streams (31747) the raw ECEI level is zero within noise over the whole delivery (5th to 95th percentile of the 1 ms level -0.0007 to +0.0006), so a ratio to the level before the interruption is undefined there; in two others (32092, 32097) the level varies strongly within the discharge. Part E therefore keeps an interruption for the ECEI readout only if the mean ECEI level of the 20 ms before the beam goes off is positive and at least ten times the standard deviation of its 1 ms bins in that window. The interruptions excluded by this rule are listed in the output. The BES ratios use all interruptions. The check of part E is the count of interruptions (41) and the median off-time (10.5 ms) before the exclusion, with the count after it reported. Parts X and V are unchanged. The beam-off and beam-return times are recomputed with the code of B.58 from 0.1 ms bins of the raw BES.
