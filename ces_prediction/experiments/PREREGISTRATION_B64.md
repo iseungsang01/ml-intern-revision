@@ -47,3 +47,7 @@ T1 +0.05 to +0.10, met. T2 met, about +0.14 to +0.18. T3 +0.03 to +0.07, met but
 ## 7. Limits known in advance
 
 Three re-partitions, one initialisation per network. The second stage's hyper-parameters come from B.38, chosen on single splits whose discharges overlap these. The second stage reads the same rows' inputs as the network; it adds no new information, only a different use of it.
+
+## Addendum 1 (2026-11-18, before any run; found while the code was checked)
+
+B.38 left out of fit and scoring every row on which one of the fifteen second-stage inputs is missing. The window features of BES and ECEI are missing on the first ten rows of a contiguous segment, about 2.4 % of the test rows (820 to 1,000 per fold); the twin's second-stage inputs are never missing. B.64 must score all rows scored by B.39. Rule: the second stage of each arm is fitted on the rows where all of that arm's inputs are present (as B.38); on a test row where the network's second-stage inputs are missing, BOTH arms keep their first-stage estimate, so the two-stage network and the two-stage twin are compared with the same treatment of the same rows. Reported beside it, not a statement: the same readouts with the gradient-boosted model's own handling of missing inputs on all rows. The input split was verified by perturbation (BES, ECEI and Mirnov columns of one discharge varied in turn): eight inputs are computed from BES or ECEI and are left out of the twin's second stage; seven come from the CES history and the first-stage estimates; none from Mirnov.
