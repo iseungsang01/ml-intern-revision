@@ -46,6 +46,12 @@ Four splits; a statement holds if it holds on at least three.
 
 D1: share 0.50 to 0.65, interval above 0.5 on one to three splits; D2 the same. By the median absolute error: 0.35 to 0.55. The ten discharges with the largest reduction hold 0.5 to 1.2 of the total reduction against the causal GP. L2 holds, +0.01 to +0.05. L1 holds, +0.03 to +0.10. LH over the causal GP: −0.05 to +0.03. G1: the rows of 20 ms or more are 0.02 to 0.04 of the scored rows; skill there +0.03 to +0.25, interval above zero on two to four splits. V1 and V2 hold, each skill within 0.03 of its value on all rows.
 
+## Addendum 1 (2026-11-18, before any readout was computed)
+
+The run stopped at the check of the join of E: on split 42 the skill of E over the causal GP is +0.0771 with the causal GP of the row table and +0.0780 in B.49 (split 7: +0.1528 and +0.1533, equal to three decimals; splits 1 and 123 equal). The join is right (every row of B.49 is joined and the reported value agrees exactly). The difference is in the causal GP: B.49 used the squared errors that `eval_seq` stored, and the row table of B.48 holds the causal GP of the replay machinery; the two computations differ on 15 rows of split 42 (by up to 653 eV) and on 15 rows of split 7 (up to 357 eV), and on no row of the other two splits. Section 3 did not say which of the two the check uses; that is an omission of the registration. No readout of parts D, L, G, V or P had been computed.
+
+The check is restated: the skill of E over the causal GP is compared with B.49 using the causal-GP errors that B.49 used (those stored by `eval_seq`), on the joined rows. Every readout uses the causal GP of the row table, as registered. The rows on which the two computations of the causal GP differ are counted per split and reported, and the skill of E over the causal GP is given with both.
+
 ## 7. Limits known in advance
 
 A discharge is one unit whatever its length. The linear filter is one choice of inputs; another choice could do better. The value threshold is applied to the scored rows and to the last visible value only; the estimator was trained with values up to 3 keV in its inputs, and a retraining with another rule needs the GPU. One initialisation for parts G and V. The test rows are those of every earlier readout.
