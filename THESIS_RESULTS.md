@@ -8313,3 +8313,22 @@ Expectations: class A was expected colder; class C is the cold one. R2 expected 
 
 Reading. The increment over the twin is established between bursts (inter-burst rows of the bursting discharges) and in the middle class B; in neither the burst-free nor the frequent-burst class alone is its interval clear of zero, and the two do not differ. The cold rows carry no increment whatever the class (the two-way table), so the classes do not show a regime effect separate from the temperature level. Over the causal GP every class is positive at the point and B and C exclude zero. By the rule: the paper gives a small table by class, says that the gain is not tied to one class and is established between bursts, and claims no regime effect separate from the temperature level.
 
+### B.59: what the estimator must read, pooled -- BES of the present frame carries the increment; ECEI alone carries none; the Mirnov channels are not needed (2026-11-18)
+
+Registration `PREREGISTRATION_B59.md` with addenda 1 to 3 (addenda 2 and 3: runs lost to the machine, run again with the same command, environment and initialisations). GPU, 60 runs (arms L, N, E, B on the 15 folds of r2 to r4), all complete; read-out `analyze_b59.py`, output `docs/paper/b59_inputs.{json,md}`.
+
+| statement | skill | verdict | expectation |
+|---|---|---|---|
+| L1 network trained with fast channels one row old, over the twin | -0.006 [-0.025, +0.016] | not met | not met |
+| L2 estimator over that network | +0.058 [+0.044, +0.072] | met | met |
+| N1 network without Mirnov over the twin | +0.060 [+0.023, +0.085] | met | met |
+| N2 estimator over the network without Mirnov, inside [-0.01, +0.01] | -0.008 [-0.036, +0.024] | not met (width) | uncertain |
+| E1 ECEI + history over the twin | -0.011 [-0.092, +0.022] | not met | met or small margin |
+| B1 BES + history over the twin | +0.044 [+0.020, +0.066] | met | met |
+
+Reported: estimator over B (BES + history) +0.009 [-0.019, +0.031]; B over E +0.055 [+0.025, +0.115]; over the causal GP: estimator +0.092, no-Mirnov network +0.099 [+0.062, +0.126], B +0.084, E +0.030 [-0.045, +0.063], L +0.036; median absolute error (eV) estimator 45.8, no Mirnov 44.7, B 46.0, E 45.4, L 47.9, causal GP 44.1, hold 45.4. Rows 1 to 3 after an absent frame over the twin: estimator +0.153, no Mirnov +0.162, B +0.147, E -0.008, L -0.018.
+
+Reading. Trained with fast channels one row old, the network has no increment over the twin: the information is in the present frame (this is a trained network, not the replay of B.55). BES with the CES history gives the increment (B1 met) and the full estimator is not separated from it; ECEI with the history gives none. Without Mirnov the network is at least as good (N1 met; its point estimates over the twin and the causal GP and its median error are slightly better), so the Mirnov inputs are not needed; N2 failed by the width of its interval, not by a difference. The pooled ablations answer the grading's point that the estimator reads inputs its evidence does not support.
+
+By the rules: the paper states the pooled ablations (BES carries the increment, ECEI alone not, Mirnov not needed) in the section on what carries the increment, and the lag-trained result beside the replay of B.55. The estimator of the paper is unchanged (the no-Mirnov network is not separated from it); the paper says that the Mirnov inputs can be dropped without loss.
+
