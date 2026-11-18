@@ -328,7 +328,8 @@ def fig_blips():
     b.set_ylabel("ratio to the 20 ms before beam-off")
     b.set_ylim(0, 1.12)
     b.legend(loc="lower right", frameon=False, fontsize=7.6)
-    b.set_title(f"(b) raw streams, {E['ecei_readout_interruptions']} interruptions", fontsize=8.5,
+    b.set_title(f"(b) raw streams, {E['bes_readout_interruptions']} (BES) and "
+                f"{E['ecei_readout_interruptions']} (ECEI) interruptions", fontsize=8.5,
                 loc="left", fontweight="bold")
     save(fig, "fig_blips")
 
@@ -346,7 +347,7 @@ def fig_use():
     irows(a, rows, 1.0, (0.55, 1.3), fmt="{:.3f}")
     a.set_xticks([0.6, 0.8, 1.0, 1.2])
     a.axvline(0.0, color=MUTED, lw=0)
-    a.set_xlabel("$\\rho_h$: share of a correction still\npresent $h$ frames later")
+    a.set_xlabel("$\\rho_h = \\beta_h/\\beta_0$: correction still present\n$h$ frames later (can exceed one)")
     a.set_title("(a) persistence", fontsize=8.5, loc="left", fontweight="bold", pad=8)
     seeds = ("42", "1", "7", "123")
     delays = D["delays_frames"]

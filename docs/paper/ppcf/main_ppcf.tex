@@ -80,14 +80,14 @@ these channels. A five-parameter robust filter driven by two summaries of the BE
 gains \KXone{} over the same filter without the drive, and the network loses its gain
 when BES is one frame old: the information is in the BES value of the present frame. Most
 of the network's correction is still present in the next, independently fitted frame.
-With a second stage, a boosted regression of the network's error fitted on training
-discharges, our estimator has on three of the eight re-partitions a skill of \TwoGp{} over
+With a second stage, a boosted regression of the network's error fitted on out-of-fold
+errors of the non-test discharges, our estimator has on three of the eight re-partitions a skill of \TwoGp{} over
 a causal Gaussian process on the CES history, a root-mean-square error lower by
 \TwoRmseAbs\,eV, a median absolute error below that of holding the last value, more frames
 within 20\% of the reported value than that process, and a gain over the same two stages
 without the fast channels. For the network alone the gain is small against the
-frame-to-frame scatter of the reported value, grows with the temperature, is absent in the
-coldest third of the discharges, rests on the tenth of them with the largest gain and was
+frame-to-frame scatter of the reported value, is not established in the coldest third of
+the discharges by temperature, rests on the tenth of them with the largest gain and was
 not established on single file-level splits. Use requires BES of the present frame and a
 CES value at most two frames late; real-time control is a prospect.
 \end{abstract}
@@ -148,8 +148,8 @@ in the present frame (\S\ref{sec:res:main}, \S\ref{sec:res:diag}); with a second
 fitted on the network's errors, the fast-channel increment keeps an interval above zero
 and the ratio of the median error to that of hold has an interval below one
 (\S\ref{sec:res:main}); for the network,
-the information is small against the scatter of the reported value, grows with the
-temperature and mostly lasts into the next frame (\S\ref{sec:res:where},
+the information is small against the scatter of the reported value, is not established in
+the coldest third of the discharges and mostly lasts into the next frame (\S\ref{sec:res:where},
 \S\ref{sec:res:use}).
 
 \paragraph{Relation to earlier work.} Gaussian-process (GP)
@@ -209,7 +209,8 @@ A published edge analysis that includes two discharges of this set takes the edg
   \label{fig:geometry}
 \end{figure}
 
-\paragraph{What a row contains.} Raw BES and ECEI signals (500\,kHz) and Mirnov signals (2\,MHz) of
+\paragraph{What a row contains.} Raw BES and ECEI signals (500\,kHz; BES at 1\,MHz in one
+discharge) and Mirnov signals (2\,MHz) of
 twelve discharges, set against the files (\Supp{sec:target}), show that every fast-channel
 value of a row is a single raw sample within one raw step of its time stamp, not an average
 over the CES frame (Fig.~\ref{fig:rows}). A step of 20, 30 or 40\,ms between rows is one
@@ -256,7 +257,7 @@ in three discharges.
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{fig_trace_causal}
-  \caption{Reported \Ti{} (circles) and three causal estimates in 0.6\,s of three test
+  \caption{Reported \Ti{} (circles) and three causal estimates in about 0.65\,s of three test
   discharges of one split: hold (grey steps), the causal GP on the CES history (dashed)
   and the recurrent network that also reads the fast channels (red). Shaded: rows
   without a reported value; dotted: absent frames (beam blips). (a, b) Two discharges
@@ -312,7 +313,11 @@ so that it learns the errors the network makes on discharges it has not seen; th
 protocol is in \Supp{sec:twostage}. Where the ten-row window is incomplete (the first ten
 rows of a segment, about 2\% of the scored rows) the network's estimate is kept. The
 second stage takes \TwoMicros\,$\mu$s per row when rows are processed together on a CPU.
-The \emph{two-stage twin} is the twin with a second stage that reads only the seven
+One row at a time on one CPU thread, the median time is 0.49\,ms for a step of the
+network, 0.64\,ms for the causal GP that the second stage reads and 1.257\,ms for a
+single-row call of a second stage of this kind (\Supp{sec:twostage}). No
+real-time use of BES or CES on KSTAR is published (\SuppTab{tab:plasma}), so real-time use
+is a prospect. The \emph{two-stage twin} is the twin with a second stage that reads only the seven
 quantities from the CES history and the twin's estimate; the skill of the two-stage
 estimator over the two-stage twin is the fast-channel increment of the paper's estimator.
 The analyses of which diagnostic carries the increment, where the gain is, persistence and
@@ -342,9 +347,11 @@ of the nine BES channels (the common mode, in which a change of the beam appears
 $g$ the difference of the mean logarithms of two columns of the array (the radial
 difference, in which it largely cancels), and $\Delta$ the change from the previous row,
 clipped. KF0 has no drive, KFX both gains, Kc and Kg one each. Per fold, KF0 is fitted on
-the training discharges first and the gains then with $q$, $r$, $k$ held. The clip and the
-two-stage fit were chosen on one re-partition of the pooled cross-validation, and every
-filter number is read on the other seven.
+the training discharges first and the gains then with $q$, $r$, $k$ held. The clip and this
+sequential fit were chosen on one re-partition (r2) of the pooled cross-validation. The
+ratios of the filter to the floor and its persistence are read on all eight re-partitions
+(r2--r9) and its comparison with the two-stage estimator on r2--r4; every other readout
+of the filter is on the other seven (r3--r9).
 
 The causal GP is the main reference because it alone meets three conditions
 (Table~\ref{tab:refs}): it reads the information of our estimator without the fast
@@ -361,15 +368,15 @@ hyper-parameters are selected by the data at every row, not by us. The compariso
   \footnotesize
   \begin{tabular}{lccp{0.43\linewidth}}
     \toprule
-    Reference & CES values only & Causal & Settings not chosen by us \\
+    Reference & CES values only & Causal & Who chose the settings \\
     \midrule
-    causal GP & yes & yes & hyper-parameters selected per row by the marginal likelihood; the kernel, the 16 values and the candidate grid (five length scales from 5 to 80\,ms, four noise variances) are ours \\
-    hold & yes & yes & no settings; trivial \\
-    PCHIP & yes & no & no settings; uses the next value \\
+    causal GP & yes & yes & the marginal likelihood, per row, for the hyper-parameters; we chose the kernel, the 16 values and the candidate grid (five length scales from 5 to 80\,ms, four noise variances) \\
+    hold & yes & yes & nobody: it has no settings \\
+    PCHIP & yes & no & nobody: it has no settings; uses the next value \\
     offline GP & yes & no & as the causal GP, with neighbours on both sides \\
-    history-only twin & yes & yes & no: architecture and training are ours \\
-    two-stage twin & yes & yes & no: the twin with a second stage on the CES history \\
-    KF0 & yes & yes & no: our specification, three parameters fitted on training discharges \\
+    history-only twin & yes & yes & we did: architecture and training \\
+    two-stage twin & yes & yes & we did: the twin with a second stage on the CES history \\
+    KF0 & yes & yes & we did: the specification; three parameters fitted on training discharges \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -377,16 +384,21 @@ hyper-parameters are selected by the data at every row, not by us. The compariso
 \subsection{Scoring, intervals and registration}
 \label{sec:methods:eval}
 Errors are computed in eV on rows where \Ti{} was measured and withheld from the
-estimator; every estimator of a comparison is scored on the identical rows. The score is
+estimator; every estimator of a comparison is scored on the identical rows. Under the
+per-discharge cap of the protocol, the scored rows of a test discharge are a seeded subset
+of at most 500, drawn anew in each re-partition; in each re-partition 633 to 635 of the
+639 discharges have scored rows, and four never do (\Supp{sec:rows}). The score is
 the mean-squared-error skill $1 - \mathrm{MSE}_A/\mathrm{MSE}_R$~\citep{murphy1988}, given
 with a 95\% interval and whether it excludes zero. The primary readout is \emph{pooled}:
 shot-level 5-fold cross-validation on 639 discharges, repeated over eight re-partitions
 (r2--r9; r0 and r1 belong to an earlier batch). The five test folds of a repeat are
 concatenated into one skill, and a two-level bootstrap draws a repeat and then resamples
 its discharges; it holds the trained networks fixed, so the fold-level interval, which
-carries the training variance, is given beside it. The ablation and component networks were
-trained on four file-level splits of 96 test discharges with one initialisation each
-(\Supp{sec:splits}). Because a mean squared error is decided by few rows, skills under a
+carries the training variance, is given beside it. The ablation networks of
+Table~\ref{tab:carry} were retrained on every fold of r2--r4; the component networks, the
+replayed networks and the earlier ablations were trained on four file-level splits of 96
+test discharges (\Supp{sec:components}, \Supp{sec:splits}); every one of these networks
+has one initialisation. Because a mean squared error is decided by few rows, skills under a
 Huber loss and with the hundredth of the rows with the largest error of hold removed are
 co-primary; because accuracy requirements are relative, we also give the share of frames
 whose absolute error is within 10\% and 20\% of the reported value, and the median absolute
@@ -457,10 +469,12 @@ differently.
   absolute error, share of frames within 20\% of the reported value (within 10\%:
   \Supp{sec:relerr}). Mean squared error over the floor (\FloorRms\,eV root mean square):
   r2--r9, triple rows only (\S\ref{sec:methods:eval}), where errors are smaller, so it does
-  not follow from the RMSE column; its reciprocal is the share of the error that the floor
+  not follow from the RMSE column (for KF0 and KFX it includes r2, on which the filter was
+  specified); its reciprocal is the share of the error that the floor
   accounts for. (c) On all scored rows of r2--r4: the two-stage estimator beside the
   network and the references; the rows differ from those of (b), so absolute errors are
-  compared within a panel only. Fold-level intervals of the first two rows of (a):
+  compared within a panel only. Fold-level intervals of the network over the causal GP
+  and over its twin in (a):
   \PoneFold{} and \PtwoFold{}; the root-mean-square error difference of the network to the
   causal GP on r2--r9: \RmseNetMinusGp\,eV (paired differences on r2--r4:
   \SuppTab{tab:twopairs}).}
@@ -478,7 +492,8 @@ differently.
   of the two-stage estimator over each reference (r2--r4), of the network, its first stage
   (r2--r9), and of the filter family (r3--r9); filled markers: the interval excludes zero.
   The two first-stage increments, network over twin and KFX over KF0, are of the same size.
-  (b) Mean squared error of each estimator over the floor $s^2$ on the triple rows (bars:
+  (b) Mean squared error of each estimator over the floor $s^2$ on the triple rows of
+  r2--r9, for the filters including r2, on which they were specified (bars:
   95\% interval; the two-stage estimator was not read against the floor); grey is the part
   that the floor accounts for, colour the part above it.}
   \label{fig:skill}
@@ -502,8 +517,9 @@ than the network on these rows.
 Within 20\% of the reported value the network alone places as many frames as the causal
 GP, not more (the registered statement is not met; Table~\ref{tab:main}b), and its median
 absolute error is not below that of hold. The filter does what the network alone does
-not: KFX places more frames than the causal GP within 10\% and within 20\% of the value,
-and its median absolute error is below that of hold (\Supp{sec:relerr}). So does the
+not: KFX places more frames than the causal GP within 10\% and within 20\% of the value
+(\Supp{sec:relerr}), and its median absolute error is below that of hold
+(\Supp{sec:filter}). So does the
 two-stage estimator, within 20\% and for the median by registered statements
 (Table~\ref{tab:main}c), within 10\% as a reported readout (\SuppTab{tab:twopairs}).
 
@@ -583,22 +599,25 @@ distribution (registered; Fig.~\ref{fig:where}, Table~\ref{tab:where}; definitio
   rows weighted to resemble rows without a value are weighted by the odds of an unusable
   value predicted from the flags of the five rows before and the fast channels.
   Edge-burst rate: onsets per second of upward departures of the BES channels, none,
-  up to 0.719 per second (the median of the non-zero rates) and above (28 discharges too
-  short for a rate are in no class); rows between bursts are at least 50\,ms from every
-  onset. Four-split values and the other rows: \SuppTab{tab:pooledrows}.}
+  up to 0.719 per second and above; 0.719 is the median of the 360 non-zero rates, and the
+  24 discharges whose rate equals it exactly fall in the lower class, which therefore holds
+  201 discharges and the upper 159; 28 discharges too short for a rate are in no class. Rows between
+  bursts are at least 50\,ms from every onset. Four-split values and the other rows: \SuppTab{tab:pooledrows}.}
   \label{tab:where}
   \footnotesize
   \setlength{\tabcolsep}{2pt}
   \TabWhere
 \end{table}
 
-The increment grows with the temperature: it has an interval above zero in the middle and
-hottest thirds of the discharges and is absent in the coldest, for the network and for the
-filter alike, while the margin over the causal GP is present in every third
-(Fig.~\ref{fig:where}a). In the coldest third the network places fewer frames within 20\%
+By temperature level, the increment has an interval above zero in the middle and hottest
+thirds of the discharges and not in the coldest, for the network and for the filter alike,
+while the margin over the causal GP has one in every third (Fig.~\ref{fig:where}a). No
+interval was computed for the difference between thirds on the pooled rows, and on single
+splits those differences include zero (\Supp{sec:rows}), so a dependence on the level is
+not shown. In the coldest third the network places fewer frames within 20\%
 of the reported value than the causal GP; KFX does not. After the second stage, on three
 re-partitions, the increment and the gain over the network have intervals above zero in
-every third, the smallest in the coldest (\SuppTab{tab:twothirds}; reported, not a
+every third, with the smallest point values in the coldest (\SuppTab{tab:twothirds}; reported, not a
 registered statement). Classed by the rate of edge
 bursts in the BES channels, the increment is established in the rows between bursts and is
 not tied to one class: the class with no bursts and the class with frequent bursts are
@@ -676,10 +695,11 @@ plasma should last into it, one that describes the fit of frame $t$ should not
 (registered; read on the first stage). With $d_t$ the network minus its twin, $\beta_h$ is
 the regression
 coefficient of the reported value of frame $t+h$ minus the twin's estimate for frame $t$
-on $d_t$, and $\rho_h = \beta_h/\beta_0$ the share of the correction still present $h$
-frames later. Most of the fast-channel correction is still there in the next frame and
+on $d_t$, and the ratio $\rho_h = \beta_h/\beta_0$ measures how much of the correction is
+still present $h$ frames later (it can exceed one). Most of the fast-channel correction is
+still there in the next frame and
 does not fall further over three frames, for the network and the filter
-(Fig.~\ref{fig:use}a; \SuppTab{tab:persist}). The share $\rho_1$ is a ratio of two
+(Fig.~\ref{fig:use}a; \SuppTab{tab:persist}). The ratio $\rho_1$ is a ratio of two
 regression coefficients, not the share of the error removed; for the network $\beta_0$ is below one, so its
 correction overshoots the reported value of its own frame (for the filter it is near one). A correction from the CES
 history alone persists at least fully, so the part of the fast-channel correction that
@@ -692,10 +712,11 @@ not seen by this test.
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{fig_use}
-  \caption{Fit or plasma, and conditions of use. (a) Share $\rho_h$ of a correction still
-  present in the reported value $h$ frames later, for the fast-channel correction of the
-  network and of the filter and for a correction from the CES history alone (pooled,
-  95\% intervals; filled: the interval excludes one). (b) The networks (first stage) of the
+  \caption{Fit or plasma, and conditions of use. (a) Ratio $\rho_h = \beta_h/\beta_0$, how
+  much of a correction is still present in the reported value $h$ frames later, for the
+  fast-channel correction of the network and of the filter and for a correction from the
+  CES history alone (pooled, r2--r9, for the filter including r2; 95\% intervals; filled:
+  the interval excludes one). (b) The networks (first stage) of the
   four splits replayed, not retrained, with the CES value made late by 0 to 4 frames: skill
   of the network over the causal GP (circles, solid) and over its twin (squares,
   dashed), one line per split
@@ -780,8 +801,8 @@ what the CES history gives. A recurrent network against its twin and a five-para
 filter with and without a BES drive agree on this, and the network given one-frame-old BES
 places it in the present frame. For the network, the information is small against an error
 that, between two scored frames, is mostly scatter of the reported value; most of it lasts
-into the next, independently fitted frame; it grows with the temperature and is absent in
-the coldest discharges. With a second stage fitted on the network's errors, on three
+into the next, independently fitted frame; it is established in the middle and hottest
+thirds of the discharges by temperature, not in the coldest. With a second stage fitted on the network's errors, on three
 re-partitions, the fast-channel increment keeps an interval above zero, the ratio of the
 median error to that of hold has an interval below one, and the skill over the offline GP,
 which waits for the next value, has an interval above zero where that of the network alone

@@ -493,25 +493,25 @@ def main():
           "    \\multicolumn{3}{l}{\\emph{Mean squared error over the floor (triple rows)}} \\\\"]
     for label, k in (("hold", "H"), ("causal GP", "G"), ("PCHIP (uses the next value)", "P"),
                      ("offline GP (uses the next value)", "O"), ("history-only twin", "Tw"),
-                     ("recurrent estimator", "A"), ("KF0", "K0"), ("KFX", "KX")):
+                     ("network", "A"), ("KF0", "K0"), ("KFX", "KX")):
         TY.append(f"    \\quad {label} & {rat(ya['mse_over_s2_' + k])} & {rat(yq['mse_over_s2_' + k])} \\\\")
     TY.append("    \\multicolumn{3}{l}{\\emph{Removable-error skill (triple rows)}} \\\\")
-    for label, k in (("recurrent estimator over the causal GP", "removable_A_over_G"),
-                     ("recurrent estimator over its twin", "removable_A_over_Tw"),
-                     ("recurrent estimator over hold", "removable_A_over_H"),
+    for label, k in (("network over the causal GP", "removable_A_over_G"),
+                     ("network over its twin", "removable_A_over_Tw"),
+                     ("network over hold", "removable_A_over_H"),
                      ("KFX over the causal GP", "removable_KX_over_G"),
                      ("KFX over the twin", "removable_KX_over_Tw"),
                      ("KFX over hold", "removable_KX_over_H")):
         TY.append(f"    \\quad {label} & {sk(ya[k])} & {sk(yq[k])} \\\\")
     TY.append("    \\multicolumn{3}{l}{\\emph{Share of the gap between the causal and the offline GP closed (all scored rows)}} \\\\")
-    for label, k in (("recurrent estimator", "gap_closure_A"), ("history-only twin", "gap_closure_Tw"),
+    for label, k in (("network", "gap_closure_A"), ("history-only twin", "gap_closure_Tw"),
                      ("KFX", "gap_closure_KX"), ("KF0", "gap_closure_K0")):
         TY.append(f"    \\quad {label} & {rat(ya[k])} & {rat(yq[k])} \\\\")
     TY += ["    \\bottomrule", "  \\end{tabular}}"]
     L += TY
     TP = ["\\newcommand{\\TabPersist}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
           "    Correction & $\\beta_0$ & $\\rho_1$ & $\\rho_3$ & $\\rho_3 - \\rho_1$ \\\\", "    \\midrule"]
-    for label, k in (("recurrent estimator minus twin (fast channels)", "net_twin"),
+    for label, k in (("network minus twin (fast channels)", "net_twin"),
                      ("KFX minus KF0 (fast channels)", "kfx_kf0"),
                      ("twin minus KF0 (CES history only; reference)", "twin_kf0")):
         TP.append(f"    {label} & {rat(ya[k + '_beta0'])} & {rat(ya[k + '_rho1'])} & {rat(ya[k + '_rho3'])} & "
@@ -521,7 +521,7 @@ def main():
     # supplement: relative error by stratum (B.60 and its addendum)
     ra_all = R["addendum1"]["cells_r3_r9"]
     TR = ["\\newcommand{\\TabRelErr}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
-          "    & \\multicolumn{2}{c}{Recurrent estimator minus causal GP} & "
+          "    & \\multicolumn{2}{c}{Network minus causal GP} & "
           "\\multicolumn{2}{c}{KFX minus causal GP} \\\\",
           "    Rows & within 10\\% & within 20\\% & within 10\\% & within 20\\% \\\\", "    \\midrule"]
     for label, k in (("all rows", "all rows"), ("coldest third by median \\Ti{}", "low third by median T_i"),
@@ -637,10 +637,10 @@ def main():
 
     TCT = ["\\newcommand{\\TabClassThird}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
            "    Edge-burst rate & coldest third & middle third & hottest third \\\\", "    \\midrule",
-           "    \\multicolumn{4}{l}{\\emph{Increment (estimator over its twin)}} \\\\"]
+           "    \\multicolumn{4}{l}{\\emph{Increment (network over its twin)}} \\\\"]
     for k, lab in (("A", "none"), ("B", "few"), ("C", "frequent"), ("all", "all discharges")):
         TCT.append(f"    \\quad {lab} & " + " & ".join(cls3(k, q) for q in ("low", "middle", "high")) + " \\\\")
-    TCT.append("    \\multicolumn{4}{l}{\\emph{Estimator over the causal GP}} \\\\")
+    TCT.append("    \\multicolumn{4}{l}{\\emph{Network over the causal GP}} \\\\")
     for k, lab in (("A", "none"), ("B", "few"), ("C", "frequent")):
         TCT.append(f"    \\quad {lab} & " + " & ".join(cls3gp(k, q) for q in ("low", "middle", "high")) + " \\\\")
     TCT += ["    \\bottomrule", "  \\end{tabular}}"]
@@ -704,7 +704,7 @@ def main():
     Pc = P.get("causal_over", {}) if pooled else {}
     T = ["\\newcommand{\\TabPrimary}{%", "  \\resizebox{\\linewidth}{!}{%", f"  \\begin{{tabular}}{{{cols}}}",
          "    \\toprule", f"    & {head} \\\\", "    \\midrule",
-         "    \\multicolumn{%d}{l}{\\emph{Skill of the recurrent estimator over}} \\\\" % (len(cols)),
+         "    \\multicolumn{%d}{l}{\\emph{Skill of the network over}} \\\\" % (len(cols)),
          row("\\quad hold", HO, Pc.get("persistence")),
          row("\\quad causal GP", S1, P.get("P1_causal_over_gp")),
          row("\\quad history-only twin", S2, P.get("P2_causal_over_twin")),
@@ -719,14 +719,14 @@ def main():
               row("\\quad the average of the three twins", E2), "    \\midrule"]
     if GR:
         T += ["    \\multicolumn{%d}{l}{\\emph{Linear filter fitted on the training discharges}} \\\\" % (len(cols)),
-              row("\\quad recurrent estimator over the filter with fast channels", LF1),
+              row("\\quad network over the filter with fast channels", LF1),
               row("\\quad filter with fast channels over the filter without", LF2), "    \\midrule"]
     T += [
          "    \\multicolumn{%d}{l}{\\emph{Median absolute error (eV)}} \\\\" % (len(cols)),
          nrow("\\quad hold", med("hold"), "{:.1f}", P.get("median_abs_error_eV", {}).get("hold")),
          nrow("\\quad causal GP", med("causal GP"), "{:.1f}", R["check"]["causal GP"]["mine"][0]),
          nrow("\\quad history-only twin", med("twin"), "{:.1f}", P.get("median_abs_error_eV", {}).get("twin")),
-         nrow("\\quad recurrent estimator", med("causal variant"), "{:.1f}",
+         nrow("\\quad network", med("causal variant"), "{:.1f}",
               P.get("median_abs_error_eV", {}).get("causal variant")),
          *([nrow("\\quad average of three initialisations",
                  [x["abs_error_eV"]["E"]["median"][0] for x in av], "{:.1f}")] if AV else []),
@@ -734,7 +734,7 @@ def main():
          nrow("\\quad hold", rms("hold"), "{:.1f}"),
          nrow("\\quad causal GP", rms("causal GP"), "{:.1f}"),
          nrow("\\quad history-only twin", rms("twin"), "{:.1f}"),
-         nrow("\\quad recurrent estimator", rms("causal variant"), "{:.1f}"),
+         nrow("\\quad network", rms("causal variant"), "{:.1f}"),
          *([nrow("\\quad average of three initialisations", [x["rmse_eV"]["E"] for x in av], "{:.1f}")]
            if AV else []),
          "    \\midrule",

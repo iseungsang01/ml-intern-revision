@@ -291,7 +291,7 @@ def figure():
     import fig_events as FE
     FE.FIG = FIG
     FE.STYLE = dict(FE.STYLE)
-    FE.STYLE["causal"] = ("recurrent estimator", *FE.STYLE["causal"][1:])
+    FE.STYLE["causal"] = ("network", *FE.STYLE["causal"][1:])
     FE.main()
     for p in (FIG.with_suffix(".pdf"), FIG.with_suffix(".png")):
         if not p.exists():
