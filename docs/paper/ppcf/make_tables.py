@@ -302,8 +302,8 @@ def main():
           mrow("\\quad recurrent estimator over KFX", kc["A_over_kfx"]),
           mrow("\\quad KFX over causal GP", kc["kfx_over_G"]),
           "    \\bottomrule", "  \\end{tabular}}",
-          "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
-          "    \\emph{(b) Estimator} & MSE / floor & Median $|e|$ (eV) & Within 10\\% & Within 20\\% \\\\",
+          "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+          "    \\emph{(b) Estimator} & MSE / floor & Median $|e|$ (eV) & Within 20\\% of the value \\\\",
           "    \\midrule"]
     for label, fk, mk, rk in (("hold", "mse_over_s2_H", "H", "hold"),
                               ("causal GP", "mse_over_s2_G", "G", "gp"),
@@ -312,7 +312,7 @@ def main():
                               ("recurrent estimator", "mse_over_s2_A", "A", "c"),
                               ("KF0 (filter, no fast channels)", "mse_over_s2_K0", "kf0", "kf0"),
                               ("KFX (filter, BES drive)", "mse_over_s2_KX", "kfx", "kfx")):
-        TM.append(f"    {label} & {rat(ya[fk])} & {medk[mk]:.1f} & {rat(ra[rk + '|0.10'])} & "
+        TM.append(f"    {label} & {rat(ya[fk])} & {medk[mk]:.1f} & "
                   f"{rat(ra[rk + '|0.20'])} \\\\")
     TM += ["    \\bottomrule", "  \\end{tabular}}"]
     L += TM
