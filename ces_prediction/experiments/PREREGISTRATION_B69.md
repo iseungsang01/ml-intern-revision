@@ -85,3 +85,20 @@ The estimator is not changed by this batch whatever its outcome.
 
 - There is one test block of 97 discharges from the end of one campaign. The four seeds differ in the training and validation partition and the initialisation, not in the test discharges.
 - The second stage's hyper-parameters come from B.38, chosen on discharges that include the test block. Its inputs and its form were fixed before this batch.
+
+## Addendum 1 (2026-11-19, before any run)
+
+**A correction to sections 2 and 7.** The four seeds of the temporal split of B.5 do not differ in the training and validation partition. The training set is identical for all four: 413 discharges, up to shot 31991. So is the validation set: 128 discharges, shots 32002 to 32310. The seeds differ in the initialisation and, in this batch, in the inner-fold partition of the training discharges. The bootstrap draw over seeds is therefore a draw over initialisations and inner folds. The test block is 97 discharges, shots 32312 to 32751; 95 of them carry scored T_i rows (20,062 rows).
+
+**Set at implementation.**
+
+- **Statistics read at scoring.** `CES_CONTROL_METRICS` follows the split: these are the harness statistics of the temporal split, `.b5_camp_cut_win_s{s}`, as in B.29.
+- **Normalisation of the twin.** The twin keeps `CES_PER_SHOT_NORM=1`, as in `pooled_env("v2h")` for B.39 and B.64. Its encoder reads no fast channel.
+- **Inner folds.** They are drawn with the generator seeded by (seed, 0).
+- **Second stage.** It is `stage2_b64.fit_fold`, called through a binding that points its paths at the temporal split. It is not copied.
+
+**Checks (a) to (h).** All passed; they are listed in `docs/paper/b69_checks.md`.
+
+- The stored references of B.29 are reproduced bit for bit by `eval_seq` under the B.69 environment.
+- `fit_fold` through the binding reproduces the stored B.64 second stage of r2 f0 bit for bit.
+- The 8 outer environments equal those of B.29's temporal runs at cap 80.
