@@ -73,3 +73,21 @@ There is one initialisation per fold, and run directories are `data/.b68_X_cut_r
 
 - There is one initialisation per fold and three re-partitions, and the weight 0.5 is not tuned.
 - The auxiliary target uses future values. It is used only in training on training discharges, and inference stays causal.
+
+## Addendum 1 (2026-11-19, before any run)
+
+Decisions taken at implementation time and before any GPU run:
+
+- **Where the auxiliary target is computed.** It is computed on the row arrays of the reference harness, with that harness's block rule, so it equals the B.39 offline-GP reference bit for bit. Grid rows without any CES value are inserted at their time stamps.
+- **Rows that carry the auxiliary loss.** Every row with a target, including rows where only V_rot is measured and inserted rows.
+  - Where no later value exists, the target is the estimator's own fallback, the previous value.
+  - Where no earlier value exists, the target is missing and masked.
+  - Coverage is 0.994 of block rows. Two-sided estimates: 243,112. Fallbacks: 1,307. Masked: 1,509.
+- **Gradient clipping.** As in `train_seq`, it acts on all parameters together, including the auxiliary head. Through that joint clipping the V_rot branch can move slightly. With weight 0 the training is bit-identical to `seq_v2`.
+- **The weight.** 0.5 is a constant in `aux_b68.py`, not an environment variable.
+- **The X3 interval.** It uses the weighted median under discharge resampling. The point estimate is the mean over re-partitions of the ratio of plain medians.
+- **Checks.** Checks (a) to (h) in `docs/paper/b68_checks.md` all passed:
+  - the target equals the stored offline-GP errors on all 37,483 test rows of r2 f0;
+  - the row's own value does not change its target, in 300 of 300 rows;
+  - the checkpoint loads as plain `seq_v2` and is scored by the unchanged `eval_seq.py`;
+  - the environments differ from `pooled_env("v2")` only in the directory.
