@@ -629,7 +629,7 @@ fold 단위 구간(Nadeau–Bengio 보정, fold 40개): 인과 GP 대비 +0.089 
 
 ## 7. 열린 일 (우선순위 순)
 
-**지금 상태(2026-11-18 14:40).** B.39는 13:53에 끝났고 pooled 판독을 기록했다(4.32절). GPU에서는 B.53(20회, 13:55쯤 시작)이 돌고, 끝나면 같은 명령 사슬에서 B.47(64회)이 이어진다: `py ces_prediction/experiments/b53_components/run_b53.py --wait-for-b39 >> data/.b53_batch.log 2>&1; py ces_prediction/experiments/b47_after_b39/run_b47.py >> data/.b47_batch.log 2>&1` (두 러너 모두 끝난 run을 건너뛴다. 세션이 끊겨 프로세스가 죽었으면 같은 명령으로 다시 띄운다). 2026-11-19에 발표가 있다. 커밋된 원고는 본문 10쪽(참고문헌 포함, 저자 지정)과 보충 자료 27쪽이며 pooled 수치가 들어 있다. GPU 배치가 도는 동안에는 기존 학습 코드를 고치지 않는다.
+**지금 상태(2026-11-18 14:09).** B.39는 13:53에 끝났고 pooled 판독을 기록했다(4.32절). CPU에서는 행 단위 판독을 pooled 행에서 다시 읽는 B.54(등록 `PREREGISTRATION_B54.md`)를 하위 에이전트가 돌리고 있다. GPU에서는 B.53(20회, 13:55쯤 시작)이 돌고, 끝나면 같은 명령 사슬에서 B.47(64회)이 이어진다: `py ces_prediction/experiments/b53_components/run_b53.py --wait-for-b39 >> data/.b53_batch.log 2>&1; py ces_prediction/experiments/b47_after_b39/run_b47.py >> data/.b47_batch.log 2>&1` (두 러너 모두 끝난 run을 건너뛴다. 세션이 끊겨 프로세스가 죽었으면 같은 명령으로 다시 띄운다). 2026-11-19에 발표가 있다. 커밋된 원고는 본문 10쪽(참고문헌 포함, 저자 지정)과 보충 자료 27쪽이며 pooled 수치가 들어 있다. GPU 배치가 도는 동안에는 기존 학습 코드를 고치지 않는다.
 
 끝나면 할 일. B.53: `py ces_prediction/experiments/b53_components/analyze_b53.py` → `docs/paper/b53_components.md` 확인 → 기록, 원고의 빔 단서 문장. B.47: `py ces_prediction/experiments/b47_after_b39/analyze_b47.py` → 기록, 원고.
 
