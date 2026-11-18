@@ -7975,3 +7975,33 @@ Reported. For E the shares are 0.714, 0.761, 0.774 and 0.780 against the causal 
 Found on the way. Two computations of the causal GP exist, that of `eval_seq` (stored with every run, used by the main table and by B.49) and that of the replay machinery (the row tables of B.30 and B.48). They differ on 16 rows of split 42 and 15 of split 7 (one discharge each but one row; ratio of the GP sums of squares 1.00096 and 1.00054) and on none of the other two. The cause was not found within the time set for it; the runs of 15 to 16 rows match the time one visible value stays among the 16 most recent, so the neighbour sets appear to differ by one value. A skill over the causal GP changes by less than 0.001.
 
 Reading. (1) The direction is shared by most discharges: the estimator has the lower squared error in about two thirds to three quarters of the test discharges, against the causal GP and against its twin. The size is not: the ten discharges with the largest reduction hold 0.748, 0.470, 0.525 and 0.620 of the total squared-error reduction against the causal GP. (Corrected the same day: the first wording of this reading said that the gain is not carried by a few discharges, which this share does not support.) By the median absolute error it is not the lower one in a majority on every split, which is the per-discharge form of the statement that the typical row is not improved. (2) A linear filter with no early stopping and no initialisation also gains from the fast channels on every split, and the recurrent estimator is separated from that filter; the linear filters themselves do not reach the causal GP. (3) The margin over the causal GP is established where the last value is 20 to 50 ms old and not where it is older than 50 ms, with few rows there. (4) Limiting the scored rows to 2,000 eV does not remove either margin. Expectation check: 7 of 19 met; the misses are on the favourable side (shares and L1 larger than expected).
+
+### B.39 arm P: the pooled cross-validation of the causal variant and its twin -- P1 and P2 hold; an offline GP has the lower error; the four-split statements S1 and S2 had failed, so neither condition of the registered decision (pooled and four-split together) is met (2026-11-18)
+
+Registration `PREREGISTRATION_B39.md`. 80 runs (the causal variant and the history-only twin on the five folds of repeats r2 to r9 of B.27, epoch cap 80, initialisation seed as in B.27), none failed. The arm was stopped at 57 runs at 07:45 and resumed at 12:07 at the author's instruction; the last run ended at 13:53. Epochs run: 18 to 80, median 35; no twin of this arm stopped before 19 epochs. Readout `py ces_prediction/experiments/b39_primary/analyze_b39.py` -> `docs/paper/b39_primary.{json,md}`; interval: 20,000 draws, a repeat and then its discharges.
+
+| pooled over eight re-partitions of 639 discharges, T_i, cut | skill of the causal variant |
+|---|---|
+| P1: over the causal GP | +0.089 [+0.064, +0.112] -> holds |
+| P2: over the history-only twin | +0.048 [+0.022, +0.073] -> holds |
+| over hold | +0.375 [+0.352, +0.394] |
+| over PCHIP | +0.201 [+0.168, +0.231] |
+| against the offline GP | -0.037 [-0.068, -0.008] (interval below zero) |
+| against the whole-discharge variant of the manuscript (cap 30, same rows) | -0.026 [-0.051, +0.001] |
+| (that variant over the causal GP on these rows) | +0.112 [+0.085, +0.132] |
+| twin over the causal GP | +0.043 [+0.023, +0.062] |
+
+Fold-level interval with the Nadeau-Bengio correction (40 folds): over the causal GP +0.089 [+0.057, +0.121], over the twin +0.048 [+0.017, +0.080]. Per repeat, over the causal GP +0.089, +0.090, +0.096, +0.082, +0.095, +0.075, +0.097, +0.088; over the twin +0.045, +0.051, +0.062, +0.033, +0.061, +0.037, +0.046, +0.050. Median absolute error (eV, mean over repeats): hold 45.4, causal variant 46.0, twin 46.1.
+
+Against the expectations of the registration: P1 +0.08 to +0.12 (found +0.089), P2 +0.04 to +0.09 (found +0.048); both inside.
+
+Decision by section 5 of the registration. "P1 and S1 hold: the causal variant becomes the estimator of the primary table; causal stays in the title": P1 holds, S1 does not (2 of 4), so the condition is not met. "P2 and S2 hold: the increment is stated for the causal variant; either fails: stated as not established under the symmetric protocol": P2 holds, S2 does not (2 of 4), so by the rule the increment is stated as not established.
+
+What the manuscript does, and where it departs. The author had designated the causal variant as the estimator of the paper and the pooled readout as primary (`PAPER_DESIGN.md`); the variant with whole-discharge standardization cannot run in real time, which is the purpose of the work. The manuscript keeps the causal estimator and gives the increment with its pooled interval, and says in the limits of the main result that both depart from the registered rules; the abstract gives the pooled skills and, beside them, that neither statement registered for a single training holds on the four splits. This departure is the session lead's choice, shown to the author for a decision.
+
+Reading. (1) Pooled, the estimator has a lower squared error than the causal GP and than its twin, with intervals that exclude zero under both the two-level and the fold-level interval, and every one of the eight repeats is positive for both. (2) An offline GP that uses the following value has the lower error: the earlier statement "the interval includes zero on every split" was a statement about single splits; pooled, the interval is below zero. The manuscript now says so in the result, the reading and the conclusion. (3) The estimator is not separated from the whole-discharge variant on the same rows (the interval includes zero by 0.001); the two differ in the standardization and in the epoch cap, so the difference is not attributed. (4) The median absolute error is not lowered: 46.0 eV against 45.4 eV for hold.
+
+What would change these statements. An untouched hold-out (none exists: the pooled folds re-partition the discharges on which the design was adopted); the same pooled arm for the average of three initialisations; per-exposure fit errors.
+
+Manuscript: `make_tables.py` gains the macros of the pooled comparisons; main text 10 pages (abstract, result, reading, limits of the main result and conclusion changed; three passages shortened), supplement 27 pages with a paragraph on the pooled cross-validation in the section on the whole-discharge variant. `check_numbers.py`: 0 not found.
+

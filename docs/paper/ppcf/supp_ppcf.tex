@@ -432,6 +432,28 @@ of \S\ref{sec:thin} the skill of the causal variant over the history-only networ
 $+0.027$ to $+0.115$ at the natural cadence, every interval excluding zero. This
 pairing was made after the results were seen, and the causal variant was trained
 under the 30-epoch cap while the history-only network had the 80-epoch cap.
+\ifpooled
+
+\paragraph{The pooled cross-validation of the main text.} The estimator of the main
+text and its twin were trained under the 80-epoch cap on the five folds of the eight
+re-partitions of Table~\ref{tab:headline} (80 trainings; registered). Per
+re-partition the skill of the estimator is \PoneRepeats{} over the causal GP and
+\PtwoRepeats{} over its twin; over the eight, \Pone{} and \Ptwo{} with the two-level
+interval and \PoneFold{} and \PtwoFold{} with the fold-level interval. The twin has
+\PTwinGp{} over the causal GP, and the estimator \PHold{} over hold, \PPchip{} over
+PCHIP and \POffGp{} against the offline GP (\POffGpZero{}). Against the headline
+network of this section on the same rows the estimator has \PWhole{}
+(\PWholeZero{}), and the headline network has \PWholeGp{} over the causal GP there;
+the two differ in the standardization and in the epoch cap (30 for the headline
+network), so the difference is not attributed to either. The median absolute error (mean over the
+re-partitions) is \PMed{}\,eV for hold, the twin and the estimator. The rules
+registered with these runs asked for the pooled and the four-split statement
+together, over the causal GP for the causal estimator to become the estimator of the
+main table and over the twin for its increment to be stated as established; the
+pooled statements hold and the four-split statements do not
+(\S\ref{app:registered}), so neither condition is met, and the main text says where
+it departs from those rules.
+\fi
 
 \paragraph{Three supporting measurements.} (i) \emph{Memory is necessary.} A
 memoryless regression (gradient-boosted trees) on the same 22 inputs of the target

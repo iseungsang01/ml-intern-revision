@@ -36,4 +36,19 @@ Ablations of the fast-channel groups (initialisation = split seed for every netw
 
 ## Arm P: pooled cross-validation (repeats r2 to r9, five folds each)
 
-Not read yet: 0 of 80 runs are complete.
+- **P1** (causal variant over the causal GP): +0.089 [+0.064, +0.112] -> holds.
+- **P2** (causal variant over the history-only twin): +0.048 [+0.022, +0.073] -> holds.
+
+| reference | skill of the causal variant (two-level interval: repeat, then discharges) |
+|---|---|
+| causal GP | +0.089 [+0.064, +0.112] |
+| hold | +0.375 [+0.352, +0.394] |
+| PCHIP | +0.201 [+0.168, +0.231] |
+| offline GP | -0.037 [-0.068, -0.008] |
+| history-only twin | +0.048 [+0.022, +0.073] |
+| whole-discharge variant of the manuscript (cap 30, same rows) | -0.026 [-0.051, +0.001] |
+| (that variant over the causal GP on these rows) | +0.112 [+0.085, +0.132] |
+
+Twin over the causal GP: +0.043 [+0.023, +0.062]. Fold-level interval with the Nadeau-Bengio correction (40 folds): over the causal GP +0.089 [+0.057, +0.121], over the twin +0.048 [+0.017, +0.080].
+Per repeat, over the causal GP: +0.089, +0.090, +0.096, +0.082, +0.095, +0.075, +0.097, +0.088; over the twin: +0.045, +0.051, +0.062, +0.033, +0.061, +0.037, +0.046, +0.050.
+Median absolute error (eV, mean over repeats): hold 45.4, causal variant 46.0, twin 46.1.

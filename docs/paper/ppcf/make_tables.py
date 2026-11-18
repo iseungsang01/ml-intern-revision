@@ -127,6 +127,17 @@ def main():
         mac("PPchip", plain(P["causal_over"]["pchip"]))
         mac("POffGp", plain(P["causal_over"]["gp"]))
         mac("PTwinGp", plain(P["twin_over_gp"]))
+        w = P["causal_over_whole_discharge_variant_cap30"]
+        mac("PWhole", plain(w))
+        mac("PWholeZero", "the interval includes zero" if w[1] < 0 < w[2] else
+            ("the interval is above zero" if w[1] > 0 else "the interval is below zero"))
+        mac("PWholeGp", plain(P["whole_discharge_variant_cap30_over_gp"]))
+        for name, key in (("PoneRepeats", "P1_per_repeat"), ("PtwoRepeats", "P2_per_repeat")):
+            v = list(P[key].values())
+            mac(name, "${:+.3f}$ to ${:+.3f}$".format(min(v), max(v)))
+        off = P["causal_over"]["gp"]
+        mac("POffGpZero", "the interval includes zero" if off[1] < 0 < off[2] else
+            ("the interval is above zero" if off[1] > 0 else "the interval is below zero"))
         pm = P["median_abs_error_eV"]
         mac("PMed", "{:.1f}, {:.1f} and {:.1f}".format(pm["hold"], pm["twin"], pm["causal variant"]))
 
