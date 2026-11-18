@@ -278,7 +278,7 @@ settle.
 \begin{table}[t]
   \centering
   \caption{KSTAR: mean-squared-error skill of the two-branch recurrent estimator
-  against each reference. \emph{Pooled} (primary): median and two-level bootstrap 95\%
+  against each reference. \emph{Pooled} (the primary readout registered for that network): median and two-level bootstrap 95\%
   interval over eight re-partitions of 639 discharges. \emph{Four splits}: number of
   file-level splits whose shot-clustered 95\% interval excludes zero (cut /
   inclusive). \Vrot{} rows are under the 1{,}000\,km/s scoring rule. Bold = interval
@@ -416,7 +416,11 @@ and $+0.103$ to $+0.112$ on the split by time, every interval excluding zero; in
 inclusive population it is $+0.098$ to $+0.165$ and $+0.097$ to $+0.121$ (the cut
 values per split are in \S\ref{app:more}). This variant takes nothing from the discharge being
 estimated except rows before the estimated one, and it is the estimator this paper
-calls causal. The headline network is separated from it on one of the four file-level
+calls causal. (These numbers are from a first training of that estimator under a
+30-epoch cap, one initialisation per split, with intervals that resample the
+discharges only; the main text reports three initialisations under an 80-epoch cap,
+with the initialisation drawn in the interval, and that is why the same point values
+carry different verdicts there.) The headline network is separated from it on one of the four file-level
 cut splits ($+0.043$ $[+0.022, +0.066]$; the other three $-0.004$ to $+0.010$) and on
 none of the initialisations of the split by time ($+0.003$ to $+0.015$): with failed
 fits excluded, whole-discharge standardization is not what carries the margin over
@@ -1001,8 +1005,10 @@ exposure. 99.37\% of the steps between rows are 10\,ms. A step of 20, 30 or 40\,
 one, two or three absent frames (1{,}637 absent frames in 1{,}414 steps), and each of
 the 45 such steps inside the raw deliveries coincides with a beam blip: the heating
 beam is interrupted for about 10\,ms and the frame exposed without beam is left out.
-The files therefore record the blips, though not the beam power. The time stamp of a
-row lies within about 2\,ms of the start of its exposure, so an estimate formed at
+The files therefore record the blips, though not the beam power. In the raw stream the beam
+is off from 1.7\,ms before an absent stamp to 8.8\,ms after it, which places the
+exposure: the time stamp of a row lies within about 2\,ms of the start of its
+exposure, so an estimate formed at
 the stamp uses fast-channel samples taken no later than 2\,ms into the exposure it
 estimates and CES values whose exposures had ended by then. Values that repeat the
 previous one to the last digit are held values, not measurements (one \Ti{} row in
@@ -1192,6 +1198,47 @@ discharge in the campaign.
   \end{tabular}
 \end{table}
 
+\paragraph{Populations.} The rows of Table~\ref{tab:delay} and of the replay with
+sparse values are those of the replay machinery (a later visible value exists and
+every estimator is finite). They differ slightly from the scored rows of
+Table~\ref{tab:ablation}, which is why the increment without delay is $+0.028$ to
+$+0.116$ here and $+0.022$ to $+0.123$ there.
+
+\paragraph{A value every fifth frame.} With a value visible every fifth frame the
+estimator has $+0.127$ $[+0.091, +0.160]$, $+0.070$ $[+0.035, +0.106]$, $+0.110$
+$[+0.080, +0.143]$ and $+0.100$ $[+0.066, +0.131]$ over the causal GP and $+0.091$
+$[+0.057, +0.128]$, $+0.054$ $[+0.030, +0.081]$, $+0.158$ $[+0.132, +0.183]$ and
+$+0.060$ $[+0.018, +0.109]$ over its twin (both registered; four of four each). Over
+PCHIP interpolation between the visible values, which is not causal, it has $+0.059$
+to $+0.127$ (three of four intervals above zero).
+
+\paragraph{Scored rows that resemble the rows without a usable value.} Every skill is
+scored on rows where a value was measured and withheld. Whether \Ti{} is unusable in a
+row (missing or above 3\,keV) is predicted from the flags of the five rows before and
+the fast-channel window with an area under the ROC curve of 0.961 to 0.974
+(\S\ref{sec:character}); $p$ is that predicted probability, from a model fitted on
+the discharges that are not test discharges. Registered readout, on the scored rows
+from the eleventh row of a segment on (the first rows have no window; 0.0222 to
+0.0241 of the scored rows). In the fifth of the scored rows with the highest $p$,
+whose range of $p$ holds 0.958 to 0.973 of the unusable test rows, the estimator has
+$+0.067$ $[+0.003, +0.131]$, $+0.105$ $[+0.067, +0.143]$, $+0.143$ $[+0.094, +0.195]$
+and $+0.091$ $[+0.038, +0.146]$ over the causal GP and $+0.064$ $[+0.019, +0.119]$,
+$+0.039$ $[+0.007, +0.074]$, $+0.112$ $[+0.084, +0.137]$ and $+0.054$
+$[+0.010, +0.104]$ over its twin; both registered statements hold. With every scored
+row weighted by $p/(1-p)$, the weights clipped at their 99th percentile, the skill
+over the causal GP is $-0.009$ $[-0.151, +0.120]$, $+0.102$ $[+0.042, +0.164]$,
+$+0.158$ $[+0.102, +0.218]$ and $+0.038$ $[-0.036, +0.114]$ and over the twin
+$+0.005$ $[-0.040, +0.062]$, $+0.029$ $[-0.016, +0.075]$, $+0.095$ $[+0.057, +0.123]$
+and $+0.018$ $[-0.025, +0.062]$; these two registered statements do not hold (two
+and one of four splits). The weights concentrate on few rows (effective number 0.046
+to 0.065 of the scored rows), most of them measured values inside stretches of
+missing ones: in the scored rows whose $p$ is above the median $p$ of the unusable
+rows (0.0058 to 0.0161 of the scored rows) the last visible value is 20 to 60\,ms old
+at the median, the median \Ti{} is 130.6 to 244.5\,eV, and the root-mean-square error
+of the estimator is 645.2 to 717.2\,eV. A readout pooled over more discharges would
+narrow these intervals; whether the rows without a value differ from these rows in
+ways that no input records cannot be tested in the files.
+
 % =========================================================================
 \section{Registered statements used in the main text}
 \label{app:registered}
@@ -1228,6 +1275,8 @@ in \S\ref{app:registration}.
     With one and with two frames of delay the estimator has skill over the causal GP & holds & \S\ref{sec:res:use} \\
     With two frames of delay it has skill over the twin & holds & \S\ref{sec:res:use} \\
         With a value every 50\,ms the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:res:use} \\
+    In the fifth of scored rows most at risk of losing the value the estimator has skill over the causal GP; over the twin & hold & \S\ref{sec:limits} \\
+    The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits} \\
     The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
     The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
     The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data:kstar} \\

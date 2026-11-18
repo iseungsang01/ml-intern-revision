@@ -149,6 +149,7 @@ def main():
         (ROOT / "docs/paper/b39_inits.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b49_average.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b48_reread.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b50_missing_like.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
