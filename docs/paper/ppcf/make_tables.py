@@ -284,38 +284,90 @@ def main():
         mac(name + "Range", rng([x[key] for x in cs]))
         mac(name + "Above", above([x[key] for x in cs]))
 
+    # B.61: absolute errors, robust skills (Huber 200 eV, 1 % of rows trimmed), discharges, dose
+    B6 = json.loads((ROOT / "docs/paper/b61_absolute_robust.json").read_text(encoding="utf-8"))
+    D6 = json.loads((ROOT / "docs/paper/b61_blip_dose.json").read_text(encoding="utf-8"))
+    a29, a39 = B6["part_a_r2_r9"], B6["part_a_r3_r9_with_filters"]
+
+    def ev(v):
+        return f"{v[0]:.1f} $[{v[1]:.1f}, {v[2]:.1f}]$"
+
+    def sev(v):
+        return f"${v[0]:+.1f}$ $[{v[1]:+.1f}, {v[2]:+.1f}]$"
+
+    mac("RmseNet", ev(a29["rmse|c"]))
+    mac("RmseGp", ev(a29["rmse|gp"]))
+    mac("RmseNetMinusGp", sev(a29["rmse_minus_gp_eV|c"]))
+    mac("RmseNetMinusGpPct", sev(a29["rmse_minus_gp_pct|c"]))
+    mac("RmseNetMinusGpAbs", f"{-a29['rmse_minus_gp_eV|c'][0]:.1f} $[{-a29['rmse_minus_gp_eV|c'][2]:.1f}, "
+        f"{-a29['rmse_minus_gp_eV|c'][1]:.1f}]$")
+    mac("RmseTwinMinusGp", sev(a29["rmse_minus_gp_eV|t"]))
+    mac("MaeNetMinusGp", sev(a29["mae_minus_gp_eV|c"]))
+    st6 = B6["statements"]
+    for name, key in (("Aone", "A1"), ("Atwo", "A2"), ("Athree", "A3"), ("Afour", "A4"), ("Afive", "A5"),
+                      ("Bone", "B1"), ("Btwo", "B2")):
+        mac("Stat" + name, sk(st6[key]["value"]))
+    pb = B6["part_b"]["64"]
+    mac("BShareSixtyFour", f"{pb['share_mean']:.3f}")
+    ov = B6["part_b"]["overlap"]
+    mac("OverlapAny", str(ov["discharges_in_any_test_set"]))
+    bn = ov["by_number_of_splits"]
+    mac("OverlapOne", str(bn["1"]))
+    mac("OverlapTwo", str(bn["2"]))
+    mac("OverlapThree", str(bn["3"]))
+    mac("OverlapFour", str(bn["4"]))
+    mac("OverlapNone", str(ov["never_a_test_discharge_of_the_639"]))
+
     def mrow(label, v, f=cell):
         return f"    {label} & {f(v)} \\\\"
 
-    TM = ["\\newcommand{\\TabMain}{%", "  \\begin{tabular}{lc}", "    \\toprule",
-          "    \\multicolumn{2}{l}{\\emph{(a) Mean-squared-error skill}} \\\\", "    \\midrule",
-          "    \\multicolumn{2}{l}{Recurrent estimator over (eight re-partitions)} \\\\",
-          mrow("\\quad hold", Pc["persistence"]),
-          mrow("\\quad causal GP", P["P1_causal_over_gp"]),
-          mrow("\\quad history-only twin (fast-channel increment)", P["P2_causal_over_twin"]),
-          mrow("\\quad PCHIP (uses the next value)", Pc["pchip"]),
-          mrow("\\quad offline GP (uses the next value)", Pc["gp"]),
-          "    \\multicolumn{2}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\\\",
-          mrow("\\quad KFX over KF0 (fast-channel increment)", kc["kfx_over_kf0"]),
-          mrow("\\quad Kg (radial difference only) over KF0", kc["kg_over_kf0"]),
-          mrow("\\quad history-only twin over KF0", kc["Tw_over_kf0"]),
-          mrow("\\quad recurrent estimator over KFX", kc["A_over_kfx"]),
-          mrow("\\quad KFX over causal GP", kc["kfx_over_G"]),
+    def rrow(label, v, hub=None, tri=None):
+        return (f"    {label} & {cell(v)} & {cell(hub) if hub else '--'} & {cell(tri) if tri else '--'} \\\\")
+
+    TM = ["\\newcommand{\\TabMain}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+          "    \\emph{(a) Skill} & Mean squared error & Huber (200\\,eV) & 1\\% of rows trimmed \\\\",
+          "    \\midrule",
+          "    \\multicolumn{4}{l}{Recurrent estimator over (eight re-partitions, r2--r9)} \\\\",
+          rrow("\\quad hold", Pc["persistence"], a29["skill_huber|c|hold"], a29["skill_trim|c|hold"]),
+          rrow("\\quad causal GP", P["P1_causal_over_gp"], a29["skill_huber|c|gp"], a29["skill_trim|c|gp"]),
+          rrow("\\quad history-only twin (fast-channel increment)", P["P2_causal_over_twin"],
+               a29["skill_huber|c|t"], a29["skill_trim|c|t"]),
+          rrow("\\quad PCHIP (uses the next value)", Pc["pchip"]),
+          rrow("\\quad offline GP (uses the next value)", Pc["gp"], a29["skill_huber|c|off"], a29["skill_trim|c|off"]),
+          "    \\multicolumn{4}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\\\",
+          rrow("\\quad KFX over KF0 (fast-channel increment)", kc["kfx_over_kf0"],
+               a39["skill_huber|kfx|kf0"], a39["skill_trim|kfx|kf0"]),
+          rrow("\\quad Kg (radial difference only) over KF0", kc["kg_over_kf0"]),
+          rrow("\\quad history-only twin over KF0", kc["Tw_over_kf0"]),
+          rrow("\\quad recurrent estimator over KFX", kc["A_over_kfx"]),
+          rrow("\\quad KFX over causal GP", kc["kfx_over_G"], a39["skill_huber|kfx|gp"], a39["skill_trim|kfx|gp"]),
           "    \\bottomrule", "  \\end{tabular}}",
-          "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
-          "    \\emph{(b) Estimator} & MSE / floor & Median $|e|$ (eV) & Within 20\\% of the value \\\\",
+          "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
+          "    \\emph{(b) Estimator} & RMSE (eV) & MSE / floor & Median $|e|$ (eV) & Within 20\\% of the value \\\\",
           "    \\midrule"]
-    for label, fk, mk, rk in (("hold", "mse_over_s2_H", "H", "hold"),
-                              ("causal GP", "mse_over_s2_G", "G", "gp"),
-                              ("offline GP (uses the next value)", "mse_over_s2_O", "O", "off"),
-                              ("history-only twin", "mse_over_s2_Tw", "Tw", "t"),
-                              ("recurrent estimator", "mse_over_s2_A", "A", "c"),
-                              ("KF0 (filter, no fast channels)", "mse_over_s2_K0", "kf0", "kf0"),
-                              ("KFX (filter, BES drive)", "mse_over_s2_KX", "kfx", "kfx")):
-        TM.append(f"    {label} & {rat(ya[fk])} & {medk[mk]:.1f} & "
+    for label, fk, mk, rk, bk in (("hold", "mse_over_s2_H", "H", "hold", "hold"),
+                                  ("causal GP", "mse_over_s2_G", "G", "gp", "gp"),
+                                  ("offline GP (uses the next value)", "mse_over_s2_O", "O", "off", "off"),
+                                  ("history-only twin", "mse_over_s2_Tw", "Tw", "t", "t"),
+                                  ("recurrent estimator", "mse_over_s2_A", "A", "c", "c"),
+                                  ("KF0 (filter, no fast channels)", "mse_over_s2_K0", "kf0", "kf0", "kf0"),
+                                  ("KFX (filter, BES drive)", "mse_over_s2_KX", "kfx", "kfx", "kfx")):
+        TM.append(f"    {label} & {ev(a39['rmse|' + bk])} & {rat(ya[fk])} & {medk[mk]:.1f} & "
                   f"{rat(ra[rk + '|0.20'])} \\\\")
     TM += ["    \\bottomrule", "  \\end{tabular}}"]
     L += TM
+    # dose of a beam interruption (B.61 part C)
+    dd = D6["differences_first_row_deficit"]["2_minus_1"]
+
+    def pci(x):
+        return f"${x['point']:+.3f}$ $[{x['ci95'][0]:+.3f}, {x['ci95'][1]:+.3f}]$"
+
+    mac("DoseTi", pci(dd["ti"]))
+    mac("DoseEcei", pci(dd["ecei"]))
+    c2 = D6["classes"]["2"]
+    mac("DoseTwoEvents", f"{c2['events']} events in {c2['discharges']} discharges")
+    c3 = D6["classes"]["3"]
+    mac("DoseThreeEvents", f"{c3['events']} events in {c3['discharges']} discharges")
 
     # supplement: the filter on the four splits (B.56)
     TF = ["\\newcommand{\\TabFilterSplits}{%", "  \\begin{tabular}{lccccc}", "    \\toprule",
@@ -422,7 +474,7 @@ def main():
     T += [
          "    \\multicolumn{%d}{l}{\\emph{Median absolute error (eV)}} \\\\" % (len(cols)),
          nrow("\\quad hold", med("hold"), "{:.1f}", P.get("median_abs_error_eV", {}).get("hold")),
-         nrow("\\quad causal GP", med("causal GP"), "{:.1f}"),
+         nrow("\\quad causal GP", med("causal GP"), "{:.1f}", R["check"]["causal GP"]["mine"][0]),
          nrow("\\quad history-only twin", med("twin"), "{:.1f}", P.get("median_abs_error_eV", {}).get("twin")),
          nrow("\\quad recurrent estimator", med("causal variant"), "{:.1f}",
               P.get("median_abs_error_eV", {}).get("causal variant")),

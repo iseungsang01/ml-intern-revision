@@ -181,39 +181,64 @@
 \newcommand{\FixTwinAbove}{four of four}
 \newcommand{\FixGpRange}{$+0.075$ to $+0.144$}
 \newcommand{\FixGpAbove}{four of four}
+\newcommand{\RmseNet}{184.6 $[174.4, 194.6]$}
+\newcommand{\RmseGp}{193.4 $[182.9, 203.9]$}
+\newcommand{\RmseNetMinusGp}{$-8.8$ $[-11.3, -6.3]$}
+\newcommand{\RmseNetMinusGpPct}{$-4.6$ $[-5.7, -3.3]$}
+\newcommand{\RmseNetMinusGpAbs}{8.8 $[6.3, 11.3]$}
+\newcommand{\RmseTwinMinusGp}{$-4.2$ $[-6.1, -2.2]$}
+\newcommand{\MaeNetMinusGp}{$-3.0$ $[-4.7, -1.5]$}
+\newcommand{\StatAone}{$+0.074$ $[+0.052, +0.094]$}
+\newcommand{\StatAtwo}{$+0.052$ $[+0.031, +0.075]$}
+\newcommand{\StatAthree}{$+0.067$ $[+0.029, +0.101]$}
+\newcommand{\StatAfour}{$+0.070$ $[+0.037, +0.100]$}
+\newcommand{\StatAfive}{$+0.067$ $[+0.058, +0.076]$}
+\newcommand{\StatBone}{$+0.030$ $[+0.002, +0.055]$}
+\newcommand{\StatBtwo}{$+0.027$ $[-0.004, +0.051]$}
+\newcommand{\BShareSixtyFour}{0.769}
+\newcommand{\OverlapAny}{301}
+\newcommand{\OverlapOne}{224}
+\newcommand{\OverlapTwo}{72}
+\newcommand{\OverlapThree}{4}
+\newcommand{\OverlapFour}{1}
+\newcommand{\OverlapNone}{338}
 \newcommand{\TabMain}{%
-  \begin{tabular}{lc}
+  \begin{tabular}{lccc}
     \toprule
-    \multicolumn{2}{l}{\emph{(a) Mean-squared-error skill}} \\
+    \emph{(a) Skill} & Mean squared error & Huber (200\,eV) & 1\% of rows trimmed \\
     \midrule
-    \multicolumn{2}{l}{Recurrent estimator over (eight re-partitions)} \\
-    \quad hold & $\mathbf{+0.375}$ $[+0.352, +0.394]$ \\
-    \quad causal GP & $\mathbf{+0.089}$ $[+0.064, +0.112]$ \\
-    \quad history-only twin (fast-channel increment) & $\mathbf{+0.048}$ $[+0.022, +0.073]$ \\
-    \quad PCHIP (uses the next value) & $\mathbf{+0.201}$ $[+0.168, +0.231]$ \\
-    \quad offline GP (uses the next value) & $\mathbf{-0.037}$ $[-0.068, -0.008]$ \\
-    \multicolumn{2}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\
-    \quad KFX over KF0 (fast-channel increment) & $\mathbf{+0.049}$ $[+0.040, +0.059]$ \\
-    \quad Kg (radial difference only) over KF0 & $\mathbf{+0.032}$ $[+0.025, +0.039]$ \\
-    \quad history-only twin over KF0 & $\mathbf{+0.037}$ $[+0.021, +0.053]$ \\
-    \quad recurrent estimator over KFX & $\mathbf{+0.036}$ $[+0.012, +0.058]$ \\
-    \quad KFX over causal GP & $\mathbf{+0.055}$ $[+0.039, +0.070]$ \\
+    \multicolumn{4}{l}{Recurrent estimator over (eight re-partitions, r2--r9)} \\
+    \quad hold & $\mathbf{+0.375}$ $[+0.352, +0.394]$ & $\mathbf{+0.265}$ $[+0.244, +0.286]$ & $\mathbf{+0.231}$ $[+0.188, +0.271]$ \\
+    \quad causal GP & $\mathbf{+0.089}$ $[+0.064, +0.112]$ & $\mathbf{+0.074}$ $[+0.052, +0.094]$ & $\mathbf{+0.067}$ $[+0.029, +0.101]$ \\
+    \quad history-only twin (fast-channel increment) & $\mathbf{+0.048}$ $[+0.022, +0.073]$ & $\mathbf{+0.052}$ $[+0.031, +0.075]$ & $\mathbf{+0.070}$ $[+0.037, +0.100]$ \\
+    \quad PCHIP (uses the next value) & $\mathbf{+0.201}$ $[+0.168, +0.231]$ & -- & -- \\
+    \quad offline GP (uses the next value) & $\mathbf{-0.037}$ $[-0.068, -0.008]$ & $\mathbf{-0.057}$ $[-0.083, -0.030]$ & $\mathbf{-0.070}$ $[-0.119, -0.027]$ \\
+    \multicolumn{4}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\
+    \quad KFX over KF0 (fast-channel increment) & $\mathbf{+0.049}$ $[+0.040, +0.059]$ & $\mathbf{+0.067}$ $[+0.058, +0.076]$ & $\mathbf{+0.084}$ $[+0.074, +0.096]$ \\
+    \quad Kg (radial difference only) over KF0 & $\mathbf{+0.032}$ $[+0.025, +0.039]$ & -- & -- \\
+    \quad history-only twin over KF0 & $\mathbf{+0.037}$ $[+0.021, +0.053]$ & -- & -- \\
+    \quad recurrent estimator over KFX & $\mathbf{+0.036}$ $[+0.012, +0.058]$ & -- & -- \\
+    \quad KFX over causal GP & $\mathbf{+0.055}$ $[+0.039, +0.070]$ & $\mathbf{+0.085}$ $[+0.073, +0.096]$ & $\mathbf{+0.073}$ $[+0.054, +0.090]$ \\
     \bottomrule
   \end{tabular}}
 \newcommand{\TabMainB}{%
-  \begin{tabular}{lccc}
+  \begin{tabular}{lcccc}
     \toprule
-    \emph{(b) Estimator} & MSE / floor & Median $|e|$ (eV) & Within 20\% of the value \\
+    \emph{(b) Estimator} & RMSE (eV) & MSE / floor & Median $|e|$ (eV) & Within 20\% of the value \\
     \midrule
-    hold & 2.123 $[2.031, 2.227]$ & 45.4 & 0.749 $[0.727, 0.770]$ \\
-    causal GP & 1.472 $[1.389, 1.568]$ & 44.1 & 0.772 $[0.752, 0.791]$ \\
-    offline GP (uses the next value) & 1.279 $[1.222, 1.342]$ & 37.5 & 0.805 $[0.785, 0.824]$ \\
-    history-only twin & 1.415 $[1.325, 1.519]$ & 46.3 & 0.759 $[0.736, 0.781]$ \\
-    recurrent estimator & 1.331 $[1.246, 1.427]$ & 45.8 & 0.771 $[0.749, 0.792]$ \\
-    KF0 (filter, no fast channels) & 1.469 $[1.387, 1.562]$ & 43.3 & 0.769 $[0.749, 0.789]$ \\
-    KFX (filter, BES drive) & 1.362 $[1.291, 1.444]$ & 41.8 & 0.783 $[0.763, 0.803]$ \\
+    hold & 233.4 $[219.7, 246.7]$ & 2.123 $[2.031, 2.227]$ & 45.4 & 0.749 $[0.727, 0.770]$ \\
+    causal GP & 193.4 $[183.1, 203.8]$ & 1.472 $[1.389, 1.568]$ & 44.1 & 0.772 $[0.752, 0.791]$ \\
+    offline GP (uses the next value) & 181.3 $[171.1, 191.6]$ & 1.279 $[1.222, 1.342]$ & 37.5 & 0.805 $[0.785, 0.824]$ \\
+    history-only twin & 189.3 $[179.0, 199.4]$ & 1.415 $[1.325, 1.519]$ & 46.3 & 0.759 $[0.736, 0.781]$ \\
+    recurrent estimator & 184.6 $[174.5, 195.0]$ & 1.331 $[1.246, 1.427]$ & 45.8 & 0.771 $[0.749, 0.792]$ \\
+    KF0 (filter, no fast channels) & 192.9 $[182.5, 203.1]$ & 1.469 $[1.387, 1.562]$ & 43.3 & 0.769 $[0.749, 0.789]$ \\
+    KFX (filter, BES drive) & 188.1 $[177.5, 198.2]$ & 1.362 $[1.291, 1.444]$ & 41.8 & 0.783 $[0.763, 0.803]$ \\
     \bottomrule
   \end{tabular}}
+\newcommand{\DoseTi}{$-0.112$ $[-0.238, +0.054]$}
+\newcommand{\DoseEcei}{$+0.047$ $[-0.003, +0.098]$}
+\newcommand{\DoseTwoEvents}{67 events in 29 discharges}
+\newcommand{\DoseThreeEvents}{65 events in 33 discharges}
 \newcommand{\TabFilterSplits}{%
   \begin{tabular}{lccccc}
     \toprule
@@ -315,7 +340,7 @@
     \midrule
     \multicolumn{6}{l}{\emph{Median absolute error (eV)}} \\
     \quad hold & 45.4 & 43.8 & 48.9 & 48.8 & 42.7 \\
-    \quad causal GP & -- & 42.2 & 48.1 & 46.1 & 41.4 \\
+    \quad causal GP & 44.1 & 42.2 & 48.1 & 46.1 & 41.4 \\
     \quad history-only twin & 46.1 & 44.6 & 50.6 & 47.5 & 42.7 \\
     \quad recurrent estimator & 46.0 & 42.1 & 53.0 & 45.2 & 41.6 \\
     \quad average of three initialisations & -- & 41.8 & 52.5 & 44.1 & 40.3 \\

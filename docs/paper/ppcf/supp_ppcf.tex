@@ -121,7 +121,8 @@ test. It agrees with two independent readings: the mean-square floor of
 \S\ref{sec:yardsticks} puts about three quarters of the mean squared error of every
 estimator in frame-to-frame scatter of the reported value; and the ratio of the 10\,ms scatter of \Ti{} divided by
 \Ti{} to the 10\,ms scatter of \Vrot{} divided by the thermal Doppler width of the
-carbon line at that \Ti{} is $\sqrt2$ (1.395--1.532 in eight split--population
+carbon line at that \Ti{} (the Gaussian standard deviation in velocity,
+$\sqrt{\Ti{}/m_\mathrm{C}}$) is $\sqrt2$ (1.395--1.532 in eight split--population
 cells), the value for independent Gaussian line-fit errors on width and shift. In this regime averaging removes noise:
 a running mean has \Ti{} skill $+0.26$ to $+0.34$ over hold on the four splits
 and the causal GP $+0.31$ to $+0.35$. PCHIP passes exactly through noisy anchors, so
@@ -864,10 +865,10 @@ scattering added to the past gives $+0.107$ $[+0.080, +0.138]$.
 
 This is not a replication of the KSTAR numbers. The gaps are frames hidden by us, the
 added measurement is as slow as the target, and the trees are a reference estimator,
-not a real-time form. What it shows is that the direction of the KSTAR result, a
-measurement at the location of the chord adding to the charge-exchange past at the
-pedestal top, is not specific to one device or to one pair of diagnostics, and that
-on MAST the typical row improves as well.
+not a real-time form. It is a different experiment (estimator, added diagnostic, gaps, and the outcome for
+the typical row differ); what it shows is only that on MAST, too, a measurement at the
+location of the chord adds to the charge-exchange past at the pedestal top, and that
+there the typical row improves as well.
 
 % =========================================================================
 \section{Rotation}
@@ -1001,7 +1002,8 @@ correction fitted on validation discharges alone (three of four intervals exclud
 zero), the interval covers 0.891 to 0.905 of the rows, and the median absolute error
 of the corrected estimate is 0.861 to 0.924 of that of hold, with the interval below
 1 on four of four splits (40.3, 45.8, 42.8 and 38.4\,eV against 44.2, 49.5, 49.8 and
-43.2\,eV). Two limits apply: the second stage is a boosted tree fitted after the
+43.2\,eV for hold on the rows scored by that batch, which differ from those of
+Table~\ref{tab:primary}). Two limits apply: the second stage is a boosted tree fitted after the
 network, not trained with it, and it holds for the mean with values above 3\,keV
 excluded only. Whether a CES value will be unusable
 (missing or above 3\,keV) is itself predictable from the fast-channel window: the area
@@ -1076,7 +1078,10 @@ the level), and it grows with the level (22.5, 33.4 and 90.7\,eV in the lowest,
 middle and highest third). Two registered checks of this estimate failed (it is below
 the reported fit error on MAST, and it does not fall with the beam-emission level as
 photon noise would), so whether the component is fit noise or a fluctuation faster
-than a frame is not decided by the files. (iv) The reported value follows the plasma
+than a frame is not decided by the files. This typical scatter of a row and the
+mean-square floor of \S\ref{sec:yardsticks} (\FloorRms\,eV root mean square) are the
+two noise quantities of the paper: the first is a robust value on a typical row, the
+second a mean square over all rows, which a few large excursions dominate. (iv) The reported value follows the plasma
 as seen by a diagnostic that uses neither the beam nor the spectrometer: the changes
 of the 200\,ms means of \Ti{} and of the ECEI level from one block to the next have a
 median rank correlation of $+0.268$ per discharge against $+0.003$ when one series is
@@ -1357,7 +1362,8 @@ causal GP the filter without the fast channels has $-0.098$, $-0.032$, $-0.034$ 
 $-0.051$ (every interval below zero) and the filter with them $-0.038$, $+0.017$,
 $+0.013$ and $-0.017$ (every interval includes zero). \emph{Age of the last value.}
 The last visible value is 10\,ms old in 0.959 to 0.972 of the scored rows, 20 to
-50\,ms in 0.024 to 0.038 and older in 0.003 to 0.004. Where it is 20\,ms old or older
+50\,ms in 0.024 to 0.038 and older in 0.003 to 0.004 (on the four splits; 0.0025 on
+the pooled rows). Where it is 20\,ms old or older
 the estimator has $+0.056$ $[-0.074, +0.177]$, $+0.089$ $[+0.026, +0.153]$, $+0.109$
 $[+0.040, +0.185]$ and $+0.105$ $[+0.049, +0.178]$ over the causal GP (the statement
 holds, three of four); beyond 50\,ms it has $+0.004$, $+0.007$, $+0.144$ and
@@ -1409,7 +1415,9 @@ effective number of rows of 0.062 of the rows it uses.
   (point estimate and 95\% interval; a statement holds if the interval excludes its
   reference, 1 for a ratio of percentiles, one half for a share, zero for a skill),
   beside the same readout on the four splits (range of the four point estimates and
-  the number of splits whose interval excludes the reference; one initialisation).}
+  the number of splits whose interval excludes the reference; one initialisation).
+  The two shares printed as 0.874 are different quantities for different rows that
+  agree to three decimals.}
   \label{tab:pooledrows}
   \footnotesize
   \begin{tabular}{p{0.43\linewidth}p{0.21\linewidth}p{0.07\linewidth}p{0.16\linewidth}}
@@ -1437,6 +1445,22 @@ effective number of rows of 0.062 of the rows it uses.
     \bottomrule
   \end{tabular}
 \end{table}
+
+\paragraph{Absolute errors, robust skills and discharges.} Registered; stored errors,
+pooled rows (r2 to r9; the filters on r3 to r9, where every estimator is recomputed).
+Root-mean-square errors: estimator \RmseNet\,eV, twin 189.2 $[179.4, 199.6]$, causal GP
+\RmseGp, hold 233.4 $[219.9, 247.2]$, offline GP 181.3 $[170.7, 191.6]$\,eV; the
+estimator is \RmseNetMinusGp\,eV (\RmseNetMinusGpPct\%) and the twin \RmseTwinMinusGp\,eV
+from the causal GP. Mean absolute errors: 91.2, 94.0, 94.2, 107.8 and 84.8\,eV. With a
+Huber loss (threshold 200\,eV) and with the rows whose squared error of hold is in its
+top 1\% removed, the estimator has \StatAone{} and \StatAthree{} over the causal GP and
+\StatAtwo{} and \StatAfour{} over the twin, and KFX has \StatAfive{} (Huber) over KF0;
+all five registered statements are met. Removing per re-partition the discharges with
+the largest reduction against the causal GP (a lower bound, since it selects on the
+outcome): without 10, 32 and 64 of them, which carry 0.214, 0.493 and 0.769 of the
+reduction, the skill over the causal GP is $+0.076$ $[+0.050, +0.099]$, $+0.055$
+$[+0.029, +0.078]$ and \StatBone{} (met for 64) and over the twin $+0.041$
+$[+0.016, +0.064]$, $+0.034$ $[+0.006, +0.056]$ and \StatBtwo{} (not met for 64).
 
 \paragraph{The instant of the fast-channel sample.} Registered; no network was
 trained. The 40 estimators of the pooled cross-validation were run again on a CPU
@@ -1536,6 +1560,21 @@ the one half required, so at this block length the statistic does not see a heat
 response where one is known to be, and the two statements on the lag are withdrawn as
 uninformative, as registered.
 
+\paragraph{Dose of a beam interruption.} Registered; the event and ratio code of the
+readout above, unchanged. If the fall of the reported \Ti{} after a blip were a response
+to the interruption, it should be deeper after two or three absent frames, when the beam
+is off for about 27\,ms instead of about 10\,ms (raw streams of twelve discharges). After
+one absent frame (1{,}262 events in 489 discharges) the first-row ratios are those
+above; after two (\DoseTwoEvents{}) they are 0.926 $[0.768, 1.049]$ for \Ti{}, 0.882
+$[0.831, 0.932]$ for the ECEI level and 0.461 $[0.438, 0.482]$ for the BES level, and
+after three (\DoseThreeEvents{}) 0.830 $[0.779, 0.963]$, 0.926 $[0.804, 0.991]$ and
+0.601 $[0.565, 0.707]$. The first-row deficit after two minus that after one is
+\DoseTi{} for \Ti{} and \DoseEcei{} for the ECEI level; neither registered statement
+(a larger deficit after two) is met. The fall does not grow with the length of the
+interruption in the events available, and the reading of the fall as a response to the
+interruption is not supported by a dose; the events with two or three absent frames are
+few.
+
 % =========================================================================
 \section{The four file-level splits of the main batch}
 \label{sec:splits}
@@ -1579,6 +1618,13 @@ splits and the statement \StwoVerdict{}. The twin varies with the initialisation
 single-initialisation increment depends on its twin. Against the offline GP the skill
 is \OverOffGpRange{} and the interval includes zero on every split. On a split by time
 an earlier training has $+0.103$ to $+0.112$ over the causal GP (\S\ref{sec:fast}).
+The four test sets overlap: \OverlapAny{} discharges are a test discharge of at least
+one split, \OverlapOne{} of exactly one, \OverlapTwo{} of two, \OverlapThree{} of three
+and \OverlapFour{} of all four; \OverlapNone{} of the 639 are a test discharge of none.
+``Three of four'' is therefore not a count of independent replications. The 157.8\,eV
+of the average of three initialisations on the first split and the 157.8\,eV of the
+whole-discharge variant on the same split in Table~\ref{tab:ladder} come from two
+different estimators whose errors agree to one decimal.
 \ifgradingreadouts A linear filter on the last three CES values, fitted on the training
 discharges, gains \LtwoRange{} when it also reads the fast channels (\LtwoAbove{}
 intervals above zero); the estimator has \LoneRange{} over that filter (\LoneAbove{};
@@ -1600,6 +1646,11 @@ and the CES history has \DoneRange{} (\DoneAbove{}). The full estimator is not
 separated from the BES network (\FullBesRange{}, \FullBesExcl{} intervals excluding
 zero) and has \FullEceiRange{} over the ECEI network (\FullEceiExcl{}). By the rule
 fixed beforehand, the increment is stated as resting on the beam-emission channels.
+These readouts use one initialisation per network and intervals over discharges only;
+the spread between initialisations of a split (\SpreadRange{} in the skill over the
+causal GP) is of the size of several differences in Table~\ref{tab:ablation}, and the
+only split on which the ECEI network has an interval above zero is the third, on which
+the twin of the same initialisation stopped after 11 epochs.
 
 \begin{table}[h]
   \centering
