@@ -8199,3 +8199,25 @@ Reading. (1) The increment does not rest on early stopping: with a fixed budget 
 
 Manuscript: with the restructuring of the main text (the sentence on early stopping; the component networks beside the filter).
 
+### B.60 addendum 1: the relative error of the filters of B.56 -- the filter with the BES drive raises the shares of frames within 10 % and within 20 % above the causal GP, also in the coldest third; the recurrent estimator does not (2026-11-18)
+
+Registered as addendum 1 of `PREREGISTRATION_B60.md` after the statements of B.60 and the skills of B.56 were read and before any relative error of a filter was computed. Run by a delegated agent (a further stage of `experiments/b60_relative_error/run_b60.py`); the section is appended to `docs/paper/b60_relative_error.md`. Rows: re-partitions r3 to r9 (r2, the development set of the filter, apart). Check passed: the cache of B.56 and the row tables of B.54 hold the same rows and reported values in 40 of 40 folds, and the median absolute errors of B.56 are reproduced (KFX 41.8 eV, KF0 43.3 eV).
+
+| on r3 to r9 | within 10 % | within 20 % | median relative error |
+|---|---|---|---|
+| KFX (filter with the BES drive) | 0.583 [0.561, 0.606] | 0.783 [0.763, 0.803] | 0.079 [0.074, 0.084] |
+| KF0 (filter without) | 0.566 | 0.769 | 0.082 |
+| recurrent estimator | 0.564 | 0.771 | 0.083 |
+| causal GP | 0.570 [0.547, 0.591] | 0.772 [0.752, 0.791] | 0.081 |
+| hold | 0.544 | 0.749 | 0.087 |
+| offline GP | 0.617 | 0.805 | 0.070 |
+
+- F20 (KFX above the causal GP within 20 %): +0.011 [+0.008, +0.014], holds.
+- F10 (within 10 %): +0.014 [+0.010, +0.018], holds.
+- F20x (KFX above KF0 within 20 %): +0.014 [+0.012, +0.017], holds.
+- F20c (coldest third, not below the causal GP by more than 0.02): +0.012 [+0.002, +0.023], holds, and the interval is above zero.
+
+Reported. KFX against hold within 20 % +0.034 [+0.029, +0.039], against the twin +0.024 [+0.017, +0.036], against the recurrent estimator +0.012 [+0.005, +0.021] (within 10 % +0.020 [+0.012, +0.029]); against the offline GP -0.022, interval below zero. Coldest third, share within 20 %: KFX 0.546, KF0 0.542, causal GP 0.534, hold 0.525, recurrent estimator 0.499; KFX over the recurrent estimator there +0.046 [+0.025, +0.074]. Rows 1 to 3 after an absent frame: KFX over the causal GP +0.044 [+0.027, +0.060], and the recurrent estimator is above KFX there (-0.024 [-0.047, -0.003]). Reported values below 50 eV: within 20 % KFX 0.064, causal GP 0.047, hold 0.074, recurrent estimator 0.001. On r2: KFX over the causal GP within 20 % +0.010 [+0.007, +0.013].
+
+Reading. With the same inputs, an estimator of the logarithm of the value does what the recurrent estimator does not: more frames within 10 % and within 20 % of the reported value than the CES history alone gives, in every third of the discharges, with no loss at small values. The gain is small (one to one and a half frames in a hundred) and its interval is narrow. The recurrent estimator keeps the advantage in the rows after a beam interruption and in squared error. By the registered rule the filter is named as the estimator to use where relative accuracy is the requirement.
+

@@ -249,5 +249,226 @@ def render(o):
     return "\n".join(L) + "\n"
 
 
+# ================================================================================ Addendum 1: the filters of B.56
+B56 = B54.DATA / ".b56"
+A1_EST = ("kfx", "kf0", "c", "t", "gp", "hold", "off")
+A1_LAB = {**LAB, "kfx": "KFX", "kf0": "KF0"}
+A1_PAIRS = [("kfx", "gp"), ("kfx", "kf0"), ("kfx", "hold"), ("kfx", "t"), ("kfx", "c"), ("kfx", "off"),
+            ("kf0", "gp"), ("c", "gp")]
+CONFIRM, DEV = tuple(range(3, 10)), (2,)
+A1_MED = {"kfx": 41.8, "kf0": 43.3}
+A1_MARK = "## Addendum 1: the filters of B.56"
+
+
+def cell_x(D, rel, mask_fn, rng, reps):
+    """B.60's cell (same resampling, same quantities) over the repeats `reps`, the estimators A1_EST and the
+    differences A1_PAIRS, each difference within a draw."""
+    draws = rng.choice(np.array(reps), size=N_BOOT)
+    bs, pts = {}, {}
+    for r in reps:
+        d = D[r]
+        m = mask_fn(r)
+        f, n = d["f"], d["n"]
+        sel = np.flatnonzero(draws == r)
+        idx = rng.integers(0, n, size=(len(sel), n))
+        W = np.zeros((len(sel), n))
+        for j in range(len(sel)):
+            W[j] = np.bincount(idx[j], minlength=n)
+        cnt = np.bincount(f[m], None, n).astype(float)
+        wc = W @ cnt
+        p_r = {}
+        for e in A1_EST:
+            x = rel[r][e]
+            for th in THRESH:
+                key = f"{e}|{th:.2f}"
+                num = np.bincount(f[m], (x <= th)[m].astype(float), n)
+                bs.setdefault(key, np.empty(N_BOOT))[sel] = (W @ num) / wc
+                p_r[key] = float(num.sum() / cnt.sum())
+            key = f"{e}|median"
+            bs.setdefault(key, np.empty(N_BOOT))[sel] = B41.wquant(x[m], f[m], W, [0.5])[:, 0]
+            p_r[key] = float(np.median(x[m]))
+        p_r["rows"], p_r["discharges"] = int(m.sum()), int(len(np.unique(f[m])))
+        pts[r] = p_r
+    out = {"rows_per_repeat": {str(r): pts[r]["rows"] for r in reps},
+           "discharges_per_repeat": {str(r): pts[r]["discharges"] for r in reps},
+           "row_share": float(np.mean([mask_fn(r).mean() for r in reps])), "value": {}, "diff": {}}
+    for e in A1_EST:
+        for q in ("0.10", "0.20", "median"):
+            key = f"{e}|{q}"
+            out["value"][key] = [float(np.mean([pts[r][key] for r in reps])), *B54.ci(bs[key])]
+            out["value"][key + "|per_repeat"] = {str(r): pts[r][key] for r in reps}
+    for a, b in A1_PAIRS:
+        for q in ("0.10", "0.20", "median"):
+            ka, kb = f"{a}|{q}", f"{b}|{q}"
+            out["diff"][f"{a}-{b}|{q}"] = [float(np.mean([pts[r][ka] - pts[r][kb] for r in reps])), *B54.ci(bs[ka] - bs[kb])]
+            out["diff"][f"{a}-{b}|{q}|per_repeat"] = {str(r): pts[r][ka] - pts[r][kb] for r in reps}
+    return out
+
+
+def addendum1():
+    t0 = _time.time()
+    F = B54.load_files()
+    D = {r: B54.repeat_data(r) for r in (*DEV, *CONFIRM)}
+    log("repeats loaded")
+    # ---------------- check: rows identical to the B.54 tables; medians of KFX and KF0 (r3 to r9) to one decimal
+    rows_chk = {}
+    for r in D:
+        est = {"kfx": [], "kf0": []}
+        for k in range(B54.K):
+            z = np.load(B56 / f"r{r}_f{k}.npz")
+            q = B54.load_rows(r, k)
+            same = (len(z["shot"]) == len(q["shot"]) and np.array_equal(z["shot"], q["shot"])
+                    and np.array_equal(z["row"], q["row"]))
+            dy = float(np.max(np.abs(z["y"] - q["y"]))) if same else np.inf
+            rows_chk[f"r{r}_f{k}"] = {"rows_b56": int(len(z["shot"])), "rows_b54": int(len(q["shot"])),
+                                      "same_rows": bool(same), "max_abs_value_diff_eV": dy,
+                                      "filter_outputs_finite": bool(np.isfinite(z["est_kfx"]).all() and np.isfinite(z["est_kf0"]).all()),
+                                      "passes": bool(same and dy <= 1e-3)}
+            for e in est:
+                est[e].append(z[f"est_{e}"].astype(np.float64))
+        for e in est:
+            D[r]["se"][e] = (np.concatenate(est[e]) - D[r]["y"]) ** 2
+    med = {e: {"mine": float(np.mean([np.median(np.sqrt(D[r]["se"][e])) for r in CONFIRM])), "recorded": v}
+           for e, v in A1_MED.items()}
+    for v in med.values():
+        v["equal_1dp"] = bool(round(v["mine"], 1) == v["recorded"])
+    chk = {"rows": rows_chk, "rows_pass": bool(all(v["passes"] for v in rows_chk.values())), "medians_eV_r3_r9": med}
+    chk["passes"] = bool(chk["rows_pass"] and all(v["equal_1dp"] for v in med.values()))
+    log(f"addendum check: rows {chk['rows_pass']}; medians " + "; ".join(f"{k} {v['mine']:.3f} vs {v['recorded']}" for k, v in med.items()))
+    o = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    if not chk["passes"]:
+        o["addendum1"] = {"check": chk, "stopped": True}
+        OUT_JSON.write_text(json.dumps(o, indent=1, default=float), encoding="utf-8")
+        raise SystemExit("FATAL: the check of Addendum 1 fails; no statement is read")
+    rel = {r: {e: np.sqrt(D[r]["se"][e]) / D[r]["y"] for e in A1_EST} for r in D}
+    ally = np.concatenate([D[r]["y"] for r in CONFIRM])
+    lowm = {r: D[r]["y"] < LOW_EV for r in CONFIRM}
+    low = {"rows_r3_r9": int(len(ally)), "rows_y_at_or_below_0": int((ally <= 0).sum()),
+           "rows_y_below_50_eV": int((ally < LOW_EV).sum()), "share_y_below_50_eV": float((ally < LOW_EV).mean()),
+           "within_20pct_in_rows_below_50_eV": {A1_LAB[e]: float(np.mean(np.concatenate([(rel[r][e] <= 0.2)[lowm[r]] for r in CONFIRM])))
+                                                for e in A1_EST},
+           "within_10pct_in_rows_below_50_eV": {A1_LAB[e]: float(np.mean(np.concatenate([(rel[r][e] <= 0.1)[lowm[r]] for r in CONFIRM])))
+                                                for e in A1_EST},
+           "median_relative_error_in_rows_below_50_eV": {A1_LAB[e]: float(np.median(np.concatenate([rel[r][e][lowm[r]] for r in CONFIRM])))
+                                                         for e in A1_EST}}
+    tl = {r: thirds_lab(D, F, r) for r in D}
+    cells = {"all rows": lambda r: np.ones(len(D[r]["y"]), bool)}
+    for j, tn in enumerate(B44.THIRDS):
+        cells[f"{tn} third by median T_i"] = (lambda r, j=j: tl[r][D[r]["f"]] == j)
+    cells["rows 1 to 3 after an absent frame"] = lambda r: D[r]["blip13"].astype(bool)
+    cells["rows not flagged by the value rules"] = lambda r: D[r]["plain"].astype(bool)
+    cells["rows with reported value below 50 eV"] = lambda r: D[r]["y"] < LOW_EV
+    cells["rows with reported value >= 50 eV"] = lambda r: D[r]["y"] >= LOW_EV
+    res = {}
+    for name, fn in cells.items():
+        res[name] = cell_x(D, rel, fn, B54.rng_for(f"b60a1|{name}"), CONFIRM)
+        v = res[name]["value"]
+        log(f"{name}: within 20 % KFX {v['kfx|0.20'][0]:.3f} KF0 {v['kf0|0.20'][0]:.3f} GP {v['gp|0.20'][0]:.3f}; "
+            f"within 10 % KFX {v['kfx|0.10'][0]:.3f} GP {v['gp|0.10'][0]:.3f}")
+    dev = {"all rows": cell_x(D, rel, cells["all rows"], B54.rng_for("b60a1|r2|all rows"), DEV),
+           "low third by median T_i": cell_x(D, rel, cells["low third by median T_i"], B54.rng_for("b60a1|r2|low third"), DEV)}
+    A, Cd = res["all rows"]["diff"], res["low third by median T_i"]["diff"]
+    st = {"F20": {"value": A["kfx-gp|0.20"], "reference": 0.0, "holds": bool(A["kfx-gp|0.20"][1] > 0),
+                  "text": "share within 20 %, KFX minus causal GP; interval above 0"},
+          "F10": {"value": A["kfx-gp|0.10"], "reference": 0.0, "holds": bool(A["kfx-gp|0.10"][1] > 0),
+                  "text": "share within 10 %, KFX minus causal GP; interval above 0"},
+          "F20x": {"value": A["kfx-kf0|0.20"], "reference": 0.0, "holds": bool(A["kfx-kf0|0.20"][1] > 0),
+                   "text": "share within 20 %, KFX minus KF0; interval above 0"},
+          "F20c": {"value": Cd["kfx-gp|0.20"], "reference": -0.02, "holds": bool(Cd["kfx-gp|0.20"][1] > -0.02),
+                   "text": "coldest third, share within 20 %, KFX minus causal GP; interval above -0.02"}}
+    V = res["all rows"]["value"]
+    E = []
+    for text, val, lo, hi, key, want in (
+            ("KFX within 20 % 0.775 to 0.80", V["kfx|0.20"][0], 0.775, 0.80, None, None),
+            ("KFX above the causal GP within 20 % by +0.003 to +0.02 (F20 holds or fails by a small margin)", A["kfx-gp|0.20"][0], 0.003, 0.02, "F20", None),
+            ("KFX within 10 % 0.575 to 0.61", V["kfx|0.10"][0], 0.575, 0.61, None, None),
+            ("KFX above the causal GP within 10 % by +0.005 to +0.03; F10 holds", A["kfx-gp|0.10"][0], 0.005, 0.03, "F10", True),
+            ("F20x +0.003 to +0.015, holds", A["kfx-kf0|0.20"][0], 0.003, 0.015, "F20x", True),
+            ("F20c -0.01 to +0.01, holds", Cd["kfx-gp|0.20"][0], -0.01, 0.01, "F20c", True)):
+        E.append({"expectation": text, "observed": f"{val:+.4f}", "range_met": bool(lo <= val <= hi),
+                  "verdict": None if key is None else ("holds" if st[key]["holds"] else "does not hold"),
+                  "verdict_met": None if want is None else bool(st[key]["holds"] == want)})
+    a1 = {"note": "Addendum 1 of PREREGISTRATION_B60.md, registered after the statements of B.60 and the skills of B.56 "
+                  "were read, before any relative error of a filter was computed. Confirmation set r3 to r9; r2 (the "
+                  "development set of the filters) reported apart.",
+          "check": chk, "low_reported_values_r3_r9": low, "statements": st, "cells_r3_r9": res, "r2_development": dev,
+          "expectations": E, "runtime_s": round(_time.time() - t0, 1)}
+    o["addendum1"] = a1
+    OUT_JSON.write_text(json.dumps(o, indent=1, default=float), encoding="utf-8")
+    md = OUT_MD.read_text(encoding="utf-8")
+    if A1_MARK in md:
+        md = md[:md.index(A1_MARK)].rstrip("\n") + "\n"
+    OUT_MD.write_text(md + "\n" + render_a1(a1), encoding="utf-8", newline="\n")
+    log("addendum 1 written")
+
+
+def render_a1(a):
+    st, C, low, ck = a["statements"], a["cells_r3_r9"], a["low_reported_values_r3_r9"], a["check"]
+    lab = A1_LAB
+    L = [A1_MARK, "",
+         "Registered after the statements of B.60 and the skills of B.56 were read (Addendum 1 of the registration), "
+         "before any relative error of a filter was computed. KF0 and KFX: the five-parameter robust filters of B.56 on "
+         "log T_i (KF0 without fast channels, KFX with them; signed one-step outputs from `data/.b56/r{r}_f{k}.npz`). "
+         "Rows: the scored rows of re-partitions r3 to r9 (the confirmation set); r2, the development set of the "
+         "filters, is reported apart and not pooled. Every estimator, the recurrent estimator, the twin, the causal "
+         "GP, hold and the offline GP included, is read on these same rows. Definitions, interval (2,000 draws, a "
+         "re-partition then its discharges, differences within a draw) and strata are those of B.60 above.", "",
+         "### Check before the readout", "",
+         f"- Rows: the B.56 cache and the B.54 row tables hold the same stored rows (discharge and row index) with the "
+         f"same reported values in {sum(v['passes'] for v in ck['rows'].values())} of {len(ck['rows'])} folds of r2 to r9 "
+         f"(largest value difference {max(v['max_abs_value_diff_eV'] for v in ck['rows'].values()):.1e} eV; rows per fold "
+         f"identical: {'yes' if all(v['rows_b56'] == v['rows_b54'] for v in ck['rows'].values()) else 'NO'}).",
+         "- Median absolute error, mean over r3 to r9 (eV): "
+         + "; ".join(f"{lab[k]} {v['mine']:.2f} against recorded {v['recorded']:.1f} ({'equal' if v['equal_1dp'] else 'NOT equal'})"
+                     for k, v in ck["medians_eV_r3_r9"].items()) + ".",
+         f"- The check {'passes' if ck['passes'] else 'FAILS'}.", "",
+         "### Statements (r3 to r9)", "", "| statement | point [95 % interval] | reference | verdict |", "|---|---|---|---|"]
+    for k, s in st.items():
+        L.append(f"| **{k}**: {s['text']} | {s3(s['value'])} | {s['reference']:+.2f} | **{'holds' if s['holds'] else 'does not hold'}** |")
+    L += ["", "### Shares and medians by stratum (r3 to r9)", ""]
+    for name, c in C.items():
+        v, d = c["value"], c["diff"]
+        L += [f"#### {name}" + (" (after the fact)" if "50 eV" in name else ""), "",
+              f"Rows per repeat (mean) {np.mean(list(c['rows_per_repeat'].values())):,.0f} (share {c['row_share']:.4f}); "
+              f"discharges with rows per repeat {min(c['discharges_per_repeat'].values())} to {max(c['discharges_per_repeat'].values())}.", "",
+              "| estimator | within 10 % | within 20 % | median relative error |", "|---|---|---|---|"]
+        for e in A1_EST:
+            L.append(f"| {lab[e]} | {f3(v[f'{e}|0.10'])} | {f3(v[f'{e}|0.20'])} | {f3(v[f'{e}|median'])} |")
+        L += ["", "| difference | within 10 % | within 20 % | median relative error |", "|---|---|---|---|"]
+        for x, y in A1_PAIRS:
+            L.append(f"| {lab[x]} minus {lab[y]} | {s3(d[f'{x}-{y}|0.10'])} | {s3(d[f'{x}-{y}|0.20'])} | {s3(d[f'{x}-{y}|median'])} |")
+        L.append("")
+    L += ["### Rows with a reported value below 50 eV (r3 to r9)", "",
+          f"{low['rows_y_below_50_eV']:,} of {low['rows_r3_r9']:,} rows ({low['share_y_below_50_eV']:.4f}); "
+          f"{low['rows_y_at_or_below_0']} at or below zero. Definition applied unchanged.", "",
+          "| estimator | within 10 % | within 20 % | median relative error |", "|---|---|---|---|"]
+    for e in A1_EST:
+        L.append(f"| {lab[e]} | {low['within_10pct_in_rows_below_50_eV'][lab[e]]:.4f} | "
+                 f"{low['within_20pct_in_rows_below_50_eV'][lab[e]]:.4f} | {low['median_relative_error_in_rows_below_50_eV'][lab[e]]:.3f} |")
+    L += ["", "### r2, the development set (reported apart)", "",
+          "| cell | KFX within 20 % | causal GP within 20 % | KFX minus causal GP, 20 % | KFX minus causal GP, 10 % | KFX minus KF0, 20 % |",
+          "|---|---|---|---|---|---|"]
+    for name, c in a["r2_development"].items():
+        v, d = c["value"], c["diff"]
+        L.append(f"| {name} | {f3(v['kfx|0.20'])} | {f3(v['gp|0.20'])} | {s3(d['kfx-gp|0.20'])} | {s3(d['kfx-gp|0.10'])} | "
+                 f"{s3(d['kfx-kf0|0.20'])} |")
+    L += ["", "(r2 alone: the interval resamples its discharges only.)", "",
+          "### Expectations of Addendum 1 beside the findings", "",
+          "| expectation | observed | range met | verdict | verdict met |", "|---|---|---|---|---|"]
+    yn = lambda x: "" if x is None else ("yes" if x else "no")                  # noqa: E731
+    for e in a["expectations"]:
+        L.append(f"| {e['expectation']} | {e['observed']} | {yn(e['range_met'])} | {e['verdict'] or ''} | {yn(e['verdict_met'])} |")
+    L += ["", "Choices: the strata are those of B.60 (B.54 definitions: thirds within a re-partition by median T_i, rows "
+          "1 to 3 after an absent frame by the row walk of run_b41.part_b, rows not flagged by run_b41.plain_mask), not "
+          "the ten-row after-blip class of B.56. The cell of rows below 50 eV and the cell at or above 50 eV are "
+          "reported (the first is listed in the addendum; the second is after the fact). Generators: "
+          "run_b54.rng_for('b60a1|' + cell name).", "",
+          f"Run time of the addendum stage: {a['runtime_s']:.0f} s."]
+    return "\n".join(L) + "\n"
+
+
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:] == ["addendum1"]:
+        addendum1()
+    else:
+        main()
