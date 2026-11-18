@@ -211,6 +211,8 @@ def main():
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b45_ablation_rows.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b46_beam_off.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b59_inputs.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b66_regimes.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B34.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B37.md").read_text(encoding="utf-8"),
         thesis,

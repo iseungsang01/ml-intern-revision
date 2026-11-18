@@ -450,28 +450,43 @@ def main():
     def four(vals):
         return f"{rng(vals)} ({sum(v[1] > 0 for v in vals)} of 4)"
 
-    TK = ["\\newcommand{\\TabCarry}{%", "  \\begin{tabular}{p{0.46\\linewidth}cc}", "    \\toprule",
-          "    & Pooled & Four splits \\\\", "    \\midrule",
-          "    \\multicolumn{3}{l}{\\emph{Trained recurrent estimator, inputs changed at test time; "
-          "skill over its twin (r2--r9)}} \\\\",
-          f"    \\quad inputs as trained & {cell(pdd['skill_file_over_twin'])} & -- \\\\",
-          f"    \\quad Mirnov channels held at the training mean & {cell(pdd['variants']['MCmean']['skill_over_twin'])} & -- \\\\",
-          f"    \\quad Mirnov channels one frame old & {cell(pdd['variants']['Gmc']['skill_over_twin'])} & -- \\\\",
-          f"    \\quad ECEI channels one frame old & {cell(pdd['variants']['Gecei']['skill_over_twin'])} & -- \\\\",
-          f"    \\quad BES channels one frame old & {cell(pdd['variants']['Gbes']['skill_over_twin'])} & -- \\\\",
-          f"    \\quad all fast channels one frame old & {cell(vg['G']['skill_over_twin'])} & -- \\\\",
-          "    \\multicolumn{3}{l}{\\emph{Networks trained with part of the inputs; skill over the twin "
-          "(one initialisation per split)}} \\\\",
-          f"    \\quad BES and CES history & -- & {four(D2)} \\\\",
-          f"    \\quad ECEI and CES history & -- & {four(D1)} \\\\",
-          f"    \\quad BES, ECEI and CES history (no Mirnov) & -- & {four(NM)} \\\\",
-          f"    \\quad all fast channels and CES history & -- & {four(FT)} \\\\",
-          f"    \\quad common mode of the BES array only & -- & {four([x['C2_C_over_twin'] for x in cs])} \\\\",
-          f"    \\quad differences between BES channels only & -- & {four([x['C1_D_over_twin'] for x in cs])} \\\\",
-          f"    \\quad all fast channels, 40 epochs, no stopping rule & -- & "
-          f"{four([x['F1_est_over_twin_fixed'] for x in cs])} \\\\",
-          "    \\multicolumn{3}{l}{\\emph{Five-parameter filter, drive changed; skill over KF0 (r3--r9)}} \\\\",
-          f"    \\quad KFX: common mode and radial difference & {cell(kc['kfx_over_kf0'])} & -- \\\\",
+    B9 = json.loads((ROOT / "docs/paper/b59_inputs.json").read_text(encoding="utf-8"))
+    st9, rf9, pr9 = B9["statements"], B9["reported"]["over_refs"], B9["reported"]["pairs"]
+    assert all(B9["statements"][k]["complete"] for k in st9), "B.59 is not complete"
+
+    def two(tw, gp):
+        return f"{cell(tw) if tw is not None else '--'} & {cell(gp) if gp is not None else '--'}"
+
+    TK = ["\\newcommand{\\TabCarry}{%", "  \\begin{tabular}{p{0.44\\linewidth}cc}", "    \\toprule",
+          "    & Over the twin & Over the causal GP \\\\", "    \\midrule",
+          "    \\multicolumn{3}{l}{\\emph{Trained estimator, inputs changed at test time (pooled, r2--r9)}} \\\\",
+          f"    \\quad inputs as trained & {two(pdd['skill_file_over_twin'], pdd['skill_file_over_gp'])} \\\\",
+          f"    \\quad Mirnov channels held at the training mean & "
+          f"{two(pdd['variants']['MCmean']['skill_over_twin'], pdd['variants']['MCmean']['skill_over_gp'])} \\\\",
+          f"    \\quad Mirnov channels one frame old & "
+          f"{two(pdd['variants']['Gmc']['skill_over_twin'], pdd['variants']['Gmc']['skill_over_gp'])} \\\\",
+          f"    \\quad ECEI channels one frame old & "
+          f"{two(pdd['variants']['Gecei']['skill_over_twin'], pdd['variants']['Gecei']['skill_over_gp'])} \\\\",
+          f"    \\quad BES channels one frame old & "
+          f"{two(pdd['variants']['Gbes']['skill_over_twin'], pdd['variants']['Gbes']['skill_over_gp'])} \\\\",
+          f"    \\quad all fast channels one frame old & "
+          f"{two(vg['G']['skill_over_twin'], vg['G']['skill_over_gp'])} \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Networks trained with changed inputs (pooled, r2--r4)}} \\\\",
+          f"    \\quad fast channels one row old (L) & {two(st9['L1']['skill'], rf9['L']['gp_causal']['skill'])} \\\\",
+          f"    \\quad BES and CES history (B) & {two(st9['B1']['skill'], rf9['B']['gp_causal']['skill'])} \\\\",
+          f"    \\quad ECEI and CES history (E) & {two(st9['E1']['skill'], rf9['E']['gp_causal']['skill'])} \\\\",
+          f"    \\quad BES, ECEI and CES history, no Mirnov (N) & "
+          f"{two(st9['N1']['skill'], rf9['N']['gp_causal']['skill'])} \\\\",
+          f"    \\quad estimator over L & {cell(st9['L2']['skill'])} & -- \\\\",
+          f"    \\quad estimator over B & {cell(pr9['est_over_B']['skill'])} & -- \\\\",
+          f"    \\quad estimator over N & {cell(st9['N2']['skill'])} & -- \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Four file-level splits, one initialisation: range (intervals above zero)}} \\\\",
+          f"    \\quad common mode of the BES array only & {four([x['C2_C_over_twin'] for x in cs])} & -- \\\\",
+          f"    \\quad differences between BES channels only & {four([x['C1_D_over_twin'] for x in cs])} & -- \\\\",
+          f"    \\quad estimator trained 40 epochs, no stopping rule & "
+          f"{four([x['F1_est_over_twin_fixed'] for x in cs])} & {four([x['F2_est_over_gp_fixed'] for x in cs])} \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Five-parameter filter, drive changed (r3--r9); first column: over KF0}} \\\\",
+          f"    \\quad KFX: common mode and radial difference & {cell(kc['kfx_over_kf0'])} & {cell(kc['kfx_over_G'])} \\\\",
           f"    \\quad Kc: common mode only & {cell(kc['kc_over_kf0'])} & -- \\\\",
           f"    \\quad Kg: radial difference only & {cell(kc['kg_over_kf0'])} & -- \\\\",
           f"    \\quad KFX, rows not within ten rows after an absent frame & "
@@ -508,6 +523,30 @@ def main():
             p = f"\\mathbf{{{p}}}"
         return f"${p}$ $[{v[1]:.3f}, {v[2]:.3f}]$"
 
+    G6 = json.loads((ROOT / "docs/paper/b66_regimes.json").read_text(encoding="utf-8"))
+    tw6 = G6["reported"]["two_way"]
+
+    def cls3(k, q):
+        c = tw6[f"{k}|{q}"]
+        return cell(c[q2]) if (q2 := "inc") in c else f"$n = {c['discharges_min']}$ ($< 30$)"
+
+    def cls3gp(k, q):
+        c = tw6[f"{k}|{q}"]
+        return cell(c["gp"]) if "gp" in c else "--"
+
+    TCT = ["\\newcommand{\\TabClassThird}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+           "    Edge-burst rate & coldest third & middle third & hottest third \\\\", "    \\midrule",
+           "    \\multicolumn{4}{l}{\\emph{Increment (estimator over its twin)}} \\\\"]
+    for k, lab in (("A", "none"), ("B", "few"), ("C", "frequent"), ("all", "all discharges")):
+        TCT.append(f"    \\quad {lab} & " + " & ".join(cls3(k, q) for q in ("low", "middle", "high")) + " \\\\")
+    TCT.append("    \\multicolumn{4}{l}{\\emph{Estimator over the causal GP}} \\\\")
+    for k, lab in (("A", "none"), ("B", "few"), ("C", "frequent")):
+        TCT.append(f"    \\quad {lab} & " + " & ".join(cls3gp(k, q) for q in ("low", "middle", "high")) + " \\\\")
+    TCT += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TCT
+    st66 = G6["statements"]
+    mac("RegAminusC", sk(st66["R4"]["value"]) if "value" in st66["R4"] else sk(G6["reported"]["A_minus_C_inc"]))
+
     TWH = ["\\newcommand{\\TabWhere}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
            "    \\emph{Discharges by median \\Ti{} (thirds)} & coldest & middle & hottest \\\\", "    \\midrule",
            f"    \\quad estimator over causal GP & {c3([rp['thirds'][k]['gp'] for k, _, _ in thk])} \\\\",
@@ -517,6 +556,17 @@ def main():
            f"{c3([rc[c]['diff']['c-gp|0.20'] for _, _, c in thk])} \\\\",
            "    \\quad within 20\\%: KFX $-$ causal GP (r3--r9) & "
            f"{c3([ra_cells[c]['diff']['kfx-gp|0.20'] for _, _, c in thk])} \\\\",
+           "    \\midrule",
+           "    \\emph{Discharges by edge-burst rate} & none & few & frequent \\\\",
+           "    \\quad discharges & " + " & ".join(str(G6['counts']['classes'][k]['discharges']) for k in "ABC")
+           + " \\\\",
+           "    \\quad median \\Ti{} of the discharges (eV) & "
+           + " & ".join(f"{G6['counts']['classes'][k]['median_of_discharge_median_ti_eV']:.0f}" for k in "ABC")
+           + " \\\\",
+           f"    \\quad estimator over its twin & {c3([G6['reported']['class'][k]['inc'] for k in 'ABC'])} \\\\",
+           f"    \\quad estimator over causal GP & {c3([G6['reported']['class'][k]['gp'] for k in 'ABC'])} \\\\",
+           one("rows between bursts (few and frequent): increment", G6['reported']['phase']['inter_BC']['inc']),
+           one("the same: over causal GP", G6['reported']['phase']['inter_BC']['gp']),
            "    \\midrule",
            "    \\multicolumn{4}{l}{\\emph{Rows}} \\\\",
            one("not flagged by the value rules: increment", rp['plain_rows']['t']),

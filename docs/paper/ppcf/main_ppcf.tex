@@ -436,31 +436,38 @@ accuracy is the requirement, the filter is the estimator to use.
 \subsection{Which diagnostic carries the increment}
 \label{sec:res:diag}
 
-BES is light of the heating beam, and the CES value needs the beam. Three registered
-readouts ask which diagnostic carries the increment and whether it needs a change of the
-beam (Table~\ref{tab:carry}): the pooled estimator given channels of the row before
-(not retrained), networks trained on four splits with part of the inputs, and the filter
-with one BES summary at a time.
+BES is light of the heating beam, and the CES value needs the beam. Registered readouts
+ask which diagnostic carries the increment and whether it needs a change of the beam
+(Table~\ref{tab:carry}): the pooled estimator given channels of the row before (not
+retrained), networks retrained on the folds of three re-partitions with changed inputs,
+networks that read one component of the BES array, and the filter with one BES summary at
+a time.
 
 \begin{table}[tbp]
   \centering
   \caption{What carries the increment (skill with 95\% interval; bold: the interval
-  excludes zero). Top: the trained recurrent estimator of the pooled cross-validation with
-  some channels replaced at test time by the values of the row before, or held at their
-  training mean. Middle: networks trained with part of the inputs on four file-level
-  splits, one initialisation each, intervals over the test discharges only (range of the
-  four point estimates; number of splits whose interval is above zero); per split:
-  \SuppTab{tab:ablation} and \SuppTab{tab:components}. Bottom: the five-parameter filter
-  with a changed drive.}
+  excludes zero). First block: the trained recurrent estimator of the pooled
+  cross-validation with some channels replaced at test time by the values of the row
+  before, or held at their training mean. Second block: networks trained on every fold of
+  re-partitions r2--r4 with all fast channels one row old (L), with BES or ECEI only beside
+  the CES history (B, E), or without the Mirnov channels (N); the earlier ablations on four
+  file-level splits are in \SuppTab{tab:ablation}. Third block: networks on four
+  file-level splits, one initialisation each (range of the four point estimates; number of
+  splits whose interval is above zero; \SuppTab{tab:components}). Last block: the
+  five-parameter filter with a changed drive.}
   \label{tab:carry}
   \footnotesize
   \TabCarry
 \end{table}
 
-When the BES channels are one frame old, the increment is gone; when the ECEI channels
-are, part of it is lost; the Mirnov channels are not needed. A network that reads BES and
-the CES history recovers an increment on every split, one that reads ECEI on one. A
-trained network of this kind needs the common mode of the BES array, in which the beam and
+The information is in the BES value of the present frame: a network trained with all
+fast channels one row old has no increment and the estimator gains over it, a network that
+reads BES and the CES history has the increment and the estimator is not separated from
+it, and the trained estimator loses its increment when only its BES channels are one frame
+old. A network that reads ECEI and the CES history has no increment. The Mirnov inputs are
+not needed: a network without them has the increment and is not separated from the
+estimator. A trained network of this kind
+needs the common mode of the BES array, in which the beam and
 the density are not separated, and the filter gets most of its increment from the common
 mode too. With the radial difference alone, which attenuates a beam interruption about
 eightfold (\Supp{sec:rows}), the filter keeps two thirds of its increment, and the
@@ -474,8 +481,9 @@ needed to explain it, and it is not excluded, because the files carry no beam po
 \label{sec:res:where}
 
 The stored row errors of the pooled cross-validation and of the filter were read by
-temperature level, by row class and over the error distribution (registered;
-Fig.~\ref{fig:where}, Table~\ref{tab:where}; definitions in \Supp{sec:rows}).
+temperature level, by the rate of edge bursts, by row class and over the error
+distribution (registered; Fig.~\ref{fig:where}, Table~\ref{tab:where}; definitions in
+\Supp{sec:rows}).
 
 \begin{figure}[tbp]
   \centering
@@ -498,7 +506,10 @@ Fig.~\ref{fig:where}, Table~\ref{tab:where}; definitions in \Supp{sec:rows}).
   Quiet rows have no absent frame, low beam emission or large BES departure behind them;
   rows weighted to resemble rows without a value are weighted by the odds of an unusable
   value predicted from the flags of the five rows before and the fast channels.
-  Four-split values and the other rows: \SuppTab{tab:pooledrows}.}
+  Edge-burst rate: onsets per second of upward departures of the BES channels, none,
+  up to 0.719 per second (the median of the non-zero rates) and above (28 discharges too
+  short for a rate are in no class); rows between bursts are at least 50\,ms from every
+  onset. Four-split values and the other rows: \SuppTab{tab:pooledrows}.}
   \label{tab:where}
   \footnotesize
   \setlength{\tabcolsep}{2pt}
@@ -509,7 +520,12 @@ The increment grows with the temperature: it has an interval above zero in the m
 hottest thirds of the discharges and is absent in the coldest, for the network and for the
 filter alike, while the margin over the causal GP is present in every third
 (Fig.~\ref{fig:where}a). In the coldest third the network places fewer frames within 20\%
-of the reported value than the causal GP; KFX does not. The increment is in the rows that
+of the reported value than the causal GP; KFX does not. Classed by the rate of edge
+bursts in the BES channels, the increment is established in the rows between bursts and is
+not tied to one class: the class with no bursts and the class with frequent bursts are
+not separated from each other (Table~\ref{tab:where}); the frequent-burst class is the coldest, and within thirds of the
+temperature the classes show no effect of their own (\SuppTab{tab:classthird}). The
+increment is in the rows that
 plain value rules do not flag, and these rows carry the reduction against the twin; the
 margin over the causal GP leans on flagged rows as well (Fig.~\ref{fig:where}b). The
 network lowers the 90th percentile of the absolute error but not its median, and has the
