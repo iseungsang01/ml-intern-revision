@@ -6,6 +6,9 @@ together with its validation discharges (the B.39 outer-fold network), and appli
 its test discharges.  The network takes all fifteen inputs of B.38; the twin takes the same inputs except the eight
 computed from BES or ECEI (B.38 reads no Mirnov input), i.e. the time step, the CES age, hold, and the first-stage
 estimate against hold and against the causal GP.
+Addendum 1: each arm is fitted on the rows where all of its own inputs are present; on a test row where the network's
+inputs are missing (the BES / ECEI window inputs on the first ten rows of a segment) BOTH arms keep their first-stage
+estimate.  Reported beside it, not a statement: the boosted model's own handling of missing inputs on every row.
 
 Stages (repo root; each caches under data/.b64/ and is resumable):
     py ces_prediction/experiments/b64_two_stage/stage2_b64.py check     # before any run: B.39 reproduction, input split
@@ -68,7 +71,8 @@ FAST_COLS = tuple(range(8))
 HIST_COLS = tuple(range(8, 15))
 COLS = {"v2": FAST_COLS + HIST_COLS, "v2h": HIST_COLS}
 ARM_KEY = {"v2": "c", "v2h": "t"}
-LAB = {"c2": "two-stage network", "t2": "two-stage twin", "c": "network", "t": "twin", "hold": "hold",
+LAB = {"c2": "two-stage network", "t2": "two-stage twin", "c2nan": "two-stage network (missing inputs to the model)",
+       "t2nan": "two-stage twin (missing inputs to the model)", "c": "network", "t": "twin", "hold": "hold",
        "gp": "causal GP", "off": "offline GP", "pchip": "PCHIP", "kfx": "KFX"}
 T0 = _time.time()
 
@@ -267,8 +271,9 @@ def load_base(paths):
 
 
 # ------------------------------------------------------------------------------------------ fit
-def rows_for(C, base, files, net, mu, sd):
-    """Base rows of the named files under one network: X (15 inputs), y, first stage, finite-input mask, causal GP."""
+def rows_for(C, base, files, net, mu, sd, cols):
+    """Base rows of the named files under one network: X (15 inputs), y, first stage, mask of the rows where all of
+    the arm's inputs `cols` are present (addendum 1: each arm is fitted on its own complete rows, as B.38), GP."""
     X, y, c, g = [], [], [], []
     for i in files:
         sel = base["by_file"].get(i)
@@ -280,7 +285,7 @@ def rows_for(C, base, files, net, mu, sd):
         X.append(inputs(fr, base["age"][sel], base["hold"][sel], pred, base["gp"][sel]))
         y.append(base["y"][sel]); c.append(pred); g.append(base["gp"][sel])
     X, y, c, g = (np.concatenate(a) for a in (X, y, c, g))
-    ok = np.isfinite(X).all(1) & np.isfinite(y) & np.isfinite(c)          # B.38's filter (all fifteen inputs finite)
+    ok = np.isfinite(X[:, list(cols)]).all(1) & np.isfinite(y) & np.isfinite(c)
     return X, y, c, ok, g
 
 
@@ -310,12 +315,12 @@ def fit_fold(args):
         for j in range(P.N_INNER):
             run = paths.inner(arm, r, k, j)
             net, m = load_net(C, run, arm)
-            p = rows_for(C, base, inner[j], net, mu, sd)
+            p = rows_for(C, base, inner[j], net, mu, sd, COLS[arm])
             parts.append(p)
             fold_info.append({"inner_fold": j, "run": run.name, "discharges": len(inner[j]), "rows": int(p[3].sum()),
                               "epochs_run": m["epochs_run"], "best_epoch": m["best_epoch"],
                               "skill_over_gp": float(1 - ((p[2] - p[1])[p[3]] ** 2).sum() / ((p[4] - p[1])[p[3]] ** 2).sum())})
-        pv = rows_for(C, base, val, outer_net, mu, sd)
+        pv = rows_for(C, base, val, outer_net, mu, sd, COLS[arm])
         Xf = np.concatenate([q[0][q[3]] for q in parts + [pv]])
         rf = np.concatenate([(q[1] - q[2])[q[3]] for q in parts + [pv]])
         model = gbr().fit(Xf[:, list(COLS[arm])], rf)
@@ -344,8 +349,13 @@ def fit_fold(args):
         for i in np.unique(z["fidx"]):
             sel = np.flatnonzero(z["fidx"] == i)
             fr[sel] = C.feats(int(i), mu, sd)[z["grow"][sel]]
-        Xt = inputs(fr, base["age"][jj], base["hold"][jj], c, base["gp"][jj])[:, list(COLS[arm])]
-        okt = np.isfinite(Xt).all(1)
+        X15 = inputs(fr, base["age"][jj], base["hold"][jj], c, base["gp"][jj])
+        Xt = X15[:, list(COLS[arm])]
+        # addendum 1: the second stage is applied where the NETWORK's fifteen inputs are all present, in both arms
+        # (the fast-channel columns are the same in both arms; the history columns are present on every scored row)
+        okt = np.isfinite(X15).all(1)
+        if not np.isfinite(X15[:, list(HIST_COLS)]).all():
+            raise SystemExit(f"FATAL: r{r} f{k} {arm}: a history-side input is missing on a scored row")
         t1 = _time.time()
         corr = model.predict(Xt[okt])
         t_pred = _time.time() - t1
@@ -354,8 +364,10 @@ def fit_fold(args):
         res[f"est_{key}"] = c
         res[f"est_{key}2"] = est2
         res[f"fallback_{key}2"] = ~okt
+        # reported beside it, not a statement: the boosted model's own handling of missing inputs on every row
+        res[f"est_{key}2nan"] = c + model.predict(Xt)
         info[arm] = {"fit_rows_out_of_fold": int(sum(q[3].sum() for q in parts)), "fit_rows_validation": int(pv[3].sum()),
-                     "fit_rows_dropped_nonfinite": int(sum((~q[3]).sum() for q in parts + [pv])),
+                     "fit_rows_dropped_missing_input": int(sum((~q[3]).sum() for q in parts + [pv])),
                      "test_rows": int(len(y)), "test_rows_first_stage_kept": int((~okt).sum()),
                      "max_dev_first_stage_eV": float(np.nanmax(dc)), "max_dev_hold_eV": float(np.nanmax(dh)),
                      "max_dev_gp_eV": float(np.nanmax(dg)),
@@ -493,14 +505,14 @@ def load_data(paths):
     D = {r: B54.repeat_data(r) for r in REPEATS}
     infos, kchk = {}, {}
     for r in REPEATS:
-        est = {e: [] for e in ("c", "c2", "t", "t2", "kfx")}
+        est = {e: [] for e in ("c", "c2", "t", "t2", "c2nan", "t2nan", "kfx")}
         fb = {"c2": [], "t2": []}
         for k in range(K):
             z = np.load(paths.cache / f"stage2_r{r}_f{k}.npz")
             q = B54.load_rows(r, k)
             if len(z["y"]) != len(q["y"]) or np.max(np.abs(z["y"] - q["y"])) > 1e-6:
                 raise SystemExit(f"FATAL: r{r} f{k}: the stage-2 rows are not the B.39 rows")
-            for e in ("c", "c2", "t", "t2"):
+            for e in ("c", "c2", "t", "t2", "c2nan", "t2nan"):
                 est[e].append(z[f"est_{e}"])
             for e in fb:
                 fb[e].append(z[f"fallback_{e}"])
@@ -559,6 +571,14 @@ def stage_readout(paths):
           "T6": {"value": A["skill_mse|t2|t"], "holds": bool(A["skill_mse|t2|t"][1] > 0),
                  "text": "two-stage twin over the twin: interval above zero"}}
     o["statements"] = st
+    # addendum 1, reported (not a statement): the boosted model's own handling of missing inputs on every row
+    nan_pairs = [("c2nan", "c"), ("c2nan", "gp"), ("c2nan", "t2nan"), ("t2nan", "t"), ("c2nan", "hold")]
+    An, _ = cell(D, all_rows, ("c2nan", "t2nan", "c", "t", "gp", "hold"), nan_pairs, B54.rng_for("b64|nan"))
+    Qn = medians(D, ("c2nan", "hold"), [("c2nan", "hold")], B54.rng_for("b64|nan_medians"))
+    o["missing_inputs_by_the_boosted_model"] = {
+        "T1": An["skill_mse|c2nan|c"], "T2": An["skill_mse|c2nan|gp"], "T3": An["skill_mse|c2nan|t2nan"],
+        "T4": Qn["median_ratio|c2nan|hold"], "T5": An["share20_diff|c2nan|gp"], "T6": An["skill_mse|t2nan|t"],
+        "rmse_eV": {e: An[f"rmse|{e}"] for e in ("c2nan", "t2nan")}, "over_hold": An["skill_mse|c2nan|hold"]}
     # thirds by median T_i of the discharge (run_b60.thirds_lab)
     F = B54.load_files()
     tl = {r: B60.thirds_lab(D, F, r) for r in REPEATS}
@@ -624,6 +644,17 @@ def render(o):
     for tn, q in o["thirds"].items():
         L.append(f"| {tn} | {s3(q['skill_mse|c2|c'])} | {s3(q['skill_mse|c2|gp'])} | {s3(q['skill_mse|c|gp'])} | "
                  f"{s3(q['skill_mse|c2|t2'])} | {s3(q['skill_mse|t2|t'])} |")
+    N = o["missing_inputs_by_the_boosted_model"]
+    L += ["", "## Reported beside the statements (addendum 1): the boosted model's own handling of missing inputs on all rows", "",
+          "Not a statement. The same second stages, applied on every row (also where the BES / ECEI window inputs are missing).", "",
+          "| quantity | value |", "|---|---|",
+          f"| T1 form: two-stage network over the network | {s3(N['T1'])} |",
+          f"| T2 form: over the causal GP | {s3(N['T2'])} |",
+          f"| T3 form: two-stage network over two-stage twin | {s3(N['T3'])} |",
+          f"| T4 form: median absolute error over hold | {f3(N['T4'])} |",
+          f"| T5 form: share within 20 %, minus causal GP | {s3(N['T5'])} |",
+          f"| T6 form: two-stage twin over twin | {s3(N['T6'])} |",
+          f"| RMSE (eV): two-stage network / two-stage twin | {e1(N['rmse_eV']['c2nan'])} / {e1(N['rmse_eV']['t2nan'])} |"]
     rc = o["checks"]["before_runs"]["reproduction"]
     L += ["", "## Checks", "",
           f"- B.39 network over twin on r2 to r4 from the stored errors: {s3(rc['arm_p_P2_network_over_twin'])} "
@@ -631,8 +662,8 @@ def render(o):
           f"- Inputs: the twin's second stage reads {', '.join(o['checks']['before_runs']['input_split']['history_side'])}; "
           f"the network's also {', '.join(o['checks']['before_runs']['input_split']['fast_side'])}.",
           f"- Inner runs: {o['checks']['inner_runs']['runs']}; reached the epoch cap: {o['checks']['inner_runs']['cap_bound'] or 'none'}.",
-          f"- Test rows where an input is missing and the first stage is kept: network {o['fallback_rows_share']['c2']:.4f}, "
-          f"twin {o['fallback_rows_share']['t2']:.4f} of rows.",
+          f"- Test rows where the network's second-stage inputs are missing and both arms keep the first stage (addendum 1): "
+          f"network {o['fallback_rows_share']['c2']:.4f}, twin {o['fallback_rows_share']['t2']:.4f} of rows.",
           f"- Second stage run time per row: network {o['seconds_per_row_second_stage']['v2'] * 1e6:.1f} us, twin "
           f"{o['seconds_per_row_second_stage']['v2h'] * 1e6:.1f} us (batch prediction, CPU)."]
     return "\n".join(L) + "\n"
