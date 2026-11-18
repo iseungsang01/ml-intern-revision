@@ -8092,3 +8092,27 @@ Reading. What can be said: after a beam interruption the reported value recovers
 
 What would change it: a lag analysis at 10 ms with a response that separates a prompt from a delayed term (a new registration); per-exposure fit errors; the beam power. From the estimator side, B.55 (fast channels one frame old) and arm L of B.59 bear on the same question.
 
+### B.60: the error as a share of the reported value -- within 20 % the estimator is not above the causal GP (0.770 against 0.772), it is above hold; in the coldest third of the discharges it is below both (2026-11-18)
+
+Registration `PREREGISTRATION_B60.md`. CPU, stored errors of the pooled cross-validation; designed by the session lead, run by a delegated agent with the code of B.54 (`experiments/b60_relative_error/run_b60.py`, about two minutes). Output `docs/paper/b60_relative_error.{json,md}`. The check (percentiles of the absolute error of B.54 reproduced to one decimal) passed.
+
+| estimator | share of rows within 10 % | within 20 % | median relative error |
+|---|---|---|---|
+| recurrent estimator | 0.562 [0.539, 0.585] | 0.770 [0.749, 0.791] | 0.084 [0.079, 0.089] |
+| twin | 0.556 | 0.761 | 0.085 |
+| causal GP | 0.570 [0.549, 0.591] | 0.772 [0.753, 0.792] | 0.081 |
+| hold | 0.544 [0.522, 0.565] | 0.749 [0.728, 0.770] | 0.087 |
+| offline GP | 0.617 | 0.805 | 0.070 |
+
+- T20 (within 20 %, the estimator above the causal GP) does not hold: -0.002 [-0.012, +0.006].
+- T20h (above hold) holds: +0.021 [+0.011, +0.031].
+- T10 (within 10 %, not below the causal GP by more than 0.02) does not hold, by the last digit: -0.007 [-0.0204, +0.003].
+
+Strata, the estimator minus the causal GP within 20 %: coldest third of the discharges -0.038 [-0.070, -0.013] (the estimator 0.495, the causal GP 0.534, hold 0.525; against hold -0.029 [-0.063, -0.003]); middle third +0.004 [-0.003, +0.011]; hottest third +0.010 [+0.003, +0.017]; rows 1 to 3 after an absent frame +0.067 [+0.042, +0.092] (0.626 against 0.559); rows not flagged by the value rules +0.005 [-0.004, +0.013]. Reported values below 50 eV are 0.0136 of the rows; of them the estimator has 0.0009 within 20 %, the causal GP 0.047, hold 0.075 (with those rows left out, after the fact, the verdicts do not change).
+
+Reading. (1) In the unit in which requirements and published real-time analyses state accuracy, the estimator and the causal GP are the same: about 0.77 of the frames within 20 % of the reported value and 0.56 to 0.57 within 10 %. The gain of the estimator in squared error is a gain in eV on frames with large errors, in hot discharges and after beam interruptions; it does not raise the share of frames within a relative band. (2) In the coldest third the estimator is worse than the causal GP and than hold in relative terms, and at reported values below 50 eV it is almost never within 20 %. A network trained on a squared error in eV gives little weight to small values. (3) These shares are against the reported value of the frame, which carries its own scatter; they are not shares within a band around the ion temperature, and they are not the same comparison as a real-time analysis against an offline analysis of the same spectra.
+
+What would change it: an estimator fitted on the logarithm of the value (the filter of B.56 has a logarithmic state; a network with a relative loss needs the GPU), or a loss that weights small values.
+
+Manuscript: by section 5 of the registration one sentence of the main result and the limit on the typical row carry these numbers; this is done with the restructuring of the main text that waits for B.56, B.57 and B.59.
+
