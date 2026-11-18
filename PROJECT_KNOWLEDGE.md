@@ -608,7 +608,9 @@ BES 9채널(3행 3열)의 로그를 공통 성분 c(아홉 채널의 평균)와 
 
 ## 7. 열린 일 (우선순위 순)
 
-**지금 상태(2026-11-18 07:45).** 저자 지시로 실행 중이던 것을 모두 멈췄다. GPU는 비어 있고 남은 프로세스는 없다. 아래 배치는 저자가 지시할 때만 다시 띄운다. 커밋된 원고는 본문 10쪽(참고문헌 포함, 저자 지정)과 보충 자료 27쪽이며, 초기화 셋 판독(4.26절)과 초기화 평균(4.27절)까지 들어 있고 pooled 칸은 비어 있다. 하위 에이전트의 CPU 작업은 저자 지시로 다시 돌린다(같은 날 08:05부터). 2026-11-19에 발표가 있다. 발표까지는 GPU 작업을 하지 않고 지금 모델과 지금 결과로 간다(저자 지시). GPU 배치와 모델 개선은 발표 뒤에 다시 시작한다.
+**지금 상태(2026-11-18 12:20).** 07:45에 저자 지시로 모두 멈췄다가, 12:07에 저자 지시로 GPU를 다시 쓴다. GPU의 순서는 B.39 pooled(남은 23회) → B.53(20회) → B.47(64회)이다. B.39는 `py ces_prediction/experiments/b39_primary/run_b39.py >> data/.b39_batch.log 2>&1`로 이어 돌고 있다. B.53과 B.47은 한 명령으로 묶어 띄웠다: `py ces_prediction/experiments/b53_components/run_b53.py --wait-for-b39 >> data/.b53_batch.log 2>&1; py ces_prediction/experiments/b47_after_b39/run_b47.py >> data/.b47_batch.log 2>&1` (B.53은 B.39가 끝나면 스스로 시작하고, 세 러너 모두 끝난 run을 건너뛴다. 세션이 끊겨 프로세스가 죽었으면 같은 명령으로 다시 띄운다). 2026-11-19에 발표가 있다. 커밋된 원고는 본문 10쪽(참고문헌 포함, 저자 지정)과 보충 자료 27쪽이며 pooled 칸은 비어 있다. GPU 배치가 도는 동안에는 기존 학습 코드를 고치지 않는다.
+
+끝나면 할 일. B.39: `py ces_prediction/experiments/b39_primary/analyze_b39.py` → `py docs/paper/ppcf/make_tables.py` → `py docs/paper/ppcf/check_numbers.py` → 컴파일 → `THESIS_RESULTS.md`에 arm P 기록 → 제목과 주 결과 표, 초록을 등록 규칙에 따라 정리(본문 10쪽 유지) → B.50의 가중 판독을 pooled 행으로(CPU). B.53: `py ces_prediction/experiments/b53_components/analyze_b53.py` → `docs/paper/b53_components.md` 확인 → 기록, 원고의 빔 단서 문장. B.47: `py ces_prediction/experiments/b47_after_b39/analyze_b47.py` → 기록, 원고.
 
 **발표 전 순서(CPU와 하위 에이전트만).**
 
@@ -623,11 +625,12 @@ BES 9채널(3행 3열)의 로그를 공통 성분 c(아홉 채널의 평균)와 
 | 7 | 11차 채점이 요구한 CPU 재분석(B.52): 방전별 비율, 학습 방전에서 맞춘 선형 필터, gap 길이별 판독, 값 문턱 민감도, 90번째 백분위수의 절대값 | `PREREGISTRATION_B52.md`, `docs/paper/b52_grading_readouts.md` | 끝남(4.31절): 등록 진술 일곱 개 모두 성립. 주 결과 표에 선형 필터 두 행, 본문 주 결과 절에 방전별 비율 |
 | 8 | 저자가 정할 것: 본문 쪽수(10쪽 유지인가, 채점자가 권한 13–15쪽과 그림 대여섯 개인가), 주 통계 틀(pooled를 기다리는가, 초기화 평균과 초기화 간 산포를 주 통계로 삼는가) | 저자 결정 | 대기 |
 
-**멈춘 것과 이어가는 법(발표 뒤, GPU를 다시 쓸 때 이 순서로).**
+**GPU 배치(2026-11-18 12:07에 다시 시작; 아래 표의 "멈춘 지점"은 07:45의 것).**
 
 | 일 | 무엇을 정하는가 | 멈춘 지점 | 이어가는 법 |
 |---|---|---|---|
 | B.39 pooled(arm P): 인과 변형과 쌍둥이를 639 방전의 5-fold로, 여덟 번 다시 나눠 학습 | 본문의 주 진술(M5). 등록 규칙은 pooled 진술과 분할 단위 진술 S1이 함께 성립해야 인과 변형을 주 estimator로 삼고 제목에 causal을 쓴다고 정했다. S1이 성립하지 않았으므로 문면으로는 조건이 채워지지 않는다. pooled를 본 뒤 제목과 주 결과 표의 구성을 정한다 | 112회 가운데 89회 완료(네 분할 32회 전부, pooled 80회 가운데 57회). 진행 중이던 `.b39p_v2h_cut_r7_f3`은 버려졌다 | `py ces_prediction/experiments/b39_primary/run_b39.py > data/.b39_batch.log 2>&1` (끝난 run은 건너뛴다. 남은 23회, 한 시간 반쯤). 끝나면 `analyze_b39.py` → `make_tables.py` → `check_numbers.py` → 컴파일 → `THESIS_RESULTS.md`에 arm P 기록 → 초록을 pooled 중심으로 정리 |
+| B.53: (C) BES 배열의 성분 하나만 추가 입력으로 읽는 신경망(공통 성분, 채널 간 차이, 둘 다), (F) estimator와 쌍둥이를 조기 종료 없이 40 epoch | (C) 4.30절의 둘째 단계 결과가 학습한 신경망에서도 나오는가: 빔 단서. (F) 쌍둥이의 조기 종료가 증분을 부풀렸는가 | 등록 `PREREGISTRATION_B53.md`(부록 1). 러너는 하위 에이전트가 만들고 학습 없이 점검(`docs/paper/b53_checks.md`) | B.39 뒤에 스스로 시작. 20회, 두세 시간. 끝나면 `analyze_b53.py` |
 | B.47: (D) ablation 변형을 초기화 둘 더, (L) CES 이력에 2프레임 지연을 넣고 학습한 estimator와 쌍둥이, (I) inclusive 모집단에서 인과 변형과 쌍둥이를 같은 상한으로 | (D) M6이 초기화 하나에 기댄다. (L) 4.23절이 지연 없이 학습한 얼린 estimator라는 한계. (I) inclusive 수치가 상한이 다른 짝에서 온 것 | 학습을 시작하기 전에 취소했다(64회 가운데 하나도 돌지 않음). 러너는 학습 없이 검증되어 커밋되어 있다 | B.39가 끝난 뒤 `py ces_prediction/experiments/b47_after_b39/run_b47.py > data/.b47_batch.log 2>&1` (B.39와 함께 띄우려면 `--wait-for-b39`). 열 시간쯤. 끝나면 `analyze_b47.py`. 등록 `PREREGISTRATION_B47.md` |
 
 **원고와 발표 자료.**
