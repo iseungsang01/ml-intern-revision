@@ -8275,3 +8275,24 @@ Reading. (1) The emission that depends on neither the beam nor the spectrometer 
 
 By the registered rule (E1 and E3 met): the paper says that a response that starts inside the interruption and deepens is present, that a response to the loss of the beam is therefore not excluded in shape, with the size estimate of the literature beside it, gives the first-frame excess as an upper bound of a measurement-side contribution, and names no mechanism.
 
+### B.63: the wall field through the beam interruptions -- the two Mirnov coils change from the moment the beam goes off and for about 50 ms after its return (2026-11-18)
+
+Registration `PREREGISTRATION_B63.md` with addendum 1 (drift correction from half of the pseudo-events, control on the held-out half; after the checks, before any statement) and addendum 2 (an exploratory check of the relative coil polarity, fixed after the statements were read). CPU, no model; run by delegated agents (`experiments/b63_blip_magnetics/run_b63.py`, `polarity_b63.py`), output `docs/paper/b63_blip_magnetics.{md,json,png,pdf}`. Raw 2 MHz Mirnov signals of two coils at two toroidal positions, integrated in time from the moment the beam goes off; 36 interruptions of one absent frame in twelve discharges; units are the control scatter of the common mode C at pseudo-events.
+
+Checks: (a) passed; (b) failed without drift correction (integration drift of one sign per discharge), passed on the held-out half after addendum 1 in the windows used; (c) passed with a ratio of 2.33; (d) 36 of 41 interruptions covered.
+
+| statement | interruptions | held-out pseudo-events | verdict |
+|---|---|---|---|
+| M1: C differs from zero inside the interruption | +1.853 [+0.656, +2.742] | -0.064 [-0.554, +0.221] | met |
+| M2: both coils change with the same sign | Phi_03 +25.048 [+7.051, +54.841], Phi_16 -16.057 [-45.187, -5.672] | | not met (opposite signs) |
+| M3: the change decays by 40 to 43 ms | -2.322 [-4.113, -0.973] | -0.532 [-1.690, +0.508] | met |
+| M4: the coil difference D shows no change | +20.553 [+4.801, +50.788] | +0.032 [-2.503, +1.001] | not met |
+
+Addendum 2 (exploratory): at the 200 candidate edge bursts the two coils change with opposite signs in 0.955 [0.906, 0.990] of events (rank correlation -0.989 [-0.994, -0.948], median ratio -0.947), at the held-out pseudo-events likewise (0.892, -0.975, -0.950), at the interruptions 0.944 (ratio -0.859). The pair therefore has opposite effective polarity for slow changes of the wall field; the opposite signs are not specific to the interruptions.
+
+Expectations: M1 to M4 all met; M2 and M4 failed on sign, which the registration should have anticipated (it states that the polarity is not known and then wrote M2 and M4 as if it were).
+
+Reading (exploratory, by addendum 2). The wall field changes alike at two toroidal positions from the moment the beam goes off: the integrated signal grows through the 10 ms off, stays near its value for about 50 ms after the return and falls by 60 ms, in all twelve discharges, by about twenty control scatters of the common mode (D). That is a change of the equilibrium at the interruptions, as published for KSTAR blips (a plasma displacement; a fall of the stored energy of less than a tenth at a fully blanked beam). The interruption ratio -0.86 against -0.95 elsewhere leaves a small part that is not alike at the two positions (the M1 signal), which cannot be told from a gain difference. Not settled: the size of a displacement (uncalibrated coils, unknown poloidal positions), whether the change is axisymmetric (two positions do not exclude an n = 1 structure locked between them), and how much of the fall of the reported T_i at the chord it causes. The longer interruptions (four events) show larger D (31 to 131 control scatters). The rank correlation over 26 interruptions between C at the return and the ECEI fall 10 to 13 ms later is -0.387.
+
+By the rules: the registered branch for M2 not met ("no change resolved") does not describe the outcome and is not applied; the paper states, as an exploratory reading from two coils of opposite effective polarity, that the wall field changes at the interruptions from the moment the beam goes off for about 50 ms, gives no displacement size, and does not attribute the fall of T_i to it.
+
