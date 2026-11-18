@@ -85,6 +85,25 @@ DERIVED = {
     "0.65": "65 rows x 10 ms",
     "0.45": "minor radius quoted in Heo et al. 2025, sec. 2 (a about 0.45 m); (2.198 - 1.77) / 0.45 = 0.951",
     "529": "C VI (n = 8-7) line at 529.05 nm observed by the KSTAR CES (Ko et al. 2010; analyze_foundations.py)",
+    # published device and diagnostic facts (Table S plasma, section 2): literature, not measured here
+    "529.05": "C VI line wavelength, Lee2026NeuralNetworkbased / Jang2021DevelopmentUltrafast (lit_kstar_facts.md)",
+    "2.25": "LCFS near R = 2.25 m in H-mode, Ko2015IonTemperature sec. 3",
+    "2.19": "CES channels nearest the pedestal top at R ~ 219-220 cm, Kim2020PedestalElectron sec. IV",
+    "2.20": "same",
+    "2.192": "CES channel 16 at R = 2.192 m 'near the pedestal top', Lee2026NeuralNetworkbased Figs 5-6",
+    "3.5": "KSTAR B_T up to 3.5 T, Nam2026OverviewKstar sec. 1",
+    "0.6": "I_p 0.5-0.6 MA of published dataset discharges (Heo2025, Kim2024, Lee2026Spatiotemporal)",
+    "1.4": "line-averaged n_e 1.0-1.4e19 m^-3 of 31921/31923, Heo2025 sec. 2",
+    "2.18": "edge CES channels span R ~ 2.18-2.25 m, read from Fig. 1(c) of Lee2026SpatiotemporalStructure",
+    "2.24": "midplane separatrix R ~ 2.24 m, read from Fig. 1(c) of Lee2026SpatiotemporalStructure",
+    "2021": "year of the discharges in Kim2024KineticProfile (27973, 28019)",
+    "3.84": "median CESNN rotation uncertainty 3.84 km/s, Kim2026AutomatedOutlier sec. 3",
+    "0.080": "median CESNN T_i uncertainty 0.080 keV, Kim2026AutomatedOutlier sec. 3",
+    "1.1": "beam-power drop of at least 1.1 MW at the blips of 31923, read from Fig. 2(b) of Heo2025",
+    # beam-heating estimate (supplement): own arithmetic from Heidbrink & Sadler 1994 eqs 7, 9, 10
+    "9.3": "critical energy at T_e 0.5 keV, n_e 2.5e19, 95 keV D, Z_eff 2 (lit_beam_physics.md, balance.py)",
+    "0.17": "share of 95 keV beam energy to ions at the same parameters (same source)",
+    "10.5": "median beam-off duration of one-absent-frame blips in the raw streams (b61_blip_dose.md: 10.5 ms)",
 }
 
 
@@ -164,6 +183,7 @@ def main():
         (ROOT / "docs/paper/b60_relative_error.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b61_absolute_robust.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b61_blip_dose.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b62_beam_return.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
