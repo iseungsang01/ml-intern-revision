@@ -8349,3 +8349,18 @@ Reported: two-stage network over the offline GP +0.063 [+0.038, +0.086] (the net
 
 Reading. A gradient-boosted second stage on the residual, fitted on the training discharges of each fold, raises the skill of the network by +0.093 and of the twin by +0.048; after it the fast-channel increment is +0.097, larger than before (+0.053). The two-stage estimator is the first causal estimator in this project whose interval over the offline GP (which uses the next value) is above zero. By the rules: the paper's estimator becomes the two-stage estimator with the network as its first stage; the abstract gives its skill over the causal GP and its eV difference and states that it lowers the median error below hold and raises the share within 20 %; T3 is stated as the fast-channel increment of the paper's estimator beside the first-stage increment; the statements rest on three re-partitions, the primary statements of B.39 on eight.
 
+### B.65: the pooled result on the inclusive population -- the margin over the causal GP holds, the fast-channel increment does not (2026-11-19)
+
+Registration `PREREGISTRATION_B65.md` with addendum 1 (`CES_CONTROL_METRICS` follows the population). GPU, 30 runs on the 15 folds of r2 to r4 (network `v2` and twin `v2h`, trained and scored with CES_TI_SPIKE_CUT_EV=0; 2.63 h; no run reached the epoch cap); run by an AI agent under the author's supervision. Output `docs/paper/b65_inclusive.{md,json}`; its checks pass.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| I1 network over causal GP, MSE skill | +0.109 [+0.070, +0.146] | met | +0.00 to +0.05, uncertain |
+| I2 network over twin, MSE skill | -0.002 [-0.017, +0.010] | not met | +0.00 to +0.04, uncertain |
+| I3 network over causal GP, Huber skill | +0.037 [+0.003, +0.070] | met | +0.04 to +0.08, met |
+| I4 network over twin, Huber skill | -0.012 [-0.038, +0.006] | not met | +0.02 to +0.05, met |
+
+Reported: on all inclusive rows the network over hold +0.395, over PCHIP +0.238, over the offline GP +0.023 [-0.023, +0.063]; the twin over the causal GP +0.111 [+0.075, +0.146]. RMSE 476.7 eV (network), 476.2 (twin), 505.1 (causal GP). On the rows at or below 3 keV of the same runs the network over the twin is -0.015 [-0.115, +0.045] and over the causal GP +0.476 [+0.405, +0.537]: the causal GP carries the values above 3 keV in its history, the networks do not separate.
+
+Reading. Kept in training and in scoring, the values above 3 keV (fit failures) remove the fast-channel increment: the network and its twin are not separated in either skill, on all rows or on the rows at or below 3 keV. The margin over the causal GP remains in both skills. By the rules (I4 not met): the paper states that the result is established on the cut population only, and the cut is named in the abstract as a condition. The estimator is not changed.
+
