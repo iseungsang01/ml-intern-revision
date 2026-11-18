@@ -558,9 +558,8 @@ dropout or a jittered sampling instant was not done.
 \section{Discussion and limitations}
 \label{sec:discussion}
 
-The increment is carried by BES, which changes with the beam and with the plasma; most
-of it is in quiet rows, and two thirds of the filter's increment is available from a
-radial difference that largely rejects the beam. Loss of beam heating
+The increment is carried by BES, which changes with the beam and with the plasma
+(\S\ref{sec:res:diag}). Loss of beam heating
 for about 10\,ms would, by published slowing-down
 formulas~\citep{Heidbrink1994BehaviourFast}, lower the temperature by a few per cent at
 most (an estimate, \Supp{sec:rows}): comparable with the fall of the ECEI level and
@@ -584,20 +583,17 @@ fewer frames within 20\% of the reported value than the causal GP. Without the t
 the discharges with the largest reduction the increment is not separated from zero.
 \item \emph{Typical row.} The recurrent estimator lowers neither the median error nor
 the share of frames within 10\% (\ShareNetTen{} against \ShareGpTen{}); the filter does.
-\item \emph{Rows without a value.} Every skill is scored on measured rows; weighted to
-resemble the rows without a usable value, the increment is not established ($+0.020$
-$[-0.014, +0.049]$, pooled; \Supp{sec:rows}).
-\item \emph{Initialisation and sampling instant.} On single splits the spread between
-initialisations decides whether an interval excludes zero; the ablation and component
-networks and the replays use one initialisation. The dependence of the estimate on the
-instant of the fast sample inside the frame is not settled on twelve discharges.
+\item \emph{Rows without a value.} Weighted to resemble them, the increment is not
+established ($+0.020$ $[-0.014, +0.049]$; \Supp{sec:rows}).
+\item \emph{Initialisation and sampling instant.} Ablation and component networks and the
+replays use one initialisation; the dependence on the instant of the fast sample inside
+the frame is not settled on twelve discharges.
 \item \emph{Selection.} The pooled folds re-partition the discharges on which the
 recurrent design was adopted; the filter's specification was chosen on one
 re-partition; the value rules and the row classes were defined with an earlier training
 of the estimator; no untouched hold-out exists.
-\item \emph{Scope and use.} One chord, one campaign and one device. Nothing was run on
-a plant control system, and we found no published description of real-time BES at
-KSTAR.
+\item \emph{Scope and use.} One chord, one campaign, one device; nothing was run on a
+plant control system (real-time BES at KSTAR: \S\ref{sec:res:use}).
 \end{itemize}
 
 % =========================================================================
