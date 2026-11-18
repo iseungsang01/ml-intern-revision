@@ -45,3 +45,8 @@ S1: 0.01 and 0.34, holds, also in each half. S2: upper end 0.046 against 0.061, 
 ## 7. Limits known in advance
 
 Defined after a look at the same data. The ECEI level is not a temperature. With eight points the coefficient b is an upper bound, not an estimate. Slow changes of the beam over more than 100 ms are removed by the differencing and are not tested. No labels of confinement mode: "quiet stretches", not "between ELMs". Block averaging of a scattered T_i lowers every correlation; the ratio is the statistic.
+
+## Addendum 1 (2026-11-18, written after the run; no statement is changed)
+
+Three points that the wording above left open were settled by the agent in the code before it read any verdict, and are recorded here as run. (i) The response used for the prediction of the heating route is the event-median T_i deficit profile of part S for events of one absent frame, as section 3 says; the exploratory script had the profile of all events, and its result is reported beside the registered one. (ii) The positive control of part L uses events of one absent frame with 15 rows before and 29 after, all 10 ms apart, the absent frame entered as a missing row that opens a 30 ms block; the two other alignments of the blocks are reported and are not the verdict. (iii) "Above" in L3 means that the lower end of the interval is above the threshold, as in the other statements.
+

@@ -471,11 +471,14 @@ the rows of the pooled cross-validation (every split and every pooled statement 
 
 \emph{Beam blips.} In the first row after an absent frame the reported \Ti{} is
 0.819 and the ECEI level 0.926 of their levels before, and both return with the same
-integral recovery time (the summed deficit of rows 1 to 15 over that of the first
-row, times 10\,ms: 41.0 $[35.7, 46.8]$ and 40.2 $[31.0, 49.2]$\,ms). An
-interruption of the heating is thus seen by a diagnostic that uses neither the beam
-nor the spectrometer, and the fall of the reported value is at least in part a change
-of the plasma. In the rows 1 to 3 after an absent frame the estimator has $+0.151$
+integral recovery time (41.0 $[35.7, 46.8]$ and 40.2 $[31.0, 49.2]$\,ms). Over the
+next eight rows the deficit of \Ti{} is proportional to that of the ECEI level, which
+uses neither the beam nor the spectrometer (share left unexplained 0.009
+$[0.005, 0.032]$), and not to that of the beam emission, which is back within two
+rows (0.333 $[0.286, 0.376]$). The part of the first-row deficit that follows the
+beam emission is 0.162 $[0.006, 0.329]$ of it: the registered bound of one third is
+not met, so how much of the first-row fall belongs to the weak signal stays open
+(readout defined after an exploratory look; \Supp{sec:rows}). In the rows 1 to 3 after an absent frame the estimator has $+0.151$
 $[+0.093, +0.215]$ over its twin on the pooled rows
 (Fig.~\ref{fig:events}a): the twin sees the longer time step but not the depth of
 the fall, and follows one row later. \emph{Edge bursts.} After 108 isolated burst onsets
@@ -504,9 +507,8 @@ $+0.110$ from the coldest to the hottest). The increment is $+0.007$
 $[-0.023, +0.031]$, $+0.042$ $[+0.009, +0.074]$ and $+0.092$ $[+0.040, +0.137]$: it
 is not established in the coldest third, and the registered statement that it is
 present in every third does not hold.
-\emph{Reading.} The estimator is an estimator of the mean: it lowers the large
-errors, among them those after beam interruptions, and leaves the typical row where
-hold and the causal GP have it. \emph{Limits.} The value rules are thresholds, not a
+\emph{Reading.} The estimator lowers the large errors, among them those after beam
+interruptions, and not the typical row. \emph{Limits.} The value rules are thresholds, not a
 fit-quality flag.
 
 \subsection{When the CES value is late or sparse}

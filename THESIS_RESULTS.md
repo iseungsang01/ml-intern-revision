@@ -8077,3 +8077,18 @@ What would change these statements, and what follows. Training with the fast cha
 
 Manuscript, by section 5 of the registration and addendum 2: abstract (the increment is lost when the fast channels are one frame old), the section on a late or sparse CES value (fast channels one frame old, BES alone, Mirnov at its mean), a limit on the sampling instant, the conclusion; supplement: a paragraph and Table S10. Main text 10 pages, supplement 29. `check_numbers.py`: 0 not found.
 
+### B.58: beam blips as a calibration of the response to the beam -- the shape statement holds, the bound on the signal-level part does not, and the lag statements are withdrawn because their positive control failed (2026-11-18)
+
+Registration `PREREGISTRATION_B58.md` (definitions fixed after an exploratory look at the same data, marked as such; addendum 1 records three implementation choices made before any verdict was read). CPU, no model; proposed and run by a delegated agent, design fixed by the session lead (`experiments/b58_blip_calibration/run_b58.py`, about two minutes). Output `docs/paper/b58_blip_calibration.{json,md}`, figure `docs/paper/b58_blip_profiles.{png,pdf}`. Every statement had to hold on all discharges and in each of two halves.
+
+- S1 (shape) holds: the T_i deficit profile after events of one absent frame is proportional to the ECEI profile with 0.009 [0.005, 0.032] unexplained and to the BES profile with 0.333 [0.286, 0.376]; in the halves 0.021 [0.011, 0.066] and 0.010 [0.006, 0.057], and 0.337 [0.276, 0.388] and 0.331 [0.260, 0.405].
+- S2 (the part of the first-row deficit proportional to the BES deficit is below one third of it) does not hold: 0.030 [0.001, 0.065] against 0.062 (first-row deficit 0.186 [0.165, 0.210]); as a share of the deficit 0.162 [0.006, 0.329]. The exploratory look had 0.046 as the upper end; the registered restriction to events of one absent frame moved it.
+- S3 (control) holds: pseudo-events within 0.011, 0.003 and 0.006 of 1 for T_i, ECEI and BES.
+- L3 (positive control of the lag readout) does not hold: on windows that contain a blip the ratio of the correlation with BES leading by 30 ms to that at zero lag is +0.188 [+0.112, +0.262], below the 0.5 required (with the blocks shifted by one row it is +0.603 [+0.516, +0.713]: the statistic depends on where the blip falls in a block). By the registration L1 and L2 are withdrawn as uninformative. Their numbers: BES common mode +0.149 [+0.094, +0.204] against a prediction of the heating route of +0.914 [+0.880, +0.945].
+
+Reported: event by event in rows 4 to 6 the T_i deficit is associated with the remaining BES deficit (rank 0.468 [0.413, 0.523]; partial on ECEI 0.399 [0.336, 0.458]). The upper end of b (0.188) translated to quiet rows: median 8.10 eV. On the twelve discharges with raw streams (45 blips) no relation of the first-row T_i deficit to the duration of the interruption is visible.
+
+Reading. What can be said: after a beam interruption the reported value recovers with the shape of an emission that uses neither the beam nor the spectrometer, and not with the shape of the beam signal. What cannot be said: that the part of the first-row fall that goes with the signal level is below one third (the upper end of its share is 0.329), and anything about the lag away from blips from this readout. By the registered rule the reading of the dip as a change of the plasma leaves the main text; the main text gives the two measured facts.
+
+What would change it: a lag analysis at 10 ms with a response that separates a prompt from a delayed term (a new registration); per-exposure fit errors; the beam power. From the estimator side, B.55 (fast channels one frame old) and arm L of B.59 bear on the same question.
+
