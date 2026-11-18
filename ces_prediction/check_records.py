@@ -61,6 +61,7 @@ SOURCES = (
     "docs/paper/b61_blip_dose.md",
     "docs/paper/b62_beam_return.md",
     "docs/paper/b63_blip_magnetics.md",
+    "docs/paper/b66_regimes.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )

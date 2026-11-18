@@ -8296,3 +8296,20 @@ Reading (exploratory, by addendum 2). The wall field changes alike at two toroid
 
 By the rules: the registered branch for M2 not met ("no change resolved") does not describe the outcome and is not applied; the paper states, as an exploratory reading from two coils of opposite effective polarity, that the wall field changes at the interruptions from the moment the beam goes off for about 50 ms, gives no displacement size, and does not attribute the fall of T_i to it.
 
+### B.66: the increment by edge-burst rate -- established between bursts, not in either class of discharges alone (2026-11-18)
+
+Registration `PREREGISTRATION_B66.md` with addendum 1 (28 short files without a defined burst rate kept out of the classes, before any error). CPU, stored errors; run by an AI agent under the author's supervision (`experiments/b66_regimes/run_b66.py`), output `docs/paper/b66_regimes.{md,json}`. Checks (a) to (d) passed. Classes by burst onsets per second (B.31 detector as in B.54): A no burst 251 discharges (median T_i 629 eV), B up to the median non-zero rate 0.719/s 201 (607 eV), C above 159 (335 eV).
+
+| statement | increment over the twin | verdict |
+|---|---|---|
+| R1 class A | +0.056 [-0.008, +0.108] | not met |
+| R2 class C | +0.025 [-0.009, +0.052] | not met |
+| R3 inter-burst phase of B and C | +0.050 [+0.027, +0.075] | met |
+| R4 class A minus class C | +0.030 [-0.028, +0.082] | not met |
+
+Reported: class B +0.072 [+0.038, +0.105]; over the causal GP A +0.060 [-0.006, +0.113], B +0.109, C +0.091 [+0.059, +0.119]; KFX over KF0 A +0.078, B +0.069, C +0.018. Class by temperature third: class C is mostly in the coldest third (81 of 159) and its increment there is +0.000 [-0.046, +0.030]; in class A the coldest third gives -0.004 [-0.062, +0.053].
+
+Expectations: class A was expected colder; class C is the cold one. R2 expected met; not met.
+
+Reading. The increment over the twin is established between bursts (inter-burst rows of the bursting discharges) and in the middle class B; in neither the burst-free nor the frequent-burst class alone is its interval clear of zero, and the two do not differ. The cold rows carry no increment whatever the class (the two-way table), so the classes do not show a regime effect separate from the temperature level. Over the causal GP every class is positive at the point and B and C exclude zero. By the rule: the paper gives a small table by class, says that the gain is not tied to one class and is established between bursts, and claims no regime effect separate from the temperature level.
+
