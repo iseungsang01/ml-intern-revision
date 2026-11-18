@@ -59,6 +59,7 @@ SOURCES = (
     "docs/paper/b53_components.md",
     "docs/paper/b61_absolute_robust.md",
     "docs/paper/b61_blip_dose.md",
+    "docs/paper/b62_beam_return.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
