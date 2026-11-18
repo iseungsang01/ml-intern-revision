@@ -13,7 +13,10 @@ docs/paper/ppcf/kstar_regime.json (rounded to three decimals), kstar_level.json,
 figure sources computed for this paper (fig_missing.json, fig_gap.json), docs/paper/mast_gate_addendum2.md,
 docs/paper/b29_causal.md, PREREGISTRATION_B29.md, docs/paper/mast_edge.md (+ .json for\ncounts), docs/paper/b29_addendum1.md, PREREGISTRATION_B29_ADDENDUM1.md, docs/paper/mast_coupling.md,
 PREREGISTRATION_MAST_COUPLING.md, fig_trace.json and docs/paper/file_rules.md (how the 10 ms files
-relate to the raw deliveries; ces_prediction/analyze_file_rules.py).
+relate to the raw deliveries; ces_prediction/analyze_file_rules.py), and the md files of
+the later batches (B.39 to B.60, among them b53_components.md, b56_kfx.md, b57_yardsticks.md and
+b60_relative_error.md; the floor of B.57 and the lower end of T10 of B.60 are taken from their
+json, as make_tables.py rounds them).
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -155,6 +158,10 @@ def main():
         (ROOT / "docs/paper/b54_pooled_rows.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b55_sample_timing.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b58_blip_calibration.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b53_components.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b56_kfx.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b57_yardsticks.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b60_relative_error.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),
@@ -177,6 +184,11 @@ def main():
             extra += ["%+.3f" % v for v in b39["P"][k]]
         for v in b39["P"]["causal_over"].values():
             extra += ["%+.3f" % x for x in v]
+    # B.57 and B.60: numbers that the paper prints rounded differently from the md (make_tables.py)
+    b57 = json.loads((ROOT / "docs/paper/b57_yardsticks.json").read_text(encoding="utf-8"))
+    extra += ["%.1f" % v for v in b57["all"]["rms"]]
+    b60 = json.loads((ROOT / "docs/paper/b60_relative_error.json").read_text(encoding="utf-8"))
+    extra.append("%+.4f" % b60["statements"]["T10"]["value"][1])
     for k in ("T_i", "V_rot"):
         r = kr[k]
         extra += ["%+.3f" % v for v in [r["median"], *r["ci95"], *r["quartiles"]]]

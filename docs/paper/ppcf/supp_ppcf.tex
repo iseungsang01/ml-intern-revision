@@ -65,7 +65,11 @@ raw beam-emission stream and the two sources of a large departure of the beam em
 rotation. \S\ref{sec:character}: the median row, a 20-parameter filter read from the
 network, and a second stage that corrects the estimate. Figures drawn for the first manuscript label hold as ``persistence'' in their legends. \S\ref{sec:target} to \S\ref{app:registered}: what the main text gives in summary (the files and
 the reported value, the structure and the design choices of the estimator, the numbers of each
-split for the row-level readouts, and the table of registered statements). \S\ref{app:registration} to
+split for the row-level readouts, the four-split ledger of the main batch with its ablations
+and the average of three initialisations (\S\ref{sec:splits}), the five-parameter filter
+(\S\ref{sec:filter}), the floor and the persistence of the correction
+(\S\ref{sec:yardsticks}), relative error (\S\ref{sec:relerr}), networks that read one
+component of the BES array (\S\ref{sec:components}), and the table of registered statements). \S\ref{app:registration} to
 \S\ref{app:vrotrule}: registration history and further readouts.
 
 % =========================================================================
@@ -923,7 +927,9 @@ with the lowest median error are therefore different, and an application has to 
 which it needs. Which rows carry the mean gain, and whether they are changes of the
 plasma or fit excursions, cannot be decided without per-exposure fit errors.
 
-\paragraph{A 20-parameter reading of the ion-temperature branch.} The weights of the
+\paragraph{A 20-parameter reading of the ion-temperature branch.} (Superseded by the
+five-parameter filter of \S\ref{sec:filter}, whose form was fixed before its confirmation
+set was read; kept as the earlier reading.) The weights of the
 trained networks carry no stable reading, but the input--output
 response~\citep{Maheswaranathan2020HowRecurrent} does: the \Ti{} output is an
 exponentially weighted average of past observed \Ti{} plus the high-pass fast-channel
@@ -1130,8 +1136,9 @@ and the choices that were not varied.
 \section{Row classes, value rules and levels: the numbers of each split}
 \label{sec:rows}
 
-The main text gives the readouts of \S\ref{sec:res:diag} and \S\ref{sec:res:where} as ranges over
-the four splits. The numbers of each split follow, in the order of the splits of
+The main text gives the readouts of \S\ref{sec:res:diag} and \S\ref{sec:res:where} on the rows of
+the pooled cross-validation (the last paragraphs of this section). The numbers of each of the
+four splits follow, in the order of the splits of
 Table~\ref{tab:primary}. The first paragraph uses the ablation networks of the main batch. The
 others use the estimator of the main batch, in each split the initialisation with
 the seed of the split; these readouts were first made with a training of the same
@@ -1469,6 +1476,7 @@ inputs, not what a network trained on them would reach.
   all discharges of the pooled readout.}
   \label{tab:instant}
   \footnotesize
+  \resizebox{\linewidth}{!}{%
   \begin{tabular}{lccc}
     \toprule
     Fast-channel input & Change of the estimate (eV, r.m.s.) & Change skill & Skill over the twin \\
@@ -1488,7 +1496,7 @@ inputs, not what a network trained on them would reach.
     Mirnov alone one frame old & 12.7 & $-0.0010$ $[-0.0037, +0.0007]$ & $+0.047$ $[+0.021, +0.072]$ \\
     Mirnov at its training mean & 18.5 & $+0.0051$ $[-0.0021, +0.0166]$ & $+0.053$ $[+0.028, +0.078]$ \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}}
 \end{table}
 
 \paragraph{Beam blips as a calibration of the response to the beam.} The definitions
@@ -1518,6 +1526,313 @@ on windows that contain a blip the same ratio is $+0.188$ $[+0.112, +0.262]$, be
 the one half required, so at this block length the statistic does not see a heating
 response where one is known to be, and the two statements on the lag are withdrawn as
 uninformative, as registered.
+
+% =========================================================================
+\section{The four file-level splits of the main batch}
+\label{sec:splits}
+
+The main text reads the main batch on the pooled cross-validation. The four file-level
+splits (96 test discharges each) are the secondary readout of the same batch; their numbers,
+the ablation networks and the average of three initialisations follow
+(Tables~\ref{tab:primary} and~\ref{tab:ablation}). The interval of a split draws one
+of the three initialisations of the estimator and, independently, of the twin, and
+then resamples the test discharges~\citep{Agarwal2021Deep}; a statement about the four
+splits holds if its interval excludes zero on at least three of them.
+
+\begin{table}[h]
+  \centering
+  \caption{KSTAR, \Ti{}, values above 3\,keV excluded: mean-squared-error skill of the
+  causal recurrent estimator with 95\% intervals (bold: the interval excludes zero),
+  and absolute errors, on the test rows of four file-level
+  splits\ifpooled\ and in the pooled cross-validation of 639 discharges\fi.
+  \ifthreeinit Three initialisations per split: each interval draws an initialisation
+  (of the estimator and, independently, of the twin) as well as the discharges, and
+  the absolute errors of the estimator and of the twin are means over the three
+  initialisations.\else One initialisation per split.\fi\ifaverage\ For the average
+  of the three initialisations the interval resamples the discharges.\fi\ifgradingreadouts\
+  The rows on the linear filter use one initialisation of the estimator, the rows with
+  three earlier values and a ten-row window, and resampled discharges.\fi}
+  \label{tab:primary}
+  \footnotesize
+  \TabPrimary
+\end{table}
+
+\paragraph{Single trainings.} Over the causal GP the skill is \SoneRange{} on the four
+splits, and it is positive in \SoneRunsPos{} of the \RunsWord{} trainings
+(\SoneRuns{}). The registered interval is above zero on \SoneAbove{} splits, so the
+statement registered for the four splits \SoneVerdict{}. Between the three
+initialisations of a split the skill differs by \SpreadRange{}. Over hold the skill is
+\OverHoldRange{} (\OverHoldAbove{} intervals above zero). The fast-channel increment
+is \StwoRange{}, positive in \StwoRunsPos{} of the \RunsWord{} pairs of the same
+initialisation (\StwoRuns{}); the registered interval is above zero on \StwoAbove{}
+splits and the statement \StwoVerdict{}. The twin varies with the initialisation
+(\TwinGpRuns{} over the causal GP; two trainings stopped after 11 and 12 epochs), so a
+single-initialisation increment depends on its twin. Against the offline GP the skill
+is \OverOffGpRange{} and the interval includes zero on every split. On a split by time
+an earlier training has $+0.103$ to $+0.112$ over the causal GP (\S\ref{sec:fast}).
+\ifgradingreadouts A linear filter on the last three CES values, fitted on the training
+discharges, gains \LtwoRange{} when it also reads the fast channels (\LtwoAbove{}
+intervals above zero); the estimator has \LoneRange{} over that filter (\LoneAbove{};
+\S\ref{sec:rows}).\fi
+
+\ifaverage
+\paragraph{The average of three initialisations.} One estimator at three steps of
+0.49\,ms per frame, whose readout was registered after the two statements on a single
+training had failed, has \EoneRange{} over the causal GP and \EtwoRange{} over the same
+average of the three twins on the four splits (every interval above zero;
+Table~\ref{tab:primary}).
+\fi
+
+\paragraph{Ablations.} Three networks with one group of fast channels removed, one
+initialisation each, were scored on the same rows as the twin
+(Table~\ref{tab:ablation}). The network that reads BES and the CES history has
+\DtwoRange{} over the twin (\DtwoAbove{} intervals above zero); the one that reads ECEI
+and the CES history has \DoneRange{} (\DoneAbove{}). The full estimator is not
+separated from the BES network (\FullBesRange{}, \FullBesExcl{} intervals excluding
+zero) and has \FullEceiRange{} over the ECEI network (\FullEceiExcl{}). By the rule
+fixed beforehand, the increment is stated as resting on the beam-emission channels.
+
+\begin{table}[h]
+  \centering
+  \caption{KSTAR, \Ti{}, values above 3\,keV excluded: ablation of the fast-channel
+  groups. Mean-squared-error skill with 95\% intervals on the test rows of the four
+  splits (bold: the interval excludes zero); one initialisation per network.}
+  \label{tab:ablation}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabAblation}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.52\linewidth]{fig_trace_causal}
+  \caption{Example traces through gaps (first initialisation of the second split).
+  Circles: reported \Ti{}; shaded: grid rows without a usable \Ti{}; dotted: an absent
+  frame (beam blip). Lines: estimates from CES values before each row; the recurrent
+  estimator also reads the fast channels up to the row. (a, b)
+  Fixed before any trace was drawn: the two discharges whose edge is analysed
+  in~\citep{Heo2025ExperimentalIdentification} and in each the window of 65 rows with
+  the most rows lacking \Ti{}; the reported \Ti{} moves by more than 1\,keV between
+  adjacent rows there, and how much of that is the plasma cannot be decided without
+  fit errors. (c) Added afterwards: the test
+  discharge of the same split whose row-to-row scatter of the reported \Ti{} is the
+  median of 46 candidates. Root-mean-square errors on the scored rows (estimator,
+  causal GP, hold): (a) 277.4, 283.4 and 282.8\,eV; (b) 358.0, 378.9 and 448.1\,eV;
+  (c) 71.5, 63.6 and 80.7\,eV. On the typical discharge (c) the estimator is not below
+  the causal GP.}
+  \label{fig:tracemain}
+\end{figure}
+
+% =========================================================================
+\section{The five-parameter filter}
+\label{sec:filter}
+
+Registered; CPU only, no network trained or run. The filter is defined in
+\S\ref{sec:methods:est} of the main text: state $\log\Ti{}$, a random walk with process
+variance $q$ per 10\,ms; observation variance $r$; a Huber-type update weighted by
+$\min(1, k\sqrt{S}/|v|)$; a drive $b_c\,\Delta c_t + b_g\,\Delta g_t$ in the prediction
+step, with $g$ the mean logarithm of column 07 of the BES array minus that of column 05
+and each change clipped at 0.2. The output for row $t$ uses CES values before $t$ and
+BES up to $t$; altering the CES values from row $t$ on leaves it unchanged (a
+registered check). Per fold the parameters minimise the mean squared error in eV on the
+discharges that are not in the test fold: first $q$, $r$, $k$ without drive (KF0), then
+the gains with those held (Kc: $b_c$ only; Kg: $b_g$ only; KFX: both).
+
+\paragraph{Development and confirmation.} The specification was developed by a delegated
+agent on re-partition r2 of the pooled cross-validation before it was registered, with
+two declared forking paths: the agent saw the test error of a filter with an unclipped
+drive once on r2 and then added the clip, and a joint fit of all five parameters was
+abandoned there because it degenerated in three of five folds. r2 is therefore the
+development set and is not pooled into the confirmation; every statement is read on
+re-partitions r3 to r9. The clip is fixed at 0.2, which every fold of r2 chose; refits
+at 0.1 and 0.4 give $+0.048$ $[+0.040, +0.056]$ and $+0.048$ $[+0.039, +0.057]$ for
+KFX over KF0.
+
+\paragraph{Statements (r3 to r9).} All six hold. KFX over KF0 (KX1): \KXone{}. Kg over
+KF0 (KX2): \KXtwo{}. The recurrent estimator over KFX (KX3): \KXthree{}. KF0 and the
+causal GP are equivalent (KX4, 90\% interval inside $\pm0.02$): \KXfour{}. Median
+absolute error of KFX over that of hold (KX5): \KXfive{}. KFX over KF0 outside the ten
+rows after an absent frame (KX6): \KXsix{}. Reported: the twin over KF0 \TwKF{}; KFX
+over the twin \KFXTw{}; Kc over KF0 \KcKF{}; KFX over the causal GP \KFXGp{} and
+against the offline GP \KFXOff{}; in the rows not flagged by the value rules KFX over KF0
+\KXplain{}. Median absolute errors (eV): KFX 41.8, Kc 41.1, KF0 43.3, Kg 43.5, causal GP
+44.1, hold 45.4, recurrent estimator 45.8, twin 46.3, offline GP 37.5. Fitted gains of
+KFX on the 35 confirmation folds: $b_c$ \GainC{}, $b_g$ \GainG{}.
+
+\paragraph{Thirds by median \Ti{}.} KFX over KF0 is \KXthirdCold{}, \KXthirdMid{} and
+\KXthirdHot{} from the coldest to the hottest third; the recurrent estimator over KFX
+\KXthreeThirdCold{}, \KXthreeThirdMid{} and \KXthreeThirdHot{}. The filter, like the
+network, has no increment in the coldest third.
+
+\paragraph{Four splits and the split by time.} On the four splits (filters fitted on
+each split's training discharges; Table~\ref{tab:filtersplits}) KX1, KX2, KX5 and KX6
+hold on four of four, KX3 on two of four (does not hold), and KX4 on none (the 90\%
+intervals of 96 discharges are wider than the band of $\pm0.02$). On the split by time
+(95 test discharges) KFX has \KXtime{} over KF0, Kg $+0.018$ $[+0.009, +0.028]$ over
+KF0, KF0 $+0.060$ $[+0.022, +0.091]$ over the causal GP and KFX $+0.085$
+$[+0.044, +0.118]$; the earlier causal variant (four initialisations, one drawn per
+resample) has $+0.024$ $[-0.004, +0.052]$ over KFX there.
+
+\begin{table}[h]
+  \centering
+  \caption{The five-parameter filter on the four file-level splits (skills with 95\%
+  intervals, bold: the interval excludes zero; KX3 draws one of the three
+  initialisations of the estimator; the filters carry none).}
+  \label{tab:filtersplits}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabFilterSplits}
+\end{table}
+
+\emph{Reading.} The fast-channel increment does not need a network, a twin or an
+initialisation: two gains on the changes of two summaries of the BES array give the
+same size as the network over its twin, with an interval about two and a half times
+narrower, and two thirds of it come from the radial difference. What the network adds
+over the filter is of the size of what its twin adds over KF0, a better use of the CES
+history. With the same inputs the filter lowers the median below that of hold, and the
+network does not. The 20-parameter reading of \S\ref{sec:character}, whose form was
+read from the network on the rows that score it, is superseded by this filter, which was
+fixed before its confirmation set was read. \emph{Limits.} The confirmation
+re-partitions re-divide the discharges on which the specification was developed; the
+clip is an ad hoc robustification; the filter reads two summaries of BES and no ECEI.
+
+% =========================================================================
+\section{The floor, the gap to the offline estimate, and persistence}
+\label{sec:yardsticks}
+
+Registered; CPU only, the 40 stored twins run forward for their signed estimates. Rows
+of the pooled cross-validation, re-partitions r2 to r9; interval: a re-partition drawn,
+then its discharges resampled (2,000 draws). \emph{Floor.} On 1{,}085{,}452 triples of
+consecutive scored rows 10\,ms apart, $s^2$, minus the covariance of successive
+increments of the reported value, is 18{,}415 $[15{,}969, 21{,}226]$\,eV$^2$ (root mean
+square \FloorRms\,eV). It is a lower bound of the mean frame-to-frame independent
+variance if the increments of the underlying value are not negatively correlated.
+\emph{Removable-error skill} of $A$ over $R$: $(\mathrm{MSE}_R - \mathrm{MSE}_A)/
+(\mathrm{MSE}_R - s^2)$. \emph{Gap closure} of $A$: $(\mathrm{MSE}_\mathrm{GP} -
+\mathrm{MSE}_A)/(\mathrm{MSE}_\mathrm{GP} - \mathrm{MSE}_\mathrm{offline\,GP})$.
+\emph{Persistence}: for a correction $d_t = A_t - B_t$, $\beta_h$ is the regression
+coefficient of $y_{t+h} - B_t$ on $d_t$, on rows whose frames $t$ to $t+h$ are
+consecutive and scored, and $\rho_h = \beta_h/\beta_0$. A correction that describes the
+plasma should keep $\rho_1$ near the reference of a correction that cannot know the fit
+of frame $t$ (the twin minus KF0); one that describes the fit of frame $t$ should not.
+
+\paragraph{Statements.} All five hold. Every estimator's mean squared error is above the
+floor (N1, Table~\ref{tab:floor}). The recurrent estimator closes more than half of the
+gap between the causal and the offline GP (N2: \GapNet{}). Its fast-channel correction
+lasts into the next frame (N3: $\rho_1$ = \RhoNet{}), as does the filter's (N4:
+\RhoKFX{}), and the part that does not last does not shrink further three frames later
+(N5: $\rho_3 - \rho_1$ = \RhoDrop{}; Table~\ref{tab:persist}).
+
+\begin{table}[h]
+  \centering
+  \caption{Floor, removable-error skill and gap closure on the rows of the pooled
+  cross-validation (eight re-partitions), on all rows and outside the ten rows after an
+  absent frame, with 95\% intervals.}
+  \label{tab:floor}
+  \footnotesize
+  \TabFloor
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Persistence of three corrections into later, independently fitted frames
+  ($\beta_0$: regression coefficient of the reported value of the frame on the
+  correction; $\rho_h = \beta_h/\beta_0$), with 95\% intervals.}
+  \label{tab:persist}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabPersist}
+\end{table}
+
+\emph{Reading.} Three quarters of the mean squared error of the recurrent estimator,
+and of the offline GP, is scatter of the reported value that no estimator of the
+present frame removes; skills that carry the floor in numerator and denominator make
+the gain look several times smaller than its share of the removable error. \RhoNet{} of
+the fast-channel correction lasts into the next frame against \RhoRef{} for a
+correction from the CES history alone, so the part specific to the frame (its fit, or a
+fluctuation inside it that the fast sample sees) is about a fifth to a quarter, 0.31
+below the reference. A bias shared by consecutive frames passes this test. The network's
+correction overshoots ($\beta_0$ below one), the filter's does not, which is the
+measured basis of the shrinking second stage of \S\ref{sec:character}. \emph{Limits.}
+The floor is a lower bound under an assumption that cannot be tested without fit
+errors; heavy tails make it wide. The network's signed estimates are those of the CPU
+run of \S\ref{sec:rows}, which differ from the stored ones by 0.026\,eV at the median.
+
+% =========================================================================
+\section{Error as a share of the reported value}
+\label{sec:relerr}
+
+Registered; CPU only, stored errors. The relative error of a row is the absolute error
+over the reported value of the row; a share within 10\% or 20\% is a ratio of
+per-discharge sums under the two-level bootstrap of the pooled readout (2,000 draws).
+The statements on the recurrent estimator use the rows of re-partitions r2 to r9; those
+on the filters, registered after the first were read and before any relative error of a
+filter was computed, use r3 to r9, on which every estimator is read again.
+
+\paragraph{Recurrent estimator.} Within 20\%: estimator \ShareNetTwenty{}, causal GP
+\ShareGpTwenty{}, hold 0.749 $[0.728, 0.770]$, offline GP 0.805 $[0.785, 0.824]$.
+Within 10\%: \ShareNetTen{} and \ShareGpTen{}. The estimator is above the causal GP
+within 20\% (T20): \TTwenty{}, does not hold. It is above hold (T20h): \TTwentyHold{},
+holds. Within 10\% it is not more than 0.02 below the causal GP (T10): \TTen{}, lower end
+\TTenLow{}, does not hold. Of 1{,}536{,}645 scored rows 20{,}865 (0.0136) have a
+reported value below 50\,eV; within 20\% of them lie 0.001 of the estimates of the
+network, 0.047 of the causal GP and 0.075 of hold.
+
+\paragraph{Filters (r3 to r9).} KFX \ShareKFXTwenty{} within 20\% and \ShareKFXTen{}
+within 10\%. All four statements hold: KFX is above the causal GP within 20\% (F20:
+\FTwenty{}) and within 10\% (F10: \FTen{}), above KF0 within 20\% (F20x: \FTwentyX{}),
+and in the coldest third not more than 0.02 below the causal GP (F20c: \FTwentyCold{}).
+Table~\ref{tab:relerr} gives the strata.
+
+\begin{table}[h]
+  \centering
+  \caption{Share of frames within 10\% and 20\% of the reported value: differences from
+  the causal GP with 95\% intervals, by stratum (recurrent estimator: re-partitions r2 to
+  r9; KFX: r3 to r9; thirds and row classes as in \S\ref{sec:rows}).}
+  \label{tab:relerr}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabRelErr}
+\end{table}
+
+\emph{Reading.} Measured as a share of the value, the recurrent estimator is no more
+accurate than the causal GP: its squared-error gain is made in eV on frames with large
+errors (hot discharges, after beam interruptions) and does not move more frames into a
+relative band; in the coldest third and on small values it is worse. An estimator of
+the logarithm with the same inputs does raise the share of frames within 10\% and 20\%
+above that of the CES history alone, including the coldest third; the gain is one or
+two frames in a hundred. \emph{Limits.} The reported value carries its own scatter, so
+a share within 10\% of it is bounded by that scatter and is not a share within 10\% of
+the ion temperature; published shares of real-time analyses use an offline analysis of
+the same spectra as the reference.
+
+% =========================================================================
+\section{Networks that read one component of the BES array, and a fixed budget}
+\label{sec:components}
+
+Registered; four splits, one initialisation (the split seed), on the test rows of the
+main batch. Arm C gives the history-only twin the common mode $c$, the differences
+between channels, or both as extra inputs of its \Ti{} branch. Arm F trains the
+estimator and its twin for a fixed 40 epochs with no stopping rule and scores the
+weights of epoch 40 (Table~\ref{tab:components}).
+
+\begin{table}[h]
+  \centering
+  \caption{Component networks and the fixed training budget: skills with 95\% intervals
+  over 2,000 resamples of the test discharges (one initialisation, so the spread between
+  initialisations is not in them; bold: the interval excludes zero).}
+  \label{tab:components}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabComponents}
+\end{table}
+
+\paragraph{Statements.} The network that reads only the differences has skill over the
+twin (C1): \CompDRange{}, \CompDAbove{} intervals above zero, does not hold. The network
+that reads only the common mode (C2): \CompCRange{}, \CompCAbove{}, holds. Under the
+fixed budget the estimator has \FixTwinRange{} over its twin (F1, \FixTwinAbove{}) and
+\FixGpRange{} over the causal GP (F2, \FixGpAbove{}); both hold. \emph{Reading.} By the
+registered rule: a trained network of this kind needs the common mode, in which the
+beam and the density are not separated; that the differences carry most of what the
+array adds is shown by the second stage of \S\ref{sec:rows} and by the filter with the
+radial difference alone (\S\ref{sec:filter}), which have the power of the pooled rows
+or of a fixed form, and a network of this kind does not extract it on single splits.
+The increment does not rest on early stopping.
 
 % =========================================================================
 \section{Registered statements used in the main text}
@@ -1572,6 +1887,16 @@ in \S\ref{app:registration}.
         Values above 3\,keV are more frequent at low beam emission & holds & \S\ref{sec:data:kstar} \\
     The reported value steps across a beam-off frame by more than over the same span elsewhere; by more than the ECEI level does & do not hold & \S\ref{sec:data:kstar} \\
     The frame-to-frame component depends on the age of the last beam-off frame & does not hold & \S\ref{sec:data:kstar} \\
+    Five-parameter filter (r3 to r9): KFX over KF0; Kg over KF0; the network over KFX; KF0 equivalent to the causal GP; median of KFX below that of hold; KFX over KF0 outside the rows after a blip & hold & \S\ref{sec:res:main}, \S\ref{sec:filter} \\
+    Every estimator above the floor; the network closes more than half of the gap to the offline GP; the fast-channel correction lasts into the next frame (network; filter); the part that does not last does not shrink further & hold & \S\ref{sec:res:main}, \S\ref{sec:res:use} \\
+    More frames within 20\% of the reported value than the causal GP (network) & does not hold & \S\ref{sec:res:main} \\
+    The same against hold (network) & holds & \S\ref{sec:res:main} \\
+    Within 10\% not more than 0.02 below the causal GP (network) & does not hold & \S\ref{sec:res:main} \\
+    KFX above the causal GP within 20\% and within 10\%; above KF0 within 20\%; in the coldest third not more than 0.02 below the causal GP & hold & \S\ref{sec:res:main}, \S\ref{sec:res:where} \\
+    A network that reads only the differences between BES channels has skill over the twin & does not hold & \S\ref{sec:res:diag} \\
+    A network that reads only the common mode has skill over the twin; under a fixed budget of 40 epochs the estimator has skill over its twin and over the causal GP & hold & \S\ref{sec:res:diag} \\
+    With the fast channels one frame old the increment remains & does not hold & \S\ref{sec:res:diag} \\
+    Samples taken one raw step, 0.5\,ms or 2\,ms earlier give an equivalent error & do not hold & \S\ref{sec:res:use} \\
     \bottomrule
   \end{tabular}
 \end{table}

@@ -5,6 +5,13 @@ and writes docs/paper/ppcf/b39_generated.tex: \\ifpooled, the two tables (\\TabP
 \\TabAblation) and the macros used in the prose.  Nothing is typed by hand; the numbers are
 printed with the formats of b39_primary.md so that check_numbers.py finds them there.
 
+Also reads b56_kfx.json (five-parameter filter), b57_yardsticks.json (floor, removable error,
+persistence), b60_relative_error.json (relative error, with its addendum on the filters) and
+b53_components.json (component networks, fixed budget) and writes the main table of the main
+text (\\TabMain, \\TabMainB), the supplement tables (\\TabFilterSplits, \\TabFloor, \\TabPersist,
+\\TabRelErr, \\TabComponents) and the macros of the prose. \\TabPrimary and \\TabAblation (four
+splits) are now used by the supplement only.
+
 Run from the repo root:  py docs/paper/ppcf/make_tables.py
 """
 import json
@@ -191,6 +198,194 @@ def main():
         for name, v in (("Lone", LF1), ("Ltwo", LF2)):
             mac(name + "Range", rng(v))
             mac(name + "Above", above(v))
+
+    # ---------------------------------------------------------------------------------------
+    # B.56 (five-parameter filter), B.57 (floor, removable error, persistence), B.60 (relative
+    # error, with its addendum on the filters) and B.53 (component networks, fixed budget):
+    # the main table of the main text (\TabMain) and the macros of the prose.
+    # ---------------------------------------------------------------------------------------
+    K = json.loads((ROOT / "docs/paper/b56_kfx.json").read_text(encoding="utf-8"))
+    Y = json.loads((ROOT / "docs/paper/b57_yardsticks.json").read_text(encoding="utf-8"))
+    R = json.loads((ROOT / "docs/paper/b60_relative_error.json").read_text(encoding="utf-8"))
+    C = json.loads((ROOT / "docs/paper/b53_components.json").read_text(encoding="utf-8"))
+    assert pooled, "the main table needs the pooled readout of B.39"
+    kc, ya, Pc = K["confirm"], Y["all"], P["causal_over"]
+    ra = R["addendum1"]["cells_r3_r9"]["all rows"]["value"]
+
+    def rat(v):
+        return f"{v[0]:.3f} $[{v[1]:.3f}, {v[2]:.3f}]$"
+
+    def sk(v):
+        return plain(v)
+
+    # filter (r3 to r9)
+    for name, key in (("KXone", "kfx_over_kf0"), ("KXtwo", "kg_over_kf0"), ("KXthree", "A_over_kfx"),
+                      ("KcKF", "kc_over_kf0"), ("TwKF", "Tw_over_kf0"), ("KFXTw", "kfx_over_Tw"),
+                      ("KFXGp", "kfx_over_G"), ("KFXOff", "kfx_over_O"), ("KFzeroGp", "kf0_over_G"),
+                      ("NetGpConfirm", "A_over_G"), ("NetTwConfirm", "A_over_Tw")):
+        mac(name, sk(kc[key]))
+    mac("KXfour", sk(kc["kf0_over_G_90"]))
+    mac("KXfive", rat(kc["median_ratio_kfx_over_hold"]))
+    mac("KXsix", sk(K["confirm_quiet"]["kfx_over_kf0"]))
+    mac("KXplain", sk(K["confirm_plain"]["kfx_over_kf0"]))
+    for name, key in (("Cold", "confirm_third_coldest"), ("Mid", "confirm_third_middle"),
+                      ("Hot", "confirm_third_hottest")):
+        mac("KXthird" + name, sk(K[key]["kfx_over_kf0"]))
+        mac("KXthreeThird" + name, sk(K[key]["A_over_kfx"]))
+    medk = kc["median_abs_eV"]
+    mac("MedKFX", f"{medk['kfx']:.1f}")
+    mac("MedKFzero", f"{medk['kf0']:.1f}")
+    mac("MedHoldConfirm", f"{medk['H']:.1f}")
+    mac("MedNetConfirm", f"{medk['A']:.1f}")
+    mac("MedGpConfirm", f"{medk['G']:.1f}")
+    conf_units = [u for u in K["params"] if u[:2] in {f"r{i}" for i in range(3, 10)}]
+    bcs = [K["params"][u]["b_kfx"][0] for u in conf_units]
+    bgs = [K["params"][u]["b_kfx"][1] for u in conf_units]
+    mac("GainC", f"{min(bcs):.3f} to {max(bcs):.3f}")
+    mac("GainG", f"{min(bgs):.3f} to {max(bgs):.3f}")
+    ks = K["statements_four_splits"]
+    mac("KXoneSplits", WORD[ks["KX1"]["of_four"]] + " of four")
+    mac("KXthreeSplits", WORD[ks["KX3"]["of_four"]] + " of four")
+    mac("KXtime", sk(K["time_split"]["kfx_over_kf0"]))
+    # floor, removable error, gap closure, persistence (r2 to r9)
+    mac("FloorRms", "{:.1f} $[{:.1f}, {:.1f}]$".format(*ya["rms"]))
+    for name, key in (("FloorNet", "mse_over_s2_A"), ("FloorTwin", "mse_over_s2_Tw"), ("FloorGp", "mse_over_s2_G"),
+                      ("FloorHold", "mse_over_s2_H"), ("FloorOff", "mse_over_s2_O"), ("FloorKFX", "mse_over_s2_KX"),
+                      ("FloorKFzero", "mse_over_s2_K0"), ("GapNet", "gap_closure_A"), ("GapTwin", "gap_closure_Tw"),
+                      ("GapKFX", "gap_closure_KX"), ("RhoNet", "net_twin_rho1"), ("RhoKFX", "kfx_kf0_rho1"),
+                      ("RhoRef", "twin_kf0_rho1"), ("BetaNet", "net_twin_beta0"), ("BetaKFX", "kfx_kf0_beta0")):
+        mac(name, rat(ya[key]))
+    for name, key in (("RemNetGp", "removable_A_over_G"), ("RemNetTwin", "removable_A_over_Tw"),
+                      ("RemKFXGp", "removable_KX_over_G"), ("RhoDrop", "net_twin_rho3_minus_rho1")):
+        mac(name, sk(ya[key]))
+    mac("ScatterShare", "{:.2f}".format(1 / ya["mse_over_s2_A"][0]))
+    # relative error (B.60: r2 to r9; addendum: r3 to r9)
+    rs, rc = R["statements"], R["cells"]
+    mac("TTwenty", sk(rs["T20"]["value"]))
+    mac("TTwentyHold", sk(rs["T20h"]["value"]))
+    mac("TTen", sk(rs["T10"]["value"]))
+    mac("TTenLow", f"{rs['T10']['value'][1]:+.4f}")
+    mac("TTwentyCold", sk(rc["low third by median T_i"]["diff"]["c-gp|0.20"]))
+    mac("TTwentyBlip", sk(rc["rows 1 to 3 after an absent frame"]["diff"]["c-gp|0.20"]))
+    av_ = rc["all rows"]["value"]
+    mac("ShareNetTwenty", rat(av_["c|0.20"]))
+    mac("ShareGpTwenty", rat(av_["gp|0.20"]))
+    mac("ShareNetTen", rat(av_["c|0.10"]))
+    mac("ShareGpTen", rat(av_["gp|0.10"]))
+    fs = R["addendum1"]["statements"]
+    for name, key in (("FTwenty", "F20"), ("FTen", "F10"), ("FTwentyX", "F20x"), ("FTwentyCold", "F20c")):
+        mac(name, sk(fs[key]["value"]))
+    mac("ShareKFXTwenty", rat(ra["kfx|0.20"]))
+    mac("ShareKFXTen", rat(ra["kfx|0.10"]))
+    # component networks and fixed budget (B.53, four splits, one initialisation)
+    cs = [C["splits"][s] for s in SEEDS]
+    for name, key in (("CompD", "C1_D_over_twin"), ("CompC", "C2_C_over_twin"),
+                      ("FixTwin", "F1_est_over_twin_fixed"), ("FixGp", "F2_est_over_gp_fixed")):
+        mac(name + "Range", rng([x[key] for x in cs]))
+        mac(name + "Above", above([x[key] for x in cs]))
+
+    def mrow(label, v, f=cell):
+        return f"    {label} & {f(v)} \\\\"
+
+    TM = ["\\newcommand{\\TabMain}{%", "  \\begin{tabular}{lc}", "    \\toprule",
+          "    \\multicolumn{2}{l}{\\emph{(a) Mean-squared-error skill}} \\\\", "    \\midrule",
+          "    \\multicolumn{2}{l}{Recurrent estimator over (eight re-partitions)} \\\\",
+          mrow("\\quad hold", Pc["persistence"]),
+          mrow("\\quad causal GP", P["P1_causal_over_gp"]),
+          mrow("\\quad history-only twin (fast-channel increment)", P["P2_causal_over_twin"]),
+          mrow("\\quad PCHIP (uses the next value)", Pc["pchip"]),
+          mrow("\\quad offline GP (uses the next value)", Pc["gp"]),
+          "    \\multicolumn{2}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\\\",
+          mrow("\\quad KFX over KF0 (fast-channel increment)", kc["kfx_over_kf0"]),
+          mrow("\\quad Kg (radial difference only) over KF0", kc["kg_over_kf0"]),
+          mrow("\\quad history-only twin over KF0", kc["Tw_over_kf0"]),
+          mrow("\\quad recurrent estimator over KFX", kc["A_over_kfx"]),
+          mrow("\\quad KFX over causal GP", kc["kfx_over_G"]),
+          "    \\bottomrule", "  \\end{tabular}}",
+          "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
+          "    \\emph{(b) Estimator} & MSE / floor & Median $|e|$ (eV) & Within 10\\% & Within 20\\% \\\\",
+          "    \\midrule"]
+    for label, fk, mk, rk in (("hold", "mse_over_s2_H", "H", "hold"),
+                              ("causal GP", "mse_over_s2_G", "G", "gp"),
+                              ("offline GP (uses the next value)", "mse_over_s2_O", "O", "off"),
+                              ("history-only twin", "mse_over_s2_Tw", "Tw", "t"),
+                              ("recurrent estimator", "mse_over_s2_A", "A", "c"),
+                              ("KF0 (filter, no fast channels)", "mse_over_s2_K0", "kf0", "kf0"),
+                              ("KFX (filter, BES drive)", "mse_over_s2_KX", "kfx", "kfx")):
+        TM.append(f"    {label} & {rat(ya[fk])} & {medk[mk]:.1f} & {rat(ra[rk + '|0.10'])} & "
+                  f"{rat(ra[rk + '|0.20'])} \\\\")
+    TM += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TM
+
+    # supplement: the filter on the four splits (B.56)
+    TF = ["\\newcommand{\\TabFilterSplits}{%", "  \\begin{tabular}{lccccc}", "    \\toprule",
+          "    Split & KX1: KFX over KF0 & KX2: Kg over KF0 & KX3: network over KFX & "
+          "KX5: median KFX / hold & KX6: KX1 not after a blip \\\\", "    \\midrule"]
+    for i, s in enumerate(SEEDS):
+        x = K["splits"][s]
+        TF.append(f"    {i + 1} & {cell(x['KX1'])} & {cell(x['KX2'])} & {cell(x['KX3'])} & {rat(x['KX5'])} & "
+                  f"{cell(x['KX6'])} \\\\")
+    TF += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TF
+    # supplement: floor, removable error, gap closure (B.57)
+    yq = Y["quiet"]
+    TY = ["\\newcommand{\\TabFloor}{%", "  \\begin{tabular}{lcc}", "    \\toprule",
+          "    & All rows & Rows not after an absent frame \\\\", "    \\midrule",
+          "    \\multicolumn{3}{l}{\\emph{Mean squared error over the floor}} \\\\"]
+    for label, k in (("hold", "H"), ("causal GP", "G"), ("PCHIP (uses the next value)", "P"),
+                     ("offline GP (uses the next value)", "O"), ("history-only twin", "Tw"),
+                     ("recurrent estimator", "A"), ("KF0", "K0"), ("KFX", "KX")):
+        TY.append(f"    \\quad {label} & {rat(ya['mse_over_s2_' + k])} & {rat(yq['mse_over_s2_' + k])} \\\\")
+    TY.append("    \\multicolumn{3}{l}{\\emph{Removable-error skill}} \\\\")
+    for label, k in (("recurrent estimator over the causal GP", "removable_A_over_G"),
+                     ("recurrent estimator over its twin", "removable_A_over_Tw"),
+                     ("recurrent estimator over hold", "removable_A_over_H"),
+                     ("KFX over the causal GP", "removable_KX_over_G"),
+                     ("KFX over the twin", "removable_KX_over_Tw"),
+                     ("KFX over hold", "removable_KX_over_H")):
+        TY.append(f"    \\quad {label} & {sk(ya[k])} & {sk(yq[k])} \\\\")
+    TY.append("    \\multicolumn{3}{l}{\\emph{Share of the gap between the causal and the offline GP closed}} \\\\")
+    for label, k in (("recurrent estimator", "gap_closure_A"), ("history-only twin", "gap_closure_Tw"),
+                     ("KFX", "gap_closure_KX"), ("KF0", "gap_closure_K0")):
+        TY.append(f"    \\quad {label} & {rat(ya[k])} & {rat(yq[k])} \\\\")
+    TY += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TY
+    TP = ["\\newcommand{\\TabPersist}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
+          "    Correction & $\\beta_0$ & $\\rho_1$ & $\\rho_3$ & $\\rho_3 - \\rho_1$ \\\\", "    \\midrule"]
+    for label, k in (("recurrent estimator minus twin (fast channels)", "net_twin"),
+                     ("KFX minus KF0 (fast channels)", "kfx_kf0"),
+                     ("twin minus KF0 (CES history only; reference)", "twin_kf0")):
+        TP.append(f"    {label} & {rat(ya[k + '_beta0'])} & {rat(ya[k + '_rho1'])} & {rat(ya[k + '_rho3'])} & "
+                  f"{sk(ya[k + '_rho3_minus_rho1'])} \\\\")
+    TP += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TP
+    # supplement: relative error by stratum (B.60 and its addendum)
+    ra_all = R["addendum1"]["cells_r3_r9"]
+    TR = ["\\newcommand{\\TabRelErr}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
+          "    & \\multicolumn{2}{c}{Recurrent estimator minus causal GP} & "
+          "\\multicolumn{2}{c}{KFX minus causal GP} \\\\",
+          "    Rows & within 10\\% & within 20\\% & within 10\\% & within 20\\% \\\\", "    \\midrule"]
+    for label, k in (("all rows", "all rows"), ("coldest third by median \\Ti{}", "low third by median T_i"),
+                     ("middle third", "middle third by median T_i"), ("hottest third", "high third by median T_i"),
+                     ("rows 1 to 3 after an absent frame", "rows 1 to 3 after an absent frame"),
+                     ("rows not flagged by the value rules", "rows not flagged by the value rules")):
+        dn, f = rc[k]["diff"], ra_all[k]["diff"]
+        TR.append(f"    {label} & {sk(dn['c-gp|0.10'])} & {sk(dn["c-gp|0.20"])} & {sk(f["kfx-gp|0.10"])} & "
+                  f"{sk(f['kfx-gp|0.20'])} \\\\")
+    TR += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TR
+    # supplement: component networks and fixed budget (B.53)
+    TC = ["\\newcommand{\\TabComponents}{%", "  \\begin{tabular}{lcccccc}", "    \\toprule",
+          "    & \\multicolumn{4}{c}{Over the history-only twin} & "
+          "\\multicolumn{2}{c}{Fixed budget of 40 epochs} \\\\",
+          "    Split & differences only & common mode only & both & BES network & "
+          "estimator over twin & estimator over causal GP \\\\", "    \\midrule"]
+    for i, x in enumerate(cs):
+        TC.append(f"    {i + 1} & {cell(x['C1_D_over_twin'])} & {cell(x['C2_C_over_twin'])} & "
+                  f"{cell(x['CD_over_twin'])} & {cell(x['bes_network_over_twin'])} & "
+                  f"{cell(x['F1_est_over_twin_fixed'])} & {cell(x['F2_est_over_gp_fixed'])} \\\\")
+    TC += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TC
 
     cols = "l" + "c" * (5 if pooled else 4)
     head = ("Pooled & " if pooled else "") + "Split 1 & Split 2 & Split 3 & Split 4"
