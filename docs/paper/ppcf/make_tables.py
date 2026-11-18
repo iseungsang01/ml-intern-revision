@@ -9,7 +9,9 @@ Also reads b56_kfx.json (five-parameter filter), b57_yardsticks.json (floor, rem
 persistence), b60_relative_error.json (relative error, with its addendum on the filters) and
 b53_components.json (component networks, fixed budget) and writes the main table of the main
 text (\\TabMain, \\TabMainB), the supplement tables (\\TabFilterSplits, \\TabFloor, \\TabPersist,
-\\TabRelErr, \\TabComponents) and the macros of the prose. \\TabPrimary and \\TabAblation (four
+\\TabRelErr, \\TabComponents) and the macros of the prose.  b64_two_stage.json (the two-stage
+estimator, r2 to r4) gives its block of \\TabMain, \\TabMainC, the supplement tables \\TabTwoPairs,
+\\TabTwoNan and \\TabTwoThirds and the macros of the abstract (\\TwoGp, \\TwoRmseAbs). \\TabPrimary and \\TabAblation (four
 splits) are now used by the supplement only.
 
 Run from the repo root:  py docs/paper/ppcf/make_tables.py
@@ -218,6 +220,12 @@ def main():
     def sk(v):
         return plain(v)
 
+    def ratc(v):
+        p = f"{v[0]:.3f}"
+        if v[1] > 1 or v[2] < 1:
+            p = f"\\mathbf{{{p}}}"
+        return f"${p}$ $[{v[1]:.3f}, {v[2]:.3f}]$"
+
     # filter (r3 to r9)
     for name, key in (("KXone", "kfx_over_kf0"), ("KXtwo", "kg_over_kf0"), ("KXthree", "A_over_kfx"),
                       ("KcKF", "kc_over_kf0"), ("TwKF", "Tw_over_kf0"), ("KFXTw", "kfx_over_Tw"),
@@ -324,22 +332,54 @@ def main():
     def rrow(label, v, hub=None, tri=None):
         return (f"    {label} & {cell(v)} & {cell(hub) if hub else '--'} & {cell(tri) if tri else '--'} \\\\")
 
+    # B.64: the two-stage estimator (network + second stage), pooled over r2 to r4 (PREREGISTRATION_B64.md,
+    # section 5: T1, T2 and T4 met -> it is the paper's estimator; T3 is its fast-channel increment)
+    T64 = json.loads((ROOT / "docs/paper/b64_two_stage.json").read_text(encoding="utf-8"))
+    ar, st64, md64 = T64["all_rows"], T64["statements"], T64["medians"]
+    assert all(st64[k]["holds"] for k in ("T1", "T2", "T4")), "B.64: the network stays the paper's estimator"
+    assert ar["skill_mse|c2|gp"] == st64["T2"]["value"] and ar["skill_mse|c2|t2"] == st64["T3"]["value"]
+
+    def r64(label, a, b):
+        return rrow(label, ar[f"skill_mse|{a}|{b}"], ar[f"skill_huber|{a}|{b}"], ar[f"skill_trim|{a}|{b}"])
+
+    d64 = ar["rmse_diff_eV|c2|gp"]
+    mac("TwoGp", sk(ar["skill_mse|c2|gp"]))
+    mac("TwoRmseAbs", f"{-d64[0]:.1f} $[{-d64[2]:.1f}, {-d64[1]:.1f}]$")
+    for i in range(1, 7):
+        mac("TwoVerdict" + "ABCDEF"[i - 1], "holds" if st64[f"T{i}"]["holds"] else "does not hold")
+    us = T64["seconds_per_row_second_stage"]
+    mac("TwoMicros", f"{us['v2'] * 1e6:.1f}")
+    mac("TwoMicrosTwin", f"{us['v2h'] * 1e6:.1f}")
+    mac("TwoFallback", f"{T64['fallback_rows_share']['c2']:.4f}")
+
     TM = ["\\newcommand{\\TabMain}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
           "    \\emph{(a) Skill} & Mean squared error & Huber (200\\,eV) & 1\\% of rows trimmed \\\\",
           "    \\midrule",
-          "    \\multicolumn{4}{l}{Recurrent estimator over (eight re-partitions, r2--r9)} \\\\",
+          "    \\multicolumn{4}{l}{Network, first stage, over (eight re-partitions, r2--r9)} \\\\",
           rrow("\\quad hold", Pc["persistence"], a29["skill_huber|c|hold"], a29["skill_trim|c|hold"]),
           rrow("\\quad causal GP", P["P1_causal_over_gp"], a29["skill_huber|c|gp"], a29["skill_trim|c|gp"]),
           rrow("\\quad history-only twin (fast-channel increment)", P["P2_causal_over_twin"],
                a29["skill_huber|c|t"], a29["skill_trim|c|t"]),
           rrow("\\quad PCHIP (uses the next value)", Pc["pchip"]),
           rrow("\\quad offline GP (uses the next value)", Pc["gp"], a29["skill_huber|c|off"], a29["skill_trim|c|off"]),
+          "    \\multicolumn{4}{l}{Two-stage estimator over (three re-partitions, r2--r4)} \\\\",
+          r64("\\quad hold", "c2", "hold"),
+          r64("\\quad causal GP", "c2", "gp"),
+          r64("\\quad two-stage twin (fast-channel increment)", "c2", "t2"),
+          r64("\\quad its first stage, the network", "c2", "c"),
+          r64("\\quad PCHIP (uses the next value)", "c2", "pchip"),
+          r64("\\quad offline GP (uses the next value)", "c2", "off"),
+          r64("\\quad KFX", "c2", "kfx"),
+          "    \\multicolumn{4}{l}{On the same rows (r2--r4)} \\\\",
+          r64("\\quad two-stage twin over the twin", "t2", "t"),
+          r64("\\quad network over its twin (first-stage increment)", "c", "t"),
+          r64("\\quad network over the offline GP", "c", "off"),
           "    \\multicolumn{4}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\\\",
           rrow("\\quad KFX over KF0 (fast-channel increment)", kc["kfx_over_kf0"],
                a39["skill_huber|kfx|kf0"], a39["skill_trim|kfx|kf0"]),
           rrow("\\quad Kg (radial difference only) over KF0", kc["kg_over_kf0"]),
           rrow("\\quad history-only twin over KF0", kc["Tw_over_kf0"]),
-          rrow("\\quad recurrent estimator over KFX", kc["A_over_kfx"]),
+          rrow("\\quad network over KFX", kc["A_over_kfx"]),
           rrow("\\quad KFX over causal GP", kc["kfx_over_G"], a39["skill_huber|kfx|gp"], a39["skill_trim|kfx|gp"]),
           "    \\bottomrule", "  \\end{tabular}}",
           "\\newcommand{\\TabMainB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
@@ -349,13 +389,80 @@ def main():
                                   ("causal GP", "mse_over_s2_G", "G", "gp", "gp"),
                                   ("offline GP (uses the next value)", "mse_over_s2_O", "O", "off", "off"),
                                   ("history-only twin", "mse_over_s2_Tw", "Tw", "t", "t"),
-                                  ("recurrent estimator", "mse_over_s2_A", "A", "c", "c"),
+                                  ("network (first stage)", "mse_over_s2_A", "A", "c", "c"),
                                   ("KF0 (filter, no fast channels)", "mse_over_s2_K0", "kf0", "kf0", "kf0"),
                                   ("KFX (filter, BES drive)", "mse_over_s2_KX", "kfx", "kfx", "kfx")):
         TM.append(f"    {label} & {ev(a39['rmse|' + bk])} & {rat(ya[fk])} & {medk[mk]:.1f} & "
                   f"{rat(ra[rk + '|0.20'])} \\\\")
     TM += ["    \\bottomrule", "  \\end{tabular}}"]
+    # (c) the two-stage estimator: absolute errors on all scored rows of r2 to r4 (B.64)
+    TM += ["\\newcommand{\\TabMainC}{%", "  \\begin{tabular}{lccccc}", "    \\toprule",
+           "    \\emph{(c) Estimator, r2--r4} & RMSE (eV) & Median $|e|$ (eV) & Median $|e|$ / hold & "
+           "Within 20\\% & Within 20\\%, minus causal GP \\\\", "    \\midrule"]
+    for label, k in (("hold", "hold"), ("causal GP", "gp"), ("offline GP (next value)", "off"),
+                     ("PCHIP (next value)", "pchip"), ("KFX (filter)", "kfx"),
+                     ("history-only twin", "t"), ("network (first stage)", "c"), ("two-stage twin", "t2"),
+                     ("two-stage estimator", "c2")):
+        mr = md64.get(f"median_ratio|{k}|hold")
+        dg = ar.get(f"share20_diff|{k}|gp")
+        TM.append(f"    {label} & {ev(ar['rmse|' + k])} & {ev(md64['median_eV|' + k])} & "
+                  f"{ratc(mr) if mr else '--'} & {rat(ar['share20|' + k])} & {cell(dg) if dg else '--'} \\\\")
+    TM += ["    \\bottomrule", "  \\end{tabular}}"]
     L += TM
+    # supplement: the two-stage estimator, every pair (B.64), the boosted model's own handling of missing inputs
+    # (addendum 1, reported), and the thirds by median T_i
+    pairs64 = (("two-stage over network (T1)", "c2", "c"),
+               ("two-stage over causal GP (T2)", "c2", "gp"),
+               ("network over causal GP", "c", "gp"),
+               ("two-stage over two-stage twin (T3)", "c2", "t2"),
+               ("network over twin", "c", "t"),
+               ("two-stage twin over twin (T6)", "t2", "t"),
+               ("two-stage twin over causal GP", "t2", "gp"))
+    TT = ["\\newcommand{\\TabTwoPairs}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+          "    Skill & mean squared error & Huber (200\\,eV) & 1\\% of rows trimmed \\\\", "    \\midrule"]
+    for label, a_, b_ in pairs64:
+        q = f"{a_}|{b_}"
+        TT.append(f"    {label} & {cell(ar['skill_mse|' + q])} & {cell(ar['skill_huber|' + q])} & "
+                  f"{cell(ar['skill_trim|' + q])} \\\\")
+    TT += ["    \\bottomrule", "  \\end{tabular}}"]
+    TT += ["\\newcommand{\\TabTwoPairsB}{%", "  \\begin{tabular}{lcccc}", "    \\toprule",
+           "    Difference & RMSE (eV) & within 20\\% & within 10\\% & median $|e|$, ratio \\\\", "    \\midrule"]
+    for label, a_, b_ in pairs64:
+        q = f"{a_}|{b_}"
+        mr = md64.get("median_ratio|" + q)
+        TT.append(f"    {label} & {sev(ar['rmse_diff_eV|' + q])} & {cell(ar['share20_diff|' + q])} & "
+                  f"{cell(ar['share10_diff|' + q])} & {ratc(mr) if mr else '--'} \\\\")
+    TT += ["    \\bottomrule", "  \\end{tabular}}"]
+    mi = T64["missing_inputs_by_the_boosted_model"]
+    TT += ["\\newcommand{\\TabTwoNan}{%", "  \\begin{tabular}{lcc}", "    \\toprule",
+           "    Statement form & Rule of the statements (first stage kept) & Second stage on every row \\\\",
+           "    \\midrule"]
+    for i, lab in enumerate(("T1: two-stage estimator over the network", "T2: over the causal GP",
+                             "T3: over the two-stage twin", "T4: median $|e|$ over that of hold",
+                             "T5: within 20\\%, minus causal GP", "T6: two-stage twin over the twin"), 1):
+        f = ratc if i == 4 else cell
+        TT.append(f"    {lab} & {f(st64[f'T{i}']['value'])} & {f(mi[f'T{i}'])} \\\\")
+    TT.append(f"    RMSE (eV), two-stage estimator & {ev(ar['rmse|c2'])} & {ev(mi['rmse_eV']['c2nan'])} \\\\")
+    TT.append(f"    RMSE (eV), two-stage twin & {ev(ar['rmse|t2'])} & {ev(mi['rmse_eV']['t2nan'])} \\\\")
+    TT += ["    \\bottomrule", "  \\end{tabular}}"]
+    th64 = T64["thirds"]
+    TT += ["\\newcommand{\\TabTwoThirds}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+           "    Discharges by median \\Ti{} (thirds) & coldest & middle & hottest \\\\", "    \\midrule",
+           "    \\multicolumn{4}{l}{\\emph{Mean-squared-error skill}} \\\\"]
+    for label, q in (("two-stage estimator over the network", "c2|c"),
+                     ("two-stage estimator over the causal GP", "c2|gp"),
+                     ("network over the causal GP", "c|gp"),
+                     ("two-stage estimator over the two-stage twin", "c2|t2"),
+                     ("two-stage twin over the twin", "t2|t")):
+        TT.append(f"    \\quad {label} & " + " & ".join(cell(th64[t]['skill_mse|' + q])
+                                                     for t in ("low", "middle", "high")) + " \\\\")
+    TT.append("    \\multicolumn{4}{l}{\\emph{Share of frames within 20\\% of the reported value}} \\\\")
+    for label, k in (("two-stage estimator", "c2"), ("two-stage twin", "t2"), ("network", "c"),
+                     ("history-only twin", "t"), ("causal GP", "gp"), ("hold", "hold")):
+        TT.append(f"    \\quad {label} & " + " & ".join(rat(th64[t]['share20|' + k])
+                                                     for t in ("low", "middle", "high")) + " \\\\")
+    TT += ["    \\bottomrule", "  \\end{tabular}}"]
+    L += TT
     # dose of a beam interruption (B.61 part C)
     dd = D6["differences_first_row_deficit"]["2_minus_1"]
 
@@ -459,7 +566,7 @@ def main():
 
     TK = ["\\newcommand{\\TabCarry}{%", "  \\begin{tabular}{p{0.44\\linewidth}cc}", "    \\toprule",
           "    & Over the twin & Over the causal GP \\\\", "    \\midrule",
-          "    \\multicolumn{3}{l}{\\emph{Trained estimator, inputs changed at test time (pooled, r2--r9)}} \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Trained network, inputs changed at test time (pooled, r2--r9)}} \\\\",
           f"    \\quad inputs as trained & {two(pdd['skill_file_over_twin'], pdd['skill_file_over_gp'])} \\\\",
           f"    \\quad Mirnov channels held at the training mean & "
           f"{two(pdd['variants']['MCmean']['skill_over_twin'], pdd['variants']['MCmean']['skill_over_gp'])} \\\\",
@@ -477,13 +584,13 @@ def main():
           f"    \\quad ECEI and CES history (E) & {two(st9['E1']['skill'], rf9['E']['gp_causal']['skill'])} \\\\",
           f"    \\quad BES, ECEI and CES history, no Mirnov (N) & "
           f"{two(st9['N1']['skill'], rf9['N']['gp_causal']['skill'])} \\\\",
-          f"    \\quad estimator over L & {cell(st9['L2']['skill'])} & -- \\\\",
-          f"    \\quad estimator over B & {cell(pr9['est_over_B']['skill'])} & -- \\\\",
-          f"    \\quad estimator over N & {cell(st9['N2']['skill'])} & -- \\\\",
+          f"    \\quad network over L & {cell(st9['L2']['skill'])} & -- \\\\",
+          f"    \\quad network over B & {cell(pr9['est_over_B']['skill'])} & -- \\\\",
+          f"    \\quad network over N & {cell(st9['N2']['skill'])} & -- \\\\",
           "    \\multicolumn{3}{l}{\\emph{Four file-level splits, one initialisation: range (intervals above zero)}} \\\\",
           f"    \\quad common mode of the BES array only & {four([x['C2_C_over_twin'] for x in cs])} & -- \\\\",
           f"    \\quad differences between BES channels only & {four([x['C1_D_over_twin'] for x in cs])} & -- \\\\",
-          f"    \\quad estimator trained 40 epochs, no stopping rule & "
+          f"    \\quad network trained 40 epochs, no stopping rule & "
           f"{four([x['F1_est_over_twin_fixed'] for x in cs])} & {four([x['F2_est_over_gp_fixed'] for x in cs])} \\\\",
           "    \\multicolumn{3}{l}{\\emph{Five-parameter filter, drive changed (r3--r9); first column: over KF0}} \\\\",
           f"    \\quad KFX: common mode and radial difference & {cell(kc['kfx_over_kf0'])} & {cell(kc['kfx_over_G'])} \\\\",
@@ -510,12 +617,6 @@ def main():
 
     def one(label, v, f=cell):
         return f"    \\multicolumn{{2}}{{l}}{{\\quad {label}}} & \\multicolumn{{2}}{{c}}{{{f(v)}}} \\\\"
-
-    def ratc(v):
-        p = f"{v[0]:.3f}"
-        if v[1] > 1 or v[2] < 1:
-            p = f"\\mathbf{{{p}}}"
-        return f"${p}$ $[{v[1]:.3f}, {v[2]:.3f}]$"
 
     def shc(v):
         p = f"{v[0]:.3f}"
@@ -549,10 +650,10 @@ def main():
 
     TWH = ["\\newcommand{\\TabWhere}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
            "    \\emph{Discharges by median \\Ti{} (thirds)} & coldest & middle & hottest \\\\", "    \\midrule",
-           f"    \\quad estimator over causal GP & {c3([rp['thirds'][k]['gp'] for k, _, _ in thk])} \\\\",
-           f"    \\quad estimator over its twin & {c3([rp['thirds'][k]['t'] for k, _, _ in thk])} \\\\",
+           f"    \\quad network over causal GP & {c3([rp['thirds'][k]['gp'] for k, _, _ in thk])} \\\\",
+           f"    \\quad network over its twin & {c3([rp['thirds'][k]['t'] for k, _, _ in thk])} \\\\",
            f"    \\quad KFX over KF0 (r3--r9) & {c3([K[q]['kfx_over_kf0'] for _, q, _ in thk])} \\\\",
-           "    \\quad within 20\\%: estimator $-$ causal GP & "
+           "    \\quad within 20\\%: network $-$ causal GP & "
            f"{c3([rc[c]['diff']['c-gp|0.20'] for _, _, c in thk])} \\\\",
            "    \\quad within 20\\%: KFX $-$ causal GP (r3--r9) & "
            f"{c3([ra_cells[c]['diff']['kfx-gp|0.20'] for _, _, c in thk])} \\\\",
@@ -563,8 +664,8 @@ def main():
            "    \\quad median \\Ti{} of the discharges (eV) & "
            + " & ".join(f"{G6['counts']['classes'][k]['median_of_discharge_median_ti_eV']:.0f}" for k in "ABC")
            + " \\\\",
-           f"    \\quad estimator over its twin & {c3([G6['reported']['class'][k]['inc'] for k in 'ABC'])} \\\\",
-           f"    \\quad estimator over causal GP & {c3([G6['reported']['class'][k]['gp'] for k in 'ABC'])} \\\\",
+           f"    \\quad network over its twin & {c3([G6['reported']['class'][k]['inc'] for k in 'ABC'])} \\\\",
+           f"    \\quad network over causal GP & {c3([G6['reported']['class'][k]['gp'] for k in 'ABC'])} \\\\",
            one("rows between bursts (few and frequent): increment", G6['reported']['phase']['inter_BC']['inc']),
            one("the same: over causal GP", G6['reported']['phase']['inter_BC']['gp']),
            "    \\midrule",

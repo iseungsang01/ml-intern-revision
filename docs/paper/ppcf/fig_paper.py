@@ -3,7 +3,7 @@
     py docs/paper/ppcf/fig_paper.py   # -> docs/paper/ppcf/fig_{geometry,schematic,skill,where,blips,use}.pdf/.png
 
 Every plotted number is read from a JSON output of the repository (b39_primary, b54_pooled_rows,
-b56_kfx, b57_yardsticks, b58_blip_calibration, b62_beam_return, b48_reread [its re-read of B.42]); the geometry figure
+b56_kfx, b57_yardsticks, b64_two_stage, b58_blip_calibration, b62_beam_return, b48_reread [its re-read of B.42]); the geometry figure
 draws positions given in the text of Supplementary section S10 and its Table S7 (literature,
 typed below and marked as published or inferred there).  Sizes are set for a 16 cm text width
 and printed 1:1 (fonts 8 to 9 pt).  A filled marker means that the 95 % interval excludes the
@@ -27,6 +27,7 @@ PAPER = HERE.parent
 W = 6.3  # inches, text width of the main text
 
 NET, TWIN, GP, HOLD, OFF, FILT, FILT2 = "#c62828", "#2e7d32", "#1f77b4", "#7f7f7f", "#6a3d9a", "#e07b00", "#f2b25c"
+TWO = "#7a0019"  # two-stage estimator (network + second stage)
 INK, MUTED, GRID = "#111111", "#666666", "#dddddd"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8.5, "axes.labelsize": 8.5,
                      "xtick.labelsize": 8, "ytick.labelsize": 8.5, "legend.fontsize": 8, "pdf.fonttype": 42,
@@ -155,19 +156,25 @@ def fig_schematic():
     ax.set_xlim(0, W)
     ax.set_ylim(0, 3.3)
     ax.axis("off")
-    ax.text(0.02, 3.27, "(a) recurrent estimator and its history-only twin", fontsize=8.5, va="top",
-            fontweight="bold")
-    box(ax, 0.02, 2.35, 2.5, 0.55, "fast channels at row $t$, one sample each:\n9 BES, 4 ECEI, 2 Mirnov",
-        "#fff1df", FILT)
-    box(ax, 0.02, 1.65, 2.5, 0.55, "CES history (rows before $t$): last value,\nits age, observed flag; time step",
-        "#e8f0fa", GP)
-    box(ax, 2.95, 1.9, 1.3, 0.75, "LSTM, 2 layers,\n160 units, run over\nevery grid row", "#fbe9e9", NET)
-    box(ax, 4.6, 2.1, 0.6, 0.35, r"$\hat T_i(t)$", "white", NET, fs=9)
-    arrow(ax, 2.52, 2.62, 2.95, 2.42, FILT)
-    arrow(ax, 2.52, 1.92, 2.95, 2.12, GP)
-    arrow(ax, 4.25, 2.27, 4.6, 2.27, NET)
-    ax.text(4.45, 1.95, "twin: the same network\nwithout the fast channels;\nincrement = skill of the\n"
-                        "estimator over its twin", fontsize=7.4, va="top")
+    ax.text(0.02, 3.27, "(a) two-stage estimator: recurrent network (first stage) and second stage", fontsize=8.5,
+            va="top", fontweight="bold")
+    box(ax, 0.02, 2.35, 2.3, 0.55, "fast channels at row $t$, one sample each:\n9 BES, 4 ECEI, 2 Mirnov",
+        "#fff1df", FILT, fs=7.4)
+    box(ax, 0.02, 1.65, 2.3, 0.55, "CES history (rows before $t$): last value,\nits age, observed flag; time step",
+        "#e8f0fa", GP, fs=7.4)
+    box(ax, 2.55, 1.9, 1.08, 0.75, "LSTM, 2 layers,\n160 units, run\nover every\ngrid row", "#fbe9e9", NET, fs=7.2)
+    box(ax, 3.83, 2.1, 0.55, 0.35, r"$\hat T_i^{(1)}(t)$", "white", NET, fs=8.5)
+    box(ax, 4.58, 1.9, 1.08, 0.75, "second stage:\nboosted trees\nestimate the\nnetwork's error", "#f6e6ea", TWO,
+        fs=7.2)
+    box(ax, 5.8, 2.1, 0.48, 0.35, r"$\hat T_i(t)$", "white", TWO, fs=8.5)
+    arrow(ax, 2.32, 2.62, 2.55, 2.42, FILT)
+    arrow(ax, 2.32, 1.92, 2.55, 2.12, GP)
+    arrow(ax, 3.63, 2.27, 3.83, 2.27, NET)
+    arrow(ax, 4.38, 2.27, 4.58, 2.27, NET)
+    arrow(ax, 5.66, 2.27, 5.8, 2.27, TWO)
+    ax.text(2.55, 1.8, "twin: the same network without the fast channels; two-stage twin: the twin with\n"
+                       "a second stage that reads the CES history only; increment = skill over the twin",
+            fontsize=7.0, va="top")
     ax.plot([0.02, W - 0.02], [1.45, 1.45], color=GRID, lw=0.8)
     ax.text(0.02, 1.4, r"(b) five-parameter robust filter on $\log T_i$", fontsize=8.5, va="top",
             fontweight="bold")
@@ -190,7 +197,15 @@ def fig_skill():
     P = J("b39_primary.json")["P"]
     C = J("b56_kfx.json")["confirm"]
     Y = J("b57_yardsticks.json")["all"]
-    rows = [("over hold", P["causal_over"]["persistence"], NET),
+    S = J("b64_two_stage.json")["all_rows"]
+    rows = [("over hold", S["skill_mse|c2|hold"], TWO),
+            ("over causal GP", S["skill_mse|c2|gp"], TWO),
+            ("over two-stage twin (increment)", S["skill_mse|c2|t2"], TWO),
+            ("over its first stage (network)", S["skill_mse|c2|c"], TWO),
+            ("over offline GP (uses next value)", S["skill_mse|c2|off"], TWO),
+            ("two-stage twin over twin", S["skill_mse|t2|t"], TWIN),
+            None,
+            ("over hold", P["causal_over"]["persistence"], NET),
             ("over causal GP", P["P1_causal_over_gp"], NET),
             ("over its twin (increment)", P["P2_causal_over_twin"], NET),
             ("over offline GP (uses next value)", P["causal_over"]["gp"], NET),
@@ -199,16 +214,19 @@ def fig_skill():
             ("Kg (radial difference) over KF0", C["kg_over_kf0"], FILT),
             ("twin over KF0", C["Tw_over_kf0"], TWIN),
             ("KFX over causal GP", C["kfx_over_G"], FILT),
-            ("recurrent estimator over KFX", C["A_over_kfx"], NET)]
-    fig, (a, b) = plt.subplots(1, 2, figsize=(W - 0.95, 2.9), gridspec_kw={"width_ratios": [1.35, 1.0], "wspace": 0.95})
-    irows(a, rows, 0.0, (-0.09, 0.42))
-    a.text(-0.09, 9.55, "recurrent estimator (r2–r9)", fontsize=7.6, color=NET, va="bottom")
-    a.text(-0.09, 4.55, "filter family (r3–r9)", fontsize=7.6, color=FILT, va="bottom")
+            ("network over KFX", C["A_over_kfx"], NET)]
+    n = len(rows)
+    fig, (a, b) = plt.subplots(1, 2, figsize=(W - 0.95, 4.3), gridspec_kw={"width_ratios": [1.35, 1.0], "wspace": 0.95})
+    irows(a, rows, 0.0, (-0.09, 0.47))
+    gaps = [i for i, r in enumerate(rows) if r is None]
+    for top, label, c in ((0, "two-stage estimator (r2–r4)", TWO), (gaps[0] + 1, "network, first stage (r2–r9)", NET),
+                          (gaps[1] + 1, "filter family (r3–r9)", FILT)):
+        a.text(-0.09, n - 1 - top + 0.55, label, fontsize=7.6, color=c, va="bottom")
     a.set_xlabel("mean-squared-error skill")
-    a.set_title("(a) skill with 95% interval", fontsize=8.5, loc="left", fontweight="bold", pad=12)
+    a.set_title("(a) skill with 95% interval", fontsize=8.5, loc="left", fontweight="bold", pad=18)
 
     est = [("hold", "H", HOLD), ("causal GP", "G", GP), ("KF0", "K0", FILT2), ("twin", "Tw", TWIN),
-           ("KFX", "KX", FILT), ("recurrent est.", "A", NET), ("offline GP", "O", OFF)]
+           ("KFX", "KX", FILT), ("network", "A", NET), ("offline GP", "O", OFF)]
     n = len(est)
     for i, (lab, k, c) in enumerate(est):
         y = n - 1 - i
@@ -227,8 +245,8 @@ def fig_skill():
     b.set_xlabel("mean squared error / floor $s^2$")
     b.set_title("(b) error against the floor", fontsize=8.5, loc="left", fontweight="bold", pad=12)
     b.text(0.5, -0.95, "floor", ha="center", fontsize=7.4, color=MUTED, va="top")
-    fig.subplots_adjust(bottom=0.2)
-    fill_legend(fig, -0.04)
+    fig.subplots_adjust(bottom=0.17)
+    fill_legend(fig, 0.0)
     save(fig, "fig_skill")
 
 
@@ -239,8 +257,8 @@ def fig_where():
     th = [("coldest", "low", "confirm_third_coldest"), ("middle", "middle", "confirm_third_middle"),
           ("hottest", "high", "confirm_third_hottest")]
     fig, (a, b) = plt.subplots(1, 2, figsize=(W, 2.6), gridspec_kw={"width_ratios": [1.2, 1.0], "wspace": 0.9})
-    series = [("recurrent estimator over causal GP", lambda t: R["thirds"][t[1]]["gp"], GP, -0.22),
-              ("recurrent estimator over its twin", lambda t: R["thirds"][t[1]]["t"], NET, 0.0),
+    series = [("network over causal GP", lambda t: R["thirds"][t[1]]["gp"], GP, -0.22),
+              ("network over its twin", lambda t: R["thirds"][t[1]]["t"], NET, 0.0),
               ("KFX over KF0 (filter increment)", lambda t: K[t[2]]["kfx_over_kf0"], FILT, 0.22)]
     for lab, f, c, dx in series:
         for i, t in enumerate(th):

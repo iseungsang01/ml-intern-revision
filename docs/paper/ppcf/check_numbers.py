@@ -16,7 +16,8 @@ PREREGISTRATION_MAST_COUPLING.md, fig_trace.json and docs/paper/file_rules.md (h
 relate to the raw deliveries; ces_prediction/analyze_file_rules.py), and the md files of
 the later batches (B.39 to B.60, among them b53_components.md, b56_kfx.md, b57_yardsticks.md and
 b60_relative_error.md; the floor of B.57 and the lower end of T10 of B.60 are taken from their
-json, as make_tables.py rounds them).
+json, as make_tables.py rounds them), and b64_two_stage.md with its json (the two-stage
+estimator; every readout as make_tables.py prints it).
 Run from the repo root:  py docs/paper/ppcf/check_numbers.py
 """
 import json
@@ -213,6 +214,7 @@ def main():
         (ROOT / "docs/paper/b46_beam_off.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b59_inputs.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b66_regimes.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b64_two_stage.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B34.md").read_text(encoding="utf-8"),
         (ROOT / "ces_prediction/experiments/PREREGISTRATION_B37.md").read_text(encoding="utf-8"),
         thesis,
@@ -235,6 +237,24 @@ def main():
     extra += ["%.1f" % v for v in b57["all"]["rms"]]
     b60 = json.loads((ROOT / "docs/paper/b60_relative_error.json").read_text(encoding="utf-8"))
     extra.append("%+.4f" % b60["statements"]["T10"]["value"][1])
+    # B.64 (two-stage estimator, r2 to r4): every readout as make_tables.py prints it from the json
+    # (skills and differences signed to three decimals, eV to one decimal, shares and ratios to three)
+    b64 = json.loads((ROOT / "docs/paper/b64_two_stage.json").read_text(encoding="utf-8"))
+    blocks = [b64["all_rows"], b64["medians"], *b64["thirds"].values(),
+              {k: v for k, v in b64["missing_inputs_by_the_boosted_model"].items() if k != "rmse_eV"}]
+    for blk in blocks:
+        for k, v in blk.items():
+            if k.startswith(("skill_", "share20_diff", "share10_diff")) or k[:1] == "T" and k != "T4":
+                extra += ["%+.3f" % x for x in v]
+            elif k.startswith(("rmse|", "mae|", "median_eV|")):
+                extra += ["%.1f" % x for x in v]
+            elif k.startswith("rmse_diff_eV|"):
+                extra += ["%+.1f" % x for x in v] + ["%.1f" % -x for x in v]
+            else:                                   # shares, median ratios, T4, over_hold
+                extra += ["%.3f" % x for x in v]
+    extra += ["%.1f" % x for x in b64["missing_inputs_by_the_boosted_model"]["rmse_eV"]["c2nan"]]
+    extra += ["%.1f" % x for x in b64["missing_inputs_by_the_boosted_model"]["rmse_eV"]["t2nan"]]
+    extra += ["%.1f" % (1e6 * v) for v in b64["seconds_per_row_second_stage"].values()]
     for k in ("T_i", "V_rot"):
         r = kr[k]
         extra += ["%+.3f" % v for v in [r["median"], *r["ci95"], *r["quartiles"]]]

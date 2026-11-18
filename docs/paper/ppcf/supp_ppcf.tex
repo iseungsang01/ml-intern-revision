@@ -60,12 +60,16 @@ temperature on an edge chord of KSTAR with co-located fast diagnostics''}
 text, what the main text summarizes: definitions, the full numbers behind each table and
 figure, and the registered statements. Part~B holds readouts that the main claim does not
 need (the measurement regime of the chord and the second device, edge bursts, rotation,
-a second stage). Part~C is the history: the first readouts with an earlier variant of
+the earlier second stages on single splits). Part~C is the history: the first readouts with an earlier variant of
 the network, which the main text does not use, and the order in which the batches were
 registered. Section, figure and table numbers without the prefix S refer to the main
 text. The analysis code, the registration documents and the generated records of every
 number are in the public repository named in the main text; Table~\ref{tab:guide} lists
-where each part of the main text is supported.
+where each part of the main text is supported. The estimator of the main text is the
+two-stage estimator: the recurrent network as first stage and a second stage
+(\S\ref{sec:twostage}). Outside \S\ref{sec:twostage}, ``the estimator'' and ``the recurrent
+estimator'' in this supplement mean the network, the first stage, on which every readout
+other than those of \S\ref{sec:twostage} was made.
 
 \begin{table}[h]
   \centering
@@ -78,7 +82,8 @@ where each part of the main text is supported.
     \midrule
     \multicolumn{3}{l}{\emph{Part A: support of the main text}} \\
     \S\ref{sec:target} & \S\ref{sec:data} & the files, what a row holds, the reported value, published geometry (Table~\ref{tab:plasma}) \\
-    \S\ref{sec:design} & \S\ref{sec:methods:est} & structure and design choices of the recurrent estimator \\
+    \S\ref{sec:design} & \S\ref{sec:methods:est} & structure and design choices of the recurrent network \\
+    \S\ref{sec:twostage} & \S\ref{sec:methods:est}, \S\ref{sec:res:main} & the second stage: inputs, fitting protocol, run time; the two-stage estimator on r2--r4, every pair and the thirds \\
     \S\ref{sec:filter} & \S\ref{sec:methods:est}, \S\ref{sec:res:main} & the five-parameter filter and its readouts \\
     \S\ref{sec:yardsticks} & \S\ref{sec:methods:eval}, \S\ref{sec:res:main}, \S\ref{sec:res:use} & the floor, the removable error, persistence \\
     \S\ref{sec:relerr} & \S\ref{sec:res:main} & error as a share of the reported value \\
@@ -90,7 +95,7 @@ where each part of the main text is supported.
     \S\ref{sec:data:mast}--\S\ref{sec:regime} & \S\ref{sec:intro} & MAST data; the chord is close to white noise, and on MAST this falls towards the edge \\
     \S\ref{sec:mastped}--\S\ref{app:coupling} & -- & the MAST pedestal top, CES-only estimators and beam power on MAST \\
     \S\ref{sec:bursts}, \S\ref{sec:twosources} & \S\ref{sec:res:where} & edge bursts in the raw BES stream; large BES departures \\
-    \S\ref{sec:character} & -- & the median row, a 20-parameter reading, a second stage \\
+    \S\ref{sec:character} & -- & the median row, a 20-parameter reading, the earlier second stages on four splits \\
     \S\ref{sec:vrot}, \S\ref{app:vrotrule} & -- & rotation of the chord and its scoring rule \\
     \multicolumn{3}{l}{\emph{Part C: history}} \\
     \S\ref{sec:history} & \S\ref{sec:discussion} & the earlier whole-discharge variant (both populations), the thinned replay, further earlier readouts, the order of registration \\
@@ -335,6 +340,103 @@ and the choices that were not varied.
     Fast channels standardized from training discharges & whole-discharge statistics & not separated with values above 3\,keV excluded (\S\ref{sec:fast}) \\
     \bottomrule
   \end{tabular}
+\end{table}
+
+\section{The second stage and the two-stage estimator}
+\label{sec:twostage}
+
+This section gives the protocol of the second stage of \S\ref{sec:methods:est} and its
+readouts on the folds of three re-partitions of the pooled cross-validation (r2 to r4, 15
+outer folds; \Ti{}, values above 3\,keV excluded). Six statements, the rule for the main
+text and numerical expectations were registered before any run.
+
+\paragraph{Inputs.} Fifteen quantities known at row $t$. From the fast channels, each
+standardized with the mean and standard deviation of the training discharges of the fold:
+the mean of the nine BES channels and the mean of the four ECEI channels, each as four
+summaries (the value at $t$, its departure from the mean of the ten rows before $t$, the
+standard deviation of those ten rows, and the change from row $t-1$). From the CES history
+and the first stage: the time step in rows, the age of the last CES value, that value
+(hold), the first-stage estimate minus hold, the first-stage estimate minus the causal GP,
+and the absolute values of these two differences. No input is computed from the Mirnov
+channels; the split was checked by varying the BES, ECEI and Mirnov columns of one
+discharge in turn. The second stage of the two-stage twin reads the seven quantities of the
+second group, computed from the twin's estimate.
+
+\paragraph{Model.} A histogram-based gradient-boosted regression
+(scikit-learn~\citep{Pedregosa2011ScikitLearn}, its default settings: squared error,
+learning rate 0.1, at most 100 trees of at most 31 leaves, at least 20 rows per leaf, and
+the library's early stopping on a tenth of the fitting rows). Model and settings are those
+of the earlier second stage on the four file-level splits (\S\ref{sec:character}); nothing
+was tuned for this batch. Its target is the residual of the first stage in eV (the reported
+value minus the first-stage estimate); the two-stage estimate is the first-stage estimate
+plus the predicted residual.
+
+\paragraph{Fitting on discharges the network has not seen.} The errors of a network on its
+own training discharges are smaller than on new discharges, so a second stage fitted there
+would learn the wrong errors. For each outer fold the training discharges were divided into
+four inner folds (seeded by the re-partition and the fold); the network and the twin were
+each trained on three of them, with the outer fold's validation discharges for early
+stopping and every other setting as in the pooled cross-validation, and estimated the
+fourth: 120 trainings (15 folds, four inner folds, two networks). The stored outer-fold
+networks of the pooled cross-validation give the estimates on the validation and test
+discharges. The second stage of each fold and network is fitted on the out-of-fold rows of
+its training discharges together with its validation discharges, on the rows where all its
+inputs are present, and is applied once to the scored rows of its test discharges. No
+discharge is in two of inner training, inner held-out, validation and test (checked for
+every fold); four of the 120 trainings stopped at the epoch cap.
+
+\paragraph{Missing inputs.} The window summaries are missing on the first ten rows of a
+contiguous segment, a share \TwoFallback{} of the scored rows. On those rows both the
+two-stage estimator and the two-stage twin keep their first-stage estimates (fixed in an
+addendum before any run), so the two are compared with the same treatment of the same
+rows. With the second stage applied on every row and the boosted model's own handling of
+missing values, the six readouts change in the third decimal only (Table~\ref{tab:twopairs},
+lower part; reported, not a statement).
+
+\paragraph{Run time.} The second stage takes \TwoMicros\,$\mu$s per row for the network and
+\TwoMicrosTwin\,$\mu$s for the twin, measured as prediction over many rows at once on a CPU.
+A call for a single row costs more: in the earlier batch one step of the correction took
+1.257\,ms at the median (\S\ref{sec:character}).
+
+\paragraph{Checks and statements.} The stored errors of the pooled cross-validation reproduce
+the registered increment of the network on r2 to r4 within the registered tolerance. All six
+statements hold (Table~\ref{tab:twopairs}): the two-stage estimator has skill over the
+network (T1) and over the causal GP, with a point value above that of the network over the
+causal GP (T2), and over the two-stage twin (T3); the ratio of its median absolute error to
+that of hold is below one (T4); its share within 20\% minus that of the causal GP is above
+zero (T5); and the two-stage twin has skill over the twin (T6). By the registered rule (T1,
+T2 and T4 met) the two-stage estimator is the estimator of the main text and T3 its
+fast-channel increment; these statements rest on three re-partitions, the primary
+statements on the network on eight. Table~\ref{tab:twothirds} gives the thirds of the
+discharges by median \Ti{} (reported). \emph{Limits.} One initialisation per network; the
+settings were chosen on single splits whose discharges overlap these; the second stage
+reads the inputs that the network reads, so it adds no information, only a different use of
+it.
+
+\begin{table}[h]
+  \centering
+  \caption{The two-stage estimator on r2 to r4 (pooled; 95\% intervals from the two-level
+  bootstrap; bold: the interval excludes zero, or one for a ratio; ``two-stage'': the
+  two-stage estimator). Upper two parts: every pair, as skills and as differences (the
+  RMSE of the first estimator of the pair minus that of the second, in eV; the share of
+  frames within 20\% and 10\% of the reported value, first minus second; the ratio of the
+  median absolute errors). Lower part: the six statements under their rule, and with the
+  second stage applied on every row (reported).}
+  \label{tab:twopairs}
+  \footnotesize
+  \TabTwoPairs\par\medskip
+  \resizebox{\linewidth}{!}{\TabTwoPairsB}\par\medskip
+  \TabTwoNan
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{The two-stage estimator by thirds of the discharges ordered by their median
+  \Ti{} (r2 to r4, pooled; 95\% intervals; bold: the interval excludes zero; reported, not
+  registered statements).}
+  \label{tab:twothirds}
+  \footnotesize
+  \resizebox{\linewidth}{!}{\TabTwoThirds}
 \end{table}
 
 \section{The five-parameter filter}
@@ -1305,6 +1407,8 @@ in \S\ref{app:registration}.
   The estimator has skill over the causal GP (four splits, three initialisations) & \SoneVerdict{} (\SoneAbove{}) & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
   The estimator has skill over its history-only twin (the same) & \StwoVerdict{} (\StwoAbove{}) & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
   The same two statements in the pooled cross-validation & \PoneVerdict{}; \PtwoVerdict{} & \S\ref{sec:res:main} \\
+  Two-stage estimator, pooled on r2 to r4: skill over the network (T1); over the causal GP, above the network's (T2); over the two-stage twin (T3) & \TwoVerdictA{}; \TwoVerdictB{}; \TwoVerdictC{} & \S\ref{sec:res:main}; \S\ref{sec:twostage} \\
+  The same: median absolute error below that of hold (T4); share within 20\% above that of the causal GP (T5); two-stage twin over the twin (T6) & \TwoVerdictD{}; \TwoVerdictE{}; \TwoVerdictF{} & \S\ref{sec:res:main}; \S\ref{sec:twostage} \\
   The average of three initialisations has skill over the causal GP; over the average of the three twins (registered after the two statements on a single training had failed) & \EoneVerdict{}; \EtwoVerdict{} & \S\ref{sec:res:main}; \S\ref{sec:splits} \\
   The ECEI network has skill over the twin & does not hold & \S\ref{sec:res:diag}; \S\ref{sec:splits} \\
   The BES network has skill over the twin & holds & \S\ref{sec:res:diag}; \S\ref{sec:splits} \\
@@ -1979,7 +2083,9 @@ of the corrected estimate is 0.861 to 0.924 of that of hold, with the interval b
 43.2\,eV for hold on the rows scored by that batch, which differ from those of
 Table~\ref{tab:primary}). Two limits apply: the second stage is a boosted tree fitted after the
 network, not trained with it, and it holds for the mean with values above 3\,keV
-excluded only. Whether a CES value will be unusable
+excluded only. The same model, fitted on out-of-fold estimates of the training
+discharges under the pooled protocol, is the second stage of the estimator of the main
+text (\S\ref{sec:twostage}). Whether a CES value will be unusable
 (missing or above 3\,keV) is itself predictable from the fast-channel window: the area
 under the ROC curve is 0.961 to 0.974, against 0.903 to 0.949 from the history of
 unusable rows alone (difference $+0.025$ to $+0.059$, four of four splits).
@@ -2547,7 +2653,13 @@ two on MAST) were registered before those readouts; of 15 numerical expectations
 were met. The second stage of \S\ref{sec:character} was registered twice: fitted on half of the
 test discharges, where three of its five statements failed, and then, with the same
 models and bars, fitted on validation discharges; the comparison with a linear
-combination and the inclusive population were registered after that result.
+combination and the inclusive population were registered after that result. The second
+stage under the pooled protocol (\S\ref{sec:twostage}) was registered after those results,
+with six statements, the rule that made the two-stage estimator the estimator of the main
+text and numerical expectations; its handling of rows with missing window inputs was fixed
+in an addendum before any run. Of the six numerical expectations four were met; the
+fast-channel increment after the second stage and the share within 20\% came out above
+the expected ranges.
 
 \paragraph{MAST.} In order: (i) a pilot of 13 shots was inspected and those shots were
 excluded; (ii) a development list of 300 shots, the fit rule, the tuning/test

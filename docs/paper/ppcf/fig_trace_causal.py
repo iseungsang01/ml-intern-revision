@@ -82,7 +82,7 @@ def main():
         obs = ~np.isnan(ti[sl])
         ax.plot(t, pers[sl], color="0.55", lw=1.0, drawstyle="steps-post", label="hold")
         ax.plot(t, gp[sl], color="#1f77b4", lw=1.1, ls="--", label="causal GP (CES only)")
-        ax.plot(t, model[sl], color="#d62728", lw=1.4, label="recurrent estimator")
+        ax.plot(t, model[sl], color="#d62728", lw=1.4, label="recurrent network (first stage)")
         ax.plot(t[obs], ti[sl][obs], "o", ms=3.6, mfc="white", mec="k", mew=0.8, label=r"reported $T_i$")
         for r in np.flatnonzero(~obs):
             ax.axvspan(t[r] - 0.005, t[r] + 0.005, color="0.92", lw=0)

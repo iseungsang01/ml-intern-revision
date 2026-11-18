@@ -202,22 +202,45 @@
 \newcommand{\OverlapThree}{4}
 \newcommand{\OverlapFour}{1}
 \newcommand{\OverlapNone}{338}
+\newcommand{\TwoGp}{$+0.176$ $[+0.155, +0.196]$}
+\newcommand{\TwoRmseAbs}{17.8 $[15.4, 20.2]$}
+\newcommand{\TwoVerdictA}{holds}
+\newcommand{\TwoVerdictB}{holds}
+\newcommand{\TwoVerdictC}{holds}
+\newcommand{\TwoVerdictD}{holds}
+\newcommand{\TwoVerdictE}{holds}
+\newcommand{\TwoVerdictF}{holds}
+\newcommand{\TwoMicros}{2.2}
+\newcommand{\TwoMicrosTwin}{1.5}
+\newcommand{\TwoFallback}{0.0235}
 \newcommand{\TabMain}{%
   \begin{tabular}{lccc}
     \toprule
     \emph{(a) Skill} & Mean squared error & Huber (200\,eV) & 1\% of rows trimmed \\
     \midrule
-    \multicolumn{4}{l}{Recurrent estimator over (eight re-partitions, r2--r9)} \\
+    \multicolumn{4}{l}{Network, first stage, over (eight re-partitions, r2--r9)} \\
     \quad hold & $\mathbf{+0.375}$ $[+0.352, +0.394]$ & $\mathbf{+0.265}$ $[+0.244, +0.286]$ & $\mathbf{+0.231}$ $[+0.188, +0.271]$ \\
     \quad causal GP & $\mathbf{+0.089}$ $[+0.064, +0.112]$ & $\mathbf{+0.074}$ $[+0.052, +0.094]$ & $\mathbf{+0.067}$ $[+0.029, +0.101]$ \\
     \quad history-only twin (fast-channel increment) & $\mathbf{+0.048}$ $[+0.022, +0.073]$ & $\mathbf{+0.052}$ $[+0.031, +0.075]$ & $\mathbf{+0.070}$ $[+0.037, +0.100]$ \\
     \quad PCHIP (uses the next value) & $\mathbf{+0.201}$ $[+0.168, +0.231]$ & -- & -- \\
     \quad offline GP (uses the next value) & $\mathbf{-0.037}$ $[-0.068, -0.008]$ & $\mathbf{-0.057}$ $[-0.083, -0.030]$ & $\mathbf{-0.070}$ $[-0.119, -0.027]$ \\
+    \multicolumn{4}{l}{Two-stage estimator over (three re-partitions, r2--r4)} \\
+    \quad hold & $\mathbf{+0.436}$ $[+0.418, +0.452]$ & $\mathbf{+0.344}$ $[+0.329, +0.359]$ & $\mathbf{+0.324}$ $[+0.286, +0.357]$ \\
+    \quad causal GP & $\mathbf{+0.176}$ $[+0.155, +0.196]$ & $\mathbf{+0.172}$ $[+0.158, +0.186]$ & $\mathbf{+0.177}$ $[+0.145, +0.204]$ \\
+    \quad two-stage twin (fast-channel increment) & $\mathbf{+0.097}$ $[+0.077, +0.116]$ & $\mathbf{+0.104}$ $[+0.089, +0.119]$ & $\mathbf{+0.133}$ $[+0.102, +0.158]$ \\
+    \quad its first stage, the network & $\mathbf{+0.093}$ $[+0.078, +0.107]$ & $\mathbf{+0.100}$ $[+0.086, +0.112]$ & $\mathbf{+0.119}$ $[+0.102, +0.137]$ \\
+    \quad PCHIP (uses the next value) & $\mathbf{+0.279}$ $[+0.251, +0.304]$ & $\mathbf{+0.224}$ $[+0.201, +0.244]$ & $\mathbf{+0.276}$ $[+0.238, +0.308]$ \\
+    \quad offline GP (uses the next value) & $\mathbf{+0.063}$ $[+0.038, +0.086]$ & $\mathbf{+0.056}$ $[+0.037, +0.073]$ & $\mathbf{+0.057}$ $[+0.019, +0.090]$ \\
+    \quad KFX & $\mathbf{+0.130}$ $[+0.111, +0.149]$ & $\mathbf{+0.096}$ $[+0.079, +0.112]$ & $\mathbf{+0.116}$ $[+0.085, +0.142]$ \\
+    \multicolumn{4}{l}{On the same rows (r2--r4)} \\
+    \quad two-stage twin over the twin & $\mathbf{+0.048}$ $[+0.038, +0.059]$ & $\mathbf{+0.051}$ $[+0.038, +0.062]$ & $\mathbf{+0.057}$ $[+0.044, +0.070]$ \\
+    \quad network over its twin (first-stage increment) & $\mathbf{+0.053}$ $[+0.028, +0.076]$ & $\mathbf{+0.055}$ $[+0.031, +0.078]$ & $\mathbf{+0.073}$ $[+0.033, +0.101]$ \\
+    \quad network over the offline GP & $\mathbf{-0.033}$ $[-0.062, -0.005]$ & $\mathbf{-0.050}$ $[-0.074, -0.027]$ & $\mathbf{-0.070}$ $[-0.121, -0.028]$ \\
     \multicolumn{4}{l}{Five-parameter filter (seven re-partitions, r3--r9)} \\
     \quad KFX over KF0 (fast-channel increment) & $\mathbf{+0.049}$ $[+0.040, +0.059]$ & $\mathbf{+0.067}$ $[+0.058, +0.076]$ & $\mathbf{+0.084}$ $[+0.074, +0.096]$ \\
     \quad Kg (radial difference only) over KF0 & $\mathbf{+0.032}$ $[+0.025, +0.039]$ & -- & -- \\
     \quad history-only twin over KF0 & $\mathbf{+0.037}$ $[+0.021, +0.053]$ & -- & -- \\
-    \quad recurrent estimator over KFX & $\mathbf{+0.036}$ $[+0.012, +0.058]$ & -- & -- \\
+    \quad network over KFX & $\mathbf{+0.036}$ $[+0.012, +0.058]$ & -- & -- \\
     \quad KFX over causal GP & $\mathbf{+0.055}$ $[+0.039, +0.070]$ & $\mathbf{+0.085}$ $[+0.073, +0.096]$ & $\mathbf{+0.073}$ $[+0.054, +0.090]$ \\
     \bottomrule
   \end{tabular}}
@@ -230,9 +253,88 @@
     causal GP & 193.4 $[183.1, 203.8]$ & 1.472 $[1.389, 1.568]$ & 44.1 & 0.772 $[0.752, 0.791]$ \\
     offline GP (uses the next value) & 181.3 $[171.1, 191.6]$ & 1.279 $[1.222, 1.342]$ & 37.5 & 0.805 $[0.785, 0.824]$ \\
     history-only twin & 189.3 $[179.0, 199.4]$ & 1.415 $[1.325, 1.519]$ & 46.3 & 0.759 $[0.736, 0.781]$ \\
-    recurrent estimator & 184.6 $[174.5, 195.0]$ & 1.331 $[1.246, 1.427]$ & 45.8 & 0.771 $[0.749, 0.792]$ \\
+    network (first stage) & 184.6 $[174.5, 195.0]$ & 1.331 $[1.246, 1.427]$ & 45.8 & 0.771 $[0.749, 0.792]$ \\
     KF0 (filter, no fast channels) & 192.9 $[182.5, 203.1]$ & 1.469 $[1.387, 1.562]$ & 43.3 & 0.769 $[0.749, 0.789]$ \\
     KFX (filter, BES drive) & 188.1 $[177.5, 198.2]$ & 1.362 $[1.291, 1.444]$ & 41.8 & 0.783 $[0.763, 0.803]$ \\
+    \bottomrule
+  \end{tabular}}
+\newcommand{\TabMainC}{%
+  \begin{tabular}{lccccc}
+    \toprule
+    \emph{(c) Estimator, r2--r4} & RMSE (eV) & Median $|e|$ (eV) & Median $|e|$ / hold & Within 20\% & Within 20\%, minus causal GP \\
+    \midrule
+    hold & 233.6 $[220.1, 247.3]$ & 45.4 $[42.4, 48.7]$ & -- & 0.749 $[0.728, 0.769]$ & -- \\
+    causal GP & 193.3 $[183.0, 203.8]$ & 44.1 $[41.3, 47.3]$ & -- & 0.772 $[0.752, 0.791]$ & -- \\
+    offline GP (next value) & 181.2 $[171.1, 191.7]$ & 37.5 $[34.9, 40.4]$ & -- & 0.805 $[0.785, 0.824]$ & -- \\
+    PCHIP (next value) & 206.6 $[194.2, 219.3]$ & 38.1 $[35.5, 41.2]$ & -- & 0.786 $[0.765, 0.806]$ & -- \\
+    KFX (filter) & 188.1 $[177.9, 198.7]$ & 41.8 $[39.3, 44.7]$ & -- & 0.783 $[0.763, 0.802]$ & -- \\
+    history-only twin & 189.2 $[179.3, 199.5]$ & 45.4 $[42.6, 48.7]$ & -- & 0.765 $[0.743, 0.785]$ & -- \\
+    network (first stage) & 184.2 $[174.3, 194.4]$ & 45.8 $[42.7, 49.4]$ & $1.010$ $[0.972, 1.062]$ & 0.770 $[0.747, 0.792]$ & $-0.002$ $[-0.013, +0.007]$ \\
+    two-stage twin & 184.6 $[174.8, 194.6]$ & 43.0 $[40.3, 46.0]$ & $\mathbf{0.949}$ $[0.932, 0.966]$ & 0.778 $[0.759, 0.797]$ & $\mathbf{+0.006}$ $[+0.004, +0.008]$ \\
+    two-stage estimator & 175.4 $[165.9, 185.3]$ & 41.2 $[38.8, 44.0]$ & $\mathbf{0.909}$ $[0.889, 0.931]$ & 0.793 $[0.774, 0.812]$ & $\mathbf{+0.021}$ $[+0.018, +0.025]$ \\
+    \bottomrule
+  \end{tabular}}
+\newcommand{\TabTwoPairs}{%
+  \begin{tabular}{lccc}
+    \toprule
+    Skill & mean squared error & Huber (200\,eV) & 1\% of rows trimmed \\
+    \midrule
+    two-stage over network (T1) & $\mathbf{+0.093}$ $[+0.078, +0.107]$ & $\mathbf{+0.100}$ $[+0.086, +0.112]$ & $\mathbf{+0.119}$ $[+0.102, +0.137]$ \\
+    two-stage over causal GP (T2) & $\mathbf{+0.176}$ $[+0.155, +0.196]$ & $\mathbf{+0.172}$ $[+0.158, +0.186]$ & $\mathbf{+0.177}$ $[+0.145, +0.204]$ \\
+    network over causal GP & $\mathbf{+0.092}$ $[+0.068, +0.114]$ & $\mathbf{+0.080}$ $[+0.062, +0.098]$ & $\mathbf{+0.066}$ $[+0.024, +0.100]$ \\
+    two-stage over two-stage twin (T3) & $\mathbf{+0.097}$ $[+0.077, +0.116]$ & $\mathbf{+0.104}$ $[+0.089, +0.119]$ & $\mathbf{+0.133}$ $[+0.102, +0.158]$ \\
+    network over twin & $\mathbf{+0.053}$ $[+0.028, +0.076]$ & $\mathbf{+0.055}$ $[+0.031, +0.078]$ & $\mathbf{+0.073}$ $[+0.033, +0.101]$ \\
+    two-stage twin over twin (T6) & $\mathbf{+0.048}$ $[+0.038, +0.059]$ & $\mathbf{+0.051}$ $[+0.038, +0.062]$ & $\mathbf{+0.057}$ $[+0.044, +0.070]$ \\
+    two-stage twin over causal GP & $\mathbf{+0.088}$ $[+0.075, +0.100]$ & $\mathbf{+0.076}$ $[+0.067, +0.084]$ & $\mathbf{+0.051}$ $[+0.034, +0.067]$ \\
+    \bottomrule
+  \end{tabular}}
+\newcommand{\TabTwoPairsB}{%
+  \begin{tabular}{lcccc}
+    \toprule
+    Difference & RMSE (eV) & within 20\% & within 10\% & median $|e|$, ratio \\
+    \midrule
+    two-stage over network (T1) & $-8.7$ $[-10.2, -7.2]$ & $\mathbf{+0.023}$ $[+0.017, +0.033]$ & $\mathbf{+0.036}$ $[+0.029, +0.047]$ & $\mathbf{0.900}$ $[0.871, 0.923]$ \\
+    two-stage over causal GP (T2) & $-17.8$ $[-20.2, -15.4]$ & $\mathbf{+0.021}$ $[+0.018, +0.025]$ & $\mathbf{+0.030}$ $[+0.023, +0.035]$ & $\mathbf{0.934}$ $[0.918, 0.951]$ \\
+    network over causal GP & $-9.1$ $[-11.5, -6.6]$ & $-0.002$ $[-0.013, +0.007]$ & $-0.007$ $[-0.023, +0.004]$ & -- \\
+    two-stage over two-stage twin (T3) & $-9.1$ $[-11.1, -7.2]$ & $\mathbf{+0.015}$ $[+0.012, +0.019]$ & $\mathbf{+0.018}$ $[+0.011, +0.024]$ & -- \\
+    network over twin & $-5.1$ $[-7.4, -2.6]$ & $+0.006$ $[-0.010, +0.015]$ & $+0.002$ $[-0.019, +0.016]$ & -- \\
+    two-stage twin over twin (T6) & $-4.6$ $[-5.7, -3.6]$ & $\mathbf{+0.013}$ $[+0.008, +0.020]$ & $\mathbf{+0.020}$ $[+0.014, +0.027]$ & -- \\
+    two-stage twin over causal GP & $-8.7$ $[-10.0, -7.3]$ & $\mathbf{+0.006}$ $[+0.004, +0.008]$ & $\mathbf{+0.012}$ $[+0.009, +0.015]$ & -- \\
+    \bottomrule
+  \end{tabular}}
+\newcommand{\TabTwoNan}{%
+  \begin{tabular}{lcc}
+    \toprule
+    Statement form & Rule of the statements (first stage kept) & Second stage on every row \\
+    \midrule
+    T1: two-stage estimator over the network & $\mathbf{+0.093}$ $[+0.078, +0.107]$ & $\mathbf{+0.093}$ $[+0.077, +0.108]$ \\
+    T2: over the causal GP & $\mathbf{+0.176}$ $[+0.155, +0.196]$ & $\mathbf{+0.176}$ $[+0.156, +0.196]$ \\
+    T3: over the two-stage twin & $\mathbf{+0.097}$ $[+0.077, +0.116]$ & $\mathbf{+0.096}$ $[+0.077, +0.116]$ \\
+    T4: median $|e|$ over that of hold & $\mathbf{0.909}$ $[0.889, 0.931]$ & $\mathbf{0.904}$ $[0.883, 0.926]$ \\
+    T5: within 20\%, minus causal GP & $\mathbf{+0.021}$ $[+0.018, +0.025]$ & $\mathbf{+0.023}$ $[+0.019, +0.026]$ \\
+    T6: two-stage twin over the twin & $\mathbf{+0.048}$ $[+0.038, +0.059]$ & $\mathbf{+0.049}$ $[+0.039, +0.060]$ \\
+    RMSE (eV), two-stage estimator & 175.4 $[165.9, 185.3]$ & 175.4 $[165.8, 185.1]$ \\
+    RMSE (eV), two-stage twin & 184.6 $[174.8, 194.6]$ & 184.5 $[174.7, 194.5]$ \\
+    \bottomrule
+  \end{tabular}}
+\newcommand{\TabTwoThirds}{%
+  \begin{tabular}{lccc}
+    \toprule
+    Discharges by median \Ti{} (thirds) & coldest & middle & hottest \\
+    \midrule
+    \multicolumn{4}{l}{\emph{Mean-squared-error skill}} \\
+    \quad two-stage estimator over the network & $\mathbf{+0.050}$ $[+0.028, +0.069]$ & $\mathbf{+0.085}$ $[+0.063, +0.111]$ & $\mathbf{+0.144}$ $[+0.123, +0.165]$ \\
+    \quad two-stage estimator over the causal GP & $\mathbf{+0.118}$ $[+0.094, +0.142]$ & $\mathbf{+0.165}$ $[+0.124, +0.202]$ & $\mathbf{+0.242}$ $[+0.200, +0.276]$ \\
+    \quad network over the causal GP & $\mathbf{+0.072}$ $[+0.040, +0.105]$ & $\mathbf{+0.087}$ $[+0.039, +0.128]$ & $\mathbf{+0.115}$ $[+0.062, +0.156]$ \\
+    \quad two-stage estimator over the two-stage twin & $\mathbf{+0.037}$ $[+0.020, +0.055]$ & $\mathbf{+0.089}$ $[+0.054, +0.121]$ & $\mathbf{+0.163}$ $[+0.119, +0.199]$ \\
+    \quad two-stage twin over the twin & $\mathbf{+0.027}$ $[+0.014, +0.043]$ & $\mathbf{+0.040}$ $[+0.023, +0.057]$ & $\mathbf{+0.075}$ $[+0.056, +0.093]$ \\
+    \multicolumn{4}{l}{\emph{Share of frames within 20\% of the reported value}} \\
+    \quad two-stage estimator & 0.539 $[0.495, 0.584]$ & 0.858 $[0.834, 0.881]$ & 0.859 $[0.841, 0.876]$ \\
+    \quad two-stage twin & 0.532 $[0.488, 0.576]$ & 0.846 $[0.820, 0.869]$ & 0.837 $[0.817, 0.855]$ \\
+    \quad network & 0.492 $[0.440, 0.543]$ & 0.844 $[0.817, 0.868]$ & 0.840 $[0.819, 0.859]$ \\
+    \quad history-only twin & 0.506 $[0.460, 0.555]$ & 0.839 $[0.812, 0.863]$ & 0.823 $[0.801, 0.843]$ \\
+    \quad causal GP & 0.532 $[0.485, 0.580]$ & 0.839 $[0.812, 0.863]$ & 0.828 $[0.808, 0.846]$ \\
+    \quad hold & 0.524 $[0.473, 0.575]$ & 0.839 $[0.811, 0.864]$ & 0.774 $[0.749, 0.797]$ \\
     \bottomrule
   \end{tabular}}
 \newcommand{\DoseTi}{$-0.112$ $[-0.238, +0.054]$}
@@ -319,7 +421,7 @@
     \toprule
     & Over the twin & Over the causal GP \\
     \midrule
-    \multicolumn{3}{l}{\emph{Trained estimator, inputs changed at test time (pooled, r2--r9)}} \\
+    \multicolumn{3}{l}{\emph{Trained network, inputs changed at test time (pooled, r2--r9)}} \\
     \quad inputs as trained & $\mathbf{+0.048}$ $[+0.022, +0.073]$ & $\mathbf{+0.089}$ $[+0.063, +0.112]$ \\
     \quad Mirnov channels held at the training mean & $\mathbf{+0.053}$ $[+0.028, +0.078]$ & $\mathbf{+0.094}$ $[+0.069, +0.116]$ \\
     \quad Mirnov channels one frame old & $\mathbf{+0.047}$ $[+0.021, +0.072]$ & $\mathbf{+0.088}$ $[+0.063, +0.111]$ \\
@@ -331,13 +433,13 @@
     \quad BES and CES history (B) & $\mathbf{+0.044}$ $[+0.020, +0.066]$ & $\mathbf{+0.084}$ $[+0.058, +0.107]$ \\
     \quad ECEI and CES history (E) & $-0.011$ $[-0.092, +0.022]$ & $+0.030$ $[-0.045, +0.063]$ \\
     \quad BES, ECEI and CES history, no Mirnov (N) & $\mathbf{+0.060}$ $[+0.023, +0.085]$ & $\mathbf{+0.099}$ $[+0.062, +0.126]$ \\
-    \quad estimator over L & $\mathbf{+0.058}$ $[+0.044, +0.072]$ & -- \\
-    \quad estimator over B & $+0.009$ $[-0.019, +0.031]$ & -- \\
-    \quad estimator over N & $-0.008$ $[-0.036, +0.024]$ & -- \\
+    \quad network over L & $\mathbf{+0.058}$ $[+0.044, +0.072]$ & -- \\
+    \quad network over B & $+0.009$ $[-0.019, +0.031]$ & -- \\
+    \quad network over N & $-0.008$ $[-0.036, +0.024]$ & -- \\
     \multicolumn{3}{l}{\emph{Four file-level splits, one initialisation: range (intervals above zero)}} \\
     \quad common mode of the BES array only & $+0.038$ to $+0.100$ (3 of 4) & -- \\
     \quad differences between BES channels only & $+0.010$ to $+0.087$ (2 of 4) & -- \\
-    \quad estimator trained 40 epochs, no stopping rule & $+0.042$ to $+0.093$ (4 of 4) & $+0.075$ to $+0.144$ (4 of 4) \\
+    \quad network trained 40 epochs, no stopping rule & $+0.042$ to $+0.093$ (4 of 4) & $+0.075$ to $+0.144$ (4 of 4) \\
     \multicolumn{3}{l}{\emph{Five-parameter filter, drive changed (r3--r9); first column: over KF0}} \\
     \quad KFX: common mode and radial difference & $\mathbf{+0.049}$ $[+0.040, +0.059]$ & $\mathbf{+0.055}$ $[+0.039, +0.070]$ \\
     \quad Kc: common mode only & $\mathbf{+0.042}$ $[+0.033, +0.051]$ & -- \\
@@ -367,17 +469,17 @@
     \toprule
     \emph{Discharges by median \Ti{} (thirds)} & coldest & middle & hottest \\
     \midrule
-    \quad estimator over causal GP & $\mathbf{+0.066}$ $[+0.032, +0.100]$ & $\mathbf{+0.091}$ $[+0.044, +0.131]$ & $\mathbf{+0.110}$ $[+0.061, +0.153]$ \\
-    \quad estimator over its twin & $+0.007$ $[-0.023, +0.031]$ & $\mathbf{+0.042}$ $[+0.009, +0.074]$ & $\mathbf{+0.092}$ $[+0.040, +0.137]$ \\
+    \quad network over causal GP & $\mathbf{+0.066}$ $[+0.032, +0.100]$ & $\mathbf{+0.091}$ $[+0.044, +0.131]$ & $\mathbf{+0.110}$ $[+0.061, +0.153]$ \\
+    \quad network over its twin & $+0.007$ $[-0.023, +0.031]$ & $\mathbf{+0.042}$ $[+0.009, +0.074]$ & $\mathbf{+0.092}$ $[+0.040, +0.137]$ \\
     \quad KFX over KF0 (r3--r9) & $+0.001$ $[-0.007, +0.009]$ & $\mathbf{+0.042}$ $[+0.031, +0.054]$ & $\mathbf{+0.101}$ $[+0.085, +0.117]$ \\
-    \quad within 20\%: estimator $-$ causal GP & $\mathbf{-0.038}$ $[-0.070, -0.013]$ & $+0.004$ $[-0.003, +0.011]$ & $\mathbf{+0.010}$ $[+0.003, +0.017]$ \\
+    \quad within 20\%: network $-$ causal GP & $\mathbf{-0.038}$ $[-0.070, -0.013]$ & $+0.004$ $[-0.003, +0.011]$ & $\mathbf{+0.010}$ $[+0.003, +0.017]$ \\
     \quad within 20\%: KFX $-$ causal GP (r3--r9) & $\mathbf{+0.012}$ $[+0.002, +0.023]$ & $\mathbf{+0.012}$ $[+0.008, +0.017]$ & $\mathbf{+0.009}$ $[+0.006, +0.013]$ \\
     \midrule
     \emph{Discharges by edge-burst rate} & none & few & frequent \\
     \quad discharges & 251 & 201 & 159 \\
     \quad median \Ti{} of the discharges (eV) & 629 & 607 & 335 \\
-    \quad estimator over its twin & $+0.056$ $[-0.008, +0.108]$ & $\mathbf{+0.072}$ $[+0.038, +0.105]$ & $+0.025$ $[-0.009, +0.052]$ \\
-    \quad estimator over causal GP & $+0.060$ $[-0.006, +0.113]$ & $\mathbf{+0.109}$ $[+0.070, +0.146]$ & $\mathbf{+0.091}$ $[+0.059, +0.119]$ \\
+    \quad network over its twin & $+0.056$ $[-0.008, +0.108]$ & $\mathbf{+0.072}$ $[+0.038, +0.105]$ & $+0.025$ $[-0.009, +0.052]$ \\
+    \quad network over causal GP & $+0.060$ $[-0.006, +0.113]$ & $\mathbf{+0.109}$ $[+0.070, +0.146]$ & $\mathbf{+0.091}$ $[+0.059, +0.119]$ \\
     \multicolumn{2}{l}{\quad rows between bursts (few and frequent): increment} & \multicolumn{2}{c}{$\mathbf{+0.050}$ $[+0.027, +0.075]$} \\
     \multicolumn{2}{l}{\quad the same: over causal GP} & \multicolumn{2}{c}{$\mathbf{+0.095}$ $[+0.070, +0.120]$} \\
     \midrule
