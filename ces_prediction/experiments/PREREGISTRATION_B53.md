@@ -47,6 +47,14 @@ Four splits; a statement holds if it holds on at least three.
 
 D over the twin: +0.01 to +0.07, C1 holds on two to four splits. C over the twin: +0.02 to +0.09, C2 holds on three or four. CD over the twin within 0.02 of the BES network of B.39. Fixed budget: the twin differs from the early-stopped twin by −0.03 to +0.03 in skill; the estimator has +0.02 to +0.12 over the twin and F1 holds on three or four splits; F2 holds.
 
+## Addendum 1 (2026-11-18, before any run)
+
+Found while the runner was written, with no network trained. The twin class of the shared code (`v2h`) ignores channels appended through the feature-table route: its T_i branch reads the seven CES-derived channels by position. Arm C therefore uses a subclass of the twin (`b53_components/model_seq_v2hx.py`, registered at run time; no shared file is edited) whose only change is that the first layer of the T_i branch reads the seven channels and the K extra ones. With K = 0 it is the twin: same shapes, same initial weights under the same seed, same output (checked). With K > 0 the initial weights of the T_i branch differ from those of the twin and the rest are the same. The environment of an arm-C run is that of the twin of B.39 with three changes: the model name, the feature table, the output directory.
+
+Details the registration left open, fixed here: the standardization constants of a split are computed on the grid rows of its training discharges without the first and the last row of each file and without rows with a non-positive BES channel; in the readout the fixed-budget increment and that of B.39 are compared on the same resamples of the discharges.
+
+The checks of section 3 passed on all four splits before any run (`docs/paper/b53_checks.md`): the extra channels widen the first layer of the T_i branch by 1, 4 and 5 inputs and leave the rotation branch unchanged; perturbing them changes the T_i output and not the rotation output; the tables match every grid row of the 641 files (759 rows filled with zeros); the constants are reproduced from the training discharges alone and change when test discharges are added; with no table the runner gives the environment of the twin of B.39 variable by variable; an arm-F run differs from its B.39 counterpart in the number of epochs, the fixed-budget switch and the output directory only.
+
 ## 7. Limits known in advance
 
 One initialisation; B.39 found that the spread between initialisations decides intervals on single splits. Five summary signals of the array stand in for its nine channels, so CD is not the BES network. The fixed budget of 40 epochs is one choice; with no stopping rule a network may be past its best validation epoch. The test rows are those of every earlier readout.
