@@ -439,6 +439,105 @@ def main():
     TC += ["    \\bottomrule", "  \\end{tabular}}"]
     L += TC
 
+    # ---------------------------------------------------------------------------------------
+    # main text, Table 2: what carries the increment (B.55 inputs changed at test time, pooled;
+    # B.39 ablation networks and B.53 component networks, four splits, one initialisation;
+    # B.56 filter variants, r3 to r9)
+    # ---------------------------------------------------------------------------------------
+    D5 = json.loads((ROOT / "docs/paper/b55_sample_timing.json").read_text(encoding="utf-8"))
+    pdd, vg = D5["partD"]["all_discharges"], D5["partG"]["variants"]
+
+    def four(vals):
+        return f"{rng(vals)} ({sum(v[1] > 0 for v in vals)} of 4)"
+
+    TK = ["\\newcommand{\\TabCarry}{%", "  \\begin{tabular}{p{0.46\\linewidth}cc}", "    \\toprule",
+          "    & Pooled & Four splits \\\\", "    \\midrule",
+          "    \\multicolumn{3}{l}{\\emph{Trained recurrent estimator, inputs changed at test time; "
+          "skill over its twin (r2--r9)}} \\\\",
+          f"    \\quad inputs as trained & {cell(pdd['skill_file_over_twin'])} & -- \\\\",
+          f"    \\quad Mirnov channels held at the training mean & {cell(pdd['variants']['MCmean']['skill_over_twin'])} & -- \\\\",
+          f"    \\quad Mirnov channels one frame old & {cell(pdd['variants']['Gmc']['skill_over_twin'])} & -- \\\\",
+          f"    \\quad ECEI channels one frame old & {cell(pdd['variants']['Gecei']['skill_over_twin'])} & -- \\\\",
+          f"    \\quad BES channels one frame old & {cell(pdd['variants']['Gbes']['skill_over_twin'])} & -- \\\\",
+          f"    \\quad all fast channels one frame old & {cell(vg['G']['skill_over_twin'])} & -- \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Networks trained with part of the inputs; skill over the twin "
+          "(one initialisation per split)}} \\\\",
+          f"    \\quad BES and CES history & -- & {four(D2)} \\\\",
+          f"    \\quad ECEI and CES history & -- & {four(D1)} \\\\",
+          f"    \\quad BES, ECEI and CES history (no Mirnov) & -- & {four(NM)} \\\\",
+          f"    \\quad all fast channels and CES history & -- & {four(FT)} \\\\",
+          f"    \\quad common mode of the BES array only & -- & {four([x['C2_C_over_twin'] for x in cs])} \\\\",
+          f"    \\quad differences between BES channels only & -- & {four([x['C1_D_over_twin'] for x in cs])} \\\\",
+          f"    \\quad all fast channels, 40 epochs, no stopping rule & -- & "
+          f"{four([x['F1_est_over_twin_fixed'] for x in cs])} \\\\",
+          "    \\multicolumn{3}{l}{\\emph{Five-parameter filter, drive changed; skill over KF0 (r3--r9)}} \\\\",
+          f"    \\quad KFX: common mode and radial difference & {cell(kc['kfx_over_kf0'])} & -- \\\\",
+          f"    \\quad Kc: common mode only & {cell(kc['kc_over_kf0'])} & -- \\\\",
+          f"    \\quad Kg: radial difference only & {cell(kc['kg_over_kf0'])} & -- \\\\",
+          f"    \\quad KFX, rows not within ten rows after an absent frame & "
+          f"{cell(K['confirm_quiet']['kfx_over_kf0'])} & -- \\\\",
+          "    \\bottomrule", "  \\end{tabular}}"]
+    L += TK
+
+    # ---------------------------------------------------------------------------------------
+    # main text, Table 3: where the gain is (B.54 pooled rows, r2 to r9; B.56 filter thirds and
+    # B.60 relative error, as marked; B.61 without the tenth of the discharges)
+    # ---------------------------------------------------------------------------------------
+    R5 = json.loads((ROOT / "docs/paper/b54_pooled_rows.json").read_text(encoding="utf-8"))
+    rp, st5 = R5["reported"], R5["statements"]
+    ra_cells = R["addendum1"]["cells_r3_r9"]
+    thk = (("low", "confirm_third_coldest", "low third by median T_i"),
+           ("middle", "confirm_third_middle", "middle third by median T_i"),
+           ("high", "confirm_third_hottest", "high third by median T_i"))
+
+    def c3(vals, f=cell):
+        return " & ".join(f(v) for v in vals)
+
+    def one(label, v, f=cell):
+        return f"    \\multicolumn{{2}}{{l}}{{\\quad {label}}} & \\multicolumn{{2}}{{c}}{{{f(v)}}} \\\\"
+
+    def ratc(v):
+        p = f"{v[0]:.3f}"
+        if v[1] > 1 or v[2] < 1:
+            p = f"\\mathbf{{{p}}}"
+        return f"${p}$ $[{v[1]:.3f}, {v[2]:.3f}]$"
+
+    def shc(v):
+        p = f"{v[0]:.3f}"
+        if v[1] > 0.5 or v[2] < 0.5:
+            p = f"\\mathbf{{{p}}}"
+        return f"${p}$ $[{v[1]:.3f}, {v[2]:.3f}]$"
+
+    TWH = ["\\newcommand{\\TabWhere}{%", "  \\begin{tabular}{lccc}", "    \\toprule",
+           "    \\emph{Discharges by median \\Ti{} (thirds)} & coldest & middle & hottest \\\\", "    \\midrule",
+           f"    \\quad estimator over causal GP & {c3([rp['thirds'][k]['gp'] for k, _, _ in thk])} \\\\",
+           f"    \\quad estimator over its twin & {c3([rp['thirds'][k]['t'] for k, _, _ in thk])} \\\\",
+           f"    \\quad KFX over KF0 (r3--r9) & {c3([K[q]['kfx_over_kf0'] for _, q, _ in thk])} \\\\",
+           "    \\quad within 20\\%: estimator $-$ causal GP & "
+           f"{c3([rc[c]['diff']['c-gp|0.20'] for _, _, c in thk])} \\\\",
+           "    \\quad within 20\\%: KFX $-$ causal GP (r3--r9) & "
+           f"{c3([ra_cells[c]['diff']['kfx-gp|0.20'] for _, _, c in thk])} \\\\",
+           "    \\midrule",
+           "    \\multicolumn{4}{l}{\\emph{Rows}} \\\\",
+           one("not flagged by the value rules: increment", rp['plain_rows']['t']),
+           one("these rows: share of the reduction against the twin", st5['C4']['value'], rat),
+           one("these rows: share of the reduction against the causal GP", st5['C3']['value'], shc),
+           one("flagged by the value rules: increment", rp['flagged_rows']['t']),
+           one("quiet rows: increment", st5['H1']['value']),
+           one("rows 1 to 3 after an absent frame: increment", st5['G1']['value']),
+           one("rows weighted to resemble rows without a value: increment", st5['F4']['value']),
+           one("last value older than 50\\,ms: over the causal GP", st5['E2']['value']),
+           "    \\midrule",
+           "    \\multicolumn{4}{l}{\\emph{Error distribution and discharges}} \\\\",
+           one("90th percentile of $|e|$, ratio to the causal GP", rp['p90_ratio']['causal GP']['value'], ratc),
+           one("median of $|e|$, ratio to the causal GP", rp['median_ratio']['causal GP']['value'], ratc),
+           one("share of discharges with lower MSE than the causal GP", st5['B1']['value'], shc),
+           one("share of discharges with lower MSE than the twin", st5['B2']['value'], shc),
+           one("without the tenth of discharges with the largest gain: over causal GP", st6['B1']['value']),
+           one("the same, increment", st6['B2']['value']),
+           "    \\bottomrule", "  \\end{tabular}}"]
+    L += TWH
+
     cols = "l" + "c" * (5 if pooled else 4)
     head = ("Pooled & " if pooled else "") + "Split 1 & Split 2 & Split 3 & Split 4"
 

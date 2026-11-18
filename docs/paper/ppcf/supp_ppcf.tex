@@ -1803,6 +1803,36 @@ read at the chord, and the files carry no equilibrium to test it. Which part of 
 is a response to the lost heating, a displacement, or the measurement of the first frame
 is not decided here.
 
+\paragraph{The wall magnetic field at the interruptions (exploratory).} Registered as
+statements, read here as an exploratory note because two of its four statements were
+written as if the relative polarity of the coils were known, which it is not. On the raw
+2\,MHz signals of the two Mirnov coils at different toroidal positions in the twelve
+discharges with raw streams, the signal integrated from the moment the beam goes off
+(36 interruptions of one absent frame; a drift of the integral was removed with half of
+the pseudo-events of each discharge and the other half kept as control) changes while the
+beam is off, holds for about 50\,ms after its return and has fallen by 60\,ms, in every
+discharge; the two coils change with opposite signs, as they do at candidate edge bursts
+and at pseudo-events, so their effective polarities are opposite and the wall field
+changes alike at both positions (\texttt{docs/paper/b63\_blip\_magnetics.md}). This
+indicates a change of the equilibrium at the interruptions; its size cannot be given (the
+coils are not calibrated in the files), two positions cannot exclude a non-axisymmetric
+structure, and what part of the fall of \Ti{} at the chord it accounts for is not known.
+It is not used as a cause in the main text.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../b48_events_fig}
+  \caption{Averages conditioned on two kinds of event, as ratios to the level before
+  the event. (a) Beam blips in the test discharges of the four splits (means; shaded:
+  the absent frame): the reported \Ti{} (``measured''), the ECEI and BES levels, the
+  recurrent estimator and its history-only twin. The estimator falls with the
+  measurement in the first row after the blip; the twin follows one row later.
+  (b) Onsets of edge bursts in the raw 500\,kHz BES stream of eleven discharges
+  (medians over 108 isolated onsets): the reported \Ti{} does not fall after an onset
+  (registered statement fails; \S\ref{sec:twosources}).}
+  \label{fig:events}
+\end{figure}
+
 % =========================================================================
 \section{The four file-level splits of the main batch}
 \label{sec:splits}
@@ -1925,12 +1955,10 @@ registered check). Per fold the parameters minimise the mean squared error in eV
 discharges that are not in the test fold: first $q$, $r$, $k$ without drive (KF0), then
 the gains with those held (Kc: $b_c$ only; Kg: $b_g$ only; KFX: both).
 
-\paragraph{Development and confirmation.} The specification was developed by an AI
-coding agent (a language-model agent that wrote and ran the analysis code under the
-author's supervision; see the declaration of AI use in the main text) on re-partition r2
-of the pooled cross-validation before it was registered, with two declared forking
-paths: the agent saw the test error of a filter with an unclipped
-drive once on r2 and then added the clip, and a joint fit of all five parameters was
+\paragraph{Development and confirmation.} The specification was developed on
+re-partition r2 of the pooled cross-validation before it was registered, with two
+declared forking paths: the test error of a filter with an unclipped drive was seen once
+on r2 and the clip was then added, and a joint fit of all five parameters was
 abandoned there because it degenerated in three of five folds. r2 is therefore the
 development set and is not pooled into the confirmation; every statement is read on
 re-partitions r3 to r9. The clip is fixed at 0.2, which every fold of r2 chose; refits
