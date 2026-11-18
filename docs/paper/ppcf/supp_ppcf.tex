@@ -1290,6 +1290,54 @@ beam interruption still appears in the radial difference at about an eighth of i
 size. The second stage shows what the components carry beyond the twin, not what the
 network uses.
 
+\paragraph{Discharges, a linear filter, gaps and value thresholds.} Registered
+readouts on the rows of this section (one initialisation of the estimator; the
+average of three initialisations where it is named). \emph{Per discharge.} Among the
+85, 88, 93 and 91 test discharges with at least 50 scored rows, the estimator has the
+lower mean squared error than the causal GP in 0.647 $[0.541, 0.753]$, 0.727
+$[0.636, 0.818]$, 0.731 $[0.634, 0.817]$ and 0.725 $[0.637, 0.813]$ and than its twin
+in 0.706 $[0.612, 0.800]$, 0.614 $[0.511, 0.716]$, 0.849 $[0.763, 0.914]$ and 0.637
+$[0.538, 0.736]$ (both statements hold, four of four); the average of three
+initialisations in 0.714, 0.761, 0.774 and 0.780 against the causal GP. By the median
+absolute error the estimator is the lower one against the causal GP in 0.612
+$[0.506, 0.706]$, 0.398 $[0.295, 0.500]$, 0.581 $[0.484, 0.677]$ and 0.549
+$[0.440, 0.659]$ of the discharges. On the two splits of the main text whose interval
+includes zero, three discharges carry 0.79 and 0.82 of the excess squared error of
+the weakest initialisation. \emph{Linear filter.} Two linear filters with an
+intercept were fitted by ridge-penalized least squares on the training discharges
+(penalty chosen on the validation discharges): one reads the last three visible
+values, their ages and the time step, the other also the fifteen fast channels at
+the row and their departures from the mean of the ten rows before. On the scored rows
+with three earlier values and a ten-row window (0.976 to 0.978 of the rows), the
+filter with the fast channels has $+0.055$ $[+0.027, +0.094]$, $+0.047$
+$[+0.032, +0.061]$, $+0.046$ $[+0.027, +0.066]$ and $+0.032$ $[+0.015, +0.049]$ over
+the one without, and the estimator has $+0.109$ $[+0.074, +0.143]$, $+0.075$
+$[+0.052, +0.098]$, $+0.119$ $[+0.092, +0.142]$ and $+0.106$ $[+0.070, +0.135]$ over
+the filter with the fast channels (both statements hold, four of four). Against the
+causal GP the filter without the fast channels has $-0.098$, $-0.032$, $-0.034$ and
+$-0.051$ (every interval below zero) and the filter with them $-0.038$, $+0.017$,
+$+0.013$ and $-0.017$ (every interval includes zero). \emph{Age of the last value.}
+The last visible value is 10\,ms old in 0.959 to 0.972 of the scored rows, 20 to
+50\,ms in 0.024 to 0.038 and older in 0.003 to 0.004. Where it is 20\,ms old or older
+the estimator has $+0.056$ $[-0.074, +0.177]$, $+0.089$ $[+0.026, +0.153]$, $+0.109$
+$[+0.040, +0.185]$ and $+0.105$ $[+0.049, +0.178]$ over the causal GP (the statement
+holds, three of four); beyond 50\,ms it has $+0.004$, $+0.007$, $+0.144$ and
+$-0.093$, every interval including zero. \emph{Value threshold.} With the scored rows
+limited to those whose reported value and last visible value are at or below
+2{,}000\,eV (0.987 to 0.993 of the rows) the estimator has $+0.109$ $[+0.058, +0.156]$,
+$+0.091$ $[+0.058, +0.125]$, $+0.137$ $[+0.096, +0.177]$ and $+0.118$
+$[+0.077, +0.157]$ over the causal GP and $+0.089$ $[+0.047, +0.127]$, $+0.043$
+$[+0.017, +0.071]$, $+0.140$ $[+0.107, +0.170]$ and $+0.082$ $[+0.046, +0.120]$ over
+its twin (both statements hold); the estimator was trained with values up to 3\,keV
+in its inputs and was not retrained. \emph{Absolute errors.} The 90th percentile of
+the absolute error is 181.2, 226.7, 204.7 and 223.7\,eV for the estimator, 192.3,
+239.2, 224.1 and 235.6\,eV for the twin, 193.5, 246.3, 219.8 and 241.8\,eV for the
+causal GP and 228.7, 296.3, 260.1 and 276.4\,eV for hold. \emph{Two computations of
+the causal GP.} The scoring code of the main table and the replay machinery of this
+section compute the causal GP separately; they differ on 16 rows of the first split
+and 15 of the third (one discharge each but one row) and on none of the other two,
+which changes a skill over the causal GP by less than 0.001.
+
 % =========================================================================
 \section{Registered statements used in the main text}
 \label{app:registered}
@@ -1330,7 +1378,10 @@ in \S\ref{app:registration}.
         The same with the rows weighted by the odds of being unusable & do not hold & \S\ref{sec:limits} \\
     The 200\,ms changes of \Ti{} follow the radial difference of the BES array; its common mode & hold & \S\ref{sec:res:diag} \\
     The same for the radial difference after the common mode is removed & does not hold & \S\ref{sec:res:diag} \\
-    A second stage on the twin that reads the differences between BES channels has skill over one without BES; one that reads the common mode & hold & \S\ref{sec:res:diag} \\
+        A second stage on the twin that reads the differences between BES channels has skill over one without BES; one that reads the common mode & hold & \S\ref{sec:res:diag} \\
+    The estimator has the lower mean squared error than the causal GP in more than half of the test discharges; than its twin & hold & \S\ref{sec:res:main} \\
+    The estimator has skill over a linear filter with the fast channels fitted on the training discharges; that filter over the one without the fast channels & hold & \S\ref{sec:res:main} \\
+    The estimator has skill over the causal GP where the last value is 20\,ms old or older; with the scored rows limited to 2{,}000\,eV, over the causal GP and over the twin & hold & \S\ref{sec:rows} \\
     The same replay, variant with whole-discharge standardization: skill over the causal GP; the increment does not vanish; skill over interpolation of the visible values & hold & \S\ref{sec:thin} \\
     The same variant: the skill over hold falls by less than 0.05 between 10 and 50\,ms & does not hold & \S\ref{sec:thin} \\
     The lower and the upper estimate of the frame-to-frame component agree within a factor 1.30 & holds & \S\ref{sec:data:kstar} \\

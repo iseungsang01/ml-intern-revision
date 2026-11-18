@@ -160,6 +160,27 @@ def main():
         mac("EPairsGp", f"{sum(q['over_causal_gp'][1] > 0 for q in pairs)} of {len(pairs)}")
         mac("EPairsTwin", f"{sum(q['over_twin_average_of_same_two'][1] > 0 for q in pairs)} of {len(pairs)}")
 
+    # B.52: per-discharge shares and the linear filter fitted on the training discharges (when its output exists)
+    gr_src = ROOT / "docs" / "paper" / "b52_grading_readouts.json"
+    GR = json.loads(gr_src.read_text(encoding="utf-8"))["splits"] if gr_src.exists() else None
+    L.append("\\newif\\ifgradingreadouts")
+    L.append("\\gradingreadoutstrue" if GR else "\\gradingreadoutsfalse")
+    if GR:
+        gr = [GR[s] for s in SEEDS]
+        sh = lambda k, m: [x["D"]["estimator"][k][m] for x in gr]          # noqa: E731
+        urng = lambda v: "{:.3f} to {:.3f}".format(min(q[0] for q in v), max(q[0] for q in v))   # noqa: E731
+        half = lambda v: WORD[sum(q[1] > 0.5 for q in v)] + " of four"      # noqa: E731
+        mac("DShareGpRange", urng(sh("gp", "share_lower_mse")))
+        mac("DShareGpAbove", half(sh("gp", "share_lower_mse")))
+        mac("DShareTwinRange", urng(sh("hist80", "share_lower_mse")))
+        mac("DShareTwinAbove", half(sh("hist80", "share_lower_mse")))
+        mac("DMedShareRange", urng(sh("gp", "share_lower_median_abs")))
+        LF1 = [x["L"]["estimator_over_LF"] for x in gr]
+        LF2 = [x["L"]["LF_over_LH"] for x in gr]
+        for name, v in (("Lone", LF1), ("Ltwo", LF2)):
+            mac(name + "Range", rng(v))
+            mac(name + "Above", above(v))
+
     cols = "l" + "c" * (5 if pooled else 4)
     head = ("Pooled & " if pooled else "") + "Split 1 & Split 2 & Split 3 & Split 4"
 
@@ -188,6 +209,10 @@ def main():
         T += ["    \\multicolumn{%d}{l}{\\emph{Average of three initialisations over}} \\\\" % (len(cols)),
               row("\\quad hold", EH), row("\\quad causal GP", E1),
               row("\\quad the average of the three twins", E2), "    \\midrule"]
+    if GR:
+        T += ["    \\multicolumn{%d}{l}{\\emph{Linear filter fitted on the training discharges}} \\\\" % (len(cols)),
+              row("\\quad recurrent estimator over the filter with fast channels", LF1),
+              row("\\quad filter with fast channels over the filter without", LF2), "    \\midrule"]
     T += [
          "    \\multicolumn{%d}{l}{\\emph{Median absolute error (eV)}} \\\\" % (len(cols)),
          nrow("\\quad hold", med("hold"), "{:.1f}", P.get("median_abs_error_eV", {}).get("hold")),

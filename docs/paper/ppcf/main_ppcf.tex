@@ -306,7 +306,9 @@ beside hold, the causal GP and the two offline references
   (of the estimator and, independently, of the twin) as well as the discharges, and
   the absolute errors of the estimator and of the twin are means over the three
   initialisations.\else One initialisation per split.\fi\ifaverage\ For the average
-  of the three initialisations the interval resamples the discharges.\fi}
+  of the three initialisations the interval resamples the discharges.\fi\ifgradingreadouts\
+  The rows on the linear filter use one initialisation of the estimator, the rows with
+  three earlier values and a ten-row window, and resampled discharges.\fi}
   \label{tab:primary}
     \footnotesize
   \begin{minipage}{0.90\linewidth}\TabPrimary\end{minipage}
@@ -317,8 +319,10 @@ it is positive in \SoneRunsPos{} of the \RunsWord{} trainings (\SoneRuns{}). The
 registered interval, which draws an initialisation as well as the discharges, is
 above zero on \SoneAbove{} splits, so the statement registered for the four splits
 \SoneVerdict{}. Between the three initialisations of a split the skill differs by
-\SpreadRange{}; on the two splits whose interval includes zero, three discharges
-carry 0.79 and 0.82 of the excess squared error of the weakest initialisation. Over hold the skill is \OverHoldRange{} (\OverHoldAbove{}
+\SpreadRange{}.\ifgradingreadouts\ Counted per discharge (registered), the estimator
+has the lower mean squared error than the causal GP in \DShareGpRange{} of the test
+discharges and than its twin in \DShareTwinRange{}; the interval is above one half
+on \DShareGpAbove{} and \DShareTwinAbove{} splits.\fi Over hold the skill is \OverHoldRange{} (\OverHoldAbove{}
 intervals above zero).\ifpooled\ Pooled over eight re-partitions the skill is \Pone{}
 over the causal GP (fold-level interval \PoneFold{}) and \PHold{} over hold.\fi
 
@@ -328,7 +332,10 @@ positive in \StwoRunsPos{} of the \RunsWord{} pairs of the same initialisation
 statement \StwoVerdict{}\ifpooled ; pooled, \Ptwo{} (fold-level \PtwoFold{})\fi. The
 twin itself varies with the initialisation (\TwinGpRuns{} over the causal GP; two of
 its trainings stopped after 11 and 12 epochs), so an increment measured with one
-initialisation depends on the twin it is paired with. Against
+initialisation depends on the twin it is paired with. \ifgradingreadouts A linear filter on the last three CES values, fitted on
+the training discharges with no early stopping and no initialisation, gains
+\LtwoRange{} when it also reads the fast channels (\LtwoAbove{} intervals above
+zero); the estimator has \LoneRange{} over that filter (\LoneAbove{}). \fi Against
 the offline GP, which uses the following value and averages noisy neighbours, the
 skill is \OverOffGpRange{} and the interval includes zero on every split.
 
@@ -344,10 +351,10 @@ the absolute error of the average is \ENinetyRange{} of that of the causal GP
 (\ENinetyBelow{} intervals below 1); its median is \EMedRange{} of it.
 \fi
 
-\emph{Median.} The median absolute error of the estimator is \MedCausal{}\,eV on the
-four splits, against \MedHold{}\,eV for hold, \MedGp{}\,eV for the causal GP and
-\MedTwin{}\,eV for the twin: the typical row is not improved
-(\S\ref{sec:res:where}). \emph{Reading.} In every training the estimator that reads
+\emph{Median.} The median absolute error of the estimator is not below that of
+hold, the causal GP or the twin (Table~\ref{tab:primary})\ifgradingreadouts ; by that
+measure it is the lower one against the causal GP in \DMedShareRange{} of the
+discharges\fi : the typical row is not improved (\S\ref{sec:res:where}). \emph{Reading.} In every training the estimator that reads
 the fast channels has a lower mean squared error than the causal GP and than its
 twin, and it is not separated from an offline GP that waits for the next value.
 Whether the margin of one training is separated from zero on one split of 96
@@ -378,8 +385,8 @@ discharges, one of them typical.
 \end{figure}
 
 \emph{Limits.} The four splits draw on the same 639 discharges, and the recurrent design was adopted on these splits; no untouched KSTAR
-hold-out exists. On a split by time, an earlier run of the same estimator under a 30-epoch cap has $+0.103$ to $+0.112$ over the
-causal GP on four initialisations, every interval excluding zero. With values above
+hold-out exists. On a split by time an earlier training has $+0.103$ to $+0.112$ over the causal
+GP (\Supp{sec:fast}). With values above
 3\,keV kept, the fast-channel increment at the natural cadence is small ($+0.016$ to
 $+0.024$ for the whole-discharge variant, two of four intervals excluding zero;
 \Supp{sec:fast}): the fast-channel statement of this paper is a statement about the

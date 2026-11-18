@@ -77,6 +77,17 @@
 \newcommand{\EMedRange}{0.957 to 1.093}
 \newcommand{\EPairsGp}{11 of 12}
 \newcommand{\EPairsTwin}{10 of 12}
+\newif\ifgradingreadouts
+\gradingreadoutstrue
+\newcommand{\DShareGpRange}{0.647 to 0.731}
+\newcommand{\DShareGpAbove}{four of four}
+\newcommand{\DShareTwinRange}{0.614 to 0.849}
+\newcommand{\DShareTwinAbove}{four of four}
+\newcommand{\DMedShareRange}{0.398 to 0.612}
+\newcommand{\LoneRange}{$+0.075$ to $+0.119$}
+\newcommand{\LoneAbove}{four of four}
+\newcommand{\LtwoRange}{$+0.032$ to $+0.055$}
+\newcommand{\LtwoAbove}{four of four}
 \newcommand{\TabPrimary}{%
   \resizebox{\linewidth}{!}{%
   \begin{tabular}{lcccc}
@@ -96,6 +107,10 @@
     \quad hold & $\mathbf{+0.360}$ $[+0.304, +0.403]$ & $\mathbf{+0.387}$ $[+0.356, +0.413]$ & $\mathbf{+0.414}$ $[+0.378, +0.444]$ & $\mathbf{+0.421}$ $[+0.374, +0.457]$ \\
     \quad causal GP & $\mathbf{+0.078}$ $[+0.019, +0.125]$ & $\mathbf{+0.105}$ $[+0.076, +0.132]$ & $\mathbf{+0.153}$ $[+0.117, +0.191]$ & $\mathbf{+0.115}$ $[+0.065, +0.161]$ \\
     \quad the average of the three twins & $\mathbf{+0.067}$ $[+0.015, +0.108]$ & $\mathbf{+0.039}$ $[+0.015, +0.062]$ & $\mathbf{+0.088}$ $[+0.057, +0.124]$ & $\mathbf{+0.066}$ $[+0.029, +0.105]$ \\
+    \midrule
+    \multicolumn{5}{l}{\emph{Linear filter fitted on the training discharges}} \\
+    \quad recurrent estimator over the filter with fast channels & $\mathbf{+0.109}$ $[+0.074, +0.143]$ & $\mathbf{+0.075}$ $[+0.052, +0.098]$ & $\mathbf{+0.119}$ $[+0.092, +0.142]$ & $\mathbf{+0.106}$ $[+0.070, +0.135]$ \\
+    \quad filter with fast channels over the filter without & $\mathbf{+0.055}$ $[+0.027, +0.094]$ & $\mathbf{+0.047}$ $[+0.032, +0.061]$ & $\mathbf{+0.046}$ $[+0.027, +0.066]$ & $\mathbf{+0.032}$ $[+0.015, +0.049]$ \\
     \midrule
     \multicolumn{5}{l}{\emph{Median absolute error (eV)}} \\
     \quad hold & 43.8 & 48.9 & 48.8 & 42.7 \\
