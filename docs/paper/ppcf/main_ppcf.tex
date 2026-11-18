@@ -319,10 +319,11 @@ it is positive in \SoneRunsPos{} of the \RunsWord{} trainings (\SoneRuns{}). The
 registered interval, which draws an initialisation as well as the discharges, is
 above zero on \SoneAbove{} splits, so the statement registered for the four splits
 \SoneVerdict{}. Between the three initialisations of a split the skill differs by
-\SpreadRange{}.\ifgradingreadouts\ Counted per discharge (registered), the estimator
+\SpreadRange{}.\ifgradingreadouts\ Counted per discharge, the estimator
 has the lower mean squared error than the causal GP in \DShareGpRange{} of the test
-discharges and than its twin in \DShareTwinRange{}; the interval is above one half
-on \DShareGpAbove{} and \DShareTwinAbove{} splits.\fi Over hold the skill is \OverHoldRange{} (\OverHoldAbove{}
+discharges and than its twin in \DShareTwinRange{} (the interval is above one half
+on \DShareGpAbove{} and \DShareTwinAbove{} splits), while the ten discharges with the
+largest reduction hold 0.470 to 0.748 of the reduction against the causal GP.\fi Over hold the skill is \OverHoldRange{} (\OverHoldAbove{}
 intervals above zero).\ifpooled\ Pooled over eight re-partitions the skill is \Pone{}
 over the causal GP (fold-level interval \PoneFold{}) and \PHold{} over hold.\fi
 
@@ -361,12 +362,11 @@ Whether the margin of one training is separated from zero on one split of 96
 discharges depends on the initialisation and on a few discharges\ifpooled ; the
 pooled readout over 639 discharges is the one that carries the claim\else ; a
 pooled cross-validation over the 639 discharges (five folds, eight re-partitions),
-registered as the primary readout, is not yet complete\fi. Figure~\ref{fig:tracemain} shows the estimates through gaps in three
-discharges, one of them typical.
+registered as the primary readout, is not yet complete\fi. Figure~\ref{fig:tracemain} shows three discharges, one of them typical.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.62\linewidth]{fig_trace_causal}
+  \includegraphics[width=0.60\linewidth]{fig_trace_causal}
   \caption{Example traces through gaps (first initialisation of the second split).
   Circles: reported \Ti{}; shaded: grid rows without a usable \Ti{}; dotted: an absent
   frame (beam blip). Lines: estimates from CES values before each row; the recurrent
@@ -456,7 +456,7 @@ changed (numbers of each split in \Supp{sec:rows}).
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.66\linewidth]{../b48_events_fig}
+  \includegraphics[width=0.64\linewidth]{../b48_events_fig}
   \caption{Averages conditioned on two kinds of event, as ratios to the level before
   the event. (a) Beam blips in the test discharges of the four splits (means; the
   shaded band is the absent frame): the reported \Ti{} (``measured'' in the legend), the ECEI and BES levels,
