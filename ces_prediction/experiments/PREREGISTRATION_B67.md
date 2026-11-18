@@ -88,3 +88,23 @@ The estimator of the paper is not changed by this batch.
 
 - There is one initialisation per fold and three re-partitions.
 - The gates are a property of one trained network per fold. Gates of a softmax over four sources can stay near uniform and still let the embeddings carry the reweighing, so a flat gate does not show that the sources are used equally.
+
+## Addendum 1 (2026-11-19, before any run)
+
+Definitions the registration left open, fixed at implementation time and before any GPU run.
+
+- **Rows right after a measured frame.** Not a beam-blip row, and the previous kept row is 10 ms earlier (age 10 ms within 0.5 ms) with a finite T_i, as in the age and hold variables of B.54. About 96 % of scored rows are in this class. It is checked row by row against the network's own staleness input.
+- **Rows within 30 ms of a burst onset, and inter-burst rows.** These are `run_b66.phase_masks`: 0 to 30 ms after an onset, and at least 50 ms from every onset. They are taken within classes B and C of B.66, as in its statement R3. Classes A, B and C are also reported whole.
+- **Re-running a failed readout.** An arm S run counts as done only when both its scored errors and its gate file exist. Otherwise it is scored again. A failed gate-alignment check marks the run as failed.
+- **Descriptive readouts, without statements.** The following gate differences are reported but carry no statement:
+  - burst rows minus inter-burst rows;
+  - class C minus class A;
+  - hottest third minus coldest third;
+  - per-row gate quantiles.
+
+  All gate intervals use the same draws, so each difference is formed draw by draw.
+- **Checks.** All passed before any run: `docs/paper/b67_checks.md` lists checks (a) to (h).
+  - The parameter counts are 430,758 (S) and 369,318 (A), against 357,570 for `seq_v2`.
+  - Causality is bit-exact.
+  - The gate alignment reproduces the stored errors of the network on all 37,483 rows of r2 f0, and a negative control shifted by one row fails.
+  - The 30 environments equal those of B.59 arm N apart from the model and the directory.
