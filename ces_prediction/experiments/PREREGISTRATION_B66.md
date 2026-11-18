@@ -36,3 +36,7 @@ Class A about a third of the discharges and colder. R1 uncertain (+0.00 to +0.04
 ## 7. Limits known in advance
 
 Burst rate is a proxy for an ELMy edge, not a mode label. Classes are confounded with temperature level and beam power.
+
+## Addendum 1 (2026-11-18, after the class counts and before any error was read)
+
+28 of the 639 discharges are short files (4 to 16 grid rows) in which no row has the ten rows of segment before it that the detector needs, so their burst rate is undefined; they carry about 150 of the about 192,000 scored rows per re-partition. They form a fourth group, "rate not defined", in no class and no statement, reported with its counts. The thresholds come from the other 611 discharges and are unchanged. Counts as fixed before any error: class A (no burst) 251 discharges, median T_i 629 eV; B 201 (607 eV); C 159 (335 eV); median of the non-zero rates 0.719 per second. The expectation of section 6 that class A is colder is contradicted by these counts: class C is the cold one.
