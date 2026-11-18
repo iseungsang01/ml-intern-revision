@@ -100,10 +100,20 @@ DERIVED = {
     "3.84": "median CESNN rotation uncertainty 3.84 km/s, Kim2026AutomatedOutlier sec. 3",
     "0.080": "median CESNN T_i uncertainty 0.080 keV, Kim2026AutomatedOutlier sec. 3",
     "1.1": "beam-power drop of at least 1.1 MW at the blips of 31923, read from Fig. 2(b) of Heo2025",
-    # beam-heating estimate (supplement): own arithmetic from Heidbrink & Sadler 1994 eqs 7, 9, 10
-    "9.3": "critical energy at T_e 0.5 keV, n_e 2.5e19, 95 keV D, Z_eff 2 (lit_beam_physics.md, balance.py)",
-    "0.17": "share of 95 keV beam energy to ions at the same parameters (same source)",
-    "10.5": "median beam-off duration of one-absent-frame blips in the raw streams (b61_blip_dose.md: 10.5 ms)",
+    # channel geometry (S10, Table S7): lit_kstar_geometry.md
+    "2.12": "BES view of 31923 spans R ~ 2.12-2.34 m, read from Fig. 1 of Heo2025",
+    "2.34": "same",
+    "2.16": "BES columns 5-7 at R ~ 2.16-2.21 m if the column index increases outward (from the 2.12-2.34 m box)",
+    "2.21": "same",
+    "2.6": "ECEI channel frequency f = LO + 2.6 + 0.9 (n_r - 1) GHz (fluctana kstarecei.py; syndia; user guide)",
+    "0.9": "same formula, 0.9 GHz channel spacing",
+    # blip facts and an earlier inter-ELM profile (lit_kstar_facts.md, third pass)
+    "2014": "year of discharge 10350 in Ko2016CharacteristicsToroidal",
+    "2.23": "T_i pedestal top at R ~ 2.22-2.23 m, read from Fig. 2 of Ko2016CharacteristicsToroidal",
+    "2.26": "CES error bars grow beyond R ~ 2.26 m, read from Fig. 2 of Ko2016CharacteristicsToroidal",
+    "2.7": "2.7 MW net beam power, 1.0 MW by NB1-B, Kim2018EnhancedFast sec. II",
+    # the beam-heating and optical-depth estimates are in docs/paper/b62_estimates.md (a source below)
+    "10.5":"median beam-off duration of one-absent-frame blips in the raw streams (b61_blip_dose.md: 10.5 ms)",
 }
 
 
@@ -184,6 +194,7 @@ def main():
         (ROOT / "docs/paper/b61_absolute_robust.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b61_blip_dose.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b62_beam_return.md").read_text(encoding="utf-8"),
+        (ROOT / "docs/paper/b62_estimates.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b42_delay.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b43_target_checks.md").read_text(encoding="utf-8"),
         (ROOT / "docs/paper/b44_strata.md").read_text(encoding="utf-8"),

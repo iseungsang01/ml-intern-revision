@@ -1037,8 +1037,11 @@ the device, on the discharges of this data set and on the diagnostics, and marks
 not published. The chord at $R = 2.198$\,m was selected by the data provider as the
 pedestal top; in other campaigns the last closed flux surface lay near $R \approx 2.25$\,m
 in H-mode~\citep{Ko2015IonTemperature}, the charge-exchange channels nearest the pedestal
-top at $R \approx 2.19$ to 2.20\,m~\citep{Kim2020PedestalElectron}, and a channel at
-$R = 2.192$\,m is described as near the pedestal top~\citep{Lee2026NeuralNetworkbased}.
+top at $R \approx 2.19$ to 2.20\,m~\citep{Kim2020PedestalElectron}, a channel at
+$R = 2.192$\,m is described as near the pedestal top~\citep{Lee2026NeuralNetworkbased},
+and in an inter-ELM profile of 2014 the \Ti{} pedestal top is at $R \approx 2.22$ to
+2.23\,m (read from figure~2 of~\citep{Ko2016CharacteristicsToroidal}): the pedestal-top
+position differs between published discharges ($R \approx 2.19$ to 2.23\,m).
 In the published equilibrium of a 2022 discharge of this set (32092) the midplane
 separatrix lies at $R \approx 2.24$\,m, the edge charge-exchange channels span
 $R \approx 2.18$ to 2.25\,m about 4\,mm apart, and the pedestal tops of \Ti{} and the
@@ -1050,7 +1053,31 @@ figure~2(e) of~\citep{Heo2025ExperimentalIdentification}. $R = 2.198$\,m is thus
 4\,cm inside that separatrix; no publication gives the pedestal-top position of the 2022
 discharges in metres.
 
-\begin{table}[h]
+\paragraph{Where the fast channels are.} The files describe the BES and ECEI channels as
+lying within about 1.5\,cm of the chord. The published geometry gives the following
+(Table~\ref{tab:plasma}). The ECEI channels GT1103 to GT1403 belong to the transmitted-beam
+array of the first ECEI system: the first two digits of a name are the vertical index
+(01 to 24) and the last two the radial index (01 to 08), and a channel's frequency is
+$f = \mathrm{LO} + 2.6 + 0.9\,(n_r - 1)$\,GHz, placed at the cold second-harmonic
+resonance, with radial channel 1 outermost (the public analysis codes \citep{fluctana,syndia}
+and the facility's data user guide~\citep{KFE2026DiagnosticsDataUserGuide}). The four
+channels are therefore vertically adjacent rows of radial column 3, about 2\,cm apart
+around the midplane. In a published figure of 32092 that column is at $R \approx 2.19$\,m
+(read from figure~1(b) of~\citep{Lee2026SpatiotemporalStructure}); between discharges the
+position is uncertain by 2 to 3\,cm, because the local-oscillator frequency and the field
+of each discharge are not published, plus about 1\,cm of mapping
+error~\citep{Yun2011TwoDimensionalVisualization}. The BES names are BES\_[vertical 01 to
+04][radial 01 to 16] on a $4\times16$ array of about 1\,cm pitch viewing the first beam
+line, movable from discharge to discharge~\citep{KFE2026DiagnosticsDataUserGuide}. In the
+published view of 31923 the array spans $R \approx 2.12$ to 2.34\,m (read from figure~1
+of~\citep{Heo2025ExperimentalIdentification}), so columns 5 to 7 are at $R \approx 2.16$ to
+2.21\,m if the column number increases outward. KSTAR raw data with CES, BES or ECEI
+signals are not openly available: the one public KSTAR file with one of these diagnostics
+is a 45\,ms de-identified 64-channel BES example~\citep{Joung2026PhysicsInformedPreprocessing},
+and the peer-review file of the paper that released it states that KSTAR raw data cannot
+be released in full~\citep{Joung2026ExplainableTokamakagnostic}.
+
+\begin{table}[p]
   \centering
   \caption{Published plasma and diagnostic parameters, with what is not published. The
   plasma rows give the published discharges of this data set only.}
@@ -1065,9 +1092,10 @@ discharges in metres.
     Published discharges of the set & 31357/31359, 31873, 31921/31923, 32092: $I_p$ 0.5 to 0.6\,MA, $B_T$ 1.8\,T, line-averaged $n_e$ 1.0 to 1.4$\times10^{19}$\,m$^{-3}$ where given, NBI 2 to 4\,MW; FIRE (I-mode-like edge), ELMy H-mode, RMP ELM suppression, QH-mode & \citep{Heo2025ExperimentalIdentification,Na2026FireMode,Kim2024HighestFusion,Yang2024TailoringTokamak,Lee2026SpatiotemporalStructure} \\
     Neutral beams & NBI-1 and NBI-2, three deuterium sources each, up to 100\,kV and about 2\,MW per source; CES and BES view NBI-1; in 2022 the first source of NBI-1 could not be used; in 31923 the beam power falls at the interruptions by at least 1.1\,MW from about 3.5\,MW (read from a figure) & \citep{Kwak2025EstimationNeutral,Lampert2015CombinedHydrogen,Lee2026NeuralNetworkbased,Han2024CriterionLong,Heo2025ExperimentalIdentification} \\
     CES & C\,VI 529.05\,nm, 32 chords, about 5\,mm apart at the edge; 10\,ms time resolution (papers on 2021 discharges and the 2022 diagnostics overview), with a 5\,ms exposure in one paper and a 10\,ms integration in another; background interpolated between beam-off frames (beam off for 10\,ms at 1 to 5\,Hz) & \citep{Lee2020TwoGaussian,Jang2021DevelopmentUltrafast,Lee2026NeuralNetworkbased,Kim2024KineticProfile,Lee2022OverviewRecent} \\
-    BES & $16\times4$ avalanche-photodiode array (radial $\times$ vertical), 2\,MHz, about 1\,cm resolution & \citep{Lampert2015CombinedHydrogen,Heo2025ExperimentalIdentification} \\
-    ECEI & $24\times8$ channels per array, second-harmonic X mode, 2\,$\mu$s & \citep{Yun2014Quasi3d} \\
-    Not available & per-frame edge fit uncertainty; the exposure setting of 2022; which beam source is switched off and when; the optical depth of ECE at the pedestal top (edge ECE may be too thin to give $T_e$~\citep{Heo2025ExperimentalIdentification}); the direction of the BES column index; the pedestal-top position of the 2022 discharges in metres; real-time use of CES, BES, ECE or ECEI in the KSTAR control system (published controllers use D-alpha, real-time equilibrium reconstruction and density~\citep{Kim2024HighestFusion}; real-time CES is a stated goal~\citep{Lee2026NeuralNetworkbased}) & -- \\
+    BES & $16\times4$ avalanche-photodiode array (radial $\times$ vertical), 2\,MHz, about 1\,cm pitch, on NBI-1, movable from discharge to discharge; names BES\_[vertical 01--04][radial 01--16]; in 31923 the view spans $R \approx 2.12$ to 2.34\,m (read from a figure), so columns 5 to 7 lie at $R \approx 2.16$ to 2.21\,m if the column number increases outward (not stated in a publication; a public de-identified KSTAR BES file has the radius increasing with the column number) & \citep{Lampert2015CombinedHydrogen,Heo2025ExperimentalIdentification,KFE2026DiagnosticsDataUserGuide,Joung2026PhysicsInformedPreprocessing} \\
+    ECEI & $24\times8$ channels per array, second-harmonic X mode, 2\,$\mu$s; GT = first system (G port), transmitted-beam array; the four digits are the vertical (01--24) and radial (01--08) index; $f = \mathrm{LO} + 2.6 + 0.9\,(n_r - 1)$\,GHz at the cold resonance, radial channel 1 outermost; GT1103 to GT1403 are four vertically adjacent channels of radial column 3, about 2\,cm apart around the midplane; that column at $R \approx 2.19$\,m in 32092 (read from a figure), 2 to 3\,cm uncertain between discharges & \citep{Yun2014Quasi3d,Yun2011TwoDimensionalVisualization,Lee2026SpatiotemporalStructure,fluctana,syndia,KFE2026DiagnosticsDataUserGuide} \\
+    ECE optical depth & not published per discharge; second-harmonic X mode at 1.8\,T and $R \approx 2.2$\,m: about 6.7 at $n_e = 2\times10^{19}$\,m$^{-3}$ and 0.5\,keV, 2.9 at $1.5\times10^{19}$ and 0.3\,keV, 1.2 at $1\times10^{19}$ and 0.2\,keV, 0.5 at separatrix values (estimate from published formulas, \texttt{docs/paper/b62\_estimates.md}); the KSTAR pedestal is described as optically thick or grey & \citep{Yun2011TwoDimensionalVisualization,Zhu2019NewTrends} \\
+    Not available & per-frame edge fit uncertainty; the exposure setting of 2022; which beam source is switched off and when; the ECEI local-oscillator frequency, the field and the BES array position of each discharge; a printed statement of the direction of the BES column index; the pedestal-top position of the 2022 discharges in metres; real-time use of CES, BES, ECE or ECEI in the KSTAR control system (published controllers use D-alpha, real-time equilibrium reconstruction and density~\citep{Kim2024HighestFusion}; real-time CES is a stated goal~\citep{Lee2026NeuralNetworkbased}) & -- \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1086,9 +1114,10 @@ is off from 1.7\,ms before an absent stamp to 8.8\,ms after it, which places the
 frame: the time stamp of a row lies within about 2\,ms of the start of its 10\,ms
 frame, so an estimate formed at the stamp uses fast-channel samples taken no later than
 2\,ms into the frame it estimates and CES values of frames that had ended by then. The
-published charge-exchange papers give a 10\,ms time resolution with a 5\,ms
-exposure~\citep{Lee2020TwoGaussian} or a 10\,ms integration~\citep{Jang2021DevelopmentUltrafast}
-and none states the 2022 setting, so the placing of the frame relative to the stamp is
+published values conflict: 10\,ms frames with a 5\,ms
+average~\citep{Ko2016CharacteristicsToroidal} or a 5\,ms exposure~\citep{Lee2020TwoGaussian},
+and a ``10\,ms integration time''~\citep{Jang2021DevelopmentUltrafast}; none states the
+2022 setting, so the placing of the frame relative to the stamp is
 inferred from the beam interruptions. The published analysis subtracts a background
 interpolated between the two neighbouring beam-off frames~\citep{Lee2020TwoGaussian}. Values that repeat the
 previous one to the last digit are held values, not measurements (one \Ti{} row in
@@ -1134,7 +1163,10 @@ rotation over all channels and times of a 2022 discharge in the neural-network
 analysis~\citep{Kim2026AutomatedOutlier}, error bars of about 0.10 to 0.14\,keV at $r/a$
 0.85 to 0.97 in the H-mode of 31921 (read from figure~10(a) of~\citep{Na2026FireMode};
 single frame or average not stated), and a scatter of about 0.05\,keV at normalized
-radius 0.94 in 31923 (read from figure~2(d) of~\citep{Heo2025ExperimentalIdentification}).
+radius 0.94 in 31923 (read from figure~2(d) of~\citep{Heo2025ExperimentalIdentification});
+in an inter-ELM profile of 2014 the error bars are about 15 to 25\,eV up to
+$R \approx 2.25$\,m and grow to 70 to 350\,eV beyond 2.26\,m (read from figure~2
+of~\citep{Ko2016CharacteristicsToroidal}).
 (iv) The reported value follows the plasma
 as seen by a diagnostic that uses neither the beam nor the spectrometer: the changes
 of the 200\,ms means of \Ti{} and of the ECEI level from one block to the next have a
@@ -1344,8 +1376,10 @@ a non-positive channel and are dropped), the common mode $c$ is the mean of $l_k
 the nine channels; the radial difference $g$ is the mean over column 07 of the array minus
 the mean over column 05 (we read BES\_0105 to BES\_0307 as rows 1 to 3 and columns 5 to 7
 of the $16\times4$ array after the published naming form~\citep{Lampert2015CombinedHydrogen};
-the direction in which the column index increases is not published, so the sign of $g$
-is a label, not a statement on geometry) ($g_1$, $g_2$ between adjacent columns; the level falls from
+no publication states the direction in which the column index increases; a public
+de-identified KSTAR BES file has the radius increasing with the column
+number~\citep{Joung2026PhysicsInformedPreprocessing}, but the sign of $g$ remains a label,
+not a statement on geometry) ($g_1$, $g_2$ between adjacent columns; the level falls from
 column 05 to column 07), and the poloidal difference $h$ is the same between rows 03
 and 01. A change of the beam
 is a shift common to all $l_k$. \emph{Control.} At the 1{,}366 absent-frame events
@@ -1659,8 +1693,11 @@ measurement of the first frame adds beyond the shape shared with ECEI. The fresh
 the rotation of the chord are 0.973 $[0.960, 0.989]$ of their level in the first row (met).
 \emph{Reading,} by the registered rule for these outcomes: a change that begins while the
 beam is off and deepens after its return is present, so a response to the loss of the
-beam is not excluded in shape. The ECEI level is not a temperature (at the edge it depends
-on density as well~\citep{Vanovac2018EffectsDensity}), the readout has 31 events, and one
+beam is not excluded in shape. The ECEI level is not a temperature: at the chord the
+second-harmonic X-mode layer is optically thick in dense H-mode and grey in low-density
+phases (an estimated optical depth of about 6.7 at $2\times10^{19}$\,m$^{-3}$ and
+0.5\,keV, 1.2 at $1\times10^{19}$\,m$^{-3}$ and 0.2\,keV; Table~\ref{tab:plasma}), where
+the level depends on density as well~\citep{Vanovac2018EffectsDensity}; the readout has 31 events, and one
 verdict changed with a correction made after reading. No mechanism is named, and the fall
 is not used as evidence on ion heat transport.
 
@@ -1687,18 +1724,32 @@ DIII-D~\citep{Heidbrink1988ComparisonExperimental}. How much of the heating an
 interruption removes is not published: in 2022 the first source of the first beam line
 could not be used~\citep{Han2024CriterionLong}, and in one discharge of this set the
 published beam power falls at the interruptions by at least 1.1\,MW from about 3.5\,MW
-(read from figure~2(b) of~\citep{Heo2025ExperimentalIdentification}), about a third. In a
+(read from figure~2(b) of~\citep{Heo2025ExperimentalIdentification}), about a third; no
+paper names the source switched off in 2022. In a published discharge of an earlier
+campaign the source that drops to zero about once a second (the second source of the
+first beam line, read from figure~1(a)) carried 1.0 of 2.7\,MW~\citep{Kim2018EnhancedFast},
+which agrees with a third. In a
 zero-dimensional balance $dW/dt = P_h(t) - W/\tau_E$, with $P_h$ the beam source passed
 through that slowing-down, $\tau_E$ of 50 or 85\,ms (a range around the IPB98(y,2)
 scaling at published KSTAR H-mode parameters~\citep{Kim2020PedestalElectron}, with an
 assumed density) and a third of the heating removed for 10.5\,ms, the fall averaged over
-the first frame after the return is about 2\% of the level (5 to 9\% if all the heating
-were removed), the largest fall comes 26 to 31\,ms after the return, and it scales with
-the length of the interruption. Ohmic and other heating are neglected, so these are upper
-estimates. This size is comparable with the fall of the ECEI level above (to 0.938 at its
+the first frame after the return is 1.8 to 2.9\% of the level (5.3 to 8.6\% if all the
+heating were removed), the largest fall comes 26 to 31\,ms after the return, and it scales
+with the length of the interruption (6.1 to 9.4\% for an interruption of 27\,ms). Ohmic
+and other heating are neglected, so these are upper estimates; every number of this
+paragraph is reproduced by
+\texttt{ces\_prediction/experiments/b62\_beam\_return/estimates\_published\_formulas.py}
+(output \texttt{docs/paper/b62\_estimates.md}). This size is comparable with the fall of the ECEI level above (to 0.938 at its
 lowest) and smaller than the first-row fall of \Ti{} (0.186 of the level), and no dose is
-seen in the events of two and three absent frames. A switching-on beam is also known to
-perturb the electrons and the rotation promptly~\citep{Zhao2023RefinedInterpretation,Lee2016ValidationToroidal}.
+seen in the events of two and three absent frames. Published for KSTAR blips are a
+plasma displacement and ion-temperature fluctuations~\citep{Kim2018EnhancedFast} (in its
+figure~1(a) the pedestal \Ti{} and rotation traces dip at each drop of the source, read
+from the figure) and changes of the rotation~\citep{Lee2016ValidationToroidal}; a
+switching-on beam also perturbs the electrons promptly~\citep{Zhao2023RefinedInterpretation}.
+With a fixed chord in a steep gradient, a displacement of the plasma changes the value
+read at the chord, and the files carry no equilibrium to test it. Which part of the fall
+is a response to the lost heating, a displacement, or the measurement of the first frame
+is not decided here.
 
 % =========================================================================
 \section{The four file-level splits of the main batch}
