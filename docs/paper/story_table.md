@@ -2,6 +2,17 @@
 
 `docs/paper/ppcf/fig_story.py`가 `docs/paper/b39_primary.json`과 `docs/paper/b49_average.json`에서 만든다. 손으로 고치지 않는다. 그림은 `docs/paper/story_fig_ko.png`. skill은 1 − MSE(A)/MSE(R), 대괄호는 95 % 구간. T_i, cut 모집단, 네 가지 파일 단위 분할.
 
+## pooled 교차검증 (639 방전, 5-fold를 여덟 번 다시 나눔; 기준값 0)
+
+| 비교 | skill [95 % 구간] | 기준값 제외 |
+|---|---|---|
+| pooled 639 방전: 대 causal GP (등록 진술 P1) | +0.089 [+0.064, +0.112] | 예 |
+| pooled 639 방전: 대 쌍둥이 (등록 진술 P2) | +0.048 [+0.022, +0.073] | 예 |
+| pooled: 대 hold | +0.375 [+0.352, +0.394] | 예 |
+| pooled: 대 PCHIP (다음 값을 씀) | +0.201 [+0.168, +0.231] | 예 |
+| pooled: 대 offline GP (다음 값을 씀) | −0.037 [−0.068, −0.008] | 예 |
+| pooled: 쌍둥이 대 causal GP | +0.043 [+0.023, +0.062] | 예 |
+
 ## 평균 제곱 오차 skill (기준값 0)
 
 | 비교 | 분할 1 | 분할 2 | 분할 3 | 분할 4 | 기준값 제외 |
