@@ -64,3 +64,8 @@ The agent that wrote the development script compared it with this registration b
 5. Check (a) compares the point estimates of section 2 to three decimals. The intervals of section 2 came from 4,000 resamples of the discharges of r2; the batch recomputes the r2 intervals with 20,000 resamples of its discharges (one re-partition has no first level to draw) and reports them.
 
 Fixed as well: the training discharges of a fold are all discharges that are not in its test fold (those the network used for training and for early stopping), as in the development script; on the four splits likewise every discharge that is not a test discharge of the split.
+
+## Addendum 2 (2026-11-18, written after the run; no statement is changed)
+
+One deviation, found and corrected by the agent during the run and recorded here. The frozen script locates a scored row in its data file as the first grid value within 0.01 eV of the stored value; where two values of a discharge differ by less than that, 45 of the 1.69 million pooled rows were placed one or more grid rows early. The batch locates each row as the closest grid value within 0.0003 eV instead, which agrees with the independent location of B.54 on every pooled row. The location decides only which row's filter output is scored; the filter and its fit do not use it, and check (a) gives the same digits either way. On the four splits and the split by time no row moved. Check (b) as registered had passed before the correction.
+

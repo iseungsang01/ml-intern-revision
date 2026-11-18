@@ -39,3 +39,19 @@ Within 20 %: estimator 0.74 to 0.80, causal GP lower by 0.003 to 0.02 (T20 holds
 ## 7. Limits known in advance
 
 The reported value carries its own scatter, so a share within 10 % of it is bounded above by that scatter and is not a share within 10 % of the ion temperature. Low values of T_i make the relative error large for a fixed error in eV; the thirds show this.
+
+## Addendum 1 (2026-11-18): the filters of B.56 — registered after the statements of B.60 and the skills of B.56 were read, before any relative error of a filter was computed
+
+B.60 found that, as a share of the reported value, the recurrent estimator is not above the causal GP (within 20 %: 0.770 against 0.772) and is below it in the coldest third of the discharges. B.56 found that a five-parameter filter whose state is the logarithm of the value has a median absolute error below that of hold (ratio 0.921 [0.906, 0.940]) and a fast-channel increment of +0.049. An estimator of the logarithm weighs a small value like a large one, so the same readout is made for the filters KF0 and KFX of B.56 (signed outputs in its cache), on the rows of re-partitions r3 to r9 (r2 was the development set of the filter and is reported apart), with the definitions, interval and strata of B.60.
+
+- **F20.** The share of rows within 20 % is higher for KFX than for the causal GP: interval of the difference above zero.
+- **F10.** The share of rows within 10 % is higher for KFX than for the causal GP: interval above zero.
+- **F20x.** The share within 20 % is higher for KFX than for KF0: interval above zero.
+- **F20c.** In the coldest third of the discharges the share within 20 % of KFX is not below that of the causal GP by more than 0.02: interval above -0.02.
+
+Reported: the shares and median relative errors of KF0 and KFX beside those of B.60 on the same rows; KFX against hold, the twin and the recurrent estimator; the strata of B.60; the rows with a reported value below 50 eV.
+
+What follows: if F20 and F10 hold, the paper says that an estimator of the logarithm with the same inputs raises the share of frames within 10 % and within 20 % of the reported value above that of the CES history alone, which the recurrent estimator does not, and the filter is named as the estimator to use where relative accuracy is the requirement. If they fail, the shares are given and the limit on the typical row stays as B.60 left it.
+
+Expectations: KFX within 20 % 0.775 to 0.80, above the causal GP by +0.003 to +0.02 (F20 holds or fails by a small margin); within 10 % 0.575 to 0.61, above the causal GP by +0.005 to +0.03 (F10 holds); F20x +0.003 to +0.015, holds; F20c -0.01 to +0.01, holds.
+

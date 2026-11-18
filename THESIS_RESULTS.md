@@ -8116,3 +8116,32 @@ What would change it: an estimator fitted on the logarithm of the value (the fil
 
 Manuscript: by section 5 of the registration one sentence of the main result and the limit on the typical row carry these numbers; this is done with the restructuring of the main text that waits for B.56, B.57 and B.59.
 
+### B.56: a five-parameter robust state-space filter with the BES array as input -- all six statements hold on the confirmation set; the filter carries the fast-channel increment (+0.049 [+0.040, +0.059]), most of it from the radial difference alone, and lowers the median below hold (2026-11-18)
+
+Registration `PREREGISTRATION_B56.md` with addendum 1 (the specification corrected to what the development script does, before any run on the confirmation set; two forking paths on r2 declared) and addendum 2 (a correction of the row location, recorded after the run). Proposed and run by a delegated agent asked for methodology, design fixed by the session lead; CPU, about an hour (`experiments/b56_kfx/run_b56.py`; frozen scripts `kfx_model.py`, `kfx_components.py` with their SHA-256 in the output). Output `docs/paper/b56_kfx.{json,md}`.
+
+The filter: state log T_i, a random walk with process variance proportional to the time step; observation log of the reported value; update weighted by min(1, k sqrt(S)/|v|); in the prediction step the state moves by b_c times the change of the BES common mode plus b_g times the change of the radial difference, each change clipped at 0.2. KF0 has no drive (three parameters), KFX both gains (five), Kc and Kg one. Fitted per fold on the discharges outside its test fold, in two stages.
+
+Checks, passed: (a) the r2 point estimates of the look reproduced to three decimals; (b) all 1,694,675 stored rows located, values equal within 0.00025 eV; (c) altering the CES values from row t on leaves the outputs up to t unchanged (30 of 30 trials).
+
+Statements on re-partitions r3 to r9 (r2 was the development set), all six hold, every point inside its expected range:
+
+| statement | value | verdict |
+|---|---|---|
+| KX1: KFX over KF0 | +0.049 [+0.040, +0.059] | holds |
+| KX2: Kg (radial difference only) over KF0 | +0.032 [+0.025, +0.039] | holds |
+| KX3: the network over KFX | +0.036 [+0.012, +0.058] | holds |
+| KX4: KF0 equivalent to the causal GP (90 % interval inside +-0.02) | +0.005 [-0.007, +0.017] | holds |
+| KX5: median absolute error of KFX over that of hold | 0.921 [0.906, 0.940] | holds |
+| KX6: KFX over KF0 in rows not within ten rows after an absent frame | +0.045 [+0.036, +0.055] | holds |
+
+Reported (r3 to r9): the twin over KF0 +0.037 [+0.021, +0.053]; KFX over the twin +0.013 [-0.007, +0.032]; Kc over KF0 +0.042 [+0.033, +0.051]; KFX over Kc +0.008 [+0.004, +0.011], over Kg +0.018 [+0.012, +0.024]; KFX over the causal GP +0.055 [+0.039, +0.070], against the offline GP -0.076 [-0.097, -0.056]; the network over the causal GP +0.089 [+0.063, +0.112] and over its twin +0.049 [+0.023, +0.073] on these rows. Medians (eV): KFX 41.8, Kc 41.1, KF0 43.3, Kg 43.5, causal GP 44.1, hold 45.4, the network 45.8, twin 46.3, offline GP 37.5. Clip at 0.1 and at 0.4: KFX over KF0 +0.048 [+0.040, +0.056] and +0.048 [+0.039, +0.057]. By third of the discharges by median T_i, KFX over KF0: coldest +0.001 [-0.007, +0.009], middle +0.042 [+0.031, +0.054], hottest +0.101 [+0.085, +0.117]; the network over KFX +0.046 [+0.015, +0.072], +0.005 [-0.036, +0.039], +0.049 [+0.001, +0.086]. Gains on the confirmation folds: b_c 0.435 to 0.577, b_g 0.416 to 0.504 with both fitted; alone b_c 0.62 to 0.76 and b_g 0.73 to 0.79; k about 2.8.
+
+Four splits (at least three of four): KX1 4/4 (+0.046 to +0.063), KX2 4/4 (+0.029 to +0.042), KX3 2/4 (+0.021 to +0.056, with the three initialisations of B.39 drawn in the interval), KX4 0/4 (the intervals on 96 discharges are about twice the margin), KX5 4/4 (0.909 to 0.936), KX6 4/4 (+0.040 to +0.056). Split by time (95 test discharges, 20,062 rows; reported): KFX over KF0 +0.027 [+0.016, +0.038], Kg over KF0 +0.018 [+0.009, +0.028], KFX over the causal GP +0.085 [+0.044, +0.118].
+
+Reading. (1) The fast-channel increment does not need a network, a twin or an initialisation: two gains on the changes of two summaries of the BES array give +0.049, the size the network has over its twin (+0.049 on the same rows), with an interval about two and a half times narrower. (2) A gain can be quoted: with both fitted, a change of 10 % of the BES common mode moves the estimate by about 5 % and so does a change of the radial difference. (3) Two thirds of the filter's increment are available from the radial difference alone, in which a beam interruption is attenuated to 0.121 of its size. (4) The network's margin over the filter (+0.036) is of the size of the twin's over KF0 (+0.037), and KFX is not separated from the twin: what the network adds to the filter is a better use of the CES history, not of the fast channels. (5) With the same inputs the filter lowers the median absolute error below that of hold; the network does not. (6) The increment is absent in the coldest third of the discharges for the filter as for the network (B.54). (7) The causal GP behaves as a robust filter on the logarithm of the value.
+
+Limits. The specification was chosen on r2 by an agent that saw its test rows; r3 to r9 re-partition the same discharges. The clip is ad hoc. On single splits KX3 and KX4 are not decided.
+
+By the registered rules: the filter and its increment enter the main result beside the network's; the network stays the estimator of the paper (KX3) and its margin over the filter is stated as a better use of the CES history; the sentence on the beam says that the filter's increment is available from the radial difference alone; the limit on the median is rewritten; the 20-parameter reading of the network is marked as superseded. Done with the restructuring of the main text.
+
