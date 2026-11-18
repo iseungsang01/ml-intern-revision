@@ -34,3 +34,7 @@ I1 +0.00 to +0.05, uncertain (values above 3 keV dominate the squared error). I2
 ## 7. Limits known in advance
 
 Three re-partitions, one initialisation. The values above 3 keV are mostly fit failures; scoring on them measures the estimator against analysis errors as well.
+
+## Addendum 1 (2026-11-19, before any run)
+
+Besides `CES_TI_SPIKE_CUT_EV` and the output directories, one more variable differs from B.39: `CES_CONTROL_METRICS` points to the normalisation statistics of the inclusive population made by B.27 (`.b27_ctrl_incl_r{r}_f{k}` instead of `.b27_ctrl_cut_r{r}_f{k}`). It is read only by the evaluation step and is part of the population change, not a separate choice. Checks before any run: the 30 planned environments match the recorded `metrics.json` of the B.39 runs apart from these three variables; no file is in two of training, validation and test; the cut references recomputed on r2 to r4 equal the stored B.39 errors bit for bit, and the inclusive references equal those of the B.27 inclusive runs. The trimmed skill on the rows at or below 3 keV removes the top 1 % of those rows, not of all rows. The readout was validated on the stored cut runs (it reproduces the B.61 values exactly).
