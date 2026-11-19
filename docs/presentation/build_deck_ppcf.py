@@ -202,6 +202,11 @@ NOTE["layout"] = """왼쪽: KFE 발표 자료(Current status of the KSTAR diagno
 NOTE["positions"] = """가운데: 받은 ABCD 위치 그림(syndia 보정 전)을 우리 채널 구역만 잘라 파일의 채널을 표시했습니다. 빨간 원이 BES 9채널(105–107, 205–207, 305–307), 파란 원이 ECEI GT1103–GT1403입니다.
 굵은 점선이 CES 측정선 ch18, R = 2.198 m이고, 가는 점선이 이웃 측정선 2.192 m, 2.203 m입니다. BES와 ECEI 채널은 측정선에서 1–2 cm 안에 있습니다.
 아래 표가 자료의 요약입니다."""
+NOTE["blip"] = """빔 blip 한 건의 예입니다. KSTAR #31923, 5.00 s.
+왼쪽 위: 원시 BES(500 kHz, 파일의 9채널 평균). 가열 빔이 약 11 ms 꺼지는 동안 BES가 거의 0으로 떨어집니다(회색). 검은 점은 10 ms 파일에 들어 있는 BES 값입니다.
+왼쪽 가운데: 10 ms 파일의 CES Ti. 4.992 s 다음 행이 5.012 s로, 그 사이 프레임의 값이 없습니다(주황). 빔이 꺼지면 전하 교환 빛이 없어서 그 프레임은 분석되지 않습니다. 직후 Ti는 약 414 eV에서 187 eV로 낮아졌다가 수십 ms에 걸쳐 회복합니다.
+왼쪽 아래: 원시 ECEI(4채널 평균). 빔과 무관한 신호인데도 blip 직후부터 낮아지고 천천히 회복합니다. 즉 Ti의 감소는 빔 세기가 아니라 플라스마 쪽 변화를 따릅니다(6절 그림 5의 사건 평균과 같은 모습).
+오른쪽: 같은 방전을 다룬 Heo et al. (2025) 그림 2. (b)의 PNBI가 약 3.5 s와 5.0 s에 계단처럼 떨어지는 것이 빔 blip이고, (e)의 BES_0206 스펙트로그램에서 같은 시각에 흰 세로줄이 보입니다. BES_0206은 이 연구가 읽는 채널 가운데 하나입니다."""
 NOTE["discharges"] = """방전 639개를 한 점씩 그렸습니다. 왼쪽부터 방전 번호에 따른 Ti 중앙값, Vrot 중앙값과 Ti 중앙값, BES 수준과 Ti 결측 비율입니다.
 색은 BES 버스트 빈도(초당), 회색은 파일이 짧아 빈도를 정할 수 없는 방전입니다. 빈 네모는 캠페인 마지막 97개 방전으로, 시간순 확증에서 시험 블록으로 씁니다.
 Ti 중앙값은 3 keV 넘는 값을 뺀 뒤, Vrot 중앙값은 직전 값의 반복(유지값)을 뺀 뒤의 값입니다. 가운데 패널은 −100–250 km/s 밖의 방전을 생략했습니다(개수는 그림에 표시).
@@ -455,11 +460,20 @@ def build():
     page_number(s, 10)
     notes(s, NOTE["vrot"])
 
+    # appendix: one beam blip
+    s = content_slide(prs, "보충: 빔 blip 예 (#31923, 5.00 s)")
+    yb = picture(s, HERE / "figures" / "deck_ppcf" / "blip_31923_ko.png", 91, 326, 980)
+    textbox(s, 91, yb + 6, 980, 70, ["우리 자료: 원시 BES(500 kHz)가 11 ms 동안 꺼지고(회색), 그 프레임의 CES 값이 없음(주황). 직후 Ti와 ECEI가 함께 낮아졌다가 회복"], 22, MUTED)
+    yh = picture(s, DECK_IN / "heo2025_fig2.png", 1120, 326, 420)
+    textbox(s, 1120, yh + 6, 530, 130, ["Heo et al., Nucl. Fusion 65, 036003 (2025), 그림 2 (같은 방전 #31923). (b) PNBI가 약 3.5 s와 5.0 s에 떨어짐, (d) Ti,edge, (e) BES_0206 스펙트로그램의 흰 세로줄"], 22, MUTED)
+    page_number(s, 11)
+    notes(s, NOTE["blip"])
+
     # appendix: discharges
     s = content_slide(prs, "보충: 방전 분포")
     yb = picture(s, HERE / "figures" / "deck_ppcf" / "dataset_overview_ko.png", 91, 330, 1734)
     textbox(s, 91, yb + 8, 1734, 70, ["방전마다 한 점. 색: BES 버스트 빈도, 빈 네모: 캠페인 마지막 97개 방전(시간순 시험 블록). Ti 중앙값은 3 keV 컷 뒤, Vrot 중앙값은 유지값을 뺀 뒤의 값"], 22, MUTED)
-    page_number(s, 11)
+    page_number(s, 12)
     notes(s, NOTE["discharges"])
 
     prs.save(str(OUT))

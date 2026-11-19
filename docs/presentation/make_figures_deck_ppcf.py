@@ -208,8 +208,83 @@ def overview(rows):
     print("overview", len(rows), "discharges,", int(test.sum()), "in the test block")
 
 
+HEO_PDF = ROOT / "data" / "literature" / "Heo2025ExperimentalIdentification.pdf"
+
+
+def heo_figure():
+    """Heo et al., Nucl. Fusion 65 (2025) 036003, figure 2 (KSTAR #31923): the beam power drops at the blips."""
+    import fitz
+    doc = fitz.open(str(HEO_PDF))
+    pix = doc[4].get_pixmap(dpi=250)
+    im = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+    k = 250 / 170.0  # crop box measured on a 170 dpi rendering of the page
+    im = im.crop((int(140 * k), int(180 * k), int(705 * k), int(880 * k)))
+    im.save(INP / "heo2025_fig2.png")
+    print("heo fig2", im.size)
+
+
+def raw_slice(shot, diag, t0, t1):
+    import pandas as pd
+    man = json.load(open(ROOT / "data" / "raw_mus" / "delivery_manifest.json", encoding="utf-8"))
+    m = [r for r in man if r["shot"] == shot and r["diag"] == diag][0]
+    i0 = int(round((t0 - m["t0"]) * m["fs_hz"]))
+    n = int(round((t1 - t0) * m["fs_hz"]))
+    df = pd.read_csv(ROOT / "data" / "raw_mus" / m["csv"], skiprows=range(1, i0 + 1), nrows=n)
+    return df["time"].to_numpy(), df.drop(columns="time").to_numpy().mean(axis=1)
+
+
+def blip_example(shot=31923, t0=4.90, t1=5.12):
+    """One beam blip: raw BES and ECEI (mean of the file's channels, 0.1 ms means) and the 10 ms file around it."""
+    plt.rcParams.update({"font.family": ["Malgun Gothic", "DejaVu Sans"], "axes.unicode_minus": False, "font.size": 13})
+    with open(ROOT / "data" / f"s{shot}.csv", encoding="utf-8") as fh:
+        rd = list(csv.reader(fh))
+    h, body = rd[0], rd[2:-1]
+    tt = np.array([float(r[0]) for r in body])
+    sel = (tt >= t0) & (tt <= t1)
+    ti = np.array([float(r[h.index("CES_TI")]) if r[h.index("CES_TI")].strip() else np.nan for r in body])
+    bes_f = np.array([np.mean([float(r[i]) for i, c in enumerate(h) if c.startswith("BES")]) for r in body])
+    gaps = [(tt[k], tt[k + 1]) for k in np.where(np.diff(tt) > 0.015)[0] if t0 <= tt[k] <= t1]
+    fig, axs = plt.subplots(3, 1, figsize=(11.5, 6.4), dpi=200, sharex=True, gridspec_kw={"hspace": 0.12})
+    for diag, ax, col, lab in (("BES", axs[0], "#1f5fae", "BES (원시 500 kHz, 9채널 평균)"),
+                               ("ECEI", axs[2], "#d0731c", "ECEI (원시 500 kHz, 4채널 평균)")):
+        t, v = raw_slice(shot, diag, t0, t1)
+        nb = len(t) // 50
+        tb, vb = t[: nb * 50].reshape(nb, 50).mean(axis=1), v[: nb * 50].reshape(nb, 50).mean(axis=1)
+        ax.plot(tb, vb, color=col, linewidth=1.0, label=lab)
+        if diag == "BES":
+            med = np.median(vb[tb < tb[0] + 0.05])
+            off = vb < 0.5 * med
+            if off.any():
+                beam_off = (tb[off][0], tb[off][-1])
+                ax.axvspan(tb[off][0], tb[off][-1], color="#9aa0a6", alpha=0.35, linewidth=0)
+                ax.text(tb[off][-1] + 0.002, med * 0.25, f"빔 꺼짐 {1000 * (tb[off][-1] - tb[off][0]):.0f} ms", fontsize=12)
+            ax.plot(tt[sel], bes_f[sel], "o", color="#16202e", markersize=4, label="10 ms 파일의 BES 값")
+        ax.set_ylabel("신호 (파일 값)")
+        ax.legend(loc="lower right" if diag == "BES" else "upper right", fontsize=11, frameon=False)
+        ax.grid(True, color="#e3e3e3", linewidth=0.8)
+    for a in (axs[1], axs[2]):
+        a.axvspan(*beam_off, color="#9aa0a6", alpha=0.25, linewidth=0)
+    ax = axs[1]
+    ok = sel & ~np.isnan(ti)
+    ax.plot(tt[ok], ti[ok], "o-", color="#c0392b", markersize=5, linewidth=1.0, label="CES Ti (10 ms 파일)")
+    for a, b in gaps:
+        ax.axvspan(a + 0.005, b - 0.005, color="#f3c9a8", alpha=0.8, linewidth=0)
+        ax.annotate("값 없는 프레임", xy=((a + b) / 2, np.nanmin(ti[ok]) + 40), xytext=(a - 0.012, np.nanmin(ti[ok]) + 15),
+                    ha="right", va="center", fontsize=12, arrowprops=dict(arrowstyle="->", color="#7a4a20", lw=1.2))
+    ax.set_ylabel("Ti (eV)")
+    ax.legend(loc="lower right", fontsize=11, frameon=False)
+    ax.grid(True, color="#e3e3e3", linewidth=0.8)
+    axs[2].set_xlabel(f"시간 (s), KSTAR #{shot}")
+    axs[2].set_xlim(t0, t1)
+    OUT_FIG.mkdir(parents=True, exist_ok=True)
+    fig.savefig(OUT_FIG / f"blip_{shot}_ko.png", bbox_inches="tight", facecolor="white")
+    print("blip example", shot, "gaps", [(round(a, 3), round(b, 3)) for a, b in gaps])
+
+
 if __name__ == "__main__":
     kfe_layout()
     abcd_marked()
     mirnov_marked()
     overview(discharge_table())
+    heo_figure()
+    blip_example()
