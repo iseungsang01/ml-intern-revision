@@ -34,7 +34,8 @@ SOURCES = ["PROJECT_KNOWLEDGE.md",
 DERIVED = {}
 # 포스터 명세의 금지어 (낱말 경계, 대소문자 무시). '첫'은 '첫 단계', 'first'는 'first stage'로 쓰일 수 있어
 # 그 자체는 찾지 않고 'the first', 'for the first time'을 찾는다.
-BANNED = ["wins", "beats", "outperforms?", "novel", "for the first time", "the first", "superior", "최초", "모수"]
+BANNED = ["wins", "beats", "outperforms?", "novel", "for the first time", "the first", "superior", "최초", "모수",
+          "능가", "처음으로", "이긴다", "앞선다"]
 
 
 def norm(s):

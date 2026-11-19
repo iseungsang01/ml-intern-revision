@@ -7,6 +7,9 @@ named; `b39_generated.tex` is `docs/paper/ppcf/b39_generated.tex` (the number ma
 Every table value was checked as a "point [low, high]" pair against `b39_generated.tex`, `main_ppcf.tex` and
 `docs/paper/b65_inclusive.md`; all 33 pairs are found verbatim.
 
+The Korean poster (`KSTAR_CES_poster_PPCF_ko.pptx`, `build_poster_ppcf.py --lang ko`) translates every element
+below sentence by sentence; its table value cells are identical to the English ones, so the sources are the same.
+
 ## Title band
 
 | Poster element | Source |

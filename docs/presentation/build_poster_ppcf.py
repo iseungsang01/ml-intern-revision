@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 """A0 conference poster (84.1 x 118.9 cm, portrait, printed 1:1) for the PPCF manuscript
-docs/paper/ppcf/main_ppcf.tex.  English only, laid out for plasma physicists.
+docs/paper/ppcf/main_ppcf.tex, laid out for plasma physicists; English, and a Korean translation.
 
-  py docs/presentation/make_figures_poster_ppcf.py          # figures first (figures/poster_ppcf/)
+  py docs/presentation/make_figures_poster_ppcf.py [--lang ko]   # figures first (figures/poster_ppcf/)
   py docs/presentation/build_poster_ppcf.py                 # -> KSTAR_CES_poster_PPCF.pptx + .png
+  py docs/presentation/build_poster_ppcf.py --lang ko       # -> KSTAR_CES_poster_PPCF_ko.pptx + .png
   py docs/presentation/check_poster_numbers.py docs/presentation/KSTAR_CES_poster_PPCF.pptx
   py docs/presentation/build_poster_ppcf.py --anon --out X.pptx --png Y.png   # author line anonymised
+
+* Korean (--lang ko): the same layout, tables, numbers and figures; every text translated (the block
+  "if LANG == 'ko'" below), set in Pretendard (Regular, SemiBold for the title, Bold) with
+  lang=ko-KR and latinLnBrk=0 so that Korean words are not split.  Captions and the group rows of
+  the tables are upright in Korean (an oblique Hangul would be synthesized).
 
 * Three columns of 25.3 cm.  Sections are numbered, with a navy rule under each heading; bold
   lead-in words; takeaway boxes with a light fill and a thick navy bar on the left; booktabs
@@ -26,6 +32,7 @@ docs/paper/ppcf/main_ppcf.tex.  English only, laid out for plasma physicists.
 """
 import argparse
 import io
+import os
 import re
 import sys
 from pathlib import Path
@@ -44,6 +51,7 @@ HERE = Path(__file__).resolve().parent
 FIG = HERE / "figures" / "poster_ppcf"
 
 ap = argparse.ArgumentParser()
+ap.add_argument("--lang", choices=("en", "ko"), default="en")
 ap.add_argument("--anon", action="store_true", help="anonymous author line (needs --out)")
 ap.add_argument("--out", type=Path)
 ap.add_argument("--png", type=Path)
@@ -52,7 +60,8 @@ ap.add_argument("--no-png", action="store_true")
 args = ap.parse_args()
 if args.anon and args.out is None:
     sys.exit("--anon needs --out (the anonymous copy never overwrites the poster)")
-OUT = args.out or HERE / "KSTAR_CES_poster_PPCF.pptx"
+LANG = args.lang
+OUT = args.out or HERE / ("KSTAR_CES_poster_PPCF.pptx" if LANG == "en" else "KSTAR_CES_poster_PPCF_ko.pptx")
 PNG = args.png or OUT.with_suffix(".png")
 
 # ====================================================================================== text
@@ -230,6 +239,178 @@ REFS = ("[1] W. H. Ko et al., Rev. Sci. Instrum. 81, 10D740 (2010).   [2] J. K. 
         "222, 115518 (2026).   [3] J. H. Friedman, Ann. Stat. 29, 1189 (2001).   [4] Z. Che et al., Sci. Rep. "
         "8, 6085 (2018).   [5] M. Kim et al., Nucl. Fusion 64, 106052 (2024).")
 ACK = "The KSTAR data were provided by the KSTAR team. There was no dedicated funding."
+SEC_TITLES = {1: "Motivation", 2: "Diagnostics and data", 3: "Estimators and scoring", 4: "Main result",
+              5: "What carries the information", 6: "Where the gain is; fit or plasma", 7: "Conclusion",
+              8: "Limitations and outlook"}
+FOOT_LABELS = ("**References**  ", "**Acknowledgement**  ")
+DOC_TITLE = "Causal nowcasting of the CES ion temperature on a KSTAR edge chord (A0 poster)"
+DOC_AUTHOR = "Seungsang Lee"
+
+# ------------------------------------------------------------------------------ Korean (--lang ko)
+# The same content, sentence by sentence, in 초록체 with common technical terms kept in English.
+if LANG == "ko":
+    TITLE_LINES = ("같은 위치의 빠른 진단으로 KSTAR edge 측정선의",
+                   "전하 교환 이온 온도를 인과적으로 nowcasting하기")
+    SUBTITLE = "boosting 둘째 단계를 붙인 순환 신경망과 5‑parameter filter를 CES 이력만 읽는 기준과 비교한다"
+    AUTHOR = "발표자 · 소속" if args.anon else "**이승상** · 서울대학교 원자핵공학과"
+    DATA_LINE = "KSTAR 2022 캠페인 자료 (KSTAR team 제공)"
+
+    S1 = [
+        "**문제:** 전하 교환 분광(CES)은 C VI 이온의 온도를 10 ms 프레임마다 하나씩 보고한다 [1]. pedestal top으로 "
+        "고른 KSTAR edge 측정선에서는 신호가 약하고, 빔 방출이 낮을수록 값이 더 자주 빠진다. 빠짐은 완전히 "
+        "무작위가 아니다.",
+        "**필요:** 감시나 제어에는 프레임을 잴 때 다음 값 없이 만든 추정이 필요하다. 가장 단순한 기준은 마지막 "
+        "값을 그대로 쓰는 hold다.",
+        "**쓸 수 있는 것:** 빔 방출 분광(BES)과 ECEI는 같은 위치를 빈틈 없이 본다. 둘 다 T_i를 재지는 않는다.",
+    ]
+    S1_BOX = ("질문: 그 프레임의 보고 온도를 인과적으로 추정할 때, 지금 프레임의 BES 값은 CES 이력에 무엇을 "
+              "더하는가?")
+
+    S2_DATA = ("**자료:** KSTAR 2022 캠페인의 방전 파일 641개, 10 ms 격자의 245,925행이다(분할에 들어가는 방전은 "
+               "639개). 한 행에는 BES 9, ECEI 4, Mirnov 2채널 값과 R = 2.198 m에 있는 측정선 하나의 CES 값이 "
+               "있다(그림 1).")
+    FIG1_CAP = ("그림 1. 대반경 위의 위치. 위: T_i 모양의 개념도(방향을 잡기 위한 것; 파일에는 분포가 없다), 다른 "
+                "방전에서 발표된 pedestal top, 발표된 그림에서 읽은 2022년 방전 하나의 separatrix. 아래: 파일의 "
+                "채널(빗금: 추정한 위치). Mirnov 코일은 벽에 있다.")
+    S2_ROW = ("**한 행이 담는 것:** 방전 12개의 원시 신호를 보면, 빠른 채널 값은 CES 프레임의 평균이 아니라 행의 "
+              "시각에서 뽑은 원시 표본 하나다. 행 사이 간격이 20–40 ms이면 빔 blip이고, 빔 없이 노출된 프레임은 "
+              "빠진다(그림 2).")
+    FIG2_CAP = ("그림 2. 10 ms 파일의 한 행(개념도). 행의 CES 값은 행의 시각에서 약 2 ms 안에 노출이 시작되는 "
+                "프레임이다. 행 t의 인과 추정은 t까지의 빠른 표본과 t 이전의 CES 값을 쓴다.")
+    S2_TARGET = ("**추정 대상:** KSTAR CES 분석이 보고하는 C VI 온도다. 이것이 주 이온 온도와 같은지는 시험하지 "
+                 "않았다. 3 keV를 넘는 값은 fit 실패로 간주해 [5] 모든 estimator에서 빠진 값으로 다룬다. 이전 "
+                 "값과 끝자리까지 같은 유지값은 뺀다.")
+    FIG3_CAP = ("그림 3. 한 분할의 시험 방전 세 개에서 약 0.65 s 동안의 보고된 T_i와 인과 추정 세 가지. 음영: 값이 "
+                "없는 행; 점선: 빠진 프레임. (a, b) 빠진 값과 큰 도약이 많은 방전; (c) 전형적인 방전. 신경망은 첫 "
+                "단계, 초기화 하나.")
+
+    FIG4_CAP = ("그림 4. (a) 신경망(첫 단계; 회전 가지는 생략)은 CES 이력을 마지막 값, 경과 시간, 관측 여부로 "
+                "읽는다 [4]. 둘째 단계는 시험하지 않는 방전의 fold 밖 오차로만 맞춘 boosting 회귀로 [3], 신경망 "
+                "오차의 추정값을 더한다. (b) filter: c는 BES 공통 성분, g는 반경 방향 차이. 분산이 S인 innovation "
+                "v가 크면 덜 반영한다. KF0: 구동 없음, KFX: 둘 다.")
+    TAB1_CAP = "표 1. 기준. 인과: 이전 프레임의 CES 값, 학습 방전 통계, 행의 시각까지의 빠른 표본만 쓴다."
+    TAB1_HEAD = ("기준", "읽는 것")
+    TAB1_ROWS = [
+        ("**hold**", "마지막으로 관측된 값"),
+        ("**인과 GP**", "주 기준: 최근 CES 값 16개에 맞춘 Matérn-3/2 GP; hyper-parameter는 행마다 marginal "
+         "likelihood로 고른다"),
+        ("**offline GP**", "인과 GP와 같되 양쪽 이웃을 쓴다: 다음 값을 쓰므로 인과가 아니다"),
+        ("**비교군**", "빠른 채널만 빼고 같은 방식으로 학습한 같은 신경망. 그 차이가 빠른 채널의 증분 (두 단계 "
+         "비교군: 둘째 단계도 CES 이력만 읽는다)"),
+    ]
+    SKILL_NOTE = "skill = 1 − MSE(estimator) / MSE(기준); 0보다 크면 기준보다 오차가 작다"
+    S3_SCORE = ("**채점:** 측정되었으나 estimator에게 감춘 행에서 오차를 eV로 재고, 모든 estimator가 같은 행을 "
+                "쓴다. 방전 639개에서 방전 단위 5‑fold 교차 검증을 반복해 pooled로 합치고, 95 % 구간은 2단계 "
+                "bootstrap으로 구한다. **등록:** 진술과 판정 규칙은 각 실행 전에 저자의 공개 저장소에 커밋했다.")
+
+    TAB2_CAP = ("표 2. 3 keV 넘는 값 제외. 신경망의 skill: 재분할 8개(r2–r9); 나머지: 재분할 3개(r2–r4, 15 fold); "
+                "신경망마다 초기화 하나. 20 % 이내: 보고값의 20 % 안에 드는 프레임의 비율.")
+    TAB2_HEAD = ("기준 대비 skill", "신경망 (첫 단계)", "두 단계 estimator")
+    TAB2_ROWS = [
+        ("hold", "**+0.375** {[+0.352, +0.394]}", "**+0.436** {[+0.418, +0.452]}"),
+        ("인과 GP", "**+0.089** {[+0.064, +0.112]}", "**+0.176** {[+0.155, +0.196]}"),
+        ("offline GP\n(다음 값 사용)", "**−0.037** {[−0.068, −0.008]}", "**+0.063** {[+0.038, +0.086]}"),
+        ("비교군 (증분)", "**+0.048** {[+0.022, +0.073]}", "**+0.097** {[+0.077, +0.116]}"),
+        "r2–r4 행의 오차",
+        ("RMSE (eV)", "184.2 {[174.3, 194.4]}", "175.4 {[165.9, 185.3]}"),
+        ("RMSE (eV)\n− 인과 GP", "**−9.1** {[−11.5, −6.6]}", "**−17.8** {[−20.2, −15.4]}"),
+        ("중앙값 |오차|\n÷ hold", "1.010 {[0.972, 1.062]}", "**0.909** {[0.889, 0.931]}"),
+        ("20 % 이내\n− 인과 GP", "−0.002 {[−0.013, +0.007]}", "**+0.021** {[+0.018, +0.025]}"),
+    ]
+    TAB_BOLD_NOTE = "굵은 글씨: 95 % 구간이 0(비율은 1)을 제외한다."
+    S4_ITEMS = [
+        "**신경망:** 모든 인과 기준보다 오차가 낮다. 증분의 구간은 fold 수준, Huber 손실, 가장 큰 오차를 잘라 "
+        "낸 경우에도 0 위에 있다.",
+        "**두 단계 estimator:** 등록한 진술 여섯 개가 모두 성립했다. 다음 값을 기다리는 offline GP 대비 구간이 "
+        "0 위에 있고, 신경망 혼자의 구간은 0 아래에 있다.",
+    ]
+
+    TAB3_CAP = "표 3. 비교군 대비 skill (filter는 구동 없는 filter인 KF0 대비). 굵은 글씨는 표 2와 같다."
+    TAB3_HEAD = ("입력", "비교군 대비 skill")
+    TAB3_ROWS = [
+        "학습된 신경망, 시험 때 입력만 바꿈 (r2–r9)",
+        ("BES 채널을 한 프레임 늦게", "+0.000 {[−0.024, +0.022]}"),
+        "입력을 바꿔 다시 학습한 신경망 (r2–r4)",
+        ("빠른 채널 전부를 한 행 늦게", "−0.006 {[−0.025, +0.016]}"),
+        ("BES와 CES 이력만", "**+0.044** {[+0.020, +0.066]}"),
+        ("ECEI와 CES 이력만", "−0.011 {[−0.092, +0.022]}"),
+        ("Mirnov 제거", "**+0.060** {[+0.023, +0.085]}"),
+        ("BES만 읽는 신경망 대비 첫 단계 신경망", "+0.009 {[−0.019, +0.031]}"),
+        "5‑parameter filter (r3–r9)",
+        ("KF0 (구동 없음) 대비 KFX (BES 구동)", "**+0.049** {[+0.040, +0.059]}"),
+    ]
+    S5_ITEMS = [
+        "**지금 프레임, BES:** BES 채널만 한 프레임 늦추면 학습된 신경망은 증분을 잃는다. BES와 CES 이력만 읽는 "
+        "신경망에는 증분이 있고, ECEI를 읽는 신경망에는 없으며, Mirnov는 필요 없다.",
+        "**빔인가 플라스마인가:** BES는 가열 빔의 빛이다. filter의 BES 구동도 같은 크기의 증분을 준다. 파일에 빔 "
+        "출력이 없으므로 빔 변화는 배제되지 않는다.",
+    ]
+
+    FIG5_CAP = ("그림 5. 프레임 하나가 빠진 빔 blip 뒤의 사건 평균, 앞선 여섯 행 대비 비(음영: 95 % 구간; 점선: 대조 "
+                "행). T_i의 감소는 빔도 분광기도 쓰지 않는 ECEI 수준을 따르고, 두 행 안에 회복하는 BES는 따르지 "
+                "않는다.")
+    TAB4_CAP = "표 4. 첫 단계, pooled (r2–r9)."
+    TAB4_HEAD = ("판독", "값")
+    TAB4_ROWS = [
+        "증분: 비교군 대비 신경망",
+        ("빠진 프레임 뒤 1–3행", "**+0.151** {[+0.093, +0.215]}"),
+        ("중앙값 T_i로 나눈 방전의 가장 차가운 3분의 1", "+0.007 {[−0.023, +0.031]}"),
+        ("중간 3분의 1", "**+0.042** {[+0.009, +0.074]}"),
+        ("가장 뜨거운 3분의 1", "**+0.092** {[+0.040, +0.137]}"),
+        ("이득이 가장 큰 방전 64개를 뺀 경우", "+0.027 {[−0.004, +0.051]}"),
+        "fit인가 플라스마인가, 그리고 산포 바닥",
+        ("ρ1: 다음 프레임에도 남아 있는 보정", "0.810 {[0.753, 0.866]}"),
+        ("바닥 s, root mean square (eV)", "135.7 {[126.4, 145.7]}"),
+        ("신경망: 바닥 대비 평균 제곱 오차", "1.331 {[1.246, 1.427]}"),
+    ]
+    TAB4_NOTE = ("굵은 글씨: skill의 구간이 0을 제외한다. ρ1: 한 프레임 뒤의 (신경망 − 비교군) 보정 계수를 같은 "
+                 "프레임의 계수로 나눈 값; 1을 넘을 수 있다.")
+    S6_ITEMS = [
+        "**어디서:** 증분은 빠진 프레임 뒤 세 행에서 가장 크다. 비교군은 늘어난 시간 간격은 보지만 감소의 깊이는 "
+        "보지 못한다. 증분은 방전의 중간과 가장 뜨거운 3분의 1에서 확인되고, 가장 차가운 3분의 1에서는 확인되지 "
+        "않는다.",
+        "**fit인가 플라스마인가:** 다음 프레임은 따로 fit되며, 빠른 채널이 만든 보정의 대부분이 거기까지 남는다. "
+        "채점된 연속 두 프레임 사이에서는 보고값 산포의 바닥이 신경망 오차의 대부분이다.",
+    ]
+
+    S7_BOX = ("pedestal top으로 고른 KSTAR edge CES 측정선에서, 지금 프레임의 빔 방출 값은 그 프레임의 보고 이온 "
+              "온도에 대해 CES 이력이 주는 것 이상의 정보를 담는다.")
+    S7_CHECKS = [
+        "**종류가 다른 두 estimator가 일치한다:** 비교군 대비 신경망, 그리고 BES 구동이 있는 filter와 없는 "
+        "filter.",
+        "**지금 프레임:** BES 채널만 한 프레임 늦추면, 학습된 신경망은 비교군 대비 증분을 잃는다.",
+        "**두 단계 estimator:** 증분과 offline GP 대비 skill의 구간은 0 위에, hold 대비 중앙값 오차 비의 구간은 "
+        "1 아래에 있다.",
+        "**보정이 남는다:** 빠른 채널이 만든 보정의 대부분이 따로 fit되는 다음 프레임에도 남아 있다.",
+    ]
+    S7_CAVEAT = ("**신경망 혼자서는** 이득이 보고값의 프레임 간 산포에 비해 작고, 온도로 나눈 방전의 가장 차가운 "
+                 "3분의 1에서 확인되지 않으며, 이득이 가장 큰 10분의 1에 기대고, 파일 단위 단일 분할에서는 확인되지 "
+                 "않았다.")
+
+    S8_ITEMS = [
+        ("**컷 모집단.** 3 keV 넘는 값을 남기면(표 5) 인과 GP 대비 여유는 남지만 증분의 구간은 0을 포함한다. "
+         "따라서 모든 진술은 컷 모집단에 대한 것이다.",
+         "→ 프레임별 fit 불확도로 fit 실패와 플라스마를 가른다"),
+        ("**측정선 하나, 캠페인 하나, 장치 하나.** 재는 것은 C VI 불순물 온도이고, 파일에 빔 출력이 없다.",
+         "→ 빔 출력, 평형 매핑, 다른 측정선"),
+        ("**손대지 않은 hold-out 방전이 없다.**",
+         "→ 마지막 97개 방전으로 시간순 확증 (진행 중)"),
+        ("**실시간은 전망이다.** KSTAR에서 BES나 CES의 실시간 사용은 발표되지 않았다. 사용하려면 지금 프레임의 "
+         "BES와 많아야 두 프레임 늦은 CES 값이 필요하다.",
+         "→ beam-off 프레임이 필요 없는 CES 분석 [2]"),
+    ]
+    TAB5_CAP = "표 5. 3 keV 넘는 값을 학습과 채점에 남긴 경우 (r2–r4)."
+    TAB5_HEAD = ("신경망의 대비 기준", "skill")
+    TAB5_ROWS = [("인과 GP", "**+0.109** {[+0.070, +0.146]}"),
+                 ("비교군", "−0.002 {[−0.017, +0.010]}")]
+
+    ACK = "KSTAR 자료는 KSTAR team이 제공하였다. 별도의 연구비 지원은 없었다."
+    SEC_TITLES = {1: "동기", 2: "진단과 자료", 3: "estimator와 채점", 4: "주 결과", 5: "무엇이 정보를 나르는가",
+                  6: "이득의 위치; fit인가 플라스마인가", 7: "결론", 8: "한계와 전망"}
+    FOOT_LABELS = ("**참고문헌**  ", "**사사**  ")
+    DOC_TITLE = "같은 위치의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기 (A0 포스터)"
+    DOC_AUTHOR = "이승상"
+
 
 # ====================================================================================== geometry and type
 W_CM, H_CM = 84.1, 118.9
@@ -238,6 +419,10 @@ M = 2.0                                    # side margin
 GUT = (W_CM - 2 * M - 3 * CW) / 2          # 2.1 cm, with a thin rule in the middle
 XS = [M + i * (CW + GUT) for i in range(3)]
 FONT, FONT_SB, FONT_SYM = "Segoe UI", "Segoe UI Semibold", "Segoe UI Symbol"
+if LANG == "ko":
+    FONT, FONT_SB = "Pretendard", "Pretendard SemiBold"
+ITALIC = LANG == "en"                      # captions and table group rows; upright in Korean
+FIG_SUFFIX = "" if LANG == "en" else "_ko"
 
 
 def rgb(h):
@@ -255,6 +440,11 @@ _FONTS = {}
 def _f(bold, italic):
     key = (bold, italic)
     if key not in _FONTS:
+        if LANG == "ko":                   # Pretendard has no italic; Korean text is set upright
+            name = {False: "Pretendard-Regular.otf", True: "Pretendard-Bold.otf", "sb": "Pretendard-SemiBold.otf"}
+            folder = Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "Windows" / "Fonts"
+            _FONTS[key] = ImageFont.truetype(str(folder / name[bold]), 200)
+            return _FONTS[key]
         name = {(False, False): "segoeui.ttf", (True, False): "segoeuib.ttf", (False, True): "segoeuii.ttf",
                 (True, True): "segoeuiz.ttf", ("sb", False): "seguisb.ttf"}[key]
         _FONTS[key] = ImageFont.truetype(str(Path(r"C:\Windows\Fonts") / name), 200)
@@ -264,6 +454,7 @@ def _f(bold, italic):
 PT2CM = 2.54 / 72.0
 NB = "\u00a0"
 FIT = 1.0                                # share of the box width filled when wrapping (PowerPoint safety)
+HANG = ".,)" if LANG == "ko" else ""     # punctuation that may hang past the right edge (Korean only)
 TOK = re.compile(r"(\*\*|\{|\}|T_i|ρ1)")
 WARN = []
 
@@ -303,38 +494,40 @@ def _w(s, pt, bold, italic=False):
 
 def wrap(s, pt, width, bold=False, italic=False):
     """Word wrap ('\\n' forces a break; a line may also break after a hyphen inside a word, as PowerPoint
-    does); returns the width (cm) of each line."""
-    words, cur, forced, glued = [], 0.0, False, False
+    does); returns the width (cm) of each line.  In Korean, PowerPoint lets a final '.' or ',' hang past
+    the right edge (East Asian hanging punctuation), so that character is not counted when a word is fitted."""
+    words, cur, forced, glued, hang = [], 0.0, False, False, 0.0
     for txt, b, mu, sh in parse(s, bold):
         size = pt * (0.7 if sh else 1.0)
         txt = re.sub(r"(?<=[A-Za-z]-)(?=[A-Za-z])", "​", txt)
         for atom in re.split("( |\n|​)", txt):
             if atom == "​":                              # a break opportunity after a hyphen
-                words.append((cur, forced, glued))
-                cur, forced, glued = 0.0, False, True
+                words.append((cur, forced, glued, hang))
+                cur, forced, glued, hang = 0.0, False, True, 0.0
                 continue
             if atom == "":
                 continue
             if atom in (" ", "\n"):
-                words.append((cur, forced, glued))
-                cur, forced, glued = 0.0, atom == "\n", False
+                words.append((cur, forced, glued, hang))
+                cur, forced, glued, hang = 0.0, atom == "\n", False, 0.0
             else:
                 cur += _w(atom, size, b, italic)
-    words.append((cur, forced, glued))
+                hang = _w(atom[-1], size, b, italic) if atom[-1] in HANG else 0.0
+    words.append((cur, forced, glued, hang))
     space = _w(" ", pt, bold, italic)
     lines, x = [], 0.0
-    for w, brk, glue_ in words:
+    for w, brk, glue_, hg in words:
         sp = 0.0 if glue_ else space
         if brk:
             lines.append(x)
             x = w
-        elif x > 0 and x + sp + w > width * FIT:
+        elif x > 0 and x + sp + w - hg > width * FIT:
             lines.append(x)
             x = w
         else:
             x = x + (sp if x > 0 else 0) + w
     lines.append(x)
-    if max(lines) > width * FIT + 1e-6:
+    if max(lines) > width * FIT + (0.3 if HANG else 0.0) + 1e-6:    # a hanging '.' or ',' may pass the edge
         WARN.append("word wider than its box (%.1f > %.1f cm): %s" % (max(lines), width, s[:40]))
     return lines
 
@@ -364,7 +557,11 @@ def _font(run, size, color, bold=False, italic=False, shift=0, face=FONT):
     f.color.rgb = color
     f.name = face
     rpr = run._r.get_or_add_rPr()
-    rpr.set("lang", "en-US")
+    if LANG == "ko":                       # Korean word wrapping needs lang = ko-KR and latinLnBrk = 0
+        rpr.set("lang", "ko-KR")
+        rpr.set("altLang", "en-US")
+    else:
+        rpr.set("lang", "en-US")
     latin = rpr.find(qn("a:latin"))
     for tag in ("a:cs", "a:ea"):
         latin.addnext(rpr.makeelement(qn(tag), {"typeface": face}))
@@ -378,6 +575,8 @@ def _fill(tf, paras, size, color, pitch, after, align, bold, italic=False, face=
         p.alignment = align
         p.line_spacing = Pt(pitch)
         p.space_after = Pt(after if i < len(paras) - 1 else 0)
+        if LANG == "ko":
+            p._p.get_or_add_pPr().set("latinLnBrk", "0")
         for txt, b, mu, sh in parse(s, bold):
             for k, piece in enumerate(txt.split("\n")):
                 if k:
@@ -513,14 +712,16 @@ def body(x, y, w, paras, **kw):
 
 
 def caption(x, y, w, s, name=None):
-    return text(x, y, w, s, CAP_PT, color=MUTED, pitch=CAP_PITCH, italic=True, align=PP_ALIGN.CENTER, name=name)
+    return text(x, y, w, s, CAP_PT, color=MUTED, pitch=CAP_PITCH, italic=ITALIC, align=PP_ALIGN.CENTER, name=name)
 
 
 def heading(x, y, w, n, title, key):
     nw = HEAD_PT * 0.95 * PT2CM
     text(x, y, nw, str(n), HEAD_PT, color=NAVY, bold=True, pitch=HEAD_PT * 1.15, name=f"{key}.num", check=False)
-    text(x + nw, y, w - nw, title, HEAD_PT, color=NAVY, bold=True, pitch=HEAD_PT * 1.15, name=f"{key}.title")
-    ry = y + HEAD_PT * 1.15 * PT2CM + 0.25
+    th = text(x + nw, y, w - nw, title, HEAD_PT, color=NAVY, bold=True, pitch=HEAD_PT * 1.15, name=f"{key}.title")
+    if not DRY and th > HEAD_PT * 1.15 * PT2CM * 1.01:
+        WARN.append("heading wraps: " + title)
+    ry = y + th + 0.25
     rule(x, ry, x + w, ry, color=NAVY, w=2.25, name=f"{key}.rule")
     return ry - y + 0.65
 
@@ -578,8 +779,8 @@ def booktabs(x, y, cols, header, rows, key, aligns=None, fills=(), padx=0.18, pa
         if isinstance(cells, str):
             if i > 0:
                 yy += 0.08
-            gh = text_h(cells, GROUP_PT, W - 2 * padx, pitch, italic=True)
-            text(x + padx, yy + pady * 0.7, W - 2 * padx, cells, GROUP_PT, color=NAVY, pitch=pitch, italic=True,
+            gh = text_h(cells, GROUP_PT, W - 2 * padx, pitch, italic=ITALIC)
+            text(x + padx, yy + pady * 0.7, W - 2 * padx, cells, GROUP_PT, color=NAVY, pitch=pitch, italic=ITALIC,
                  name=f"{key}.g{i}", check=False)
             yy += gh + pady * 1.2
             continue
@@ -595,7 +796,7 @@ def table_block(x, y, w, cap, cols, head, rows, key, fills=(), note=None, aligns
     yy += booktabs(x, yy, cols, head, rows, key, fills=fills, aligns=aligns)
     if note:
         yy += 0.2
-        yy += text(x, yy, w, note, CAP_PT, color=MUTED, pitch=CAP_PITCH, italic=True, align=PP_ALIGN.CENTER,
+        yy += text(x, yy, w, note, CAP_PT, color=MUTED, pitch=CAP_PITCH, italic=ITALIC, align=PP_ALIGN.CENTER,
                    name=f"{key}.note")
     return yy - y
 
@@ -650,6 +851,7 @@ def s3_score(x, y, w):
 
 def s4_table(x, y, w):
     c0 = max(text_w(r[0], TAB_PT) for r in TAB2_ROWS if not isinstance(r, str)) / FIT + 0.6
+    c0 = min(c0, w - 2 * value_col(TAB2_ROWS, extra=0.0))      # values on one line; long labels wrap instead
     cv = (w - c0) / 2
     return table_block(x, y, w, TAB2_CAP, (c0, cv, cv), TAB2_HEAD, TAB2_ROWS, "tab2", fills=TAB2_FILL,
                        note=TAB_BOLD_NOTE)
@@ -719,21 +921,35 @@ FIG_ALT = {
     "trace": "Reported T_i and the hold, causal GP and network estimates in three test discharges",
     "blips": "Ratios of BES level, ECEI level and reported T_i in the ten rows after a beam blip",
 }
+if LANG == "ko":
+    FIG_ALT = {
+        "geometry": "대반경 위의 위치: 발표된 pedestal top 띠 안의 R = 2.198 m CES 측정선과 그 둘레의 BES · ECEI 열",
+        "rows": "한 행의 개념도: 행의 시각에서 뽑은 빠른 채널 원시 표본 하나, 그 시각에 시작하는 CES 프레임, 프레임 "
+                "하나를 빼는 빔 blip",
+        "schematic": "두 단계 estimator와 5-parameter filter의 구성도",
+        "trace": "시험 방전 세 개에서 보고된 T_i와 hold, 인과 GP, 신경망의 추정",
+        "blips": "빔 blip 뒤 열 행에서 BES 수준, ECEI 수준, 보고된 T_i의 비",
+    }
+
+
+def fig(base):
+    return base + FIG_SUFFIX + ".png"
+
 
 SECTIONS = {
-    1: ("Motivation", "s1", [s1_text, s1_box]),
-    2: ("Diagnostics and data", "s2",
-        [s2_data, figure("poster_geometry.png", FIG1_CAP, FIG_ALT["geometry"], "fig1"), s2_row,
-         figure("poster_rows.png", FIG2_CAP, FIG_ALT["rows"], "fig2"), s2_target,
-         figure("poster_trace.png", FIG3_CAP, FIG_ALT["trace"], "fig3")]),
-    3: ("Estimators and scoring", "s3",
-        [figure("poster_schematic.png", FIG4_CAP, FIG_ALT["schematic"], "fig4"), s3_refs, s3_score]),
-    4: ("Main result", "s4", [s4_table, s4_items]),
-    5: ("What carries the information", "s5", [s5_table, s5_items]),
-    6: ("Where the gain is; fit or plasma", "s6",
-        [figure("poster_blips.png", FIG5_CAP, FIG_ALT["blips"], "fig5"), s6_table, s6_items]),
-    7: ("Conclusion", "s7", [s7_box, s7_checks, s7_caveat]),
-    8: ("Limitations and outlook", "s8", [s8_limits]),
+    1: (SEC_TITLES[1], "s1", [s1_text, s1_box]),
+    2: (SEC_TITLES[2], "s2",
+        [s2_data, figure(fig("poster_geometry"), FIG1_CAP, FIG_ALT["geometry"], "fig1"), s2_row,
+         figure(fig("poster_rows"), FIG2_CAP, FIG_ALT["rows"], "fig2"), s2_target,
+         figure(fig("poster_trace"), FIG3_CAP, FIG_ALT["trace"], "fig3")]),
+    3: (SEC_TITLES[3], "s3",
+        [figure(fig("poster_schematic"), FIG4_CAP, FIG_ALT["schematic"], "fig4"), s3_refs, s3_score]),
+    4: (SEC_TITLES[4], "s4", [s4_table, s4_items]),
+    5: (SEC_TITLES[5], "s5", [s5_table, s5_items]),
+    6: (SEC_TITLES[6], "s6",
+        [figure(fig("poster_blips"), FIG5_CAP, FIG_ALT["blips"], "fig5"), s6_table, s6_items]),
+    7: (SEC_TITLES[7], "s7", [s7_box, s7_checks, s7_caveat]),
+    8: (SEC_TITLES[8], "s8", [s8_limits]),
 }
 COLUMNS = [(1, 2), (3, 4, 5), (6, 7, 8)]
 
@@ -805,7 +1021,8 @@ def title_band():
 band_h = title_band()
 Y0 = band_h + 1.35
 REF_PT = 18.0
-foot_h = text_h(["**References**  " + REFS, "**Acknowledgement**  " + ACK], REF_PT, W_CM - 2 * M, REF_PT * 1.3, 4)
+FOOT = [FOOT_LABELS[0] + REFS, FOOT_LABELS[1] + ACK]
+foot_h = text_h(FOOT, REF_PT, W_CM - 2 * M, REF_PT * 1.3, 4)
 FOOT_Y = H_CM - 1.3 - foot_h - 0.45
 Y1 = FOOT_Y - 0.9
 
@@ -836,14 +1053,14 @@ for k in range(2):
     rule(xm, Y0 + 0.2, xm, Y1, color=RULE, w=1.25, name=f"column.divider{k}")
 
 rule(M, FOOT_Y, W_CM - M, FOOT_Y, color=RULE, w=1.25, name="footer.rule")
-text(M, FOOT_Y + 0.45, W_CM - 2 * M, ["**References**  " + REFS, "**Acknowledgement**  " + ACK], REF_PT,
+text(M, FOOT_Y + 0.45, W_CM - 2 * M, FOOT, REF_PT,
      color=MUTED, pitch=REF_PT * 1.3, after=4, name="footer.text", check=False)
 print("column ends: %s (target %.2f)" % (", ".join("%.2f" % e for e in ends), Y1))
 for w_ in dict.fromkeys(WARN):
     print("  WARN", w_)
 
-prs.core_properties.title = "Causal nowcasting of the CES ion temperature on a KSTAR edge chord (A0 poster)"
-prs.core_properties.author = "" if args.anon else "Seungsang Lee"
+prs.core_properties.title = DOC_TITLE
+prs.core_properties.author = "" if args.anon else DOC_AUTHOR
 OUT.parent.mkdir(parents=True, exist_ok=True)
 prs.save(OUT)
 print("saved", OUT)

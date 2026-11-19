@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Figures of the A0 PPCF poster, drawn at their placed size (one poster column wide, printed 1:1).
 
-  py docs/presentation/make_figures_poster_ppcf.py              # all figures
+  py docs/presentation/make_figures_poster_ppcf.py              # all figures, English
+  py docs/presentation/make_figures_poster_ppcf.py --lang ko    # the same figures with Korean text (*_ko.png)
   py docs/presentation/make_figures_poster_ppcf.py --trace      # also recompute the example traces (CPU)
   py docs/presentation/make_figures_poster_ppcf.py --only where   # the optional thirds figure (not on the poster)
-  -> docs/presentation/figures/poster_ppcf/poster_*.png
+  -> docs/presentation/figures/poster_ppcf/poster_*.png  (Korean: poster_*_ko.png)
 
 Why these are re-drawn and not re-exported.  The manuscript figures (docs/paper/ppcf/fig_paper.py,
 fig_trace_causal.py) are laid out for a 16 cm text width with 7 to 9 pt type set as literals inside
@@ -17,7 +18,10 @@ the ones typed in fig_paper.fig_geometry; the example traces are recomputed by t
 fig_trace_causal.py (same run, same discharges, same windows, same row-level check against the
 stored errors; CPU only) and cached in figures/poster_ppcf/poster_trace_cache.npz.
 
-Every text artist of every figure is checked to be at least MIN_PT at the placed size.
+All words drawn in a figure are in TX (English and Korean); the drawing code is shared.  The Korean
+figures use Pretendard (the poster's Korean font); formulas stay in the mathtext font of the English.
+Every text artist of every figure is checked to be at least MIN_PT at the placed size, and every
+label drawn inside a box is checked to fit inside it.
 """
 from __future__ import annotations
 
@@ -36,6 +40,7 @@ sys.path.insert(0, str(PPCF))
 import matplotlib  # noqa: E402
 
 matplotlib.use("Agg")
+import matplotlib.font_manager as fm  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
@@ -62,6 +67,124 @@ plt.rcParams.update({
     "figure.constrained_layout.h_pad": 0.06, "figure.constrained_layout.w_pad": 0.06,
 })
 
+# ------------------------------------------------------------------------------------------------ words
+TX = {
+    "en": {
+        "suffix": "",
+        # geometry
+        "g_band": "published pedestal tops\n(other discharges)",
+        "g_sep": "midplane separatrix,\none 2022 discharge",
+        "g_shape": "schematic $T_i$ shape",
+        "g_chord": "CES chord, R = 2.198 m",
+        "g_rows": ("CES channels", "BES view, #31923", "BES columns 5–7", "ECEI column 3"),
+        "g_notes": ("chord and its\nneighbours", None, "inferred from\nchannel names", "±2–3 cm between\ndischarges"),
+        "g_xlabel": "major radius R (m)",
+        # rows
+        "r_lanes": ("beam", "CES frames", "fast channels", "file rows"),
+        "r_xlabel": "time relative to the stamp of row t (ms)",
+        "r_blip": "blip",
+        "r_absent": "absent",
+        "r_frames": "frame t: estimated;\nearlier: CES history",
+        "r_sample": "one raw sample per\nrow, at its stamp",
+        "r_step": "20 ms step = one absent frame",
+        "r_row": "estimate of row t\nformed at its stamp",
+        # schematic
+        "s_a": "(a) two-stage estimator",
+        "s_w": (3.02, 1.78, 1.86), "s_fs": 18.5,       # widths of the input, network, second-stage boxes (in)
+        "s_fast": ["fast channels at row t:", "9 BES · 4 ECEI · 2 Mirnov"],
+        "s_ces": ["CES history before t:", "last value · age · flag"],
+        "s_net": ["first stage:", "recurrent", "network", "(LSTM) over", "every row"],
+        "s_two": ["second stage:", "boosted trees", "estimate the", "network's", "error"],
+        "s_summ": "summaries of BES and ECEI over the last ten rows, CES history",
+        "s_b": r"(b) five-parameter robust filter on $x = \log T_i$",
+        "s_pred": [r"predict: $x_t = x_{t-1} + b_c\,\Delta c_t + b_g\,\Delta g_t$", "random walk, variance q"],
+        "s_upd": ["update with a CES value:", r"weight $\min(1, k\sqrt{S}/|v|)$, variance r"],
+        "s_next": "next row",
+        # trace
+        "t_blip": "absent frame (beam blip)",
+        "t_hold": "hold",
+        "t_gp": "causal GP (CES history only)",
+        "t_net": "network (first stage)",
+        "t_rep": r"reported $T_i$",
+        "t_title": "({p}) #{shot}: {miss} of {n} rows without $T_i$; reported {lo:.0f} to {hi:.0f} eV",
+        "t_ylabel": r"$T_i$ (eV)",
+        "t_xlabel": "time (s)",
+        # blips
+        "b_lab": ("BES level", "ECEI level", "reported $T_i$"),
+        "b_xlabel": "row after the absent frame (10 ms rows)",
+        "b_ylabel": "ratio to the six rows before",
+        "b_dotted": "dotted: control rows without a blip",
+        "b_title": "{n:,} blips of one absent frame",
+        # where
+        "w_thirds": ("coldest", "middle", "hottest"),
+        "w_series": ("network over causal GP", "network over its control", "KFX over KF0 (filter)"),
+        "w_ylabel": "skill",
+        "w_xlabel": "third of the discharges by median $T_i$",
+    },
+    "ko": {
+        "suffix": "_ko",
+        "g_band": "발표된 pedestal top\n(다른 방전)",
+        "g_sep": "중앙면 separatrix,\n2022년 방전 하나",
+        "g_shape": "$T_i$ 모양 (개념도)",
+        "g_chord": "CES 측정선, R = 2.198 m",
+        "g_rows": ("CES 채널", "BES 시야, #31923", "BES 5–7열", "ECEI 3열"),
+        "g_notes": ("측정선과 이웃 채널", None, "채널 이름에서 추정", "방전마다 ±2–3 cm"),
+        "g_xlabel": "대반경 R (m)",
+        "r_lanes": ("빔", "CES 프레임", "빠른 채널", "파일의 행"),
+        "r_xlabel": "행 t의 시각 기준 시간 (ms)",
+        "r_blip": "blip",
+        "r_absent": "없음",
+        "r_frames": "프레임 t: 추정 대상\n이전 프레임: CES 이력",
+        "r_sample": "행마다 원시 표본 하나\n(행의 시각에서)",
+        "r_step": "20 ms 간격 = 빠진 프레임 하나",
+        "r_row": "행 t의 추정은\n그 시각에 만든다",
+        "s_a": "(a) 두 단계 estimator",
+        "s_w": (3.38, 1.56, 1.72), "s_fs": 18.0,
+        "s_fast": ["행 t의 빠른 채널:", "BES 9 · ECEI 4 · Mirnov 2"],
+        "s_ces": ["t 이전의 CES 이력:", "마지막 값 · 경과 시간 · 관측 여부"],
+        "s_net": ["첫 단계:", "순환 신경망", "(LSTM),", "모든 행을", "차례로"],
+        "s_two": ["둘째 단계:", "gradient", "boosting이", "신경망의", "오차를 추정"],
+        "s_summ": "최근 열 행의 BES · ECEI 요약값과 CES 이력",
+        "s_b": r"(b) $x = \log T_i$의 5-parameter robust filter",
+        "s_pred": [r"예측: $x_t = x_{t-1} + b_c\,\Delta c_t + b_g\,\Delta g_t$", "random walk, 분산 q"],
+        "s_upd": ["CES 값으로 갱신:", r"가중치 $\min(1, k\sqrt{S}/|v|)$, 분산 r"],
+        "s_next": "다음 행",
+        "t_blip": "빠진 프레임 (빔 blip)",
+        "t_hold": "hold",
+        "t_gp": "인과 GP (CES 이력만)",
+        "t_net": "신경망 (첫 단계)",
+        "t_rep": r"보고된 $T_i$",
+        "t_title": "({p}) #{shot}: {n}행 가운데 {miss}행에 $T_i$ 없음, 보고값 {lo:.0f}–{hi:.0f} eV",
+        "t_ylabel": r"$T_i$ (eV)",
+        "t_xlabel": "시간 (s)",
+        "b_lab": ("BES 수준", "ECEI 수준", "보고된 $T_i$"),
+        "b_xlabel": "빠진 프레임 뒤의 행 (10 ms 간격)",
+        "b_ylabel": "앞선 여섯 행 대비 비",
+        "b_dotted": "점선: blip이 없는 대조 행",
+        "b_title": "프레임 하나가 빠진 빔 blip {n:,}건",
+        "w_thirds": ("가장 차가운", "중간", "가장 뜨거운"),
+        "w_series": ("인과 GP 대비 신경망", "비교군 대비 신경망", "KF0 대비 KFX (filter)"),
+        "w_ylabel": "skill",
+        "w_xlabel": "중앙값 $T_i$로 나눈 방전의 3분의 1",
+    },
+}
+L = TX["en"]
+BOXED = []                   # (text artist, box width in inches) of labels drawn inside boxes
+
+
+def set_lang(lang):
+    """Words of one language; the Korean figures also switch the text font to Pretendard."""
+    global L
+    L = TX[lang]
+    if lang == "ko":
+        user = Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "Windows" / "Fonts"
+        for f in ("Pretendard-Regular.otf", "Pretendard-SemiBold.otf", "Pretendard-Bold.otf"):
+            if (user / f).exists():
+                fm.fontManager.addfont(str(user / f))
+        if "Pretendard" not in {f.name for f in fm.fontManager.ttflist}:
+            raise SystemExit("FATAL: Pretendard is not installed")
+        plt.rcParams["font.family"] = "Pretendard"
+
 
 def J(name):
     return FP.J(name)
@@ -81,22 +204,30 @@ def check_fonts(fig, name):
         raise SystemExit(f"FATAL: {name}: text below {MIN_PT} pt: {small}")
 
 
+def check_boxed(fig, name):
+    """Every label drawn inside a box must be narrower than the box (0.08 in of padding on each side)."""
+    r = fig.canvas.get_renderer()
+    wide = []
+    for t, bw in BOXED:
+        w = t.get_window_extent(r).width / fig.dpi
+        if w > bw - 0.16:
+            wide.append((t.get_text()[:30], round(w, 2), round(bw, 2)))
+    BOXED.clear()
+    if wide:
+        raise SystemExit(f"FATAL: {name}: label wider than its box: {wide}")
+
+
 def save(fig, name):
     check_fonts(fig, name)
+    check_boxed(fig, name)
     OUT.mkdir(parents=True, exist_ok=True)
     w, h = fig.get_size_inches()
     if abs(w - CW) > 1e-6:
         raise SystemExit(f"FATAL: {name} is {w:.3f} in wide, not one column ({CW:.3f} in)")
+    name = name + L["suffix"]
     fig.savefig(OUT / f"{name}.png", dpi=DPI)
     plt.close(fig)
     print("written %s.png  %.1f x %.1f cm" % (name, w * 2.54, h * 2.54))
-
-
-def legend_fill(fig, ax_or_fig, loc, anchor, ref="0", ncol=2, transform=None):
-    h = [Line2D([], [], marker="o", ls="-", color=INK, mfc=INK, ms=11, lw=2.4, label=f"interval excludes {ref}"),
-         Line2D([], [], marker="o", ls="-", color=INK, mfc="white", ms=11, lw=2.4, label=f"interval includes {ref}")]
-    return ax_or_fig.legend(handles=h, loc=loc, bbox_to_anchor=anchor, ncol=ncol, columnspacing=1.2,
-                            bbox_transform=transform)
 
 
 # ------------------------------------------------------------------------------------------------ 1
@@ -113,21 +244,18 @@ def geometry():
     a1.plot(R, prof, color=MUTED, lw=2.4, ls="--")
     a1.axvline(2.24, color=INK, lw=1.8, ls=":")
     a1.axvline(2.198, color=NET, lw=3.0)
-    a1.text(2.186, 1.30, "published pedestal tops\n(other discharges)", ha="right", va="top", fontsize=18,
-            color="#7a5a12")
-    a1.text(2.245, 1.30, "midplane separatrix,\none 2022 discharge", ha="left", va="top", fontsize=18)
-    a1.text(2.349, 0.10, "schematic $T_i$ shape", fontsize=18, color=MUTED, ha="right", va="bottom")
-    a1.text(2.194, 0.03, "CES chord, R = 2.198 m", color=NET, fontsize=19, ha="right", va="bottom",
-            fontweight="bold")
+    a1.text(2.186, 1.30, L["g_band"], ha="right", va="top", fontsize=18, color="#7a5a12")
+    a1.text(2.245, 1.30, L["g_sep"], ha="left", va="top", fontsize=18)
+    a1.text(2.349, 0.10, L["g_shape"], fontsize=18, color=MUTED, ha="right", va="bottom")
+    a1.text(2.194, 0.03, L["g_chord"], color=NET, fontsize=19, ha="right", va="bottom", fontweight="bold")
     a1.set_ylim(0, 1.32)
     a1.set_yticks([])
     a1.spines["left"].set_visible(False)
     a1.tick_params(axis="x", labelbottom=False, length=0)
 
-    rows = [("CES channels", [2.192, 2.198, 2.203], True, NET, "chord and its\nneighbours"),
-            ("BES view, #31923", (2.12, 2.34), True, FILT2, None),
-            ("BES columns 5–7", (2.16, 2.21), False, FILT, "inferred from\nchannel names"),
-            ("ECEI column 3", (2.165, 2.215), True, GP, "±2–3 cm between\ndischarges")]
+    pos = [([2.192, 2.198, 2.203], True, NET), ((2.12, 2.34), True, FILT2), ((2.16, 2.21), False, FILT),
+           ((2.165, 2.215), True, GP)]
+    rows = [(lab, x, pub, c, note) for lab, note, (x, pub, c) in zip(L["g_rows"], L["g_notes"], pos)]
     for i, (lab, x, pub, c, note) in enumerate(rows):
         y = len(rows) - 1 - i
         if isinstance(x, list):
@@ -147,7 +275,7 @@ def geometry():
     a2.spines["left"].set_visible(False)
     a2.set_xlim(2.08, 2.35)
     a2.set_xticks([2.10, 2.15, 2.20, 2.25, 2.30, 2.35])
-    a2.set_xlabel("major radius R (m)")
+    a2.set_xlabel(L["g_xlabel"])
     save(fig, "poster_geometry")
 
 
@@ -163,20 +291,20 @@ def rows_schematic():
     for sp in ("left", "right", "top"):
         ax.spines[sp].set_visible(False)
     ax.set_yticks([3, 2, 1, 0])
-    ax.set_yticklabels(["beam", "CES frames", "fast channels", "file rows"])
+    ax.set_yticklabels(list(L["r_lanes"]))
     ax.tick_params(axis="y", length=0)
-    ax.set_xlabel("time relative to the stamp of row t (ms)")
+    ax.set_xlabel(L["r_xlabel"])
     ax.plot([-52, -30, -30, -20, -20, 10], [3.25, 3.25, 2.78, 2.78, 3.25, 3.25], color=INK, lw=2.4)
-    ax.text(-25, 3.06, "blip", ha="center", va="center", fontsize=18)
+    ax.text(-25, 3.06, L["r_blip"], ha="center", va="center", fontsize=18)
     for x0 in (-50, -40, -30, -20, -10, 0):
         absent, target = x0 == -30, x0 == 0
         fc = "white" if absent else ("#fbe9e9" if target else "#e8f0fa")
         ec = MUTED if absent else (NET if target else GP)
         ax.add_patch(Rectangle((x0 + 0.45, 1.72), 9.1, 0.56, fc=fc, ec=ec, lw=2.0, ls="--" if absent else "-"))
-    ax.text(-25.0, 2.0, "absent", ha="center", va="center", fontsize=18, color=MUTED)
+    ax.text(-25.0, 2.0, L["r_absent"], ha="center", va="center", fontsize=18, color=MUTED)
     ax.text(5.0, 2.0, "t", ha="center", va="center", fontsize=20, color=NET, fontweight="bold",
             fontstyle="italic")
-    ax.text(11.5, 2.0, "frame t: estimated;\nearlier: CES history", ha="left", va="center", fontsize=18)
+    ax.text(11.5, 2.0, L["r_frames"], ha="left", va="center", fontsize=18)
     tt = np.linspace(-52, 10, 600)
     sig = 1.0 + 0.12 * np.sin(tt / 2.3) + 0.06 * np.sin(tt / 0.7)
     sig = np.where((tt > -30) & (tt < -20), sig - 0.28, sig)
@@ -186,13 +314,17 @@ def rows_schematic():
         y0 = float(np.interp(x0 + 0.5, tt, sig))
         ax.plot(x0 + 0.5, y0, "o", ms=10, color=FILT if x0 == 0 else FILT2, mec=FILT, mew=1.6)
         ax.plot([x0 + 0.5, x0 + 0.5], [0.14, y0 - 0.1], color=GRID, lw=1.6)
-    ax.text(11.5, 1.0, "one raw sample per\nrow, at its stamp", ha="left", va="center", fontsize=18)
+    ax.text(11.5, 1.0, L["r_sample"], ha="left", va="center", fontsize=18)
     for x0 in stamps:
         ax.plot(x0 + 0.5, 0, "s", ms=12, color=NET if x0 == 0 else INK)
     ax.annotate("", xy=(-19.5, -0.36), xytext=(-39.5, -0.36),
                 arrowprops=dict(arrowstyle="<->", color=MUTED, lw=1.8, mutation_scale=22))
-    ax.text(-29.5, -0.55, "20 ms step = one absent frame", ha="center", va="top", fontsize=18, color=MUTED)
-    ax.text(11.5, 0.0, "estimate of row t\nformed at its stamp", ha="left", va="center", fontsize=18)
+    ax.text(-29.5, -0.55, L["r_step"], ha="center", va="top", fontsize=18, color=MUTED)
+    ax.text(11.5, 0.0, L["r_row"], ha="left", va="center", fontsize=18)
+    r = fig.canvas.get_renderer()
+    right = max(t.get_window_extent(r).x1 for t in ax.texts) / fig.dpi
+    if right > CW - 0.02:
+        raise SystemExit(f"FATAL: rows: a label runs off the figure ({right:.2f} > {CW:.2f} in)")
     save(fig, "poster_rows")
 
 
@@ -206,9 +338,12 @@ def _box(ax, x, y, w, h, lines, fc, ec, fs=18.5, bold_first=False, ls="-", lw=2.
     pitch = fs * 1.32 / 72.0
     y0 = y + h / 2 + (n - 1) * pitch / 2
     xx = x + w / 2 if align == "center" else x + 0.14
+    if n * pitch > h:
+        raise SystemExit(f"FATAL: {n} lines do not fit a box {h:.2f} in high: {lines[0]}")
     for i, s in enumerate(lines):
-        ax.text(xx, y0 - i * pitch, s, ha=align, va="center", fontsize=fs,
-                fontweight="bold" if (bold_first and i == 0) else "normal")
+        t = ax.text(xx, y0 - i * pitch, s, ha=align, va="center", fontsize=fs,
+                    fontweight="bold" if (bold_first and i == 0) else "normal")
+        BOXED.append((t, w))
 
 
 def _arrow(ax, x0, y0, x1, y1, c=INK, ls="-", lw=2.2, rad=0.0):
@@ -227,15 +362,15 @@ def schematic():
     ax.axis("off")
     Y = lambda d: H - d
     x0 = 0.04
-    ax.text(x0, Y(0.04), "(a) two-stage estimator", fontsize=20, fontweight="bold", va="top")
+    ax.text(x0, Y(0.04), L["s_a"], fontsize=20, fontweight="bold", va="top")
     t0 = 0.52                                    # top of the input boxes
-    iw, ih, gap = 3.02, 0.93, 0.16
-    _box(ax, x0, Y(t0 + ih), iw, ih, ["fast channels at row t:", "9 BES · 4 ECEI · 2 Mirnov"], "#fff1df", FILT)
-    _box(ax, x0, Y(t0 + 2 * ih + gap), iw, ih, ["CES history before t:", "last value · age · flag"], "#e8f0fa", GP)
+    (iw, nw, sw), fs = L["s_w"], L["s_fs"]
+    ih, gap = 0.93, 0.16
+    _box(ax, x0, Y(t0 + ih), iw, ih, L["s_fast"], "#fff1df", FILT, fs=fs)
+    _box(ax, x0, Y(t0 + 2 * ih + gap), iw, ih, L["s_ces"], "#e8f0fa", GP, fs=fs)
     cy = Y(t0 + ih + gap / 2)
-    nx, nw, nh = x0 + iw + 0.42, 1.78, 2.02
-    _box(ax, nx, cy - nh / 2, nw, nh, ["first stage:", "recurrent", "network", "(LSTM) over", "every row"],
-         "#fbe9e9", NET, bold_first=True)
+    nx, nh = x0 + iw + 0.42, 2.02
+    _box(ax, nx, cy - nh / 2, nw, nh, L["s_net"], "#fbe9e9", NET, fs=fs, bold_first=True)
     _arrow(ax, x0 + iw + 0.02, Y(t0 + ih / 2), nx - 0.03, cy + 0.35, FILT)
     _arrow(ax, x0 + iw + 0.02, Y(t0 + 1.5 * ih + gap), nx - 0.03, cy - 0.35, GP)
     ox, ow = nx + nw + 0.34, 0.92
@@ -243,9 +378,8 @@ def schematic():
                                 ec=NET, lw=2.2))
     ax.text(ox + ow / 2, cy, r"$\hat{T}_i^{(1)}$", ha="center", va="center", fontsize=21)
     _arrow(ax, nx + nw + 0.02, cy, ox - 0.03, cy, NET)
-    sx, sw = ox + ow + 0.34, 1.86
-    _box(ax, sx, cy - nh / 2, sw, nh, ["second stage:", "boosted trees", "estimate the", "network's", "error"],
-         "#f6e6ea", TWO, bold_first=True)
+    sx = ox + ow + 0.34
+    _box(ax, sx, cy - nh / 2, sw, nh, L["s_two"], "#f6e6ea", TWO, fs=fs, bold_first=True)
     _arrow(ax, ox + ow + 0.02, cy, sx - 0.03, cy, NET)
     tx = sx + sw + 0.32
     tw = CW - tx - 0.05
@@ -259,26 +393,22 @@ def schematic():
     ax.plot([x0 + 0.5, x0 + 0.5], [Y(t0 + 2 * ih + gap) - 0.02, Y(d_by)], color=TWO, lw=2.0, ls=dash)
     ax.plot([x0 + 0.5, sx + sw / 2], [Y(d_by), Y(d_by)], color=TWO, lw=2.0, ls=dash)
     _arrow(ax, sx + sw / 2, Y(d_by), sx + sw / 2, cy - nh / 2 - 0.02, TWO, ls=dash, lw=2.0)
-    ax.text(x0 + 0.62, Y(d_by + 0.07), "summaries of BES and ECEI over the last ten rows, CES history",
-            fontsize=18, va="top", color=TWO)
+    ax.text(x0 + 0.62, Y(d_by + 0.07), L["s_summ"], fontsize=18, va="top", color=TWO)
     # (b) filter
     d_rule = d_by + 0.56
     ax.plot([x0, CW - 0.04], [Y(d_rule), Y(d_rule)], color=GRID, lw=1.6)
-    ax.text(x0, Y(d_rule + 0.12), r"(b) five-parameter robust filter on $x = \log T_i$", fontsize=20,
-            fontweight="bold", va="top")
+    ax.text(x0, Y(d_rule + 0.12), L["s_b"], fontsize=20, fontweight="bold", va="top")
     d_f = d_rule + 0.62
     fh = 0.98
     fy = Y(d_f + fh)
     pw = 4.55
-    _box(ax, x0, fy, pw, fh, [r"predict: $x_t = x_{t-1} + b_c\,\Delta c_t + b_g\,\Delta g_t$",
-                              "random walk, variance q"], "#fff1df", FILT, fs=18.5)
+    _box(ax, x0, fy, pw, fh, L["s_pred"], "#fff1df", FILT, fs=18.5)
     ux = x0 + pw + 0.5
     uw = CW - ux - 0.04
-    _box(ax, ux, fy, uw, fh, ["update with a CES value:", r"weight $\min(1, k\sqrt{S}/|v|)$, variance r"],
-         "#e8f0fa", GP, fs=18.5)
+    _box(ax, ux, fy, uw, fh, L["s_upd"], "#e8f0fa", GP, fs=18.5)
     _arrow(ax, x0 + pw + 0.02, fy + fh / 2, ux - 0.03, fy + fh / 2)
     _arrow(ax, ux + uw * 0.45, fy - 0.03, x0 + pw * 0.55, fy - 0.03, rad=-0.16)
-    ax.text(x0 + pw + 0.25, fy - 0.50, "next row", ha="center", va="top", fontsize=18, color=MUTED)
+    ax.text(x0 + pw + 0.25, fy - 0.50, L["s_next"], ha="center", va="top", fontsize=18, color=MUTED)
     if fy - 0.50 - 0.3 < 0.0:
         raise SystemExit("FATAL: schematic runs off the figure")
     save(fig, "poster_schematic")
@@ -354,27 +484,26 @@ def trace():
         dt = np.diff(t)
         for j, b in enumerate(np.flatnonzero((dt > 0.015) & (dt < 0.045))):
             ax.axvline(0.5 * (t[b] + t[b + 1]), color=TWIN, lw=2.0, ls=":",
-                       label="absent frame (beam blip)" if j == 0 else None)
-        ax.plot(t, pers, color="0.55", lw=2.0, drawstyle="steps-post", label="hold")
-        ax.plot(t, gp, color=GP, lw=2.2, ls="--", label="causal GP (CES history only)")
-        ax.plot(t, model, color=NET, lw=2.8, label="network (first stage)")
-        ax.plot(t[obs], ti[obs], "o", ms=7.5, mfc="white", mec="k", mew=1.4, label=r"reported $T_i$", zorder=5)
+                       label=L["t_blip"] if j == 0 else None)
+        ax.plot(t, pers, color="0.55", lw=2.0, drawstyle="steps-post", label=L["t_hold"])
+        ax.plot(t, gp, color=GP, lw=2.2, ls="--", label=L["t_gp"])
+        ax.plot(t, model, color=NET, lw=2.8, label=L["t_net"])
+        ax.plot(t[obs], ti[obs], "o", ms=7.5, mfc="white", mec="k", mew=1.4, label=L["t_rep"], zorder=5)
         vv = ti[obs]
-        ax.set_title(f"({'abc'[k]}) #{name[1:6]}: {int((~obs).sum())} of {len(t)} rows without $T_i$; "
-                     f"reported {vv.min():.0f} to {vv.max():.0f} eV", fontsize=19, fontweight="normal", pad=6)
-        ax.set_ylabel(r"$T_i$ (eV)")
+        ax.set_title(L["t_title"].format(p="abc"[k], shot=name[1:6], miss=int((~obs).sum()), n=len(t),
+                                         lo=vv.min(), hi=vv.max()), fontsize=19, fontweight="normal", pad=6)
+        ax.set_ylabel(L["t_ylabel"])
         ax.margins(x=0.01)
         ax.locator_params(axis="y", nbins=4)
         ax.tick_params(axis="x", pad=3)
-    axes[-1].set_xlabel("time (s)")
+    axes[-1].set_xlabel(L["t_xlabel"])
     hs, ls = [], []
     for ax in axes:
         for h, l in zip(*ax.get_legend_handles_labels()):
             if l not in ls:
                 hs.append(h)
                 ls.append(l)
-    order = [ls.index(x) for x in ("reported $T_i$", "network (first stage)", "causal GP (CES history only)",
-                                   "hold", "absent frame (beam blip)") if x in ls]
+    order = [ls.index(x) for x in (L["t_rep"], L["t_net"], L["t_gp"], L["t_hold"], L["t_blip"]) if x in ls]
     fig.legend([hs[i] for i in order], [ls[i] for i in order], ncol=2, loc="outside upper center",
                columnspacing=1.4, handlelength=1.8)
     save(fig, "poster_trace")
@@ -387,7 +516,7 @@ def blips():
     fig, a = plt.subplots(figsize=(CW, 4.1), layout="constrained")
     pr, ci, ctl = S["profiles"], S["profiles_ci95"], S["control_profiles"]
     x = np.arange(1, len(pr["ti"]) + 1)
-    for k, lab, c in (("bes", "BES level", HOLD), ("ecei", "ECEI level", FILT), ("ti", "reported $T_i$", GP)):
+    for (k, c), lab in zip((("bes", HOLD), ("ecei", FILT), ("ti", GP)), L["b_lab"]):
         a.fill_between(x, [p[0] for p in ci[k]], [p[1] for p in ci[k]], color=c, alpha=0.22, lw=0)
         a.plot(x, pr[k], "-o", color=c, lw=2.8, ms=8, label=lab)
         a.plot(x, ctl[k], ":", color=c, lw=2.0)
@@ -395,11 +524,11 @@ def blips():
     a.set_xticks(x)
     a.set_xlim(0.6, len(x) + 0.4)
     a.set_ylim(0.62, 1.07)
-    a.set_xlabel("row after the absent frame (10 ms rows)")
-    a.set_ylabel("ratio to the six rows before")
+    a.set_xlabel(L["b_xlabel"])
+    a.set_ylabel(L["b_ylabel"])
     a.legend(loc="lower right", ncol=1)
-    a.text(len(x) + 0.3, 1.045, "dotted: control rows without a blip", ha="right", fontsize=18, color=MUTED)
-    a.set_title(f"{S['events']:,} blips of one absent frame", fontsize=19, fontweight="normal")
+    a.text(len(x) + 0.3, 1.045, L["b_dotted"], ha="right", fontsize=18, color=MUTED)
+    a.set_title(L["b_title"].format(n=S["events"]), fontsize=19, fontweight="normal")
     save(fig, "poster_blips")
 
 
@@ -408,12 +537,13 @@ def where():
     """fig_paper.fig_where panel (a), re-laid out: skill by thirds of the discharges by median T_i."""
     R = J("b54_pooled_rows.json")["reported"]
     K = J("b56_kfx.json")
-    th = [("coldest", "low", "confirm_third_coldest"), ("middle", "middle", "confirm_third_middle"),
-          ("hottest", "high", "confirm_third_hottest")]
+    th = [(lab, key, conf) for lab, (key, conf) in
+          zip(L["w_thirds"], (("low", "confirm_third_coldest"), ("middle", "confirm_third_middle"),
+                              ("high", "confirm_third_hottest")))]
     fig, a = plt.subplots(figsize=(CW, 4.7), layout="constrained")
-    series = [("network over causal GP", lambda t: R["thirds"][t[1]]["gp"], GP, -0.22),
-              ("network over its control", lambda t: R["thirds"][t[1]]["t"], NET, 0.0),
-              ("KFX over KF0 (filter)", lambda t: K[t[2]]["kfx_over_kf0"], FILT, 0.22)]
+    series = [(L["w_series"][0], lambda t: R["thirds"][t[1]]["gp"], GP, -0.22),
+              (L["w_series"][1], lambda t: R["thirds"][t[1]]["t"], NET, 0.0),
+              (L["w_series"][2], lambda t: K[t[2]]["kfx_over_kf0"], FILT, 0.22)]
     for lab, f, c, dx in series:
         for i, t in enumerate(th):
             v = f(t)
@@ -423,8 +553,8 @@ def where():
     a.set_xticks(range(3))
     a.set_xticklabels([t[0] for t in th])
     a.set_xlim(-0.5, 2.5)
-    a.set_ylabel("skill")
-    a.set_xlabel("third of the discharges by median $T_i$")
+    a.set_ylabel(L["w_ylabel"])
+    a.set_xlabel(L["w_xlabel"])
     a.grid(axis="y", color=GRID, lw=1.0)
     a.set_ylim(-0.04, 0.2)
     a.legend(handles=[Line2D([], [], marker="o", ls="-", color=c, mfc=c, ms=11, lw=2.6, label=lab)
@@ -434,9 +564,11 @@ def where():
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--lang", choices=("en", "ko"), default="en")
     ap.add_argument("--trace", action="store_true", help="recompute the example traces (CPU inference)")
     ap.add_argument("--only", nargs="*", help="names of figures to draw")
     a = ap.parse_args()
+    set_lang(a.lang)
     if a.trace:
         trace_compute()
     figs = {"geometry": geometry, "rows": rows_schematic, "schematic": schematic, "trace": trace, "blips": blips,
