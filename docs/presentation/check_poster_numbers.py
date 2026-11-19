@@ -27,12 +27,14 @@ SOURCES = ["PROJECT_KNOWLEDGE.md",
            "docs/paper/b66_regimes.md",
            "docs/paper/b54_pooled_rows.md",
            "docs/paper/ppcf/main_ppcf.tex",
+           "docs/paper/ppcf/b39_generated.tex",
+           "docs/paper/ppcf/supp_ppcf.tex",
            "docs/paper/ppcf/refs.bib",
            "docs/paper/file_rules.md"]
 DERIVED = {}
 # 포스터 명세의 금지어 (낱말 경계, 대소문자 무시). '첫'은 '첫 단계', 'first'는 'first stage'로 쓰일 수 있어
 # 그 자체는 찾지 않고 'the first', 'for the first time'을 찾는다.
-BANNED = ["wins", "beats", "outperforms?", "novel", "for the first time", "the first", "최초", "모수"]
+BANNED = ["wins", "beats", "outperforms?", "novel", "for the first time", "the first", "superior", "최초", "모수"]
 
 
 def norm(s):

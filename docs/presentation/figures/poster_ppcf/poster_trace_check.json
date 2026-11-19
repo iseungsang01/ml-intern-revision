@@ -1,0 +1,80 @@
+{
+ "run": ".b39_v2_cut_s1_i1",
+ "typical_discharge": "s31343.csv",
+ "s31921.csv": {
+  "scored_rows": 437,
+  "max_value_mismatch_eV": 4.57763671875e-05,
+  "model": {
+   "max_abs_dev_of_error_eV": 0.30957169491955483,
+   "max_rel_dev": 0.16327325425518258,
+   "share_within_1e-3": 0.33638443935926776,
+   "rmse_mine": 277.427245983002,
+   "rmse_stored": 277.4197814955967
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 4.57763671875e-05,
+   "max_rel_dev": 1.7526717289331943e-05,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 282.7786540712677,
+   "rmse_stored": 282.77865440227555
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 283.3812317072798,
+   "rmse_stored": 283.3812317072798
+  }
+ },
+ "s31923.csv": {
+  "scored_rows": 389,
+  "max_value_mismatch_eV": 0.0001220703125,
+  "model": {
+   "max_abs_dev_of_error_eV": 0.25561525995821555,
+   "max_rel_dev": 0.14662104845046997,
+   "share_within_1e-3": 0.390745501285347,
+   "rmse_mine": 357.9631273052593,
+   "rmse_stored": 357.9539235839242
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 0.0001220703125,
+   "max_rel_dev": 5.447884176971785e-05,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 448.055890290386,
+   "rmse_stored": 448.05589034094294
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 378.86071972577236,
+   "rmse_stored": 378.86071972577236
+  }
+ },
+ "s31343.csv": {
+  "scored_rows": 393,
+  "max_value_mismatch_eV": 6.103515625e-05,
+  "model": {
+   "max_abs_dev_of_error_eV": 0.13598822993610327,
+   "max_rel_dev": 0.15088584646582603,
+   "share_within_1e-3": 0.33587786259541985,
+   "rmse_mine": 71.48634640454254,
+   "rmse_stored": 71.48201652947976
+  },
+  "persistence": {
+   "max_abs_dev_of_error_eV": 6.103515625e-05,
+   "max_rel_dev": 1.1873519706034353e-06,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 80.68969469660678,
+   "rmse_stored": 80.68969521194867
+  },
+  "causal_gp": {
+   "max_abs_dev_of_error_eV": 0.0,
+   "max_rel_dev": 0.0,
+   "share_within_1e-3": 1.0,
+   "rmse_mine": 63.57247435836144,
+   "rmse_stored": 63.57247435836144
+  }
+ },
+ "check_passed": true
+}

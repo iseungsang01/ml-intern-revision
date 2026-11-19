@@ -8,7 +8,7 @@
 |---|---|---|
 | **`KSTAR_CES_포스터_초안.pptx`** | PowerPoint, 1장, 세로 45 × 60 cm (200 % 인쇄 시 90 × 120 cm) | **포스터 한국어판** (2026-11-19). 내용은 두 단계 estimator(B.64)와 3 keV 컷 조건(B.65). 결과 수치는 표에만 둔다. 빠른 채널을 뺀 신경망은 "비교군"이다. 미리보기 `KSTAR_CES_포스터_초안.png` |
 | **`KSTAR_CES_poster_en.pptx`** | PowerPoint, 1장, 같은 크기 | **포스터 영어판**: 한국어판과 같은 배치이고, history-only control이라는 용어를 쓴다. 미리보기 `KSTAR_CES_poster_en.png` |
-| `KSTAR_CES_poster_PPCF.pptx` | PowerPoint, 1장, A0 세로 | **PPCF 원고의 영어 학회 포스터** (만드는 중). 원고를 줄여 옮긴다. 빌더 `build_poster_ppcf.py` |
+| **`KSTAR_CES_poster_PPCF.pptx`** | PowerPoint, 1장, A0 세로 84.1 × 118.9 cm (1:1 인쇄) | **PPCF 원고의 영어 학회 포스터** (2026-11-19). 제목은 원고 제목이고, 세 단에 여덟 절을 두었다. 문장은 원고를 줄여 옮겼고, 절마다 원고 줄 번호를 `poster_ppcf_sources.md`에 적었다. 그림은 원고 그림을 A0 크기로 다시 그렸다(`make_figures_poster_ppcf.py` → `figures/poster_ppcf/`). 빌더 `build_poster_ppcf.py`. 숫자 대조 108개, 불일치 0. 미리보기 `KSTAR_CES_poster_PPCF.png` |
 | `figs_20261119/` | PNG·PDF | 2026-11-19 발표 덱(claude.ai Slides 아티팩트)의 그림. 빌더 `build_figs_20261119.py`와 `build_figs_progress_20261119.py` |
 
 **포스터 빌드**
