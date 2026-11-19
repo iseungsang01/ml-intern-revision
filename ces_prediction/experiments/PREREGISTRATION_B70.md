@@ -166,3 +166,68 @@ Written after the step-1 timing run (`.b39p_v2_cut_r2_f0` re-scored on all eligi
 - `b70_d1/score_b70.py` therefore runs eval_seq's own code for the rows and references once per fold, and `eval_seq.build_pred_lookup` once per arm. It writes per arm the files that `eval_seq.compare()` writes. The loop and the post-loop block are copied from `compare()`; the functions are imported.
 - Arm handling: B.59 arm L installs `fast_shift.install_eval(1)` around the lookup, as `eval_b59L.py` does. B.67 registers its variants, as `eval_b67.py` does; the gate readout is not written.
 - It is used for the folds other than r2 f0 only if, on r2 f0, every key of every arm's npz and the metrics json are bit-identical to the output of that arm's own scoring script (`runs_b70.execute`, A1). Otherwise the batch uses the arms' own scripts.
+
+## Addendum 2 (2026-11-19, phase 2, before any phase-2 readout)
+
+Written after phase 1 was read and while the B.56 filters were being refitted. No phase-2 statement, table or readout had been computed. Facts and choices only.
+
+**C1. How each readout is re-read.**
+- Each batch's own readout code runs unchanged. Its module constants are pointed at D1 caches: the stored-run directory function `run_b39.pooled_run_dir` (to the D1 re-scorings, A1), cache directories, output paths, and every set of re-partitions.
+- Every pooled set becomes r2-r4: B.39's r2-r9, the filters' confirmation set r3-r9, B.66's `KFX_REPEATS`. Where a script reports r2 alone (the filters' development set), r2 alone is still reported.
+- Outputs go to `data/.b70p2/paper/` with the structure of the original `docs/paper/b*.json`. `docs/paper/b70_d1_phase2.{md,json}` sets them key by key beside the old values.
+- Intervals, draws and seeds are each script's own; only the first level is drawn among r2-r4.
+- Not re-read: parts on the four file-level splits, the time split or the raw-stream overlap of the four test sets (B.56 units s42/s1/s7/s123 and camp, B.61 part B overlap, B.54 check (e) and B.66 check (b) on split 42, which stay as checks only).
+- The four-split statements of B.56 (KX1-KX6) are read in their pooled form, in which B.56 already reports them: kfx over kf0, kg over kf0, network over kfx, kf0 over the causal GP (90 %), median ratio kfx / hold, kfx over kf0 on rows not after an absent frame.
+
+**C2. Checks that compared with recorded old values.**
+- B.54 (a), B.55 (d), B.57 (ii), B.60's section-2 percentiles, B.60 addendum medians, B.61 pooled skills and percentiles, and B.56 (a) compared with recorded old numbers. They are pointed at D1 references:
+  - P1 and P2 from `analyze_b39.arm_p`'s code on the D1 runs of r2-r4 (`data/.b70p2/paper/b39_primary.json`);
+  - the D1 B.54 readout (for B.61);
+  - percentiles and medians computed directly from the D1 npz files and the D1 filter caches.
+- Checks that do not depend on the scored rows run unchanged against the old files: B.54 (e), B.55 (b) and (c), B.66 (a) and (b).
+
+**C3. Row tables and propensity.**
+- B.54 row tables: `run_b54.locate` on the D1 rows. Per-file features (classes, blip rows, median T_i; `data/.b54/files.npz`) and the B.50 propensity fits of each fold (`p_s*.npz`) do not depend on the scored rows. They are reused and joined to the D1 rows with `run_b54.join_p`.
+
+**C4. Rows after an absent frame (D1 item 2.6).**
+- Every stratum a script defines by its own rule uses the B.54 definition, `run_b54.blip_rows_13`:
+  - B.55's `after_absent`, which counted rows 1-3 after a 15-40 ms step with no condition before. B.55 also reads rows 1, 2 and 3 separately: the row number k is the smallest k with which `blip_rows_13`'s walk marks the row;
+  - the rows not after an absent frame of B.56 (`quiet_mask`, ten rows after a 15 ms - 0.5 s step) and of B.57 (`after_absent10`).
+- The original ten-row variants of B.56 and B.57 are reported beside.
+- B.45 classes (B.54 H, B.66) are classes, not this stratum, and are unchanged.
+
+**C5. Filters (D1 item 2.9).**
+- KF0, Kc, Kg and KFX at clip 0.2, and KFX at clips 0.1 and 0.4, are refitted with `run_b56.fit_unit`'s code: starts, Nelder-Mead options and order unchanged. Two things change:
+  - fit set: the manifest's `train_files` of the fold, not every non-test discharge;
+  - held repeats removed from the filter's T_i (Y and LY, all files) where `seq_data.load_grid_files` (cut, held removal) has no value. Filter row j is grid row j + 1, checked file by file. One value is removed.
+- The filter's own `iloc[1:-1]` loader and raw-log BES drive stay.
+- Rows: the D1 rows of the fold, located by `run_b56.map_rows_exact`.
+- Parameters per fold go to `data/.b70/kf_params_r{r}_f{k}.json`, keys "KF0", "KFX" (theta in `kfx_model.run`'s order), "use_x".
+
+**C6. B.55.**
+- Parts R (the twelve raw discharges, row-independent raw caches of B.55 reused), G and D run on the D1 rows of the 15 r2-r4 networks.
+
+**C7. B.65 on the cut population.**
+- The 30 inclusive networks (`.b65_{v2,v2h}_incl_r{r}_f{k}`) are run by `eval_seq.build_pred_lookup` under `run_b39.pooled_env` of the same model and fold. That env is cut, with the cut harness statistics, CPU and A1's three changes. Inputs and outputs use each network's own (inclusive) training statistics.
+- Their T_i errors on the D1 rows, with the D1 references, are read by `analyze_b65.cell` (20,000 draws, B.65's seed) as I1-I4.
+
+**C8. Delay replay (`run_b42`'s rule and functions).**
+- Delay rule: a T_i sample at grid row u is available at row t if u <= t - 1 - L. The six CES channels are rebuilt (`run_b42.ces_channels`, true staleness; the no-delay staleness reported).
+- Networks: the B.39 network and twin of each r2-r4 fold, on its test discharges.
+- References: hold = last available value; causal GP = `predict_gp_causal` on the 16 last available samples.
+- L = 0, 1, 2 on one fixed row set: the D1 rows (grid rows by `compact_index`) whose block holds a T_i at u <= t - 3.
+- Statements:
+  - T1: the network over the causal GP at L = 1 and at L = 2;
+  - T2: the network over the twin at L = 2.
+  - Each is read as the pooled two-level interval (20,000 draws) above zero. The rule of three of four splits has no D1 form.
+- Checks at L = 0: the rebuilt inputs equal `build_blocks` on every test file; network, hold and GP lie within 0.5 eV of the D1 npz on at least 99 % of the fixed rows.
+
+**C9. 50 ms thinning replay (`run_b30.rows` at k = 5, copied).**
+- In each block every fifth row is visible (phases o = 0..4). History and networks see visible values only.
+- References: GP length scales x 5 (unscaled reported); PCHIP on up to four visible values on each side; hold = last visible value.
+- Rows: the D1 rows. In each phase a row is scored when it has a visible earlier and a visible later T_i in its block and every estimator is finite (the B.30 population). A row counts once per phase.
+- Statements H1 (network over the causal GP) and H2 (network over the twin) are read as pooled two-level intervals (20,000 draws) above zero.
+- References and phases depend only on the discharge. They are computed once per discharge and paired with the network of the fold in which it is a test discharge, in each re-partition.
+
+**C10. Old values.**
+- Each original `docs/paper/b*.json` is the old value. B.48 is the old value for the replays: the B.39 four-split network; the per-split values and their mean are given.

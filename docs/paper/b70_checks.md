@@ -133,3 +133,31 @@ All 135 runs are re-scored under their runner's own env function with exactly CE
 | c | True |
 | d | True |
 | env | True |
+
+## Phase 2
+
+Registered: PREREGISTRATION_B70.md, Addendum 2. Each batch's own checks, run on the D1 rows; where a check compared recorded old values it is pointed at a D1 reference (C2). Files: `data/.b70p2/`.
+
+| batch | check | result | passes |
+|---|---|---|---|
+| B.54 | (a) P1/P2 from the row tables vs analyze_b39.arm_p on the D1 runs | P1 +0.0938 vs +0.0938; P2 +0.0524 vs +0.0524 | True |
+| B.54 | (b) every discharge in one test fold per re-partition; (c) network and twin on the same rows, references agree; (d) the value of every row in the file, no first/last grid row | True, True, True | True |
+| B.54 | (e) row-independent codes on split 42 (unchanged) | | True |
+| B.55 | (a) every network reproduces its D1 errors (B.49 rule) | largest dev 0.0002 eV | True |
+| B.55 | (b), (c) raw streams (row-independent) | | True, True |
+| B.55 | (d) part G unshifted reproduces P1, P2 of the D1 runs | max diff 2.1e-09 | True |
+| B.55 | C4: rows 1-3 after an absent frame by the B.54 walk, equal to run_b54's blip13 flags in every file | 10,878 rows (B.55's own rule 11,079) | True |
+| B.56 | (b) D1 rows located, file values within 0.01 eV, filter outputs finite, grid row = B.54's + 1 | 15 of 15 folds | True |
+| B.56 | (c) the output for row t does not move when CES values from t on change | 0.0 eV | True |
+| B.56 | fits on the training discharges (D1 item 2.9), held repeats removed; parameters written for B.71 | 15 of 15 parameter files; fit files [383, 384]; held values removed from the filter grid 1; unmatched rows 0 | True |
+| B.57 | (i) twins reproduce their D1 errors | min share within 0.5 eV 1.0000 | True |
+| B.57 | (ii) section-2 values (recorded old numbers; C2: reported, not required) | | False |
+| B.57 | (iii) rho_1 = 1 when the next value is replaced by the current one | | True |
+| B.60 | percentiles of |e| from the D1 row tables vs computed from the D1 npz directly (C2) | 5 of 5 equal to 1 decimal | True |
+| B.60 | addendum: filter rows identical to the D1 row tables; KFX/KF0 medians vs the D1 filter caches | rows True | True |
+| B.61 | P1/P2 vs the D1 B.39 values; percentiles vs the D1 B.54 readout; filter rows | P1 True, P2 True; filter rows 15 of 15 | True |
+| B.66 | (a) detector = B.54 classes; (b) quiet share split 42; (c) D1 row tables and filter rows; (d) 639 discharges | True, True, True, True | True |
+| B.65 (cut) | the row path reproduces the D1 errors of the B.39 network bit for bit, every fold | 15 of 15 folds | True |
+| replays | L = 0: network, hold, causal GP within 0.5 eV of the D1 npz (>= 99 % of the fixed rows); rebuilt inputs equal build_blocks on every file (checked in the run) | {'c': 1.0, 'hold': 1.0, 'gp': 0.9995935730349256} | True |
+
+Summary: b54 passes, b55 passes, b56 passes, b57 passes, b60 passes, b61 passes, b66 passes, b65 passes, replay passes.
