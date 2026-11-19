@@ -30,8 +30,9 @@ SOURCES = ["PROJECT_KNOWLEDGE.md",
            "docs/paper/ppcf/refs.bib",
            "docs/paper/file_rules.md"]
 DERIVED = {}
-# 포스터 명세의 금지어 ('첫'은 '첫 단계'로 쓰이므로 여기서 찾지 않는다)
-BANNED = ["wins", "beats", "outperform", "novel", "최초", "모수"]
+# 포스터 명세의 금지어 (낱말 경계, 대소문자 무시). '첫'은 '첫 단계', 'first'는 'first stage'로 쓰일 수 있어
+# 그 자체는 찾지 않고 'the first', 'for the first time'을 찾는다.
+BANNED = ["wins", "beats", "outperforms?", "novel", "for the first time", "the first", "최초", "모수"]
 
 
 def norm(s):
@@ -80,7 +81,7 @@ def main():
     print("poster tokens checked: %d, not found in any source: %d" % (len(toks), len(bad)))
     for t in bad:
         print("  MISSING", t)
-    words = [w for w in BANNED if w in text]
+    words = [w for w in BANNED if re.search(r"(?<![A-Za-z])" + w + r"(?![A-Za-z])", text, re.I)]
     print("banned words found: %d" % len(words))
     for w in words:
         print("  BANNED", w)
