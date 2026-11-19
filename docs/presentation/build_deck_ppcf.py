@@ -183,23 +183,39 @@ def csv_excerpt(path, t0, t1):
 
 
 def problem_slide(prs):
-    """'1 문제': why nowcasting matters, from the verified prior work (numbers in the table only)."""
-    s = content_slide(prs, "1 문제")
-    textbox(s, 91, 322, 1734, 45, ["선행 연구"], 28, NAVY, bold=True)
-    y = table(s, 91, 372, 1734, [
+    """'1 문제 (선행 연구)': what control asks of an ion-temperature diagnostic and what real-time CX analysis exists,
+    as written in each paper (numbers in the table only)."""
+    s = content_slide(prs, "1 문제 (선행 연구)")
+    y = table(s, 91, 330, 1734, [
         (["출처", "내용", "시간 · 정확도"], "hd"),
-        (["ITER CXRS 요구 (Mazon et al. 2025)", "제어용 중심 Ti 측정", "100 ms, 10 %"], ""),
-        (["HL-3 신경망 CXRS (Tian et al. 2026)", "플라스마 제어에 필요한 응답 시간", "약 10 ms"], ""),
-        (["JT-60U (Kobayashi et al. 2007)", "Ti 실시간 전송, NBI 되먹임", "10 ms마다"], ""),
-        (["DIII-D 실시간 CER (Chrystal et al. 2026)", "기준 분석과 20 % 이내인 Ti 비율", "5 ms 노출, 중심 88 % · 가장자리 79 %"], ""),
-        (["KSTAR NN-CES (Lee et al., FED 222)", "beam-off 프레임 대기, R ≳ 2.2 m에서 성능 저하, 실시간 CES는 목표 단계", "최대 1 s 지연"], "hi"),
-    ], [0.30, 0.46, 0.24], size=22, rh=46)
-    bullets(s, 91, y + 22, 1734, 200, [
-        "제어: 약 10 ms 단위의 Ti 필요, 실시간 CX 분석은 가장자리에서 정확도 낮음",
-        "KSTAR edge 측정선 (R = 2.198 m): 실시간 CES 없음, 결측과 빔 blip 잦음",
-        "문제: 다음 CES 값 없이 지금 프레임의 Ti 추정 (nowcasting)",
-        "대상: 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보"], 26)
+        (["ITER 측정 요구 (Mazon et al. 2025)", "가장자리 Ti (r/a > 0.85)", "100 ms, 10 %"], ""),
+        (["HL-3 신경망 CXRS (Tian et al. 2026)", "제어에 요구되는 진단 응답 시간 (자체 CCD 노출 25 ms, NN 분석 0.56 ms)", "약 10 ms"], ""),
+        (["JT-60U (Kobayashi et al. 2007)", "4개 지점 Ti를 제어계로 전송, grad-Ti 되먹임 (원자료 60 ms 평균)", "10 ms마다"], ""),
+        (["DIII-D 실시간 CER (Chrystal et al. 2026)", "기준 분석과 20 % 이내인 Ti 비율 (5 ms 노출, 결과는 약 1 ms 뒤)", "중심 88 %, 가장자리 79 %"], "hi"),
+    ], [0.28, 0.52, 0.20], size=22, rh=48)
+    bullets(s, 91, y + 30, 1734, 140, [
+        "제어용 Ti 진단에는 짧은 응답이 요구됨",
+        "실시간 CX 분석은 다른 장치에서 쓰이지만 가장자리에서 정확도가 낮음"], 26)
     notes(s, NOTE["problem"])
+    return s
+
+
+def bottleneck_slide(prs):
+    """'1 문제 (KSTAR 병목)': from raw signal to value on KSTAR, how far it is solved, and where this work sits."""
+    s = content_slide(prs, "1 문제 (KSTAR 병목)")
+    y = table(s, 91, 326, 1734, [
+        (["진단 · 출처", "원시 신호 → 값", "지금 상태"], "hd"),
+        (["CES 기존 분석 (Lee et al. 2026)", "스펙트럼 → beam-off 배경(1 Hz, 10 ms) 차감 → fit, 방전 뒤 자동 분석", "최대 1 s 지연, 실시간 불가"], ""),
+        (["KSTAR NN-CES (Lee et al. 2026)", "원시 스펙트럼에서 바로 추정, 변조 불필요, 기존 분석과 잘 맞음, R ≳ 2.2 m에서 성능 저하", "약 210 ns/프레임 (GPU), RT-CES는 목표"], "hi"),
+        (["KSTAR 실시간 진단 (Ko, KFE 2024)", "CES Ti·Vφ: 실시간·초고속 시스템 시험, ECEI: 실시간 DAQ, BES: 실시간 항목 없음", "시험 단계"], ""),
+        (["DIII-D SHIELD (Kim et al. 2026)", "BES 64채널을 제어계로 실시간 전송 (빛의 세기라 분광 fit 불필요)", "주기당 35 µs 미만"], ""),
+    ], [0.27, 0.53, 0.20], size=20, rh=44)
+    bullets(s, 91, y + 18, 1734, 240, [
+        "참값: KSTAR CES 자동 분석이 보고한 10 ms 값 (빔이 꺼진 프레임은 능동 CX 빛이 없어 값 없음)",
+        "이 연구의 측정선 R = 2.198 m: NN-CES 성능이 떨어지는 경계, 결측과 빔 blip 잦음",
+        "문제: 다음 CES 값 없이 지금 프레임의 Ti 추정 (nowcasting), 대상: 같은 위치 BES가 CES 이력에 더하는 정보",
+        "실시간 적용 조건: BES 실시간 수집 (KSTAR 미보고), CES 값이 두 프레임 이내 도착 (RT-CES 시험 단계)"], 24)
+    notes(s, NOTE["bottleneck"])
     return s
 
 
@@ -235,11 +251,18 @@ NOTE["data"] = """자료는 KSTAR 2022 캠페인의 방전 파일 641개, 10 ms 
 그림 1: 빨간 선이 CES 측정선 R = 2.198 m이고, 아래 막대가 BES 시야, BES 5–7열, ECEI 3열입니다. 빗금은 채널 이름에서 추정한 위치입니다.
 그림 2: 빠른 채널 값은 그 행 시각의 원시 표본 하나이고, CES 값은 그 시각 근처에서 노출이 시작되는 프레임입니다. 행 간격이 20–40 ms이면 빔 blip이고, 그 프레임은 파일에 없습니다. 행 t의 인과 추정은 t까지의 빠른 표본과 t 이전의 CES 값만 씁니다.
 3 keV 넘는 값은 fit 실패로 보고 빠진 값으로 다루고, 직전 값을 되풀이한 유지값은 뺍니다."""
-NOTE["problem"] = """선행 연구로 본 nowcasting의 필요입니다.
-제어 쪽 요구: HL-3의 신경망 CXRS 논문(Tian et al. 2026)은 플라스마 제어에 보통 필요한 응답 시간을 약 10 ms로 적습니다. ITER CXRS 요구(Mazon et al. 2025)는 제어용 중심 Ti에 100 ms, 10 %입니다.
-실시간 분석 선례: JT-60U는 Ti를 10 ms마다 보내 NBI 되먹임에 썼고(Kobayashi et al. 2007), DIII-D의 실시간 CER은 5 ms 노출 뒤 약 1 ms에 결과를 내지만 기준 분석과 20 % 안에 드는 Ti 비율이 중심 88 %, 가장자리 79 %로 가장자리에서 낮습니다(Chrystal et al. 2026).
-KSTAR: 지금의 CES 분석은 배경을 빼려고 beam-off 프레임을 기다려 최대 1 s 늦고, R ≳ 2.2 m에서 성능이 떨어지며, 실시간 CES는 목표로 제시된 단계입니다(Lee et al., FED 222). 이 연구의 측정선 R = 2.198 m은 그 경계에 있고 결측과 빔 blip이 잦습니다.
-그래서 문제를 다음 CES 값 없이 지금 프레임의 Ti를 추정하는 것(nowcasting)으로 둡니다. 재는 것은 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보입니다."""
+NOTE["problem"] = """선행 연구로 본 요구와 선례입니다. 각 줄은 논문 원문에 적힌 대로입니다.
+ITER 측정 요구(Mazon et al. 2025, 표 10): 가장자리 Ti(r/a > 0.85)는 시간 분해능 100 ms, 공간 10–20 mm, 정확도 10 %입니다.
+HL-3(Tian et al. 2026): 실시간 플라스마 제어는 보통 에너지 가둠 시간보다 훨씬 짧은, 약 10 ms 수준의 진단 응답 시간을 요구한다고 씁니다. 이 논문의 신경망은 분석을 스펙트럼당 약 90 ms에서 프로파일당 0.56 ms로 줄였지만, CCD 노출이 25 ms라 그 요구를 넘는다고 스스로 적습니다.
+JT-60U(Kobayashi et al. 2007): 비선형 피팅 없이 4개 지점의 Ti를 10 ms마다 제어계로 보내 grad-Ti 되먹임 제어를 했습니다. 원자료는 60 ms 평균이고 처리는 5 ms 미만입니다.
+DIII-D(Chrystal et al. 2026): 5 ms 노출 자료를 받은 뒤 약 1 ms 안에 결과를 냅니다. 기준 분석(CERAUTO)과 20 % 안에 드는 Ti는 중심 88 %, 가장자리 79 %로, 가장자리가 더 어렵다고 적습니다."""
+NOTE["bottleneck"] = """KSTAR에서 원시 신호가 값이 되기까지의 병목과, 그것이 얼마나 풀렸는지입니다.
+CES: 기존 분석은 배경을 빼려고 빔을 1 Hz마다 10 ms 끄고 그 구간을 기다리므로 최대 1 s 늦고, 그래서 실시간 분석이 막힌다고 Lee et al.(2026, FED 222)이 씁니다. 같은 논문의 NN-CES는 원시 스펙트럼에서 바로 추정해 변조가 필요 없고, GPU에서 프레임당 약 210 ns입니다(기존 피팅은 CPU에서 약 2 ms). 기존 분석 결과와 잘 맞지만, R ≳ 2.2 m의 가장자리에서는 수동 방출이 늘고 ELM 등으로 스펙트럼이 왜곡되어 성능이 떨어집니다. 결론은 실시간 제어에 쓰일 잠재력이 있고, 최종 목표가 실시간 CES(RT-CES) 시스템이라는 것입니다.
+KFE의 2024년 진단 현황 자료(Ko)는 CES의 Ti·Vφ에 대해 실시간·초고속 시스템을 시험했다고 적고, ECEI는 실시간 DAQ 자료를 보여 주며, BES는 실시간 항목에 없습니다.
+BES는 빛의 세기라 분광 피팅이 필요 없고, 병목은 수집과 전송입니다. DIII-D의 SHIELD(Kim et al. 2026)는 BES 64채널을 제어계로 실시간 전송하며, 주기당 복사와 처리가 35 µs 미만입니다. 이 논문은 요동·영상 진단이 그동안 방전 뒤 분석에만 쓰였다고 적습니다.
+ECEI도 라디오미터 전압이라 피팅 단계가 없습니다. KFE 2024 자료는 ECEI 아날로그 신호를 나눠 실시간 ADC로 받았고, 실시간 자료의 스펙트로그램이 오프라인 자료와 같게 나왔다고 보여 줍니다(지연 수치는 없음). 다만 이 연구에서 ECEI만으로는 증분이 없으므로, 실시간 적용의 열쇠는 BES 수집과 CES 이력입니다.
+참값: 이 연구의 표적은 KSTAR CES 자동 분석(방전 뒤, 빔 변조 배경 차감)이 보고한 10 ms 값입니다. 빔이 꺼진 프레임에는 능동 CX 빛이 없으므로 어떤 분석으로도 그 프레임의 값은 없습니다.
+그래서 이 연구의 쓸모는 두 단계입니다. 지금은 방전 뒤 값의 빈 프레임(결측, 빔 blip)을 메웁니다. 실시간으로 쓰려면 BES 실시간 수집과, 늦어도 두 프레임 안에 도착하는 CES 값이 필요합니다. 그때에도 NN-CES가 약한 가장자리와 빔이 꺼진 프레임은 남고, 그 자리를 같은 위치 BES로 메우는 것이 이 방법의 역할입니다."""
 NOTE["layout"] = """왼쪽: KFE 발표 자료(Current status of the KSTAR diagnostics, 2024)의 진단 배치. 빨간 표시가 이 연구가 읽는 진단입니다. 위에서 본 배치에서 NBI 1 빔과, 그 빔을 보는 Toroidal CES와 BES의 시선, ECEI가 있는 G 포트를 짚습니다. 단면 배치에서는 CES 측정점 R = 2.198 m, z = 0을 짚습니다.
 맨 오른쪽: 받은 Mirnov 배치도. 토로이달 배열 20개 코일 가운데 파일에 들어 있는 두 코일 MC1T03, MC1T16을 이름의 번호로 표시했습니다. Mirnov 코일은 벽에 있습니다."""
 NOTE["positions"] = """가운데: 받은 ABCD 위치 그림(syndia 보정 전)을 우리 채널 구역만 잘라 파일의 채널을 표시했습니다. 빨간 원이 BES 9채널(105–107, 205–207, 305–307), 파란 원이 ECEI GT1103–GT1403입니다.
@@ -330,6 +353,8 @@ def build():
     # 1 problem
     s = problem_slide(prs)
     page_number(s, 3)
+    s = bottleneck_slide(prs)
+    page_number(s, 4)
 
     # 2 diagnostics and data, one slide
     s = content_slide(prs, "2 진단과 자료")
@@ -343,7 +368,7 @@ def build():
         (["방전 파일", "격자", "CES 측정선", "BES", "ECEI", "Mirnov", "제외"], "hd"),
         (["641개 (분할 639개)", "10 ms, 245,925행", "ch18, R = 2.198 m", "9채널 (105–307)", "GT1103–GT1403", "MC1T03, MC1T16", "3 keV 초과, 유지값"], ""),
     ], [0.165, 0.15, 0.15, 0.13, 0.14, 0.135, 0.13], size=22, rh=44)
-    page_number(s, 4)
+    page_number(s, 5)
     notes(s, NOTE["layout"] + chr(10) * 2 + NOTE["positions"])
 
     # 3 estimators
@@ -351,7 +376,7 @@ def build():
     yb = picture(s, "poster_schematic_ko.png", 91, 330, 900)
     textbox(s, 91, yb + 10, 900, 40, ["그림 3. (a) 두 단계 estimator. (b) 5-parameter filter (KF0: 구동 없음, KFX: BES 구동)."], 24, MUTED)
     estimators_right(s)
-    page_number(s, 5)
+    page_number(s, 6)
     notes(s, NOTE["estimators"])
 
     # 4 result
@@ -372,7 +397,7 @@ def build():
     textbox(s, 91, y + 8, 1100, 40, ["파란 값: 95 % 구간이 0(비율은 1)을 제외"], 24, MUTED)
     yb = picture(s, "poster_trace_ko.png", 1235, 330, 590)
     textbox(s, 1235, yb + 8, 590, 70, ["그림 4. 시험 방전 세 개의 보고된 Ti와 인과 추정 (음영: 값이 없는 행, 신경망: 첫 단계)"], 24, MUTED)
-    page_number(s, 6)
+    page_number(s, 7)
     notes(s, NOTE["result"])
 
     # 5 information
@@ -392,7 +417,7 @@ def build():
     textbox(s, 91, y + 8, 1160, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1300, 330, 525, 45, ["주의"], 28, NAVY, bold=True)
     bullets(s, 1300, 380, 525, 260, ["BES: 가열 빔의 빛, 밀도와 빔에 의존", "파일에 빔 출력 없음: 빔 변화의 기여는 배제 못 함"], 26)
-    page_number(s, 7)
+    page_number(s, 8)
     notes(s, NOTE["information"])
 
     # 6 where
@@ -414,7 +439,7 @@ def build():
         (["신경망: 바닥 대비 평균 제곱 오차", "1.331 [1.246, 1.427]"], ""),
     ], [0.60, 0.40])
     textbox(s, 915, y + 8, 910, 70, ["파란 값: 95 % 구간이 0을 제외 · ρ1: 한 프레임 뒤 보정 계수 ÷ 같은 프레임의 계수"], 24, MUTED)
-    page_number(s, 8)
+    page_number(s, 9)
     notes(s, NOTE["where"])
 
     # 7 conclusion
@@ -432,7 +457,7 @@ def build():
         "방전 온도의 가장 차가운 3분의 1에서 확인되지 않음",
         "이득이 가장 큰 방전 10분의 1에 의존",
         "파일 단위 단일 분할에서 확인되지 않음"], 28)
-    page_number(s, 9)
+    page_number(s, 10)
     notes(s, NOTE["conclusion"])
 
     # 8 limits
@@ -463,7 +488,7 @@ def build():
     textbox(s, 1100, y + 8, 725, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1100, y + 70, 725, 45, ["다음: 3 keV 초과 값의 영향"], 28, NAVY, bold=True)
     bullets(s, 1100, y + 120, 725, 260, ["손실을 지배하는 소수의 큰 값", "목표 정규화의 폭", "fit 실패와 빠른 채널의 결합", "인과 GP 이력의 큰 값"], 26)
-    page_number(s, 10)
+    page_number(s, 11)
     notes(s, NOTE["limits"])
 
     # 9 rotation
@@ -488,7 +513,7 @@ def build():
         (["빔 blip 뒤 첫 행의 회전 ÷ 직전 수준", "0.973 [0.960, 0.989]"], ""),
     ], [0.68, 0.32])
     bullets(s, 91, max(y1, y2) + 70, 1734, 120, ["Vrot 가지: CES 이력만 입력, 빠른 채널 미사용 → 빠른 채널 증분 판독 없음", "결과 위치: 원고 보충 자료"], 28)
-    page_number(s, 11)
+    page_number(s, 12)
     notes(s, NOTE["vrot"])
 
     # appendix: one beam blip
@@ -497,14 +522,14 @@ def build():
     textbox(s, 91, yb + 6, 980, 70, ["우리 자료: 원시 BES(500 kHz)가 11 ms 동안 꺼지고(회색), 그 프레임의 CES 값이 없음(주황). 직후 Ti와 ECEI가 함께 낮아졌다가 회복"], 22, MUTED)
     yh = picture(s, DECK_IN / "heo2025_fig2.png", 1120, 326, 420)
     textbox(s, 1120, yh + 6, 530, 130, ["Heo et al., Nucl. Fusion 65, 036003 (2025), 그림 2 (같은 방전 #31923). (b) PNBI가 약 3.5 s와 5.0 s에 떨어짐, (d) Ti,edge, (e) BES_0206 스펙트로그램의 흰 세로줄"], 22, MUTED)
-    page_number(s, 12)
+    page_number(s, 13)
     notes(s, NOTE["blip"])
 
     # appendix: discharges
     s = content_slide(prs, "보충: 방전 분포")
     yb = picture(s, HERE / "figures" / "deck_ppcf" / "dataset_overview_ko.png", 91, 330, 1734)
     textbox(s, 91, yb + 8, 1734, 70, ["방전마다 한 점. 색: BES 버스트 빈도, 빈 네모: 캠페인 마지막 97개 방전(시간순 시험 블록). Ti 중앙값은 3 keV 컷 뒤, Vrot 중앙값은 유지값을 뺀 뒤의 값"], 22, MUTED)
-    page_number(s, 13)
+    page_number(s, 14)
     notes(s, NOTE["discharges"])
 
     prs.save(str(OUT))
