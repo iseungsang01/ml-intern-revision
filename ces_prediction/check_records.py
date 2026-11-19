@@ -69,6 +69,8 @@ SOURCES = (
     "docs/paper/dataset_ledger.md",
     "docs/paper/b70_d1.md",
     "docs/paper/b70_checks.md",
+    "docs/paper/b71_scenarios.md",
+    "docs/paper/b71_checks.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
