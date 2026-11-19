@@ -66,6 +66,7 @@ SOURCES = (
     "docs/paper/b64_two_stage.md",
     "docs/paper/b65_inclusive.md",
     "docs/paper/b67_gated.md",
+    "docs/paper/dataset_ledger.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
