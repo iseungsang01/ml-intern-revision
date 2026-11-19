@@ -115,3 +115,54 @@ Also reported, without a statement:
   - they are 3.18 times as frequent in the weakest BES quintile (B.43 F1).
 
   The literature supports the reading that KSTAR CES outliers are failed spectral fits (Kim et al. 2024, Nucl. Fusion 64 106052). D1-6 is the check against a published statistical rule.
+
+## Addendum 1 (2026-11-19, before the phase-1 batch and before any readout)
+
+Written after the step-1 timing run (`.b39p_v2_cut_r2_f0` re-scored on all eligible rows, 447 s) and the check re-scorings of fold r2 f0 (step 2), and before the other folds were re-scored. No statement, table value or mixture fit had been computed. Facts and choices only.
+
+**A1. Re-scoring path (section 3 (a)).**
+- Each stored run is re-scored by its own batch's scoring script: `seq/eval_seq.py` (B.39, B.59 N/E/B, B.68), `b59_inputs/eval_b59L.py` (B.59 L), `b67_gated/eval_b67.py` (B.67).
+- Env: the runner's own env function (`run_b39.pooled_env`, `run_b59.arm_env`, `run_b67.arm_env`, `run_b68.arm_env`) with exactly `CES_MAX_VAL_SAMPLES=0`, `CES_SEQ_DEVICE=cpu` and `CES_OUTPUT_DIR` changed (`b70_d1/runs_b70.py` refuses any other difference). Not `CES_*`: `CUDA_VISIBLE_DEVICES=""`, `PYTHONUNBUFFERED=1`.
+- The stored run's `metrics.json`, weights and sidecar json (`b59_shift.json`, `b68_aux.json`) are copied into `data/.b70_rescore/<run name without the dot>/`, which the script reads and writes. The stored directories are only read.
+- The stored runs scored the LSTM on CUDA, the re-scoring runs it on the CPU. Rows, values and reference errors are bit-identical; the network's squared errors differ by float32 rounding. Check (a) reports the size.
+- The scorer also scores V_rot as before; phase 1 reads T_i only. B.67 arm S also writes its gate readout into the new directory; phase 1 does not read it.
+
+**A2. Second stage (section 3 (b), item 2.8).**
+- B.64 did not save the fitted models (`stage2_b64.fit_fold` stores predictions only). They are refitted with `stage2_b64`'s code: `run_b37.gbr` (fixed `random_state`), the fifteen inputs, the unchanged R-fit64 rows, `OMP_NUM_THREADS=4` as in B.64.
+- Check (d): the refit is applied to the old B.39 rows exactly as in `fit_fold` and must reproduce the stored two-stage predictions within 1e-6 eV.
+- On the D1 rows the first-stage estimate is rebuilt by `fit_fold`'s rule, y + sign(CPU prediction - y) x |error|, with the error of the D1 re-scoring.
+- B.64 addendum 1 is kept: where any of the network's fifteen inputs is missing, both arms keep the first stage. The boosted model's own handling of missing inputs is computed beside it and reported only.
+- KFX is a phase-2 estimator; the B.64 pairs with KFX are not in the phase-1 tables.
+
+**A3. Mixture of D1-6.**
+- Residual r = ln T_i - median of ln T_i over the finite values among the 11 grid rows centred on the row (±5 rows of 10 ms, the row included).
+- Window edges: the window is truncated at the block edges, with no padding and no reflection. Blocks are cut at a time step >= 0.5 s (or <= 0), as in `seq_data`.
+- The residual is defined when the window holds at least three finite values. Otherwise the row enters no fit and is never flagged; the number of such rows is reported. The first and last grid row of each file are excluded.
+- EM fit: two zero-mean Gaussians and the bad fraction w.
+  - Start: s_g = 1.4826 x median |r|, s_b = 10 s_g, w = 0.01.
+  - Stop: relative change of the log-likelihood <= 1e-12, or 5,000 iterations.
+  - "Bad" is the wider component.
+- The fit uses the residuals of the fold's training discharges (`train_files` of the manifest; not validation, not test). A scored row of the fold's test discharges is flagged when its posterior bad probability exceeds 0.5.
+- D1-6 holds when the D1-1 and the D1-2 intervals, on the D1 rows without the flagged rows, are both above zero.
+- "Run before the cut": the same procedure on the inclusive grid (`seq_data.load_grid_files` with cut 0; held repeats removed as everywhere). The fit is per fold on its training discharges; each value is judged by the fold in which its discharge is a test discharge. Counts are reported per re-partition. The number of measured values above 3 keV on that grid is checked against 1,197.
+- A "single isolated frame" is a flagged value whose previous and next measured values in its block are not flagged; a block edge counts as not flagged. "Below 75 eV" means T_i < 75 eV.
+
+**A4. Intervals.**
+- Sums (MSE skills, RMSE, RMSE differences, Huber and trimmed skills, shares): the two-level bootstrap of `analyze_b39.arm_p` (a re-partition drawn among r2-r4, then its test discharges resampled with replacement), in the weighted form of `stage2_b64.cell`, with 20,000 draws.
+- Medians and median ratios: weighted quantiles under the same draws (`stage2_b64.medians`), with 20,000 draws (B.64 used 2,000).
+- Seed 20261170, one stream per quantity (crc32 of its name, as `run_b54.rng_for`).
+- MSE intervals are the squares of the RMSE bounds on the same draws.
+- "MSE reduction in %" = 100 x skill.
+
+**A5. Old values.**
+- Two-stage rows and every pair: `docs/paper/b64_two_stage.json` (r2-r4, old subset).
+- Network rows of the main table, as cited: `b39_primary.json` arm P and `b61_absolute_robust.json` (r2-r9). The r2-r4 values of B.64 are given beside them where they exist.
+- B.59: `b59_inputs.json`. B.67 and B.68: `b67_gated.json` and `b68_auxtarget.json`.
+
+**A6. Shared references (timing, step 1).**
+- Timing: one network with its references on all 40,666 eligible samples of r2 f0 took 447 s on the CPU. The 15 folds hold 695,472 eligible samples, so the 135 runs take about 19 process-hours.
+- Six processes at once ran at about 1.5 times the speed of one: each scorer holds about 1.8 GB, beside an 11.6 GB process of another session, and the machine was on battery. That puts the 135 runs at about 11 hours, over the 10-hour limit of the task.
+- The rows, values and reference errors of a fold do not depend on the network: same split, harness statistics, seed, window and data treatment. Check (c) verifies this.
+- `b70_d1/score_b70.py` therefore runs eval_seq's own code for the rows and references once per fold, and `eval_seq.build_pred_lookup` once per arm. It writes per arm the files that `eval_seq.compare()` writes. The loop and the post-loop block are copied from `compare()`; the functions are imported.
+- Arm handling: B.59 arm L installs `fast_shift.install_eval(1)` around the lookup, as `eval_b59L.py` does. B.67 registers its variants, as `eval_b67.py` does; the gate readout is not written.
+- It is used for the folds other than r2 f0 only if, on r2 f0, every key of every arm's npz and the metrics json are bit-identical to the output of that arm's own scoring script (`runs_b70.execute`, A1). Otherwise the batch uses the arms' own scripts.
