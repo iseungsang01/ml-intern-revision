@@ -73,6 +73,8 @@ def kfe_layout():
     # CES point in the poloidal panel: R = 2.198 m, z = 0 (tick labels 1.2 and 2.2 m at x = 1419 and 1812 px, z = 0 at y = 887 px)
     px_r = 1419 + (2.198 - 1.2) / 1.0 * (1812 - 1419)
     py_z = 887
+    for y0 in range(300, 1480, 34):  # a vertical guide at R = 2.198 m over the height of the poloidal panel
+        d.line((px_r, y0, px_r, y0 + 20), fill=red, width=6)
     d.ellipse((px_r - 26, py_z - 26, px_r + 26, py_z + 26), outline=red, width=7)
     d.rectangle((px_r - 470, py_z + 34, px_r - 10, py_z + 92), fill=(255, 255, 255), outline=red, width=4)
     d.text((px_r - 458, py_z + 38), "CES R = 2.198 m", font=font(44), fill=red)
