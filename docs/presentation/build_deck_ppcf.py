@@ -220,21 +220,25 @@ def bottleneck_slide(prs):
 
 
 def estimators_right(s):
-    """Right column of '3 estimator와 채점': the references, scoring in one line, and what (b) is."""
+    """Right column of '3 estimator와 채점': the references, scoring in one line, and the five filter parameters."""
     y = table(s, 1035, 326, 790, [
         (["기준", "읽는 것"], "hd"),
         (["hold", "마지막 관측값"], ""),
         (["인과 GP", "CES 이력만 맞춘 GP (주 기준)"], ""),
         (["offline GP", "다음 값까지 사용, 실시간 불가"], ""),
         (["비교군", "빠른 채널만 뺀 같은 신경망"], "hi"),
-    ], [0.26, 0.74], size=20, rh=38)
-    textbox(s, 1035, y + 8, 790, 70, ["skill = 1 − MSE(estimator) / MSE(기준) · 채점: 감춘 측정 행, 방전 단위 교차 검증 (pooled), bootstrap 95 % 구간"], 20, MUTED)
-    textbox(s, 1035, y + 88, 790, 40, ["(b) 5-parameter filter"], 24, NAVY, bold=True)
-    bullets(s, 1035, y + 130, 790, 230, [
-        "예측: log Ti의 직전 값에 BES 변화 두 가지를 더함 (c: 9채널 공통 성분, g: 7열 − 5열)",
-        "갱신: CES 값이 오면 차이(innovation)가 클수록 덜 반영",
-        "파라미터 5개: bc, bg, q, r, k",
-        "KF0 (구동 없음)과 KFX (BES 구동) 비교: 같은 정보를 신경망 없이 시험 (표 3)"], 22)
+    ], [0.26, 0.74], size=20, rh=36)
+    textbox(s, 1035, y + 6, 790, 64, ["skill = 1 − MSE(estimator) / MSE(기준) · 채점: 감춘 측정 행, 방전 단위 교차 검증 (pooled), bootstrap 95 % 구간"], 20, MUTED)
+    textbox(s, 1035, y + 76, 790, 40, ["(b) 5-parameter filter: log Ti를 예측하고 CES 값으로 갱신"], 22, NAVY, bold=True)
+    y2 = table(s, 1035, y + 118, 790, [
+        (["이름", "뜻"], "hd"),
+        (["b_c", "BES 전체 밝기 변화를 얼마나 믿을지"], ""),
+        (["b_g", "BES 안쪽–바깥쪽 차이 변화를 얼마나 믿을지 (빔 꺼짐에 덜 흔들리는 신호)"], ""),
+        (["q", "진짜 Ti가 10 ms마다 얼마나 저절로 흔들리나"], ""),
+        (["r", "CES 값의 잡음 크기"], ""),
+        (["k", "어디서부터 \"튄 값\"으로 볼지"], ""),
+    ], [0.12, 0.88], size=20, rh=36)
+    textbox(s, 1035, y2 + 6, 790, 40, ["KF0: BES 구동 없음 (b_c = b_g = 0), KFX: BES 구동 → 표 3"], 20, MUTED)
 
 
 NOTE = {}
