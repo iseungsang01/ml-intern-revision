@@ -355,7 +355,7 @@ def build():
     notes(s, NOTE["estimators"])
 
     # 4 result
-    s = content_slide(prs, "4 주 결과")
+    s = content_slide(prs, "4 결과")
     textbox(s, 91, 322, 1100, 40, ["표 2. 3 keV 초과 제외 · 신경망: 재분할 8개(r2–r9) · 나머지: 재분할 3개(r2–r4, 15 fold)"], 24, MUTED)
     y = table(s, 91, 366, 1100, [
         (["기준 대비 skill", "신경망 (첫 단계)", "두 단계 estimator"], "hd"),
