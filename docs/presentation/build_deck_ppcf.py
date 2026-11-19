@@ -27,7 +27,7 @@ HERE = Path(__file__).resolve().parent
 FIG = HERE / "figures" / "poster_ppcf"
 TEMPLATE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(r"C:\Users\lss\Desktop\원핵 졸논\졸논 정리.pptx")
 DECK_IN = HERE.parents[1] / "data" / "deck_inputs"
-OUT = Path(sys.argv[2]) if len(sys.argv) > 2 else HERE.parents[1] / "data" / "deck_out" / "KSTAR_CES_발표_PPCF.pptx"
+OUT = Path(sys.argv[2]) if len(sys.argv) > 2 else HERE.parents[1] / "data" / "deck_out" / "중간 보고 2_final.pptx"  # the author's name for the final deck
 
 FONT = "맑은 고딕"
 NAVY, TEAL, GREY = RGBColor(0x1A, 0x32, 0x60), RGBColor(0x45, 0x90, 0xB8), RGBColor(0x96, 0x9F, 0xA7)
