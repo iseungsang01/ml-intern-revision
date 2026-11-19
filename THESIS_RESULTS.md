@@ -8364,3 +8364,17 @@ Reported: on all inclusive rows the network over hold +0.395, over PCHIP +0.238,
 
 Reading. Kept in training and in scoring, the values above 3 keV (fit failures) remove the fast-channel increment: the network and its twin are not separated in either skill, on all rows or on the rows at or below 3 keV. The margin over the causal GP remains in both skills. By the rules (I4 not met): the paper states that the result is established on the cut population only, and the cut is named in the abstract as a condition. The estimator is not changed.
 
+### B.67: weighing the sources per row before the recurrent layer -- neither the gated concatenation nor the attention bottleneck separates from the network; the BES gate does not rise after an absent frame (2026-11-19)
+
+Registration `PREREGISTRATION_B67.md` with addendum 1 (checks `docs/paper/b67_checks.md`). GPU, 30 runs on the 15 folds of r2 to r4, cut population, environment `run_b39.pooled_env` with only `CES_SEQ_MODEL` changed (S: `v2s`, gated concatenation of per-source embeddings, 430,758 parameters; A: `v2a`, attention pooling, 369,318). All 30 runs ok; one (A r4 f4) reached the epoch cap of 80 with its best epoch at 78. Run by an AI agent under the author's supervision; the chain was restarted at 11:20 after the earlier session ended, and the runner skipped the finished runs. Output `docs/paper/b67_gated.{md,json}`; the gate-alignment check passes on all 15 folds.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| G1 S over the network (v2) | +0.009 [-0.052, +0.040] | not met | -0.01 to +0.02, not met |
+| G2 S over the twin | +0.062 [+0.009, +0.087] | met | +0.03 to +0.06, met (point just above the range) |
+| G3 A over the network | -0.006 [-0.059, +0.026] | not met | -0.03 to +0.01, not met |
+| G4 arm S, BES gate in rows 1 to 3 after an absent frame minus rows right after a measured frame | -0.004 [-0.008, -0.001] | not met (interval below zero) | met |
+
+Reported: over the causal GP S +0.100 [+0.043, +0.129], A +0.086 [+0.035, +0.114], the network +0.092 [+0.068, +0.114]; S over A +0.015 [-0.002, +0.032]; median absolute error 44.4 eV (S), 45.2 (A), 45.8 (network), 44.1 (causal GP). Mean gates of arm S on all scored rows: CES-derived 0.634, BES 0.171, Mirnov 0.098, ECEI 0.097. In rows 1 to 3 after an absent frame the CES-derived gate falls by 0.020 [0.008, 0.030] and the Mirnov gate rises by 0.019 [0.009, 0.028]; in the burst phase (classes B and C) all three fast-channel gates rise and the CES-derived gate falls by 0.052 [0.035, 0.071] (descriptive, addendum 1).
+
+Reading. A per-row weighting of the four sources, with or without a bottleneck, adds nothing over the fixed weights of the LSTM input layer: by the rules (neither G1 nor G3 met) the paper states this as the answer to "would attention do better". G2 says the gated network keeps the fast-channel increment at the size of the network's. G4 is not met: after an absent frame the trained gates move weight from the CES history and from BES to Mirnov and ECEI, the opposite of the expectation; a gate is which source the trained network weighs, not a physical cause, and the gate readout goes to the supplement. The estimator is not changed.
