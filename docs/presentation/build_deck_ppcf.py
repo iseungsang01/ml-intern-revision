@@ -99,10 +99,13 @@ def picture(slide, name, x, y, w):
     return y + h
 
 
-def table(slide, x, y, w, rows, widths, size=24):
-    """rows: list of (cells, kind) with kind in {'hd','hi','grp',''}; a cell is str or (str, 'y'|'n')."""
+MISS, HELD = RGBColor(0xFB, 0xE3, 0xD2), RGBColor(0xE2, 0xE2, 0xE2)
+
+
+def table(slide, x, y, w, rows, widths, size=24, rh=46):
+    """rows: list of (cells, kind) with kind in {'hd','hi','grp',''}; a cell is str or (str, tone) with tone
+    'y' (blue: interval excludes 0), 'n', 'm' (missing value, orange fill) or 'h' (held repeat, grey fill)."""
     nr, nc = len(rows), len(widths)
-    rh = 46
     gs = slide.shapes.add_table(nr, nc, px(x), px(y), px(w), px(rh * nr))
     tbl = gs.table
     tblpr = gs._element.graphic.graphicData.tbl.tblPr
@@ -122,7 +125,8 @@ def table(slide, x, y, w, rows, widths, size=24):
             cell.margin_top = cell.margin_bottom = px(5)
             cell.vertical_anchor = MSO_ANCHOR.MIDDLE
             cell.fill.solid()
-            cell.fill.fore_color.rgb = HEAD if kind == "hd" else (SHADE if kind == "hi" else WHITE)
+            row_fill = HEAD if kind == "hd" else (SHADE if kind == "hi" else WHITE)
+            cell.fill.fore_color.rgb = MISS if tone == "m" else (HELD if tone == "h" else row_fill)
     return y + rh * nr
 
 
@@ -153,12 +157,41 @@ def content_slide(prs, title):
     return s
 
 
-NOTE = {}
-NOTE["motivation"] = """CES는 탄소 C VI 이온의 온도를 10 ms 프레임마다 보고합니다. 자료 제공자가 pedestal top으로 고른 edge 측정선에서는 T_i 값이 자주 빠지고, BES 수준이 낮을수록 더 자주 빠집니다.
-감시나 제어에는 다음 값을 기다리지 않고 지금 프레임에서 만든 추정이 필요합니다.
-이 발표에서 재는 것은, 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보입니다.
+def csv_excerpt(path, t0, t1):
+    """Rows of a 10 ms file between t0 and t1 (inclusive): time, CES_TI, CES_VT, first BES channel."""
+    import csv
+    with open(path, encoding="utf-8") as fh:
+        rows = list(csv.reader(fh))
+    h = rows[0]
+    it, iti, ivt = h.index("time"), h.index("CES_TI"), h.index("CES_VT")
+    ib = [i for i, c in enumerate(h) if c.startswith("BES")][0]
+    out, prev_vt = [], None
+    for r in rows[1:]:
+        t = float(r[it])
+        if t0 - 1e-6 <= t <= t1 + 1e-6:
+            ti, vt = r[iti].strip(), r[ivt].strip()
+            ti_c = (f"{float(ti):.2f}", "n") if ti else (" ", "m")
+            if not vt:
+                vt_c = (" ", "m")
+            else:
+                vt_c = (f"{float(vt):.2f}", "h" if vt == prev_vt else "n")
+            out.append(([f"{t:.3f}", ti_c, vt_c, f"{float(r[ib]):.4f}"], ""))
+        if r[ivt].strip():
+            prev_vt = r[ivt].strip()
+    return h[ib], out
 
-용어 풀이. nowcasting: 지금 프레임의 값을 그 프레임의 CES 값 없이 추정하는 것. 인과적: 지금 시각까지의 정보만 쓴다는 뜻. BES(빔 방출 분광): 가열 빔이 내는 빛의 세기, 밀도와 빔에 의존. ECEI: 전자 사이클로트론 방출 영상."""
+
+NOTE = {}
+NOTE["cover"] = """제목: 같은 위치의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기.
+nowcasting: 지금 프레임의 값을 그 프레임의 CES 값 없이 추정하는 것. 인과적: 지금 시각까지의 정보만 쓴다는 뜻."""
+NOTE["background"] = """배경: CES는 탄소 C VI 이온의 온도 T_i와 회전 V_rot을 10 ms 프레임마다 보고합니다. 자료 제공자가 pedestal top으로 고른 edge 측정선에서는 값이 자주 빠집니다.
+왼쪽 표: 격자 245,925행(첫·끝 행 제외) 기준으로 T_i는 7.7 %, V_rot은 23.5 %가 완전 결측입니다. V_rot은 관측의 54 %가 직전 값의 반복이라 격자의 41.3 %가 유지값이고, 독립 측정은 35.2 %뿐입니다. T_i의 유지값은 226,991개 중 1개입니다. T_i 결측은 BES 세기가 낮은 5분위에서 18.0 % [15.9, 20.0], 높은 5분위에서 3.4 % [2.7, 4.1]로 무작위가 아닙니다.
+오른쪽 표: 실제 파일 #30909의 3.47–3.58 s. 주황 칸이 빈 값, 회색 칸이 직전 값의 반복입니다. T_i는 빈 칸이 섞여 있고, V_rot은 16.06이 계속 되풀이됩니다.
+두 표적은 서로 독립적으로 빠지므로, 표적마다 따로 가린 손실(masked loss)로 학습합니다.
+UFCES(KSTAR 초고속 CES, 100 kHz)는 요동 측정용 설계이고 실시간 분석은 다루지 않습니다.
+문제: 감시·제어에는 다음 CES 값 없이 지금 프레임에서 만든 T_i 추정이 필요합니다. 이 발표는 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보를 잽니다.
+
+용어 풀이. 유지값: 새 측정 없이 직전 값이 다시 적힌 값. 학습·입력·기준에서 모두 뺀다. BES(빔 방출 분광): 가열 빔이 내는 빛의 세기, 밀도와 빔에 의존."""
 NOTE["data"] = """자료는 KSTAR 2022 캠페인의 방전 파일 641개, 10 ms 격자 245,925행입니다. 분할에 들어가는 방전은 639개입니다.
 그림 1: 빨간 선이 CES 측정선 R = 2.198 m이고, 아래 막대가 BES 시야, BES 5–7열, ECEI 3열입니다. 빗금은 채널 이름에서 추정한 위치입니다.
 그림 2: 빠른 채널 값은 그 행 시각의 원시 표본 하나이고, CES 값은 그 시각 근처에서 노출이 시작되는 프레임입니다. 행 간격이 20–40 ms이면 빔 blip이고, 그 프레임은 파일에 없습니다. 행 t의 인과 추정은 t까지의 빠른 표본과 t 이전의 CES 값만 씁니다.
@@ -203,7 +236,7 @@ def build():
     cp.author = cp.last_modified_by = ""
     cp.title, cp.subject, cp.keywords, cp.comments = "KSTAR CES PPCF 발표", "", "", ""
 
-    # 1 title slide (motivation)
+    # cover
     s = prs.slides.add_slide(prs.slide_layouts[0])
     for ph in list(s.placeholders):
         if ph.placeholder_format.idx != 0:
@@ -213,16 +246,35 @@ def build():
     t.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
     fill_tf(t.text_frame, ["같은 위치의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기"],
             54, RGBColor(0x33, 0x33, 0x33), bold=True, align=PP_ALIGN.RIGHT, space=0, line=1.15)
-    textbox(s, 130, 520, 1660, 50, ["1 동기"], 28, SOFT, bold=True)
-    bullets(s, 130, 575, 1660, 320, [
-        "CES: C VI 이온 온도, 10 ms 프레임마다 보고",
-        "pedestal top으로 고른 edge 측정선: Ti 결측, BES 수준이 낮을수록 잦음",
-        "감시·제어: 다음 값 없이 지금 프레임에서 만든 추정이 필요",
-        "대상: 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보"], 30, WHITE)
-    textbox(s, 130, 915, 1660, 50, ["이승상 · 서울대학교 원자핵공학과 · KSTAR 2022 캠페인 자료 (KSTAR team 제공)"],
-            28, SOFT, align=PP_ALIGN.CENTER)
-    page_number(s, 1, SOFT)
-    notes(s, NOTE["motivation"])
+    textbox(s, 130, 840, 1660, 110, ["이승상 · 서울대학교 원자핵공학과", "KSTAR 2022 캠페인 자료 (KSTAR team 제공)"],
+            30, WHITE, align=PP_ALIGN.CENTER, space=6)
+    notes(s, NOTE["cover"])
+
+    # 1 background and problem
+    s = content_slide(prs, "1 배경과 문제")
+    textbox(s, 91, 322, 1000, 45, ["배경: 결측 실태 (격자 245,925행 대비)"], 28, NAVY, bold=True)
+    y = table(s, 91, 372, 1000, [
+        (["항목", "Ti", "Vrot"], "hd"),
+        (["완전 결측 (NaN)", "7.7 %", "23.5 %"], ""),
+        (["직전 값의 반복 (유지값)", "1개", "41.3 %"], ""),
+        (["독립 측정", "92.3 %", "35.2 %"], "hi"),
+        (["Ti 결측: BES 세기 최하위 5분위", "18.0 % [15.9, 20.0]", "—"], ""),
+        (["Ti 결측: BES 세기 최상위 5분위", "3.4 % [2.7, 4.1]", "—"], ""),
+    ], [0.48, 0.30, 0.22], rh=44)
+    bullets(s, 91, y + 14, 1000, 90, [
+        "Ti와 Vrot이 서로 독립적으로 결측 → 표적별 masked loss",
+        "UFCES (KSTAR 초고속 CES, 100 kHz): 요동 측정용 설계, 실시간 분석 없음"], 26)
+    textbox(s, 91, y + 134, 1000, 45, ["문제"], 28, NAVY, bold=True)
+    bullets(s, 91, y + 182, 1000, 90, [
+        "감시·제어: 다음 CES 값 없이 지금 프레임에서 만든 Ti 추정 필요",
+        "대상: 같은 위치 BES의 지금 프레임 값이 CES 이력에 더하는 정보"], 26)
+    bes_name, ex = csv_excerpt(HERE.parents[1] / "data" / "s30909.csv", 3.472, 3.582)
+    textbox(s, 1130, 322, 695, 45, ["원본 파일 예: #30909, 3.47–3.58 s"], 24, MUTED)
+    ye = table(s, 1130, 366, 695, [(["time (s)", "CES_TI", "CES_VT", bes_name], "hd")] + ex,
+               [0.22, 0.26, 0.24, 0.28], size=22, rh=38)
+    textbox(s, 1130, ye + 6, 695, 40, ["주황: 빈 값 · 회색: 직전 값의 반복"], 24, MUTED)
+    page_number(s, 2)
+    notes(s, NOTE["background"])
 
     # 2 data
     s = content_slide(prs, "2 진단과 자료")
@@ -237,7 +289,7 @@ def build():
     picture(s, "poster_rows_ko.png", 91, y + 20, 700)
     yb = picture(s, "poster_geometry_ko.png", 895, 330, 930)
     textbox(s, 895, yb + 10, 930, 70, ["그림 1. 대반경 위의 측정선과 채널(빗금: 채널 이름에서 추정한 위치). 그림 2(왼쪽 아래). 10 ms 파일의 한 행(개념도)."], 24, MUTED)
-    page_number(s, 2)
+    page_number(s, 3)
     notes(s, NOTE["data"])
 
     # 3 estimators
@@ -254,7 +306,7 @@ def build():
     textbox(s, 1035, y + 30, 790, 40, ["skill = 1 − MSE(estimator) / MSE(기준)"], 24, MUTED)
     bullets(s, 1035, y + 85, 790, 220, ["채점: 감춘 측정 행의 오차", "방전 단위 5-fold 교차 검증, 나눔을 바꿔 반복 (pooled)",
                                         "방전 단위 bootstrap 95 % 구간", "진술과 판정 규칙: 실행 전 등록"], 24)
-    page_number(s, 3)
+    page_number(s, 4)
     notes(s, NOTE["estimators"])
 
     # 4 result
@@ -275,7 +327,7 @@ def build():
     textbox(s, 91, y + 8, 1100, 40, ["파란 값: 95 % 구간이 0(비율은 1)을 제외"], 24, MUTED)
     yb = picture(s, "poster_trace_ko.png", 1235, 330, 590)
     textbox(s, 1235, yb + 8, 590, 70, ["그림 4. 시험 방전 세 개의 보고된 Ti와 인과 추정 (음영: 값이 없는 행, 신경망: 첫 단계)"], 24, MUTED)
-    page_number(s, 4)
+    page_number(s, 5)
     notes(s, NOTE["result"])
 
     # 5 information
@@ -295,7 +347,7 @@ def build():
     textbox(s, 91, y + 8, 1160, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1300, 330, 525, 45, ["주의"], 28, NAVY, bold=True)
     bullets(s, 1300, 380, 525, 260, ["BES: 가열 빔의 빛, 밀도와 빔에 의존", "파일에 빔 출력 없음: 빔 변화의 기여는 배제 못 함"], 26)
-    page_number(s, 5)
+    page_number(s, 6)
     notes(s, NOTE["information"])
 
     # 6 where
@@ -317,7 +369,7 @@ def build():
         (["신경망: 바닥 대비 평균 제곱 오차", "1.331 [1.246, 1.427]"], ""),
     ], [0.60, 0.40])
     textbox(s, 915, y + 8, 910, 70, ["파란 값: 95 % 구간이 0을 제외 · ρ1: 한 프레임 뒤 보정 계수 ÷ 같은 프레임의 계수"], 24, MUTED)
-    page_number(s, 6)
+    page_number(s, 7)
     notes(s, NOTE["where"])
 
     # 7 conclusion
@@ -335,7 +387,7 @@ def build():
         "방전 온도의 가장 차가운 3분의 1에서 확인되지 않음",
         "이득이 가장 큰 방전 10분의 1에 의존",
         "파일 단위 단일 분할에서 확인되지 않음"], 28)
-    page_number(s, 7)
+    page_number(s, 8)
     notes(s, NOTE["conclusion"])
 
     # 8 limits
@@ -366,7 +418,7 @@ def build():
     textbox(s, 1100, y + 8, 725, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1100, y + 70, 725, 45, ["다음: 3 keV 초과 값의 영향"], 28, NAVY, bold=True)
     bullets(s, 1100, y + 120, 725, 260, ["손실을 지배하는 소수의 큰 값", "목표 정규화의 폭", "fit 실패와 빠른 채널의 결합", "인과 GP 이력의 큰 값"], 26)
-    page_number(s, 8)
+    page_number(s, 9)
     notes(s, NOTE["limits"])
 
     # 9 rotation
@@ -391,7 +443,7 @@ def build():
         (["빔 blip 뒤 첫 행의 회전 ÷ 직전 수준", "0.973 [0.960, 0.989]"], ""),
     ], [0.68, 0.32])
     bullets(s, 91, max(y1, y2) + 70, 1734, 120, ["Vrot 가지: CES 이력만 입력, 빠른 채널 미사용 → 빠른 채널 증분 판독 없음", "결과 위치: 원고 보충 자료"], 28)
-    page_number(s, 9)
+    page_number(s, 10)
     notes(s, NOTE["vrot"])
 
     prs.save(str(OUT))
