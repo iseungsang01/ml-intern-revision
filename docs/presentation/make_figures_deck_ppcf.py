@@ -47,12 +47,36 @@ def font(size):
 
 
 def kfe_layout():
+    """Page 15 of the KFE slides, cropped, with the diagnostics this work reads marked.
+
+    Label boxes come from the PDF's own text positions; the ECEI port (G) follows the supplement (GT = first ECEI
+    system, G port); the CES point is R = 2.198 m, z = 0 in the poloidal panel (scale read from its tick labels)."""
     import fitz
     doc = fitz.open(str(KFE_PDF))
-    pix = doc[14].get_pixmap(dpi=220)
+    page = doc[14]
+    dpi = 220
+    s = dpi / 72.0
+    pix = page.get_pixmap(dpi=dpi)
     im = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
-    # content between the title bar and the footer band
-    im = im.crop((0, int(0.14 * im.height), im.width, int(0.955 * im.height)))
+    top, bottom = int(0.14 * im.height), int(0.955 * im.height)
+    d = ImageDraw.Draw(im)
+    red = (220, 20, 20)
+    marks = [page.search_for("Toroidal CES")[0], page.search_for("BES")[0], page.search_for("NBI 1 Beam")[0],
+             page.search_for("Toroidal CES")[1]]
+    for r in marks:
+        d.rounded_rectangle((r.x0 * s - 10, r.y0 * s - 6, r.x1 * s + 10, r.y1 * s + 6), radius=10, outline=red, width=7)
+    g = [w for w in page.get_text("words") if w[4] == "G"][0]
+    gx, gy = (g[0] + g[2]) / 2 * s, (g[1] + g[3]) / 2 * s
+    d.ellipse((gx - 40, gy - 40, gx + 40, gy + 40), outline=red, width=7)
+    d.rectangle((gx + 48, gy - 30, gx + 400, gy + 30), fill=(255, 255, 255), outline=red, width=4)
+    d.text((gx + 60, gy - 28), "ECEI (G 포트)", font=font(44), fill=red)
+    # CES point in the poloidal panel: R = 2.198 m, z = 0 (tick labels 1.2 and 2.2 m at x = 1419 and 1812 px, z = 0 at y = 887 px)
+    px_r = 1419 + (2.198 - 1.2) / 1.0 * (1812 - 1419)
+    py_z = 887
+    d.ellipse((px_r - 26, py_z - 26, px_r + 26, py_z + 26), outline=red, width=7)
+    d.rectangle((px_r - 470, py_z + 34, px_r - 10, py_z + 92), fill=(255, 255, 255), outline=red, width=4)
+    d.text((px_r - 458, py_z + 38), "CES R = 2.198 m", font=font(44), fill=red)
+    im = im.crop((0, top, im.width, bottom))
     im.save(INP / "kfe_layout_p15.png")
     print("kfe layout", im.size)
 
@@ -71,7 +95,7 @@ def abcd_marked():
         R, z = pos[name]
         x, y = to_px(R, z)
         col = (200, 30, 30) if name.startswith("BES") else (20, 90, 170)
-        d.ellipse((x - 22, y - 22, x + 22, y + 22), outline=col, width=5)
+        d.ellipse((x - 26, y - 26, x + 26, y + 26), outline=col, width=8)
     for R, w, lab in ((2.198, 6, "CES ch18, R = 2.198 m"), (2.192, 2, None), (2.203, 2, None)):
         x, _ = to_px(R, 0)
         for y0 in range(92, 876, 22):
@@ -79,7 +103,8 @@ def abcd_marked():
         if lab:
             d.rectangle((x - 530, 820, x - 12, 868), fill=(255, 255, 255))
             d.text((x - 524, 822), lab, font=font(38), fill=(20, 20, 20))
-    im = im.crop((60, 40, im.width, 965))
+    x0, _ = to_px(2.1765, 0)
+    im = im.crop((int(x0), 40, im.width, 965))
     im.save(INP / "abcd_marked.png")
     print("abcd marked", im.size)
 

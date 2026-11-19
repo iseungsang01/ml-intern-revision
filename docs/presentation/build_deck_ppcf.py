@@ -183,7 +183,7 @@ def csv_excerpt(path, t0, t1):
 
 
 NOTE = {}
-NOTE["cover"] = """제목: 같은 위치의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기.
+NOTE["cover"] = """제목: Pedestal top에서의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기.
 nowcasting: 지금 프레임의 값을 그 프레임의 CES 값 없이 추정하는 것. 인과적: 지금 시각까지의 정보만 쓴다는 뜻."""
 NOTE["background"] = """배경: CES는 탄소 C VI 이온의 온도 T_i와 회전 V_rot을 10 ms 프레임마다 보고합니다. 자료 제공자가 pedestal top으로 고른 edge 측정선에서는 값이 자주 빠집니다.
 왼쪽 표: 격자 245,925행(첫·끝 행 제외) 기준으로 T_i는 7.7 %, V_rot은 23.5 %가 완전 결측입니다. V_rot은 관측의 54 %가 직전 값의 반복이라 격자의 41.3 %가 유지값이고, 독립 측정은 35.2 %뿐입니다. T_i의 유지값은 226,991개 중 1개입니다. T_i 결측은 BES 세기가 낮은 5분위에서 18.0 % [15.9, 20.0], 높은 5분위에서 3.4 % [2.7, 4.1]로 무작위가 아닙니다.
@@ -197,11 +197,11 @@ NOTE["data"] = """자료는 KSTAR 2022 캠페인의 방전 파일 641개, 10 ms 
 그림 1: 빨간 선이 CES 측정선 R = 2.198 m이고, 아래 막대가 BES 시야, BES 5–7열, ECEI 3열입니다. 빗금은 채널 이름에서 추정한 위치입니다.
 그림 2: 빠른 채널 값은 그 행 시각의 원시 표본 하나이고, CES 값은 그 시각 근처에서 노출이 시작되는 프레임입니다. 행 간격이 20–40 ms이면 빔 blip이고, 그 프레임은 파일에 없습니다. 행 t의 인과 추정은 t까지의 빠른 표본과 t 이전의 CES 값만 씁니다.
 3 keV 넘는 값은 fit 실패로 보고 빠진 값으로 다루고, 직전 값을 되풀이한 유지값은 뺍니다."""
-NOTE["layout"] = """왼쪽: KFE 발표 자료(Current status of the KSTAR diagnostics, 2024)의 진단 배치. 위에서 본 배치에서 NBI 1 빔과 그 빔을 보는 Toroidal CES, BES, MSE의 시선, 그리고 ECE 위치를 짚습니다. 오른쪽 단면 배치에서 CES·BES·ECE가 보는 높이(z ≈ 0)를 짚습니다.
-오른쪽: 받은 Mirnov 배치도. 토로이달 배열 20개 코일 가운데 파일에 들어 있는 두 코일 MC1T03, MC1T16을 이름의 번호로 표시했습니다. Mirnov 코일은 벽에 있습니다."""
-NOTE["positions"] = """받은 ABCD 위치 그림(syndia 보정 전)에 파일의 채널을 표시했습니다. 빨간 원이 BES 9채널(105–107, 205–207, 305–307), 파란 원이 ECEI GT1103–GT1403입니다.
+NOTE["layout"] = """왼쪽: KFE 발표 자료(Current status of the KSTAR diagnostics, 2024)의 진단 배치. 빨간 표시가 이 연구가 읽는 진단입니다. 위에서 본 배치에서 NBI 1 빔과, 그 빔을 보는 Toroidal CES와 BES의 시선, ECEI가 있는 G 포트를 짚습니다. 단면 배치에서는 CES 측정점 R = 2.198 m, z = 0을 짚습니다.
+맨 오른쪽: 받은 Mirnov 배치도. 토로이달 배열 20개 코일 가운데 파일에 들어 있는 두 코일 MC1T03, MC1T16을 이름의 번호로 표시했습니다. Mirnov 코일은 벽에 있습니다."""
+NOTE["positions"] = """가운데: 받은 ABCD 위치 그림(syndia 보정 전)을 우리 채널 구역만 잘라 파일의 채널을 표시했습니다. 빨간 원이 BES 9채널(105–107, 205–207, 305–307), 파란 원이 ECEI GT1103–GT1403입니다.
 굵은 점선이 CES 측정선 ch18, R = 2.198 m이고, 가는 점선이 이웃 측정선 2.192 m, 2.203 m입니다. BES와 ECEI 채널은 측정선에서 1–2 cm 안에 있습니다.
-오른쪽 표가 자료의 요약입니다."""
+아래 표가 자료의 요약입니다."""
 NOTE["discharges"] = """방전 639개를 한 점씩 그렸습니다. 왼쪽부터 방전 번호에 따른 Ti 중앙값, Vrot 중앙값과 Ti 중앙값, BES 수준과 Ti 결측 비율입니다.
 색은 BES 버스트 빈도(초당), 회색은 파일이 짧아 빈도를 정할 수 없는 방전입니다. 빈 네모는 캠페인 마지막 97개 방전으로, 시간순 확증에서 시험 블록으로 씁니다.
 Ti 중앙값은 3 keV 넘는 값을 뺀 뒤, Vrot 중앙값은 직전 값의 반복(유지값)을 뺀 뒤의 값입니다. 가운데 패널은 −100–250 km/s 밖의 방전을 생략했습니다(개수는 그림에 표시).
@@ -254,7 +254,7 @@ def build():
     t = s.shapes.title
     t.left, t.top, t.width, t.height = px(91), px(150), px(1731), px(300)
     t.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-    fill_tf(t.text_frame, ["같은 위치의 빠른 진단으로 KSTAR edge 측정선의 전하 교환 이온 온도를 인과적으로 nowcasting하기"],
+    fill_tf(t.text_frame, ["Pedestal top에서의 빠른 진단으로 KSTAR edge 측정선의", "전하 교환 이온 온도를 인과적으로 nowcasting하기"],
             54, RGBColor(0x33, 0x33, 0x33), bold=True, align=PP_ALIGN.RIGHT, space=0, line=1.15)
     textbox(s, 130, 840, 1660, 110, ["이승상 · 서울대학교 원자핵공학과", "KSTAR 2022 캠페인 자료 (KSTAR team 제공)"],
             30, WHITE, align=PP_ALIGN.CENTER, space=6)
@@ -286,38 +286,20 @@ def build():
     page_number(s, 2)
     notes(s, NOTE["background"])
 
-    # 2a layout of the diagnostics
-    s = content_slide(prs, "2 진단 배치")
-    yb = picture(s, DECK_IN / "kfe_layout_p15.png", 91, 330, 1100)
-    textbox(s, 91, yb + 8, 1100, 40, ["KSTAR 진단 배치 (J. Ko, Current status of the KSTAR diagnostics, KFE, 2024, 15쪽)"], 22, MUTED)
-    ym = picture(s, DECK_IN / "mirnov_marked.png", 1235, 330, 590)
-    textbox(s, 1235, ym + 8, 590, 70, ["Mirnov 토로이달 배열 20개 (제공 그림), 파일의 두 코일 표시"], 22, MUTED)
+    # 2 diagnostics and data, one slide
+    s = content_slide(prs, "2 진단과 자료")
+    yb = picture(s, DECK_IN / "kfe_layout_p15.png", 91, 326, 860)
+    textbox(s, 91, yb + 4, 860, 40, ["KSTAR 진단 배치 (J. Ko, KFE, 2024, 15쪽). 빨강: 이 연구가 읽는 진단"], 22, MUTED)
+    ya = picture(s, DECK_IN / "abcd_marked.png", 975, 326, 520)
+    textbox(s, 975, ya + 4, 520, 80, ["채널 위치 (제공 ABCD 그림, syndia 보정 전). 원: BES 9채널, ECEI 4채널. 굵은 점선: CES ch18"], 22, MUTED)
+    ym = picture(s, DECK_IN / "mirnov_marked.png", 1515, 326, 310)
+    textbox(s, 1515, ym + 4, 310, 80, ["Mirnov 토로이달 배열 (제공 그림)"], 22, MUTED)
+    table(s, 91, 782, 1734, [
+        (["방전 파일", "격자", "CES 측정선", "BES", "ECEI", "Mirnov", "제외"], "hd"),
+        (["641개 (분할 639개)", "10 ms, 245,925행", "ch18, R = 2.198 m", "9채널 (105–307)", "GT1103–GT1403", "MC1T03, MC1T16", "3 keV 초과, 유지값"], ""),
+    ], [0.165, 0.15, 0.15, 0.13, 0.14, 0.135, 0.13], size=22, rh=44)
     page_number(s, 3)
-    notes(s, NOTE["layout"])
-
-    # 2b channel positions
-    s = content_slide(prs, "2 채널 위치")
-    yb = picture(s, DECK_IN / "abcd_marked.png", 91, 330, 1240)
-    textbox(s, 91, yb + 8, 1240, 70, ["제공된 ABCD 위치 (syndia 보정 전). 원: 파일의 BES 9채널(빨강)과 ECEI GT1103–GT1403(파랑). 굵은 점선: CES ch18, 가는 점선: 이웃 측정선 (2.192, 2.203 m)"], 22, MUTED)
-    table(s, 1370, 330, 455, [
-        (["항목", "값"], "hd"),
-        (["방전 파일", "641개 (분할 639개)"], ""),
-        (["격자", "10 ms, 245,925행"], ""),
-        (["CES 측정선", "ch18, R = 2.198 m"], ""),
-        (["BES", "9채널 (3×3)"], ""),
-        (["ECEI", "GT1103–GT1403"], ""),
-        (["Mirnov", "MC1T03, MC1T16"], ""),
-        (["제외", "3 keV 초과, 유지값"], ""),
-    ], [0.38, 0.62], size=22, rh=44)
-    page_number(s, 4)
-    notes(s, NOTE["positions"])
-
-    # 2c discharges
-    s = content_slide(prs, "2 방전 분포")
-    yb = picture(s, HERE / "figures" / "deck_ppcf" / "dataset_overview_ko.png", 91, 330, 1734)
-    textbox(s, 91, yb + 8, 1734, 70, ["방전마다 한 점. 색: BES 버스트 빈도, 빈 네모: 캠페인 마지막 97개 방전(시간순 시험 블록). Ti 중앙값은 3 keV 컷 뒤, Vrot 중앙값은 유지값을 뺀 뒤의 값"], 22, MUTED)
-    page_number(s, 5)
-    notes(s, NOTE["discharges"])
+    notes(s, NOTE["layout"] + chr(10) * 2 + NOTE["positions"])
 
     # 3 estimators
     s = content_slide(prs, "3 estimator와 채점")
@@ -333,7 +315,7 @@ def build():
     textbox(s, 1035, y + 30, 790, 40, ["skill = 1 − MSE(estimator) / MSE(기준)"], 24, MUTED)
     bullets(s, 1035, y + 85, 790, 220, ["채점: 감춘 측정 행의 오차", "방전 단위 5-fold 교차 검증, 나눔을 바꿔 반복 (pooled)",
                                         "방전 단위 bootstrap 95 % 구간", "진술과 판정 규칙: 실행 전 등록"], 24)
-    page_number(s, 6)
+    page_number(s, 4)
     notes(s, NOTE["estimators"])
 
     # 4 result
@@ -354,7 +336,7 @@ def build():
     textbox(s, 91, y + 8, 1100, 40, ["파란 값: 95 % 구간이 0(비율은 1)을 제외"], 24, MUTED)
     yb = picture(s, "poster_trace_ko.png", 1235, 330, 590)
     textbox(s, 1235, yb + 8, 590, 70, ["그림 4. 시험 방전 세 개의 보고된 Ti와 인과 추정 (음영: 값이 없는 행, 신경망: 첫 단계)"], 24, MUTED)
-    page_number(s, 7)
+    page_number(s, 5)
     notes(s, NOTE["result"])
 
     # 5 information
@@ -374,7 +356,7 @@ def build():
     textbox(s, 91, y + 8, 1160, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1300, 330, 525, 45, ["주의"], 28, NAVY, bold=True)
     bullets(s, 1300, 380, 525, 260, ["BES: 가열 빔의 빛, 밀도와 빔에 의존", "파일에 빔 출력 없음: 빔 변화의 기여는 배제 못 함"], 26)
-    page_number(s, 8)
+    page_number(s, 6)
     notes(s, NOTE["information"])
 
     # 6 where
@@ -396,7 +378,7 @@ def build():
         (["신경망: 바닥 대비 평균 제곱 오차", "1.331 [1.246, 1.427]"], ""),
     ], [0.60, 0.40])
     textbox(s, 915, y + 8, 910, 70, ["파란 값: 95 % 구간이 0을 제외 · ρ1: 한 프레임 뒤 보정 계수 ÷ 같은 프레임의 계수"], 24, MUTED)
-    page_number(s, 9)
+    page_number(s, 7)
     notes(s, NOTE["where"])
 
     # 7 conclusion
@@ -414,7 +396,7 @@ def build():
         "방전 온도의 가장 차가운 3분의 1에서 확인되지 않음",
         "이득이 가장 큰 방전 10분의 1에 의존",
         "파일 단위 단일 분할에서 확인되지 않음"], 28)
-    page_number(s, 10)
+    page_number(s, 8)
     notes(s, NOTE["conclusion"])
 
     # 8 limits
@@ -445,7 +427,7 @@ def build():
     textbox(s, 1100, y + 8, 725, 40, ["파란 값: 95 % 구간이 0을 제외"], 24, MUTED)
     textbox(s, 1100, y + 70, 725, 45, ["다음: 3 keV 초과 값의 영향"], 28, NAVY, bold=True)
     bullets(s, 1100, y + 120, 725, 260, ["손실을 지배하는 소수의 큰 값", "목표 정규화의 폭", "fit 실패와 빠른 채널의 결합", "인과 GP 이력의 큰 값"], 26)
-    page_number(s, 11)
+    page_number(s, 9)
     notes(s, NOTE["limits"])
 
     # 9 rotation
@@ -470,8 +452,15 @@ def build():
         (["빔 blip 뒤 첫 행의 회전 ÷ 직전 수준", "0.973 [0.960, 0.989]"], ""),
     ], [0.68, 0.32])
     bullets(s, 91, max(y1, y2) + 70, 1734, 120, ["Vrot 가지: CES 이력만 입력, 빠른 채널 미사용 → 빠른 채널 증분 판독 없음", "결과 위치: 원고 보충 자료"], 28)
-    page_number(s, 12)
+    page_number(s, 10)
     notes(s, NOTE["vrot"])
+
+    # appendix: discharges
+    s = content_slide(prs, "보충: 방전 분포")
+    yb = picture(s, HERE / "figures" / "deck_ppcf" / "dataset_overview_ko.png", 91, 330, 1734)
+    textbox(s, 91, yb + 8, 1734, 70, ["방전마다 한 점. 색: BES 버스트 빈도, 빈 네모: 캠페인 마지막 97개 방전(시간순 시험 블록). Ti 중앙값은 3 keV 컷 뒤, Vrot 중앙값은 유지값을 뺀 뒤의 값"], 22, MUTED)
+    page_number(s, 11)
+    notes(s, NOTE["discharges"])
 
     prs.save(str(OUT))
     print("written", OUT.name, len(prs.slides), "slides")
