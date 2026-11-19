@@ -74,6 +74,8 @@ SOURCES = (
     "docs/paper/b71_checks.md",
     "docs/paper/b72_methods.md",
     "docs/paper/b74_exposure.md",
+    "docs/paper/b73_targets.md",
+    "docs/paper/b73_checks.md",
     "docs/paper/validation_methods.md",
     "docs/paper/review_loop/critique_20261120_referee.md",
     "docs/paper/review_loop/critique_20261120_pedestal.md",
