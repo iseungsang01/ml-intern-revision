@@ -72,6 +72,12 @@ SOURCES = (
     "docs/paper/b70_d1_phase2.md",
     "docs/paper/b71_scenarios.md",
     "docs/paper/b71_checks.md",
+    "docs/paper/b72_methods.md",
+    "docs/paper/validation_methods.md",
+    "docs/paper/review_loop/critique_20261120_referee.md",
+    "docs/paper/review_loop/critique_20261120_pedestal.md",
+    "docs/paper/review_loop/critique_20261120_stats.md",
+    "docs/paper/review_loop/critique_20261120_cxrs.md",
     "docs/paper/b45_ablation_rows.md",
     "docs/paper/b46_beam_off.md",
 )
