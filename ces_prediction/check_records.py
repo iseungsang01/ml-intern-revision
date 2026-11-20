@@ -88,6 +88,7 @@ SOURCES = (
     "docs/paper/b82_lead_checks.md",
     "docs/paper/review_loop/grade16_20261120.md",
     "docs/paper/review_loop/grade17_20261120.md",
+    "docs/paper/review_loop/grade18_20261121.md",
     "docs/paper/b83_interp.md",
     "docs/paper/b83_lead_checks.md",
     "docs/paper/b84_onefit.md",

@@ -75,8 +75,9 @@ is formed without waiting for the next one, a nowcast. We look for the causal es
 of the CES ion temperature on the pedestal-top chord with the lowest error against
 holding the last value, a causal Gaussian process and interpolation that waits for the
 next value, and ask what fast diagnostics at the same location, beam-emission
-spectroscopy and electron-cyclotron-emission imaging, add. The best estimator found needs
-no neural network: a Gaussian process on the past CES values followed by a boosted
+spectroscopy and electron-cyclotron-emission imaging, add. With every value up to the
+previous frame at hand, the estimator with the lowest error that we found needs no neural
+network: a Gaussian process on the past CES values followed by a boosted
 regression on scalars of that history and of the fast channels, about two milliseconds
 per frame on one processor thread. On 627 discharges of the 2022 campaign and under four
 validation designs, its mean squared error (MSE) on the value of the frame is lower than
@@ -84,7 +85,7 @@ that of monotone cubic interpolation, which waits for the next value, by
 \TXoverPchipVfoura{} per cent in the least favourable design (chronological; 95\,\%
 interval, clusters of shots resampled), and lower than that of a two-sided Gaussian
 process by \TXoverOfflineVtwo{} per cent when clusters of shots are held out; in time
-order it is level with the latter. An estimate from the CES history alone does not reach
+order no difference from the latter is established. An estimate from the CES history alone does not reach
 the two-sided process: the fast diagnostics carry the difference. In use, where the CES
 value is late or sparse, the fast diagnostics matter more: with the newest CES value
 \AgeMedianS\,s old they reduce the MSE of the estimate of the temperature level by
@@ -121,16 +122,19 @@ a decline of its accuracy at $R \gtrsim 2.2$\,m~\citep{Lee2026NeuralNetworkbased
 The KSTAR chord studied here was selected by the data provider as the pedestal top
 ($R = 2.198$\,m). On it the CES value is weak in three ways: one frame in twelve carries
 no usable value, the values that exist scatter from frame to frame, and some are failed
-fits (\S\ref{sec:data}). The value is also late: the beam-modulation analysis subtracts a
-background measured in frames without beam, which delays it by about a
-second~\citep{Lee2020TwoGaussian,Lee2026NeuralNetworkbased}. An estimate for monitoring
+fits (\S\ref{sec:data}). The value is also late: as described for KSTAR, the
+beam-modulation analysis subtracts a background measured in frames without beam and
+delivers a value about a second
+later~\citep{Lee2020TwoGaussian,Lee2026NeuralNetworkbased}. An estimate for monitoring
 or control has to be formed when the frame is taken, without the next value. We call such
 an estimate a \emph{nowcast}; the simplest one holds the last value.
 
 Earlier work meets the problem from four sides. \emph{Readers of the spectrum} remove
 the delay at its source: a two-Gaussian fit gives \Ti{} without beam
 modulation~\citep{Lee2020TwoGaussian}, and neural networks read \Ti{} from the spectrum of
-the frame on KSTAR~\citep{Lee2026NeuralNetworkbased}, HL-3~\citep{Tian2026RealTimeCxrs}
+the frame, first at
+JET~\citep{Bishop1993AutomaticAnalysis,Svensson1999AnalysisJet} and now on
+KSTAR~\citep{Lee2026NeuralNetworkbased}, HL-3~\citep{Tian2026RealTimeCxrs}
 and EAST~\citep{Hu2026RealTimeIon}; DIII-D runs a simplified fit in real
 time~\citep{Chrystal2026RealTime}, and JT-60U used real-time charge-exchange data for
 feedback on the ion-temperature gradient~\citep{Yoshida2009RealTime}. These read a
@@ -141,8 +145,9 @@ at random in training so that it runs when one is absent; it has no memory, give
 accuracy for the ion temperature without charge exchange, and its edge ion temperature is
 that of an offline reconstruction which extrapolates it from the electron temperature. An
 attention network on EAST predicts \Ti{} and \Te{} profiles from global signals when its
-x-ray spectra are missing~\citep{Wang2026FusingGlobal}; other channels are filled or
-sharpened from neighbouring
+x-ray spectra are missing~\citep{Wang2026FusingGlobal}; profile evolution is predicted
+from actuators and earlier profiles~\citep{Abbate2021DatadrivenProfile}; other channels
+are filled or sharpened from neighbouring
 diagnostics~\citep{Jalalvand2025MultimodalSuperresolution,Imrek2026TemporalSuperresolution,Wang2025TimeSeriesExtrinsic,Jia2026TimeSeries}.
 \emph{Interpolation and smoothing} of the measured series, by monotone cubic
 interpolation~\citep{fritsch1980} or Gaussian-process (GP)
@@ -331,7 +336,11 @@ TXN are T0 and TX with 19 scalars of the beam waveforms added.
 
 Two \emph{references wait for the next value} and are not available in real time:
 monotone cubic interpolation (PCHIP)~\citep{fritsch1980} through the measured values of
-the block with row $t$ left out, and an \emph{offline GP} with neighbours on both sides.
+the block with row $t$ left out, and an \emph{offline GP}, the same Mat\'ern-3/2 process
+as the causal GP with the 16 nearest values on each side of row $t$ instead of the 16
+before it. For both processes the values are standardized within the neighbour set, and
+the length scale (5 to 80\,ms) and the noise are chosen at every row by marginal
+likelihood on a fixed grid.
 A recurrent network (a two-branch LSTM) and a two-stage form of it, the estimators of an
 earlier version of this work, are comparison rows. We call an estimator \emph{causal}
 when it uses no sample stamped later than the row and no statistic computed over the
@@ -433,8 +442,10 @@ three notches, the one with the median fast-channel increment.
 On MAST we use the public FAIR-MAST data~\citep{Jackson2024FairMast}: the charge-exchange
 \Ti{} of chords in a pedestal-top band, 1.5 to 5\,cm inside the edge of the Thomson
 density profile, in 5\,ms frames, with the Thomson-scattering \Te{} and density at the
-same radius as fast inputs (nine scalars: present and anchor-frame values, their
-difference and log ratio, and the distance to the density edge). The target is the level
+same radius as inputs of the present (nine scalars: present and anchor-frame values,
+their difference and log ratio, and the distance to the density edge). Thomson scattering
+on MAST is not faster than the charge-exchange frames: what is tested there is a present
+measurement of another diagnostic against a stale charge-exchange history. The target is the level
 of the next five frames. No frame is hidden by a beam modulation on MAST, so delays D5
 (previous frame) to D150 are imposed; the designs are M1 random, M2 sessions held out (a
 session is an experiment date), M3 rolling origin and M4 chronological, with sessions
@@ -465,7 +476,9 @@ read after the fact, and where they carry no interval this is said.
 has the lowest error, and how does it stand against interpolation that waits for that
 value?} Table~\ref{tab:ladder} gives the estimators under the random design and
 Table~\ref{tab:vsref} the estimator of the paper against each reference under the four
-designs; Fig.~\ref{fig:nowcast} shows them on the example discharge.
+designs; Fig.~\ref{fig:nowcast} shows them on the example discharge. A reference that
+waits is defined on 222{,}005 of the 222{,}672 rows, in 627 of the 635 discharges; the
+comparisons with the references are made on these rows.
 
 \begin{table}[tbp]
   \centering
@@ -497,9 +510,11 @@ the paper lowest (Table~\ref{tab:ladder}). The nowcast, which does not wait, has
 MSE than PCHIP, which does, under all four designs; the least favourable is the
 chronological design (Table~\ref{tab:vsref}). Against the offline GP, the stronger of the
 two references that wait, the MSE is lower under the random and the cluster design, and
-in the two designs that respect time order the interval contains zero: there the nowcast
-is level with an interpolation that has seen the next value. The history-only estimator
-does not reach the offline GP; it is the fast diagnostics that carry the nowcast past it.
+in the two designs that respect time order the interval contains zero: a difference from
+an interpolation that has seen the next value is not established there, in either
+direction. The history-only estimator
+has a higher MSE than the offline GP under all four designs; where the nowcast passes
+the offline GP, it is the fast diagnostics that carry it there.
 
 The advantage lies in the larger errors. The median absolute error of the offline GP is
 slightly lower than that of the nowcast (against PCHIP the difference of the medians is
@@ -512,17 +527,20 @@ On the level of the following frames the estimator of the paper has the lowest e
 the causal estimators, and it is closer to the level than the reading of the frame
 itself: with the previous frame visible, two thirds of the estimates lie within 10 per
 cent of the level, against three fifths of the readings (Table~\ref{tab:robust}). The
-recurrent network and its two-stage form have the same error as the estimator of the
-paper on the value of the frame and a higher one on the level (Table~\ref{tab:ladder}):
-for the nowcast condition no network is needed.
+two-stage form of the recurrent network has the same error as the estimator of the paper
+on the value of the frame, the network alone a higher one, and both have a higher error
+on the level (Table~\ref{tab:ladder}): for the nowcast condition this network is not
+needed. One recurrent architecture was compared, and the regression is untuned.
 
 \subsection{What the fast diagnostics add}
 \label{sec:res:fast}
 
 \emph{Question: what do BES and ECEI at the location add to the CES history?} With the
-previous frame visible the fast-channel increment on the value of the frame is
-established under all four designs, and on the level under three; under rolling origin
-its interval on the level contains zero (rows ``TX over T0'' of Table~\ref{tab:vsref};
+previous frame visible the interval of the fast-channel increment on the value of the frame excludes zero under
+all four designs (under the chronological design only just; the spread over the seeds of
+the regression, measured for an older history in \SuppTab{tab:seeds}, was not measured
+for this condition), and on the level under three; under rolling origin its interval on
+the level contains zero (rows ``TX over T0'' of Table~\ref{tab:vsref};
 the two halves and further estimators in \SuppTab{tab:dten}). It is small: the CES value
 of the previous frame already says most of what can be said about this one. It grows
 when the CES value is older (\S\ref{sec:res:use}), and the following properties were
@@ -541,13 +559,14 @@ explain it: with 19 beam scalars given to both estimators the fast diagnostics s
 reduce the MSE under all four designs (\SuppTab{tab:which}).
 \item \emph{Beam notches.} Under the random design the increment is not confined to the
 rows after a notch, where the reported \Ti{} and the BES light dip together: it is
-established on rows more than 300\,ms after one and on rows with no notch before them;
-under the two designs in time order it is not established far from a notch
-(\SuppTab{tab:tau}).
+established on rows more than 300\,ms after one and on rows with no notch before them.
+With the history \AgeMedianS\,s old it is not established far from a notch under the two
+designs in time order; under the schedule and rolling origin it is (\SuppTab{tab:tau}).
 \item \emph{Specificity.} Fast inputs of another discharge at the same time in the
 discharge give no reduction. The two Mirnov signals, which are not at the radius, treated
 exactly like the fast inputs, carry about a quarter of the increment under the random
-design (\SuppTab{tab:specificity}). By the rule registered beforehand we therefore do not
+design, and under rolling origin the estimator with the fast inputs is not established
+above the one with the Mirnov inputs (\SuppTab{tab:specificity}). By the rule registered beforehand we therefore do not
 claim that the increment is specific to the radius of the chord.
 \end{itemize}
 
@@ -600,7 +619,7 @@ Table~\ref{tab:increment} the fast-channel increment under the four designs.
   charge-exchange history, random design. (a) KSTAR: hold, the causal GP, the history-only
   estimator T0 and the estimator TX; dashed: the reading of the frame itself; diamonds:
   the beam-modulation schedule S, drawn at its median age (scored on its own rows).
-  (b) MAST, with Thomson scattering at the same radius as fast input.}
+  (b) MAST, with Thomson scattering at the same radius as the input of the present.}
   \label{fig:ladder}
 \end{figure}
 
@@ -609,7 +628,7 @@ Table~\ref{tab:increment} the fast-channel increment under the four designs.
   \caption{Fast-channel increment: reduction of the MSE of the level estimate (target L5)
   in per cent, TX against T0 on the same rows, by validation design and availability
   rule. KSTAR: BES and ECEI as fast inputs; D10 and D650 on the common rows, S on its own
-  rows. MAST: Thomson scattering at the same radius as fast input; D5 is the previous
+  rows. MAST: Thomson scattering at the same radius as the input of the present; D5 is the previous
   frame. Intervals: 95\,\%, KSTAR shot clusters and MAST sessions resampled; bold: the
   interval excludes zero.}
   \label{tab:increment}
@@ -629,12 +648,16 @@ is about three times that with the previous frame visible, and the fast diagnost
 back about half of the loss (Table~\ref{tab:rules}). The fast-channel increment, small
 under the nowcast condition, is then established under all four designs
 (Table~\ref{tab:increment}, Fig.~\ref{fig:designs}); the least favourable is the
-rolling-origin design. Under the beam-modulation schedule it is established under the
+rolling-origin design: in one of its four scored fifths the interval contains zero and
+the increment lies below that of a control fitted on a random set of the same size
+(\SuppTab{tab:fifths}). Under the beam-modulation schedule it is established under the
 random, the cluster and the rolling-origin design and not under the chronological design
 (\S\ref{sec:res:limits}). When CES reports only every tenth frame, the estimator with
 fast inputs has, under the random design, the error that the history-only estimator would
-have with a value about every 47\,ms: the fast diagnostics are worth a CES that reports
-twice as often (Fig.~\ref{fig:sparse}, \SuppTab{tab:sparse}).
+have with a value about every 47\,ms: there the fast diagnostics are worth a CES that
+reports twice as often (Fig.~\ref{fig:sparse}, \SuppTab{tab:sparse}). Under one of the two
+chronological fits the increment at that rate is not established
+(\SuppTab{tab:sparsedesigns}).
 
 \begin{figure}[tbp]
   \centering
@@ -751,9 +774,12 @@ half through the history, but the fast inputs add to it under the random design 
 \label{sec:discussion}
 
 \emph{Reading.} At the pedestal top a nowcast built from the CES history and two fast
-diagnostics is as accurate as, or more accurate than, an interpolation that waits for the
-next CES value, and the fast diagnostics are what lifts it past the better of the two
-interpolations. The gain is in the frames in which the value moves. On both devices an
+diagnostics has a lower MSE than monotone interpolation that waits for the next CES
+value, and under two of the four designs a lower MSE than a two-sided GP; in time order
+no difference from the two-sided GP is established, and under the random design its
+median absolute error is the higher one (Table~\ref{tab:vsref}). Without the fast
+diagnostics the MSE of the nowcast is higher than that of the two-sided GP under all four
+designs. The gain is in the frames in which the value moves. On both devices an
 electron channel carries part of it: on KSTAR the ECEI half alone has an increment under
 three of the four designs with the history \AgeMedianS\,s old, and on MAST the increment
 comes with the Thomson \Te{}. A reason to look at an electron channel is that electrons
@@ -809,12 +835,14 @@ the direction only.
 \label{sec:conclusion}
 
 For the charge-exchange ion temperature on the pedestal-top chord of KSTAR, where the
-measurement is weak, the causal estimator with the lowest error found here is a Gaussian
+measurement is weak, the causal estimator with the lowest error found here, with every
+value up to the previous frame at hand, is a Gaussian
 process on the CES history followed by a boosted regression on two dozen scalars of that
 history and of BES and ECEI at the location. Without waiting for the next value it has a
 lower mean squared error than monotone cubic interpolation, which waits, under random,
 cluster-blocked, rolling-origin and chronological validation, and than a two-sided
-Gaussian process under the first two; in time order it is level with that process. The
+Gaussian process under the first two; in time order no difference from that process is
+established. The
 fast diagnostics carry the difference to the two-sided process, their gain is in the
 larger errors, and the estimate takes about two milliseconds. In use, where the CES value
 is late or sparse, the fast diagnostics matter more, on KSTAR and, with Thomson

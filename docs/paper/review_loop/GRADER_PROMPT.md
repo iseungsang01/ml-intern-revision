@@ -39,4 +39,4 @@ Write the report in English, about 1,200 to 1,800 words. Finish with one line of
 |---|---|---|---|---|---|---|
 | 16 | the line of 2026-11-20 (bridging a late CES value), commit ab344d7 | 15 % | 32 % | 27 % | 60 % | `grade16_20261120.md` |
 | 17 | the same line with B.82 written in, commit 1ba9a8b | 13 % | 30 % | 22 % | 55 % | `grade17_20261120.md` |
-| 18 | the author's framing restored, commit ab0bf1a | requested 2026-11-21; add the row when the report is in | | | | |
+| 18 | the author's framing restored, commit ab0bf1a | 15 % | 35 % | 25 % | 60 % | `grade18_20261121.md` |

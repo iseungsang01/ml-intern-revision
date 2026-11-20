@@ -33,12 +33,12 @@
 \input{gen_v2}
 
 \hypersetup{
-  pdftitle={Supplementary material: causal nowcasting of the charge-exchange ion temperature on the pedestal-top chord of KSTAR},
+  pdftitle={Supplementary material: causal nowcasting of the charge-exchange ion temperature on an edge chord of KSTAR},
   pdfauthor={Seungsang Lee},
 }
 
 \title{Supplementary material for ``Causal nowcasting of the charge-exchange ion
-temperature on the pedestal-top chord of KSTAR with co-located fast diagnostics''}
+temperature on an edge chord of KSTAR with fast diagnostics at the pedestal top''}
 \author{Seungsang Lee}
 \date{}
 
@@ -190,16 +190,20 @@ value is visible when its index is a multiple of $k$ and its row is before $t$; 
 rows are those whose index is a multiple of none of the spacings compared.
 
 \paragraph{Estimators.} The causal GP is evaluated at row $t$ on the last 16 visible
-values with a Mat\'ern-3/2 kernel whose length scale and noise are chosen by marginal
-likelihood on a fixed grid at every row. The boosted regression
+values with a Mat\'ern-3/2 kernel and white noise; the values are standardized within the
+neighbour set, and the length scale (5, 10, 20, 40 or 80\,ms) and the noise variance are
+chosen at every row by exact marginal likelihood on a fixed grid. The offline GP is the
+same process with the 16 nearest values on each side of row $t$, the row itself left out;
+PCHIP runs through all measured values of the block with the row left out. The boosted regression
 (\texttt{HistGradientBoostingRegressor} of scikit-learn, default settings, fixed seed) is
 fitted to the difference between the target and the GP estimate on the fit rows; the
 estimate is the GP estimate plus the regression. The ten history scalars are the time
 step, the age of the newest visible value, the held value H, the GP estimate minus H and
 its absolute value, and of the last up to ten visible values the mean, the standard
 deviation, H minus the mean, the last increment and their number. The eight fast scalars
-are, for the BES array mean and the ECEI array mean each, the level relative to a running
-mean, its departure from the mean of the ten rows before, the standard deviation over
+are, for the BES array mean and the ECEI array mean each, the level (the standardized
+array mean at row $t$), its departure from the mean of the ten rows before, the standard
+deviation over
 those rows and the one-row increment. The six anchor scalars are, for each array mean, the
 level at the anchor row, the change of the level since the anchor row and the logarithm of
 the ratio of the raw running means at row $t$ and at the anchor row. Missing inputs are
