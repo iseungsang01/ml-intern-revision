@@ -59,3 +59,41 @@ The two NBI-1 sources that run (B and C) are low together in the first row after
 
 Values are written with either NBI-1 source on. The rows with NBI-1 off are few.
 
+## 5. Power columns that cannot be used
+
+A power column of a file is taken as invalid when it is above 5 MW or below -0.1 MW in any row. Invalid file-source pairs: 29, in 13 shot files: 30801, 30805, 30809, 30810, 30811, 30812, 30842, 30843, 30845, 30895, 30906, 30907, 30909. All of them NBI-2 sources: yes.
+
+| shot | source | smallest power (MW) | largest power (MW) | median of V x I / 1000 on the on rows (MW) | rows |
+|---|---|---|---|---|---|
+| 30801 | NB2A | 135.74 | 137.16 | 1.12 | 33 |
+| 30801 | NB2B | -1.00 | 0.04 | nan | 33 |
+| 30805 | NB2A | -2.76 | -1.18 | nan | 36 |
+| 30805 | NB2B | -0.42 | 74.16 | 0.20 | 36 |
+| 30809 | NB2A | 1.42 | 143.83 | 1.15 | 298 |
+| 30809 | NB2B | -2.02 | 75.16 | 0.00 | 298 |
+| 30810 | NB2A | -2.76 | 142.97 | 1.15 | 438 |
+| 30810 | NB2B | -1.21 | 75.29 | 2.41 | 438 |
+| 30811 | NB2A | -2.89 | 141.96 | 1.14 | 448 |
+| 30811 | NB2B | -1.06 | 74.90 | 2.41 | 448 |
+| 30812 | NB2A | -2.61 | 141.62 | 1.14 | 448 |
+| 30812 | NB2B | -1.37 | 74.87 | 2.40 | 448 |
+| 30842 | NB2A | -2.68 | 67.42 | 1.96 | 447 |
+| 30842 | NB2B | 64.34 | 66.50 | 2.01 | 447 |
+| 30842 | NB2C | 1.50 | 50.46 | 1.28 | 447 |
+| 30843 | NB2A | -2.55 | 63.69 | 1.94 | 189 |
+| 30843 | NB2B | -1.22 | 0.83 | 0.00 | 189 |
+| 30845 | NB2A | -2.55 | 63.86 | 1.95 | 189 |
+| 30845 | NB2B | -1.19 | 0.94 | 0.00 | 189 |
+| 30895 | NB2A | 81.25 | 82.59 | 2.79 | 297 |
+| 30895 | NB2B | -0.18 | 0.03 | nan | 297 |
+| 30906 | NB2A | -3.48 | 83.43 | 2.82 | 120 |
+| 30906 | NB2B | 62.91 | 64.45 | 1.96 | 120 |
+| 30907 | NB2A | 82.00 | 83.55 | 2.82 | 297 |
+| 30907 | NB2B | 62.62 | 64.24 | 1.96 | 297 |
+| 30907 | NB2C | 39.28 | 41.39 | 0.99 | 297 |
+| 30909 | NB2A | -1.79 | 92.99 | 3.29 | 297 |
+| 30909 | NB2B | 64.46 | 65.84 | 2.00 | 297 |
+| 30909 | NB2C | 39.45 | 41.35 | 1.00 | 297 |
+
+In the valid files the power is a steady fraction of V x I (median over shots of the per-shot median of P / (V x I / 1000), source on in at least 20 rows): NB1B 0.381; NB1C 0.588; NB2A 0.298; NB2B 0.308; NB2C 0.353. In the files above the voltage and the current of the source are of the usual size and the power column is not: the column is wrong, not the source. The on and off states of sections 2 to 4 are not affected by a wrong scale (a real power is above 0.1 MW); a negative offset reads as off. Batch B.79 leaves these files out of every fit and score.
+

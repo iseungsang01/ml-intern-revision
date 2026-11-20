@@ -19,6 +19,7 @@ NBI = DATA / "nbi"
 OUT = REPO / "docs" / "paper" / "nbi_files.md"
 SRC = ("NB1A", "NB1B", "NB1C", "NB2A", "NB2B", "NB2C")
 ON_MW = 0.1
+P_LO, P_HI = -0.1, 5.0            # a power column outside this range in any row of a file is taken as invalid
 BLOCKS = (("up to 31991", 0, 31991), ("32002-32310", 32002, 32310), ("from 32312", 32312, 10 ** 9))
 
 
@@ -52,7 +53,8 @@ def main():
     small = []
     all_off = [0, 0]
     n_abs = 0
-    ti_after = []
+    bad = []          # (shot, source, smallest P, largest P, median V*I/1000 on the on rows, rows)
+    eff = [[] for _ in SRC]
     for sh in ours:
         hn, N = load(NBI / f"s{sh}_NBI.csv")
         hc, C = load(DATA / f"s{sh}.csv")
@@ -64,6 +66,18 @@ def main():
         t, ti, vt = C[:, hc.index("time")], C[:, hc.index("CES_TI")], C[:, hc.index("CES_VT")]
         P = np.column_stack([N[:, hn.index(s + "_P")] for s in SRC])
         V = np.column_stack([N[:, hn.index(s + "_V")] for s in SRC])
+        cur = np.column_stack([N[:, hn.index(s + "_I")] for s in SRC])
+        for k in range(6):
+            fin = np.isfinite(P[:, k])
+            if not fin.any():
+                continue
+            pk = P[fin, k]
+            onk = fin & (P[:, k] > ON_MW)
+            vi = V[onk, k] * cur[onk, k] / 1000.0
+            if pk.max() > P_HI or pk.min() < P_LO:
+                bad.append((sh, SRC[k], float(pk.min()), float(pk.max()), float(np.nanmedian(vi)) if onk.any() else float("nan"), int(fin.sum())))
+            elif onk.sum() >= 20:
+                eff[k].append(float(np.nanmedian(P[onk, k] / vi)))
         rows_tot += len(P)
         nan_rows += np.isnan(P).sum(0)
         nan_shots += np.isnan(P).any(0)
@@ -149,6 +163,20 @@ def main():
         n, a, b = combo[k]
         w(f"| {names[k]} | {n:,} | {a / n:.3f} | {b / n:.3f} |")
     w("\nValues are written with either NBI-1 source on. The rows with NBI-1 off are few.\n")
+    w("## 5. Power columns that cannot be used\n")
+    bshots = sorted({b[0] for b in bad})
+    only2 = "yes" if all(b[1].startswith("NB2") for b in bad) else "no"
+    w(f"A power column of a file is taken as invalid when it is above {P_HI:.0f} MW or below {P_LO} MW in any row. "
+      f"Invalid file-source pairs: {len(bad)}, in {len(bshots)} shot files: {', '.join(str(x) for x in bshots)}. All of them NBI-2 sources: {only2}.\n")
+    w("| shot | source | smallest power (MW) | largest power (MW) | median of V x I / 1000 on the on rows (MW) | rows |")
+    w("|---|---|---|---|---|---|")
+    for b in bad:
+        w(f"| {b[0]} | {b[1]} | {b[2]:.2f} | {b[3]:.2f} | {b[4]:.2f} | {b[5]} |")
+    w("\nIn the valid files the power is a steady fraction of V x I (median over shots of the per-shot median of P / (V x I / 1000), source on in at least 20 rows): "
+      + "; ".join(f"{s} {np.median(e):.3f}" for s, e in zip(SRC, eff) if len(e)) + ". "
+      "In the files above the voltage and the current of the source are of the usual size and the power column is not: the column is wrong, not the source. "
+      "The on and off states of sections 2 to 4 are not affected by a wrong scale (a real power is above 0.1 MW); a negative offset reads as off. "
+      "Batch B.79 leaves these files out of every fit and score.\n")
     OUT.write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
     print("written", OUT)
 
