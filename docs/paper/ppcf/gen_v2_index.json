@@ -1177,10 +1177,59 @@
  },
  {
   "kind": "table",
+  "name": "\\TabMastRadius",
+  "what": "MAST by radius band: rho, T_i, rows, RMSE TX, within 10 %, cost of staleness, Thomson increment M1/M3 D5/D100",
+  "source": "b86 counts.*.L5_common; bands.*.{M1,M3}.{D5,D100}",
+  "paper_map": "supplement or 4.4"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabMastRadiusAcross",
+  "what": "B.86 across-band statements R5-R7",
+  "source": "b86 statements (band = null)",
+  "paper_map": "supplement or 4.4"
+ },
+ {
+  "kind": "table",
   "name": "\\TabStatSummary",
-  "what": "count of registered statements per batch B.73-B.84: hold, do not hold, expectations met",
-  "source": "statements blocks of b73..b81 JSON (counted)",
+  "what": "count of registered statements per batch B.73-B.86: hold, do not hold, expectations met",
+  "source": "statements blocks of b73..b86 JSON (counted)",
   "paper_map": "supplement (replaces the nine statement tables)"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStatements",
+  "what": "registered statements B.73-B.86",
+  "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+  "paper_map": "sec. 3 / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStatementsHold",
+  "what": "of them hold",
+  "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+  "paper_map": "sec. 3 / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStatementsNotHeld",
+  "what": "of them do not hold",
+  "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+  "paper_map": "sec. 3 / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStatementsDefinite",
+  "what": "with a definite registered expectation",
+  "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+  "paper_map": "sec. 3 / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStatementsMet",
+  "what": "definite expectations met",
+  "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+  "paper_map": "sec. 3 / supplement"
  },
  {
   "kind": "table",
@@ -1199,7 +1248,7 @@
  {
   "kind": "table",
   "name": "\\TabStatNotHeldC",
-  "what": "registered statements that do not hold (B.83-B.84)",
+  "what": "registered statements that do not hold (B.83-B.86)",
   "source": "statements blocks of the batch JSON (holds = false)",
   "paper_map": "supplement"
  },

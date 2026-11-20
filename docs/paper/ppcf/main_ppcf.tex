@@ -454,7 +454,7 @@ resampled for the intervals. T0 and TX are built as on KSTAR.
 \subsection{Registration and independent recomputation}
 \label{sec:methods:reg}
 
-Each batch of analyses of this paper (labelled B.73 to B.84 in the supplementary material
+Each batch of analyses of this paper (labelled B.73 to B.86 in the supplementary material
 and the repository) was registered before it was run: its statements, the rule by which
 each is judged, the expected outcome and the sentences that the paper would carry for
 either outcome were committed first. Choices that a registration left open were written
@@ -716,12 +716,27 @@ much; a regression is needed. The pedestal-top band is defined with the Thomson 
 profile that also supplies the inputs, the scored part of the chronological design is
 small (39 sessions), and both halves of the MAST data had been read in earlier batches.
 
+\emph{From the core to the edge.} The KSTAR files hold one chord and the channels around
+it. On MAST the charge-exchange chords and Thomson scattering cover the whole radius, and
+the same estimator was refitted in five bands from the pedestal top to the magnetic axis
+(\SuppTab{tab:mastradius}). With the history 100\,ms old the Thomson scalars reduce the MSE
+of the level estimate in every band under the random and the rolling-origin design; with
+the previous frame visible they do so in every band under the random design, and under
+rolling origin in every band except the pedestal-top one. Against what was registered as
+expected, a stale history costs more, and the Thomson scalars add more, inside than at the
+pedestal top. The share of estimates within 10 per cent of the level is higher inside and
+stays below seven tenths in every band. On the value of the frame the interpolations that
+wait have the lower MSE in every band inside the pedestal-top band; in the pedestal-top
+band the interval contains zero. These are statements about MAST: the KSTAR files hold no
+channel inside the pedestal top.
+
 \subsection{Where it does not hold}
 \label{sec:res:limits}
 
 \emph{In time order against the interpolation that waits, and for the increment on the
-level.} Under the rolling-origin and the chronological design the nowcast is level with
-the offline GP, not below it, and with the previous frame visible the fast-channel
+level.} Under the rolling-origin and the chronological design no difference between the
+nowcast and the offline GP is established, and with the previous frame visible the
+fast-channel
 increment on the level is not established under rolling origin (Table~\ref{tab:vsref}).
 
 \emph{The last block of shots under the beam-modulation schedule.} Under rule S the
@@ -799,7 +814,8 @@ cent of the level in two frames out of three. That is short of the 10 per cent o
 requirement documents, and nothing was run on a plant control system: use in control is a
 prospect. The channels of the files sit at the edge, so nothing is said about the core;
 the method itself needs, for any chord, its CES history and a fast diagnostic at its
-radius.
+radius. On MAST, where both exist at every radius, it was run from the core to the edge
+(\S\ref{sec:res:mast}).
 
 \emph{Relation to readers of the spectrum.} A reader that delivers \Ti{} from the
 spectrum of each frame and the estimator here are successive stages, not alternatives:

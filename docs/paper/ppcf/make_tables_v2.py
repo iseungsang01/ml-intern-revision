@@ -231,6 +231,7 @@ B73, B74, B77 = "b73_targets.json", "b74_exposure.json", "b77_correct.json"
 B81 = "b81_controls.json"
 B82 = "b82_localize.json"
 B83 = "b83_interp.json"
+B86 = "b86_mast_radius.json"
 B84 = "b84_onefit.json"
 
 
@@ -1509,7 +1510,34 @@ STAT_BATCHES = [("B.73", B73, "previous frame visible: targets, designs, network
                 ("B.81", B81, "controls; ECEI and BES halves under V2, V3"),
                 ("B.82", B82, "where the increment sits; robust errors; specificity"),
                 ("B.83", B83, "previous frame visible: against interpolation"),
-                ("B.84", B84, "one estimator fitted for every rule")]
+                ("B.84", B84, "one estimator fitted for every rule"),
+                ("B.86", B86, "MAST by distance inside the density edge")]
+
+
+def stmts(f):
+    """The statements of a batch as {id: statement}; B.86 stores a list with a scalar value and a session
+    interval, which is turned into the {point, session} form of the other batches."""
+    st = J(f)["statements"]
+    if isinstance(st, dict):
+        return st
+    out = {}
+    for v in st:
+        w = dict(v)
+        w["value"] = {"point": v["value"], "session": v["session_interval"]}
+        out[v["id"]] = w
+    return out
+
+
+def is_definite(v):
+    if "expectation_met" in v:
+        return v["expectation_met"] in ("met", "not met")
+    return definite(expectation(v))
+
+
+def is_met(v):
+    if "expectation_met" in v:
+        return v["expectation_met"] == "met"
+    return met(expectation(v), v["holds"])
 
 
 def expectation(v):
@@ -1531,36 +1559,42 @@ def tab_stat_summary():
     rows = []
     tot = [0, 0, 0, 0, 0]
     for lab, f, what in STAT_BATCHES:
-        st = J(f)["statements"]
+        st = stmts(f)
         s_ = src_of(f)
         n = len(st)
         h = sum(1 for v in st.values() if v["holds"])
-        d = [v for v in st.values() if definite(expectation(v))]
-        m = sum(1 for v in d if met(expectation(v), v["holds"]))
+        d = [v for v in st.values() if is_definite(v)]
+        m = sum(1 for v in d if is_met(v))
         vals = [n, h, n - h, len(d), m]
         tot = [a + b for a, b in zip(tot, vals)]
         rows.append([lab, esc(what, "make_tables_v2.py", "STAT_BATCHES text")]
                     + [cnt(x, s_, "statements (counted)", "count of statements") if x >= 100 else str(x) for x in vals])
     rows.append("MID")
-    rows.append(["all", ""] + [cnt(x, "make_tables_v2.py", "sum over the statements blocks of b73..b82", "count of statements")
+    rows.append(["all", ""] + [cnt(x, "make_tables_v2.py", "sum over the statements blocks of b73..b86", "count of statements")
                                if x >= 100 else str(x) for x in tot])
     head = [r" & & regis- & & do not & definite & expectation \\",
             r"batch & question & tered & hold & hold & expectation & met \\"]
     body = tabular("@{}llrrrrr@{}", head, rows, "footnotesize", "4.5pt")
-    cap = (r"The registered statements of batches B.73 to B.84, counted from the result files: how many were "
+    cap = (r"The registered statements of batches B.73 to B.86 (there is no batch B.85), counted from the result files: how many were "
            r"registered, how many hold and do not hold by the registered rule, how many had a definite registered "
            r"expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements "
            r"that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that "
            r"hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.")
-    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.84: hold, do not hold, expectations met",
-         "statements blocks of b73..b81 JSON (counted)", "supplement (replaces the nine statement tables)")
+    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.86: hold, do not hold, expectations met",
+         "statements blocks of b73..b86 JSON (counted)", "supplement (replaces the nine statement tables)")
+    src = "make_tables_v2.py (sum over the statements blocks of b73..b86)"
+    for nm, x, what in (("NStatements", tot[0], "registered statements B.73-B.86"), ("NStatementsHold", tot[1], "of them hold"),
+                        ("NStatementsNotHeld", tot[2], "of them do not hold"),
+                        ("NStatementsDefinite", tot[3], "with a definite registered expectation"),
+                        ("NStatementsMet", tot[4], "definite expectations met")):
+        macro(nm, cnt(x, src, "statement totals", "count of statements") if x >= 100 else str(x), what, src, "sec. 3 / supplement")
     return tot
 
 
 def stat_rows(batches):
     rows = []
     for lab, f, what in batches:
-        st = J(f)["statements"]
+        st = stmts(f)
         s_ = src_of(f)
         first = True
         for k, v in st.items():
@@ -1602,9 +1636,9 @@ def tab_stat_not_held():
         n.append(len(rows))
         body = tabular("@{}lllll@{}", head, rows, "footnotesize", "3pt")
         if name == "StatNotHeld":
-            cap = (r"The registered statements of B.73 to B.84 that do not hold (" + batches[0][0] + " to "
+            cap = (r"The registered statements of B.73 to B.86 that do not hold (" + batches[0][0] + " to "
                    + batches[-1][0] + r"). Values as registered: skills are signed fractions, not per cent; 95 \% "
-                   r"intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, "
+                   r"intervals with shot clusters resampled (B.74: discharges; B.76, B.86: sessions). The complete lists, "
                    r"with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and "
                    r"\texttt{b8x\_*.md} of the repository.")
         else:
@@ -2139,6 +2173,88 @@ def tab_one_fit():
 
 
 # ----------------------------------------------------------------------------------------------
+# 10f. B.86: MAST by distance of the chord inside the density edge
+# ----------------------------------------------------------------------------------------------
+BANDS86 = ["E", "B2", "B3", "B4", "B5"]
+
+
+def tab_mast_radius():
+    o = J(B86)
+    s_ = src_of(B86)
+    rows = []
+
+    def band_label(b):
+        lo, hi = o["counts"][b]["distance_cm"]
+        a = fnum(lo, "%g", s_, f"counts.{b}.distance_cm[0]", "cm, as stored")
+        z = fnum(hi, "%g", s_, f"counts.{b}.distance_cm[1]", "cm, as stored")
+        return a + "--" + z
+
+    for b in BANDS86:
+        c = o["counts"][b]["L5_common"]
+        m1 = o["bands"][b]["M1"]
+        p = f"bands.{b}.M1"
+        tx = m1["D5"]["estimators"]["TX"]
+        rows.append([band_label(b),
+                     fnum(c["median_rho"], "%.2f", s_, f"counts.{b}.L5_common.median_rho", "two decimals"),
+                     cnt(round(c["median_Ti_eV"]), s_, f"counts.{b}.L5_common.median_Ti_eV", "eV rounded to integer"),
+                     cnt(m1["counts"]["rows"], s_, p + ".counts.rows"),
+                     ev(tx["rmse_eV"], s_, p + ".D5.estimators.TX.rmse_eV"),
+                     stack(pct_parts(tx["share_within_10pct"], s_, p + ".D5.estimators.TX.share_within_10pct", bold=False)),
+                     ratio(m1["cost of staleness"]["T0"], s_, p + ".cost of staleness.T0")])
+    rows.append("MID")
+    rows.append(r" & \multicolumn{4}{c}{\textit{Thomson increment, TX vs T0 (L5)}} & \multicolumn{2}{c}{\textit{value of the frame (F), M1, D5}} \\")
+    rows.append(r"\cmidrule(lr){2-5}\cmidrule(lr){6-7}")
+    rows.append(r"band (cm) & M1, D5 & M1, D100 & M3, D5 & M3, D100 & TX vs PCHIP$^{\dagger}$ & TX vs offline GP$^{\dagger}$ \\")
+    rows.append(r"\midrule")
+    for b in BANDS86:
+        row = [band_label(b)]
+        for d in ("M1", "M3"):
+            for r in ("D5", "D100"):
+                row.append(pct(o["bands"][b][d][r]["A over R"]["TX over T0"], s_, f"bands.{b}.{d}.{r}.A over R.TX over T0", "stack"))
+        vf = o["value_of_frame"][b]["A over R"]
+        row += [pct(vf["TX over PCHIP"], s_, f"value_of_frame.{b}.A over R.TX over PCHIP", "stack"),
+                pct(vf["TX over OGP"], s_, f"value_of_frame.{b}.A over R.TX over OGP", "stack")]
+        rows.append(row)
+    head = [r"band & median & median & scored & RMSE of TX & TX within & cost of \\",
+            r"(cm) & $\rho$ & $T_i$ (eV) & rows & (eV) & 10\,\% (\%) & staleness \\"]
+    body = tabular("@{}lrrrrcc@{}", head, rows, "footnotesize", "4pt")
+    sb = o["counts"]["B5"]["L5_common"]["share_rho_below_0"]
+    cap = (r"MAST by the distance of the chord inside the edge of the Thomson density profile (bands of the distance "
+           r"in cm; the first is the pedestal-top band of the main analysis), target L5. Each band has its own fit. "
+           r"T0: causal GP and history scalars; TX: T0 and the nine Thomson scalars at the radius of the chord. Upper "
+           r"block, random design M1: median normalized radius and median reported $T_i$ of the scored rows, scored "
+           r"rows, RMSE of TX with the previous frame visible (D5), share of TX estimates within 10\,\% of the level "
+           r"(D5), and the cost of staleness of T0 (MSE with the history 100~ms old over MSE with the previous frame "
+           r"visible; bold: the interval excludes one). Lower block: the Thomson increment under M1 and the rolling "
+           r"origin design M3, and on the value of the frame (target F, previous frame visible, M1) TX against PCHIP "
+           r"and against the offline GP; $^{\dagger}$both references wait for the next value. Reductions of the MSE "
+           r"in per cent (bold: the interval excludes zero). The innermost band reaches the magnetic axis: "
+           + share_pct(sb, s_, "counts.B5.L5_common.share_rho_below_0") + r"\,\% of its rows have $\rho < 0$. "
+           r"Intervals: 95 \%, sessions resampled.")
+    emit("MastRadius", body, cap, "MAST by radius band: rho, T_i, rows, RMSE TX, within 10 %, cost of staleness, Thomson increment M1/M3 D5/D100",
+         "b86 counts.*.L5_common; bands.*.{M1,M3}.{D5,D100}", "supplement or 4.4")
+    # across-band statements
+    rows = []
+    for st in o["statements"]:
+        if st["band"] is not None:
+            continue
+        p = "statements[" + st["id"] + "]"
+        v = fnum(st["value"], "%+.3f", s_, p + ".value", "as registered, signed three decimals")
+        lo = fnum(st["session_interval"][0], "%+.3f", s_, p + ".session_interval[0]", "as registered (session interval)")
+        hi = fnum(st["session_interval"][1], "%+.3f", s_, p + ".session_interval[1]", "as registered (session interval)")
+        rows.append([esc(st["id"], s_, p), r"\parbox[t]{8.4cm}{\raggedright " + esc(st["text"], s_, p + ".text") + r"\strut}",
+                     f"{v} [{lo}, {hi}]", st["verdict"]])
+    head = [r"id & statement (as registered) & value [95 \% interval] & verdict \\"]
+    body = tabular("@{}llll@{}", head, rows, "footnotesize", "4pt")
+    cap = (r"MAST by radius: the three registered statements across bands (the innermost band with statements is "
+           r"the one of 35--60~cm). Values as registered: R5 a difference of the cost of staleness, R6 a difference of "
+           r"skills (fractions), R7 a difference of shares; intervals with sessions resampled.")
+    for x in ("35", "60"):
+        pass
+    emit("MastRadiusAcross", body, cap, "B.86 across-band statements R5-R7", "b86 statements (band = null)", "supplement or 4.4")
+
+
+# ----------------------------------------------------------------------------------------------
 # 11. prose macros
 # ----------------------------------------------------------------------------------------------
 DNAME = {"V1": "Vone", "V2": "Vtwo", "V3": "Vthree", "V4a": "Vfoura", "V4b": "Vfourb",
@@ -2441,6 +2557,7 @@ def main():
     tab_vs_references()
     tab_ladder_designs()
     tab_one_fit()
+    tab_mast_radius()
     tot = tab_stat_summary()
     nnh = tab_stat_not_held()
     print("statement totals (registered, hold, do not hold, definite, met):", tot, " not-held rows per table:", nnh)

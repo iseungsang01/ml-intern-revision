@@ -31,7 +31,7 @@ SOURCES_MD = [
     "b75_lead_checks.md", "b75_last_block.md", "b76_mast_availability.md", "b76_checks.md",
     "b76_lead_checks.md", "b77_correct.md", "b77_checks.md", "b77_lead_checks.md", "b78_sparse.md",
     "b78_checks.md", "b78_lead_checks.md", "b79_beam_inputs.md", "b79_checks.md", "b79_lead_checks.md",
-    "b80_ecei_gate.md", "b80_lead_checks.md", "b75_stuck_ecei.md", "b81_controls.md", "b81_lead_checks.md", "b81_checks.md", "b82_localize.md", "b82_lead_checks.md", "b82_checks.md", "b83_interp.md", "b83_lead_checks.md", "b83_checks.md", "b84_onefit.md", "b84_lead_checks.md", "b84_checks.md", "nbi_files.md", "b71_scenarios.md",
+    "b80_ecei_gate.md", "b80_lead_checks.md", "b75_stuck_ecei.md", "b81_controls.md", "b81_lead_checks.md", "b81_checks.md", "b82_localize.md", "b82_lead_checks.md", "b82_checks.md", "b83_interp.md", "b83_lead_checks.md", "b83_checks.md", "b84_onefit.md", "b84_lead_checks.md", "b84_checks.md", "b86_mast_radius.md", "b86_lead_checks.md", "b86_checks.md", "nbi_files.md", "b71_scenarios.md",
 ]
 
 # token -> derivation (numbers computed from, not printed in, the sources). Add with a stated derivation.

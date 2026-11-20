@@ -1,6 +1,6 @@
 {
  "generator": "docs/paper/ppcf/make_tables_v2.py",
- "n_tokens": 2105,
+ "n_tokens": 2171,
  "tokens": {
   "222,672": [
    {
@@ -392,6 +392,11 @@
     "source": "docs/paper/b75_stuck_ecei.md",
     "path": "code block (1), all, discharges with any",
     "transform": "verbatim from the md (unregistered description, no interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B5.distance_cm[1]",
+    "transform": "cm, as stored"
    }
   ],
   "102,684": [
@@ -727,6 +732,16 @@
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "distribution.D1 discharges.all blocks.per class.low",
     "transform": "count"
+   },
+   {
+    "source": "make_tables_v2.py",
+    "path": "sum over the statements blocks of b73..b86",
+    "transform": "count of statements"
+   },
+   {
+    "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+    "path": "statement totals",
+    "transform": "count of statements"
    }
   ],
   "24,856": [
@@ -1738,6 +1753,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.recovered share.cluster[1]",
     "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B3.L5_common.median_rho",
+    "transform": "two decimals"
    }
   ],
   "650": [
@@ -2244,6 +2264,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.applied TXa/T0a.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "5.7": [
@@ -2303,6 +2328,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_A.V3.D650.all.tau.up to 100 ms.TX/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "274.7": [
@@ -2465,6 +2495,11 @@
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.recovered share.point",
     "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B4.L5_common.median_rho",
+    "transform": "two decimals"
    }
   ],
   "0.59": [
@@ -2726,6 +2761,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.TX/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "22.1": [
@@ -4467,6 +4507,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_A.V1.S.all.tau.above 100 and up to 300 ms.TXN/TN.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-0.3": [
@@ -4614,6 +4659,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.applied TX: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "4.3": [
@@ -4814,6 +4864,11 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "cells.V1.S.skills.TXall over TX.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over PCHIP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "41.5": [
@@ -4853,6 +4908,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V2.D650.TX over T0.MAE ratio.cluster[0]",
     "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B2.L5_common.median_rho",
+    "transform": "two decimals"
    }
   ],
   "312.3": [
@@ -4988,6 +5048,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.recovered share.cluster[0]",
     "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B5.L5_common.median_rho",
+    "transform": "two decimals"
    }
   ],
   "203.0": [
@@ -5081,6 +5146,11 @@
    {
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|S.low+high.high minus low: TXN/TN.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D5.A over R.TX over T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
@@ -5503,6 +5573,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|F.t2.over_G.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "36.0": [
@@ -6285,6 +6360,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V1.D650.TBm/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "7.3": [
@@ -6572,6 +6652,11 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "cells.V1.K10.skills.TXall over T0all.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "8.4": [
@@ -6685,6 +6770,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|L5.TX vs c2 as built.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "29.4": [
@@ -6773,6 +6863,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V4a.S.TBm/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "36.3": [
@@ -7284,6 +7379,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "pairs.V2.T0 over offline GP.MSE skill.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over OGP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-8.1": [
@@ -7356,6 +7456,11 @@
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.TX/O.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over OGP.point",
     "transform": "100 x skill, one decimal"
    }
   ],
@@ -7585,6 +7690,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V4b.S.per discharge.median of the skill.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "31590": [
@@ -7657,6 +7767,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "v3c.fifth 3.V3 TX/T0 D10.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over PCHIP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "13.7": [
@@ -8437,6 +8552,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D1000.applied TX: refit over applied.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over OGP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "4.4": [
@@ -8508,6 +8628,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_A.V3.D650.all.tau.above 100 and up to 300 ms.TX/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-6.9": [
@@ -8648,6 +8773,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V3.S.TBm/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "2.9": [
@@ -8670,6 +8800,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.TX8/T0.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over OGP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "33.0": [
@@ -8868,6 +9003,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "increments.V1|F.cells.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "19.9": [
@@ -8912,6 +9052,21 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D100.applied TX: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "30.4": [
@@ -9571,6 +9726,16 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.applied T0: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over OGP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over PCHIP.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-37.0": [
@@ -9678,6 +9843,11 @@
     "source": "docs/paper/b75_stuck_ecei.md",
     "path": "code block, all, rule S, ECEI constant",
     "transform": "100 x skill, one decimal (parsed from md, no interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "17.1": [
@@ -10047,6 +10217,16 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D650.applied T0: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over OGP.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-13.2": [
@@ -10345,6 +10525,11 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "cells.V4a.D1000.skills.TXall over T0all.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "40.7": [
@@ -10498,6 +10683,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V2.S.per discharge.median of the skill.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-6.2": [
@@ -10538,6 +10728,11 @@
    {
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V2|L5.T0[L5].over_G.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.A over R.TX over T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
@@ -10929,6 +11124,11 @@
     "source": "docs/paper/b81_controls.json",
     "path": "main.V2.S.TXo/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over PCHIP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "29.6": [
@@ -10941,6 +11141,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V1.S.TBm/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "39.1": [
@@ -11164,6 +11369,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V1.S.TBi/T0.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "52.3": [
@@ -11342,6 +11552,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V4b.D10.TX over T0.share within 20 % difference.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-12.0": [
@@ -11354,6 +11569,11 @@
     "source": "docs/paper/b81_controls.json",
     "path": "main.V4b.S.TX/TXo.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over PCHIP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-25.3": [
@@ -11582,6 +11802,11 @@
     "source": "docs/paper/b79_beam_inputs.json",
     "path": "refit_without_13_files.statements_beside_main.N1.refit.value.point",
     "transform": "as registered, signed three decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R7].session_interval[1]",
+    "transform": "as registered (session interval)"
    }
   ],
   "+0.084": [
@@ -12447,6 +12672,11 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D5.rmse_eV.TX",
     "transform": "RMSE in eV, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.estimators.TX.rmse_eV",
+    "transform": "RMSE in eV, one decimal"
    }
   ],
   "201.1": [
@@ -13124,6 +13354,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V4a.S.TX over T0.median absolute error ratio.point",
     "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.E.L5_common.median_rho",
+    "transform": "two decimals"
    }
   ],
   "0.69": [
@@ -13447,6 +13682,11 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D25.staleness T0.session[1]",
     "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.cost of staleness.T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "0.72": [
@@ -13628,6 +13868,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.applied T0: refit over applied.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over OGP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "1.51": [
@@ -13769,6 +14014,11 @@
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|S.low+high.high minus low: TX/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over OGP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "1.88": [
@@ -13999,6 +14249,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.applied T0: refit over applied.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "11.1": [
@@ -14259,6 +14514,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V4a.S.TXs/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over OGP.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "44.9": [
@@ -14364,6 +14624,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "pairs.V1.TX over offline GP.MSE skill.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "12.9": [
@@ -14656,6 +14921,11 @@
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K5.equivalent rate.cluster.k_prime[0]",
     "transform": "frames, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.cost of staleness.T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "3.25": [
@@ -14706,6 +14976,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V2|L5.T0[L5].over_G.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "4.67": [
@@ -15729,6 +16004,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V4a.D650.TM/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "5.0": [
@@ -16147,6 +16427,16 @@
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|S.class middle.counts.discharges",
     "transform": "count"
+   },
+   {
+    "source": "make_tables_v2.py",
+    "path": "sum over the statements blocks of b73..b86",
+    "transform": "count of statements"
+   },
+   {
+    "source": "make_tables_v2.py (sum over the statements blocks of b73..b86)",
+    "path": "statement totals",
+    "transform": "count of statements"
    }
   ],
   "39.7": [
@@ -16191,6 +16481,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.applied TXa/T0a.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "21.2": [
@@ -16371,6 +16666,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V4a.D650.per discharge.median of the skill.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "35.0": [
@@ -16640,6 +16940,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V1.D650.estimators.H.share within 10 %.point",
     "transform": "100 x share, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "5.9": [
@@ -17383,6 +17688,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V4a.D650.TX/TM.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D5.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "5.3": [
@@ -17557,6 +17867,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|F.M5.over_G.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over PCHIP.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-14.2": [
@@ -17576,6 +17891,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.applied T0: refit over applied.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over PCHIP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "154.4": [
@@ -17699,6 +18019,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|F.TE[F].over_G.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D5.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "130.7": [
@@ -17931,6 +18256,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_C.V1.S.TXM/TX.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.E.distance_cm[0]",
+    "transform": "cm, as stored"
    }
   ],
   "-1.3": [
@@ -18359,6 +18689,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D1000.applied TX: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.estimators.TX.share_within_10pct.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "221.3": [
@@ -18534,6 +18869,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D1000.applied TX: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "-5.3": [
@@ -18686,6 +19026,11 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.applied T0: refit over applied.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over PCHIP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-2.9": [
@@ -18990,6 +19335,11 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "cells.V4a.D10.skills.TXall over T0all.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over OGP.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "175.7": [
@@ -20105,6 +20455,16 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V4b.D650.per discharge.share of discharges with positive skill.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "0": [
@@ -20621,6 +20981,11 @@
     "source": "docs/paper/b73_targets.json",
     "path": "statements.Q1.value.point",
     "transform": "as registered, signed three decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R7].session_interval[0]",
+    "transform": "as registered (session interval)"
    }
   ],
   "-0.267": [
@@ -21067,6 +21432,11 @@
     "source": "docs/paper/b78_sparse.json",
     "path": "statements.K-1.value.cluster[0]",
     "transform": "as registered, cluster interval"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R7].value",
+    "transform": "as registered, signed three decimals"
    }
   ],
   "+0.027": [
@@ -21325,6 +21695,16 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "statements.U11.text",
     "transform": "verbatim from text"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.E.distance_cm[1]",
+    "transform": "cm, as stored"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B2.distance_cm[0]",
+    "transform": "cm, as stored"
    }
   ],
   "-10": [
@@ -22111,6 +22491,21 @@
    {
     "source": "docs/paper/b82_localize.json",
     "path": "statements.B5.text",
+    "transform": "verbatim from text"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B2.distance_cm[1]",
+    "transform": "cm, as stored"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B3.distance_cm[0]",
+    "transform": "cm, as stored"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R7].text",
     "transform": "verbatim from text"
    }
   ],
@@ -23413,6 +23808,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_E.beam.total_power_MW_over_grid_rows_with_a_source_on_outside_13_files.10",
     "transform": "MW, two decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.cost of staleness.T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "3.86": [
@@ -23485,6 +23885,11 @@
    {
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V1.D10.estimators.TX.p90 absolute error.point",
+    "transform": "RMSE in eV, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.estimators.TX.rmse_eV",
     "transform": "RMSE in eV, one decimal"
    }
   ],
@@ -24311,6 +24716,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_A.V1.D650.all.tau.up to 100 ms.TXN/TN.point",
     "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M3.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "37.7": [
@@ -25319,6 +25729,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V1.D10.estimators.T0.share within 10 %.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.estimators.TX.share_within_10pct.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-7.5": [
@@ -25439,6 +25854,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V1.D650.estimators.O.share within 10 %.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "34.1": [
@@ -25491,6 +25911,11 @@
     "source": "docs/paper/b82_localize.json",
     "path": "part_B.V1.S.estimators.O.share within 10 %.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.estimators.TX.share_within_10pct.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "231.8": [
@@ -25573,6 +25998,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "estimators.V2.P.share within 10 %.point",
     "transform": "100 x share, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.estimators.TX.share_within_10pct.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "191.9": [
@@ -25614,6 +26044,16 @@
     "source": "docs/paper/b83_interp.json",
     "path": "estimators.V4a.P.share within 10 %.point",
     "transform": "100 x share, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B5.L5_common.share_rho_below_0",
+    "transform": "100 x share, one decimal"
    }
   ],
   "179.4": [
@@ -25650,6 +26090,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "estimators.V2.O.share within 10 %.point",
     "transform": "100 x share, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "182.2": [
@@ -25678,6 +26123,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "estimators.V1.TX.share within 10 %.point",
     "transform": "100 x share, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.estimators.TX.share_within_10pct.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "45.0": [
@@ -25775,6 +26225,11 @@
     "source": "docs/paper/b84_onefit.json",
     "path": "cells.V3.S.skills.TXall over TX.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over PCHIP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "36.5": [
@@ -26067,6 +26522,11 @@
     "source": "docs/paper/b83_interp.json",
     "path": "estimators.V4a.T0.median absolute error.point",
     "transform": "RMSE in eV, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "43.1": [
@@ -26415,18 +26875,535 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "147": [
+  "239": [
    {
-    "source": "make_tables_v2.py",
-    "path": "sum over the statements blocks of b73..b82",
-    "transform": "count of statements"
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.E.L5_common.median_Ti_eV",
+    "transform": "eV rounded to integer"
    }
   ],
-  "102": [
+  "145,048": [
    {
-    "source": "make_tables_v2.py",
-    "path": "sum over the statements blocks of b73..b82",
-    "transform": "count of statements"
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.counts.rows",
+    "transform": "count"
+   }
+  ],
+  "148.3": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.estimators.TX.rmse_eV",
+    "transform": "RMSE in eV, one decimal"
+   }
+  ],
+  "51.8": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.estimators.TX.share_within_10pct.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "56.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.D5.estimators.TX.share_within_10pct.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "1.55": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.cost of staleness.T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "1.83": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.E.M1.cost of staleness.T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "319": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B2.L5_common.median_Ti_eV",
+    "transform": "eV rounded to integer"
+   }
+  ],
+  "239,297": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.counts.rows",
+    "transform": "count"
+   }
+  ],
+  "127.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.estimators.TX.rmse_eV",
+    "transform": "RMSE in eV, one decimal"
+   }
+  ],
+  "58.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.estimators.TX.share_within_10pct.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "56.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.D5.estimators.TX.share_within_10pct.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "2.74": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M1.cost of staleness.T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "20": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B3.distance_cm[1]",
+    "transform": "cm, as stored"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B4.distance_cm[0]",
+    "transform": "cm, as stored"
+   }
+  ],
+  "559": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B3.L5_common.median_Ti_eV",
+    "transform": "eV rounded to integer"
+   }
+  ],
+  "485,836": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.counts.rows",
+    "transform": "count"
+   }
+  ],
+  "129.1": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.estimators.TX.rmse_eV",
+    "transform": "RMSE in eV, one decimal"
+   }
+  ],
+  "61.2": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.estimators.TX.share_within_10pct.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "63.3": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D5.estimators.TX.share_within_10pct.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "3.94": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.cost of staleness.T0.point",
+    "transform": "ratio, two decimals"
+   }
+  ],
+  "3.54": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.cost of staleness.T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "4.44": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.cost of staleness.T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "35": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B4.distance_cm[1]",
+    "transform": "cm, as stored"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B5.distance_cm[0]",
+    "transform": "cm, as stored"
+   }
+  ],
+  "976": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B4.L5_common.median_Ti_eV",
+    "transform": "eV rounded to integer"
+   }
+  ],
+  "678,409": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.counts.rows",
+    "transform": "count"
+   }
+  ],
+  "68.0": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D5.estimators.TX.share_within_10pct.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "4.27": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.cost of staleness.T0.point",
+    "transform": "ratio, two decimals"
+   }
+  ],
+  "3.89": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.cost of staleness.T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "4.68": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.cost of staleness.T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "989": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "counts.B5.L5_common.median_Ti_eV",
+    "transform": "eV rounded to integer"
+   }
+  ],
+  "1,074,935": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.counts.rows",
+    "transform": "count"
+   }
+  ],
+  "67.3": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.estimators.TX.share_within_10pct.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "65.2": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.estimators.TX.share_within_10pct.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "69.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D5.estimators.TX.share_within_10pct.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "3.95": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.cost of staleness.T0.point",
+    "transform": "ratio, two decimals"
+   }
+  ],
+  "3.63": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.cost of staleness.T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "4.29": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.cost of staleness.T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   }
+  ],
+  "-3.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.E.A over R.TX over PCHIP.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "40.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "59.6": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B2.M3.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-19.0": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over PCHIP.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over PCHIP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-6.8": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over PCHIP.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-17.2": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over OGP.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "-31.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B2.A over R.TX over OGP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "70.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "67.1": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "73.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M1.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "65.8": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "58.6": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "71.6": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B3.M3.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-17.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over PCHIP.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "-30.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over PCHIP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-23.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B3.A over R.TX over OGP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "64.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "66.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M1.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "60.8": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "57.9": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D100.A over R.TX over T0.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "63.4": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B4.M3.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-11.5": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B4.A over R.TX over OGP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "62.5": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M1.D100.A over R.TX over T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "55.2": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "bands.B5.M3.D100.A over R.TX over T0.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
+  "-9.5": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "value_of_frame.B5.A over R.TX over OGP.session[0]",
+    "transform": "100 x skill, one decimal (session interval)"
+   }
+  ],
+  "-2.272": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R5].value",
+    "transform": "as registered, signed three decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R5.value.point",
+    "transform": "as registered, signed three decimals"
+   }
+  ],
+  "-2.622": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R5].session_interval[0]",
+    "transform": "as registered (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R5.value.session[0]",
+    "transform": "as registered, session interval"
+   }
+  ],
+  "-1.927": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R5].session_interval[1]",
+    "transform": "as registered (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R5.value.session[1]",
+    "transform": "as registered, session interval"
+   }
+  ],
+  "-0.304": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R6].value",
+    "transform": "as registered, signed three decimals"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R6.value.point",
+    "transform": "as registered, signed three decimals"
+   }
+  ],
+  "-0.357": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R6].session_interval[0]",
+    "transform": "as registered (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R6.value.session[0]",
+    "transform": "as registered, session interval"
+   }
+  ],
+  "-0.245": [
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements[R6].session_interval[1]",
+    "transform": "as registered (session interval)"
+   },
+   {
+    "source": "docs/paper/b86_mast_radius.json",
+    "path": "statements.R6.value.session[1]",
+    "transform": "as registered, session interval"
    }
   ],
   "46.7": [

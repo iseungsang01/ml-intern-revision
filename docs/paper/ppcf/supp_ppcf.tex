@@ -389,6 +389,32 @@ by design. A readout with D-alpha as a
 further input is in the result file of B.76; its scale is set over the whole shot and is
 therefore not causal within a shot, and it is not used here.
 
+\paragraph{From the core to the edge.} The estimator was refitted in five bands by the
+distance of the chord inside the edge of the Thomson density profile, from the
+pedestal-top band used above to a band that reaches the magnetic axis
+(Table~\ref{tab:mastradius}). Rows, targets, inputs and fits are those of the pedestal-top
+band; the folds of the random design and the fifths of the rolling-origin design are
+formed from the shots of each band, and the rows of a band are those complete under both
+rules. The statements across bands were registered with expectations: that a stale
+history costs more at the pedestal top than in the innermost band (not held: it costs
+more inside), that the Thomson scalars add more at the pedestal top (not held: they add
+more inside), and that the share of estimates within 10 per cent of the level is higher
+in the innermost band (held).
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapMastRadius}
+  \label{tab:mastradius}
+  \TabMastRadius
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapMastRadiusAcross}
+  \label{tab:mastradiusacross}
+  \TabMastRadiusAcross
+\end{table}
+
 \begin{table}[tbp]
   \centering
   \caption{MAST, pedestal-top band, target L5: RMSE by delay of the charge-exchange history under the random (M1) and the chronological design (M4), on the rows complete under all delays. TX adds the Thomson scalars of the same radius. RT multiplies the held value by the ratio of the Thomson $T_e$ at the present and at the anchor frame; RTa fits an exponent $\alpha$ and an offset to that ratio in logarithms.}
@@ -504,7 +530,7 @@ as registered (a skill is a signed fraction; the main text prints 100 times the 
 its 95\,\% interval and the expectation. The complete lists, with the statements that
 hold, the intervals with discharges resampled and the readouts that carry no statement,
 are in the result files of the repository (\texttt{docs/paper/b73\_targets.md} to
-\texttt{b84\_onefit.md}).
+\texttt{b86\_mast\_radius.md}).
 
 \begin{table}[tbp]
   \centering

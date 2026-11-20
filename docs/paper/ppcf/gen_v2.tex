@@ -1138,7 +1138,40 @@ V4, fit to 31991 & D10 & 138.4 & -- & 145.0 & 152.5 & -- & \ci{\textbf{$-$9.8}}{
 \bottomrule\end{tabular}}}
 \newcommand{\CapOneFit}{One estimator for every availability rule (target L5). TX: fitted under each rule; TXa: fitted with the previous frame visible and applied to the rule; TXall: one fit on the rows of every rule of the mixture (D10 to D1000 and S), the age of the history as an input; TXraw: the same with raw windows instead of the hand-made scalars; TXrel: without absolute levels (D650 and S only). K10 is not in the mixture. Reductions of the MSE in per cent. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
 
-% ---- StatSummary: count of registered statements per batch B.73-B.84: hold, do not hold, expectations met
+% ---- MastRadius: MAST by radius band: rho, T_i, rows, RMSE TX, within 10 %, cost of staleness, Thomson increment M1/M3 D5/D100
+\newcommand{\TabMastRadius}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}lrrrrcc@{}}\toprule
+band & median & median & scored & RMSE of TX & TX within & cost of \\
+(cm) & $\rho$ & $T_i$ (eV) & rows & (eV) & 10\,\% (\%) & staleness \\
+\midrule
+1.5--5 & 0.90 & 239 & 145{,}048 & 148.3 & \ci{54.1}{[51.8, 56.4]} & \ci{\textbf{1.68}}{[1.55, 1.83]} \\
+5--10 & 0.82 & 319 & 239{,}297 & 127.4 & \ci{58.9}{[56.9, 60.9]} & \ci{\textbf{2.34}}{[2.05, 2.74]} \\
+10--20 & 0.68 & 559 & 485{,}836 & 129.1 & \ci{61.2}{[59.2, 63.3]} & \ci{\textbf{3.94}}{[3.54, 4.44]} \\
+20--35 & 0.42 & 976 & 678{,}409 & 162.6 & \ci{68.0}{[65.9, 70.0]} & \ci{\textbf{4.27}}{[3.89, 4.68]} \\
+35--60 & 0.03 & 989 & 1{,}074{,}935 & 162.7 & \ci{67.3}{[65.2, 69.4]} & \ci{\textbf{3.95}}{[3.63, 4.29]} \\
+\midrule
+ & \multicolumn{4}{c}{\textit{Thomson increment, TX vs T0 (L5)}} & \multicolumn{2}{c}{\textit{value of the frame (F), M1, D5}} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-7}
+band (cm) & M1, D5 & M1, D100 & M3, D5 & M3, D100 & TX vs PCHIP$^{\dagger}$ & TX vs offline GP$^{\dagger}$ \\
+\midrule
+1.5--5 & \ci{\textbf{10.4}}{[7.5, 13.5]} & \ci{\textbf{29.6}}{[24.5, 35.4]} & \ci{0.2}{[$-$5.4, 5.2]} & \ci{\textbf{20.9}}{[9.6, 30.6]} & \ci{$-$3.4}{[$-$12.0, 4.7]} & \ci{$-$4.5}{[$-$12.6, 2.9]} \\
+5--10 & \ci{\textbf{15.0}}{[8.6, 20.5]} & \ci{\textbf{51.8}}{[44.0, 60.0]} & \ci{\textbf{13.9}}{[9.5, 19.1]} & \ci{\textbf{50.7}}{[40.9, 59.6]} & \ci{\textbf{$-$19.0}}{[$-$35.5, $-$6.8]} & \ci{\textbf{$-$17.2}}{[$-$31.4, $-$6.0]} \\
+10--20 & \ci{\textbf{19.6}}{[16.0, 23.5]} & \ci{\textbf{70.4}}{[67.1, 73.4]} & \ci{\textbf{17.2}}{[13.0, 22.0]} & \ci{\textbf{65.8}}{[58.6, 71.6]} & \ci{\textbf{$-$17.9}}{[$-$30.9, $-$7.9]} & \ci{\textbf{$-$13.7}}{[$-$23.4, $-$5.7]} \\
+20--35 & \ci{\textbf{19.8}}{[18.2, 21.3]} & \ci{\textbf{64.4}}{[61.8, 66.9]} & \ci{\textbf{17.9}}{[15.1, 20.5]} & \ci{\textbf{60.8}}{[57.9, 63.4]} & \ci{\textbf{$-$12.6}}{[$-$19.0, $-$7.3]} & \ci{\textbf{$-$6.5}}{[$-$11.5, $-$1.7]} \\
+35--60 & \ci{\textbf{18.7}}{[16.8, 20.5]} & \ci{\textbf{60.0}}{[57.4, 62.5]} & \ci{\textbf{16.2}}{[14.0, 18.3]} & \ci{\textbf{55.2}}{[52.4, 57.9]} & \ci{\textbf{$-$10.4}}{[$-$15.0, $-$6.4]} & \ci{\textbf{$-$5.4}}{[$-$9.5, $-$1.9]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapMastRadius}{MAST by the distance of the chord inside the edge of the Thomson density profile (bands of the distance in cm; the first is the pedestal-top band of the main analysis), target L5. Each band has its own fit. T0: causal GP and history scalars; TX: T0 and the nine Thomson scalars at the radius of the chord. Upper block, random design M1: median normalized radius and median reported $T_i$ of the scored rows, scored rows, RMSE of TX with the previous frame visible (D5), share of TX estimates within 10\,\% of the level (D5), and the cost of staleness of T0 (MSE with the history 100~ms old over MSE with the previous frame visible; bold: the interval excludes one). Lower block: the Thomson increment under M1 and the rolling origin design M3, and on the value of the frame (target F, previous frame visible, M1) TX against PCHIP and against the offline GP; $^{\dagger}$both references wait for the next value. Reductions of the MSE in per cent (bold: the interval excludes zero). The innermost band reaches the magnetic axis: 44.0\,\% of its rows have $\rho < 0$. Intervals: 95 \%, sessions resampled.}
+
+% ---- MastRadiusAcross: B.86 across-band statements R5-R7
+\newcommand{\TabMastRadiusAcross}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}llll@{}}\toprule
+id & statement (as registered) & value [95 \% interval] & verdict \\
+\midrule
+R5 & \parbox[t]{8.4cm}{\raggedright M1: the cost of staleness of T0 at D100 (MSE at D100 over MSE at D5, same rows) is larger in band E than in the innermost band with statements\strut} & $-$2.272 [$-$2.622, $-$1.927] & does not hold \\
+R6 & \parbox[t]{8.4cm}{\raggedright M1, D100: the Thomson increment (TX over T0) in band E minus that in the innermost band with statements lies above zero\strut} & $-$0.304 [$-$0.357, $-$0.245] & does not hold \\
+R7 & \parbox[t]{8.4cm}{\raggedright M1, D5: the share of estimates of TX within 10 \% of the level is larger in the innermost band with statements than in band E\strut} & +0.133 [+0.116, +0.149] & holds \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapMastRadiusAcross}{MAST by radius: the three registered statements across bands (the innermost band with statements is the one of 35--60~cm). Values as registered: R5 a difference of the cost of staleness, R6 a difference of skills (fractions), R7 a difference of shares; intervals with sessions resampled.}
+
+% ---- StatSummary: count of registered statements per batch B.73-B.86: hold, do not hold, expectations met
 \newcommand{\TabStatSummary}{{\footnotesize\setlength{\tabcolsep}{4.5pt}\begin{tabular}{@{}llrrrrr@{}}\toprule
  & & regis- & & do not & definite & expectation \\
 batch & question & tered & hold & hold & expectation & met \\
@@ -1155,10 +1188,11 @@ B.81 & controls; ECEI and BES halves under V2, V3 & 17 & 16 & 1 & 10 & 10 \\
 B.82 & where the increment sits; robust errors; specificity & 23 & 17 & 6 & 13 & 13 \\
 B.83 & previous frame visible: against interpolation & 14 & 8 & 6 & 10 & 9 \\
 B.84 & one estimator fitted for every rule & 11 & 6 & 5 & 2 & 2 \\
+B.86 & MAST by distance inside the density edge & 23 & 21 & 2 & 14 & 13 \\
 \midrule
-all &  & 147 & 102 & 45 & 85 & 74 \\
+all &  & 170 & 123 & 47 & 99 & 87 \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatSummary}{The registered statements of batches B.73 to B.84, counted from the result files: how many were registered, how many hold and do not hold by the registered rule, how many had a definite registered expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
+\newcommand{\CapStatSummary}{The registered statements of batches B.73 to B.86 (there is no batch B.85), counted from the result files: how many were registered, how many hold and do not hold by the registered rule, how many had a definite registered expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
 
 % ---- StatNotHeld: registered statements that do not hold (B.73-B.77)
 \newcommand{\TabStatNotHeld}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
@@ -1182,7 +1216,7 @@ B.77 & A4 & \parbox[t]{7.0cm}{\raggedright V2: CX over C0 lies above zero\strut}
  & A8 & \parbox[t]{7.0cm}{\raggedright V1 and V4: the area under the curve of FHX minus that of FH lies above zero under each\strut} & \parbox[t]{3.6cm}{\raggedright V1: +0.005 [+0.003, +0.008]; V4a: 0.000 [$-$0.007, +0.007]\strut} & \parbox[t]{2.3cm}{\raggedright holds\strut} \\
  & A9 & \parbox[t]{7.0cm}{\raggedright V1, q = 10 \%: the MSE of O on the rows kept by FHX lies below that on the rows kept by FH (interval of the ratio below 1)\strut} & \parbox[t]{3.6cm}{\raggedright +0.989 [+0.975, +1.002]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatNotHeld}{The registered statements of B.73 to B.84 that do not hold (B.73 to B.77). Values as registered: skills are signed fractions, not per cent; 95 \% intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
+\newcommand{\CapStatNotHeld}{The registered statements of B.73 to B.86 that do not hold (B.73 to B.77). Values as registered: skills are signed fractions, not per cent; 95 \% intervals with shot clusters resampled (B.74: discharges; B.76, B.86: sessions). The complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
 
 % ---- StatNotHeldB: registered statements that do not hold (B.78-B.82)
 \newcommand{\TabStatNotHeldB}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
@@ -1208,7 +1242,7 @@ B.82 & A3 & \parbox[t]{7.0cm}{\raggedright V3, D650, rows with tau above 300 ms:
 \bottomrule\end{tabular}}}
 \newcommand{\CapStatNotHeldB}{Continuation of table \ref{tab:statnotheld} (B.78 to B.82).}
 
-% ---- StatNotHeldC: registered statements that do not hold (B.83-B.84)
+% ---- StatNotHeldC: registered statements that do not hold (B.83-B.86)
 \newcommand{\TabStatNotHeldC}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
 batch & id & statement (as registered) & value [95 \% interval] & expected \\
 \midrule
@@ -1223,8 +1257,10 @@ B.84 & U2 & \parbox[t]{7.0cm}{\raggedright V1, D10: TXall is not worse than the 
  & U8 & \parbox[t]{7.0cm}{\raggedright V1, D650: TXraw is not worse than TXall by more than 5 \% (the hand-made scalars are not needed)\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.327 [$-$0.432, $-$0.230]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
  & U10 & \parbox[t]{7.0cm}{\raggedright V4a, S: TXrel over the per-rule T0 lies above zero (the last block under the schedule)\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.004 [$-$0.156, +0.095]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to does not hold\strut} \\
  & U11 & \parbox[t]{7.0cm}{\raggedright V1, D650: TXrel is not worse than the per-rule TX by more than 5 \%\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.032 [$-$0.059, $-$0.001]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
+B.86 & R5 & \parbox[t]{7.0cm}{\raggedright M1: the cost of staleness of T0 at D100 (MSE at D100 over MSE at D5, same rows) is larger in band E than in the innermost band with statements\strut} & \parbox[t]{3.6cm}{\raggedright $-$2.272 [$-$2.622, $-$1.927]\strut} & \parbox[t]{2.3cm}{\raggedright holds (the edge changes faster)\strut} \\
+ & R6 & \parbox[t]{7.0cm}{\raggedright M1, D100: the Thomson increment (TX over T0) in band E minus that in the innermost band with statements lies above zero\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.304 [$-$0.357, $-$0.245]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatNotHeldC}{Continuation of table \ref{tab:statnotheld} (B.83 to B.84).}
+\newcommand{\CapStatNotHeldC}{Continuation of table \ref{tab:statnotheld} (B.83 to B.86).}
 
 % ---- prose macros
 \newcommand{\RefitOverAppliedTXDsixfiftyVone}{49.6~[39.2, 57.3]}
@@ -1336,6 +1372,11 @@ B.84 & U2 & \parbox[t]{7.0cm}{\raggedright V1, D10: TXall is not worse than the 
 \newcommand{\OneFitDtenVonePt}{$-$6.2}
 \newcommand{\OneFitKtenVone}{$-$29.0~[$-$50.5, $-$11.8]}
 \newcommand{\OneFitKtenVonePt}{$-$29.0}
+\newcommand{\NStatements}{170}
+\newcommand{\NStatementsHold}{123}
+\newcommand{\NStatementsNotHeld}{47}
+\newcommand{\NStatementsDefinite}{99}
+\newcommand{\NStatementsMet}{87}
 \newcommand{\IncDtenVone}{10.3~[7.0, 14.1]}
 \newcommand{\IncDtenVonePt}{10.3}
 \newcommand{\IncDsixfiftyVone}{33.6~[28.5, 38.0]}

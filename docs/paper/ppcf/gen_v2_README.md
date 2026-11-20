@@ -86,10 +86,12 @@ This file is written by `make_tables_v2.py`; do not edit it by hand.
 | `\TabVsReferences` (caption `\CapVsReferences`) | TX (and T0) against hold, PCHIP, causal and offline GP by design; ratio block V1 | b83 pairs.*.*.MSE skill and ratios; b73 per_estimator.*/L5.{TX[L5],T0[L5]}.over_G | 4 (main) |
 | `\TabLadderDesigns` (caption `\CapLadderDesigns`) | the F columns of the main table for V2, V3, V4a | b83 estimators.{V2,V3,V4a}.* | supplement |
 | `\TabOneFit` (caption `\CapOneFit`) | one fit for every rule vs per-rule fits (V1 r2, V3, V4a; D10..S, K10) | b84 cells.* | supplement / sec. on use |
-| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.84: hold, do not hold, expectations met | statements blocks of b73..b81 JSON (counted) | supplement (replaces the nine statement tables) |
+| `\TabMastRadius` (caption `\CapMastRadius`) | MAST by radius band: rho, T_i, rows, RMSE TX, within 10 %, cost of staleness, Thomson increment M1/M3 D5/D100 | b86 counts.*.L5_common; bands.*.{M1,M3}.{D5,D100} | supplement or 4.4 |
+| `\TabMastRadiusAcross` (caption `\CapMastRadiusAcross`) | B.86 across-band statements R5-R7 | b86 statements (band = null) | supplement or 4.4 |
+| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.86: hold, do not hold, expectations met | statements blocks of b73..b86 JSON (counted) | supplement (replaces the nine statement tables) |
 | `\TabStatNotHeld` (caption `\CapStatNotHeld`) | registered statements that do not hold (B.73-B.77) | statements blocks of the batch JSON (holds = false) | supplement |
 | `\TabStatNotHeldB` (caption `\CapStatNotHeldB`) | registered statements that do not hold (B.78-B.82) | statements blocks of the batch JSON (holds = false) | supplement |
-| `\TabStatNotHeldC` (caption `\CapStatNotHeldC`) | registered statements that do not hold (B.83-B.84) | statements blocks of the batch JSON (holds = false) | supplement |
+| `\TabStatNotHeldC` (caption `\CapStatNotHeldC`) | registered statements that do not hold (B.83-B.86) | statements blocks of the batch JSON (holds = false) | supplement |
 
 ## Prose macros (`gen_v2.tex`, end of file)
 
@@ -206,6 +208,11 @@ Naming: `Inc<Rule><Design>` = fast-channel increment (TX vs T0), `IncBeam` = TXN
 | `\OneFitDtenVonePt` | one fit TXall vs per-rule TX, D10, V1 (r2) (per cent, point) | docs/paper/b84_onefit.json cells.V1.D10.skills.TXall over TX |
 | `\OneFitKtenVone` | one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, interval) | docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX |
 | `\OneFitKtenVonePt` | one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, point) | docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX |
+| `\NStatements` | registered statements B.73-B.86 | make_tables_v2.py (sum over the statements blocks of b73..b86) |
+| `\NStatementsHold` | of them hold | make_tables_v2.py (sum over the statements blocks of b73..b86) |
+| `\NStatementsNotHeld` | of them do not hold | make_tables_v2.py (sum over the statements blocks of b73..b86) |
+| `\NStatementsDefinite` | with a definite registered expectation | make_tables_v2.py (sum over the statements blocks of b73..b86) |
+| `\NStatementsMet` | definite expectations met | make_tables_v2.py (sum over the statements blocks of b73..b86) |
 | `\IncDtenVone` | fast-channel increment, D10, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDtenVonePt` | fast-channel increment, D10, V1, L5 (per cent, point) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDsixfiftyVone` | fast-channel increment, D650, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D650.TX/T0 |
