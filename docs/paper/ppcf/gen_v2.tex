@@ -183,21 +183,28 @@ V4 chronological, fit to 32310 & D650 & \ci{\textbf{14.5}}{[4.8, 29.5]} & \ci{9.
 \bottomrule\end{tabular}}}
 \newcommand{\CapWhich}{Which diagnostic, and beyond the beam waveforms: reduction of the MSE in per cent (target L5), history 0.65~s old (D650, common set) and beam-modulation schedule (S, S set). TE and TB are T0 with the ECEI or the BES half of the fast inputs; TN is T0 with the 19 beam scalars; TXN is TX with them. ``Both, beam'': the fast diagnostics after the beam waveforms are given; ``beam, both'': the beam waveforms after the fast diagnostics. Beam columns as delivered. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
 
-% ---- Controls: permuted-input and anchor-row controls: B.81 per design (D650, S); B.78, B.79, B.77, B.76
-\newcommand{\TabControls}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llllccc@{}}\toprule
+% ---- Controls: permuted-input and anchor-row controls per design under D650 and S (KSTAR head rules)
+\newcommand{\TabControls}{{\footnotesize\setlength{\tabcolsep}{5pt}\begin{tabular}{@{}llccc@{}}\toprule
+ & & fast inputs & fast inputs at & present over \\
+design & rule & permuted & the anchor row & anchor row \\
+\midrule
+V1 random & D650 & \ci{$-$0.4}{[$-$0.8, 0.1]} & \ci{\textbf{8.7}}{[3.3, 13.4]} & \ci{\textbf{27.3}}{[22.9, 31.7]} \\
+ & S & \ci{0.0}{[$-$1.0, 0.9]} & \ci{\textbf{7.0}}{[0.6, 13.6]} & \ci{\textbf{27.6}}{[21.5, 33.3]} \\
+V2 shot clusters held out & D650 & \ci{\textbf{$-$0.5}}{[$-$1.0, 0.0]} & \ci{$-$2.3}{[$-$10.3, 4.7]} & \ci{\textbf{29.8}}{[23.2, 36.3]} \\
+ & S & \ci{0.0}{[$-$1.1, 1.1]} & \ci{$-$0.5}{[$-$15.0, 10.9]} & \ci{\textbf{29.6}}{[20.5, 39.1]} \\
+V3 rolling origin & D650 & \ci{$-$0.1}{[$-$0.4, 0.4]} & \ci{\textbf{$-$41.1}}{[$-$94.0, $-$11.8]} & \ci{\textbf{42.6}}{[30.7, 56.2]} \\
+ & S & \ci{0.0}{[$-$1.0, 0.9]} & \ci{$-$5.9}{[$-$16.1, 4.7]} & \ci{\textbf{27.4}}{[19.2, 37.3]} \\
+V4 chronological, fit to 31991 & D650 & \ci{1.2}{[$-$1.0, 2.8]} & \ci{$-$18.7}{[$-$47.0, 4.8]} & \ci{\textbf{35.7}}{[23.5, 52.3]} \\
+ & S & \ci{2.2}{[$-$3.8, 6.8]} & \ci{3.8}{[$-$25.5, 29.3]} & \ci{$-$1.1}{[$-$40.8, 17.1]} \\
+V4 chronological, fit to 32310 & D650 & \ci{$-$1.2}{[$-$2.6, 0.0]} & \ci{3.0}{[$-$5.9, 17.8]} & \ci{\textbf{19.2}}{[8.4, 28.6]} \\
+ & S & \ci{\textbf{2.9}}{[0.2, 6.4]} & \ci{$-$12.0}{[$-$25.3, 4.6]} & \ci{$-$12.0}{[$-$44.3, 13.2]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapControls}{The two controls beside the fast inputs (target L5), reduction of the MSE in per cent, every design under the history 0.65~s old (D650, common set) and the beam-modulation schedule (S, S set). ``Permuted'': the fast inputs shuffled over rows and the estimator refitted; the reduction against T0 should be zero. ``At the anchor row'': the fast inputs taken at the row of the newest visible CES value instead of row $t$; ``present over anchor row'': TX against that estimator. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
+
+% ---- ControlsOther: controls of the other conditions (sparse CES, beam scalars, correction, MAST)
+\newcommand{\TabControlsOther}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llllccc@{}}\toprule
  & & & & fast inputs & fast inputs at & present over \\
 condition & design & rule & comparison & permuted & the anchor row & anchor row \\
-\midrule
-\parbox[t]{3.1cm}{\raggedright KSTAR, head rules\strut} & V1 random & D650 & TX vs T0 & \ci{$-$0.4}{[$-$0.8, 0.1]} & \ci{\textbf{8.7}}{[3.3, 13.4]} & \ci{\textbf{27.3}}{[22.9, 31.7]} \\
- &  & S & TX vs T0 & \ci{0.0}{[$-$1.0, 0.9]} & \ci{\textbf{7.0}}{[0.6, 13.6]} & \ci{\textbf{27.6}}{[21.5, 33.3]} \\
- & V2 shot clusters held out & D650 & TX vs T0 & \ci{\textbf{$-$0.5}}{[$-$1.0, 0.0]} & \ci{$-$2.3}{[$-$10.3, 4.7]} & \ci{\textbf{29.8}}{[23.2, 36.3]} \\
- &  & S & TX vs T0 & \ci{0.0}{[$-$1.1, 1.1]} & \ci{$-$0.5}{[$-$15.0, 10.9]} & \ci{\textbf{29.6}}{[20.5, 39.1]} \\
- & V3 rolling origin & D650 & TX vs T0 & \ci{$-$0.1}{[$-$0.4, 0.4]} & \ci{\textbf{$-$41.1}}{[$-$94.0, $-$11.8]} & \ci{\textbf{42.6}}{[30.7, 56.2]} \\
- &  & S & TX vs T0 & \ci{0.0}{[$-$1.0, 0.9]} & \ci{$-$5.9}{[$-$16.1, 4.7]} & \ci{\textbf{27.4}}{[19.2, 37.3]} \\
- & V4 chronological, fit to 31991 & D650 & TX vs T0 & \ci{1.2}{[$-$1.0, 2.8]} & \ci{$-$18.7}{[$-$47.0, 4.8]} & \ci{\textbf{35.7}}{[23.5, 52.3]} \\
- &  & S & TX vs T0 & \ci{2.2}{[$-$3.8, 6.8]} & \ci{3.8}{[$-$25.5, 29.3]} & \ci{$-$1.1}{[$-$40.8, 17.1]} \\
- & V4 chronological, fit to 32310 & D650 & TX vs T0 & \ci{$-$1.2}{[$-$2.6, 0.0]} & \ci{3.0}{[$-$5.9, 17.8]} & \ci{\textbf{19.2}}{[8.4, 28.6]} \\
- &  & S & TX vs T0 & \ci{\textbf{2.9}}{[0.2, 6.4]} & \ci{$-$12.0}{[$-$25.3, 4.6]} & \ci{$-$12.0}{[$-$44.3, 13.2]} \\
 \midrule
 \parbox[t]{3.1cm}{\raggedright sparse CES (a value every tenth frame)\strut} & V1 random & K10 & TX vs T0 & \ci{$-$0.3}{[$-$1.5, 0.9]} & \ci{\textbf{7.8}}{[3.8, 11.6]} & \ci{\textbf{12.2}}{[7.6, 17.0]} \\
 \parbox[t]{3.1cm}{\raggedright beam scalars given (fast inputs permuted)\strut} & V1 random & D650 & TXN vs TN & \ci{0.1}{[$-$0.6, 0.9]} & -- & -- \\
@@ -205,7 +212,7 @@ condition & design & rule & comparison & permuted & the anchor row & anchor row 
 \parbox[t]{3.1cm}{\raggedright correcting the reading of the frame\strut} & V1 random & D10 & CX vs C0 & \ci{$-$0.4}{[$-$0.8, 0.0]} & -- & -- \\
 \parbox[t]{3.1cm}{\raggedright MAST (Thomson)\strut} & M1 random & D100 & TX vs T0 & \ci{0.3}{[$-$0.4, 1.1]} & \ci{\textbf{5.8}}{[2.8, 8.9]} & \ci{\textbf{26.2}}{[21.0, 32.0]} \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapControls}{The two controls beside the fast inputs (target L5), reduction of the MSE in per cent. Upper block: every design under the history 0.65~s old (D650, common set) and the beam-modulation schedule (S, S set). Lower block: the same controls in the other conditions of the paper. ``Permuted'': the fast inputs (for TN: the beam scalars) shuffled over rows and the estimator refitted; the reduction against the same reference should be zero. ``At the anchor row'': the fast inputs taken at the row of the newest visible CES value instead of row $t$; ``present over anchor row'': TX against that estimator. Intervals: 95 \%, shot clusters (MAST: sessions) resampled; bold: the interval excludes zero.}
+\newcommand{\CapControlsOther}{The same two controls in the other conditions of the paper (target L5), reduction of the MSE in per cent: a CES value every tenth frame, the beam scalars, correcting the reading of the frame, and MAST. For TN the beam scalars are the inputs permuted. Intervals: 95 \%, shot clusters (MAST: sessions) resampled; bold: the interval excludes zero.}
 
 % ---- Refit: B.79 main readout vs refit without the 13 files with invalid NBI-2 power columns
 \newcommand{\TabRefit}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llllll@{}}\toprule
@@ -774,7 +781,223 @@ E8 & \parbox[t]{6.6cm}{\raggedright V3, S: TB over T0 lies above zero\strut} & \
 \bottomrule\end{tabular}}}
 \newcommand{\CapStatBeightyone}{B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3): the registered statements with the value as registered (skills as fractions, signed), the 95 \% interval (shot clusters resampled), the verdict by the registered rule and the registered expectation.}
 
-% ---- StatSummary: count of registered statements per batch B.73-B.81: hold, do not hold, expectations met
+% ---- StatBeightytwo: registered statements of B.82 (where the increment sits; robust error measures; specificity)
+\newcommand{\TabStatBeightytwo}{{\scriptsize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
+id & statement & value [95 \% interval] & verdict & expected \\
+\midrule
+A1 & \parbox[t]{6.6cm}{\raggedright V1, D650, rows with tau above 300 ms: TX over T0 lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.264 [+0.215, +0.314]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+A2 & \parbox[t]{6.6cm}{\raggedright V1, S, rows with tau above 300 ms: TX over T0 lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.334 [+0.264, +0.404]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+A3 & \parbox[t]{6.6cm}{\raggedright V3, D650, rows with tau above 300 ms: TX over T0 lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.077 [$-$0.109, +0.200]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+A4 & \parbox[t]{6.6cm}{\raggedright V1, D650, rows with no notch before: TX over T0 lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.417 [+0.314, +0.504]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+A5 & \parbox[t]{6.6cm}{\raggedright V1, S: TX over T0 on rows with tau up to 100 ms minus that on rows with tau above 300 ms lies above zero (the gain is larger just after a notch)\strut} & \parbox[t]{3.7cm}{\raggedright $-$0.110 [$-$0.214, $-$0.020]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+A6 & \parbox[t]{6.6cm}{\raggedright V1, D650, lowest third of c: TX over T0 lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.191 [+0.125, +0.255]\strut} & holds & \parbox[t]{2.2cm}{\raggedright uncertain\strut} \\
+A7 & \parbox[t]{6.6cm}{\raggedright V1, D650: TX over T0 in the highest third of c minus that in the lowest third lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.221 [+0.148, +0.298]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+A8 & \parbox[t]{6.6cm}{\raggedright V1, S, rows with tau above 300 ms: TXN over TN lies above zero (beam scalars given)\strut} & \parbox[t]{3.7cm}{\raggedright +0.256 [+0.184, +0.323]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+B1 & \parbox[t]{6.6cm}{\raggedright V1, D650: MAE(TX) / MAE(T0) lies below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.826 [+0.795, +0.856]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+B2 & \parbox[t]{6.6cm}{\raggedright V1, D650: the ratio of the median absolute errors lies below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.849 [+0.802, +0.892]\strut} & holds & \parbox[t]{2.2cm}{\raggedright uncertain\strut} \\
+B3 & \parbox[t]{6.6cm}{\raggedright V3, D650: MAE ratio below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.951 [+0.876, +1.044]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+B4 & \parbox[t]{6.6cm}{\raggedright V1, S: MAE ratio below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.828 [+0.791, +0.860]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+B5 & \parbox[t]{6.6cm}{\raggedright V1, D650: share of rows within 10 \% of the level, TX minus T0, lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.049 [+0.036, +0.065]\strut} & holds & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+B6 & \parbox[t]{6.6cm}{\raggedright V1, D650: the share of discharges whose own skill of TX over T0 is positive lies above one half\strut} & \parbox[t]{3.7cm}{\raggedright +0.831 [+0.785, +0.877]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+B7 & \parbox[t]{6.6cm}{\raggedright V4a, D650: MAE ratio below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.867 [+0.719, +0.998]\strut} & holds & \parbox[t]{2.2cm}{\raggedright uncertain\strut} \\
+B8 & \parbox[t]{6.6cm}{\raggedright V1, D650: the ratio of the 90th percentiles of the absolute error lies below one\strut} & \parbox[t]{3.7cm}{\raggedright +0.815 [+0.779, +0.850]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+C1 & \parbox[t]{6.6cm}{\raggedright V1, D650: TM over T0 has an interval that contains zero or lies below it (a diagnostic that is not at the radius adds nothing)\strut} & \parbox[t]{3.7cm}{\raggedright +0.084 [+0.046, +0.119]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain\strut} \\
+C2 & \parbox[t]{6.6cm}{\raggedright V1, D650: TX over TM lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.275 [+0.232, +0.316]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+C3 & \parbox[t]{6.6cm}{\raggedright V3, D650: TX over TM lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.126 [$-$0.018, +0.213]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+C4 & \parbox[t]{6.6cm}{\raggedright V1, D650: TXs over T0 has an interval that contains zero or lies below it\strut} & \parbox[t]{3.7cm}{\raggedright $-$0.083 [$-$0.129, $-$0.046]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+C5 & \parbox[t]{6.6cm}{\raggedright V1, S: TXs over T0 has an interval that contains zero or lies below it\strut} & \parbox[t]{3.7cm}{\raggedright +0.019 [$-$0.012, +0.054]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+C6 & \parbox[t]{6.6cm}{\raggedright V1, D650: TXM over TX has an interval that contains zero or lies below it (Mirnov adds nothing on top of the fast diagnostics)\strut} & \parbox[t]{3.7cm}{\raggedright +0.022 [+0.004, +0.039]\strut} & does not hold & \parbox[t]{2.2cm}{\raggedright uncertain, leaning to holds\strut} \\
+C7 & \parbox[t]{6.6cm}{\raggedright V1, S: TX over TM lies above zero\strut} & \parbox[t]{3.7cm}{\raggedright +0.273 [+0.211, +0.329]\strut} & holds & \parbox[t]{2.2cm}{\raggedright holds\strut} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapStatBeightytwo}{B.82 (where the increment sits; robust error measures; specificity): the registered statements with the value as registered (skills as fractions, signed), the 95 \% interval (shot clusters resampled), the verdict by the registered rule and the registered expectation.}
+
+% ---- Dataset: the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources
+\newcommand{\TabDataset}{{\footnotesize\setlength{\tabcolsep}{5pt}\begin{tabular}{@{}ll@{}}\toprule
+quantity & value \\
+\midrule
+\parbox[t]{8.6cm}{\raggedright discharges\strut} & 635 \\
+\parbox[t]{8.6cm}{\raggedright grid rows (10 ms, first and last row of each file left out)\strut} & 245{,}785 \\
+\parbox[t]{8.6cm}{\raggedright grid rows per discharge (10th / 50th / 90th percentile)\strut} & 99 / 347 / 696 \\
+\parbox[t]{8.6cm}{\raggedright absent steps per discharge (10th / 50th / 90th percentile)\strut} & 0 / 2 / 4; total 1{,}413, none in 127 discharges \\
+\parbox[t]{8.6cm}{\raggedright reported $T_i$ (eV; 10th / 50th / 90th percentile)\strut} & 187 / 593 / 1{,}127 \\
+\parbox[t]{8.6cm}{\raggedright following level L5 (eV; 10th / 50th / 90th percentile)\strut} & 207 / 597 / 1{,}091 \\
+\parbox[t]{8.6cm}{\raggedright grid rows without a usable $T_i$\strut} & 8.1\,\% \\
+\parbox[t]{8.6cm}{\raggedright total beam power while a source is on (MW; 10th / 50th / 90th percentile)$^{a}$\strut} & 2.34 / 3.86 / 4.64 \\
+\parbox[t]{8.6cm}{\raggedright grid rows by number of beam sources on (0 / 1 / 2 / 3 / 4 / 5), \%\strut} & 0.1 / 7.2 / 9.4 / 20.1 / 40.2 / 23.1 \\
+\parbox[t]{8.6cm}{\raggedright plasma current, toroidal field, density\strut} & not in the files \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapDataset}{The data: the 2022 campaign of KSTAR, shots 30801 to 32751, the discharges of the D1 definition (the first and last row of each file and values above 3 keV or held from the previous row are not used). $^{a}$Without the 13 earliest files, whose NBI-2 power columns are invalid.}
+
+% ---- Robust: robust error measures (MAE, median, p90, within 10/20 %) of T0, TX, O for V1 at D10, D650, S
+\newcommand{\TabRobust}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}lrccccc@{}}\toprule
+ & RMSE & MAE & median & 90th pct. & within & within \\
+estimator & (eV) & (eV) & abs. error (eV) & abs. error (eV) & 10\,\% & 20\,\% \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{D10 (common set, 160{,}343 rows)}} \\
+T0 & 131.5 & 72.3 & 37.3 & 170.4 & 65.0 & 82.5 \\
+TX & 124.5 & 69.1 & 36.3 & 162.7 & 66.0 & 83.3 \\
+O, own reading & 183.3 & 91.9 & 43.4 & 217.8 & 59.3 & 78.5 \\
+TX / T0 &  & \ci{\textbf{0.96}}{[0.94, 0.97]} & \ci{\textbf{0.97}}{[0.96, 0.99]} & \ci{\textbf{0.95}}{[0.93, 0.97]} & \ci{\textbf{1.0}}{[0.6, 1.6]} & \ci{\textbf{0.7}}{[0.5, 1.1]} \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{D650 (common set, 160{,}343 rows)}} \\
+T0 & 226.2 & 142.3 & 84.9 & 336.1 & 39.0 & 62.4 \\
+TX & 184.3 & 117.5 & 72.0 & 274.0 & 43.9 & 67.7 \\
+O, own reading & 183.3 & 91.9 & 43.4 & 217.8 & 59.3 & 78.5 \\
+TX / T0 &  & \ci{\textbf{0.83}}{[0.80, 0.86]} & \ci{\textbf{0.85}}{[0.80, 0.89]} & \ci{\textbf{0.82}}{[0.78, 0.85]} & \ci{\textbf{4.9}}{[3.6, 6.5]} & \ci{\textbf{5.3}}{[4.0, 6.8]} \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{S (S set, 147{,}837 rows)}} \\
+T0 & 217.6 & 138.2 & 83.1 & 326.2 & 39.6 & 62.8 \\
+TX & 178.5 & 114.4 & 69.9 & 269.4 & 44.7 & 68.3 \\
+O, own reading & 178.2 & 89.9 & 42.6 & 212.8 & 59.8 & 78.7 \\
+TX / T0 &  & \ci{\textbf{0.83}}{[0.79, 0.86]} & \ci{\textbf{0.84}}{[0.78, 0.89]} & \ci{\textbf{0.83}}{[0.78, 0.87]} & \ci{\textbf{5.1}}{[3.5, 6.7]} & \ci{\textbf{5.5}}{[3.5, 8.1]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapRobust}{Error measures beside the MSE, random design V1, target L5: RMSE, mean and median absolute error, 90th percentile of the absolute error, and the share of rows within 10 and 20 \% of the level (per cent; points, mean over the three re-partitions). Row ``TX / T0'': the ratios of the three absolute error measures (bold: the interval excludes one) and the differences of the two shares in percentage points (bold: the interval excludes zero). Intervals: 95 \%, shot clusters resampled.}
+
+% ---- RobustFull: robust error measures for H, G, T0, TX, O, V1 at D10, D650, S
+\newcommand{\TabRobustFull}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}lrccccc@{}}\toprule
+ & RMSE & MAE & median & 90th pct. & within & within \\
+estimator & (eV) & (eV) & abs. error (eV) & abs. error (eV) & 10\,\% & 20\,\% \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{D10 (common set, 160{,}343 rows)}} \\
+hold & 193.5 & 98.7 & 46.4 & 236.1 & 57.1 & 76.7 \\
+causal GP & 144.1 & 78.1 & 39.1 & 184.8 & 63.0 & 81.1 \\
+T0 & 131.5 & 72.3 & 37.3 & 170.4 & 65.0 & 82.5 \\
+TX & 124.5 & 69.1 & 36.3 & 162.7 & 66.0 & 83.3 \\
+O, own reading & 183.3 & 91.9 & 43.4 & 217.8 & 59.3 & 78.5 \\
+TX / T0 &  & \ci{\textbf{0.96}}{[0.94, 0.97]} & \ci{\textbf{0.97}}{[0.96, 0.99]} & \ci{\textbf{0.95}}{[0.93, 0.97]} & \ci{\textbf{1.0}}{[0.6, 1.6]} & \ci{\textbf{0.7}}{[0.5, 1.1]} \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{D650 (common set, 160{,}343 rows)}} \\
+hold & 325.9 & 185.1 & 92.9 & 452.1 & 35.4 & 56.7 \\
+causal GP & 277.6 & 157.7 & 80.4 & 381.4 & 40.4 & 61.7 \\
+T0 & 226.2 & 142.3 & 84.9 & 336.1 & 39.0 & 62.4 \\
+TX & 184.3 & 117.5 & 72.0 & 274.0 & 43.9 & 67.7 \\
+O, own reading & 183.3 & 91.9 & 43.4 & 217.8 & 59.3 & 78.5 \\
+TX / T0 &  & \ci{\textbf{0.83}}{[0.80, 0.86]} & \ci{\textbf{0.85}}{[0.80, 0.89]} & \ci{\textbf{0.82}}{[0.78, 0.85]} & \ci{\textbf{4.9}}{[3.6, 6.5]} & \ci{\textbf{5.3}}{[4.0, 6.8]} \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{S (S set, 147{,}837 rows)}} \\
+hold & 274.7 & 157.7 & 81.9 & 386.5 & 39.1 & 61.6 \\
+causal GP & 226.3 & 137.3 & 76.2 & 329.8 & 42.2 & 64.0 \\
+T0 & 217.6 & 138.2 & 83.1 & 326.2 & 39.6 & 62.8 \\
+TX & 178.5 & 114.4 & 69.9 & 269.4 & 44.7 & 68.3 \\
+O, own reading & 178.2 & 89.9 & 42.6 & 212.8 & 59.8 & 78.7 \\
+TX / T0 &  & \ci{\textbf{0.83}}{[0.79, 0.86]} & \ci{\textbf{0.84}}{[0.78, 0.89]} & \ci{\textbf{0.83}}{[0.78, 0.87]} & \ci{\textbf{5.1}}{[3.5, 6.7]} & \ci{\textbf{5.5}}{[3.5, 8.1]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapRobustFull}{Error measures beside the MSE for every estimator (hold and causal GP included), random design V1, target L5: RMSE, mean and median absolute error, 90th percentile of the absolute error, and the share of rows within 10 and 20 \% of the level (per cent; points, mean over the three re-partitions). Row ``TX / T0'': the ratios of the three absolute error measures (bold: the interval excludes one) and the differences of the two shares in percentage points (bold: the interval excludes zero). Intervals: 95 \%, shot clusters resampled.}
+
+% ---- Tau: increment by time since the last notch (V1, V2, V3, V4a; D650, S; TXN vs TN for V1)
+\newcommand{\TabTau}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllcccc@{}}\toprule
+ & & & \multicolumn{4}{c}{time since the last notch} \\
+\cmidrule(lr){4-7}
+rule & design & comparison & up to 100 ms & 100 to 300 ms & above 300 ms & no notch before \\
+\midrule
+D650 & V1 random & TX vs T0 & \ci{\textbf{45.2}}{[32.8, 54.3]} & \ci{\textbf{39.8}}{[30.8, 46.4]} & \ci{\textbf{26.4}}{[21.5, 31.4]} & \ci{\textbf{41.7}}{[31.4, 50.4]} \\
+ & V2 shot clusters held out & TX vs T0 & \ci{\textbf{35.5}}{[26.3, 45.2]} & \ci{\textbf{33.1}}{[20.7, 43.0]} & \ci{\textbf{21.7}}{[14.4, 28.6]} & \ci{\textbf{37.5}}{[25.8, 47.4]} \\
+ & V3 rolling origin & TX vs T0 & \ci{\textbf{29.3}}{[13.5, 41.5]} & \ci{\textbf{25.7}}{[10.4, 37.2]} & \ci{7.7}{[$-$10.9, 20.0]} & \ci{\textbf{37.2}}{[19.4, 46.5]} \\
+ & V4, fit to 31991 & TX vs T0 & \ci{\textbf{45.1}}{[6.6, 66.5]} & \ci{25.2}{[0.0, 38.2]} & \ci{19.7}{[$-$13.8, 45.9]} & \ci{\textbf{24.8}}{[4.2, 46.4]} \\
+ & V1 random & TXN vs TN & \ci{\textbf{30.6}}{[22.8, 37.7]} & \ci{\textbf{27.9}}{[20.4, 34.5]} & \ci{\textbf{24.5}}{[18.9, 30.5]} & \ci{\textbf{24.1}}{[16.2, 31.5]} \\
+ & \textit{scored rows, V1} &  & 12{,}462 & 23{,}038 & 108{,}715 & 16{,}128 \\
+\midrule
+S & V1 random & TX vs T0 & \ci{\textbf{22.4}}{[13.1, 29.9]} & \ci{\textbf{34.2}}{[26.3, 40.7]} & \ci{\textbf{33.4}}{[26.4, 40.4]} & -- \\
+ & V2 shot clusters held out & TX vs T0 & \ci{\textbf{12.8}}{[2.7, 23.6]} & \ci{\textbf{27.0}}{[16.5, 35.5]} & \ci{\textbf{31.5}}{[22.8, 39.9]} & -- \\
+ & V3 rolling origin & TX vs T0 & \ci{\textbf{11.8}}{[5.4, 20.3]} & \ci{\textbf{26.5}}{[15.6, 38.4]} & \ci{\textbf{23.4}}{[14.3, 33.1]} & -- \\
+ & V4, fit to 31991 & TX vs T0 & \ci{14.4}{[$-$7.7, 24.9]} & \ci{$-$0.1}{[$-$17.1, 12.4]} & \ci{2.6}{[$-$21.1, 20.1]} & -- \\
+ & V1 random & TXN vs TN & \ci{\textbf{18.9}}{[9.9, 27.0]} & \ci{\textbf{26.5}}{[16.8, 35.8]} & \ci{\textbf{25.6}}{[18.4, 32.3]} & -- \\
+ & \textit{scored rows, V1} &  & 13{,}718 & 24{,}352 & 109{,}767 & -- \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapTau}{Where the increment sits: reduction of the MSE in per cent by the fast inputs (TX against T0; for V1 also with the beam scalars given, TXN against TN), target L5, by the time since the last absent frame (beam notch) at row $t$, a class defined from the inputs. D650 on the common set, S on the S set; under S every row has a notch before it. Rows per class for the other designs: table \ref{tab:taurows}. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
+
+% ---- TauRows: rows per class of the time since the last notch, every design
+\newcommand{\TabTauRows}{{\footnotesize\setlength{\tabcolsep}{5pt}\begin{tabular}{@{}llrrrr@{}}\toprule
+ & & \multicolumn{4}{c}{time since the last notch} \\
+\cmidrule(lr){3-6}
+rule & design & up to 100 ms & 100 to 300 ms & above 300 ms & no notch before \\
+\midrule
+D650 & V1 random & 12{,}462 & 23{,}038 & 108{,}715 & 16{,}128 \\
+ & V2 shot clusters held out & 12{,}462 & 23{,}038 & 108{,}715 & 16{,}128 \\
+ & V3 rolling origin & 9{,}467 & 17{,}254 & 73{,}030 & 12{,}448 \\
+ & V4 chronological, fit to 31991 & 545 & 1{,}088 & 5{,}332 & 3{,}181 \\
+ & V4 chronological, fit to 32310 & 545 & 1{,}088 & 5{,}332 & 3{,}181 \\
+\midrule
+S & V1 random & 13{,}718 & 24{,}352 & 109{,}767 & -- \\
+ & V2 shot clusters held out & 13{,}718 & 24{,}352 & 109{,}767 & -- \\
+ & V3 rolling origin & 10{,}406 & 18{,}277 & 74{,}001 & -- \\
+ & V4 chronological, fit to 31991 & 654 & 1{,}186 & 5{,}340 & -- \\
+ & V4 chronological, fit to 32310 & 654 & 1{,}186 & 5{,}340 & -- \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapTauRows}{Scored rows per class of the time since the last notch (target L5), by design and rule.}
+
+% ---- Specificity: Mirnov in place of/added to the fast inputs, another discharge's inputs, single BES columns
+\newcommand{\TabSpecificity}{{\footnotesize\setlength{\tabcolsep}{2.6pt}\begin{tabular}{@{}llccccccc@{}}\toprule
+ & & TM & TX & TXM & TXs & \multicolumn{3}{c}{one BES column alone over T0} \\
+\cmidrule(lr){7-9}
+design & rule & vs T0 & vs TM & vs TX & vs T0 & 05 & 06 & 07 \\
+\midrule
+V1 random & D650 & \ci{\textbf{8.4}}{[4.6, 11.9]} & \ci{\textbf{27.5}}{[23.2, 31.6]} & \ci{\textbf{2.2}}{[0.4, 3.9]} & \ci{\textbf{$-$8.3}}{[$-$12.9, $-$4.6]} & \ci{\textbf{23.8}}{[18.9, 28.7]} & \ci{\textbf{24.6}}{[19.8, 29.5]} & \ci{\textbf{22.0}}{[17.5, 26.4]} \\
+ & S & \ci{\textbf{7.4}}{[3.2, 11.4]} & \ci{\textbf{27.3}}{[21.1, 32.9]} & \ci{1.5}{[$-$0.8, 4.1]} & \ci{1.9}{[$-$1.2, 5.4]} & \ci{\textbf{23.5}}{[18.1, 28.6]} & \ci{\textbf{24.1}}{[18.5, 29.6]} & \ci{\textbf{23.4}}{[18.1, 28.7]} \\
+V3 rolling origin & D650 & \ci{\textbf{7.4}}{[3.1, 12.1]} & \ci{12.6}{[$-$1.8, 21.3]} & \ci{2.5}{[$-$0.5, 6.2]} & \ci{\textbf{$-$13.6}}{[$-$21.7, $-$7.1]} & \ci{\textbf{11.2}}{[1.0, 22.8]} & \ci{\textbf{14.2}}{[5.2, 24.6]} & \ci{\textbf{13.0}}{[4.7, 22.3]} \\
+ & S & \ci{$-$1.6}{[$-$5.5, 2.1]} & \ci{\textbf{24.3}}{[16.7, 32.8]} & \ci{$-$0.6}{[$-$4.2, 3.2]} & \ci{\textbf{$-$7.8}}{[$-$14.1, $-$0.9]} & \ci{\textbf{18.8}}{[13.0, 24.9]} & \ci{\textbf{17.7}}{[12.0, 24.5]} & \ci{\textbf{15.8}}{[10.5, 21.6]} \\
+V4, fit to 31991 & D650 & \ci{6.8}{[$-$6.6, 21.3]} & \ci{\textbf{18.1}}{[5.2, 32.1]} & \ci{0.2}{[$-$4.6, 7.6]} & \ci{$-$9.2}{[$-$26.8, 11.5]} & \ci{$-$3.3}{[$-$22.2, 14.3]} & \ci{4.0}{[$-$16.3, 24.6]} & \ci{$-$0.7}{[$-$26.3, 24.1]} \\
+ & S & \ci{11.3}{[$-$8.2, 32.0]} & \ci{$-$9.6}{[$-$51.9, 10.9]} & \ci{\textbf{6.8}}{[0.5, 13.8]} & \ci{\textbf{$-$68.1}}{[$-$120.8, $-$13.7]} & \ci{$-$0.4}{[$-$23.9, 23.6]} & \ci{$-$9.4}{[$-$32.8, 19.6]} & \ci{$-$15.9}{[$-$41.4, 10.9]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapSpecificity}{Specificity of the fast inputs, target L5, reduction of the MSE in per cent. TM: T0 with seven Mirnov scalars in place of the fast inputs; TX vs TM: the fast inputs against Mirnov; TXM vs TX: Mirnov added to the fast inputs; TXs: TX with the fast and anchor inputs taken from another discharge at the same frame index; BES column 05, 06, 07: T0 with the seven scalars of one radial BES column (channel names; their radii are not verified). Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
+
+% ---- Seeds: seed spread of the increment (V4a, V4b, V1 r2 pooled; D650, S)
+\newcommand{\TabSeeds}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}llrrrrrc@{}}\toprule
+ & & registered & \multicolumn{4}{c}{ten other seeds} & sign \\
+\cmidrule(lr){4-7}
+rule & unit & seed & smallest & median & largest & sd & changes \\
+\midrule
+D650 & V4 chronological, fit to 31991 & 23.7 & 21.6 & 22.5 & 23.9 & 0.7 & no \\
+ & V4 chronological, fit to 32310 & 21.6 & 20.1 & 21.9 & 23.4 & 1.1 & no \\
+ & V1, re-partition r2 (five units) & 33.6 & 33.7 & 34.0 & 34.4 & 0.2 & no \\
+\midrule
+S & V4 chronological, fit to 31991 & 2.8 & $-$7.4 & $-$2.6 & 4.1 & 3.6 & yes \\
+ & V4 chronological, fit to 32310 & $-$25.4 & $-$25.0 & $-$18.3 & $-$8.1 & 5.8 & no \\
+ & V1, re-partition r2 (five units) & 31.9 & 31.7 & 32.4 & 33.7 & 0.7 & no \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapSeeds}{Spread of the fast-channel increment (TX against T0, per cent, target L5) over the random seed of the boosted regression: the registered seed 20261116 and ten other seeds, refitted on the same rows; sd in percentage points. ``Sign changes'': whether the ten seeds disagree in sign.}
+
+% ---- Change: increment by thirds of the change since the anchor row (V1, V3; D650, S)
+\newcommand{\TabChange}{{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}llcccc@{}}\toprule
+ & & \multicolumn{3}{c}{change of the fast level since the anchor row} & highest $-$ \\
+\cmidrule(lr){3-5}
+design & rule & lowest third & middle third & highest third & lowest \\
+\midrule
+V1 random & D650 & \begin{tabular}[t]{@{}c@{}}\textbf{19.1}\\[-1.5pt]{\scriptsize [12.5, 25.5]}\\[-2pt]{\tiny 53{,}399 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{18.1}\\[-1.5pt]{\scriptsize [11.9, 25.4]}\\[-2pt]{\tiny 53{,}453 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{41.2}\\[-1.5pt]{\scriptsize [35.8, 45.6]}\\[-2pt]{\tiny 53{,}491 rows}\end{tabular} & \ci{\textbf{22.1}}{[14.8, 29.8]} \\
+ & S & \begin{tabular}[t]{@{}c@{}}\textbf{22.7}\\[-1.5pt]{\scriptsize [14.6, 30.7]}\\[-2pt]{\tiny 49{,}235 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{23.0}\\[-1.5pt]{\scriptsize [16.2, 30.4]}\\[-2pt]{\tiny 49{,}284 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{39.1}\\[-1.5pt]{\scriptsize [31.1, 46.1]}\\[-2pt]{\tiny 49{,}318 rows}\end{tabular} & \ci{\textbf{16.4}}{[6.0, 26.3]} \\
+V3 rolling origin & D650 & \begin{tabular}[t]{@{}c@{}}0.8\\[-1.5pt]{\scriptsize [$-$17.8, 15.1]}\\[-2pt]{\tiny 45{,}203 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}5.0\\[-1.5pt]{\scriptsize [$-$10.7, 19.7]}\\[-2pt]{\tiny 34{,}055 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{26.0}\\[-1.5pt]{\scriptsize [9.2, 37.3]}\\[-2pt]{\tiny 32{,}941 rows}\end{tabular} & \ci{\textbf{25.2}}{[8.5, 43.7]} \\
+ & S & \begin{tabular}[t]{@{}c@{}}\textbf{16.4}\\[-1.5pt]{\scriptsize [5.4, 27.9]}\\[-2pt]{\tiny 41{,}095 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{13.6}\\[-1.5pt]{\scriptsize [3.1, 23.1]}\\[-2pt]{\tiny 31{,}727 rows}\end{tabular} & \begin{tabular}[t]{@{}c@{}}\textbf{28.1}\\[-1.5pt]{\scriptsize [17.8, 39.7]}\\[-2pt]{\tiny 29{,}862 rows}\end{tabular} & \ci{11.7}{[$-$0.6, 26.1]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapChange}{Fast-channel increment (TX against T0, per cent, target L5) by thirds of the change of the fast level since the anchor row (an input; cut points fitted on the fit rows of each unit), and the difference highest minus lowest third in percentage points. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.}
+
+% ---- RobustDesigns: robust measures TX vs T0 per design and rule, per-discharge skill
+\newcommand{\TabRobustDesigns}{{\footnotesize\setlength{\tabcolsep}{2.4pt}\begin{tabular}{@{}llccccccc@{}}\toprule
+ & & MAE & median & p90 & within & within & skill & median \\
+design & rule & ratio & ratio & ratio & 10\,\% (pp) & 20\,\% (pp) & $>$ 0 (\%) & skill (\%) \\
+\midrule
+V1 random & D10 & \ci{\textbf{0.96}}{[0.94, 0.97]} & \ci{\textbf{0.97}}{[0.96, 0.99]} & \ci{\textbf{0.95}}{[0.93, 0.97]} & \ci{\textbf{1.0}}{[0.6, 1.6]} & \ci{\textbf{0.7}}{[0.5, 1.1]} & \ci{74.6}{[69.7, 79.7]} & \ci{\textbf{6.2}}{[4.6, 8.3]} \\
+ & D650 & \ci{\textbf{0.83}}{[0.80, 0.86]} & \ci{\textbf{0.85}}{[0.80, 0.89]} & \ci{\textbf{0.82}}{[0.78, 0.85]} & \ci{\textbf{4.9}}{[3.6, 6.5]} & \ci{\textbf{5.3}}{[4.0, 6.8]} & \ci{83.1}{[78.5, 87.7]} & \ci{\textbf{28.8}}{[22.3, 33.8]} \\
+ & S & \ci{\textbf{0.83}}{[0.79, 0.86]} & \ci{\textbf{0.84}}{[0.78, 0.89]} & \ci{\textbf{0.83}}{[0.78, 0.87]} & \ci{\textbf{5.1}}{[3.5, 6.7]} & \ci{\textbf{5.5}}{[3.5, 8.1]} & \ci{71.4}{[65.3, 76.9]} & \ci{\textbf{23.7}}{[16.2, 30.2]} \\
+\midrule
+V2 clusters out & D10 & \ci{0.98}{[0.96, 1.00]} & \ci{1.00}{[0.98, 1.02]} & \ci{0.98}{[0.96, 1.02]} & \ci{0.5}{[$-$0.1, 1.0]} & \ci{0.4}{[$-$0.1, 0.8]} & \ci{69.7}{[63.2, 76.3]} & \ci{\textbf{5.0}}{[3.1, 6.5]} \\
+ & D650 & \ci{\textbf{0.86}}{[0.82, 0.91]} & \ci{\textbf{0.91}}{[0.85, 0.97]} & \ci{\textbf{0.84}}{[0.78, 0.89]} & \ci{\textbf{2.8}}{[1.1, 4.7]} & \ci{\textbf{2.8}}{[1.0, 4.8]} & \ci{78.9}{[71.9, 85.7]} & \ci{\textbf{24.3}}{[18.4, 30.2]} \\
+ & S & \ci{\textbf{0.84}}{[0.79, 0.89]} & \ci{\textbf{0.85}}{[0.79, 0.92]} & \ci{\textbf{0.83}}{[0.76, 0.90]} & \ci{\textbf{4.2}}{[2.1, 6.6]} & \ci{\textbf{4.6}}{[2.1, 6.7]} & \ci{68.7}{[61.9, 75.4]} & \ci{\textbf{20.0}}{[13.0, 28.1]} \\
+\midrule
+V3 rolling origin & D10 & \ci{1.00}{[0.97, 1.02]} & \ci{1.01}{[0.98, 1.04]} & \ci{1.01}{[0.98, 1.04]} & \ci{0.0}{[$-$0.8, 0.8]} & \ci{0.0}{[$-$0.5, 0.6]} & \ci{60.0}{[53.1, 67.4]} & \ci{\textbf{3.5}}{[1.2, 5.5]} \\
+ & D650 & \ci{0.95}{[0.88, 1.04]} & \ci{1.03}{[0.93, 1.14]} & \ci{0.92}{[0.84, 1.03]} & \ci{$-$0.5}{[$-$2.9, 2.0]} & \ci{$-$0.9}{[$-$4.0, 2.3]} & \ci{70.6}{[60.2, 79.7]} & \ci{\textbf{15.9}}{[9.2, 22.1]} \\
+ & S & \ci{\textbf{0.89}}{[0.83, 0.93]} & \ci{\textbf{0.91}}{[0.85, 0.98]} & \ci{\textbf{0.89}}{[0.81, 0.95]} & \ci{\textbf{2.1}}{[0.5, 3.7]} & \ci{\textbf{3.4}}{[1.7, 5.3]} & \ci{62.9}{[56.2, 69.8]} & \ci{\textbf{18.8}}{[7.7, 27.4]} \\
+\midrule
+V4 fit to 31991 & D10 & \ci{\textbf{0.96}}{[0.93, 0.99]} & \ci{\textbf{0.96}}{[0.92, 0.97]} & \ci{1.00}{[0.93, 1.06]} & \ci{0.8}{[$-$0.4, 2.0]} & \ci{1.0}{[$-$0.4, 2.5]} & \ci{95.0}{[86.4, 100.0]} & \ci{\textbf{10.1}}{[8.5, 15.4]} \\
+ & D650 & \ci{\textbf{0.87}}{[0.72, 1.00]} & \ci{0.86}{[0.66, 1.00]} & \ci{0.91}{[0.70, 1.07]} & \ci{2.3}{[$-$2.6, 8.9]} & \ci{\textbf{6.1}}{[0.5, 13.3]} & \ci{67.5}{[54.5, 91.7]} & \ci{\textbf{18.3}}{[0.9, 35.2]} \\
+ & S & \ci{0.98}{[0.88, 1.11]} & \ci{0.90}{[0.76, 1.16]} & \ci{1.08}{[0.91, 1.24]} & \ci{3.2}{[$-$3.2, 7.8]} & \ci{4.5}{[$-$1.4, 8.8]} & \ci{45.9}{[25.7, 70.0]} & \ci{$-$7.5}{[$-$25.2, 13.7]} \\
+\midrule
+V4 fit to 32310 & D10 & \ci{\textbf{0.96}}{[0.93, 0.97]} & \ci{\textbf{0.94}}{[0.91, 0.96]} & \ci{0.98}{[0.94, 1.01]} & \ci{\textbf{1.0}}{[0.2, 2.7]} & \ci{\textbf{0.8}}{[0.2, 2.0]} & \ci{82.5}{[69.2, 90.6]} & \ci{\textbf{8.1}}{[5.3, 10.9]} \\
+ & D650 & \ci{\textbf{0.88}}{[0.75, 0.97]} & \ci{\textbf{0.86}}{[0.70, 0.98]} & \ci{0.91}{[0.74, 1.02]} & \ci{2.7}{[$-$1.4, 8.9]} & \ci{\textbf{6.3}}{[1.0, 12.8]} & \ci{72.5}{[60.0, 90.9]} & \ci{\textbf{20.2}}{[3.2, 34.3]} \\
+ & S & \ci{1.10}{[0.95, 1.26]} & \ci{0.95}{[0.80, 1.16]} & \ci{\textbf{1.24}}{[1.01, 1.46]} & \ci{\textbf{3.6}}{[0.1, 6.9]} & \ci{$-$0.2}{[$-$3.8, 2.8]} & \ci{37.8}{[16.7, 58.1]} & \ci{$-$14.9}{[$-$39.0, 15.1]} \\
+\bottomrule\end{tabular}}}
+\newcommand{\CapRobustDesigns}{TX against T0 beside the MSE, every design, target L5: ratios of the mean, median and 90th-percentile absolute error (bold: the interval excludes one), differences of the shares within 10 and 20 \% of the level (percentage points), the share of discharges whose own skill is positive and the median per-discharge skill (discharges with at least 50 scored rows). Intervals: 95 \%, shot clusters resampled; bold (differences, skill): the interval excludes zero.}
+
+% ---- StatSummary: count of registered statements per batch B.73-B.82: hold, do not hold, expectations met
 \newcommand{\TabStatSummary}{{\footnotesize\setlength{\tabcolsep}{4.5pt}\begin{tabular}{@{}llrrrrr@{}}\toprule
  & & regis- & & do not & definite & expectation \\
 batch & question & tered & hold & hold & expectation & met \\
@@ -788,10 +1011,11 @@ B.78 & a CES value every k-th frame & 8 & 6 & 2 & 5 & 5 \\
 B.79 & beam waveforms as inputs & 11 & 9 & 2 & 7 & 7 \\
 B.80 & coherence of the ECEI channels & 9 & 3 & 6 & 6 & 3 \\
 B.81 & controls; ECEI and BES halves under V2, V3 & 17 & 16 & 1 & 10 & 10 \\
+B.82 & where the increment sits; robust errors; specificity & 23 & 17 & 6 & 13 & 13 \\
 \midrule
-all &  & 99 & 71 & 28 & 60 & 50 \\
+all &  & 122 & 88 & 34 & 73 & 63 \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatSummary}{The registered statements of batches B.73 to B.81, counted from the result files: how many were registered, how many hold and do not hold by the registered rule, how many had a definite registered expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
+\newcommand{\CapStatSummary}{The registered statements of batches B.73 to B.82, counted from the result files: how many were registered, how many hold and do not hold by the registered rule, how many had a definite registered expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
 
 % ---- StatNotHeld: registered statements that do not hold (B.73-B.77)
 \newcommand{\TabStatNotHeld}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
@@ -815,9 +1039,9 @@ B.77 & A4 & \parbox[t]{7.0cm}{\raggedright V2: CX over C0 lies above zero\strut}
  & A8 & \parbox[t]{7.0cm}{\raggedright V1 and V4: the area under the curve of FHX minus that of FH lies above zero under each\strut} & \parbox[t]{3.6cm}{\raggedright V1: +0.005 [+0.003, +0.008]; V4a: 0.000 [$-$0.007, +0.007]\strut} & \parbox[t]{2.3cm}{\raggedright holds\strut} \\
  & A9 & \parbox[t]{7.0cm}{\raggedright V1, q = 10 \%: the MSE of O on the rows kept by FHX lies below that on the rows kept by FH (interval of the ratio below 1)\strut} & \parbox[t]{3.6cm}{\raggedright +0.989 [+0.975, +1.002]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatNotHeld}{The registered statements of B.73 to B.81 that do not hold (B.73 to B.77). Values as registered: skills are signed fractions, not per cent; 95 \% intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
+\newcommand{\CapStatNotHeld}{The registered statements of B.73 to B.82 that do not hold (B.73 to B.77). Values as registered: skills are signed fractions, not per cent; 95 \% intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.}
 
-% ---- StatNotHeldB: registered statements that do not hold (B.78-B.81)
+% ---- StatNotHeldB: registered statements that do not hold (B.78-B.82)
 \newcommand{\TabStatNotHeldB}{{\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lllll@{}}\toprule
 batch & id & statement (as registered) & value [95 \% interval] & expected \\
 \midrule
@@ -832,8 +1056,14 @@ B.80 & G1 & \parbox[t]{7.0cm}{\raggedright V1, S: TX over T0 in the high class m
  & G8 & \parbox[t]{7.0cm}{\raggedright V4 (fit to 31991), S: TG over T0 lies above zero\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.025 [$-$0.163, +0.052]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
  & G9 & \parbox[t]{7.0cm}{\raggedright V1, S, all blocks: TG is not worse than TX (the interval of TG over TX is not below zero)\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.067 [$-$0.128, $-$0.027]\strut} & \parbox[t]{2.3cm}{\raggedright holds\strut} \\
 B.81 & E2 & \parbox[t]{7.0cm}{\raggedright V3, D650: TE over T0 lies above zero\strut} & \parbox[t]{3.6cm}{\raggedright +0.058 [$-$0.067, +0.166]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
+B.82 & A3 & \parbox[t]{7.0cm}{\raggedright V3, D650, rows with tau above 300 ms: TX over T0 lies above zero\strut} & \parbox[t]{3.6cm}{\raggedright +0.077 [$-$0.109, +0.200]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
+ & A5 & \parbox[t]{7.0cm}{\raggedright V1, S: TX over T0 on rows with tau up to 100 ms minus that on rows with tau above 300 ms lies above zero (the gain is larger just after a notch)\strut} & \parbox[t]{3.6cm}{\raggedright $-$0.110 [$-$0.214, $-$0.020]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
+ & B3 & \parbox[t]{7.0cm}{\raggedright V3, D650: MAE ratio below one\strut} & \parbox[t]{3.6cm}{\raggedright +0.951 [+0.876, +1.044]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
+ & C1 & \parbox[t]{7.0cm}{\raggedright V1, D650: TM over T0 has an interval that contains zero or lies below it (a diagnostic that is not at the radius adds nothing)\strut} & \parbox[t]{3.6cm}{\raggedright +0.084 [+0.046, +0.119]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain\strut} \\
+ & C3 & \parbox[t]{7.0cm}{\raggedright V3, D650: TX over TM lies above zero\strut} & \parbox[t]{3.6cm}{\raggedright +0.126 [$-$0.018, +0.213]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
+ & C6 & \parbox[t]{7.0cm}{\raggedright V1, D650: TXM over TX has an interval that contains zero or lies below it (Mirnov adds nothing on top of the fast diagnostics)\strut} & \parbox[t]{3.6cm}{\raggedright +0.022 [+0.004, +0.039]\strut} & \parbox[t]{2.3cm}{\raggedright uncertain, leaning to holds\strut} \\
 \bottomrule\end{tabular}}}
-\newcommand{\CapStatNotHeldB}{Continuation of table \ref{tab:statnotheld} (B.78 to B.81).}
+\newcommand{\CapStatNotHeldB}{Continuation of table \ref{tab:statnotheld} (B.78 to B.82).}
 
 % ---- prose macros
 \newcommand{\RefitOverAppliedTXDsixfiftyVone}{49.6~[39.2, 57.3]}
@@ -857,6 +1087,54 @@ B.81 & E2 & \parbox[t]{7.0cm}{\raggedright V3, D650: TE over T0 lies above zero\
 \newcommand{\TXvsOSVfouraPt}{45.7}
 \newcommand{\TXvsOSVfourb}{40.5~[14.5, 60.0]}
 \newcommand{\TXvsOSVfourbPt}{40.5}
+\newcommand{\SeedMinDsixfiftyVfoura}{21.6}
+\newcommand{\SeedMaxDsixfiftyVfoura}{23.9}
+\newcommand{\SeedMinSVfoura}{$-$7.4}
+\newcommand{\SeedMaxSVfoura}{4.1}
+\newcommand{\WithinTenTZeroDtenVone}{65.0~[59.1, 70.0]}
+\newcommand{\WithinTenTZeroDtenVonePt}{65.0}
+\newcommand{\WithinTenTXDtenVone}{66.0~[60.1, 71.0]}
+\newcommand{\WithinTenTXDtenVonePt}{66.0}
+\newcommand{\WithinTenODtenVone}{59.3~[52.4, 65.3]}
+\newcommand{\WithinTenODtenVonePt}{59.3}
+\newcommand{\WithinTenTZeroDsixfiftyVone}{39.0~[34.1, 43.0]}
+\newcommand{\WithinTenTZeroDsixfiftyVonePt}{39.0}
+\newcommand{\WithinTenTXDsixfiftyVone}{43.9~[39.5, 47.7]}
+\newcommand{\WithinTenTXDsixfiftyVonePt}{43.9}
+\newcommand{\WithinTenODsixfiftyVone}{59.3~[52.4, 65.3]}
+\newcommand{\WithinTenODsixfiftyVonePt}{59.3}
+\newcommand{\WithinTenTZeroSVone}{39.6~[34.2, 44.2]}
+\newcommand{\WithinTenTZeroSVonePt}{39.6}
+\newcommand{\WithinTenTXSVone}{44.7~[39.6, 49.0]}
+\newcommand{\WithinTenTXSVonePt}{44.7}
+\newcommand{\WithinTenOSVone}{59.8~[52.6, 65.9]}
+\newcommand{\WithinTenOSVonePt}{59.8}
+\newcommand{\MaeRatioDsixfiftyVone}{0.83~[0.80, 0.86]}
+\newcommand{\MaeRatioDsixfiftyVonePt}{0.83}
+\newcommand{\MedianRatioDsixfiftyVone}{0.85~[0.80, 0.89]}
+\newcommand{\MedianRatioDsixfiftyVonePt}{0.85}
+\newcommand{\MaeRatioDsixfiftyVthree}{0.95~[0.88, 1.04]}
+\newcommand{\MaeRatioDsixfiftyVthreePt}{0.95}
+\newcommand{\MaeRatioSVone}{0.83~[0.79, 0.86]}
+\newcommand{\MaeRatioSVonePt}{0.83}
+\newcommand{\MaeRatioDsixfiftyVfoura}{0.87~[0.72, 1.00]}
+\newcommand{\MaeRatioDsixfiftyVfouraPt}{0.87}
+\newcommand{\PninetyRatioDsixfiftyVone}{0.82~[0.78, 0.85]}
+\newcommand{\PninetyRatioDsixfiftyVonePt}{0.82}
+\newcommand{\WithinTenDiffDsixfiftyVone}{4.9~[3.6, 6.5]}
+\newcommand{\WithinTenDiffDsixfiftyVonePt}{4.9}
+\newcommand{\ShareDischargesPositiveDsixfiftyVone}{83.1~[78.5, 87.7]}
+\newcommand{\ShareDischargesPositiveDsixfiftyVonePt}{83.1}
+\newcommand{\IncTauFarDsixfiftyVone}{26.4~[21.5, 31.4]}
+\newcommand{\IncTauFarDsixfiftyVonePt}{26.4}
+\newcommand{\IncTauFarSVone}{33.4~[26.4, 40.4]}
+\newcommand{\IncTauFarSVonePt}{33.4}
+\newcommand{\IncTauFarDsixfiftyVthree}{7.7~[$-$10.9, 20.0]}
+\newcommand{\IncTauFarDsixfiftyVthreePt}{7.7}
+\newcommand{\MirnovAloneDsixfiftyVone}{8.4~[4.6, 11.9]}
+\newcommand{\MirnovAloneDsixfiftyVonePt}{8.4}
+\newcommand{\TXoverMirnovDsixfiftyVone}{27.5~[23.2, 31.6]}
+\newcommand{\TXoverMirnovDsixfiftyVonePt}{27.5}
 \newcommand{\IncDtenVone}{10.3~[7.0, 14.1]}
 \newcommand{\IncDtenVonePt}{10.3}
 \newcommand{\IncDsixfiftyVone}{33.6~[28.5, 38.0]}

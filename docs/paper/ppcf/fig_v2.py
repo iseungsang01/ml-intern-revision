@@ -612,6 +612,48 @@ def fig_limits():
     save(fig, "limits", data, toks)
 
 
+# ----------------------------------------------------------------------------------------------
+# 9. time since the last notch (B.82 part A)
+# ----------------------------------------------------------------------------------------------
+def fig_tau():
+    A = J("b82_localize.json")["part_A"]
+    classes = ["up to 100 ms", "above 100 and up to 300 ms", "above 300 ms", "no notch before"]
+    labels = ["up to\n100 ms", "100 to\n300 ms", "above\n300 ms", "no notch\nbefore"]
+    designs = [("V1", "V1 random", "#0072B2", "o"), ("V2", "V2 clusters held out", "#E69F00", "s"),
+               ("V3", "V3 rolling origin", "#009E73", "^"), ("V4a", "V4 fit to 31991", "#CC79A7", "D")]
+    fig, axes = plt.subplots(1, 2, figsize=(W, 6.3 * CM), sharey=True, layout="constrained")
+    data, toks = {}, []
+    for ax, r in zip(axes, ("D650", "S")):
+        for j, (d, lab, col, mk) in enumerate(designs):
+            t = A[d][r]["all"]["tau"]
+            for i, k in enumerate(classes):
+                cell = t.get(k, {}).get("TX/T0")
+                if cell is None:
+                    continue
+                p, lo, hi = ci(cell)
+                x = i + (j - 1.5) * 0.16
+                ax.plot([x, x], [lo, hi], color=col, lw=1.0)
+                filled = lo > 0 or hi < 0
+                ax.plot(x, p, marker=mk, ms=4, color=col, mfc=col if filled else "white", mec=col, ls="",
+                        label=lab if i == 0 else None)
+                data[f"{r}|{d}|{k}"] = [p, lo, hi]
+                toks += ["%.1f" % z for z in (p, lo, hi)]
+        ax.axhline(0, color="black", lw=0.6)
+        ax.set_xticks(range(4))
+        ax.set_xticklabels(labels)
+        ax.set_xlim(-0.5, 3.5)
+        ax.grid(axis="y", lw=0.3, color="#DDDDDD")
+        ax.set_xlabel("time since the last notch")
+        ax.set_title("(a) rule D650" if r == "D650" else "(b) rule S", loc="left", fontsize=8.5)
+    axes[0].set_ylabel("MSE reduction (%)")
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="outside right center", fontsize=7.5)
+    data["note"] = ("TX vs T0, target L5, 95 % cluster interval, filled marker: interval excludes zero; "
+                    "under S every row has a notch before it (no marker in that class)")
+    data["source"] = "b82 part_A.{V1,V2,V3,V4a}.{D650,S}.all.tau.*.TX/T0"
+    save(fig, "tau", data, toks)
+
+
 def main():
     info, med, q25, sel = select_example()
     print("example discharge (median):", med[1], "skill %.3f" % med[0], "candidates", info["candidates"],
@@ -625,6 +667,7 @@ def main():
     fig_trace(info, med, sel, "trace")
     fig_trace(info, q25, sel, "trace_q25")
     fig_limits()
+    fig_tau()
 
 
 if __name__ == "__main__":

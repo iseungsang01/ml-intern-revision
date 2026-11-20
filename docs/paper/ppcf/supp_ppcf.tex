@@ -63,7 +63,7 @@ Section, figure and table numbers without the prefix S refer to the main text. N
 those of the main text: T0 is the history-only estimator, TX the estimator of the paper,
 L5 the level of the following frames, F the reading of the frame; D10, D$d$, S and K$k$
 are the availability rules; V1 to V4 and M1 to M4 the validation designs. The labels B.73
-to B.81 are the registered batches; for each, the registration, the code, the result file
+to B.82 are the registered batches; for each, the registration, the code, the result file
 with every readout and the record of the independent recomputation are in the public
 repository named in the main text (\texttt{ces\_prediction/experiments/} and
 \texttt{docs/paper/}). The supplement of the earlier version of this work, with the
@@ -237,7 +237,10 @@ then given a stale history with those fitted under the rule. Table~\ref{tab:anch
 separates the six anchor scalars. Table~\ref{tab:vsreading} sets the estimate against the
 reading of the frame itself, Table~\ref{tab:fifths} gives the rolling-origin design by
 fifth of the shot list with a size-matched control, and Table~\ref{tab:timing} the
-computation time. Figure~\ref{fig:trace2} is the second example discharge.
+computation time. Table~\ref{tab:robustdesigns} gives the robust error measures under
+every design, Table~\ref{tab:change} the increment by the size of the change of the fast
+level since the anchor row, and Table~\ref{tab:seeds} the spread of the increment over the
+seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
 
 \begin{table}[tbp]
   \centering
@@ -291,6 +294,27 @@ computation time. Figure~\ref{fig:trace2} is the second example discharge.
   \TabTiming
 \end{table}
 
+\begin{table}[tbp]
+  \centering
+  \caption{\CapRobustDesigns}
+  \label{tab:robustdesigns}
+  \TabRobustDesigns
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapChange}
+  \label{tab:change}
+  \TabChange
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapSeeds}
+  \label{tab:seeds}
+  \TabSeeds
+\end{table}
+
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{figv2_trace_q25}
@@ -310,7 +334,36 @@ of the total; which sources are on; and the voltage of source NB1B. Table~\ref{t
 sets the registered readout, with the power columns as delivered, beside the refit without
 the 13 files whose columns for the second box are invalid. The implementation reported
 those files before any fit; the refit was run after the registered readout had been read
-and is therefore a sensitivity. The verdicts are the same.
+and is therefore a sensitivity. The verdicts are the same. Figure~\ref{fig:tau} draws the
+increment by the time since the last notch. Figure~\ref{fig:which} draws
+Table~\ref{tab:which} of the main text, and Table~\ref{tab:controlsother} gives the two
+controls for the other conditions and for MAST.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_tau}
+  \caption{The fast-channel increment by the time since the last beam notch
+  (Table~\ref{tab:tau} of the main text) by validation design, (a) with the history
+  0.65\,s old and (b) under the beam-modulation schedule. Filled: the 95\,\% cluster
+  interval excludes zero.}
+  \label{fig:tau}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_which}
+  \caption{The reductions of Table~\ref{tab:which} by validation design, (a) with the
+  history 0.65\,s old and (b) under the beam-modulation schedule, and (c) the controls of
+  Table~\ref{tab:controls}. Filled: the 95\,\% cluster interval excludes zero.}
+  \label{fig:which}
+\end{figure}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapControlsOther}
+  \label{tab:controlsother}
+  \TabControlsOther
+\end{table}
 
 \begin{table}[tbp]
   \centering
@@ -345,11 +398,27 @@ therefore not causal within a shot, and it is not used here.
 \section{Sparse CES and the limits: further tables}
 \label{sec:slimits}
 
-Table~\ref{tab:sparsedesigns} gives the increment by spacing of the CES values under
-every design. Table~\ref{tab:gate} is the registered test of the correlation between the
+Table~\ref{tab:sparse} gives the errors by spacing of the CES values under the random
+design and Table~\ref{tab:sparsedesigns} the increment under every design.
+Table~\ref{tab:blockdescr} describes the three blocks of shots from their inputs and
+values. Table~\ref{tab:gate} is the registered test of the correlation between the
 ECEI channels as a condition on the inputs (B.80), and
 Table~\ref{tab:correct} the variant that reads and corrects the value of the frame itself
 (B.77).
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapSparse}
+  \label{tab:sparse}
+  \TabSparse
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapBlockDescr}
+  \label{tab:blockdescr}
+  \TabBlockDescr
+\end{table}
 
 \begin{table}[tbp]
   \centering
@@ -417,7 +486,7 @@ as registered (a skill is a signed fraction; the main text prints 100 times the 
 its 95\,\% interval and the expectation. The complete lists, with the statements that
 hold, the intervals with discharges resampled and the readouts that carry no statement,
 are in the result files of the repository (\texttt{docs/paper/b73\_targets.md} to
-\texttt{b81\_controls.md}).
+\texttt{b82\_localize.md}).
 
 \begin{table}[tbp]
   \centering
@@ -486,6 +555,12 @@ and the controls of every design and rule were pooled again from the stored esti
 are equal. Over the test rows the correction that the permuted fit adds to the
 history-only estimate is several times smaller than that of TX and is almost uncorrelated
 with it, as it should be when the fit cannot see the fast inputs of the row.
+
+\paragraph{B.82 (where the increment arises; robust measures; specificity; seeds).} The
+time since the last notch was recomputed from the grid stamps and equals the batch's on
+every row; the increments by its classes, the robust measures of the random design, the
+pooled values of the specificity controls and the seed spread were recomputed from the
+stored estimates and are equal.
 
 \FloatBarrier
 \bibliographystyle{unsrtnat}

@@ -65,9 +65,16 @@
  {
   "kind": "table",
   "name": "\\TabControls",
-  "what": "permuted-input and anchor-row controls: B.81 per design (D650, S); B.78, B.79, B.77, B.76",
-  "source": "b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}; b78 main.V1|L5.all.K10; b79 main.V1|L5|common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; b76 main.M1|L5|common.all.controls",
-  "paper_map": "4.2 (main) / beside every table of fast inputs"
+  "what": "permuted-input and anchor-row controls per design under D650 and S (KSTAR head rules)",
+  "source": "b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}",
+  "paper_map": "4.2 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabControlsOther",
+  "what": "controls of the other conditions (sparse CES, beam scalars, correction, MAST)",
+  "source": "b78 main.V1|L5.all.K10; b79 main.V1|L5|common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; b76 main.M1|L5|common.all.controls",
+  "paper_map": "supplement"
  },
  {
   "kind": "table",
@@ -442,8 +449,414 @@
  },
  {
   "kind": "table",
+  "name": "\\TabStatBeightytwo",
+  "what": "registered statements of B.82 (where the increment sits; robust error measures; specificity)",
+  "source": "b82_localize.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabDataset",
+  "what": "the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources",
+  "source": "b82 part_E",
+  "paper_map": "sec. 2 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRobust",
+  "what": "robust error measures (MAE, median, p90, within 10/20 %) of T0, TX, O for V1 at D10, D650, S",
+  "source": "b82 part_B.V1.{D10,D650,S}",
+  "paper_map": "4.1 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRobustFull",
+  "what": "robust error measures for H, G, T0, TX, O, V1 at D10, D650, S",
+  "source": "b82 part_B.V1.{D10,D650,S}",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabTau",
+  "what": "increment by time since the last notch (V1, V2, V3, V4a; D650, S; TXN vs TN for V1)",
+  "source": "b82 part_A.*.{D650,S}.all.tau",
+  "paper_map": "4.2 or 4.3 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabTauRows",
+  "what": "rows per class of the time since the last notch, every design",
+  "source": "b82 part_A.*.tau.*.counts",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabSpecificity",
+  "what": "Mirnov in place of/added to the fast inputs, another discharge's inputs, single BES columns",
+  "source": "b82 part_C.{V1,V3,V4a}.{D650,S}",
+  "paper_map": "4.2 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabSeeds",
+  "what": "seed spread of the increment (V4a, V4b, V1 r2 pooled; D650, S)",
+  "source": "b82 part_D",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\SeedMinDsixfiftyVfoura",
+  "what": "smallest increment over ten seeds, D650, V4a (per cent)",
+  "source": "docs/paper/b82_localize.json",
+  "paper_map": "4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\SeedMaxDsixfiftyVfoura",
+  "what": "largest increment over ten seeds, D650, V4a (per cent)",
+  "source": "docs/paper/b82_localize.json",
+  "paper_map": "4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\SeedMinSVfoura",
+  "what": "smallest increment over ten seeds, S, V4a (per cent)",
+  "source": "docs/paper/b82_localize.json",
+  "paper_map": "4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\SeedMaxSVfoura",
+  "what": "largest increment over ten seeds, S, V4a (per cent)",
+  "source": "docs/paper/b82_localize.json",
+  "paper_map": "4.3"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabChange",
+  "what": "increment by thirds of the change since the anchor row (V1, V3; D650, S)",
+  "source": "b82 part_A.{V1,V3}.{D650,S}.all.c",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRobustDesigns",
+  "what": "robust measures TX vs T0 per design and rule, per-discharge skill",
+  "source": "b82 part_B.*",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroDtenVone",
+  "what": "share of rows within 10 % of the level, T0, D10, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroDtenVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXDtenVone",
+  "what": "share of rows within 10 % of the level, TX, D10, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXDtenVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenODtenVone",
+  "what": "share of rows within 10 % of the level, O, D10, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenODtenVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D10.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroDsixfiftyVone",
+  "what": "share of rows within 10 % of the level, T0, D650, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroDsixfiftyVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXDsixfiftyVone",
+  "what": "share of rows within 10 % of the level, TX, D650, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXDsixfiftyVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenODsixfiftyVone",
+  "what": "share of rows within 10 % of the level, O, D650, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenODsixfiftyVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroSVone",
+  "what": "share of rows within 10 % of the level, T0, S, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTZeroSVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.T0.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXSVone",
+  "what": "share of rows within 10 % of the level, TX, S, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenTXSVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.TX.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenOSVone",
+  "what": "share of rows within 10 % of the level, O, S, V1 (per cent)",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenOSVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.estimators.O.share within 10 %",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVone",
+  "what": "MAE(TX)/MAE(T0), D650, V1 (B1)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVonePt",
+  "what": "MAE(TX)/MAE(T0), D650, V1 (B1) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MedianRatioDsixfiftyVone",
+  "what": "median abs. error ratio, D650, V1 (B2)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.median absolute error ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MedianRatioDsixfiftyVonePt",
+  "what": "median abs. error ratio, D650, V1 (B2) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.median absolute error ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVthree",
+  "what": "MAE ratio, D650, V3 (B3)",
+  "source": "docs/paper/b82_localize.json part_B.V3.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVthreePt",
+  "what": "MAE ratio, D650, V3 (B3) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V3.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioSVone",
+  "what": "MAE ratio, S, V1 (B4)",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioSVonePt",
+  "what": "MAE ratio, S, V1 (B4) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.S.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVfoura",
+  "what": "MAE ratio, D650, V4a (B7)",
+  "source": "docs/paper/b82_localize.json part_B.V4a.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MaeRatioDsixfiftyVfouraPt",
+  "what": "MAE ratio, D650, V4a (B7) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V4a.D650.TX over T0.MAE ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PninetyRatioDsixfiftyVone",
+  "what": "90th-percentile abs. error ratio, D650, V1 (B8)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.p90 absolute error ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PninetyRatioDsixfiftyVonePt",
+  "what": "90th-percentile abs. error ratio, D650, V1 (B8) (point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.p90 absolute error ratio",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenDiffDsixfiftyVone",
+  "what": "share within 10 %, TX minus T0, D650, V1 (B5; percentage points) (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.share within 10 % difference",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\WithinTenDiffDsixfiftyVonePt",
+  "what": "share within 10 %, TX minus T0, D650, V1 (B5; percentage points) (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.TX over T0.share within 10 % difference",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\ShareDischargesPositiveDsixfiftyVone",
+  "what": "share of discharges with positive own skill, D650, V1 (B6) (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.per discharge.share of discharges with positive skill",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\ShareDischargesPositiveDsixfiftyVonePt",
+  "what": "share of discharges with positive own skill, D650, V1 (B6) (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_B.V1.D650.per discharge.share of discharges with positive skill",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarDsixfiftyVone",
+  "what": "increment on rows more than 300 ms after the last notch, D650, V1 (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_A.V1.D650.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarDsixfiftyVonePt",
+  "what": "increment on rows more than 300 ms after the last notch, D650, V1 (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_A.V1.D650.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarSVone",
+  "what": "increment on rows more than 300 ms after the last notch, S, V1 (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_A.V1.S.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarSVonePt",
+  "what": "increment on rows more than 300 ms after the last notch, S, V1 (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_A.V1.S.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarDsixfiftyVthree",
+  "what": "increment on rows more than 300 ms after the last notch, D650, V3 (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_A.V3.D650.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncTauFarDsixfiftyVthreePt",
+  "what": "increment on rows more than 300 ms after the last notch, D650, V3 (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_A.V3.D650.all.tau.above 300 ms.TX/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MirnovAloneDsixfiftyVone",
+  "what": "Mirnov in place of the fast inputs (TM vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_C.V1.D650.TM/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MirnovAloneDsixfiftyVonePt",
+  "what": "Mirnov in place of the fast inputs (TM vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_C.V1.D650.TM/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverMirnovDsixfiftyVone",
+  "what": "fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b82_localize.json part_C.V1.D650.TX/TM",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverMirnovDsixfiftyVonePt",
+  "what": "fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, point)",
+  "source": "docs/paper/b82_localize.json part_C.V1.D650.TX/TM",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "table",
   "name": "\\TabStatSummary",
-  "what": "count of registered statements per batch B.73-B.81: hold, do not hold, expectations met",
+  "what": "count of registered statements per batch B.73-B.82: hold, do not hold, expectations met",
   "source": "statements blocks of b73..b81 JSON (counted)",
   "paper_map": "supplement (replaces the nine statement tables)"
  },
@@ -457,7 +870,7 @@
  {
   "kind": "table",
   "name": "\\TabStatNotHeldB",
-  "what": "registered statements that do not hold (B.78-B.81)",
+  "what": "registered statements that do not hold (B.78-B.82)",
   "source": "statements blocks of the batch JSON (holds = false)",
   "paper_map": "supplement"
  },

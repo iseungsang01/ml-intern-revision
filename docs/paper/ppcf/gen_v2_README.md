@@ -36,7 +36,8 @@ This file is written by `make_tables_v2.py`; do not edit it by hand.
 | `\TabIncrementLadder` (caption `\CapIncrementLadder`) | increment along the whole delay ladder, every design, KSTAR and MAST | b75 main.*/L5/common.all.D*.TX/T0; b76 main.M*/L5/common.all.D*.TX/T0 | supplement (4.1, 4.3, 4.4) |
 | `\TabFifths` (caption `\CapFifths`) | V3 by scored fifth and the size-matched control V3c (D10, D650) | b75 v3c.*; designs.v3_fifths | 4.3 (main or supplement) |
 | `\TabWhich` (caption `\CapWhich`) | ECEI only, BES only, both; beam alone; both given beam; beam given both (D650, S, per design) | b75 main.{V1,V4a,V4b}.{D650,S}.{TE,TB}/T0 and main.*.{D650,S}.TX/T0; b81 main.{V2,V3}.{D650,S}.{TE,TB}/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX} | 4.2 (main) |
-| `\TabControls` (caption `\CapControls`) | permuted-input and anchor-row controls: B.81 per design (D650, S); B.78, B.79, B.77, B.76 | b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}; b78 main.V1/L5.all.K10; b79 main.V1/L5/common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; b76 main.M1/L5/common.all.controls | 4.2 (main) / beside every table of fast inputs |
+| `\TabControls` (caption `\CapControls`) | permuted-input and anchor-row controls per design under D650 and S (KSTAR head rules) | b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo} | 4.2 (main) |
+| `\TabControlsOther` (caption `\CapControlsOther`) | controls of the other conditions (sparse CES, beam scalars, correction, MAST) | b78 main.V1/L5.all.K10; b79 main.V1/L5/common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; b76 main.M1/L5/common.all.controls | supplement |
 | `\TabRefit` (caption `\CapRefit`) | B.79 main readout vs refit without the 13 files with invalid NBI-2 power columns | b79 refit_without_13_files.statements_beside_main.* | supplement (4.2) |
 | `\TabMastRmse` (caption `\CapMastRmse`) | MAST RMSE by delay (M1, M4): hold, GP, T0, TX, O, closed ratio form RT, RTa and its alpha | b76 main.{M1,M4}/L5/common.all.D*.rmse_eV; rta_coefficients.*.alpha.mean | 4.4 (main) |
 | `\TabMastCost` (caption `\CapMastCost`) | MAST cost of staleness, increment, recovered share, TX vs O by design and delay | b76 main.M*/L5/common.all.D{25,50,100,150}.{staleness T0,TX/T0,recovered share,TX/O} | 4.4 / supplement |
@@ -69,9 +70,19 @@ This file is written by `make_tables_v2.py`; do not edit it by hand.
 | `\TabStatBseventynine` (caption `\CapStatBseventynine`) | registered statements of B.79 (beam waveforms as inputs) | b79_beam_inputs.json statements.* | supplement (statement tables) |
 | `\TabStatBeighty` (caption `\CapStatBeighty`) | registered statements of B.80 (coherence of the ECEI channels) | b80_ecei_gate.json statements.* | supplement (statement tables) |
 | `\TabStatBeightyone` (caption `\CapStatBeightyone`) | registered statements of B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3) | b81_controls.json statements.* | supplement (statement tables) |
-| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.81: hold, do not hold, expectations met | statements blocks of b73..b81 JSON (counted) | supplement (replaces the nine statement tables) |
+| `\TabStatBeightytwo` (caption `\CapStatBeightytwo`) | registered statements of B.82 (where the increment sits; robust error measures; specificity) | b82_localize.json statements.* | supplement (statement tables) |
+| `\TabDataset` (caption `\CapDataset`) | the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources | b82 part_E | sec. 2 (main) |
+| `\TabRobust` (caption `\CapRobust`) | robust error measures (MAE, median, p90, within 10/20 %) of T0, TX, O for V1 at D10, D650, S | b82 part_B.V1.{D10,D650,S} | 4.1 (main) |
+| `\TabRobustFull` (caption `\CapRobustFull`) | robust error measures for H, G, T0, TX, O, V1 at D10, D650, S | b82 part_B.V1.{D10,D650,S} | supplement |
+| `\TabTau` (caption `\CapTau`) | increment by time since the last notch (V1, V2, V3, V4a; D650, S; TXN vs TN for V1) | b82 part_A.*.{D650,S}.all.tau | 4.2 or 4.3 (main) |
+| `\TabTauRows` (caption `\CapTauRows`) | rows per class of the time since the last notch, every design | b82 part_A.*.tau.*.counts | supplement |
+| `\TabSpecificity` (caption `\CapSpecificity`) | Mirnov in place of/added to the fast inputs, another discharge's inputs, single BES columns | b82 part_C.{V1,V3,V4a}.{D650,S} | 4.2 (main) |
+| `\TabSeeds` (caption `\CapSeeds`) | seed spread of the increment (V4a, V4b, V1 r2 pooled; D650, S) | b82 part_D | supplement |
+| `\TabChange` (caption `\CapChange`) | increment by thirds of the change since the anchor row (V1, V3; D650, S) | b82 part_A.{V1,V3}.{D650,S}.all.c | supplement |
+| `\TabRobustDesigns` (caption `\CapRobustDesigns`) | robust measures TX vs T0 per design and rule, per-discharge skill | b82 part_B.* | supplement |
+| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.82: hold, do not hold, expectations met | statements blocks of b73..b81 JSON (counted) | supplement (replaces the nine statement tables) |
 | `\TabStatNotHeld` (caption `\CapStatNotHeld`) | registered statements that do not hold (B.73-B.77) | statements blocks of the batch JSON (holds = false) | supplement |
-| `\TabStatNotHeldB` (caption `\CapStatNotHeldB`) | registered statements that do not hold (B.78-B.81) | statements blocks of the batch JSON (holds = false) | supplement |
+| `\TabStatNotHeldB` (caption `\CapStatNotHeldB`) | registered statements that do not hold (B.78-B.82) | statements blocks of the batch JSON (holds = false) | supplement |
 
 ## Prose macros (`gen_v2.tex`, end of file)
 
@@ -100,6 +111,54 @@ Naming: `Inc<Rule><Design>` = fast-channel increment (TX vs T0), `IncBeam` = TXN
 | `\TXvsOSVfouraPt` | TX against the frame's own reading under S, V4a (per cent, point) | docs/paper/b75_availability.json main.V4a/L5/S.all.S.TX/O |
 | `\TXvsOSVfourb` | TX against the frame's own reading under S, V4b (per cent, interval) | docs/paper/b75_availability.json main.V4b/L5/S.all.S.TX/O |
 | `\TXvsOSVfourbPt` | TX against the frame's own reading under S, V4b (per cent, point) | docs/paper/b75_availability.json main.V4b/L5/S.all.S.TX/O |
+| `\SeedMinDsixfiftyVfoura` | smallest increment over ten seeds, D650, V4a (per cent) | docs/paper/b82_localize.json |
+| `\SeedMaxDsixfiftyVfoura` | largest increment over ten seeds, D650, V4a (per cent) | docs/paper/b82_localize.json |
+| `\SeedMinSVfoura` | smallest increment over ten seeds, S, V4a (per cent) | docs/paper/b82_localize.json |
+| `\SeedMaxSVfoura` | largest increment over ten seeds, S, V4a (per cent) | docs/paper/b82_localize.json |
+| `\WithinTenTZeroDtenVone` | share of rows within 10 % of the level, T0, D10, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D10.estimators.T0.share within 10 % |
+| `\WithinTenTZeroDtenVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D10.estimators.T0.share within 10 % |
+| `\WithinTenTXDtenVone` | share of rows within 10 % of the level, TX, D10, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D10.estimators.TX.share within 10 % |
+| `\WithinTenTXDtenVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D10.estimators.TX.share within 10 % |
+| `\WithinTenODtenVone` | share of rows within 10 % of the level, O, D10, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D10.estimators.O.share within 10 % |
+| `\WithinTenODtenVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D10.estimators.O.share within 10 % |
+| `\WithinTenTZeroDsixfiftyVone` | share of rows within 10 % of the level, T0, D650, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D650.estimators.T0.share within 10 % |
+| `\WithinTenTZeroDsixfiftyVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D650.estimators.T0.share within 10 % |
+| `\WithinTenTXDsixfiftyVone` | share of rows within 10 % of the level, TX, D650, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D650.estimators.TX.share within 10 % |
+| `\WithinTenTXDsixfiftyVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D650.estimators.TX.share within 10 % |
+| `\WithinTenODsixfiftyVone` | share of rows within 10 % of the level, O, D650, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.D650.estimators.O.share within 10 % |
+| `\WithinTenODsixfiftyVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.D650.estimators.O.share within 10 % |
+| `\WithinTenTZeroSVone` | share of rows within 10 % of the level, T0, S, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.S.estimators.T0.share within 10 % |
+| `\WithinTenTZeroSVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.S.estimators.T0.share within 10 % |
+| `\WithinTenTXSVone` | share of rows within 10 % of the level, TX, S, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.S.estimators.TX.share within 10 % |
+| `\WithinTenTXSVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.S.estimators.TX.share within 10 % |
+| `\WithinTenOSVone` | share of rows within 10 % of the level, O, S, V1 (per cent) | docs/paper/b82_localize.json part_B.V1.S.estimators.O.share within 10 % |
+| `\WithinTenOSVonePt` | the same, point | docs/paper/b82_localize.json part_B.V1.S.estimators.O.share within 10 % |
+| `\MaeRatioDsixfiftyVone` | MAE(TX)/MAE(T0), D650, V1 (B1) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.MAE ratio |
+| `\MaeRatioDsixfiftyVonePt` | MAE(TX)/MAE(T0), D650, V1 (B1) (point) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.MAE ratio |
+| `\MedianRatioDsixfiftyVone` | median abs. error ratio, D650, V1 (B2) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.median absolute error ratio |
+| `\MedianRatioDsixfiftyVonePt` | median abs. error ratio, D650, V1 (B2) (point) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.median absolute error ratio |
+| `\MaeRatioDsixfiftyVthree` | MAE ratio, D650, V3 (B3) | docs/paper/b82_localize.json part_B.V3.D650.TX over T0.MAE ratio |
+| `\MaeRatioDsixfiftyVthreePt` | MAE ratio, D650, V3 (B3) (point) | docs/paper/b82_localize.json part_B.V3.D650.TX over T0.MAE ratio |
+| `\MaeRatioSVone` | MAE ratio, S, V1 (B4) | docs/paper/b82_localize.json part_B.V1.S.TX over T0.MAE ratio |
+| `\MaeRatioSVonePt` | MAE ratio, S, V1 (B4) (point) | docs/paper/b82_localize.json part_B.V1.S.TX over T0.MAE ratio |
+| `\MaeRatioDsixfiftyVfoura` | MAE ratio, D650, V4a (B7) | docs/paper/b82_localize.json part_B.V4a.D650.TX over T0.MAE ratio |
+| `\MaeRatioDsixfiftyVfouraPt` | MAE ratio, D650, V4a (B7) (point) | docs/paper/b82_localize.json part_B.V4a.D650.TX over T0.MAE ratio |
+| `\PninetyRatioDsixfiftyVone` | 90th-percentile abs. error ratio, D650, V1 (B8) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.p90 absolute error ratio |
+| `\PninetyRatioDsixfiftyVonePt` | 90th-percentile abs. error ratio, D650, V1 (B8) (point) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.p90 absolute error ratio |
+| `\WithinTenDiffDsixfiftyVone` | share within 10 %, TX minus T0, D650, V1 (B5; percentage points) (per cent, interval) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.share within 10 % difference |
+| `\WithinTenDiffDsixfiftyVonePt` | share within 10 %, TX minus T0, D650, V1 (B5; percentage points) (per cent, point) | docs/paper/b82_localize.json part_B.V1.D650.TX over T0.share within 10 % difference |
+| `\ShareDischargesPositiveDsixfiftyVone` | share of discharges with positive own skill, D650, V1 (B6) (per cent, interval) | docs/paper/b82_localize.json part_B.V1.D650.per discharge.share of discharges with positive skill |
+| `\ShareDischargesPositiveDsixfiftyVonePt` | share of discharges with positive own skill, D650, V1 (B6) (per cent, point) | docs/paper/b82_localize.json part_B.V1.D650.per discharge.share of discharges with positive skill |
+| `\IncTauFarDsixfiftyVone` | increment on rows more than 300 ms after the last notch, D650, V1 (per cent, interval) | docs/paper/b82_localize.json part_A.V1.D650.all.tau.above 300 ms.TX/T0 |
+| `\IncTauFarDsixfiftyVonePt` | increment on rows more than 300 ms after the last notch, D650, V1 (per cent, point) | docs/paper/b82_localize.json part_A.V1.D650.all.tau.above 300 ms.TX/T0 |
+| `\IncTauFarSVone` | increment on rows more than 300 ms after the last notch, S, V1 (per cent, interval) | docs/paper/b82_localize.json part_A.V1.S.all.tau.above 300 ms.TX/T0 |
+| `\IncTauFarSVonePt` | increment on rows more than 300 ms after the last notch, S, V1 (per cent, point) | docs/paper/b82_localize.json part_A.V1.S.all.tau.above 300 ms.TX/T0 |
+| `\IncTauFarDsixfiftyVthree` | increment on rows more than 300 ms after the last notch, D650, V3 (per cent, interval) | docs/paper/b82_localize.json part_A.V3.D650.all.tau.above 300 ms.TX/T0 |
+| `\IncTauFarDsixfiftyVthreePt` | increment on rows more than 300 ms after the last notch, D650, V3 (per cent, point) | docs/paper/b82_localize.json part_A.V3.D650.all.tau.above 300 ms.TX/T0 |
+| `\MirnovAloneDsixfiftyVone` | Mirnov in place of the fast inputs (TM vs T0), D650, V1 (per cent, interval) | docs/paper/b82_localize.json part_C.V1.D650.TM/T0 |
+| `\MirnovAloneDsixfiftyVonePt` | Mirnov in place of the fast inputs (TM vs T0), D650, V1 (per cent, point) | docs/paper/b82_localize.json part_C.V1.D650.TM/T0 |
+| `\TXoverMirnovDsixfiftyVone` | fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, interval) | docs/paper/b82_localize.json part_C.V1.D650.TX/TM |
+| `\TXoverMirnovDsixfiftyVonePt` | fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, point) | docs/paper/b82_localize.json part_C.V1.D650.TX/TM |
 | `\IncDtenVone` | fast-channel increment, D10, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDtenVonePt` | fast-channel increment, D10, V1, L5 (per cent, point) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDsixfiftyVone` | fast-channel increment, D650, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D650.TX/T0 |
@@ -355,6 +414,7 @@ Canvas widths are final: 16 cm for full-width figures, 10 cm for `figv2_sparse`;
 | `figv2_sparse` | RMSE of T0 and TX against the spacing of the CES values (V1), O as dashed line, equivalent spacing of TX at K10 (k' = 4.67 frames = 46.7 ms, cluster interval as error bar) | b78 `main.V1|L5.all.K*` | 4.5 |
 | `figv2_trace` | the example discharge in three 2 s windows (centred at the 25/50/75 % quantiles of its scored times): reported values, following level L5, T0 and TX under rule S (stored estimates), absent frames | caches `data/.b75/fits/V1_r2_k*__{T0,TX}__S__L5.npz`, `data/.b73/rows.npz`, `grid.npz` | 4.1 / 4.6 |
 | `figv2_trace_q25` | the same for the 25th-percentile discharge (second example) | same | supplement |
+| `figv2_tau` | increment TX vs T0 (%, cluster interval) by the time since the last notch, (a) D650, (b) S, one series per design V1, V2, V3, V4 (fit to 31991); filled = excludes zero | b82 `part_A.*.{D650,S}.all.tau` | 4.2/4.3 (main) |
 | `figv2_limits` | (a) increment under S by block of shots, TX vs T0 and TXN vs TN (V1); (b) first row after a notch over the level before, T_i, BES, ECEI, by block (after the fact, no interval) | b75, b79 `main.V1|L5|S.<block>.S`; `b75_last_block.md` section (7) | 4.6 |
 
 **Example discharge (selection rule, no hand picking).** Among the test discharges of unit group V1,

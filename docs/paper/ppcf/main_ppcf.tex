@@ -88,7 +88,11 @@ history 100\,ms old and Thomson scattering at the same radius, the reduction is
 \TimeMedian\,ms on one processor thread. Under the actual schedule of the beam modulation
 the reduction holds in three designs and is not established on the last block of shots of
 the campaign, for which we have no explanation; with
-the previous frame visible it is small and not established in time order.
+the previous frame visible it is small and not established in time order. Under the random
+design the gain is not confined to the frames after a beam notch and is present in the
+median error; magnetic signals that are not at the radius carry a quarter of it, so that
+specificity to the radius is not shown, and in the median the estimate stays less accurate
+than a reading of the frame once that exists.
 \end{abstract}
 
 \noindent\textbf{Keywords:} charge-exchange spectroscopy, ion temperature, pedestal,
@@ -187,7 +191,8 @@ the tests are registered tests on data that had been read before; no untouched d
 \label{sec:data:files}
 
 We use the \NFiles{} discharge files of the KSTAR 2022 campaign (shots 30801--32751) on a
-10\,ms grid; 639 discharges have more than one grid row. Each row holds nine BES
+10\,ms grid; 639 discharges have more than one grid row (Table~\ref{tab:dataset}). The
+plasma current, the field and the density are not in the files. Each row holds nine BES
 channels~\citep{Lampert2015CombinedHydrogen,KFE2026DiagnosticsDataUserGuide}, four ECEI
 channels~\citep{Yun2010DevelopmentKstar}, two Mirnov-coil signals (not used by the
 estimator of this paper), the time stamp and the CES values of one outboard chord at
@@ -198,12 +203,19 @@ different discharges, are collected in \Supp{sec:sdata}. We call it the pedestal
 sits at the pedestal top in every discharge. A second set of files gives, for the same
 rows, the power and voltage of the six neutral-beam sources (\SuppTab{tab:nbisources}).
 
+\begin{table}[tbp]
+  \centering
+  \caption{The data set: KSTAR, 2022 campaign, shots 30801--32751, the discharges with scored rows. Percentiles are over discharges or over rows as stated; the beam line leaves out the 13 files whose power columns of the second beam box are invalid.}
+  \label{tab:dataset}
+  \TabDataset
+\end{table}
+
 Raw streams of twelve discharges, set against the files, show that every fast-channel
 value of a row is a single raw sample at the time stamp, not an average over the CES
 frame, and that the stamp lies within about 2\,ms of the start of the 10\,ms exposure
 (\Supp{sec:sdata}). An estimate formed at the stamp of row $t$ therefore uses fast samples
 taken up to the start of the frame it estimates. The first and the last row of a file
-carry no CES value and are not grid rows; the grid has \NGridRows{} rows. In
+carry no CES value and are not grid rows; the grid of all files has \NGridRows{} rows. In
 \StuckShare{} of them, in \NStuckDischarges{} discharges, the four ECEI channels are
 constant for at least ten rows while the BES channels are not; these rows are kept, and
 what they change is given in \S\ref{sec:res:limits}.
@@ -451,7 +463,7 @@ sessions resampled for the intervals. T0 and TX are built as on KSTAR.
 \subsection{Registration and independent recomputation}
 \label{sec:methods:reg}
 
-Each batch of analyses of this paper (labelled B.73 to B.81 in the supplementary material
+Each batch of analyses of this paper (labelled B.73 to B.82 in the supplementary material
 and the repository) was registered before it was run: its statements, the rule by which
 each is judged, the expected outcome and the sentences that the paper would carry for
 either outcome were committed first. Choices that a registration left open were written
@@ -507,12 +519,25 @@ up to 0.3\,s and is flat beyond. Under this design about half of it is there wit
 six anchor scalars, and the other half comes with them, that is, with how far the fast
 level has moved since the newest visible CES value was taken (\SuppTab{tab:anchor}).
 
-Under the schedule and the random design the error of the estimate is that of a single
-reading: in row S of Table~\ref{tab:rules} the RMSE of TX and that of the reading of the
-frame itself, which has not been analysed at that time, differ by less than one eV, and
-the interval of their difference contains zero. This equality belongs to the random
-design; under the other designs the comparison goes either way
-(\SuppTab{tab:vsreading}). Figure~\ref{fig:trace} shows the
+Squared error gives weight to a few large errors, so Table~\ref{tab:robust} gives
+measures that do not. Under the random design and with the history \AgeMedianS\,s old the
+fast inputs lower the mean, the median and the 90th percentile of the absolute error by
+15 to 19 per cent, and five in six discharges have a positive increment of their own;
+under the rolling-origin design the ratio of the mean absolute errors has an interval that
+contains one (\SuppTab{tab:robustdesigns}). The absolute accuracy is modest: with a
+history that old fewer than half of the estimates lie within 10 per cent of the level, the
+figure of the requirement documents of \S\ref{sec:intro}, against two thirds with the
+previous frame visible.
+
+In RMSE the estimate under the schedule equals a single reading: in row S of
+Table~\ref{tab:rules} the RMSE of TX and that of the reading of the frame itself, which
+has not been analysed at that time, differ by less than one eV under the random design
+(other designs: \SuppTab{tab:vsreading}). The robust measures show that this equality comes
+from the large excursions of the reading (\S\ref{sec:data:value}): in the median error and
+in the share within 10 per cent the reading is closer to the level than the estimate under
+both rules with a stale history, in every design. With the previous frame visible the
+estimate is closer than the reading. The estimate bridges the time until the reading
+exists; it does not replace it. Figure~\ref{fig:trace} shows the
 two estimates in the example discharge: between notches the history-only estimate stays
 at the level of the block before, and the estimate with fast inputs follows the level.
 Formed one row at a time on one processor thread, the GP and the regression together take
@@ -530,6 +555,13 @@ supplies the history.
   \label{fig:trace}
 \end{figure}
 
+\begin{table}[tbp]
+  \centering
+  \caption{Error measures that do not square the error: KSTAR, random design V1, target L5, for the previous frame visible (D10), the history \AgeMedianS\,s old (D650) and the beam-modulation schedule (S). MAE: mean absolute error; the shares are of rows whose estimate lies within 10 and 20 per cent of the level. The rows ``TX over T0'' give ratios (shares: differences). Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes one (differences: zero).}
+  \label{tab:robust}
+  \TabRobust
+\end{table}
+
 \emph{Limit.} The history values are those of the offline analysis under every rule, and
 rule S assumes that the analysis takes no time.
 
@@ -539,8 +571,8 @@ rule S assumes that the analysis takes no time.
 \emph{Question: which diagnostic carries the increment, and is it more than what the
 beam power, known without any diagnostic, already gives?} The notch that makes the CES
 value late is an event of the beam, and BES light follows the beam. Table~\ref{tab:which}
-and Fig.~\ref{fig:which} separate the two halves of the fast inputs and add the beam
-scalars.
+separates the two halves of the fast inputs and adds the beam scalars (as a figure:
+\SuppFig{fig:which}).
 
 \begin{table}[tbp]
   \centering
@@ -554,16 +586,6 @@ scalars.
   \label{tab:which}
   \TabWhich
 \end{table}
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=\linewidth]{figv2_which}
-  \caption{The reductions of Table~\ref{tab:which} by validation design, (a) with the
-  history \AgeMedianS\,s old and (b) under the beam-modulation schedule, and (c) the
-  controls of Table~\ref{tab:controls}. Filled: the 95\,\% cluster interval excludes
-  zero.}
-  \label{fig:which}
-\end{figure}
 
 With the beam scalars given to both estimators and the history \AgeMedianS\,s old, the
 fast diagnostics still reduce the MSE under all four designs (column ``both, beam''); the
@@ -596,15 +618,55 @@ respected. The increment therefore rests on the fast samples of the present and 
 change since the newest CES value was taken, not on a memory of the state the discharge
 was in at that time.
 
+\emph{Is the gain a response to the notch?} After a notch the reported \Ti{} and the BES
+light are both low for a few frames (\S\ref{sec:res:limits}), and under the schedule every
+scored row follows a notch that the history has not seen. An estimator with BES input
+could gain by tracking that dip, which may be a response of the measurement to the beam
+and not a change of the plasma. Table~\ref{tab:tau} gives the increment by the time
+since the last notch (as a figure: \SuppFig{fig:tau}). Under the random design it is not confined to
+the rows after a notch: on rows more than 300\,ms after one the interval excludes zero
+under both rules, also after the beam scalars are given, and with the history
+\AgeMedianS\,s old it does so on rows with no notch before them in the discharge. Under
+the schedule the increment in the first 100\,ms after a notch is smaller than later, not
+larger. With the history \AgeMedianS\,s old the increment on the rows more than 300\,ms
+after a notch is not established under the rolling-origin and the chronological design,
+where it rests on the rows near a notch and on those with no notch before them.
+
+\emph{Is it specific to the radius?} Table~\ref{tab:specificity} gives three comparisons.
+Fast inputs taken from another discharge at the same time in the discharge give no
+reduction: the increment is not a pattern of the time in the discharge. The three radial
+columns of the BES array, each alone, give the same increment under the random design.
+The two Mirnov signals of the files, which are not at the radius, treated exactly like the
+fast inputs, carry an increment as well, about a quarter of the size under the random
+design. The estimator with the fast inputs has a lower MSE than the one with the Mirnov
+inputs under the random design; under the rolling-origin design with the history
+\AgeMedianS\,s old that difference is not established. By the rule registered beforehand we therefore do not claim that the
+increment is specific to the radius of the chord: ``co-located'' names where the channels
+are.
+
+\begin{table}[tbp]
+  \centering
+  \caption{The fast-channel increment by the time since the last beam notch (target L5), reduction of the MSE in per cent, with the history \AgeMedianS\,s old (D650) and under the beam-modulation schedule (S). ``No notch before'': rows with no absent frame earlier in their segment (they have no visible value under S). Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:tau}
+  \TabTau
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{Specificity (target L5), reduction of the MSE in per cent. Mirnov: seven scalars built from the two Mirnov signals of the files exactly as the fast scalars are built, in place of them (against T0), against them (TX against that estimator) and added to them (against TX). Other discharge: the fast scalars of each row replaced by those of another discharge at the same time in the discharge, against T0. BES columns: the BES half built from one radial column of the array alone, against T0. Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:specificity}
+  \TabSpecificity
+\end{table}
+
 \begin{table}[tbp]
   \centering
   \caption{The two controls (target L5), reduction of the MSE in per cent. ``Permuted'':
   the fast scalars shuffled over rows and the estimator refitted, against T0. ``At the
   anchor row'': the fast scalars taken at the row of the newest visible CES value instead
-  of row $t$, against T0. ``Present over anchor row'': TX against that estimator. Upper
-  block: the two head rules on KSTAR under every design; lower block: the controls
-  registered with other batches. Intervals: 95\,\%, shot clusters (MAST: sessions)
-  resampled; bold: the interval excludes zero.}
+  of row $t$, against T0. ``Present over anchor row'': TX against that estimator. The
+  two head rules on KSTAR under every design; the controls of the other conditions and of
+  MAST are in \SuppTab{tab:controlsother}. Intervals: 95\,\%, shot clusters resampled;
+  bold: the interval excludes zero.}
   \label{tab:controls}
   \TabControls
 \end{table}
@@ -650,7 +712,10 @@ equally many discharges drawn at random (\SuppTab{tab:fifths}): the statement fo
 design is one about the scored rows pooled. Under the beam-modulation schedule the increment is established
 under the random, the cluster and the rolling-origin design and not under the
 chronological design (\S\ref{sec:res:limits}). The whole ladder of delays under every
-design is in \SuppTab{tab:ladder}.
+design is in \SuppTab{tab:ladder}. The intervals do not include the variability of the
+fit. Over ten seeds of the regression the chronological increment with the history
+\AgeMedianS\,s old stays between 21 and 24 per cent; under the schedule its sign changes
+among the seeds (\SuppTab{tab:seeds}).
 
 \subsection{A second device}
 \label{sec:res:mast}
@@ -694,19 +759,8 @@ supplies the inputs, and both halves of the MAST data had been read in earlier b
 \emph{Question: if CES reported only every $k$-th frame, how much would the fast
 diagnostics make up for?} This is the same proposal with the CES value sparse instead of
 late: under rule K$k$ only frames whose index is a multiple of $k$ are visible, and the
-rows scored are those that no thinning keeps (Table~\ref{tab:sparse},
-Fig.~\ref{fig:sparse}).
-
-\begin{table}[tbp]
-  \centering
-  \caption{A CES value only every $k$-th frame: KSTAR, random design V1, target L5
-  (\NKRows{} rows, \NKDischarges{} discharges). Cost of sparseness: MSE of T0 at spacing
-  $k$ over its MSE at spacing one. Equivalent spacing $k'$: the spacing at which T0,
-  without fast inputs, has the MSE of TX at spacing $k$. Intervals: 95\,\%, shot clusters
-  resampled; bold: the interval excludes zero.}
-  \label{tab:sparse}
-  \TabSparse
-\end{table}
+rows scored are those that no thinning keeps (Fig.~\ref{fig:sparse},
+\SuppTab{tab:sparse}).
 
 \begin{figure}[tbp]
   \centering
@@ -720,8 +774,7 @@ Fig.~\ref{fig:sparse}).
 
 With a CES value every 100\,ms (K10) the estimator with fast inputs has the error that
 the history-only estimator would have with a value about every 47\,ms: under the random
-design the fast diagnostics are worth a CES that reports twice as often (column
-``equivalent $k'$''). The
+design the fast diagnostics are worth a CES that reports twice as often. The
 increment at this spacing is established under the random, the
 cluster and the rolling-origin design, and under the chronological design for one of the
 two fits (\SuppTab{tab:sparsedesigns}).
@@ -748,19 +801,6 @@ Giving the beam scalars does not change this. With the history at the fixed age 
   \TabBlocks
 \end{table}
 
-\begin{table}[tbp]
-  \centering
-  \caption{The three blocks of shots described from their inputs and values, read after
-  the fact (not registered, no estimator, no interval). Age: median age of the newest
-  visible value under S. Spearman: rank correlation of the change of the ECEI or BES
-  level since the newest visible value with the change of the \Ti{} level. Notch: the
-  value in the first row after an absent frame over the median of the five rows before.
-  ECEI channels: mean correlation between the four channels, median over discharges.
-  Scatter of O: median of $|O/\mathrm{L5} - 1|$.}
-  \label{tab:blockdescr}
-  \TabBlockDescr
-\end{table}
-
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{figv2_limits}
@@ -773,7 +813,7 @@ Giving the beam scalars does not change this. With the history at the fixed age 
 \end{figure}
 
 Read after the fact, the ECEI of the last block is another signal
-(Table~\ref{tab:blockdescr}, Fig.~\ref{fig:limits}b): its change since the newest visible
+(Fig.~\ref{fig:limits}b, \SuppTab{tab:blockdescr}): its change since the newest visible
 value does not go with the change of the \Ti{} level, it does not fall at a notch while
 \Ti{} and BES do in every block, and its four channels are less correlated with each
 other. The age of the history, the state of the second beam box and the rows with a
@@ -857,6 +897,10 @@ applied; each is judged by its own interval.
 estimator's inputs were fixed in an earlier batch on the same discharges; no untouched
 hold-out exists. The registered expectations that were not met are listed with the
 statements (\Supp{sec:sstatements}).
+\item \emph{Accuracy and specificity.} With a stale history fewer than half of the
+estimates lie within 10 per cent of the level, and a reading of the frame, once it exists,
+is closer in the median. The increment is not shown to be specific to the radius: magnetic
+signals away from it carry a quarter of it under the random design.
 \item \emph{Scope.} One chord, one campaign and one device for the sizes; MAST carries
 the direction only. Nothing was run on a plant control system.
 \end{itemize}
@@ -873,6 +917,8 @@ level estimate is established under random, cluster-blocked, rolling-origin and
 chronological validation on the scored rows of each design pooled (not in every part of
 the campaign), also when the beam waveforms are given; it needs the fast samples of the
 present, and BES and ECEI together.
+Under the random design it is not confined to the frames after a beam notch and is present
+in the median error; it is not shown to be specific to the radius.
 The same direction is found on MAST with Thomson scattering, and on KSTAR when the CES
 values are made sparse instead of late. The estimator is a Gaussian process and a boosted
 regression on two dozen scalars and runs in a few milliseconds. The proposal is not

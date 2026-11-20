@@ -229,6 +229,7 @@ B75, B76, B78, B79, B80 = ("b75_availability.json", "b76_mast_availability.json"
                            "b79_beam_inputs.json", "b80_ecei_gate.json")
 B73, B74, B77 = "b73_targets.json", "b74_exposure.json", "b77_correct.json"
 B81 = "b81_controls.json"
+B82 = "b82_localize.json"
 
 
 def shot_tok(s, src, path):
@@ -591,15 +592,27 @@ def tab_controls():
         for r in ("D650", "S"):
             c = b1["main"][d][r]
             p = f"main.{d}.{r}"
-            rows.append(["KSTAR, head rules" if (d == "V1" and r == "D650") else "", design_label(d) if r == "D650" else "", r,
-                         "TX vs T0", pct(c["TXp/T0"], src_of(B81), p + ".TXp/T0", "stack"),
+            rows.append([design_label(d) if r == "D650" else "", r,
+                         pct(c["TXp/T0"], src_of(B81), p + ".TXp/T0", "stack"),
                          pct(c["TXo/T0"], src_of(B81), p + ".TXo/T0", "stack"),
                          pct(c["TX/TXo"], src_of(B81), p + ".TX/TXo", "stack")])
-    rows.append("MID")
+    head = [r" & & fast inputs & fast inputs at & present over \\",
+            r"design & rule & permuted & the anchor row & anchor row \\"]
+    body = tabular("@{}llccc@{}", head, rows, "footnotesize", "5pt")
+    cap = (r"The two controls beside the fast inputs (target L5), reduction of the MSE in per cent, every design "
+           r"under the history 0.65~s old (D650, common set) and the beam-modulation schedule (S, S set). "
+           r"``Permuted'': the fast inputs shuffled over rows and the estimator refitted; the reduction against T0 "
+           r"should be zero. ``At the anchor row'': the fast inputs taken at the row of the newest visible CES value "
+           r"instead of row $t$; ``present over anchor row'': TX against that estimator. Intervals: 95 \%, shot "
+           r"clusters resampled; bold: the interval excludes zero.")
+    emit("Controls", body, cap, "permuted-input and anchor-row controls per design under D650 and S (KSTAR head rules)",
+         "b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}", "4.2 (main)")
+    rows = []
     b8 = J(B78)
     c = b8["main"]["V1|L5"]["all"]["K10"]
     p = "main.V1|L5.all.K10"
-    rows.append(["sparse CES (a value every tenth frame)", design_label("V1"), "K10", "TX vs T0", pct(c["TXp/T0"], src_of(B78), p + ".TXp/T0", "stack"),
+    rows.append(["sparse CES (a value every tenth frame)", design_label("V1"), "K10", "TX vs T0",
+                 pct(c["TXp/T0"], src_of(B78), p + ".TXp/T0", "stack"),
                  pct(c["TXo/T0"], src_of(B78), p + ".TXo/T0", "stack"), pct(c["TX/TXo"], src_of(B78), p + ".TX/TXo", "stack")])
     b9 = J(B79)
     c = b9["main"]["V1|L5|common"]["all"]["D650"]
@@ -617,21 +630,17 @@ def tab_controls():
     p = "main.M1|L5|common.all.controls"
     rows.append(["MAST (Thomson)", MLAB["M1"], "D100", "TX vs T0", pct(c["TXp/T0"], src_of(B76), p + ".TXp/T0", "stack"),
                  pct(c["TXo/T0"], src_of(B76), p + ".TXo/T0", "stack"), pct(c["TX/TXo"], src_of(B76), p + ".TX/TXo", "stack")])
+    rows = [[r"\parbox[t]{3.1cm}{\raggedright " + r[0] + r"\strut}"] + r[1:] for r in rows]
     head = [r" & & & & fast inputs & fast inputs at & present over \\",
             r"condition & design & rule & comparison & permuted & the anchor row & anchor row \\"]
-    rows = [[r"\parbox[t]{3.1cm}{\raggedright " + r[0] + r"\strut}"] + r[1:] if isinstance(r, list) and r[0] else r
-            for r in rows]
     body = tabular("@{}llllccc@{}", head, rows, "footnotesize", "3pt")
-    cap = (r"The two controls beside the fast inputs (target L5), reduction of the MSE in per cent. Upper block: "
-           r"every design under the history 0.65~s old (D650, common set) and the beam-modulation schedule "
-           r"(S, S set). Lower block: the same controls in the other conditions of the paper. ``Permuted'': the fast "
-           r"inputs (for TN: the beam scalars) shuffled over rows and the estimator refitted; the reduction against "
-           r"the same reference should be zero. ``At the anchor row'': the fast inputs taken at the row of the "
-           r"newest visible CES value instead of row $t$; ``present over anchor row'': TX against that estimator. "
-           r"Intervals: 95 \%, shot clusters (MAST: sessions) resampled; bold: the interval excludes zero.")
-    emit("Controls", body, cap, "permuted-input and anchor-row controls: B.81 per design (D650, S); B.78, B.79, B.77, B.76",
-         "b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}; b78 main.V1|L5.all.K10; b79 main.V1|L5|common.all.D650.{TXNp/TN,TNp/T0}; "
-         "b77 designs.V1.all.CXp/C0; b76 main.M1|L5|common.all.controls", "4.2 (main) / beside every table of fast inputs")
+    cap = (r"The same two controls in the other conditions of the paper (target L5), reduction of the MSE in per "
+           r"cent: a CES value every tenth frame, the beam scalars, correcting the reading of the frame, and MAST. "
+           r"For TN the beam scalars are the inputs permuted. Intervals: 95 \%, shot clusters (MAST: sessions) "
+           r"resampled; bold: the interval excludes zero.")
+    emit("ControlsOther", body, cap, "controls of the other conditions (sparse CES, beam scalars, correction, MAST)",
+         "b78 main.V1|L5.all.K10; b79 main.V1|L5|common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; "
+         "b76 main.M1|L5|common.all.controls", "supplement")
 
 
 def stat_val(v, src, path):
@@ -1495,7 +1504,8 @@ STAT_BATCHES = [("B.73", B73, "previous frame visible: targets, designs, network
                 ("B.78", B78, "a CES value every k-th frame"),
                 ("B.79", B79, "beam waveforms as inputs"),
                 ("B.80", B80, "coherence of the ECEI channels"),
-                ("B.81", B81, "controls; ECEI and BES halves under V2, V3")]
+                ("B.81", B81, "controls; ECEI and BES halves under V2, V3"),
+                ("B.82", B82, "where the increment sits; robust errors; specificity")]
 
 
 def expectation(v):
@@ -1528,16 +1538,17 @@ def tab_stat_summary():
         rows.append([lab, esc(what, "make_tables_v2.py", "STAT_BATCHES text")]
                     + [cnt(x, s_, "statements (counted)", "count of statements") if x >= 100 else str(x) for x in vals])
     rows.append("MID")
-    rows.append(["all", ""] + [str(x) for x in tot])
+    rows.append(["all", ""] + [cnt(x, "make_tables_v2.py", "sum over the statements blocks of b73..b82", "count of statements")
+                               if x >= 100 else str(x) for x in tot])
     head = [r" & & regis- & & do not & definite & expectation \\",
             r"batch & question & tered & hold & hold & expectation & met \\"]
     body = tabular("@{}llrrrrr@{}", head, rows, "footnotesize", "4.5pt")
-    cap = (r"The registered statements of batches B.73 to B.81, counted from the result files: how many were "
+    cap = (r"The registered statements of batches B.73 to B.82, counted from the result files: how many were "
            r"registered, how many hold and do not hold by the registered rule, how many had a definite registered "
            r"expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements "
            r"that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that "
            r"hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.")
-    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.81: hold, do not hold, expectations met",
+    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.82: hold, do not hold, expectations met",
          "statements blocks of b73..b81 JSON (counted)", "supplement (replaces the nine statement tables)")
     return tot
 
@@ -1587,7 +1598,7 @@ def tab_stat_not_held():
         n.append(len(rows))
         body = tabular("@{}lllll@{}", head, rows, "footnotesize", "3pt")
         if name == "StatNotHeld":
-            cap = (r"The registered statements of B.73 to B.81 that do not hold (" + batches[0][0] + " to "
+            cap = (r"The registered statements of B.73 to B.82 that do not hold (" + batches[0][0] + " to "
                    + batches[-1][0] + r"). Values as registered: skills are signed fractions, not per cent; 95 \% "
                    r"intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, "
                    r"with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and "
@@ -1597,6 +1608,354 @@ def tab_stat_not_held():
         emit(name, body, cap, "registered statements that do not hold (" + batches[0][0] + "-" + batches[-1][0] + ")",
              "statements blocks of the batch JSON (holds = false)", "supplement")
     return n
+
+
+# ----------------------------------------------------------------------------------------------
+# 10d. B.82: data set, robust errors, time since the notch, specificity, seeds, change since the anchor row
+# ----------------------------------------------------------------------------------------------
+TAU = ["up to 100 ms", "above 100 and up to 300 ms", "above 300 ms", "no notch before"]
+TAU_LAB = ["up to 100 ms", "100 to 300 ms", "above 300 ms", "no notch before"]
+
+
+def ratio_parts(cell, src, path, ref=1.0):
+    """Ratio with two decimals and its cluster interval; bold when the interval excludes ref (one)."""
+    k = iv_key(cell)
+    lo, hi = cell[k]
+    pt = fnum(cell["point"], "%.2f", src, path + ".point", "ratio, two decimals")
+    a = fnum(lo, "%.2f", src, f"{path}.{k}[0]", f"ratio, two decimals ({k} interval)")
+    b = fnum(hi, "%.2f", src, f"{path}.{k}[1]", f"ratio, two decimals ({k} interval)")
+    if (lo > ref and hi > ref) or (lo < ref and hi < ref):
+        pt = r"\textbf{" + pt + "}"
+    return pt, f"[{a}, {b}]"
+
+
+def ratio(cell, src, path, mode="stack"):
+    if cell is None:
+        return "--"
+    p = ratio_parts(cell, src, path)
+    return stack(p) if mode == "stack" else inline(p)
+
+
+def share_pct(v, src, path):
+    """A share printed as per cent, one decimal."""
+    return fnum(v, "%.1f", src, path, "100 x share, one decimal", 100)
+
+
+def tab_dataset():
+    e = J(B82)["part_E"]
+    s_ = src_of(B82)
+
+    def trio(d, path, fmt="%.0f", tr="rounded to integer", scale=1.0, thousands=False):
+        out = []
+        for q in ("10", "50", "90"):
+            v = d[q] * scale
+            if thousands:
+                t = f"{v:,.0f}"
+                reg(t, s_, f"{path}.{q}", tr)
+                out.append(t.replace(",", "{,}"))
+            else:
+                out.append(fnum(d[q], fmt, s_, f"{path}.{q}", tr, scale))
+        return " / ".join(out)
+
+    bm = e["beam"]
+    srcs = bm["share_of_grid_rows_by_sources_on_all_d1_discharges"]
+    rows = [
+        ["discharges", cnt(e["d1_discharges"], s_, "part_E.d1_discharges")],
+        ["grid rows (10 ms, first and last row of each file left out)", cnt(e["grid_rows_of_d1_discharges"], s_, "part_E.grid_rows_of_d1_discharges")],
+        ["grid rows per discharge (10th / 50th / 90th percentile)", trio(e["grid_rows_per_discharge"], "part_E.grid_rows_per_discharge")],
+        ["absent steps per discharge (10th / 50th / 90th percentile)", trio(e["absent_steps_per_discharge"], "part_E.absent_steps_per_discharge")
+         + "; total " + cnt(e["absent_steps_total"], s_, "part_E.absent_steps_total") + ", none in "
+         + cnt(e["discharges_without_absent_step"], s_, "part_E.discharges_without_absent_step") + " discharges"],
+        [r"reported $T_i$ (eV; 10th / 50th / 90th percentile)", trio(e["reported_Ti_eV_over_d1_rows"], "part_E.reported_Ti_eV_over_d1_rows", thousands=True)],
+        ["following level L5 (eV; 10th / 50th / 90th percentile)", trio(e["L5_eV_over_d1_rows"], "part_E.L5_eV_over_d1_rows", thousands=True)],
+        [r"grid rows without a usable $T_i$", share_pct(e["share_of_grid_rows_without_usable_Ti"], s_, "part_E.share_of_grid_rows_without_usable_Ti") + r"\,\%"],
+        [r"total beam power while a source is on (MW; 10th / 50th / 90th percentile)$^{a}$",
+         trio(bm["total_power_MW_over_grid_rows_with_a_source_on_outside_13_files"],
+              "part_E.beam.total_power_MW_over_grid_rows_with_a_source_on_outside_13_files", "%.2f", "MW, two decimals")],
+        ["grid rows by number of beam sources on (0 / 1 / 2 / 3 / 4 / 5), \\%",
+         " / ".join(share_pct(srcs[k], s_, f"part_E.beam.share_of_grid_rows_by_sources_on_all_d1_discharges.{k}") for k in ("0", "1", "2", "3", "4", "5"))],
+        ["plasma current, toroidal field, density", "not in the files"],
+    ]
+    rows = [[r"\parbox[t]{8.6cm}{\raggedright " + r[0] + r"\strut}", r[1]] for r in rows]
+    head = [r"quantity & value \\"]
+    body = tabular("@{}ll@{}", head, rows, "footnotesize", "5pt")
+    n13 = len(bm["files_left_out_of_that_line"])
+    reg(str(n13), s_, "part_E.beam.files_left_out_of_that_line (length)", "count")
+    for sh in ("30801", "32751"):
+        reg(sh, "PAPER_DESIGN.md / DERIVED", "campaign shot range", "shot number")
+    reg("2022", "PAPER_DESIGN.md / DERIVED", "campaign year", "year")
+    cap = (r"The data: the 2022 campaign of KSTAR, shots 30801 to 32751, the discharges of the D1 definition "
+           r"(the first and last row of each file and values above 3 keV or held from the previous row are not "
+           r"used). $^{a}$Without the " + str(n13) + r" earliest files, whose NBI-2 power columns are invalid.")
+    reg("3", "PAPER_DESIGN.md", "cut at 3 keV", "definition")
+    emit("Dataset", body, cap, "the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources",
+         "b82 part_E", "sec. 2 (main)")
+
+
+ROB_EST = [("H", "hold"), ("G", "causal GP"), ("T0", "T0"), ("TX", "TX"), ("O", "O, own reading")]
+ROB_M = [("MAE", "eV"), ("median absolute error", "eV"), ("p90 absolute error", "eV"),
+         ("share within 10 %", "share"), ("share within 20 %", "share")]
+ROB_R = ["MAE ratio", "median absolute error ratio", "p90 absolute error ratio",
+         "share within 10 % difference", "share within 20 % difference"]
+
+
+def tab_robust(full=False):
+    b = J(B82)["part_B"]
+    s_ = src_of(B82)
+    rows = []
+    for r in ("D10", "D650", "S"):
+        c = b["V1"][r]
+        p = f"part_B.V1.{r}"
+        cc = c["counts"]
+        rows.append(r"\multicolumn{7}{@{}l}{\textit{" + (r + (" (S set" if r == "S" else " (common set")) + ", "
+                    + cnt(cc["rows"], s_, p + ".counts.rows") + r" rows)}} \\")
+        for e, lab in ROB_EST:
+            if e in ("H", "G") and not full:
+                continue
+            em = c["estimators"][e]
+            row = [lab, ev(c["rmse_eV"][e], s_, f"{p}.rmse_eV.{e}")]
+            for m, kind in ROB_M:
+                v = em[m]["point"]
+                row.append(ev(v, s_, f"{p}.estimators.{e}.{m}.point") if kind == "eV"
+                           else share_pct(v, s_, f"{p}.estimators.{e}.{m}.point"))
+            rows.append(row)
+        t = c["TX over T0"]
+        rows.append([r"TX / T0", ""] + [ratio(t[k], s_, f"{p}.TX over T0.{k}") for k in ROB_R[:3]]
+                    + [pct(t[k], s_, f"{p}.TX over T0.{k}", "stack") for k in ROB_R[3:]])
+        if r != "S":
+            rows.append("MID")
+    head = [r" & RMSE & MAE & median & 90th pct. & within & within \\",
+            r"estimator & (eV) & (eV) & abs. error (eV) & abs. error (eV) & 10\,\% & 20\,\% \\"]
+    body = tabular("@{}lrcccccc@{}".replace("cccccc", "ccccc"), head, rows, "footnotesize", "4pt")
+    cap = (r"Error measures beside the MSE, random design V1, target L5: RMSE, mean and median absolute error, "
+           r"90th percentile of the absolute error, and the share of rows within 10 and 20 \% of the level (per "
+           r"cent; points, mean over the three re-partitions). Row ``TX / T0'': the ratios of the three absolute "
+           r"error measures (bold: the interval excludes one) and the differences of the two shares in percentage "
+           r"points (bold: the interval excludes zero). Intervals: 95 \%, shot clusters resampled.")
+    if full:
+        cap = cap.replace("Error measures beside the MSE,", "Error measures beside the MSE for every estimator (hold and causal GP included),")
+        emit("RobustFull", body, cap, "robust error measures for H, G, T0, TX, O, V1 at D10, D650, S",
+             "b82 part_B.V1.{D10,D650,S}", "supplement")
+        return
+    emit("Robust", body, cap, "robust error measures (MAE, median, p90, within 10/20 %) of T0, TX, O for V1 at D10, D650, S",
+         "b82 part_B.V1.{D10,D650,S}", "4.1 (main)")
+
+
+def tau_cell(cell, key, src, path):
+    if cell is None or key not in cell:
+        return "--"
+    return pct(cell[key], src, f"{path}.{key}", "stack")
+
+
+def tab_tau():
+    a = J(B82)["part_A"]
+    s_ = src_of(B82)
+    rows = []
+    for r in ("D650", "S"):
+        for d in ("V1", "V2", "V3", "V4a"):
+            t = a[d][r]["all"]["tau"]
+            p = f"part_A.{d}.{r}.all.tau"
+            rows.append([r if d == "V1" else "", design_label(d).replace("V4 chronological, fit to", "V4, fit to"), "TX vs T0"]
+                        + [tau_cell(t.get(k), "TX/T0", s_, f"{p}.{k}") for k in TAU])
+        t = a["V1"][r]["all"]["tau"]
+        rows.append(["", design_label("V1"), "TXN vs TN"]
+                    + [tau_cell(t.get(k), "TXN/TN", s_, f"part_A.V1.{r}.all.tau.{k}") for k in TAU])
+        rows.append(["", r"\textit{scored rows, V1}", ""]
+                    + [(cnt(t[k]["counts"]["rows"], s_, f"part_A.V1.{r}.all.tau.{k}.counts.rows")
+                        if k in t and "rows" in t[k].get("counts", {}) and "TX/T0" in t[k] else "--") for k in TAU])
+        if r == "D650":
+            rows.append("MID")
+    head = [r" & & & \multicolumn{4}{c}{time since the last notch} \\", r"\cmidrule(lr){4-7}",
+            r"rule & design & comparison & " + " & ".join(TAU_LAB) + r" \\"]
+    body = tabular("@{}lllcccc@{}", head, rows, "footnotesize", "3pt")
+    cap = (r"Where the increment sits: reduction of the MSE in per cent by the fast inputs (TX against T0; for V1 "
+           r"also with the beam scalars given, TXN against TN), target L5, by the time since the last absent frame "
+           r"(beam notch) at row $t$, a class defined from the inputs. D650 on the common set, S on the S set; "
+           r"under S every row has a notch before it. Rows per class for the other designs: table "
+           r"\ref{tab:taurows}. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.")
+    emit("Tau", body, cap, "increment by time since the last notch (V1, V2, V3, V4a; D650, S; TXN vs TN for V1)",
+         "b82 part_A.*.{D650,S}.all.tau", "4.2 or 4.3 (main)")
+    rows = []
+    for r in ("D650", "S"):
+        for d in ("V1", "V2", "V3", "V4a", "V4b"):
+            t = a[d][r]["all"]["tau"]
+            p = f"part_A.{d}.{r}.all.tau"
+            rows.append([r if d == "V1" else "", design_label(d)]
+                        + [(cnt(t[k]["counts"]["rows"], s_, f"{p}.{k}.counts.rows")
+                            if k in t and "TX/T0" in t[k] else "--") for k in TAU])
+        if r == "D650":
+            rows.append("MID")
+    head = [r" & & \multicolumn{4}{c}{time since the last notch} \\", r"\cmidrule(lr){3-6}",
+            r"rule & design & " + " & ".join(TAU_LAB) + r" \\"]
+    body = tabular("@{}llrrrr@{}", head, rows, "footnotesize", "5pt")
+    cap = r"Scored rows per class of the time since the last notch (target L5), by design and rule."
+    emit("TauRows", body, cap, "rows per class of the time since the last notch, every design", "b82 part_A.*.tau.*.counts",
+         "supplement")
+
+
+SPEC = [("TM/T0", r"Mirnov vs T0"), ("TX/TM", r"fast vs Mirnov"), ("TXM/TX", r"Mirnov added"),
+        ("TXs/T0", r"other discharge"), ("TBi/T0", "BES column 05"), ("TBm/T0", "BES column 06"),
+        ("TBo/T0", "BES column 07")]
+
+
+def tab_specificity():
+    c_ = J(B82)["part_C"]
+    s_ = src_of(B82)
+    rows = []
+    for d in ("V1", "V3", "V4a"):
+        for r in ("D650", "S"):
+            c = c_[d][r]
+            p = f"part_C.{d}.{r}"
+            rows.append([design_label(d).replace("V4 chronological, fit to", "V4, fit to") if r == "D650" else "", r]
+                        + [pct(c[k], s_, f"{p}.{k}", "stack") for k, _ in SPEC])
+    head = [r" & & TM & TX & TXM & TXs & \multicolumn{3}{c}{one BES column alone over T0} \\",
+            r"\cmidrule(lr){7-9}",
+            r"design & rule & vs T0 & vs TM & vs TX & vs T0 & 05 & 06 & 07 \\"]
+    body = tabular("@{}llccccccc@{}", head, rows, "footnotesize", "2.6pt")
+    cap = (r"Specificity of the fast inputs, target L5, reduction of the MSE in per cent. TM: T0 with seven "
+           r"Mirnov scalars in place of the fast inputs; TX vs TM: the fast inputs against Mirnov; TXM vs TX: "
+           r"Mirnov added to the fast inputs; TXs: TX with the fast and anchor inputs taken from another discharge "
+           r"at the same frame index; BES column 05, 06, 07: T0 with the seven scalars of one radial BES column "
+           r"(channel names; their radii are not verified). Intervals: 95 \%, shot clusters resampled; bold: the "
+           r"interval excludes zero.")
+    for x in ("05", "06", "07"):
+        reg(x, s_.replace(".json", ".md"), "estimator definitions (BES column names)", "verbatim")
+    emit("Specificity", body, cap, "Mirnov in place of/added to the fast inputs, another discharge's inputs, single BES columns",
+         "b82 part_C.{V1,V3,V4a}.{D650,S}", "4.2 (main)")
+
+
+def tab_seeds():
+    d_ = J(B82)["part_D"]
+    s_ = src_of(B82)
+    rows = []
+    for r in ("D650", "S"):
+        for u, lab in (("V4a", design_label("V4a")), ("V4b", design_label("V4b")), ("V1 r2 pooled (five units)", "V1, re-partition r2 (five units)")):
+            c = d_[r][u]
+            p = f"part_D.{r}.{u}"
+            rows.append([r if u == "V4a" else "", lab,
+                         fnum(c["registered_seed_20261116"], "%.1f", s_, p + ".registered_seed_20261116", "100 x skill, one decimal", 100),
+                         fnum(c["min"], "%.1f", s_, p + ".min", "100 x skill, one decimal", 100),
+                         fnum(c["median"], "%.1f", s_, p + ".median", "100 x skill, one decimal", 100),
+                         fnum(c["max"], "%.1f", s_, p + ".max", "100 x skill, one decimal", 100),
+                         fnum(c["sd_ddof1"], "%.1f", s_, p + ".sd_ddof1", "100 x sd, one decimal", 100),
+                         "yes" if c["sign_changes_among_the_ten_seeds"] else "no"])
+        if r == "D650":
+            rows.append("MID")
+    head = [r" & & registered & \multicolumn{4}{c}{ten other seeds} & sign \\", r"\cmidrule(lr){4-7}",
+            r"rule & unit & seed & smallest & median & largest & sd & changes \\"]
+    body = tabular("@{}llrrrrrc@{}", head, rows, "footnotesize", "4pt")
+    reg("20261116", "PAPER_DESIGN.md", "sec. 6 random_state", "verbatim")
+    cap = (r"Spread of the fast-channel increment (TX against T0, per cent, target L5) over the random seed of the "
+           r"boosted regression: the registered seed 20261116 and ten other seeds, refitted on the same rows; sd in "
+           r"percentage points. ``Sign changes'': whether the ten seeds disagree in sign.")
+    emit("Seeds", body, cap, "seed spread of the increment (V4a, V4b, V1 r2 pooled; D650, S)", "b82 part_D", "supplement")
+    for r, rn in (("D650", "Dsixfifty"), ("S", "S")):
+        c = d_[r]["V4a"]
+        p = f"part_D.{r}.V4a"
+        macro("SeedMin" + rn + "Vfoura", fnum(c["min"], "%.1f", s_, p + ".min", "100 x skill, one decimal", 100),
+              f"smallest increment over ten seeds, {r}, V4a (per cent)", s_, "4.3")
+        macro("SeedMax" + rn + "Vfoura", fnum(c["max"], "%.1f", s_, p + ".max", "100 x skill, one decimal", 100),
+              f"largest increment over ten seeds, {r}, V4a (per cent)", s_, "4.3")
+
+
+def tab_change():
+    a = J(B82)["part_A"]
+    s_ = src_of(B82)
+    rows = []
+    thirds = ["lowest third", "middle third", "highest third"]
+    for d in ("V1", "V3"):
+        for r in ("D650", "S"):
+            c = a[d][r]["all"]["c"]
+            p = f"part_A.{d}.{r}.all.c"
+            cells = []
+            for k in thirds:
+                cell = c[k]
+                pt, ci_ = pct_parts(cell["TX/T0"], s_, f"{p}.{k}.TX/T0")
+                n = cnt(round(cell["counts"]["rows"]), s_, f"{p}.{k}.counts.rows", "rows, mean over the re-partitions, rounded")
+                cells.append(r"\begin{tabular}[t]{@{}c@{}}" + pt + r"\\[-1.5pt]{\scriptsize " + ci_ + r"}\\[-2pt]{\tiny " + n + r" rows}\end{tabular}")
+            cells.append(pct(c["highest third minus lowest third"]["TX/T0"], s_, f"{p}.highest third minus lowest third.TX/T0", "stack"))
+            rows.append([design_label(d) if r == "D650" else "", r] + cells)
+    head = [r" & & \multicolumn{3}{c}{change of the fast level since the anchor row} & highest $-$ \\",
+            r"\cmidrule(lr){3-5}", r"design & rule & lowest third & middle third & highest third & lowest \\"]
+    body = tabular("@{}llcccc@{}", head, rows, "footnotesize", "4pt")
+    cap = (r"Fast-channel increment (TX against T0, per cent, target L5) by thirds of the change of the fast level "
+           r"since the anchor row (an input; cut points fitted on the fit rows of each unit), and the difference "
+           r"highest minus lowest third in percentage points. Intervals: 95 \%, shot clusters resampled; bold: the "
+           r"interval excludes zero.")
+    emit("Change", body, cap, "increment by thirds of the change since the anchor row (V1, V3; D650, S)",
+         "b82 part_A.{V1,V3}.{D650,S}.all.c", "supplement")
+
+
+def tab_robust_designs():
+    b = J(B82)["part_B"]
+    s_ = src_of(B82)
+    rows = []
+    for d in DES:
+        for r in ("D10", "D650", "S"):
+            c = b[d][r]
+            p = f"part_B.{d}.{r}"
+            t = c["TX over T0"]
+            pdis = c["per discharge"]
+            short = {"V1": "V1 random", "V2": "V2 clusters out", "V3": "V3 rolling origin",
+                     "V4a": "V4 fit to " + shot_tok(31991, src_of(B75), "block key"),
+                     "V4b": "V4 fit to " + shot_tok(32310, src_of(B75), "block key")}[d]
+            rows.append([short if r == "D10" else "", r]
+                        + [ratio(t[k], s_, f"{p}.TX over T0.{k}") for k in ROB_R[:3]]
+                        + [pct(t[k], s_, f"{p}.TX over T0.{k}", "stack") for k in ROB_R[3:]]
+                        + [pct(pdis["share of discharges with positive skill"], s_, f"{p}.per discharge.share of discharges with positive skill", "stack", bold=False),
+                           pct(pdis["median of the skill"], s_, f"{p}.per discharge.median of the skill", "stack")])
+        if d != "V4b":
+            rows.append("MID")
+    head = [r" & & MAE & median & p90 & within & within & skill & median \\",
+            r"design & rule & ratio & ratio & ratio & 10\,\% (pp) & 20\,\% (pp) & $>$ 0 (\%) & skill (\%) \\"]
+    body = tabular("@{}llccccccc@{}", head, rows, "footnotesize", "2.4pt")
+    cap = (r"TX against T0 beside the MSE, every design, target L5: ratios of the mean, median and 90th-percentile "
+           r"absolute error (bold: the interval excludes one), differences of the shares within 10 and 20 \% of "
+           r"the level (percentage points), the share of discharges whose own skill is positive and the median "
+           r"per-discharge skill (discharges with at least 50 scored rows). Intervals: 95 \%, shot clusters "
+           r"resampled; bold (differences, skill): the interval excludes zero.")
+    emit("RobustDesigns", body, cap, "robust measures TX vs T0 per design and rule, per-discharge skill", "b82 part_B.*",
+         "supplement")
+
+
+def b82_macros():
+    o = J(B82)
+    s_ = src_of(B82)
+    b = o["part_B"]
+    for r in ("D10", "D650", "S"):
+        rn = RNAME[r]
+        for e, en in (("T0", "TZero"), ("TX", "TX"), ("O", "O")):
+            cell = b["V1"][r]["estimators"][e]["share within 10 %"]
+            p = f"part_B.V1.{r}.estimators.{e}.share within 10 %"
+            pt, ci_ = pct_parts(cell, s_, p, bold=False)
+            macro("WithinTen" + en + rn + "Vone", pt + "~" + ci_, f"share of rows within 10 % of the level, {e}, {r}, V1 (per cent)", s_ + " " + p, "4.1")
+            macro("WithinTen" + en + rn + "Vone" + "Pt", pt, f"the same, point", s_ + " " + p, "4.1")
+
+    def rm(name, d, r, k, what):
+        cell = b[d][r]["TX over T0"][k]
+        p = f"part_B.{d}.{r}.TX over T0.{k}"
+        pt, ci_ = ratio_parts(cell, s_, p)
+        pt = pt.replace(r"\textbf{", "").replace("}", "")
+        macro(name, pt + "~" + ci_, what, s_ + " " + p, "4.1")
+        macro(name + "Pt", pt, what + " (point)", s_ + " " + p, "4.1")
+
+    rm("MaeRatioDsixfiftyVone", "V1", "D650", "MAE ratio", "MAE(TX)/MAE(T0), D650, V1 (B1)")
+    rm("MedianRatioDsixfiftyVone", "V1", "D650", "median absolute error ratio", "median abs. error ratio, D650, V1 (B2)")
+    rm("MaeRatioDsixfiftyVthree", "V3", "D650", "MAE ratio", "MAE ratio, D650, V3 (B3)")
+    rm("MaeRatioSVone", "V1", "S", "MAE ratio", "MAE ratio, S, V1 (B4)")
+    rm("MaeRatioDsixfiftyVfoura", "V4a", "D650", "MAE ratio", "MAE ratio, D650, V4a (B7)")
+    rm("PninetyRatioDsixfiftyVone", "V1", "D650", "p90 absolute error ratio", "90th-percentile abs. error ratio, D650, V1 (B8)")
+    pct_macro("WithinTenDiffDsixfiftyVone", b["V1"]["D650"]["TX over T0"]["share within 10 % difference"], s_,
+              "part_B.V1.D650.TX over T0.share within 10 % difference", "share within 10 %, TX minus T0, D650, V1 (B5; percentage points)", "4.1")
+    pct_macro("ShareDischargesPositiveDsixfiftyVone", b["V1"]["D650"]["per discharge"]["share of discharges with positive skill"], s_,
+              "part_B.V1.D650.per discharge.share of discharges with positive skill", "share of discharges with positive own skill, D650, V1 (B6)", "4.1")
+    a = o["part_A"]
+    for nm, d, r in (("IncTauFarDsixfiftyVone", "V1", "D650"), ("IncTauFarSVone", "V1", "S"), ("IncTauFarDsixfiftyVthree", "V3", "D650")):
+        pct_macro(nm, a[d][r]["all"]["tau"]["above 300 ms"]["TX/T0"], s_, f"part_A.{d}.{r}.all.tau.above 300 ms.TX/T0",
+                  f"increment on rows more than 300 ms after the last notch, {r}, {d}", "4.2")
+    c = o["part_C"]["V1"]["D650"]
+    pct_macro("MirnovAloneDsixfiftyVone", c["TM/T0"], s_, "part_C.V1.D650.TM/T0", "Mirnov in place of the fast inputs (TM vs T0), D650, V1", "4.2")
+    pct_macro("TXoverMirnovDsixfiftyVone", c["TX/TM"], s_, "part_C.V1.D650.TX/TM", "fast inputs against Mirnov (TX vs TM), D650, V1", "4.2")
 
 
 # ----------------------------------------------------------------------------------------------
@@ -1793,6 +2152,7 @@ Canvas widths are final: 16 cm for full-width figures, 10 cm for `figv2_sparse`;
 | `figv2_sparse` | RMSE of T0 and TX against the spacing of the CES values (V1), O as dashed line, equivalent spacing of TX at K10 (k' = 4.67 frames = 46.7 ms, cluster interval as error bar) | b78 `main.V1|L5.all.K*` | 4.5 |
 | `figv2_trace` | the example discharge in three 2 s windows (centred at the 25/50/75 % quantiles of its scored times): reported values, following level L5, T0 and TX under rule S (stored estimates), absent frames | caches `data/.b75/fits/V1_r2_k*__{T0,TX}__S__L5.npz`, `data/.b73/rows.npz`, `grid.npz` | 4.1 / 4.6 |
 | `figv2_trace_q25` | the same for the 25th-percentile discharge (second example) | same | supplement |
+| `figv2_tau` | increment TX vs T0 (%, cluster interval) by the time since the last notch, (a) D650, (b) S, one series per design V1, V2, V3, V4 (fit to 31991); filled = excludes zero | b82 `part_A.*.{D650,S}.all.tau` | 4.2/4.3 (main) |
 | `figv2_limits` | (a) increment under S by block of shots, TX vs T0 and TXN vs TN (V1); (b) first row after a notch over the level before, T_i, BES, ECEI, by block (after the fact, no interval) | b75, b79 `main.V1|L5|S.<block>.S`; `b75_last_block.md` section (7) | 4.6 |
 
 **Example discharge (selection rule, no hand picking).** Among the test discharges of unit group V1,
@@ -1882,8 +2242,18 @@ def main():
                             ("Bseventyeight", B78, "B.78 (a CES value every k-th frame)"),
                             ("Bseventynine", B79, "B.79 (beam waveforms as inputs)"),
                             ("Beighty", B80, "B.80 (coherence of the ECEI channels)"),
-                            ("Beightyone", B81, "B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3)")):
+                            ("Beightyone", B81, "B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3)"),
+                            ("Beightytwo", B82, "B.82 (where the increment sits; robust error measures; specificity)")):
         tab_statements(batch, f, title)
+    tab_dataset()
+    tab_robust()
+    tab_robust(full=True)
+    tab_tau()
+    tab_specificity()
+    tab_seeds()
+    tab_change()
+    tab_robust_designs()
+    b82_macros()
     tot = tab_stat_summary()
     nnh = tab_stat_not_held()
     print("statement totals (registered, hold, do not hold, definite, met):", tot, " not-held rows per table:", nnh)
