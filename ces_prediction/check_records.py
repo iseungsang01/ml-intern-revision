@@ -87,6 +87,7 @@ SOURCES = (
     "docs/paper/b82_localize.md",
     "docs/paper/b82_lead_checks.md",
     "docs/paper/review_loop/grade16_20261120.md",
+    "docs/paper/review_loop/grade17_20261120.md",
     "docs/paper/b80_ecei_gate.md",
     "docs/paper/b80_lead_checks.md",
     "docs/paper/b76_mast_availability.md",

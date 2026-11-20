@@ -69,15 +69,15 @@ of KSTAR with co-located fast diagnostics}
 Charge-exchange spectroscopy (CES) reports the ion temperature at the pedestal top of
 KSTAR every 10\,ms, but the value is hard to use while the discharge runs: it scatters
 from frame to frame, and because the analysis takes its background from frames in which
-the heating beam is switched off, the newest value that it can deliver is \AgeMedianS\,s
-old at the median. We propose that, while the CES value is late or sparse, fast
+the heating beam is switched off, the newest value that it could deliver, by our reading
+of that schedule and with no analysis time, is \AgeMedianS\,s old at the median. We propose that, while the CES value is late or sparse, fast
 diagnostics that view the same radius in the present, electron-cyclotron-emission imaging
 and beam-emission spectroscopy, carry the level of the pedestal-top ion temperature. We
 test this with a causal estimator that needs no neural network: a Gaussian process on the
 CES values that are visible, followed by a boosted regression on scalars of that history
 and of the fast channels. The target is the level of the following frames, and every
-statement names which CES values the estimator may see. On 639 discharges of the 2022
-campaign, a history \AgeMedianS\,s old raises the mean squared error (MSE) of a
+statement names which CES values the estimator may see. On \NCommonDischarges{}
+discharges of the 2022 campaign, a history \AgeMedianS\,s old raises the mean squared error (MSE) of a
 history-only estimate by a factor \CostDsixfiftyVone{} (95\,\% interval, clusters of
 shots resampled). The fast diagnostics reduce the MSE by \IncDsixfiftyVthree{} per cent in
 the least favourable of four validation designs (rolling origin), and by
@@ -205,7 +205,7 @@ rows, the power and voltage of the six neutral-beam sources (\SuppTab{tab:nbisou
 
 \begin{table}[tbp]
   \centering
-  \caption{The data set: KSTAR, 2022 campaign, shots 30801--32751, the discharges with scored rows. Percentiles are over discharges or over rows as stated; the beam line leaves out the 13 files whose power columns of the second beam box are invalid.}
+  \caption{The data set: KSTAR, 2022 campaign, shots 30801--32751, the 635 discharges with scored rows (all 641 files hold 245{,}925 grid rows and 1{,}414 absent steps). Percentiles are over discharges or over rows as stated; the beam line leaves out the 13 files whose power columns of the second beam box are invalid.}
   \label{tab:dataset}
   \TabDataset
 \end{table}
@@ -599,17 +599,19 @@ delivered, and a refit without those files gives the same verdicts
 (\SuppTab{tab:refit}).
 
 Neither half of the fast inputs carries the increment under all four designs by itself.
-With the history \AgeMedianS\,s old the ECEI half alone, which uses neither the beam nor
-the spectrometer, has an increment under the random, the cluster and the chronological
+With the history \AgeMedianS\,s old the ECEI half alone, which is neither a beam
+diagnostic nor part of the spectrometer (its level nevertheless falls at a notch in the
+earlier blocks of shots, \S\ref{sec:res:limits}), has an increment under the random, the cluster and the chronological
 design and not under the rolling-origin design; the BES half alone has one under the
 random, the cluster and the rolling-origin design and not under the chronological design.
 Only the two together exclude zero under all four. Under the beam-modulation schedule
 each half has an increment under the random, the cluster and the rolling-origin design.
 
 Table~\ref{tab:controls} gives the two controls. With the fast scalars permuted over rows
-the reduction is zero under both head rules. Two of the ten cells have an interval
-that just misses zero, one below it (cluster design, D650) and one above it (the last
-block of shots under the schedule, where no increment is established either). The samples of the present are needed: with the history
+the reduction is zero within its interval in eight of the ten cells. Two cells have an
+interval that just misses zero, one below it (cluster design, D650) and one above it (the
+last block of shots under the schedule, where no increment is established either); this
+is also a reminder that intervals from 14 to 18 clusters can be too narrow. The samples of the present are needed: with the history
 \AgeMedianS\,s old the estimator with the present fast samples has a lower MSE than the
 one given the fast samples of the anchor row under every design (column ``present over
 anchor row''). The fast samples of the anchor row alone add a little to the history under
@@ -742,8 +744,10 @@ With the charge-exchange history 100\,ms old the Thomson scalars reduce the MSE 
 level estimate under all four designs; the least favourable is the rolling-origin design.
 A history 100\,ms old costs less than on KSTAR, and the Thomson scalars give back most of
 it (\SuppTab{tab:mastcost}). Under the chronological design the estimate from a history
-100\,ms old and the present Thomson values is as close to the level as the reading of the
-frame itself (columns TX and O of Table~\ref{tab:mast}). Read after the fact on the chronological
+100\,ms old and the present Thomson values has an RMSE close to that of the reading of the
+frame itself (columns TX and O of Table~\ref{tab:mast}); the interval of their difference
+is wide and establishes nothing. The scored part of that design is small (39 sessions),
+and its errors are not monotonic in the delay. Read after the fact on the chronological
 fit, without an interval, the \Te{} scalars alone give nearly the whole increment and the
 distance to the density edge gives none (\Supp{sec:schecks}). The closed form that
 multiplies the held \Ti{} by the ratio of the two \Te{} values is not usable: the ratio of
@@ -795,7 +799,8 @@ Giving the beam scalars does not change this. With the history at the fixed age 
   \caption{Under the beam-modulation schedule S (target L5), by block of shots. Upper
   block: the random design, with the scored rows grouped by the block of their discharge.
   Lower block: the chronological design, which scores the shots from 32312 on. TE: the
-  ECEI half only; TXN against TN: the fast diagnostics after the beam scalars.
+  ECEI half only; TXN against TN: the fast diagnostics after the beam scalars. The
+  cluster of shots 32310 and 32312 is counted in two blocks.
   Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
   \label{tab:blocks}
   \TabBlocks
@@ -847,8 +852,8 @@ is not proposed.
 
 \emph{Reading.} On both devices an electron channel at the same radius carries part of
 the change of the ion-temperature level between two charge-exchange values: on KSTAR the
-ECEI half alone, which makes no use of the beam, has an increment under three of the four
-designs, and on MAST the increment comes with the Thomson \Te{}. A reason to look at an
+ECEI half alone, which is not a beam diagnostic, has an increment under three of the four
+designs with the history \AgeMedianS\,s old, and on MAST the increment comes with the Thomson \Te{}. A reason to look at an
 electron channel is that electrons and ions exchange energy within ten to a few tens of
 milliseconds in deuterium at a density of a few $10^{19}$\,m$^{-3}$ and an electron
 temperature of several hundred eV~\citep{Wesson2011Tokamaks}, far shorter than the age of
@@ -914,8 +919,9 @@ a history as old as the beam-modulation analysis makes it raises the MSE of a hi
 estimate of the level about threefold. Fast diagnostics at the same radius give
 back part of it: with the history \AgeMedianS\,s old the reduction of the MSE of the
 level estimate is established under random, cluster-blocked, rolling-origin and
-chronological validation on the scored rows of each design pooled (not in every part of
-the campaign), also when the beam waveforms are given; it needs the fast samples of the
+chronological validation in MSE on the scored rows of each design pooled (not in every
+part of the campaign, and under rolling origin not in the mean or median absolute error),
+also when the beam waveforms are given; it needs the fast samples of the
 present, and BES and ECEI together.
 Under the random design it is not confined to the frames after a beam notch and is present
 in the median error; it is not shown to be specific to the radius.
