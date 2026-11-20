@@ -1,6 +1,6 @@
 {
  "generator": "docs/paper/ppcf/make_tables_v2.py",
- "n_tokens": 1747,
+ "n_tokens": 1670,
  "tokens": {
   "222,672": [
    {
@@ -953,25 +953,35 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.323": [
+  "1.32": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K5.cost T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.253": [
+  "1.25": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D25.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.398": [
+  "1.40": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "18.5": [
@@ -1045,30 +1055,60 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.760": [
+  "0.76": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D1000.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.600": [
+  "0.60": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D300.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D100.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D1000.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D50.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b75_last_block.md",
+    "path": "code block, block 32002-32310, (1) age median",
+    "transform": "verbatim from the md (unregistered diagnostic, no interval)"
    }
   ],
-  "1.004": [
+  "1.00": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D50.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
-    "source": "docs/paper/b74_exposure.json",
-    "path": "B.W10.l5_ratio.Q.point",
-    "transform": "as registered, three decimals"
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D100.recovered share.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "100": [
@@ -1161,40 +1201,65 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.588": [
+  "1.59": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D50.recovered share.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.435": [
+  "1.43": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D100.staleness T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D100.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    },
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D100.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    },
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K5.cost T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.754": [
+  "1.75": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D100.staleness T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D150.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    },
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.cost T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "23.8": [
@@ -1253,25 +1318,40 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "0.644": [
+  "0.64": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.531": [
+  "0.53": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.784": [
+  "0.78": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D100.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D300.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D50.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D50.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "300": [
@@ -1344,25 +1424,35 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.331": [
+  "2.33": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.973": [
+  "1.97": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D300.staleness T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "2.727": [
+  "2.73": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D1000.staleness T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "34.5": [
@@ -1391,30 +1481,33 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.605": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D300.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   },
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D50.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.521": [
+  "0.52": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D1000.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D50.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D150.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.681": [
+  "0.68": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D300.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "650": [
@@ -1487,25 +1580,30 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.958": [
+  "2.96": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.491": [
+  "2.49": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D300.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "3.484": [
+  "3.48": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "33.6": [
@@ -1569,35 +1667,65 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.508": [
+  "0.51": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D650.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D1000.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K10.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K50.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.442": [
+  "0.44": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.569": [
+  "0.57": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D25.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "1000": [
@@ -1670,25 +1798,30 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "3.388": [
+  "3.39": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D1000.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D1000.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.871": [
+  "2.87": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D1000.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.971": [
+  "3.97": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D1000.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "36.4": [
@@ -1722,25 +1855,33 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.516": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D1000.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.453": [
+  "0.45": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D1000.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|S.all.S.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.576": [
+  "0.58": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D1000.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D300.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D100.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "189.0": [
@@ -1927,25 +2068,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.799": [
+  "2.80": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.402": [
+  "2.40": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.244": [
+  "3.24": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "32.7": [
@@ -2004,25 +2145,48 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.509": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.421": [
+  "0.42": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D1000.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D650.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D1000.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K20.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.591": [
+  "0.59": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D150.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D100.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "133.3": [
@@ -2174,25 +2338,50 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.622": [
+  "1.62": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.staleness T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D150.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.454": [
+  "1.45": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K10.cost T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.805": [
+  "1.81": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D150.staleness T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D100.staleness T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "18.0": [
@@ -2256,25 +2445,23 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.470": [
+  "0.47": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D100.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.371": [
+  "0.37": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D100.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.597": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D100.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "210.2": [
@@ -2296,25 +2483,28 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.486": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D300.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "2.071": [
+  "2.07": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D300.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D150.staleness T0.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K20.equivalent rate.point.factor_k_over_k_prime",
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.943": [
+  "2.94": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D300.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "29.3": [
@@ -2388,25 +2578,43 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.489": [
+  "0.49": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D300.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D150.recovered share.session[1]",
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D25.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.380": [
+  "0.38": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D300.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.584": [
+    "transform": "ratio, two decimals (cluster interval)"
+   },
    {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D300.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K5.recovered share.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K10.recovered share.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "236.7": [
@@ -2423,25 +2631,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "3.153": [
+  "3.15": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D650.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.618": [
+  "2.62": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D650.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.758": [
+  "3.76": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D650.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "28.2": [
@@ -2490,30 +2698,38 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.413": [
+  "0.41": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D650.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.319": [
+  "0.32": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D650.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D1000.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.506": [
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D50.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D150.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
    {
     "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D650.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "path": "age_under_S.L5.newest_value_age_s.quantiles.0.25",
+    "transform": "s, two decimals"
    }
   ],
   "253.6": [
@@ -2530,25 +2746,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "3.618": [
+  "3.62": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D1000.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "3.023": [
+  "3.02": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D1000.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "4.307": [
+  "4.31": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|common.all.D1000.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "30.2": [
@@ -2597,25 +2813,6 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.417": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D1000.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.510": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D1000.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K50.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
   "223.2": [
    {
     "source": "docs/paper/b75_availability.json",
@@ -2630,46 +2827,39 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.865": [
+  "2.86": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|S.all.S.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.433": [
+  "2.43": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|S.all.S.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.354": [
+  "3.35": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|S.all.S.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.450": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|S.all.S.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.343": [
+  "0.34": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|S.all.S.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.542": [
+  "0.54": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V2|L5|S.all.S.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "217.4": [
@@ -2825,30 +3015,23 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.697": [
+  "1.70": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.433": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D100.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "2.004": [
+  "2.00": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D100.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.cost T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
   "12.7": [
@@ -2922,25 +3105,18 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.308": [
+  "0.31": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.201": [
+  "0.20": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D100.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.474": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D100.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "329.4": [
@@ -2964,25 +3140,18 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.554": [
+  "2.55": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.974": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D300.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "3.234": [
+  "3.23": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "15.7": [
@@ -3076,25 +3245,35 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.258": [
+  "0.26": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.065": [
+  "0.07": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.456": [
+  "0.46": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "363.1": [
@@ -3123,25 +3302,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "3.179": [
+  "3.18": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D650.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.448": [
+  "2.45": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D650.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "4.003": [
+  "4.00": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D650.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "19.0": [
@@ -3250,35 +3429,23 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.277": [
+  "0.28": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D650.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V3|L5|common.all.D1000.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.051": [
+  "0.05": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D650.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b74_exposure.json",
-    "path": "A.W10.B.lo",
-    "transform": "as registered (discharges resampled)"
-   }
-  ],
-  "0.415": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D650.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K20.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "380.8": [
@@ -3302,25 +3469,11 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "3.386": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D1000.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "2.729": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D1000.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "4.111": [
+  "4.11": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D1000.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "20.0": [
@@ -3335,25 +3488,28 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.284": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V3|L5|common.all.D1000.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.100": [
+  "0.10": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D1000.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.recovered share.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.397": [
+  "0.40": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D1000.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D25.recovered share.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "304.8": [
@@ -3377,25 +3533,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.813": [
+  "2.81": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.348": [
+  "2.35": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.330": [
+  "3.33": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "23.1": [
@@ -3484,25 +3640,30 @@
     "transform": "100 x skill, one decimal (parsed from md, no interval)"
    }
   ],
-  "0.358": [
+  "0.36": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.230": [
+  "0.23": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.499": [
+  "0.50": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|S.all.S.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K20.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "254.5": [
@@ -3690,25 +3851,35 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.279": [
+  "1.28": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.staleness T0.cluster[0]",
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.113": [
+  "1.11": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.517": [
+  "1.52": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D50.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "16.8": [
@@ -3755,40 +3926,35 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.772": [
+  "0.77": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    },
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "-0.017": [
+  "-0.02": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "statements.Q9-V4.value.cluster[1]",
-    "transform": "as registered, cluster interval"
-   },
-   {
-    "source": "docs/paper/b80_ecei_gate.json",
-    "path": "statements.G1.value.cluster[0]",
-    "transform": "as registered, cluster interval"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.346": [
+  "1.35": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D100.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D100.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "335.0": [
@@ -3822,25 +3988,35 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.582": [
+  "1.58": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D100.staleness T0.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D300.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.298": [
+  "1.30": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "2.105": [
+  "2.10": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "18.7": [
@@ -3924,18 +4100,11 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.155": [
+  "0.16": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D300.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.778": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D300.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "313.8": [
@@ -3964,25 +4133,23 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.947": [
+  "1.95": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D650.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.620": [
+    "transform": "ratio, two decimals"
+   },
    {
     "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "path": "timing.median_ms",
+    "transform": "ms, two decimals"
    }
   ],
-  "2.639": [
+  "2.64": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D650.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "23.7": [
@@ -4046,30 +4213,16 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.487": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   },
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D25.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.101": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.817": [
+  "0.82": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D650.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D25.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "312.3": [
@@ -4098,25 +4251,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.233": [
+  "2.23": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.777": [
+  "1.78": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.128": [
+  "3.13": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "23.4": [
@@ -4170,25 +4323,11 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.423": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D1000.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.033": [
+  "0.03": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D1000.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.756": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D1000.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "203.0": [
@@ -4227,25 +4366,28 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.598": [
+  "1.60": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|S.all.S.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.281": [
+    "transform": "ratio, two decimals"
+   },
    {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D100.staleness T0.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K10.cost T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.311": [
+  "2.31": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|S.all.S.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "-16.6": [
@@ -4277,25 +4419,11 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.074": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "-0.414": [
+  "-0.41": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|S.all.S.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.513": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "138.1": [
@@ -4353,25 +4481,16 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.348": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.143": [
+  "1.14": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D100.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "1.580": [
+    "transform": "ratio, two decimals (cluster interval)"
+   },
    {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D100.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D100.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "15.9": [
@@ -4403,25 +4522,25 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.616": [
+  "0.62": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.210": [
+  "0.21": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D100.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.924": [
+  "0.92": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D100.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "173.3": [
@@ -4438,30 +4557,23 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.576": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D300.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.331": [
+  "1.33": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D300.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    },
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D25.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.925": [
+  "1.93": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D300.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "20.1": [
@@ -4545,25 +4657,30 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "0.549": [
+  "0.55": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D300.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.304": [
+  "0.30": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D300.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D1000.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.794": [
+  "0.79": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D300.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "189.8": [
@@ -4580,25 +4697,30 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.890": [
+  "1.89": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.566": [
+  "1.57": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D100.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.474": [
+  "2.47": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "7.5": [
@@ -4645,25 +4767,28 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "0.459": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D650.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.167": [
+  "0.17": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.735": [
+  "0.74": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D150.recovered share.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D25.recovered share.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "196.8": [
@@ -4680,25 +4805,25 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "2.032": [
+  "2.03": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D1000.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.687": [
+  "1.69": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D1000.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "2.509": [
+  "2.51": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D1000.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "15.5": [
@@ -4772,25 +4897,11 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "0.305": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D1000.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.016": [
+  "0.02": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D1000.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.601": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D1000.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "170.3": [
@@ -4807,25 +4918,35 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "1.532": [
+  "1.53": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.362": [
+  "1.36": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.staleness T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D25.staleness T0.point",
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D25.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.854": [
+  "1.85": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.staleness T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "-25.4": [
@@ -4869,25 +4990,25 @@
     "transform": "100 x skill, one decimal (parsed from md, no interval)"
    }
   ],
-  "-0.732": [
+  "-0.73": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "-1.548": [
+  "-1.55": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.111": [
+  "0.11": [
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "10.7": [
@@ -8604,6 +8725,11 @@
     "transform": "median age in s, two decimals"
    },
    {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K10.recovered share.cluster[1]",
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
     "source": "docs/paper/b75_availability.json",
     "path": "age_under_S.L5.newest_value_age_s.quantiles.0.5",
     "transform": "s, two decimals"
@@ -10377,11 +10503,6 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "rta_coefficients.M1|L5|D150.alpha.mean",
     "transform": "coefficient, three decimals"
-   },
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K20.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
    }
   ],
   "123.6": [
@@ -10706,44 +10827,37 @@
     "transform": "coefficient, three decimals"
    }
   ],
-  "1.246": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D25.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.441": [
+  "1.44": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D25.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D25.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.902": [
+  "0.90": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D25.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   },
-   {
-    "source": "docs/paper/b75_last_block.md",
-    "path": "code block, block up to 31991, (7) ECEI notch",
-    "transform": "verbatim from the md (unregistered diagnostic, no interval)"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.693": [
+  "0.69": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D25.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.116": [
+  "1.12": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D25.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "24.4": [
@@ -10765,91 +10879,66 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.499": [
+  "1.50": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D50.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D50.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.374": [
+  "1.37": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D50.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D50.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.654": [
+  "1.65": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D50.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.775": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D50.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.964": [
+  "0.96": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D50.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.567": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.427": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D100.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.745": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D100.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.844": [
+  "0.84": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.710": [
+  "0.71": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D100.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.998": [
+    "transform": "ratio, two decimals (session interval)"
+   },
    {
     "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D100.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "path": "main.M2|L5|common.all.D150.recovered share.point",
+    "transform": "ratio, two decimals"
    },
    {
-    "source": "docs/paper/b74_exposure.json",
-    "path": "B.W10.l5_ratio.Q.lo",
-    "transform": "as registered (discharges resampled)"
-   },
-   {
-    "source": "docs/paper/b74_exposure.json",
-    "path": "B.W10.ec_ratio.Q.lo",
-    "transform": "as registered (discharges resampled)"
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D25.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "20.4": [
@@ -10874,51 +10963,28 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "1.624": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D150.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.481": [
+  "1.48": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D150.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.811": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D150.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.737": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D150.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.593": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D150.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    },
    {
-    "source": "docs/paper/nbi_files.md",
-    "path": "sec. 3 table, NB1B",
-    "transform": "verbatim from text"
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D25.staleness T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.887": [
+  "0.89": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.D150.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D150.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "28.9": [
@@ -10933,46 +10999,30 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "1.359": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D25.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.266": [
+  "1.27": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D25.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.479": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D25.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.823": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D25.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.565": [
+  "0.56": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D25.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K5.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.098": [
+  "1.10": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D25.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "34.7": [
@@ -10982,51 +11032,35 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.505": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D50.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   },
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.368": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D50.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.683": [
+  "1.68": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D50.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D25.staleness T0.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.719": [
+  "0.72": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D50.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.520": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D50.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.927": [
+  "0.93": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D50.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M2|L5|common.all.D150.recovered share.session[1]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "30.3": [
@@ -11046,84 +11080,42 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "1.599": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.809": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D100.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.590": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D100.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.981": [
+  "0.98": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D100.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D100.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.629": [
+  "1.63": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D150.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M3|L5|common.all.D100.staleness T0.session[0]",
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.489": [
+  "1.49": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D150.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.816": [
+  "1.82": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D150.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.713": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D150.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   },
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D25.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.524": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D150.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   },
-   {
-    "source": "docs/paper/b80_ecei_gate.json",
-    "path": "distribution.D1 discharges.block from 32312.share low among those with C_E",
-    "transform": "share, three decimals"
-   }
-  ],
-  "0.926": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M2|L5|common.all.D150.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-6.0": [
@@ -11143,39 +11135,11 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "1.355": [
+  "1.51": [
    {
     "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.681": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.571": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.400": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.738": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D25.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "path": "main.M3|L5|common.all.D25.staleness T0.point",
+    "transform": "ratio, two decimals"
    }
   ],
   "-10.5": [
@@ -11185,46 +11149,32 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.743": [
+  "1.74": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D50.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.518": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D50.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "2.035": [
+  "2.04": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D50.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.324": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D50.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "-0.058": [
+  "-0.06": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D50.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.608": [
+  "0.61": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D50.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-13.0": [
@@ -11241,46 +11191,37 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.920": [
+  "1.92": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.633": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D100.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "2.287": [
+  "2.29": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.578": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.428": [
+  "0.43": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
+   },
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K50.recovered share.point",
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.734": [
+  "0.73": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-31.6": [
@@ -11290,46 +11231,18 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "2.075": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D150.staleness T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.752": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D150.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "2.499": [
+  "2.50": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D150.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.316": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D150.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.134": [
+  "0.13": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D150.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "0.491": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M3|L5|common.all.D150.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-30.6": [
@@ -11358,32 +11271,25 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "1.880": [
+  "1.88": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D25.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.437": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D25.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "2.393": [
+  "2.39": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D25.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.170": [
+  "1.17": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D25.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-31.2": [
@@ -11400,51 +11306,37 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.788": [
+  "1.79": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D50.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    },
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K10.cost T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.313": [
+  "1.31": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D50.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "2.710": [
+  "2.71": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D50.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.068": [
+  "1.07": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D50.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.779": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D50.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   }
-  ],
-  "1.590": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D50.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals"
    }
   ],
   "-64.9": [
@@ -11454,51 +11346,32 @@
     "transform": "100 x skill, one decimal (session interval)"
    }
   ],
-  "1.638": [
+  "1.64": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D100.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "0.983": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D100.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
-   },
-   {
-    "source": "docs/paper/nbi_files.md",
-    "path": "sec. 3 table, NB2C",
-    "transform": "verbatim from text"
-   }
-  ],
-  "3.048": [
+  "3.05": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D100.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.136": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D100.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "-1.246": [
+  "-1.25": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D100.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "4.367": [
+  "4.37": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D100.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-73.3": [
@@ -11525,46 +11398,39 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "2.133": [
+  "2.13": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D150.staleness T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.615": [
+  "1.61": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D150.staleness T0.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "3.506": [
+  "3.51": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D150.staleness T0.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "0.888": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D150.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.704": [
+  "0.70": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D150.recovered share.session[0]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
-  "1.086": [
+  "1.09": [
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D150.recovered share.session[1]",
-    "transform": "ratio, 3 decimals (session interval)"
+    "transform": "ratio, two decimals (session interval)"
    }
   ],
   "-18.0": [
@@ -11907,46 +11773,51 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "1.052": [
+  "1.05": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.cost T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.022": [
+  "1.02": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.cost T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "age_under_S.L5.newest_value_age_s.quantiles.0.75",
+    "transform": "s, two decimals"
    }
   ],
-  "1.081": [
+  "1.08": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.cost T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "1.944": [
+  "1.94": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.recovered share.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "1.062": [
+  "1.06": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "5.344": [
+  "5.34": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K2.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "1": [
@@ -12074,39 +11945,18 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "1.316": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K5.cost T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.220": [
+  "1.22": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K5.cost T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.564": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K5.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.378": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K5.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.848": [
+  "0.85": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K5.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "2.69": [
@@ -12161,34 +12011,6 @@
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|D650.class middle.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "1.602": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K10.cost T0.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "1.451": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K10.cost T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.376": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K10.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
-   }
-  ],
-  "0.647": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K10.recovered share.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
    }
   ],
   "4.67": [
@@ -12265,18 +12087,18 @@
     "transform": "100 x skill, one decimal"
    }
   ],
-  "2.283": [
+  "2.28": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.cost T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.327": [
+  "0.33": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "9.64": [
@@ -12298,13 +12120,6 @@
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K20.equivalent rate.cluster.k_prime[1]",
     "transform": "frames, two decimals (cluster interval)"
-   }
-  ],
-  "2.07": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K20.equivalent rate.point.factor_k_over_k_prime",
-    "transform": "ratio, two decimals"
    }
   ],
   "500": [
@@ -12352,39 +12167,32 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "2.793": [
+  "2.79": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K50.cost T0.point",
-    "transform": "ratio, 3 decimals"
+    "transform": "ratio, two decimals"
    }
   ],
-  "2.376": [
+  "2.38": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K50.cost T0.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "3.285": [
+  "3.28": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K50.cost T0.cluster[1]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
-  "0.435": [
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K50.recovered share.point",
-    "transform": "ratio, 3 decimals"
-   }
-  ],
-  "0.351": [
+  "0.35": [
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K50.recovered share.cluster[0]",
-    "transform": "ratio, 3 decimals (cluster interval)"
+    "transform": "ratio, two decimals (cluster interval)"
    }
   ],
   "20.20": [
@@ -13079,6 +12887,13 @@
     "transform": "verbatim from the md (unregistered diagnostic, no interval)"
    }
   ],
+  "0.902": [
+   {
+    "source": "docs/paper/b75_last_block.md",
+    "path": "code block, block up to 31991, (7) ECEI notch",
+    "transform": "verbatim from the md (unregistered diagnostic, no interval)"
+   }
+  ],
   "0.911": [
    {
     "source": "docs/paper/b75_last_block.md",
@@ -13090,13 +12905,6 @@
    {
     "source": "docs/paper/b75_last_block.md",
     "path": "code block, block up to 31991, (2) relative scatter",
-    "transform": "verbatim from the md (unregistered diagnostic, no interval)"
-   }
-  ],
-  "0.60": [
-   {
-    "source": "docs/paper/b75_last_block.md",
-    "path": "code block, block 32002-32310, (1) age median",
     "transform": "verbatim from the md (unregistered diagnostic, no interval)"
    }
   ],
@@ -13819,6 +13627,13 @@
     "source": "docs/paper/b74_exposure.json",
     "path": "E.W10.up.departures",
     "transform": "count"
+   }
+  ],
+  "0.524": [
+   {
+    "source": "docs/paper/b80_ecei_gate.json",
+    "path": "distribution.D1 discharges.block from 32312.share low among those with C_E",
+    "transform": "share, three decimals"
    }
   ],
   "590": [
@@ -14760,13 +14575,6 @@
     "source": "docs/paper/b75_availability.json",
     "path": "timing.rows",
     "transform": "count"
-   }
-  ],
-  "1.95": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "timing.median_ms",
-    "transform": "ms, two decimals"
    }
   ],
   "4.59": [
@@ -15790,6 +15598,13 @@
     "transform": "as registered, three decimals"
    }
   ],
+  "0.051": [
+   {
+    "source": "docs/paper/b74_exposure.json",
+    "path": "A.W10.B.lo",
+    "transform": "as registered (discharges resampled)"
+   }
+  ],
   "0.236": [
    {
     "source": "docs/paper/b74_exposure.json",
@@ -16036,6 +15851,25 @@
    {
     "source": "docs/paper/b74_exposure.json",
     "path": "B.W10.l5_ratio.P.hi",
+    "transform": "as registered (discharges resampled)"
+   }
+  ],
+  "1.004": [
+   {
+    "source": "docs/paper/b74_exposure.json",
+    "path": "B.W10.l5_ratio.Q.point",
+    "transform": "as registered, three decimals"
+   }
+  ],
+  "0.998": [
+   {
+    "source": "docs/paper/b74_exposure.json",
+    "path": "B.W10.l5_ratio.Q.lo",
+    "transform": "as registered (discharges resampled)"
+   },
+   {
+    "source": "docs/paper/b74_exposure.json",
+    "path": "B.W10.ec_ratio.Q.lo",
     "transform": "as registered (discharges resampled)"
    }
   ],
@@ -16913,6 +16747,13 @@
     "transform": "verbatim from text"
    }
   ],
+  "0.593": [
+   {
+    "source": "docs/paper/nbi_files.md",
+    "path": "sec. 3 table, NB1B",
+    "transform": "verbatim from text"
+   }
+  ],
   "950": [
    {
     "source": "docs/paper/nbi_files.md",
@@ -16988,6 +16829,13 @@
    {
     "source": "docs/paper/nbi_files.md",
     "path": "sec. 3 table, NB2B",
+    "transform": "verbatim from text"
+   }
+  ],
+  "0.983": [
+   {
+    "source": "docs/paper/nbi_files.md",
+    "path": "sec. 3 table, NB2C",
     "transform": "verbatim from text"
    }
   ],
@@ -17421,6 +17269,18 @@
    {
     "source": "docs/paper/b73_targets.json",
     "path": "statements.Q9-V4.value.cluster[0]",
+    "transform": "as registered, cluster interval"
+   }
+  ],
+  "-0.017": [
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "statements.Q9-V4.value.cluster[1]",
+    "transform": "as registered, cluster interval"
+   },
+   {
+    "source": "docs/paper/b80_ecei_gate.json",
+    "path": "statements.G1.value.cluster[0]",
     "transform": "as registered, cluster interval"
    }
   ],
@@ -18909,20 +18769,6 @@
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V1|L5.all.K10.equivalent rate.point.k_prime",
     "transform": "10 ms x k', one decimal"
-   }
-  ],
-  "0.32": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "age_under_S.L5.newest_value_age_s.quantiles.0.25",
-    "transform": "s, two decimals"
-   }
-  ],
-  "1.02": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "age_under_S.L5.newest_value_age_s.quantiles.0.75",
-    "transform": "s, two decimals"
    }
   ],
   "+0.071": [

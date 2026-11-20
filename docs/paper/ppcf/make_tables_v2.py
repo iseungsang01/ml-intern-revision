@@ -102,11 +102,11 @@ def pct_parts(cell, src, path, bold=True):
     return pt, f"[{a}, {b}]"
 
 
-def rat_parts(cell, src, path, nd=3):
+def rat_parts(cell, src, path, nd=2):
     k = iv_key(cell)
     lo, hi = cell[k]
     f = "%." + str(nd) + "f"
-    tr = f"ratio, {nd} decimals"
+    tr = "ratio, " + {2: "two", 3: "three"}.get(nd, str(nd)) + " decimals"
     pt = fnum(cell["point"], f, src, path + ".point", tr)
     a = fnum(lo, f, src, f"{path}.{k}[0]", tr + f" ({k} interval)")
     b = fnum(hi, f, src, f"{path}.{k}[1]", tr + f" ({k} interval)")
@@ -128,7 +128,7 @@ def pct(cell, src, path, mode="inline", bold=True):
     return inline(p) if mode == "inline" else stack(p)
 
 
-def rat(cell, src, path, mode="inline", nd=3):
+def rat(cell, src, path, mode="inline", nd=2):
     if cell is None:
         return "--"
     p = rat_parts(cell, src, path, nd)
@@ -559,10 +559,10 @@ def tab_which():
     body = tabular("@{}llcccccc@{}", head, rows, "footnotesize", "3.2pt")
     cap = (r"Which diagnostic, and beyond the beam waveforms: reduction of the MSE in per cent (target L5), "
            r"history 0.65~s old (D650, common set) and beam-modulation schedule (S, S set). TE and TB are T0 "
-           r"with the ECEI or the BES half of the fast inputs (V1 and V4 from B.75; V2 and V3 fitted in B.81); TN is "
+           r"with the ECEI or the BES half of the fast inputs; TN is "
            r"T0 with the 19 beam scalars; TXN is TX with them. ``Both, beam'': the fast diagnostics after the beam "
            r"waveforms are given; ``beam, both'': the beam waveforms after the fast diagnostics. Beam columns as "
-           r"delivered (registered readout). Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.")
+           r"delivered. Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.")
     reg("0.65", src_of(B75), "age_under_S.L5.newest_value_age_s.quantiles.0.5", "median age in s, two decimals")
     reg("19", src_of(B79), "beam_scalars (list length)", "count")
     emit("Which", body, cap, "ECEI only, BES only, both; beam alone; both given beam; beam given both (D650, S, per design)",
@@ -591,7 +591,7 @@ def tab_controls():
         for r in ("D650", "S"):
             c = b1["main"][d][r]
             p = f"main.{d}.{r}"
-            rows.append(["B.81" if (d == "V1" and r == "D650") else "", design_label(d) if r == "D650" else "", r,
+            rows.append(["KSTAR, head rules" if (d == "V1" and r == "D650") else "", design_label(d) if r == "D650" else "", r,
                          "TX vs T0", pct(c["TXp/T0"], src_of(B81), p + ".TXp/T0", "stack"),
                          pct(c["TXo/T0"], src_of(B81), p + ".TXo/T0", "stack"),
                          pct(c["TX/TXo"], src_of(B81), p + ".TX/TXo", "stack")])
@@ -599,31 +599,33 @@ def tab_controls():
     b8 = J(B78)
     c = b8["main"]["V1|L5"]["all"]["K10"]
     p = "main.V1|L5.all.K10"
-    rows.append(["B.78", design_label("V1"), "K10", "TX vs T0", pct(c["TXp/T0"], src_of(B78), p + ".TXp/T0", "stack"),
+    rows.append(["sparse CES (a value every tenth frame)", design_label("V1"), "K10", "TX vs T0", pct(c["TXp/T0"], src_of(B78), p + ".TXp/T0", "stack"),
                  pct(c["TXo/T0"], src_of(B78), p + ".TXo/T0", "stack"), pct(c["TX/TXo"], src_of(B78), p + ".TX/TXo", "stack")])
     b9 = J(B79)
     c = b9["main"]["V1|L5|common"]["all"]["D650"]
     p = "main.V1|L5|common.all.D650"
-    rows.append(["B.79", design_label("V1"), "D650", "TXN vs TN",
+    rows.append(["beam scalars given (fast inputs permuted)", design_label("V1"), "D650", "TXN vs TN",
                  pct(c["TXNp/TN"], src_of(B79), p + ".TXNp/TN", "stack"), "--", "--"])
-    rows.append(["B.79", design_label("V1"), "D650", "TN vs T0 (beam)",
+    rows.append(["beam scalars permuted", design_label("V1"), "D650", "TN vs T0",
                  pct(c["TNp/T0"], src_of(B79), p + ".TNp/T0", "stack"), "--", "--"])
     b7 = J(B77)
     c = b7["designs"]["V1"]["all"]
-    rows.append(["B.77", design_label("V1"), "D10", "CX vs C0",
+    rows.append(["correcting the reading of the frame", design_label("V1"), "D10", "CX vs C0",
                  pct(c["CXp/C0 (placebo)"], src_of(B77), "designs.V1.all.CXp/C0 (placebo)", "stack"), "--", "--"])
     b6 = J(B76)
     c = b6["main"]["M1|L5|common"]["all"]["controls"]
     p = "main.M1|L5|common.all.controls"
-    rows.append(["B.76 (MAST)", MLAB["M1"], "D100", "TX vs T0", pct(c["TXp/T0"], src_of(B76), p + ".TXp/T0", "stack"),
+    rows.append(["MAST (Thomson)", MLAB["M1"], "D100", "TX vs T0", pct(c["TXp/T0"], src_of(B76), p + ".TXp/T0", "stack"),
                  pct(c["TXo/T0"], src_of(B76), p + ".TXo/T0", "stack"), pct(c["TX/TXo"], src_of(B76), p + ".TX/TXo", "stack")])
     head = [r" & & & & fast inputs & fast inputs at & present over \\",
-            r"batch & design & rule & comparison & permuted & the anchor row & anchor row \\"]
+            r"condition & design & rule & comparison & permuted & the anchor row & anchor row \\"]
+    rows = [[r"\parbox[t]{3.1cm}{\raggedright " + r[0] + r"\strut}"] + r[1:] if isinstance(r, list) and r[0] else r
+            for r in rows]
     body = tabular("@{}llllccc@{}", head, rows, "footnotesize", "3pt")
-    cap = (r"The two controls beside the fast inputs (target L5), reduction of the MSE in per cent. Upper block "
-           r"(B.81): every design under the history 0.65~s old (D650, common set) and the beam-modulation schedule "
-           r"(S, S set). Lower block: the controls registered with other batches. ``Permuted'': the fast inputs "
-           r"(for B.79 TN: the beam scalars) shuffled over rows and the estimator refitted; the reduction against "
+    cap = (r"The two controls beside the fast inputs (target L5), reduction of the MSE in per cent. Upper block: "
+           r"every design under the history 0.65~s old (D650, common set) and the beam-modulation schedule "
+           r"(S, S set). Lower block: the same controls in the other conditions of the paper. ``Permuted'': the fast "
+           r"inputs (for TN: the beam scalars) shuffled over rows and the estimator refitted; the reduction against "
            r"the same reference should be zero. ``At the anchor row'': the fast inputs taken at the row of the "
            r"newest visible CES value instead of row $t$; ``present over anchor row'': TX against that estimator. "
            r"Intervals: 95 \%, shot clusters (MAST: sessions) resampled; bold: the interval excludes zero.")
@@ -1611,7 +1613,7 @@ def pct_macro(name, cell, src, path, what, where):
     macro(name + "Pt", p[0], what + " (per cent, point)", f"{src} {path}", where)
 
 
-def rat_macro(name, cell, src, path, what, where, nd=3):
+def rat_macro(name, cell, src, path, what, where, nd=2):
     p = rat_parts(cell, src, path, nd)
     macro(name, p[0] + "~" + p[1], what + " (with interval)", f"{src} {path}", where)
     macro(name + "Pt", p[0], what + " (point)", f"{src} {path}", where)
