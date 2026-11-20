@@ -10,13 +10,16 @@
 
 ## 1. 먼저 읽을 것 (이 순서로)
 
+0. `README.md`: 저장소의 배선(무엇이 무엇을 읽는가)
 1. `AGENTS.md` (Codex가 자동으로 읽는 요약) 또는 `CLAUDE.md` (같은 규칙의 원문)
 2. `PAPER_DESIGN.md` 1–10절: 논문의 목적, 용어, 표적, estimator, 검증 설계, 서술 규칙, 논문 지도
-3. `PROJECT_KNOWLEDGE.md` 1–3절(목적, 자료), 4.52–4.69절(지금 쓰는 결과), 6절(규칙), 7절(열린 일)
+3. `PROJECT_KNOWLEDGE.md` 1–3절(목적, 자료, 설계), 4절(쓰는 결과: 4.48절부터), 6절(규칙)
 4. `ces_prediction/experiments/README.md`: 배치 디렉터리와 상태 표
 5. 이 문서의 9절(열린 일)과 10절(확장 방향)
 
-`THESIS_RESULTS.md`는 시간순 기록이다. 한 실험의 세부를 볼 때만 연다. 거기에만 있는 수치는 근거로 쓰지 않는다.
+`THESIS_RESULTS.md`는 시간순 기록이다(B.70부터). 한 실험의 세부를 볼 때만 연다. 거기에만 있는 수치는 근거로 쓰지 않는다.
+
+**2026-11-21의 정리.** 저자의 지시로 옛 연구를 저장소에서 걷어냈다: 지금 줄기의 코드가 import하거나 읽지 않는 실험 디렉터리 47개와 그 등록·결과·시험, 옛 문서, 이전 원고의 스크립트, `PROJECT_KNOWLEDGE.md`의 4.1–4.47절, `THESIS_RESULTS.md`의 B.70 앞 기록. 모두 git 이력에 있다(지우기 전 마지막 커밋 `e86adaf`). 되살리지 않는다. 새 파일을 만들면 무엇이 그것을 읽는지 `README.md`의 배선 표에 적는다.
 
 ## 2. 논문의 틀 (바꾸지 않는다)
 
@@ -37,7 +40,7 @@
 | 패키지 | `pyproject.toml`의 numpy, scipy, pandas, torch에 더해 scikit-learn(`HistGradientBoostingRegressor`), matplotlib, pypdf, python-pptx |
 | LaTeX | MiKTeX, `latexmk -pdf` (`docs/paper/ppcf/`에서 `supp_ppcf` 먼저, 그다음 `main_ppcf`; 둘이 서로를 참조한다) |
 | GPU | 노트북 GPU 하나(8 GB). 다른 프로세스(`llama-server.exe`)가 쓰고 있을 수 있다. 그 프로세스는 건드리지 않는다 |
-| 시험 | `py -m pytest -q` (118개 통과가 정상) |
+| 시험 | `py -m pytest -q` (89개 통과가 정상) |
 
 함정:
 
@@ -126,7 +129,7 @@ py docs/paper/ppcf/check_numbers_v2.py   # tex에 손으로 친 수치가 출처
 
 - `gen_v2_README.md`에 표(`\TabXxx`, 캡션 `\CapXxx`), 매크로, 그림의 목록과 출처가 있다. 새 배치의 표가 필요하면 `make_tables_v2.py`에 함수를 더하고 `check_numbers_v2.py`의 `SOURCES_MD`에 md를 더한다.
 - 본문은 `PAPER_DESIGN.md` 9절의 논문 지도를 따른다. 본문 16–18쪽, 그림 6–8개, 초록의 결과 수치 다섯 이내, 본문 표에 배치 번호를 쓰지 않는다.
-- `docs/paper/ppcf/earlier_line/`은 2026-11-19까지의 원고를 얼려 둔 것이고 `check_records.py`의 출처로 쓰인다. 고치지 않는다. 옛 `make_tables.py`, `check_numbers.py`, `fig_paper.py`는 그 원고의 것이다.
+- `docs/paper/ppcf/earlier_line/`은 2026-11-19까지의 원고를 얼려 둔 것이고 보충 자료의 자료 절(`make_supp_fragment.py`)이 거기서 온다. 고치지 않는다. `fig_paper.py`는 그 원고의 그림 스크립트로, 보충 자료의 그림 둘(`fig_geometry`, `fig_rows`)과 포스터 그림을 만든다. 그 원고의 표·검사 스크립트는 2026-11-21에 지웠다.
 
 ## 8. 독립 채점
 
@@ -159,7 +162,8 @@ py docs/paper/ppcf/check_numbers_v2.py   # tex에 손으로 친 수치가 출처
 2. **사건 기준의 쓸모(설계 초안).** 저자의 목적에 있는 "적용했을 때 더 잘 작동함"을 수준이 급히 떨어지는 사건으로 보인다. 사건은 이후 수준이 앞선 300 ms의 중앙값보다 정해 둔 비율 넘게 떨어지는 첫 행으로 정의한다. 견줄 것은 (a) 빔 변조 일정대로 늦게 오는 CES 값만 보는 감시, (b) T0, (c) TX가 같은 문턱을 넘는 시각이다. 보고는 놓친 사건의 몫, 거짓 경보율, 검출 지연의 중앙값. 저장된 추정(`data/.b75/fits/`)으로 된다. 등록부터 한다.
 3. **기다림의 값어치(18차 채점자의 권고; 논문의 첫 질문에 들어간다).** 같은 boosted regression에 다음 값 1, 2, 5개를 보여 준 기준을 만들어, 허용 지연 0, 1, 2, 5프레임에 따른 오차를 한 그림으로 낸다. 지금의 비교는 학습한 인과 estimator 대 학습하지 않은 양쪽 보간이라 두 차이가 섞여 있다. 저장된 행 표(`data/.b73/rows.npz`)와 B.83의 기준으로 된다. 등록부터 한다.
 4. **표적 검증(17차·18차 채점자의 권고).** 다섯 프레임을 둘로 나눈 잡음 바닥, notch 뒤 100 ms 안의 행과 BES 수준이 가장 낮은 행을 뺀 주 표의 재채점, 컷을 2 keV와 4 keV로 바꾼 판독, 절대 오차를 손실로 한 fit.
-5. **구간의 보정.** 군집이 14–19개인 시간순 설계에서 섞은 입력으로 구간의 포함률을 잰다(B.81의 대조를 여러 seed로).
+5. **`experiments/seq/`의 옛 변형 정리.** `seq_models.py`가 지운 배치들의 구조 변형(v4k, v2d, b28, b3, tcn, xfmr 등)을 한 사전에 import한다. 지금 줄기는 v2, v2h, v2e·v2b·v2n만 쓴다. 변형 파일과 그 시험을 지우려면 `seq_models.py`를 고쳐야 하고, 저장된 학습 결과가 그대로 읽히는지(B.70의 채점 경로) 확인해야 한다. GPU 배치가 돌지 않을 때 한다.
+6. **구간의 보정.** 군집이 14–19개인 시간순 설계에서 섞은 입력으로 구간의 포함률을 잰다(B.81의 대조를 여러 seed로).
 
 ### 9.3 저자의 결정을 기다리는 것
 

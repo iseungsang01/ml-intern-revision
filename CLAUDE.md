@@ -4,23 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A single PyTorch pipeline that predicts normalized low-resolution KSTAR CES (Charge
-Exchange Spectroscopy) targets `[CES_TI, CES_VT]` from higher-resolution BES, ECEI, MC
-diagnostics plus irregular-time features and previous-CES history. Everything executable
-lives under `ces_prediction/`. The old generic `ml-intern` CLI/FastAPI runtime is gone —
-do not reintroduce it.
+The research code and the manuscript of one study: **causal nowcasting of the KSTAR charge-exchange
+(CES) ion temperature on a pedestal-top chord** from its own history and the fast diagnostics at the
+same location (BES, ECEI), 2022 campaign. Three layers:
+
+- the core PyTorch pipeline under `ces_prediction/` (`dataset.py`, `model.py`, `train.py`,
+  `evaluate.py`, `baselines_interpolation.py`): the data contract below and the windowed model;
+- the registered experiment batches under `ces_prediction/experiments/` (one directory per batch);
+- the manuscript in PPCF format under `docs/paper/ppcf/`, whose numbers are generated from the result
+  files of the batches.
+
+`README.md` holds the wiring (what reads what), `HANDOVER.md` the handover (environment, data and
+caches, the procedure of a batch, the manuscript build, open work), `AGENTS.md` the short form for other
+coding agents. The old generic `ml-intern` CLI/FastAPI runtime is gone; do not reintroduce it. Earlier
+lines of this research were removed on 2026-11-21 (git history, last commit before `e86adaf`); do not
+bring them back.
 
 ## Commands
 
 ```bash
-python -m pip install -e ".[dev]"   # install (requires-python >=3.11)
-python -m pytest -q                  # tests (tests/test_architecture.py)
+python -m pip install -e ".[dev]"   # install (requires-python >=3.11); the batches also need scikit-learn and matplotlib
+python -m pytest -q                  # tests
 .\ces_prediction\run_smoke_test.ps1  # pytest + 1-epoch tiny train, end-to-end (PowerShell)
-python ces_prediction/train.py       # full training run
+python ces_prediction/train.py       # training run of the core pipeline (windowed model)
 python ces_prediction/evaluate.py    # clean eval: model vs persistence/mean, physical units, per target
-python ces_prediction/inspect_split.py        # validate fixed split / manifest
-python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
-python ces_prediction/analyze_foundations.py    # checks every derivation in docs/theory_foundations.md (data + frozen npz)
+python ces_prediction/inspect_split.py          # validate fixed split / manifest
 python ces_prediction/analyze_file_rules.py     # how the 10 ms files relate to the raw 1 us deliveries (grid, snapshots, beam blips)
 python ces_prediction/analyze_nbi_files.py      # what the NBI files (data/nbi/) are: rows, sources, notches, CES values by source state
 python ces_prediction/check_records.py          # numbers of PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md against their sources
@@ -28,14 +36,6 @@ python docs/paper/ppcf/make_tables_v2.py        # manuscript tables and number m
 python docs/paper/ppcf/fig_v2.py                # manuscript figures (figv2_*)
 python docs/paper/ppcf/check_numbers_v2.py      # numbers typed in main_ppcf.tex / supp_ppcf.tex against their sources
 ```
-
-`HANDOVER.md` is the handover document (state, data layout, the procedure of a batch, manuscript build, open work, GPU batches that wait); `AGENTS.md` is the short form for other coding agents.
-
-Controlled experiment batches live under `ces_prediction/experiments/` — one directory per batch, each with
-its own runner and each behind a record in `THESIS_RESULTS.md`, plus two shared files
-(`runner_common.py` for the frozen splits/controls/env, `paired_model_compare.py` for the paired
-bootstrap). The mapping (directory ↔ §8 section ↔ verdict) and the non-negotiables for a new batch
-are in `ces_prediction/experiments/README.md`; read that before adding one.
 
 Run a single test: `python -m pytest tests/test_architecture.py::test_dry_run -q`
 
@@ -45,13 +45,15 @@ the script's own directory being on `sys.path`. There is no `ces_prediction.*` p
 in the runtime code (`tests/` and the runners patch `sys.path` manually).
 
 **You need real data to do almost anything.** The shot CSVs are **not** committed (`data/*`
-is gitignored). Point `CES_DATA_DIR` at the real folder (the thesis `data/`, e.g.
-`C:\Users\lss\Desktop\원핵 졸논\data`) or copy the CSVs into `data/`. Of the three tests,
-only `test_dry_run` runs without data — `test_real_csv_sample_forward` and
-`test_temporal_subset_sample_uses_previous_ces_only` load real CSVs and fail without
-`CES_DATA_DIR` pointing at them. `train.py`, `evaluate.py`, and the smoke script all need it too.
-The local interpreter is invoked as `py` (Python 3.14); the commands above also work as `python`
-where a 3.11+ `python` is on PATH.
+is gitignored). Point `CES_DATA_DIR` at the real folder or copy the CSVs into `data/` (layout in
+`HANDOVER.md` section 4). Tests that load real CSVs fail without them; `test_dry_run` runs without
+data. The local interpreter is invoked as `py` (Python 3.14); the commands above also work as
+`python` where a 3.11+ `python` is on PATH.
+
+Experiment batches live under `ces_prediction/experiments/`, one directory per batch, each behind a
+registration `PREREGISTRATION_B{NN}.md`, plus two shared files (`runner_common.py`,
+`paired_model_compare.py`). Read `ces_prediction/experiments/README.md` and `HANDOVER.md` section 5
+before adding one.
 
 ## The data/model contract (do not break)
 
@@ -113,65 +115,51 @@ so canonical splits/metrics/weights are not overwritten (the smoke script uses `
 The shot CSVs are **not** committed (`data/*` is gitignored); point `CES_DATA_DIR` at their real
 location (e.g. the thesis `data/` folder) or copy them into `data/`.
 
-## The AutoML loop is gone (removed 2026-08-05) — but its output is load-bearing
+## Estimators and architecture files
 
-An `automl_agent_loop.py` keep/discard autoresearch loop produced the thesis architecture and was
-then retired (last run 2026-06-24; every experiment since is a hand-written batch under
-`experiments/`). The runner, its Slack notifier, `program.md`, and `HANDOFF.md` were deleted —
-recover them from git history if ever needed.
+- **The estimator of the paper** is not a network: a causal Gaussian process on the past CES values
+  followed by a boosted regression on scalars of that history and of the fast channels
+  (`experiments/b73_targets/stage_trees.py` for the nowcast condition,
+  `experiments/b75_availability/stage_fits.py` for a late or sparse CES history). Definitions are fixed
+  in `PAPER_DESIGN.md` section 5.
+- **The recurrent network** `experiments/seq/model_seq_v2.py` (a full-grid two-branch causal LSTM,
+  trained by `experiments/seq/train_seq.py`, scored by `experiments/seq/eval_seq.py`) and its
+  two-stage form are comparison rows of the paper. Their stored trainings are re-scored on the data
+  definition D1 by `experiments/b70_d1/`.
+- **The windowed model** of the core pipeline: `ces_prediction/model.py` re-exports
+  `model_iter009.py`. `model_iter009.py` and `model_iter002.py` are frozen architecture files pinned by
+  SHA-256 in `tests/test_architecture.py` — **do not edit them**. The windowed model is not in the
+  paper; it is kept for the data contract and its tests.
 
-**The window-family architectures live in the repo (moved in 2026-08-09).**
-`ces_prediction/model_iter009.py` is the windowed GRU + observation-masked multi-head-attention
-model that the AutoML loop produced — under the confirmed protocol (2026-08-16, `THESIS_RESULTS.md`
-§8ab) it is the **W = 2 paired control**, not the paper's main model — and
-`ces_prediction/model_iter002.py` is the iter2 "before" baseline. Both are byte-identical copies of
-the AutoML archive that used to exist only under the gitignored `data/`, and both are pinned by
-SHA-256 in `tests/test_architecture.py` — **do not edit them**.
+A controlled experiment that varies the architecture of the core pipeline sets **`CES_MODEL_FILE`**
+to its own `.py` file in the subprocess env, like every other `CES_*` knob. The file must define
+`MultimodalCESPredictor` with the contract signature. No runner writes to tracked source; never copy
+a variant over `model.py`.
 
-**The paper's main model is `seq_v2`** (`ces_prediction/experiments/seq/model_seq_v2.py`, a
-full-grid two-branch causal LSTM whose `V_rot` branch never sees the fast diagnostics), trained by
-`experiments/seq/train_seq.py` and scored by `experiments/seq/eval_seq.py` (`CES_SEQ_MODEL=v2`,
-`CES_PER_SHOT_NORM=1`); the interpretable rung is `experiments/seq/model_seq_b3.py`. The confirmed
-protocol (W = 2 · held-free · per-file cap 500 · two co-primary populations via
-`CES_TI_SPIKE_CUT_EV=3000` / `0`) is **not** the default of `train.py` (whose defaults are W = 4,
-held kept, no cut) — the batch runners' env (`experiments/b1_gate/run_b1_gate.py::GATE_ENV`) is the
-reference; always pin these variables explicitly.
-
-## Choosing the architecture (`CES_MODEL_FILE`)
-
-`ces_prediction/model.py` **re-exports `model_iter009.py`**, so `from model import
-MultimodalCESPredictor` — in `train.py`, `evaluate.py`, `compare_baselines.py`, and every
-window-family experiment runner — gives you the windowed control architecture, and every saved
-window checkpoint loads. (The seq family has its own loader in `experiments/seq/`.)
-
-A controlled experiment that varies the architecture sets **`CES_MODEL_FILE`** to its own `.py`
-file in the subprocess env, exactly like every other `CES_*` knob (`experiments/anchor/` is the
-worked example). The file must define `MultimodalCESPredictor` with the contract signature.
-
-Until 2026-08-09 the runners instead **copied a variant over `model.py` and restored it afterwards**
-(`swap_in_iter009` / `.wsweep_backup`). That is gone: no runner writes to tracked source, and an
-interrupted batch can no longer leave a corrupted `model.py` behind. Don't reintroduce it.
-See `docs/reference/PROJECT_KNOWLEDGE_until_2026-11-16.md` "Checkpoint / Architecture Provenance".
+The defaults of `train.py` (W = 4, held values kept, no cut) are **not** the data definition of the
+paper. Every run pins its `CES_*` variables explicitly; the reference env of the network trainings is
+in `experiments/b64_two_stage/run_b64.py` and `experiments/b39_primary/run_b39.py`.
 
 ## Working agreements
 
-- **Three records, three roles (2026-11-16).** `PROJECT_KNOWLEDGE.md` is the record in use: purpose,
-  data facts, the design choices with what was measured for each, the results that are used, rules
-  and open work. `PAPER_DESIGN.md` fixes the terms, populations, estimators, training, scoring and
-  sentence forms that the paper, the poster and every new analysis follow. `THESIS_RESULTS.md` is
-  the chronological log. Read the first two before changing training/model/data code or writing
-  paper text; open the log for the detail of one experiment.
-- A number or conclusion that is only in the log, in `docs/reference/` or in a document that
-  `docs/README.md` marks as reference is **not** grounds for a next step and is not quoted. If it
-  is needed, re-measure it and promote it into `PROJECT_KNOWLEDGE.md` section 4.
-- Change **one controlled variable at a time**; don't bundle architecture + data + loss +
-  optimizer changes.
+- **The records.** `README.md` is the wiring of the repository. `HANDOVER.md` is the handover.
+  `PAPER_DESIGN.md` fixes the purpose, terms, data definition, targets, estimators, validation
+  designs, wording rules and the paper map. `PROJECT_KNOWLEDGE.md` holds the data facts and the
+  results in use, one subsection per batch. `THESIS_RESULTS.md` is the chronological log (from B.70).
+  Read `PAPER_DESIGN.md` and `PROJECT_KNOWLEDGE.md` before changing training/model/data code or
+  writing paper text; open the log for the detail of one experiment.
+- **The framing of the paper is the author's** (`PAPER_DESIGN.md` section 1) and is not rebuilt in
+  answer to a critique or a grading.
+- A number or conclusion that is only in the log is **not** grounds for a next step and is not
+  quoted. If it is needed, re-measure it and put it into `PROJECT_KNOWLEDGE.md` section 4.
+- **Register before running**; change **one controlled variable at a time**; real data only.
 - **Record every meaningful run at the end of `THESIS_RESULTS.md`** (design, result, verdict). What
-  will be used goes into `PROJECT_KNOWLEDGE.md` section 4 as one line with its source; a change of
-  design or method goes into the change log of `PAPER_DESIGN.md`. Then run
+  will be used goes into `PROJECT_KNOWLEDGE.md` section 4 with its source; a change of design or
+  method goes into the change log of `PAPER_DESIGN.md`. Then run
   `python ces_prediction/check_records.py` (every number of the two files against its source).
 - **Pin the data treatment explicitly in every run** — never let `CES_DROP_STUCK_TARGETS` and
-  friends fall back to a default. A silent default produced a wrong window-sweep conclusion once
-  (THESIS_RESULTS.md §8f).
+  friends fall back to a default.
+- **Leave no orphan.** A new batch gets a row in `ces_prediction/experiments/README.md` and in the
+  wiring table of `README.md`; a file that nothing reads is removed, not parked.
 - After code changes run `python -m pytest -q`; if training/data/model behavior changed, also
   run a smoke training command and record whether it passed.

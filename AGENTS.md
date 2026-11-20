@@ -8,15 +8,16 @@ Causal nowcasting of the KSTAR charge-exchange (CES) ion temperature on one pede
 
 ## Read first
 
+0. `README.md` — the wiring of the repository: what reads what.
 1. `HANDOVER.md` — state, environment, data layout, the batch procedure, open work (section 9), proposed extensions (section 10).
 2. `PAPER_DESIGN.md` sections 1 to 10 — purpose, terms, targets, estimators, validation designs, wording rules, the paper map.
-3. `PROJECT_KNOWLEDGE.md` sections 1 to 3, 4.52 to 4.69, 6 and 7 — the results in use and the rules.
+3. `PROJECT_KNOWLEDGE.md` sections 1 to 3, 4 (from 4.48) and 6 — the data facts, the results in use and the rules.
 4. `ces_prediction/experiments/README.md` — batch directories and their status.
 
 ## Commands
 
 ```bash
-py -m pytest -q                                  # tests (118 pass); run after code changes
+py -m pytest -q                                  # tests (89 pass); run after code changes
 py ces_prediction/check_records.py               # every number of the two record files against its source
 py docs/paper/ppcf/make_tables_v2.py             # result json -> gen_v2.tex (tables, number macros)
 py docs/paper/ppcf/fig_v2.py                     # figures of the manuscript
@@ -31,6 +32,7 @@ Always run scripts from the repository root with `py` (Python 3.14 on Windows). 
 - **The framing of the paper is the author's and is not rebuilt.** Purpose: nowcasting at the pedestal top; find the best model against interpolation and the like; 10 ms real time; a demonstration of use is a bonus. Do not rebuild the storyline in answer to a critique or a grading; place new results inside the five questions of `PAPER_DESIGN.md` section 1.
 - **Register before running.** Every batch gets `PREREGISTRATION_B{NN}.md` (statements, rule of judgement, expectation, the sentences of the paper for either outcome) committed before any run; open choices go into `..._ADDENDUM1.md` before the readout; the registration is never edited afterwards. Follow `HANDOVER.md` section 5.
 - **Real data only.** No synthetic or mock data. Fail loudly if data are missing.
+- **Earlier lines of this research were removed on 2026-11-21** (git history, last commit before the cleanup `e86adaf`). Do not restore them and do not quote their numbers. Leave no orphan: a new file is read by something, and that is written into the wiring table of `README.md`.
 - **Pin the data treatment** in every run (`CES_*` variables in the runner's env); never rely on defaults.
 - **Do not edit** `ces_prediction/model_iter009.py`, `model_iter002.py` (pinned by SHA-256), a registration file after it is committed, `docs/paper/ppcf/earlier_line/`, or existing training code while a GPU batch runs. New work goes into new files.
 - **Numbers are never typed by hand** into the manuscript; they come from `gen_v2.tex`. Every number in `PROJECT_KNOWLEDGE.md` and `PAPER_DESIGN.md` must pass `check_records.py`.

@@ -6,10 +6,10 @@ Records checked: PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md.  A token is a decimal
 of three or more digits (sign kept).  It passes if the same token occurs in
 
   tier 1  the manuscript (docs/paper/ppcf/main_ppcf.tex and supp_ppcf.tex), the analysis outputs listed in SOURCES
-          (file rules, B.29 / B.30 / B.31, MAST), the figure data of the manuscript, or DERIVED;
-  tier 2  the experiment log THESIS_RESULTS.md (design-choice numbers of earlier batches live only
-          there).  Tokens that pass on tier 2 alone are listed, because the log holds almost every
-          number that was ever produced and a match there is weaker evidence.
+          (file rules, the result files of B.70 onward, the critiques and gradings), the figure data of
+          the manuscript, or DERIVED;
+  tier 2  the experiment log THESIS_RESULTS.md.  Tokens that pass on tier 2 alone are listed: a match
+          there is weaker evidence.
 
 This catches transcription errors.  It does not check that a number is attached to the right
 sentence; that is read by hand.
@@ -26,47 +26,10 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 RECORDS = ("PROJECT_KNOWLEDGE.md", "PAPER_DESIGN.md")
 SOURCES = (
-    "docs/paper/ppcf/main_ppcf.tex", "docs/paper/ppcf/supp_ppcf.tex", "docs/paper/ppcf/refs.bib", "docs/paper/file_rules.md",
-    "docs/paper/ppcf/earlier_line/main_ppcf_ea2e1a6.tex", "docs/paper/ppcf/earlier_line/supp_ppcf_ea2e1a6.tex",
-    "docs/paper/b29_causal.md", "docs/paper/b29_addendum1.md", "docs/paper/b30_thinned.md",
-    "docs/paper/b30_posthoc.md", "docs/paper/b30_sensitivity.md", "docs/paper/b30_stack.md",
-    "docs/paper/b30_stack_offline.md", "docs/paper/b31_bursts.md", "docs/paper/mast_ped_confirmation.md",
-    "docs/paper/mast_edge.md", "docs/paper/mast_gate.md", "docs/paper/mast_gate_addendum1.md",
-    "docs/paper/fast_departure.md", "docs/paper/b32_two_sources.md", "docs/paper/b32_posthoc.md",
-    "docs/paper/b32_posthoc_model.md",
-    "docs/paper/b33_clusters.md",
-    "docs/paper/b34_error_model.md", "docs/paper/b35_blip_response.md",
-    "docs/paper/b36_layer.md", "docs/paper/b37_plan.md",
-    "docs/paper/b37_addendum1.md",
-    "docs/paper/b38_stage2.md",
-    "docs/paper/b41_events.md",
-    "docs/paper/b40_noise.md",
-    "docs/paper/b44_strata.md",
-    "docs/paper/b43_target_checks.md",
-    "docs/paper/b42_delay.md",
-    "docs/paper/b39_primary.md",
-    "docs/paper/b39_inits.md",
-    "docs/paper/b49_average.md",
-    "docs/paper/b48_reread.md",
-    "docs/paper/b50_missing_like.md",
-    "docs/paper/b51_bes_modes.md",
-    "docs/paper/b52_grading_readouts.md",
-    "docs/paper/b54_pooled_rows.md",
-    "docs/paper/b55_sample_timing.md",
-    "docs/paper/b58_blip_calibration.md",
-    "docs/paper/b60_relative_error.md",
-    "docs/paper/b56_kfx.md",
-    "docs/paper/b57_yardsticks.md",
-    "docs/paper/b53_components.md",
-    "docs/paper/b61_absolute_robust.md",
-    "docs/paper/b61_blip_dose.md",
-    "docs/paper/b62_beam_return.md",
-    "docs/paper/b63_blip_magnetics.md",
-    "docs/paper/b66_regimes.md",
-    "docs/paper/b59_inputs.md",
-    "docs/paper/b64_two_stage.md",
-    "docs/paper/b65_inclusive.md",
-    "docs/paper/b67_gated.md",
+    "docs/paper/ppcf/main_ppcf.tex",
+    "docs/paper/ppcf/supp_ppcf.tex",
+    "docs/paper/ppcf/refs.bib",
+    "docs/paper/file_rules.md",
     "docs/paper/dataset_ledger.md",
     "docs/paper/b70_d1.md",
     "docs/paper/b70_checks.md",
@@ -115,13 +78,9 @@ SOURCES = (
     "docs/paper/review_loop/critique_20261120_pedestal.md",
     "docs/paper/review_loop/critique_20261120_stats.md",
     "docs/paper/review_loop/critique_20261120_cxrs.md",
-    "docs/paper/b45_ablation_rows.md",
-    "docs/paper/b46_beam_off.md",
 )
 DERIVED = {
     "2022": "the campaign year",
-    "0.218": "seq_v2 lean step, median ms (latency ladder of the log, section 8aj)",
-    "1.37": "offline GP median 2.357 ms / causal GP 1.723 ms in the same sessions (bench_offline.py record)",
     "30801": "first shot of the data set",
     "32751": "last shot of the data set",
 }

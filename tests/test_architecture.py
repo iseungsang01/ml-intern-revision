@@ -12,7 +12,7 @@ from model import MultimodalCESPredictor
 
 # The two architectures behind published numbers, pinned by content hash. Neither is model.py
 # (which the AutoML search later rewrote into a Transformer), so they can neither drift silently
-# nor be "cleaned up" without this test failing. Provenance: docs/reference/PROJECT_KNOWLEDGE_until_2026-11-16.md.
+# nor be "cleaned up" without this test failing. Provenance: the git history of this repository.
 CES_DIR = Path(__file__).resolve().parents[1] / "ces_prediction"
 PINNED_ARCHITECTURES = {
     # final model: every headline number

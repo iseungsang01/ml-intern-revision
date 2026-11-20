@@ -1,6 +1,6 @@
 # 발표자료 — KSTAR CES nowcasting
 
-지금 쓰는 것만 이 폴더 맨 위에 둔다. 이전 판은 `archive/`에 있다(2026-11-19 정리).
+2026-11-19 판의 발표 덱과 포스터다. 내용은 그날의 줄기(순환 신경망과 2단계 estimator, B.64·B.65)이고, 지금 원고(신경망 없는 estimator, 자료 정의 D1)에 맞춘 갱신은 저자가 "수정"을 말할 때 한다. 그보다 앞선 덱들의 보관함(`archive/`)은 2026-11-21에 지웠다(git 이력).
 
 ## 지금 쓰는 것
 
@@ -21,18 +21,3 @@
 - `preview_pptx.py`: pptx 미리보기.
 
 **미추적 파일:** `KSTAR_CES_의사결정.pptx`, `build_pptx_decision.py`, `check_deck_rules.py`, `audit_deck_geometry.py`, `PPT_4STEP.md`는 다른 작업이 쓰는 미추적 파일이다. 손대지 않는다.
-
-## archive/
-
-2026-08부터 11-12까지 만든 덱과 그 빌더·그림이다. 수치와 결론은 당시 기록(W = 4 윈도 시절, THESIS_RESULTS §0 등)에서 왔다. **지금의 근거로 쓰지 않는다.** 근거는 `PROJECT_KNOWLEDGE.md`이다.
-
-**들어 있는 것**
-- 1시간·20분 발표 덱
-- 종합방어, 연구흐름, 졸논정리, 물리근거 덱
-- 1-pager
-- `기말발표/` v1–v4 (2026-11-12)
-- `physics_report.html`, `survey_artifact.html`
-
-당시 README는 `archive/README.md`에 그대로 있다.
-
-옮긴 빌더의 경로는 `archive/` 안에서 맞게 남겨 두었지만, 유지하지 않는다.
