@@ -8652,3 +8652,25 @@ Reading. The increment of the fast diagnostics under a stale history is not what
 ### The last block under the schedule rule: an unregistered diagnostic, and the registration of B.80 (2026-11-20)
 
 `docs/paper/b75_last_block.md` (session lead; stored estimates of B.75 under V1 and rule S, input-only quantities, no interval). The age of the newest visible value is the same in the three blocks of shots (median 0.66, 0.60, 0.66 s). What differs from 32312 on is the ECEI: the change of its level since the newest visible value does not go with the change of the ion-temperature level (Spearman -0.013 against +0.269 and +0.329; BES +0.166 against +0.287 and +0.301); at a beam notch the ECEI level stays (1.001 of the level before, against 0.902 and 0.967) while T_i (0.757, 0.819, 0.837) and BES (0.669, 0.656, 0.643) fall in all blocks; its four channels are correlated at 0.654 against 0.911 and 0.841. Level of the history and state of NBI-2 do not remove the difference. Three discharges carry most of the loss (skill +0.133 without them, +0.066 with them). The cause is not decided: no toroidal field and no ECEI setting is in the files. B.80 (`PREREGISTRATION_B80.md`) asks whether the coherence of the ECEI channels orders the increment discharge by discharge inside every block, and reads an estimator that uses the fast inputs only where the channels are coherent.
+
+### B.80: the coherence of the ECEI channels does not account for the limit under the schedule rule (2026-11-20)
+
+Registration `PREREGISTRATION_B80.md` with addendum 1 (written before the check and any readout). CPU, no fit: stored estimates of B.75 and B.79 read by classes of an input-only measure per discharge, C_E = the mean pairwise correlation of the four raw ECEI channels (low below 0.7, middle, high from 0.9), and a gated estimator TG (TX where C_E is 0.7 or above, T0 otherwise). Run by an AI agent under the author's supervision. Output `docs/paper/b80_ecei_gate.{md,json}`; the session lead's checks `docs/paper/b80_lead_checks.md` (C_E, the class counts, the class skills and TG recomputed with own code). Target L5; intervals with shot clusters resampled.
+
+C_E over the 590 discharges that have it: low 170, middle 135, high 285; share low 0.221 up to 31991, 0.348 in 32002 to 32310, 0.524 from 32312.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| G1 V1, S: TX over T0, high minus low, above zero | +0.151 [-0.017, +0.277] | does not hold | holds |
+| G2 V1, S: TE over T0 in the low class contains zero or lies below | +0.165 [+0.043, +0.302] | does not hold | holds |
+| G3 V1, S: TE over T0 in the high class above zero | +0.240 [+0.152, +0.317] | holds | holds |
+| G4 V1, D650: high minus low above zero | +0.253 [+0.154, +0.354] | holds | holds |
+| G5 V1, S, shots up to 32310: high minus low above zero | +0.141 [-0.046, +0.270] | does not hold | uncertain, leaning to holds |
+| G6 V3, S: TX over T0 in the high class above zero | +0.287 [+0.194, +0.396] | holds | holds |
+| G7 V1, S, from 32312: TG over T0 above zero | +0.010 [-0.198, +0.112] | does not hold | uncertain |
+| G8 V4 (fit to 31991), S: TG over T0 above zero | -0.025 [-0.163, +0.052] | does not hold | uncertain |
+| G9 V1, S: TG not worse than TX | -0.067 [-0.128, -0.027] | does not hold | holds |
+
+Reported: TX over T0 by class under V1, S +0.218 / +0.292 / +0.370 and D650 +0.143 / +0.319 / +0.396; inside the last block low +0.084, high +0.154; Spearman of C_E with the per-discharge skill +0.183 [+0.071, +0.283] (444 discharges).
+
+Reading. The coherence goes weakly with the increment, but under the schedule rule the fast diagnostics reduce the MSE in the low class too, the ECEI half included, and switching them off where the coherence is low costs accuracy. The block comparison of `b75_last_block.md` stays a description. By the rules registered beforehand the paper reports the last block under the schedule as a limit without an explanation and proposes no gated estimator. What would decide it: toroidal field and ECEI settings per shot, which are not in the files. Expectation of G1, G2 and G9 not met.
