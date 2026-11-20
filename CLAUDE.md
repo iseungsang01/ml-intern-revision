@@ -24,7 +24,12 @@ python ces_prediction/analyze_foundations.py    # checks every derivation in doc
 python ces_prediction/analyze_file_rules.py     # how the 10 ms files relate to the raw 1 us deliveries (grid, snapshots, beam blips)
 python ces_prediction/analyze_nbi_files.py      # what the NBI files (data/nbi/) are: rows, sources, notches, CES values by source state
 python ces_prediction/check_records.py          # numbers of PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md against their sources
+python docs/paper/ppcf/make_tables_v2.py        # manuscript tables and number macros from the result json files (gen_v2.tex)
+python docs/paper/ppcf/fig_v2.py                # manuscript figures (figv2_*)
+python docs/paper/ppcf/check_numbers_v2.py      # numbers typed in main_ppcf.tex / supp_ppcf.tex against their sources
 ```
+
+`HANDOVER.md` is the handover document (state, data layout, the procedure of a batch, manuscript build, open work, GPU batches that wait); `AGENTS.md` is the short form for other coding agents.
 
 Controlled experiment batches live under `ces_prediction/experiments/` — one directory per batch, each with
 its own runner and each behind a record in `THESIS_RESULTS.md`, plus two shared files

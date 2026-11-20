@@ -6,7 +6,9 @@
 
 | 문서 | 내용 |
 |---|---|
-| `paper/ppcf/` | 원고(`main_ppcf.tex`, `main_ppcf.pdf`), 그림 스크립트, `check_numbers.py` |
+| `paper/ppcf/` | 원고(`main_ppcf.tex`, `supp_ppcf.tex`와 PDF), 표와 수치 매크로(`make_tables_v2.py` → `gen_v2.tex`), 그림(`fig_v2.py` → `figv2_*`), 검사(`check_numbers_v2.py`). `earlier_line/`은 2026-11-19까지의 원고를 얼려 둔 것 |
+| `paper/b70_d1.md` … `paper/b86_mast_radius.md` (각각 `.json`, `_checks.md`, `_lead_checks.md`) | 2026-11-19 이후의 등록 배치 결과. 목록은 저장소 루트의 `HANDOVER.md` 6절 |
+| `paper/review_loop/` | 독립 채점 기록과 고정 지시문(`GRADER_PROMPT.md`), 비판 기록 |
 | `paper/file_rules.md`, `.json` | 10 ms 파일과 원시 자료의 관계: 격자, 표본, 빔 blip, blip 뒤 응답 |
 | `paper/b27c_hier.json` | pooled 구간(주 수치) |
 | `paper/b29_causal.md`, `b29_addendum1.md` | 빠른 채널의 증분, 인과 변형 |

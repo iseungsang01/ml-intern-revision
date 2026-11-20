@@ -1,5 +1,7 @@
 # ML Intern Revision: KSTAR CES Prediction
 
+> **Where to start (2026-11-21).** The state of the work, the data layout, the procedure of an experiment batch, the manuscript build and the open work are in [`HANDOVER.md`](HANDOVER.md) (Korean). Coding agents read [`AGENTS.md`](AGENTS.md) (Codex) or [`CLAUDE.md`](CLAUDE.md) (Claude Code). The design of the paper is fixed in [`PAPER_DESIGN.md`](PAPER_DESIGN.md); the results in use are in [`PROJECT_KNOWLEDGE.md`](PROJECT_KNOWLEDGE.md). The sections below describe the original training pipeline and remain valid for it.
+
 This revision is focused on **KSTAR CES (Charge Exchange Spectroscopy) multimodal prediction**. The active code path trains a PyTorch model that predicts normalized low-resolution CES targets from higher-resolution BES, ECEI, MC, irregular-time, and previous-CES-history features.
 
 The old generic `ml-intern` CLI/web runtime is not present in this streamlined repository. The current executable paths are the KSTAR CES training/evaluation pipeline and the controlled experiment batches under `ces_prediction/`.
