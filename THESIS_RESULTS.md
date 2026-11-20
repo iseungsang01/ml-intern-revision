@@ -8678,3 +8678,31 @@ Reading. The coherence goes weakly with the increment, but under the schedule ru
 ### Rows in which the ECEI channels do not move (unregistered diagnostic, 2026-11-20)
 
 `docs/paper/b75_stuck_ecei.md`. Found on the example discharge of the manuscript (31076: the four ECEI channels are constant until about 2 s). Over all files the ECEI is constant for at least ten rows in 0.035 of the grid rows, in 60 of 641 discharges (6 of them for more than half of their rows); the BES channels never are. The estimators were fitted and scored with these rows in. Stored estimates of B.75 (V1, L5): where the ECEI is constant at the row or at the anchor row the increment is +0.160 against +0.334 (schedule rule) and +0.059 against +0.348 (history 0.65 s old). It does not account for the last block (ECEI constant in 0.017 of its grid rows; +0.039 on the rows where it moves). No interval.
+
+### B.81: the two controls and the two halves under the stale-history rules, every design (2026-11-20)
+
+Registration `PREREGISTRATION_B81.md` with addendum 1 (written before any run). CPU: 220 boosted regressions of the kind of B.75 on B.75's rows, inputs and units, target L5, rules D650 and S; the four checks passed before the readout (`docs/paper/b81_checks.md`). Run by an AI agent under the author's supervision. Output `docs/paper/b81_controls.{md,json}`; the session lead's checks `docs/paper/b81_lead_checks.md` (all seventeen values pooled again from the stored estimates). Intervals with shot clusters resampled.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| C1 V1, D650: permuted fast inputs, TXp over T0, contains zero or lies below | -0.004 [-0.008, +0.001] | holds | holds |
+| C2 V1, S: the same | -0.000 [-0.010, +0.009] | holds | holds |
+| C3 V1, D650: TX over TXo (fast inputs of the anchor row) above zero | +0.273 [+0.229, +0.317] | holds | holds |
+| C4 V1, S: the same | +0.276 [+0.215, +0.333] | holds | holds |
+| C5 V2, D650: the same | +0.298 [+0.232, +0.363] | holds | holds |
+| C6 V3, D650: the same | +0.426 [+0.307, +0.562] | holds | uncertain, leaning to holds |
+| C7 V4 (fit to 31991), D650: the same | +0.357 [+0.235, +0.523] | holds | uncertain |
+| C8 V2, S: the same | +0.296 [+0.205, +0.391] | holds | holds |
+| C9 V3, S: the same | +0.274 [+0.192, +0.373] | holds | uncertain, leaning to holds |
+| E1 V2, D650: TE over T0 above zero | +0.163 [+0.090, +0.231] | holds | holds |
+| E2 V3, D650: TE over T0 above zero | +0.058 [-0.067, +0.166] | does not hold | uncertain, leaning to holds |
+| E3 V2, D650: TB over T0 above zero | +0.225 [+0.163, +0.285] | holds | holds |
+| E4 V3, D650: TB over T0 above zero | +0.122 [+0.028, +0.234] | holds | uncertain |
+| E5 V2, S: TE over T0 above zero | +0.181 [+0.098, +0.257] | holds | holds |
+| E6 V3, S: TE over T0 above zero | +0.160 [+0.066, +0.257] | holds | uncertain, leaning to holds |
+| E7 V2, S: TB over T0 above zero | +0.221 [+0.157, +0.297] | holds | holds |
+| E8 V3, S: TB over T0 above zero | +0.171 [+0.119, +0.229] | holds | uncertain |
+
+Reported: TXo over T0 under D650 is +0.087 [+0.033, +0.134] (V1), -0.023 [-0.103, +0.047] (V2), -0.411 [-0.940, -0.118] (V3), -0.187 [-0.470, +0.048] (V4, fit to 31991); under S +0.070 [+0.006, +0.136] (V1), -0.005 (V2), -0.059 (V3). The permuted control excludes zero in one cell that is not a statement (S, V4 fit to 32310: +0.029 [+0.002, +0.064]).
+
+Reading. With the fast inputs permuted the increment is zero under both head rules. The present samples are needed under every design; fast samples taken when the newest visible CES value was taken add a little under the random design only and do harm in time order. Each half alone fails one design at D650 (ECEI under rolling origin, BES under the chronological design, B.75); only the two together exclude zero under all four. The manuscript's sentence on the ECEI half names the designs in which it holds.

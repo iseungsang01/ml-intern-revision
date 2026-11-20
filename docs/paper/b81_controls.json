@@ -1,0 +1,1790 @@
+{
+ "registration": "ces_prediction/experiments/PREREGISTRATION_B81.md",
+ "addendum": "ces_prediction/experiments/PREREGISTRATION_B81_ADDENDUM1.md",
+ "n_boot": 20000,
+ "seed": 20261181,
+ "target": "L5",
+ "rule_sets": {
+  "D650": "common set (common_L5 of data/.b75/sets.npz)",
+  "S": "S set (S_L5 of data/.b75/sets.npz)"
+ },
+ "sources": {
+  "T0, TX": "data/.b75/fits (B.75)",
+  "TE, TB of V1, V4a, V4b": "data/.b75/fits (B.75)",
+  "TE, TB of V2, V3": "data/.b81/fits (B.81)",
+  "TXp, TXo": "data/.b81/fits (B.81)"
+ },
+ "main": {
+  "V1": {
+   "D650": {
+    "counts": {
+     "rows": 160343,
+     "discharges": 562,
+     "clusters": 79
+    },
+    "rmse_eV": {
+     "T0": 226.20807108247956,
+     "TX": 184.28551225092056,
+     "TXp": 226.65851610275175,
+     "TXo": 216.14464157943522,
+     "TE": 198.58194381020226,
+     "TB": 196.43968148160843
+    },
+    "TX/T0": {
+     "point": 0.3362894993238565,
+     "discharge": [
+      0.29871208766904095,
+      0.3718892875181865
+     ],
+     "cluster": [
+      0.2849479070747809,
+      0.380707762541501
+     ],
+     "stream": "V1|D650|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.00398901568883218,
+     "discharge": [
+      -0.0076509326716387325,
+      0.0005005835600600519
+     ],
+     "cluster": [
+      -0.00767434475994862,
+      0.0010986564898421006
+     ],
+     "stream": "C1"
+    },
+    "TXo/T0": {
+     "point": 0.08695670173170052,
+     "discharge": [
+      0.04724172864612939,
+      0.12662473169068292
+     ],
+     "cluster": [
+      0.03297992155866281,
+      0.1337405596990555
+     ],
+     "stream": "V1|D650|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.27305043978618837,
+     "discharge": [
+      0.2340771210145359,
+      0.30934422390490834
+     ],
+     "cluster": [
+      0.22851307916682032,
+      0.31692696417216404
+     ],
+     "stream": "C3"
+    },
+    "TE/T0": {
+     "point": 0.22932523566504612,
+     "discharge": [
+      0.18756341815151353,
+      0.26788697962088176
+     ],
+     "cluster": [
+      0.16185923442538316,
+      0.2894978247272227
+     ],
+     "stream": "V1|D650|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": 0.2458746089143576,
+     "discharge": [
+      0.20901143054317087,
+      0.2819933893147311
+     ],
+     "cluster": [
+      0.19938252721384403,
+      0.2917869298485429
+     ],
+     "stream": "V1|D650|all|TB/T0"
+    }
+   },
+   "S": {
+    "counts": {
+     "rows": 147837,
+     "discharges": 503,
+     "clusters": 71
+    },
+    "rmse_eV": {
+     "T0": 217.5870422519702,
+     "TX": 178.46552874814566,
+     "TXp": 217.6163062976726,
+     "TXo": 209.7745987592119,
+     "TE": 192.02890049369944,
+     "TB": 189.44810197530364
+    },
+    "TX/T0": {
+     "point": 0.3272003663828373,
+     "discharge": [
+      0.2766272367799358,
+      0.3745612010863415
+     ],
+     "cluster": [
+      0.26243932542044296,
+      0.3879174924361499
+     ],
+     "stream": "V1|S|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.0002566796915303149,
+     "discharge": [
+      -0.008832538558768149,
+      0.009777553225561397
+     ],
+     "cluster": [
+      -0.009768561027098905,
+      0.008803258311162077
+     ],
+     "stream": "C2"
+    },
+    "TXo/T0": {
+     "point": 0.07038234385483633,
+     "discharge": [
+      0.013356304542284312,
+      0.12608968727830705
+     ],
+     "cluster": [
+      0.005674198740334222,
+      0.13641221172677132
+     ],
+     "stream": "V1|S|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.2762159784828324,
+     "discharge": [
+      0.2273187407910968,
+      0.3227373197994719
+     ],
+     "cluster": [
+      0.21526657579407102,
+      0.3333735544278153
+     ],
+     "stream": "C4"
+    },
+    "TE/T0": {
+     "point": 0.22108224008853125,
+     "discharge": [
+      0.16865261985630808,
+      0.27053173047456636
+     ],
+     "cluster": [
+      0.1556588045472528,
+      0.28613324282312586
+     ],
+     "stream": "V1|S|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": 0.24185602841207524,
+     "discharge": [
+      0.19481076599721636,
+      0.28495327942933435
+     ],
+     "cluster": [
+      0.1870135016302132,
+      0.29400237049727995
+     ],
+     "stream": "V1|S|all|TB/T0"
+    }
+   }
+  },
+  "V2": {
+   "D650": {
+    "counts": {
+     "rows": 160343,
+     "discharges": 562,
+     "clusters": 79
+    },
+    "rmse_eV": {
+     "T0": 236.7023444151378,
+     "TX": 200.5731800280687,
+     "TXp": 237.28973679881426,
+     "TXo": 239.3986682321744,
+     "TE": 216.5194254604255,
+     "TB": 208.32225005323758
+    },
+    "TX/T0": {
+     "point": 0.2819719785147969,
+     "discharge": [
+      0.24402836701906797,
+      0.31817227219903504
+     ],
+     "cluster": [
+      0.2142036851219822,
+      0.34250662108342267
+     ],
+     "stream": "V2|D650|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.004970619750067555,
+     "discharge": [
+      -0.00936848259915044,
+      -7.553208649927555e-05
+     ],
+     "cluster": [
+      -0.010210684856106933,
+      -0.0004527159917401502
+     ],
+     "stream": "V2|D650|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.022941988814181375,
+     "discharge": [
+      -0.07012544216165967,
+      0.02242742541511581
+     ],
+     "cluster": [
+      -0.10301948478726111,
+      0.04674477938643954
+     ],
+     "stream": "V2|D650|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.29797133813165494,
+     "discharge": [
+      0.2549118255768988,
+      0.33575975452297274
+     ],
+     "cluster": [
+      0.23189232115742503,
+      0.3627172574188704
+     ],
+     "stream": "C5"
+    },
+    "TE/T0": {
+     "point": 0.1632502253274971,
+     "discharge": [
+      0.11214087862131364,
+      0.20973413234290814
+     ],
+     "cluster": [
+      0.08995289458787614,
+      0.23100063477510627
+     ],
+     "stream": "E1"
+    },
+    "TB/T0": {
+     "point": 0.2254065999071995,
+     "discharge": [
+      0.18410287882001272,
+      0.26610536987051825
+     ],
+     "cluster": [
+      0.16304278587020488,
+      0.28452222343073524
+     ],
+     "stream": "E3"
+    }
+   },
+   "S": {
+    "counts": {
+     "rows": 147837,
+     "discharges": 503,
+     "clusters": 71
+    },
+    "rmse_eV": {
+     "T0": 223.24631933251308,
+     "TX": 187.73044402508833,
+     "TXp": 223.2259118893219,
+     "TXo": 223.7317165808273,
+     "TE": 202.00496638680673,
+     "TB": 196.96667823430906
+    },
+    "TX/T0": {
+     "point": 0.2928354172863394,
+     "discharge": [
+      0.24195255738040225,
+      0.3408254594955455
+     ],
+     "cluster": [
+      0.21709620899601348,
+      0.36355441212067574
+     ],
+     "stream": "V2|S|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": 0.00016253055701557587,
+     "discharge": [
+      -0.009967437224558489,
+      0.010004809942845408
+     ],
+     "cluster": [
+      -0.011261597126406337,
+      0.011412357531691786
+     ],
+     "stream": "V2|S|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.004571554650833957,
+     "discharge": [
+      -0.10090182311861222,
+      0.07058163838374228
+     ],
+     "cluster": [
+      -0.1495998696326328,
+      0.10868919117985139
+     ],
+     "stream": "V2|S|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.2958724847986887,
+     "discharge": [
+      0.2329493754037897,
+      0.362109807025671
+     ],
+     "cluster": [
+      0.2047323200744486,
+      0.3911757374352831
+     ],
+     "stream": "C8"
+    },
+    "TE/T0": {
+     "point": 0.1812051611001124,
+     "discharge": [
+      0.12382010382230302,
+      0.2342454347999188
+     ],
+     "cluster": [
+      0.09768420561467545,
+      0.25741023833087057
+     ],
+     "stream": "E5"
+    },
+    "TB/T0": {
+     "point": 0.2214450146259486,
+     "discharge": [
+      0.17007782366710913,
+      0.2719693040273703
+     ],
+     "cluster": [
+      0.15687845887324608,
+      0.29672101611928836
+     ],
+     "stream": "E7"
+    }
+   }
+  },
+  "V3": {
+   "D650": {
+    "counts": {
+     "rows": 112199,
+     "discharges": 441,
+     "clusters": 60
+    },
+    "rmse_eV": {
+     "T0": 268.49673962678384,
+     "TX": 241.65276047252962,
+     "TXp": 268.5813987538899,
+     "TXo": 318.8843344704904,
+     "TE": 260.6568070442064,
+     "TB": 251.6448729255036
+    },
+    "TX/T0": {
+     "point": 0.18996182159990282,
+     "discharge": [
+      0.13328088865624207,
+      0.24205023122029168
+     ],
+     "cluster": [
+      0.031014950049401573,
+      0.2910108780601802
+     ],
+     "stream": "V3|D650|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.0006307150996847088,
+     "discharge": [
+      -0.004863674460908013,
+      0.0035948846698659214
+     ],
+     "cluster": [
+      -0.0043123241728991344,
+      0.00395992773423556
+     ],
+     "stream": "V3|D650|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.4105495164124584,
+     "discharge": [
+      -0.6362980752835727,
+      -0.23394451272991576
+     ],
+     "cluster": [
+      -0.9396804911997895,
+      -0.11781147691816243
+     ],
+     "stream": "V3|D650|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.4257286476122303,
+     "discharge": [
+      0.3539519928391637,
+      0.49476076710771394
+     ],
+     "cluster": [
+      0.30717430831600584,
+      0.5619772208187667
+     ],
+     "stream": "C6"
+    },
+    "TE/T0": {
+     "point": 0.057546114652171965,
+     "discharge": [
+      -0.0020065171604793626,
+      0.1148123755877425
+     ],
+     "cluster": [
+      -0.06654356855876511,
+      0.16601947103928125
+     ],
+     "stream": "E2"
+    },
+    "TB/T0": {
+     "point": 0.12158824281952108,
+     "discharge": [
+      0.06982884847395908,
+      0.17483275315485533
+     ],
+     "cluster": [
+      0.02825448611187599,
+      0.23419937336820615
+     ],
+     "stream": "E4"
+    }
+   },
+   "S": {
+    "counts": {
+     "rows": 102684,
+     "discharges": 395,
+     "clusters": 56
+    },
+    "rmse_eV": {
+     "T0": 249.13980650780766,
+     "TX": 218.47212142328138,
+     "TXp": 249.15408371642258,
+     "TXo": 256.38698016115103,
+     "TE": 228.4028245567217,
+     "TB": 226.7962580629707
+    },
+    "TX/T0": {
+     "point": 0.23103635811237366,
+     "discharge": [
+      0.16623664042263991,
+      0.2894666232899102
+     ],
+     "cluster": [
+      0.14518490871643294,
+      0.3246468968888134
+     ],
+     "stream": "V3|S|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.00011461530696355027,
+     "discharge": [
+      -0.008647107518346237,
+      0.008143951153696576
+     ],
+     "cluster": [
+      -0.010238683071790905,
+      0.009319729512209206
+     ],
+     "stream": "V3|S|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.059023722347842256,
+     "discharge": [
+      -0.1361855661410861,
+      0.009208246671617836
+     ],
+     "cluster": [
+      -0.16098160234359343,
+      0.04687064249437008
+     ],
+     "stream": "V3|S|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.2738938461332636,
+     "discharge": [
+      0.21205206430242785,
+      0.33356757681672866
+     ],
+     "cluster": [
+      0.19226798043505888,
+      0.3727760776408486
+     ],
+     "stream": "C9"
+    },
+    "TE/T0": {
+     "point": 0.15954068482044526,
+     "discharge": [
+      0.09142442689051984,
+      0.22187516088655743
+     ],
+     "cluster": [
+      0.066038996432314,
+      0.2569723699182542
+     ],
+     "stream": "E6"
+    },
+    "TB/T0": {
+     "point": 0.17132254427246918,
+     "discharge": [
+      0.11902156941632015,
+      0.2209394698289516
+     ],
+     "cluster": [
+      0.11932830581309627,
+      0.22898729386688269
+     ],
+     "stream": "E8"
+    }
+   }
+  },
+  "V4a": {
+   "D650": {
+    "counts": {
+     "rows": 10146,
+     "discharges": 75,
+     "clusters": 18
+    },
+    "rmse_eV": {
+     "T0": 202.30790213604547,
+     "TX": 176.7410047898785,
+     "TXp": 201.0496699297154,
+     "TXo": 220.42926174107853,
+     "TE": 183.49065052031,
+     "TB": 203.7672699961514
+    },
+    "TX/T0": {
+     "point": 0.23678139945425292,
+     "discharge": [
+      0.06911724452990961,
+      0.3560880511458479
+     ],
+     "cluster": [
+      0.0412719267907151,
+      0.4155723995012024
+     ],
+     "stream": "V4a|D650|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": 0.012400103735407564,
+     "discharge": [
+      -0.005359255372706961,
+      0.028674423110026496
+     ],
+     "cluster": [
+      -0.010291422785473648,
+      0.0283817201334028
+     ],
+     "stream": "V4a|D650|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.18716968734058748,
+     "discharge": [
+      -0.5033245694546364,
+      0.031896415842378824
+     ],
+     "cluster": [
+      -0.46955780225378957,
+      0.04808590929839524
+     ],
+     "stream": "V4a|D650|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.35711077474067354,
+     "discharge": [
+      0.24945516714865337,
+      0.45333167397093943
+     ],
+     "cluster": [
+      0.23481977410625132,
+      0.5230197839999379
+     ],
+     "stream": "C7"
+    },
+    "TE/T0": {
+     "point": 0.17737446270656454,
+     "discharge": [
+      0.08173286311172974,
+      0.26884307603501373
+     ],
+     "cluster": [
+      0.08469211449282259,
+      0.30611427748526787
+     ],
+     "stream": "V4a|D650|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": -0.014479231815612614,
+     "discharge": [
+      -0.295019708873867,
+      0.1719285508412244
+     ],
+     "cluster": [
+      -0.2667972003836354,
+      0.20146839414647122
+     ],
+     "stream": "V4a|D650|all|TB/T0"
+    }
+   },
+   "S": {
+    "counts": {
+     "rows": 7180,
+     "discharges": 50,
+     "clusters": 14
+    },
+    "rmse_eV": {
+     "T0": 184.8488659286364,
+     "TX": 182.2634186363722,
+     "TXp": 182.7883612624297,
+     "TXo": 181.29445627409135,
+     "TE": 188.93281819930118,
+     "TB": 189.14955353328517
+    },
+    "TX/T0": {
+     "point": 0.027778003290131248,
+     "discharge": [
+      -0.13273141466328292,
+      0.15906768946657873
+     ],
+     "cluster": [
+      -0.16423538676572272,
+      0.1733604390620139
+     ],
+     "stream": "V4a|S|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": 0.022169684023789826,
+     "discharge": [
+      -0.03435833490319377,
+      0.06939747792794414
+     ],
+     "cluster": [
+      -0.037584243022936246,
+      0.06835546011323963
+     ],
+     "stream": "V4a|S|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": 0.03808772359139878,
+     "discharge": [
+      -0.199310707878183,
+      0.21510772852620905
+     ],
+     "cluster": [
+      -0.25542101817744445,
+      0.2933452597938646
+     ],
+     "stream": "V4a|S|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": -0.010717942326050611,
+     "discharge": [
+      -0.2009724681500066,
+      0.14202179891886352
+     ],
+     "cluster": [
+      -0.4082006154118092,
+      0.17087273883824336
+     ],
+     "stream": "V4a|S|all|TX/TXo"
+    },
+    "TE/T0": {
+     "point": -0.044675054745334064,
+     "discharge": [
+      -0.2182219107014035,
+      0.08826615694412149
+     ],
+     "cluster": [
+      -0.24235276310245285,
+      0.08855000443228547
+     ],
+     "stream": "V4a|S|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": -0.04707323910935157,
+     "discharge": [
+      -0.30309910744870133,
+      0.15092434086218048
+     ],
+     "cluster": [
+      -0.3173823661529008,
+      0.2549644835972831
+     ],
+     "stream": "V4a|S|all|TB/T0"
+    }
+   }
+  },
+  "V4b": {
+   "D650": {
+    "counts": {
+     "rows": 10146,
+     "discharges": 75,
+     "clusters": 18
+    },
+    "rmse_eV": {
+     "T0": 189.82246267617128,
+     "TX": 168.05247444934702,
+     "TXp": 190.93985458202252,
+     "TXo": 186.95490306888465,
+     "TE": 175.52193138667198,
+     "TB": 180.71687904027488
+    },
+    "TX/T0": {
+     "point": 0.21621920789467552,
+     "discharge": [
+      0.10065368253583884,
+      0.3071198664659387
+     ],
+     "cluster": [
+      0.07468628262241545,
+      0.359957007117644
+     ],
+     "stream": "V4b|D650|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": -0.01180767185931586,
+     "discharge": [
+      -0.02178036994971928,
+      -0.0032485716252740426
+     ],
+     "cluster": [
+      -0.02635510893281979,
+      0.00023493630344696454
+     ],
+     "stream": "V4b|D650|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": 0.029984861885140823,
+     "discharge": [
+      -0.11039620873325824,
+      0.1367775193214154
+     ],
+     "cluster": [
+      -0.05882680380775935,
+      0.1778344994389968
+     ],
+     "stream": "V4b|D650|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": 0.19199117487121398,
+     "discharge": [
+      0.11974140371719155,
+      0.2642209022978956
+     ],
+     "cluster": [
+      0.08366556564032132,
+      0.28642268350151906
+     ],
+     "stream": "V4b|D650|all|TX/TXo"
+    },
+    "TE/T0": {
+     "point": 0.14499713245395696,
+     "discharge": [
+      0.05891866654019837,
+      0.23045007262587514
+     ],
+     "cluster": [
+      0.047406267128260494,
+      0.2940484503389485
+     ],
+     "stream": "V4b|D650|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": 0.0936368739669673,
+     "discharge": [
+      -0.052863533888188576,
+      0.20279039750977063
+     ],
+     "cluster": [
+      -0.0626917593038045,
+      0.2466449984365446
+     ],
+     "stream": "V4b|D650|all|TB/T0"
+    }
+   },
+   "S": {
+    "counts": {
+     "rows": 7180,
+     "discharges": 50,
+     "clusters": 14
+    },
+    "rmse_eV": {
+     "T0": 170.34047644396708,
+     "TX": 190.75577695162968,
+     "TXp": 167.826356977139,
+     "TXo": 180.2812035709087,
+     "TE": 193.90195551170794,
+     "TB": 178.3586603950422
+    },
+    "TX/T0": {
+     "point": -0.25406394894607565,
+     "discharge": [
+      -0.5247644345593959,
+      -0.05102510235507457
+     ],
+     "cluster": [
+      -0.5353870638745986,
+      0.04416305954758329
+     ],
+     "stream": "V4b|S|all|TX/T0"
+    },
+    "TXp/T0": {
+     "point": 0.029300916602474247,
+     "discharge": [
+      -0.0015245358154525378,
+      0.06839002202873268
+     ],
+     "cluster": [
+      0.0017746688813040147,
+      0.06370362831407705
+     ],
+     "stream": "V4b|S|all|TXp/T0"
+    },
+    "TXo/T0": {
+     "point": -0.12012162637329515,
+     "discharge": [
+      -0.2947377955791711,
+      0.015540249688451052
+     ],
+     "cluster": [
+      -0.25328845675511114,
+      0.04573618831730213
+     ],
+     "stream": "V4b|S|all|TXo/T0"
+    },
+    "TX/TXo": {
+     "point": -0.11957837382932768,
+     "discharge": [
+      -0.39143710182252667,
+      0.11640542738673004
+     ],
+     "cluster": [
+      -0.44272109216240824,
+      0.13159949266425475
+     ],
+     "stream": "V4b|S|all|TX/TXo"
+    },
+    "TE/T0": {
+     "point": -0.2957722134481213,
+     "discharge": [
+      -0.6350300414719996,
+      -0.05487167070370814
+     ],
+     "cluster": [
+      -0.5932320006452504,
+      0.037063967089904865
+     ],
+     "stream": "V4b|S|all|TE/T0"
+    },
+    "TB/T0": {
+     "point": -0.09635875333262645,
+     "discharge": [
+      -0.323362200625848,
+      0.1000795052648322
+     ],
+     "cluster": [
+      -0.2682066828982659,
+      0.18501405107772947
+     ],
+     "stream": "V4b|S|all|TB/T0"
+    }
+   }
+  }
+ },
+ "ecei_moving": {
+  "D650": {
+   "counts": {
+    "rows": 153655,
+    "discharges": 559,
+    "clusters": 78
+   },
+   "rmse_eV": {
+    "T0": 226.2295162698595,
+    "TX": 182.62807485841824,
+    "TXp": 226.67283223278878,
+    "TXo": 216.0030392353493,
+    "TE": 197.58499757578386,
+    "TB": 195.06019069785307
+   },
+   "TX/T0": {
+    "point": 0.34828969838871765,
+    "discharge": [
+     0.3104476549632131,
+     0.3834185456468109
+    ],
+    "cluster": [
+     0.29787422218170584,
+     0.3917217691385394
+    ],
+    "stream": "V1|D650|ECEI moving|TX/T0"
+   },
+   "TXp/T0": {
+    "point": -0.00392569514421585,
+    "discharge": [
+     -0.007730801043760976,
+     0.0007289677902608325
+    ],
+    "cluster": [
+     -0.007637875422927226,
+     0.0013129302534262118
+    ],
+    "stream": "V1|D650|ECEI moving|TXp/T0"
+   },
+   "TXo/T0": {
+    "point": 0.08832630974207623,
+    "discharge": [
+     0.04835759746487469,
+     0.12806904153610876
+    ],
+    "cluster": [
+     0.034917297124097565,
+     0.13645523270602428
+    ],
+    "stream": "V1|D650|ECEI moving|TXo/T0"
+   },
+   "TX/TXo": {
+    "point": 0.2851372695413485,
+    "discharge": [
+     0.2476130204166551,
+     0.32069010852281987
+    ],
+    "cluster": [
+     0.24364749806425265,
+     0.32537951184323965
+    ],
+    "stream": "V1|D650|ECEI moving|TX/TXo"
+   },
+   "rows_left_out": 6688,
+   "rows_left_out_constant_at_row_t": 4900,
+   "rows_left_out_constant_at_anchor_row": 5499
+  },
+  "S": {
+   "counts": {
+    "rows": 140634,
+    "discharges": 495,
+    "clusters": 69
+   },
+   "rmse_eV": {
+    "T0": 218.4530715841851,
+    "TX": 178.21901798770594,
+    "TXp": 218.49832140935652,
+    "TXo": 210.88273177575616,
+    "TE": 191.45619434303444,
+    "TB": 189.8951158439869
+   },
+   "TX/T0": {
+    "point": 0.3343580224087794,
+    "discharge": [
+     0.28314523164405253,
+     0.3818188094720945
+    ],
+    "cluster": [
+     0.27215848841567825,
+     0.39138646171424724
+    ],
+    "stream": "V1|S|ECEI moving|TX/T0"
+   },
+   "TXp/T0": {
+    "point": -0.00039989826274437296,
+    "discharge": [
+     -0.00963199525941969,
+     0.009374181566747295
+    ],
+    "cluster": [
+     -0.01020740782217045,
+     0.00884067617265665
+    ],
+    "stream": "V1|S|ECEI moving|TXp/T0"
+   },
+   "TXo/T0": {
+    "point": 0.06795396261039592,
+    "discharge": [
+     0.00821842490389725,
+     0.1260364875333727
+    ],
+    "cluster": [
+     -0.0017725722860683292,
+     0.13695180479262134
+    ],
+    "stream": "V1|S|ECEI moving|TXo/T0"
+   },
+   "TX/TXo": {
+    "point": 0.28578579391856024,
+    "discharge": [
+     0.23710700830154463,
+     0.33097848928811285
+    ],
+    "cluster": [
+     0.22355594321002423,
+     0.3412060089300036
+    ],
+    "stream": "V1|S|ECEI moving|TX/TXo"
+   },
+   "rows_left_out": 7203,
+   "rows_left_out_constant_at_row_t": 4619,
+   "rows_left_out_constant_at_anchor_row": 4499
+  }
+ },
+ "counts": {
+  "V1": {
+   "D650": {
+    "rows": 160343,
+    "discharges": 562,
+    "clusters": 79,
+    "fit_rows_per_unit": {
+     "min": 122684,
+     "max": 133674
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 14,
+     "test_per_unit_max": 14,
+     "test_total": 42
+    }
+   },
+   "S": {
+    "rows": 147837,
+    "discharges": 503,
+    "clusters": 71,
+    "fit_rows_per_unit": {
+     "min": 112909,
+     "max": 123415
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 75,
+     "test_per_unit_max": 75,
+     "test_total": 225
+    }
+   }
+  },
+  "V2": {
+   "D650": {
+    "rows": 160343,
+    "discharges": 562,
+    "clusters": 79,
+    "fit_rows_per_unit": {
+     "min": 113440,
+     "max": 138804
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 14,
+     "test_per_unit_max": 14,
+     "test_total": 42
+    }
+   },
+   "S": {
+    "rows": 147837,
+    "discharges": 503,
+    "clusters": 71,
+    "fit_rows_per_unit": {
+     "min": 105194,
+     "max": 128163
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 75,
+     "test_per_unit_max": 75,
+     "test_total": 225
+    }
+   }
+  },
+  "V3": {
+   "D650": {
+    "rows": 112199,
+    "discharges": 441,
+    "clusters": 60,
+    "fit_rows_per_unit": {
+     "min": 48144,
+     "max": 143366
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 14,
+     "test_per_unit_max": 4,
+     "test_total": 4
+    }
+   },
+   "S": {
+    "rows": 102684,
+    "discharges": 395,
+    "clusters": 56,
+    "fit_rows_per_unit": {
+     "min": 45153,
+     "max": 135332
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 32,
+     "test_per_unit_max": 43,
+     "test_total": 75
+    }
+   }
+  },
+  "V4a": {
+   "D650": {
+    "rows": 10146,
+    "discharges": 75,
+    "clusters": 18,
+    "fit_rows_per_unit": {
+     "min": 127270,
+     "max": 127270
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 14,
+     "test_per_unit_max": 0,
+     "test_total": 0
+    }
+   },
+   "S": {
+    "rows": 7180,
+    "discharges": 50,
+    "clusters": 14,
+    "fit_rows_per_unit": {
+     "min": 119655,
+     "max": 119655
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 0,
+     "test_per_unit_max": 43,
+     "test_total": 43
+    }
+   }
+  },
+  "V4b": {
+   "D650": {
+    "rows": 10146,
+    "discharges": 75,
+    "clusters": 18,
+    "fit_rows_per_unit": {
+     "min": 150197,
+     "max": 150197
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 14,
+     "test_per_unit_max": 0,
+     "test_total": 0
+    }
+   },
+   "S": {
+    "rows": 7180,
+    "discharges": 50,
+    "clusters": 14,
+    "fit_rows_per_unit": {
+     "min": 140657,
+     "max": 140657
+    },
+    "TXo_rows_with_nonfinite_anchor_row_scalars": {
+     "fit_per_unit_max": 32,
+     "test_per_unit_max": 43,
+     "test_total": 43
+    }
+   }
+  }
+ },
+ "designs": {
+  "d1_discharges": 635,
+  "clusters_d1": 86,
+  "units": [
+   {
+    "name": "V1_r2_k0",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V1_r2_k1",
+    "fit": 507,
+    "test": 128
+   },
+   {
+    "name": "V1_r2_k2",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r2_k3",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r2_k4",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r3_k0",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r3_k1",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V1_r3_k2",
+    "fit": 507,
+    "test": 128
+   },
+   {
+    "name": "V1_r3_k3",
+    "fit": 507,
+    "test": 128
+   },
+   {
+    "name": "V1_r3_k4",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V1_r4_k0",
+    "fit": 507,
+    "test": 128
+   },
+   {
+    "name": "V1_r4_k1",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r4_k2",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V1_r4_k3",
+    "fit": 507,
+    "test": 128
+   },
+   {
+    "name": "V1_r4_k4",
+    "fit": 510,
+    "test": 125
+   },
+   {
+    "name": "V2_s1_k0",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V2_s1_k1",
+    "fit": 506,
+    "test": 129
+   },
+   {
+    "name": "V2_s1_k2",
+    "fit": 505,
+    "test": 130
+   },
+   {
+    "name": "V2_s1_k3",
+    "fit": 511,
+    "test": 124
+   },
+   {
+    "name": "V2_s1_k4",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V2_s2_k0",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V2_s2_k1",
+    "fit": 509,
+    "test": 126
+   },
+   {
+    "name": "V2_s2_k2",
+    "fit": 516,
+    "test": 119
+   },
+   {
+    "name": "V2_s2_k3",
+    "fit": 510,
+    "test": 125
+   },
+   {
+    "name": "V2_s2_k4",
+    "fit": 496,
+    "test": 139
+   },
+   {
+    "name": "V2_s3_k0",
+    "fit": 506,
+    "test": 129
+   },
+   {
+    "name": "V2_s3_k1",
+    "fit": 503,
+    "test": 132
+   },
+   {
+    "name": "V2_s3_k2",
+    "fit": 510,
+    "test": 125
+   },
+   {
+    "name": "V2_s3_k3",
+    "fit": 511,
+    "test": 124
+   },
+   {
+    "name": "V2_s3_k4",
+    "fit": 510,
+    "test": 125
+   },
+   {
+    "name": "V3_q1",
+    "fit": 127,
+    "test": 127
+   },
+   {
+    "name": "V3_q2",
+    "fit": 254,
+    "test": 127
+   },
+   {
+    "name": "V3_q3",
+    "fit": 381,
+    "test": 127
+   },
+   {
+    "name": "V3_q4",
+    "fit": 508,
+    "test": 127
+   },
+   {
+    "name": "V4a",
+    "fit": 412,
+    "test": 95
+   },
+   {
+    "name": "V4b",
+    "fit": 540,
+    "test": 95
+   }
+  ]
+ },
+ "statements": {
+  "C1": {
+   "text": "V1, D650: TXp over T0",
+   "design": "V1",
+   "rule": "D650",
+   "comparison": "TXp/T0",
+   "judged": "lower end of the cluster interval at most zero",
+   "value": {
+    "point": -0.00398901568883218,
+    "discharge": [
+     -0.0076509326716387325,
+     0.0005005835600600519
+    ],
+    "cluster": [
+     -0.00767434475994862,
+     0.0010986564898421006
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C2": {
+   "text": "V1, S: TXp over T0",
+   "design": "V1",
+   "rule": "S",
+   "comparison": "TXp/T0",
+   "judged": "lower end of the cluster interval at most zero",
+   "value": {
+    "point": -0.0002566796915303149,
+    "discharge": [
+     -0.008832538558768149,
+     0.009777553225561397
+    ],
+    "cluster": [
+     -0.009768561027098905,
+     0.008803258311162077
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C3": {
+   "text": "V1, D650: TX over TXo lies above zero (the present samples add to those of the anchor row)",
+   "design": "V1",
+   "rule": "D650",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.27305043978618837,
+    "discharge": [
+     0.2340771210145359,
+     0.30934422390490834
+    ],
+    "cluster": [
+     0.22851307916682032,
+     0.31692696417216404
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C4": {
+   "text": "V1, S: TX over TXo lies above zero",
+   "design": "V1",
+   "rule": "S",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.2762159784828324,
+    "discharge": [
+     0.2273187407910968,
+     0.3227373197994719
+    ],
+    "cluster": [
+     0.21526657579407102,
+     0.3333735544278153
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C5": {
+   "text": "V2, D650: TX over TXo lies above zero",
+   "design": "V2",
+   "rule": "D650",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.29797133813165494,
+    "discharge": [
+     0.2549118255768988,
+     0.33575975452297274
+    ],
+    "cluster": [
+     0.23189232115742503,
+     0.3627172574188704
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C6": {
+   "text": "V3, D650: TX over TXo lies above zero",
+   "design": "V3",
+   "rule": "D650",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.4257286476122303,
+    "discharge": [
+     0.3539519928391637,
+     0.49476076710771394
+    ],
+    "cluster": [
+     0.30717430831600584,
+     0.5619772208187667
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain, leaning to holds",
+   "note": ""
+  },
+  "C7": {
+   "text": "V4a, D650: TX over TXo lies above zero",
+   "design": "V4a",
+   "rule": "D650",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.35711077474067354,
+    "discharge": [
+     0.24945516714865337,
+     0.45333167397093943
+    ],
+    "cluster": [
+     0.23481977410625132,
+     0.5230197839999379
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain (the lead's one-unit point is +0.205 for present, -0.128 for the anchor row, no interval)",
+   "note": "V4b (fit to 32310): +0.192; c [+0.084, +0.286]"
+  },
+  "C8": {
+   "text": "V2, S: TX over TXo lies above zero",
+   "design": "V2",
+   "rule": "S",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.2958724847986887,
+    "discharge": [
+     0.2329493754037897,
+     0.362109807025671
+    ],
+    "cluster": [
+     0.2047323200744486,
+     0.3911757374352831
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "C9": {
+   "text": "V3, S: TX over TXo lies above zero",
+   "design": "V3",
+   "rule": "S",
+   "comparison": "TX/TXo",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.2738938461332636,
+    "discharge": [
+     0.21205206430242785,
+     0.33356757681672866
+    ],
+    "cluster": [
+     0.19226798043505888,
+     0.3727760776408486
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain, leaning to holds",
+   "note": ""
+  },
+  "E1": {
+   "text": "V2, D650: TE over T0 lies above zero",
+   "design": "V2",
+   "rule": "D650",
+   "comparison": "TE/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.1632502253274971,
+    "discharge": [
+     0.11214087862131364,
+     0.20973413234290814
+    ],
+    "cluster": [
+     0.08995289458787614,
+     0.23100063477510627
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "E2": {
+   "text": "V3, D650: TE over T0 lies above zero",
+   "design": "V3",
+   "rule": "D650",
+   "comparison": "TE/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.057546114652171965,
+    "discharge": [
+     -0.0020065171604793626,
+     0.1148123755877425
+    ],
+    "cluster": [
+     -0.06654356855876511,
+     0.16601947103928125
+    ]
+   },
+   "holds": false,
+   "expected": "uncertain, leaning to holds",
+   "note": ""
+  },
+  "E3": {
+   "text": "V2, D650: TB over T0 lies above zero",
+   "design": "V2",
+   "rule": "D650",
+   "comparison": "TB/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.2254065999071995,
+    "discharge": [
+     0.18410287882001272,
+     0.26610536987051825
+    ],
+    "cluster": [
+     0.16304278587020488,
+     0.28452222343073524
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "E4": {
+   "text": "V3, D650: TB over T0 lies above zero",
+   "design": "V3",
+   "rule": "D650",
+   "comparison": "TB/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.12158824281952108,
+    "discharge": [
+     0.06982884847395908,
+     0.17483275315485533
+    ],
+    "cluster": [
+     0.02825448611187599,
+     0.23419937336820615
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain (under V4a it is -0.014 [-0.257, +0.203])",
+   "note": ""
+  },
+  "E5": {
+   "text": "V2, S: TE over T0 lies above zero",
+   "design": "V2",
+   "rule": "S",
+   "comparison": "TE/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.1812051611001124,
+    "discharge": [
+     0.12382010382230302,
+     0.2342454347999188
+    ],
+    "cluster": [
+     0.09768420561467545,
+     0.25741023833087057
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "E6": {
+   "text": "V3, S: TE over T0 lies above zero",
+   "design": "V3",
+   "rule": "S",
+   "comparison": "TE/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.15954068482044526,
+    "discharge": [
+     0.09142442689051984,
+     0.22187516088655743
+    ],
+    "cluster": [
+     0.066038996432314,
+     0.2569723699182542
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain, leaning to holds",
+   "note": ""
+  },
+  "E7": {
+   "text": "V2, S: TB over T0 lies above zero",
+   "design": "V2",
+   "rule": "S",
+   "comparison": "TB/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.2214450146259486,
+    "discharge": [
+     0.17007782366710913,
+     0.2719693040273703
+    ],
+    "cluster": [
+     0.15687845887324608,
+     0.29672101611928836
+    ]
+   },
+   "holds": true,
+   "expected": "holds",
+   "note": ""
+  },
+  "E8": {
+   "text": "V3, S: TB over T0 lies above zero",
+   "design": "V3",
+   "rule": "S",
+   "comparison": "TB/T0",
+   "judged": "lower end of the cluster interval above zero",
+   "value": {
+    "point": 0.17132254427246918,
+    "discharge": [
+     0.11902156941632015,
+     0.2209394698289516
+    ],
+    "cluster": [
+     0.11932830581309627,
+     0.22898729386688269
+    ]
+   },
+   "holds": true,
+   "expected": "uncertain",
+   "note": ""
+  }
+ },
+ "expectations": {
+  "C1": {
+   "verdict_as_expected": true
+  },
+  "C2": {
+   "verdict_as_expected": true
+  },
+  "C3": {
+   "verdict_as_expected": true
+  },
+  "C4": {
+   "verdict_as_expected": true
+  },
+  "C5": {
+   "verdict_as_expected": true
+  },
+  "C6": {
+   "verdict_as_expected": null
+  },
+  "C7": {
+   "verdict_as_expected": null
+  },
+  "C8": {
+   "verdict_as_expected": true
+  },
+  "C9": {
+   "verdict_as_expected": null
+  },
+  "E1": {
+   "verdict_as_expected": true
+  },
+  "E2": {
+   "verdict_as_expected": null
+  },
+  "E3": {
+   "verdict_as_expected": true
+  },
+  "E4": {
+   "verdict_as_expected": null
+  },
+  "E5": {
+   "verdict_as_expected": true
+  },
+  "E6": {
+   "verdict_as_expected": null
+  },
+  "E7": {
+   "verdict_as_expected": true
+  },
+  "E8": {
+   "verdict_as_expected": null
+  }
+ },
+ "checks": {
+  "reuse": true,
+  "permutation": true,
+  "anchor": true,
+  "rows": true
+ },
+ "runtime_readout_s": 44.2
+}

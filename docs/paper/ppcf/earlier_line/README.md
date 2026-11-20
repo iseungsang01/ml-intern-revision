@@ -1,0 +1,3 @@
+# The manuscript on the earlier line (frozen at commit ea2e1a6)
+
+`main_ppcf_ea2e1a6.tex` and `supp_ppcf_ea2e1a6.tex` are the main text and the supplement as they stood before the rewrite of 2026-11-20 (claim: the beam-emission value of the present frame adds to the CES history; target: the reading of the frame; estimator: the recurrent network with a second stage). They are kept here, unbuilt, for two reasons: the present supplement points to them for the measurement regime of the chord, the rotation and the design of the network, and `ces_prediction/check_records.py` uses them as a source for numbers of `PROJECT_KNOWLEDGE.md` that were traced through them. They are not edited. The tables they input (`b39_generated.tex`) and their figures are still in the parent folder.

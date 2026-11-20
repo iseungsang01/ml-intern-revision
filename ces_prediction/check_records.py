@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RECORDS = ("PROJECT_KNOWLEDGE.md", "PAPER_DESIGN.md")
 SOURCES = (
     "docs/paper/ppcf/main_ppcf.tex", "docs/paper/ppcf/supp_ppcf.tex", "docs/paper/ppcf/refs.bib", "docs/paper/file_rules.md",
+    "docs/paper/ppcf/earlier_line/main_ppcf_ea2e1a6.tex", "docs/paper/ppcf/earlier_line/supp_ppcf_ea2e1a6.tex",
     "docs/paper/b29_causal.md", "docs/paper/b29_addendum1.md", "docs/paper/b30_thinned.md",
     "docs/paper/b30_posthoc.md", "docs/paper/b30_sensitivity.md", "docs/paper/b30_stack.md",
     "docs/paper/b30_stack_offline.md", "docs/paper/b31_bursts.md", "docs/paper/mast_ped_confirmation.md",
@@ -81,6 +82,8 @@ SOURCES = (
     "docs/paper/b75_lead_checks.md",
     "docs/paper/b75_last_block.md",
     "docs/paper/b75_stuck_ecei.md",
+    "docs/paper/b81_controls.md",
+    "docs/paper/b81_lead_checks.md",
     "docs/paper/b80_ecei_gate.md",
     "docs/paper/b80_lead_checks.md",
     "docs/paper/b76_mast_availability.md",
