@@ -79,6 +79,8 @@ SOURCES = (
     "docs/paper/b75_availability.md",
     "docs/paper/b75_checks.md",
     "docs/paper/b75_lead_checks.md",
+    "docs/paper/prior_work_missing_ti.md",
+    "docs/paper/review_loop/critique_20261120_novelty.md",
     "docs/paper/validation_methods.md",
     "docs/paper/review_loop/critique_20261120_referee.md",
     "docs/paper/review_loop/critique_20261120_pedestal.md",
