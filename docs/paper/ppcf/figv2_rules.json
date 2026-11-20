@@ -1,0 +1,13 @@
+{
+ "schematic": true,
+ "frames": 30,
+ "row_t": 29,
+ "notches": [
+  7,
+  18,
+  25
+ ],
+ "d_ms": 60,
+ "k": 5,
+ "printed_tokens": []
+}

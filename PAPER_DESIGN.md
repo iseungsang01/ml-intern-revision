@@ -138,7 +138,7 @@ boosted regression은 `HistGradientBoostingRegressor(random_state=20261116)`, �
 3. 음의 결과에는 그것을 뒤집을 측정과 측정한 범위를 함께 적는다.
 4. 새로움은 선행 연구를 이어 넓힌 것으로 쓴다. 계보(CER 없이 프로파일을 내는 RTCAKENN, EAST의 신경망, 스펙트럼 판독기들)를 먼저 인정하고, 넓힌 것을 적는다: 시간 이력, fit된 프로파일이 아닌 한 측정선의 수준, hold·인과 GP 대비 구간, CES 값의 나이에 따른 오차, pedestal top. "first", "novel", "최초"를 쓰지 않는다.
 5. 기전을 말할 때는 측정으로 받친 것까지만 말한다. 전자와 이온의 에너지 교환 시간이 지연보다 훨씬 짧다는 것은 기대의 근거로 적고, 이 논문이 시험한 것은 추정이지 그 근거가 아니라고 적는다. 버스트는 "ELM과 부합하는 가장자리 버스트"라고 쓴다.
-6. 원고의 숫자는 `check_numbers.py`, 포스터는 `check_poster_numbers.py`, 기록은 `check_records.py`를 통과해야 한다.
+6. 원고의 숫자는 `check_numbers_v2.py`(표와 매크로는 `make_tables_v2.py`가 결과 파일에서 만든다), 포스터는 `check_poster_numbers.py`, 기록은 `check_records.py`를 통과해야 한다.
 
 ## 9. 구성
 
@@ -168,15 +168,15 @@ boosted regression은 `HistGradientBoostingRegressor(random_state=20261116)`, �
 
 ## 10. 지정과 지금 원고의 차이
 
-| 지정 | 지금 원고 | 맞추는 데 필요한 것 |
+원고는 2026-11-20에 이 문서의 1–10절대로 처음부터 다시 썼다(`docs/paper/ppcf/main_ppcf.tex`, `supp_ppcf.tex`). 알려진 차이는 아래뿐이다.
+
+| 지정 | 지금 원고 | 까닭 |
 |---|---|---|
-| 줄거리는 제안 → 시연 → 한계, 표적은 이후 수준 | 본문은 "같은 프레임의 BES 값이 CES 이력 너머로 더하는 것"을 그 프레임의 보고값으로 잰 옛 줄거리 | 본문과 초록을 처음부터 다시 쓴다 |
-| 논문의 estimator는 TX(신경망 없음), 신경망은 비교 행 | 2단계 estimator가 주 estimator | 방법 절과 주 결과 표를 다시 쓴다 |
-| 가용 규칙을 문장마다 적는다 | 모든 수치가 직전 프레임까지 보이는 조건 | 4.1–4.5절을 새로 쓴다(B.75, B.76, B.78, B.79) |
-| 네 설계의 표, 군집 구간 | pooled 교차검증과 방전 구간 | 표를 다시 만든다(`make_tables.py`가 새 JSON을 읽도록) |
-| 본문 16–18쪽, 그림 6–8개 | 10쪽 | 그림을 새로 그린다(값의 나이, 지연에 따른 RMSE, 예시 방전, MAST) |
-| 원고의 "방전당 채점 행 최대 500" | 코드에 없는 규칙 | 지운다 |
-| 계보를 먼저 인정하는 관련 연구 | RTCAKENN의 "CER 없이"와 EAST preprint가 빠져 있음 | `docs/paper/prior_work_missing_ti.md`대로 다시 쓴다 |
+| 보충 자료에 회전, 갱신이 멈출 때의 재생, 검증 방법의 비교를 싣는다(이전 지정) | 싣지 않고 저장소의 이전 판(`docs/paper/ppcf/earlier_line/`)을 가리킨다 | 그 수치는 옛 모집단과 옛 표적의 것이어서 새 정의의 표와 섞지 않는다(11절, 2026-11-20) |
+| 등록 진술의 표와 성립 여부 | 배치별 개수 표와 성립하지 않은 진술의 표만 싣고, 전체 목록은 결과 파일을 가리킨다 | 보충 자료를 20쪽 남짓으로 두기 위해서다. 진술 전체의 표는 `gen_v2.tex`에 매크로로 남아 있다 |
+| 포스터와 발표 덱 | 옛 줄거리 | 저자가 "수정"을 요청할 때 고친다 |
+
+원고가 쓰는 파일: 표와 수치 매크로 `gen_v2.tex`(`make_tables_v2.py`), 그림 `figv2_*`(`fig_v2.py`), 보충 자료의 자료 절 `supp_data_fragment.tex`(`make_supp_fragment.py`), 검사 `check_numbers_v2.py`. 옛 `make_tables.py`, `check_numbers.py`, `fig_paper.py`는 얼려 둔 이전 원고의 것이다.
 
 ## 11. 변경 기록
 

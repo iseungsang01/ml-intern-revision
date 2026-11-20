@@ -1,0 +1,2144 @@
+[
+ {
+  "kind": "table",
+  "name": "\\TabSets",
+  "what": "row sets, discharges and clusters (KSTAR), shots and sessions (MAST)",
+  "source": "b75 sets/designs/main.*.counts; b73 increments.V1|L5; b78 counts.V1.L5; b77 row_set; b76 main.M1|L5|*.counts",
+  "paper_map": "sec. 2/3 (data and method)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabScored",
+  "what": "scored rows/discharges/clusters per design and set",
+  "source": "b75 counts.*; b78 counts.*.L5; b76 main.M*|L5|common.all.counts",
+  "paper_map": "sec. 3 / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabInputs",
+  "what": "estimators and their inputs (definitions from PAPER_DESIGN.md sec. 6; beam scalar names from b79)",
+  "source": "PAPER_DESIGN.md sec. 6 (text); b79 beam_scalars",
+  "paper_map": "sec. 3 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRulesVone",
+  "what": "RMSE by availability rule (V1), cost of staleness, increment, recovered share",
+  "source": "b75 main.V1|L5|common.all.{D10..D1000}, main.V1|L5|S.all.{S,D10S}",
+  "paper_map": "4.1 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRulesDesigns",
+  "what": "RMSE by rule for V2, V3, V4 (both fits), with cost, increment, recovered share",
+  "source": "b75 main.{V2,V3,V4a,V4b}|L5|{common,S}.all.*",
+  "paper_map": "supplement (4.1)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabIncrement",
+  "what": "fast-channel increment by design and rule, KSTAR D10/D650/S and MAST D5/D100",
+  "source": "b75 main.*|L5|common.all.{D10,D650}.TX/T0, main.*|L5|S.all.S.TX/T0; b76 main.M*|L5|common.all.{D5,D100}.TX/T0",
+  "paper_map": "4.3 (main); 4.4 for the MAST rows"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabIncrementLadder",
+  "what": "increment along the whole delay ladder, every design, KSTAR and MAST",
+  "source": "b75 main.*|L5|common.all.D*.TX/T0; b76 main.M*|L5|common.all.D*.TX/T0",
+  "paper_map": "supplement (4.1, 4.3, 4.4)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabFifths",
+  "what": "V3 by scored fifth and the size-matched control V3c (D10, D650)",
+  "source": "b75 v3c.*; designs.v3_fifths",
+  "paper_map": "4.3 (main or supplement)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabWhich",
+  "what": "ECEI only, BES only, both; beam alone; both given beam; beam given both (D650, S, per design)",
+  "source": "b81 main.*.{D650,S}.{TE,TB}/T0; b75 main.*.{D650,S}.TX/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX}",
+  "paper_map": "4.2 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabControls",
+  "what": "permuted-input and anchor-row controls: B.81 per design (D650, S); B.78, B.79, B.77, B.76",
+  "source": "b81 main.*.{D650,S}.{TXp/T0,TXo/T0,TX/TXo}; b78 main.V1|L5.all.K10; b79 main.V1|L5|common.all.D650.{TXNp/TN,TNp/T0}; b77 designs.V1.all.CXp/C0; b76 main.M1|L5|common.all.controls",
+  "paper_map": "4.2 (main) / beside every table of fast inputs"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabRefit",
+  "what": "B.79 main readout vs refit without the 13 files with invalid NBI-2 power columns",
+  "source": "b79 refit_without_13_files.statements_beside_main.*",
+  "paper_map": "supplement (4.2)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabMastRmse",
+  "what": "MAST RMSE by delay (M1, M4): hold, GP, T0, TX, O, closed ratio form RT, RTa and its alpha",
+  "source": "b76 main.{M1,M4}|L5|common.all.D*.rmse_eV; rta_coefficients.*.alpha.mean",
+  "paper_map": "4.4 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabMastCost",
+  "what": "MAST cost of staleness, increment, recovered share, TX vs O by design and delay",
+  "source": "b76 main.M*|L5|common.all.D{25,50,100,150}.{staleness T0,TX/T0,recovered share,TX/O}",
+  "paper_map": "4.4 / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabMastDalpha",
+  "what": "MAST D-alpha inputs (TD, TA) against T0 and TX, M1 and M4",
+  "source": "b76 main.{M1,M4}|L5|DA.all.{D5,D100}",
+  "paper_map": "4.4 / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabSparse",
+  "what": "RMSE of T0 and TX by spacing of the CES values (V1), increment, cost, recovered share, equivalent spacing",
+  "source": "b78 main.V1|L5.all.K*",
+  "paper_map": "4.5 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabSparseDesigns",
+  "what": "increment by spacing K1..K50 and design",
+  "source": "b78 main.*|L5.all.K*.TX/T0",
+  "paper_map": "4.5 (main or supplement)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabBlocks",
+  "what": "increment under S by block of shots (V1) and under V4 (both fits), with and without beam inputs",
+  "source": "b75 main.V1|L5|S.<block>.S, main.V4*|L5|S.all.S; b79 main.*|L5|S.*.S.TXN/TN",
+  "paper_map": "4.6 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabBlockDescr",
+  "what": "last-block diagnostic: age, Spearman ECEI/BES, notch response T_i/BES/ECEI, channel coherence",
+  "source": "docs/paper/b75_last_block.md code block sections (1), (2), (7), (8) (parsed)",
+  "paper_map": "4.6 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabGate",
+  "what": "B.80: increment by class of ECEI channel coherence (S and D650, V1), gated estimator TG",
+  "source": "b80 cells.V1|{S,D650}.{class low,class middle,class high,all,low+high}",
+  "paper_map": "4.6 (main or supplement)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabGateBlocks",
+  "what": "B.80 class counts by block of shots and share of the low class",
+  "source": "b80 distribution.D1 discharges.*",
+  "paper_map": "4.6 / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabCorrect",
+  "what": "B.77: correcting the frame's reading, RMSE and fast increments by design",
+  "source": "b77 designs.*.all",
+  "paper_map": "4.6 (main) / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabDten",
+  "what": "B.73: D10 increments by design and target (trees, filters, ECEI only, BES only, lagged)",
+  "source": "b73 increments.*|{L5,F}.cells",
+  "paper_map": "4.6 (main: the D10 column) / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabNetwork",
+  "what": "B.73: every estimator incl. the recurrent network and two-stage estimator, targets F and L5",
+  "source": "b73 per_estimator.V1|{F,L5}",
+  "paper_map": "supplement (previous frame visible)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabTiming",
+  "what": "computation time per row (GP + TX)",
+  "source": "b75 timing.*",
+  "paper_map": "4.1 / sec. 5"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabAsFitted",
+  "what": "estimators fitted at D10 and applied to a stale history vs refitted under the rule",
+  "source": "b75 main.*.{D50..D1000,S}.{rmse_eV.T0a/TXa, applied T0/TX: refit over applied, applied TXa/T0a}",
+  "paper_map": "sec. 3 (method sentence) / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RefitOverAppliedTXDsixfiftyVone",
+  "what": "refitted TX vs applied TX, D650, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.applied TX: refit over applied",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RefitOverAppliedTXDsixfiftyVonePt",
+  "what": "refitted TX vs applied TX, D650, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.applied TX: refit over applied",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RefitOverAppliedTZeroDsixfiftyVone",
+  "what": "refitted T0 vs applied T0, D650, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.applied T0: refit over applied",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RefitOverAppliedTZeroDsixfiftyVonePt",
+  "what": "refitted T0 vs applied T0, D650, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.applied T0: refit over applied",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseAppliedTZeroDsixfiftyVone",
+  "what": "RMSE (eV) of T0a, D650, V1 (applied = fitted at D10)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseAppliedTXDsixfiftyVone",
+  "what": "RMSE (eV) of TXa, D650, V1 (applied = fitted at D10)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseRefitTZeroDsixfiftyVone",
+  "what": "RMSE (eV) of T0, D650, V1 (applied = fitted at D10)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseRefitTXDsixfiftyVone",
+  "what": "RMSE (eV) of TX, D650, V1 (applied = fitted at D10)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650",
+  "paper_map": "sec. 3"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabAsFittedChrono",
+  "what": "the same for V4a, V4b",
+  "source": "b75 main.V4*.*",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabAnchorScalars",
+  "what": "TX8 (no anchor scalars) and TX against T0, V1 and V4, D10/D650/S",
+  "source": "b75 main.{V1,V4a,V4b}.{D10,D650,S}.{TX8/T0,TX/T0,rmse_eV}",
+  "paper_map": "4.2 / supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabBursts",
+  "what": "B.74 in readable form: rows with/without a burst inside the exposure, ratios, excursions",
+  "source": "b74 A.W10, B.W10.{ti,l5,vt,ec}_ratio, E.W10",
+  "paper_map": "supplement (sec. 2)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStuckEcei",
+  "what": "constant-ECEI rows by block and the increment on moving/constant rows (unregistered)",
+  "source": "docs/paper/b75_stuck_ecei.md code block (1), (3) (parsed)",
+  "paper_map": "sec. 2 / supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\StuckShare",
+  "what": "share of grid rows with a constant ECEI",
+  "source": "docs/paper/b75_stuck_ecei.md",
+  "paper_map": "sec. 2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStuckDischarges",
+  "what": "discharges with any constant-ECEI row",
+  "source": "docs/paper/b75_stuck_ecei.md",
+  "paper_map": "sec. 2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NStuckDischargesHalf",
+  "what": "discharges with a constant ECEI in more than half of the rows",
+  "source": "docs/paper/b75_stuck_ecei.md",
+  "paper_map": "sec. 2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVone",
+  "what": "TX against the frame's own reading under S, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVonePt",
+  "what": "TX against the frame's own reading under S, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVtwo",
+  "what": "TX against the frame's own reading under S, V2 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVtwoPt",
+  "what": "TX against the frame's own reading under S, V2 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVthree",
+  "what": "TX against the frame's own reading under S, V3 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVthreePt",
+  "what": "TX against the frame's own reading under S, V3 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVfoura",
+  "what": "TX against the frame's own reading under S, V4a (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVfouraPt",
+  "what": "TX against the frame's own reading under S, V4a (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVfourb",
+  "what": "TX against the frame's own reading under S, V4b (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXvsOSVfourbPt",
+  "what": "TX against the frame's own reading under S, V4b (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|S.all.S.TX/O",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabVsReading",
+  "what": "TX against the frame's own reading O, D650 and S, per design",
+  "source": "b75 main.*.{D650,S}.{TX/O, rmse_eV.TX/O}",
+  "paper_map": "4.1 / 4.6"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabNbiSources",
+  "what": "NBI sources: rows on, shots, voltage",
+  "source": "docs/paper/nbi_files.md sec. 2 (parsed)",
+  "paper_map": "supplement (sec. 2 / 4.2)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabNbiNotch",
+  "what": "power of each NBI source before/after an absent frame",
+  "source": "docs/paper/nbi_files.md sec. 3 (parsed)",
+  "paper_map": "sec. 2 (main or supplement)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabNbiStates",
+  "what": "share of rows with a T_i value by beam state",
+  "source": "docs/paper/nbi_files.md sec. 4 (parsed)",
+  "paper_map": "supplement (sec. 2)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventythree",
+  "what": "registered statements of B.73 (previous frame visible: targets, designs, network rows)",
+  "source": "b73_targets.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventyfour",
+  "what": "registered statements of B.74 (bursts inside the exposure)",
+  "source": "b74_exposure.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventyfive",
+  "what": "registered statements of B.75 (stale CES history)",
+  "source": "b75_availability.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventysix",
+  "what": "registered statements of B.76 (MAST, stale CXRS history)",
+  "source": "b76_mast_availability.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventyseven",
+  "what": "registered statements of B.77 (correcting the frame's reading)",
+  "source": "b77_correct.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventyeight",
+  "what": "registered statements of B.78 (a CES value every k-th frame)",
+  "source": "b78_sparse.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBseventynine",
+  "what": "registered statements of B.79 (beam waveforms as inputs)",
+  "source": "b79_beam_inputs.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBeighty",
+  "what": "registered statements of B.80 (coherence of the ECEI channels)",
+  "source": "b80_ecei_gate.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBeightyone",
+  "what": "registered statements of B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3)",
+  "source": "b81_controls.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatSummary",
+  "what": "count of registered statements per batch B.73-B.81: hold, do not hold, expectations met",
+  "source": "statements blocks of b73..b81 JSON (counted)",
+  "paper_map": "supplement (replaces the nine statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatNotHeld",
+  "what": "registered statements that do not hold (B.73-B.77)",
+  "source": "statements blocks of the batch JSON (holds = false)",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatNotHeldB",
+  "what": "registered statements that do not hold (B.78-B.81)",
+  "source": "statements blocks of the batch JSON (holds = false)",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVone",
+  "what": "fast-channel increment, D10, V1, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVonePt",
+  "what": "fast-channel increment, D10, V1, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVone",
+  "what": "fast-channel increment, D650, V1, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVonePt",
+  "what": "fast-channel increment, D650, V1, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVone",
+  "what": "fast-channel increment, S, V1, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVonePt",
+  "what": "fast-channel increment, S, V1, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVone",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVonePt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V1 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVone",
+  "what": "beam scalars alone (TN vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVonePt",
+  "what": "beam scalars alone (TN vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVone",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V1 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVonePt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V1 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVone",
+  "what": "beam scalars alone (TN vs T0), S, V1 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVonePt",
+  "what": "beam scalars alone (TN vs T0), S, V1 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVone",
+  "what": "fast-channel increment, K10, V1 (per cent, interval)",
+  "source": "docs/paper/b78_sparse.json main.V1|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVonePt",
+  "what": "fast-channel increment, K10, V1 (per cent, point)",
+  "source": "docs/paper/b78_sparse.json main.V1|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVtwo",
+  "what": "fast-channel increment, D10, V2, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVtwoPt",
+  "what": "fast-channel increment, D10, V2, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVtwo",
+  "what": "fast-channel increment, D650, V2, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVtwoPt",
+  "what": "fast-channel increment, D650, V2, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVtwo",
+  "what": "fast-channel increment, S, V2, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVtwoPt",
+  "what": "fast-channel increment, S, V2, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V2|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVtwo",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVtwoPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V2 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVtwo",
+  "what": "beam scalars alone (TN vs T0), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVtwoPt",
+  "what": "beam scalars alone (TN vs T0), D650, V2 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVtwo",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V2 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVtwoPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V2 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVtwo",
+  "what": "beam scalars alone (TN vs T0), S, V2 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVtwoPt",
+  "what": "beam scalars alone (TN vs T0), S, V2 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V2|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVtwo",
+  "what": "fast-channel increment, K10, V2 (per cent, interval)",
+  "source": "docs/paper/b78_sparse.json main.V2|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVtwoPt",
+  "what": "fast-channel increment, K10, V2 (per cent, point)",
+  "source": "docs/paper/b78_sparse.json main.V2|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVthree",
+  "what": "fast-channel increment, D10, V3, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVthreePt",
+  "what": "fast-channel increment, D10, V3, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVthree",
+  "what": "fast-channel increment, D650, V3, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVthreePt",
+  "what": "fast-channel increment, D650, V3, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVthree",
+  "what": "fast-channel increment, S, V3, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVthreePt",
+  "what": "fast-channel increment, S, V3, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVthree",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVthreePt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V3 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVthree",
+  "what": "beam scalars alone (TN vs T0), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVthreePt",
+  "what": "beam scalars alone (TN vs T0), D650, V3 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVthree",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V3 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVthreePt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V3 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVthree",
+  "what": "beam scalars alone (TN vs T0), S, V3 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVthreePt",
+  "what": "beam scalars alone (TN vs T0), S, V3 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V3|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVthree",
+  "what": "fast-channel increment, K10, V3 (per cent, interval)",
+  "source": "docs/paper/b78_sparse.json main.V3|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVthreePt",
+  "what": "fast-channel increment, K10, V3 (per cent, point)",
+  "source": "docs/paper/b78_sparse.json main.V3|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVfoura",
+  "what": "fast-channel increment, D10, V4a, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVfouraPt",
+  "what": "fast-channel increment, D10, V4a, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVfoura",
+  "what": "fast-channel increment, D650, V4a, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVfouraPt",
+  "what": "fast-channel increment, D650, V4a, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVfoura",
+  "what": "fast-channel increment, S, V4a, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVfouraPt",
+  "what": "fast-channel increment, S, V4a, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVfoura",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVfouraPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V4a (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVfoura",
+  "what": "beam scalars alone (TN vs T0), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVfouraPt",
+  "what": "beam scalars alone (TN vs T0), D650, V4a (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVfoura",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V4a (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVfouraPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V4a (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVfoura",
+  "what": "beam scalars alone (TN vs T0), S, V4a (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVfouraPt",
+  "what": "beam scalars alone (TN vs T0), S, V4a (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4a|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVfoura",
+  "what": "fast-channel increment, K10, V4a (per cent, interval)",
+  "source": "docs/paper/b78_sparse.json main.V4a|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVfouraPt",
+  "what": "fast-channel increment, K10, V4a (per cent, point)",
+  "source": "docs/paper/b78_sparse.json main.V4a|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVfourb",
+  "what": "fast-channel increment, D10, V4b, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDtenVfourbPt",
+  "what": "fast-channel increment, D10, V4b, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|common.all.D10.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVfourb",
+  "what": "fast-channel increment, D650, V4b, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncDsixfiftyVfourbPt",
+  "what": "fast-channel increment, D650, V4b, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|common.all.D650.TX/T0",
+  "paper_map": "4.1/4.3/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVfourb",
+  "what": "fast-channel increment, S, V4b, L5 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSVfourbPt",
+  "what": "fast-channel increment, S, V4b, L5 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4b|L5|S.all.S.TX/T0",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVfourb",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V4b (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamDsixfiftyVfourbPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), D650, V4b (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|common.all.D650.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVfourb",
+  "what": "beam scalars alone (TN vs T0), D650, V4b (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneDsixfiftyVfourbPt",
+  "what": "beam scalars alone (TN vs T0), D650, V4b (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|common.all.D650.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVfourb",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V4b (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSVfourbPt",
+  "what": "fast diagnostics after the beam scalars (TXN vs TN), S, V4b (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|S.all.S.TXN/TN",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVfourb",
+  "what": "beam scalars alone (TN vs T0), S, V4b (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BeamAloneSVfourbPt",
+  "what": "beam scalars alone (TN vs T0), S, V4b (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V4b|L5|S.all.S.TN/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVfourb",
+  "what": "fast-channel increment, K10, V4b (per cent, interval)",
+  "source": "docs/paper/b78_sparse.json main.V4b|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncKtenVfourbPt",
+  "what": "fast-channel increment, K10, V4b (per cent, point)",
+  "source": "docs/paper/b78_sparse.json main.V4b|L5.all.K10.TX/T0",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVone",
+  "what": "ECEI only (TE vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVonePt",
+  "what": "ECEI only (TE vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVone",
+  "what": "BES only (TB vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVonePt",
+  "what": "BES only (TB vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVone",
+  "what": "ECEI only (TE vs T0), S, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVonePt",
+  "what": "ECEI only (TE vs T0), S, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVone",
+  "what": "BES only (TB vs T0), S, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVonePt",
+  "what": "BES only (TB vs T0), S, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVfoura",
+  "what": "ECEI only (TE vs T0), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVfouraPt",
+  "what": "ECEI only (TE vs T0), D650, V4a (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVfoura",
+  "what": "BES only (TB vs T0), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVfouraPt",
+  "what": "BES only (TB vs T0), D650, V4a (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVfoura",
+  "what": "ECEI only (TE vs T0), S, V4a (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVfouraPt",
+  "what": "ECEI only (TE vs T0), S, V4a (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TE/T0",
+  "paper_map": "4.2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVfoura",
+  "what": "BES only (TB vs T0), S, V4a (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVfouraPt",
+  "what": "BES only (TB vs T0), S, V4a (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|S.all.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVone",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVonePt",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVone",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVonePt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVone",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVonePt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVone",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVonePt",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVone",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVonePt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVone",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V1 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVonePt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V1 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V1.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVtwo",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVtwoPt",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVtwo",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVtwoPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVtwo",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVtwoPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVtwo",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVtwoPt",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVtwo",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVtwoPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVtwo",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVtwoPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVthree",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVthreePt",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVthree",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVthreePt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVthree",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVthreePt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVthree",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVthreePt",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVthree",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVthreePt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVthree",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVthreePt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVfoura",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVfouraPt",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVfoura",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVfouraPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVfoura",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVfouraPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVfoura",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVfouraPt",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVfoura",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVfouraPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVfoura",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V4a (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVfouraPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V4a (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4a.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVfourb",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermDsixfiftyVfourbPt",
+  "what": "control: fast inputs permuted (TXp vs T0), D650, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVfourb",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorDsixfiftyVfourbPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), D650, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVfourb",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorDsixfiftyVfourbPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), D650, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.D650.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVfourb",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlPermSVfourbPt",
+  "what": "control: fast inputs permuted (TXp vs T0), S, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TXp/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVfourb",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CtrlAnchorSVfourbPt",
+  "what": "control: fast inputs at the anchor row (TXo vs T0), S, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TXo/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVfourb",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V4b (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\PresentOverAnchorSVfourbPt",
+  "what": "present fast inputs over anchor-row inputs (TX vs TXo), S, V4b (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V4b.S.TX/TXo",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVtwo",
+  "what": "ECEI only (TE vs T0), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVtwoPt",
+  "what": "ECEI only (TE vs T0), D650, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVtwo",
+  "what": "BES only (TB vs T0), D650, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVtwoPt",
+  "what": "BES only (TB vs T0), D650, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVtwo",
+  "what": "ECEI only (TE vs T0), S, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVtwoPt",
+  "what": "ECEI only (TE vs T0), S, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVtwo",
+  "what": "BES only (TB vs T0), S, V2 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVtwoPt",
+  "what": "BES only (TB vs T0), S, V2 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V2.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVthree",
+  "what": "ECEI only (TE vs T0), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlyDsixfiftyVthreePt",
+  "what": "ECEI only (TE vs T0), D650, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVthree",
+  "what": "BES only (TB vs T0), D650, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlyDsixfiftyVthreePt",
+  "what": "BES only (TB vs T0), D650, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.D650.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVthree",
+  "what": "ECEI only (TE vs T0), S, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EceiOnlySVthreePt",
+  "what": "ECEI only (TE vs T0), S, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TE/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVthree",
+  "what": "BES only (TB vs T0), S, V3 (per cent, interval)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\BesOnlySVthreePt",
+  "what": "BES only (TB vs T0), S, V3 (per cent, point)",
+  "source": "docs/paper/b81_controls.json main.V3.S.TB/T0",
+  "paper_map": "4.2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMone",
+  "what": "MAST Thomson increment, D5, M1 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMonePt",
+  "what": "MAST Thomson increment, D5, M1 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMone",
+  "what": "MAST Thomson increment, D100, M1 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMonePt",
+  "what": "MAST Thomson increment, D100, M1 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMtwo",
+  "what": "MAST Thomson increment, D5, M2 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M2|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMtwoPt",
+  "what": "MAST Thomson increment, D5, M2 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M2|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMtwo",
+  "what": "MAST Thomson increment, D100, M2 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M2|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMtwoPt",
+  "what": "MAST Thomson increment, D100, M2 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M2|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMthree",
+  "what": "MAST Thomson increment, D5, M3 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M3|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMthreePt",
+  "what": "MAST Thomson increment, D5, M3 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M3|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMthree",
+  "what": "MAST Thomson increment, D100, M3 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M3|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMthreePt",
+  "what": "MAST Thomson increment, D100, M3 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M3|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMfour",
+  "what": "MAST Thomson increment, D5, M4 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M4|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDfiveMfourPt",
+  "what": "MAST Thomson increment, D5, M4 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M4|L5|common.all.D5.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMfour",
+  "what": "MAST Thomson increment, D100, M4 (per cent, interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M4|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncMastDhundredMfourPt",
+  "what": "MAST Thomson increment, D100, M4 (per cent, point)",
+  "source": "docs/paper/b76_mast_availability.json main.M4|L5|common.all.D100.TX/T0",
+  "paper_map": "4.4/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostDsixfiftyVone",
+  "what": "cost of staleness of T0, D650, V1 (R1) (with interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.staleness T0",
+  "paper_map": "4.1/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostDsixfiftyVonePt",
+  "what": "cost of staleness of T0, D650, V1 (R1) (point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.staleness T0",
+  "paper_map": "4.1/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostSVone",
+  "what": "cost of staleness of T0, S, V1 (with interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.staleness T0",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostSVonePt",
+  "what": "cost of staleness of T0, S, V1 (point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.staleness T0",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVone",
+  "what": "recovered share, D650, V1 (with interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.recovered share",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVonePt",
+  "what": "recovered share, D650, V1 (point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|common.all.D650.recovered share",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecSVone",
+  "what": "recovered share, S, V1 (with interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.recovered share",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecSVonePt",
+  "what": "recovered share, S, V1 (point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.all.S.recovered share",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVthree",
+  "what": "recovered share, D650, V3 (with interval)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D650.recovered share",
+  "paper_map": "4.1/4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVthreePt",
+  "what": "recovered share, D650, V3 (point)",
+  "source": "docs/paper/b75_availability.json main.V3|L5|common.all.D650.recovered share",
+  "paper_map": "4.1/4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVfoura",
+  "what": "recovered share, D650, V4a (with interval)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.recovered share",
+  "paper_map": "4.1/4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecDsixfiftyVfouraPt",
+  "what": "recovered share, D650, V4a (point)",
+  "source": "docs/paper/b75_availability.json main.V4a|L5|common.all.D650.recovered share",
+  "paper_map": "4.1/4.3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostMastDhundredMone",
+  "what": "MAST cost of staleness, D100, M1 (S1) (with interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.staleness T0",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\CostMastDhundredMonePt",
+  "what": "MAST cost of staleness, D100, M1 (S1) (point)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.staleness T0",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecMastDhundredMone",
+  "what": "MAST recovered share, D100, M1 (with interval)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.recovered share",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RecMastDhundredMonePt",
+  "what": "MAST recovered share, D100, M1 (point)",
+  "source": "docs/paper/b76_mast_availability.json main.M1|L5|common.all.D100.recovered share",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EqRateKten",
+  "what": "equivalent spacing k' at K10, V1 (frames, interval)",
+  "source": "docs/paper/b78_sparse.json main.V1|L5.all.K10.equivalent rate",
+  "paper_map": "4.5/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EqRateKtenPt",
+  "what": "equivalent spacing k' at K10, V1 (frames)",
+  "source": "docs/paper/b78_sparse.json",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EqRateKtenMs",
+  "what": "equivalent spacing at K10 in ms (10 x k')",
+  "source": "docs/paper/b78_sparse.json",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\EqRateKtenFactor",
+  "what": "spacing ratio k/k' at K10",
+  "source": "docs/paper/b78_sparse.json",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\AgeMedianS",
+  "what": "median age (s) of the newest value the analysis could deliver (S set, L5)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "1/2/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\AgeQuartLoS",
+  "what": "25th percentile of that age (s)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\AgeQuartHiS",
+  "what": "75th percentile of that age (s)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseTXSVone",
+  "what": "RMSE of TX under S, V1 (eV)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseOSVone",
+  "what": "RMSE of the frame's own reading on the S set, V1 (eV)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.1/4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\RmseTZeroSVone",
+  "what": "RMSE of T0 under S, V1 (eV)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TimeMedian",
+  "what": "computation time per row, median (ms)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.1/abstract"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TimePnn",
+  "what": "computation time per row, 99th percentile (ms)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.1"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NDoneRows",
+  "what": "D1 rows",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "2/3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NDoneDischarges",
+  "what": "D1 discharges",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "2/3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NDoneClusters",
+  "what": "D1 shot clusters",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "2/3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NGridRows",
+  "what": "10 ms grid rows without the first and last rows of the files",
+  "source": "docs/paper/nbi_files.md sec. 1",
+  "paper_map": "2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NFiles",
+  "what": "shot files",
+  "source": "docs/paper/b73_targets.json",
+  "paper_map": "2"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NCommonRows",
+  "what": "common set rows (L5)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NCommonDischarges",
+  "what": "common set discharges",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NCommonClusters",
+  "what": "common set clusters",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NSRows",
+  "what": "S set rows (L5)",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NSDischarges",
+  "what": "S set discharges",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NSClusters",
+  "what": "S set clusters",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "3"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NKRows",
+  "what": "K set rows (L5)",
+  "source": "docs/paper/b78_sparse.json",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NKDischarges",
+  "what": "K set discharges",
+  "source": "docs/paper/b78_sparse.json",
+  "paper_map": "4.5"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NMastRows",
+  "what": "MAST common rows (L5)",
+  "source": "docs/paper/b76_mast_availability.json",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NMastShots",
+  "what": "MAST shots",
+  "source": "docs/paper/b76_mast_availability.json",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NMastSessions",
+  "what": "MAST sessions",
+  "source": "docs/paper/b76_mast_availability.json",
+  "paper_map": "4.4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NLastBlockDischarges",
+  "what": "discharges of the last block on the S set",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NLastBlockRows",
+  "what": "rows of the last block on the S set",
+  "source": "docs/paper/b75_availability.json",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSLastBlockVone",
+  "what": "increment under S on the last block, V1 (per cent, interval)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.block from 32312.S.TX/T0",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncSLastBlockVonePt",
+  "what": "increment under S on the last block, V1 (per cent, point)",
+  "source": "docs/paper/b75_availability.json main.V1|L5|S.block from 32312.S.TX/T0",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSLastBlockVone",
+  "what": "TXN vs TN under S on the last block, V1 (per cent, interval)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.block from 32312.S.TXN/TN",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\IncBeamSLastBlockVonePt",
+  "what": "TXN vs TN under S on the last block, V1 (per cent, point)",
+  "source": "docs/paper/b79_beam_inputs.json main.V1|L5|S.block from 32312.S.TXN/TN",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\GateSpearman",
+  "what": "rank correlation of per-discharge skill (V1, S) with C_E",
+  "source": "docs/paper/b80_ecei_gate.json spearman.all blocks",
+  "paper_map": "4.6"
+ },
+ {
+  "kind": "macro",
+  "name": "\\NGateSpearmanDischarges",
+  "what": "discharges of that rank correlation",
+  "source": "docs/paper/b80_ecei_gate.json",
+  "paper_map": "4.6"
+ }
+]
