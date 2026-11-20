@@ -8550,3 +8550,27 @@ The author asked whether work that fills in missing charge-exchange values reall
 - Estimating T_i without the charge-exchange measurement exists (RTCAKENN on DIII-D by input dropout, no time history, no accuracy given for the case without CER, edge target extrapolated from T_e; an EAST preprint). Not found: a causal estimate in time of one chord against hold or a GP with intervals, anything for KSTAR CES, and the error as a function of the age of the newest value.
 - The critique's verdicts on the findings that existed before B.75: the history-only learned estimator over the causal GP follows from known results and rests on a weak reference (a four-coefficient linear blend gives +0.086 [+0.072, +0.101], T0 +0.168 [+0.148, +0.187]; under V4 the five-parameter filter has RMSE 139.1 against 143.9 eV); the burst finding is the known ELM disturbance of edge CXRS; the protocol exists component by component; the decomposition of the cross-diagnostic gain by target is the one item not found in the fusion literature. For PPCF: nothing; after a second demonstration on MAST, a methods paper.
 - The author's direction of the same day: a paper proposes a possibility and shows that it works; every candidate is to be tried (A: B.77, B: B.75 and B.76, D: B.78; C needs a GPU for the network form).
+
+### B.77: the frame's own reading corrected and flagged with the fast samples of the same frame -- the fast samples add +0.048 under the random design and nothing established under the other three (candidate A, 2026-11-20)
+
+Registration `PREREGISTRATION_B77.md` with addendum 1 (written before any fit). CPU; run by an AI agent under the author's supervision. Output `docs/paper/b77_correct.{md,json}`, checks `docs/paper/b77_checks.md`, the session lead's checks `docs/paper/b77_lead_checks.md` (statement values recomputed from the stored estimates; C0 refitted with own code bit for bit in two units). Rows: 209,432 (606 discharges, 85 clusters), rule D10, target L5. O = the reported value of frame t; C0 = causal GP plus boosted trees on ten history scalars and four scalars of the frame's value; CX = C0 plus fourteen fast scalars.
+
+RMSE (eV) O / MED3 / T0 / TX / C0 / CX: V1 183.4 / 145.1 / 129.9 / 124.2 / 120.0 / 117.1; V2 183.4 / 145.1 / 131.4 / 127.6 / 121.1 / 120.2; V3 203.3 / 158.6 / 146.1 / 143.9 / 134.5 / 135.1; V4 (fit to 31991) 234.7 / 155.7 / 133.9 / 128.2 / 120.7 / 120.1; V4 (fit to 32310) 234.7 / 155.7 / 126.6 / 123.6 / 117.1 / 114.5.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| A1 V1: C0 below O | +0.572 [+0.518, +0.621] | holds | holds (+0.5 to +0.7) |
+| A2 V1: C0 below T0 | +0.147 [+0.132, +0.164] | holds | holds (+0.05 to +0.30) |
+| A3 V1: CX over C0 above zero | +0.048 [+0.023, +0.072] | holds | holds (+0.03 to +0.15) |
+| A4 V2: CX over C0 | +0.013 [-0.012, +0.037] | does not hold | holds |
+| A5 V3: CX over C0 | -0.009 [-0.049, +0.023] | does not hold | uncertain |
+| A6 V4 (fit to 31991): CX over C0 | +0.010 [-0.009, +0.032] | does not hold | uncertain |
+| A7 V1: CX over C0 exceeds TX over T0 | -0.038 [-0.054, -0.018] | does not hold | uncertain, leaning to holds |
+| A8 V1 and V4: AUC of FHX minus FH above zero under each | V1 +0.005 [+0.003, +0.008]; V4 -0.000 [-0.007, +0.007] | does not hold | holds |
+| A9 V1, 10 % screened: MSE of O kept by FHX over kept by FH below 1 | 0.989 [0.975, 1.002] | does not hold | uncertain |
+| A10 V1: CE over C0 above zero | +0.014 [+0.003, +0.025] | holds | uncertain |
+| A11 V1, placebo | -0.004 [-0.008, +0.000] | holds | holds |
+
+Reported: V4 (fit to 32310) CX over C0 +0.043 [+0.033, +0.062]; by BES class, below 0.9 of the recent level +0.100 [+0.047, +0.164], 0.97 to 1.03 +0.024 [-0.004, +0.047]; areas under the curve PH / PHX / FH / FHX: V1 0.8707 / 0.8864 / 0.9171 / 0.9223, V4 0.7685 / 0.7693 / 0.8763 / 0.8759; PHX minus PH: V1 +0.016 [+0.012, +0.021], V4 +0.001 [-0.009, +0.015]; screening under V1, MSE of O 33,642 eV^2 unscreened and with 10 % dropped FHX 14,513, FH 14,680, PHX 23,753, PH 24,816; fast scalars of the row before: +0.035 [+0.014, +0.055].
+
+Reading. A value corrected from the frame's reading and the history is far closer to the following level than the reading as it is, which is expected of any smoother. What the fast samples add to that correction holds under the random design only; under the cluster-blocked, rolling-origin and chronological (fit to 31991) designs the interval contains zero, and their part in the flags is small or not established. By the rule registered beforehand (A3 and A4 together) candidate A is not proposed. Once the frame's value is read, most of what the fast samples announced about that frame is no longer needed (A7).
