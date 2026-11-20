@@ -179,7 +179,7 @@ boosted regression은 `HistGradientBoostingRegressor(random_state=20261116)`, �
 | 등록 진술의 표와 성립 여부 | 배치별 개수 표와 성립하지 않은 진술의 표만 싣고, 전체 목록은 결과 파일을 가리킨다 | 보충 자료를 20쪽 남짓으로 두기 위해서다. 진술 전체의 표는 `gen_v2.tex`에 매크로로 남아 있다 |
 | 포스터와 발표 덱 | 옛 줄거리 | 저자가 "수정"을 요청할 때 고친다 |
 
-원고가 쓰는 파일: 표와 수치 매크로 `gen_v2.tex`(`make_tables_v2.py`), 그림 `figv2_*`(`fig_v2.py`), 보충 자료의 자료 절 `supp_data_fragment.tex`(`make_supp_fragment.py`), 검사 `check_numbers_v2.py`. 옛 `make_tables.py`, `check_numbers.py`, `fig_paper.py`는 얼려 둔 이전 원고의 것이다.
+원고가 쓰는 파일: 표와 수치 매크로 `gen_v2.tex`(`make_tables_v2.py`), 그림 `figv2_*`(`fig_v2.py`), 보충 자료의 자료 절 `supp_data_fragment.tex`(`make_supp_fragment.py`), 검사 `check_numbers_v2.py`. `fig_paper.py`는 얼려 둔 이전 원고의 그림 스크립트로, 보충 자료의 그림 둘(`fig_geometry`, `fig_rows`)을 만든다. 이전 원고의 표·검사 스크립트는 2026-11-21에 지웠다.
 
 ## 11. 변경 기록
 
