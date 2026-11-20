@@ -8574,3 +8574,24 @@ RMSE (eV) O / MED3 / T0 / TX / C0 / CX: V1 183.4 / 145.1 / 129.9 / 124.2 / 120.0
 Reported: V4 (fit to 32310) CX over C0 +0.043 [+0.033, +0.062]; by BES class, below 0.9 of the recent level +0.100 [+0.047, +0.164], 0.97 to 1.03 +0.024 [-0.004, +0.047]; areas under the curve PH / PHX / FH / FHX: V1 0.8707 / 0.8864 / 0.9171 / 0.9223, V4 0.7685 / 0.7693 / 0.8763 / 0.8759; PHX minus PH: V1 +0.016 [+0.012, +0.021], V4 +0.001 [-0.009, +0.015]; screening under V1, MSE of O 33,642 eV^2 unscreened and with 10 % dropped FHX 14,513, FH 14,680, PHX 23,753, PH 24,816; fast scalars of the row before: +0.035 [+0.014, +0.055].
 
 Reading. A value corrected from the frame's reading and the history is far closer to the following level than the reading as it is, which is expected of any smoother. What the fast samples add to that correction holds under the random design only; under the cluster-blocked, rolling-origin and chronological (fit to 31991) designs the interval contains zero, and their part in the flags is small or not established. By the rule registered beforehand (A3 and A4 together) candidate A is not proposed. Once the frame's value is read, most of what the fast samples announced about that frame is no longer needed (A7).
+
+### B.78: a CES value every k-th frame -- with a value every 100 ms the fast channels reduce the MSE of the level estimate by 19 % (random), 16 % (cluster-blocked), 8 % (rolling origin); not established on the last block (candidate D, 2026-11-20)
+
+Registration `PREREGISTRATION_B78.md` with addendum 1 (written before any readout). CPU; run by an AI agent under the author's supervision. Output `docs/paper/b78_sparse.{md,json}`, checks `docs/paper/b78_checks.md` (frame lattice; the K1 inputs equal B.75's D10 inputs bit for bit on 88,749 rows; 200 rows unchanged when values off the kept grid are removed or raised), the session lead's checks `docs/paper/b78_lead_checks.md` (statement values recomputed; frame index, scored rows and K10 history inputs recomputed with own code bit for bit). Scored rows: frames on no kept grid, complete under all six rules, 60,523 rows (507 discharges, 72 clusters). Estimators and inputs as B.75; target L5; intervals with shot clusters resampled.
+
+RMSE (eV), V1, T0 / TX by rule: K1 127.0 / 120.9; K2 130.2 / 123.8; K5 145.6 / 135.4; K10 160.7 / 144.6; K20 179.7 / 159.9; K50 212.2 / 180.1; the frame's own reading 177.1.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| K-1 V1, K10: TX over T0 above zero | +0.191 [+0.133, +0.247] | holds | holds (+0.10 to +0.30) |
+| K-2 V2, K10 | +0.163 [+0.095, +0.231] | holds | holds |
+| K-3 V3, K10 | +0.075 [+0.012, +0.123] | holds | uncertain, leaning to holds |
+| K-4 V4 (fit to 31991), K10 | +0.023 [-0.077, +0.120] | does not hold | uncertain |
+| K-5 V1: MSE of TX under K10 below that of T0 under K5 | +0.015 [-0.046, +0.078] | does not hold | uncertain |
+| K-6 V1: MSE(TX, K10) / MSE(TX, K1) below 2 | 1.430 [1.332, 1.530] | holds | holds (1.3 to 2.0) |
+| K-7 V1, K10: TE over T0 above zero | +0.107 [+0.052, +0.161] | holds | holds |
+| K-8 V1, K10, placebo | -0.003 [-0.015, +0.009] | holds | holds |
+
+Reported: increments by rule, V1 +0.093, +0.096, +0.136, +0.191, +0.208, +0.279 (K1 to K50); V4 (fit to 32310), K10 +0.105 [+0.018, +0.201]; equivalent rate under V1, the spacing at which T0 has the MSE of TX: K5 2.69 [2.05, 3.25] frames, K10 4.67 [3.59, 5.78], K20 9.64 [7.53, 11.86], K50 20.20 [15.41, 24.71]; recovered share K5 0.564 [0.378, 0.848], K10 0.508 [0.376, 0.647]; under V4 (fit to 31991), K10, ECEI half +0.075 [+0.037, +0.128], BES half -0.134 [-0.298, +0.032]; by position between two kept values (V1, K10) +0.122 [+0.089, +0.159] at 10 to 30 ms and +0.204 [+0.146, +0.263] at 70 to 90 ms; fast scalars taken at the anchor row +0.078 [+0.038, +0.116] over T0.
+
+Reading. As with a delayed history (B.75), the sparser the CES values the more the fast channels add. With a value every 100 ms the increment holds under the random, cluster-blocked and rolling-origin designs and is not established on the chronological split (3,587 scored rows). With the fast channels a value every 100 ms gives the error of a value about every 47 ms without them. By the rule registered beforehand (K-1 and K-2 hold) candidate D may be proposed with these sizes. Limit: the thinning is done after the fact; the withheld frames were taken with the beam on.
