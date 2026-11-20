@@ -13,6 +13,7 @@ Role: hostile but fair PPCF referee and handling editor, asked one question. The
 - [F-crit]: another critic read the full text today, and I did not reread it.
 - [V-map]: taken from the authors' `literature_map.md` and not reread.
 - [P]: a project file.
+- [P-unrecorded]: today's B.75 output, checked by the lead, not yet recorded in `PROJECT_KNOWLEDGE.md`.
 - [J]: my judgement.
 
 **Checks.** N1-N3 are unregistered, after-the-fact, read-only checks. They are single-threaded numpy runs on `data/.b73/` and `data/mast/`. Scripts and printed outputs are in `docs/paper/review_loop/critique_20261120_novelty_checks/`. Nothing was trained and no tracked file was changed.
@@ -263,7 +264,203 @@ What would change it but does not exist here: the chord's spectra, fitted amplit
 
 ---
 
-## 7. Unregistered checks (N1-N3)
+## 6b. Possibilities that could be proposed
+
+The author's point, taken seriously: accepted papers in this area devise a capability, propose it, and show that it can work.
+- RTCAKENN runs without CER and was shown by one hardware test.
+- NN-CES offers "potential for real-time control".
+- Diag2Diag produces synthetic high-rate Thomson data.
+
+Sections 1-6 audited increments. This section asks what capability these files can demonstrate, judged with the same hostility.
+
+What is distinctive here, and why each item matters:
+1. **The BES samples the same heating beam as the CES, inside each CES exposure.** Its light is what the frame's fit reacts to (B.74).
+2. **ECEI sits at the same radius and uses neither beam nor spectrometer.**
+3. **Raw 500 kHz streams exist for 12 discharges.**
+4. **There is 100 Hz CES ground truth for 639 discharges.** The target can be withheld and checked at its own rate. Diag2Diag had no high-rate truth for its target.
+5. **A beam-modulation schedule makes the conventional CES value late.** It arrives after the next beam-off frame: 0.65 s at the median, and 31.1 % of D1 rows have no earlier beam-off frame in their block (B.75 counts).
+6. **A second public device exists (MAST).** It has fit errors, Thomson and D-alpha, but no co-located BES or ECEI in the fetched files.
+
+[P-unrecorded] marks numbers from today's B.75 output (`docs/paper/b75_availability.md`, checked in `docs/paper/b75_lead_checks.md`), not yet recorded in `PROJECT_KNOWLEDGE.md`. All B.75 numbers are on target L5. "c [...]" is the shot-cluster interval. N4 (`n4_b75_recovered_share.py`) is my arithmetic on B.75's point RMSE tables. It gives the share of the staleness cost recovered by the fast samples: (MSE T0 − MSE TX) / (MSE T0 − MSE T0 with a 10 ms history), with no intervals.
+
+### B. Bridge the beam-modulation latency with the fast diagnostics of the same radius (the session lead's candidate B)
+
+**Idea.** The CES value for frame t is late. Estimate the present pedestal-top T_i level from the CES history as old as the modulation analysis allows, plus the BES and ECEI samples of the present frame.
+
+**Prior work.**
+- The technique is known elsewhere:
+  - nowcasting a late official statistic from timely indicators ([T] Giannone, Reichlin & Small, J. Monet. Econ. 2008, 10.1016/j.jmoneco.2008.05.010);
+  - out-of-sequence measurement updates in tracking ([A] Bar-Shalom, IEEE TAES 2002, 10.1109/taes.2002.1039398).
+- In fusion the latency is removed rather than bridged:
+  - DIII-D real-time CER gives results within 1 ms, "the large majority" within 20 % of the best automatic analysis ([A] RSI 2026, 10.1063/5.0350505);
+  - NN-CES reads spectra without modulation ([A]), but its accuracy degrades beyond R ≈ 2.2 m ([F-crit] Lee 2026, section 3.4);
+  - HL-3 reads spectra in 0.56 ms ([A]).
+- RTCAKENN runs without CER through input dropout and states no quantitative T_i accuracy without CER (lead, full text).
+- Not found: bridging the CXRS analysis delay with co-located fast diagnostics while keeping the stale CES history.
+
+**What already supports it** ([P-unrecorded] B.75, lead-checked):
+- **Fixed 650 ms delay, V1.** RMSE: hold 325.9, causal GP 277.6, T0 226.2, TX 184.3 eV. Fast samples without any CES history (X0) give 265.4 eV. The frame's own reading against L5 gives 183.3 eV.
+- **The increment holds in all four designs at D650:**
+  - V1 +0.336 c [+0.285, +0.380];
+  - V2 +0.282 c [+0.215, +0.343];
+  - V3 +0.190 c [+0.033, +0.292];
+  - V4 +0.237 c [+0.047, +0.415].
+- **Real schedule S** (zero analysis time assumed):
+  - V1 +0.327 c [+0.262, +0.388]; TX 178.5 eV against 178.2 eV for the frame's own reading;
+  - V2 +0.293 and V3 +0.231 (reported, not registered statements);
+  - V4 +0.028 c [-0.166, +0.172], does not hold;
+  - V4b -0.254.
+- **Recovered share (N4):**
+  - at 650 ms delay: 0.51 (V1), 0.41 (V2), 0.28 (V3), 0.49 (V4);
+  - under S: 0.51, 0.45, 0.36 in V1-V3, and 0.07 / -0.74 in the last block (V4a / V4b).
+- **The beam-free part:** ECEI alone gives TE over T0 = +0.229 c [+0.162, +0.291] (V1, D650).
+- **Controls** (lead, unregistered):
+  - fast inputs permuted: +0.013;
+  - fast inputs as old as the history: -0.128, against +0.205 with present ones;
+  - time since the last notch alone: +0.023; adding it to both models leaves the increment at +0.335.
+- **Computation:** 1.95 ms per row (median), 4.59 ms (99th percentile), one CPU thread.
+
+**Still missing:**
+1. Why the schedule rule fails in the last block. The S set there is only 7,180 rows, 50 discharges, 14 clusters. Needs a rolling-origin S readout. [existing data, CPU]
+2. One estimator for all ages, as it would run, and the update when delayed values arrive (out-of-sequence). [existing data, CPU]
+3. A reference not produced by the same analysis. L5 carries any bias that lasts more than 50 ms. [needs data that do not exist here]
+4. A comparison with a real-time spectral reader at this chord (NN-CES or two-Gaussian values for these frames). [needs data that do not exist here]
+5. Whether BES and ECEI 10 ms samples reach the plant within a frame. [unverified]
+
+**Most likely failure.** Under the real schedule and forward in time, the increment is not established (R8), and a referee reads the rest as random-split optimism. The referee's second line is "install a real-time spectral reader instead". The answer is that this is the chord where such readers are weakest, but that can be cited and not measured here.
+
+### D. Operate the CES sparsely and reconstruct the skipped frames (candidate D)
+
+**Idea.** Run the CES at a fraction of 100 Hz, for example to lengthen exposures where the active signal is weak. Fill the skipped frames from BES/ECEI and validate against the real frames withheld.
+
+**Prior work.**
+- Diag2Diag gives synthetic 500 kHz Thomson, checked only at measured Thomson times ([A]; [S] IAEA abstract).
+- COMPASS gives µs T_e/n_e from SXR/AXUV, with errors about 10 % in the core and 20 % at the edge, checked at Thomson times ([A] PPCF 2026).
+- KSTAR's own review argues for reduced diagnostic sets plus inference ([A] PST 2026, aeb854).
+- Not found: thinning a target that has native-rate truth, to show what rate suffices.
+
+**Support.**
+- 4.4/4.50 (frozen network, F target): visible every 50 ms, against the causal GP +0.112 [+0.096, +0.129] and against the twin +0.089 [+0.069, +0.109] ([P]).
+- B.75's fixed-delay rows bound sparse sampling from the conservative side (the age is always the maximum). With the CES 50 ms old, TX has an RMSE of 136.5 eV (V1) and 140.1 eV (V4). A full-rate CES estimator without fast channels has 131.5 and 145.0 eV ([P-unrecorded]).
+
+**Still missing.**
+- Estimators fitted under real thinning (k = 2, 5, 10), on L5, in V1-V4. [existing data, CPU]
+- The reason to thin: the S/N gained by a longer exposure at the weak edge. That needs spectra. [needs data that do not exist here]
+
+**Most likely failure.** At KSTAR there is no operational reason to thin a 100 Hz CES. Without the S/N side, the result is "fewer frames cost +8 % MSE (V1)", and a referee asks why anyone would do it. Best as one section of the B paper.
+
+### A. BES as a monitor of the CES exposure: flag, gate and correct frames (candidate A)
+
+**Idea.** Use the same-beam BES light inside each exposure as a real-time quality gate for edge CES values. It would flag frames with a light burst and values written while the beam emission was at its beam-off level, and down-weight them in any estimator.
+
+**Prior work.**
+- ELM filtering with D-alpha is routine ([A] OMFIT 2018; [A] JET ELM synchronisation 2016).
+- KSTAR CES outliers are classified from the CES values themselves ([A] Kim 2024; [A] Kim 2026, posterior outlier probabilities).
+- BES as a beam monitor for CXRS (attenuation, deposition, cross-calibration) is old ([S] ITER and JET reports).
+- Spectral readers give per-frame uncertainty ([A] HL-3).
+- Not found: gating a CXRS frame by the same beam's emission inside its own exposure, or a beam-presence gate.
+
+**Support.**
+- B.74: J6 9.48 [4.65, 18.68]; J1 0.144 against 0.044.
+- B.73: AUC for an unusable next value, V1 0.9285 to 0.9622 and V4 0.9242 to 0.9477; Q12 (BES below 0.9 of its recent level) L5 increment +0.183 [+0.124, +0.254].
+- CXRS critique C10/C15/C19 (unregistered): 13 of 15 beam-off exposures carry a T_i, as do 45 of 50 frames in 31747 and 133 of 181 campaign-wide rows with every BES channel below 0.4.
+
+**Still missing.**
+- A test that conditions only on inputs: does gating the history and the training targets lower every causal estimator's error against L5? This kind of stratum is allowed by `PAPER_DESIGN.md` 7.7. [existing data, CPU]
+- A comparison with the analysis's own error bar. [needs data that do not exist here]
+
+**Most likely failure.** The CES history alone already flags most such frames (AUC 0.93), so BES adds +0.02 to +0.03. The flagged frames may be ones KSTAR's analysis already marks with large errors.
+
+### E. A per-frame uncertainty for an edge CES product that reports none, from the co-located fast light
+
+**Idea.** Predict each frame's reliability from the light of its exposure. Calibrate the light-to-uncertainty mapping on MAST, where the analysis reports errors, and check its calibration on KSTAR against the frame's departure from the following level.
+
+**Prior work.**
+- Fit error bars are standard where the fit is available (MAST; the KSTAR tree has `ERR_BAR`, [F-crit]).
+- NN-CES uses the SD of filtered residuals ([P] survey row 1).
+- Kim 2026 gives posterior outlier probabilities ([A]).
+- Not found: an auxiliary fast-light model of a CXRS value's uncertainty.
+
+**Support.**
+- N3: on MAST, in burst frames the reported error is 1.18-1.22 times its recent level, against 0.96 in quiet frames.
+- B.34 (4.16): the size of the error is predictable (the top 10 % of predicted rows hold 0.43-0.50 of the squared error), but a calibrated interval failed coverage (0.856-0.875).
+
+**Still missing.** The MAST mapping and its transfer test. [existing data, CPU]
+
+**Most likely failure.** MAST's mid-plane D-alpha and KSTAR's same-beam BES are different signals, so the calibration does not transfer, and on KSTAR the predicted uncertainty comes mostly from the CES history.
+
+### F. A modulation-aware product: measure, notch by notch, the disturbance the CES's own beam modulation causes
+
+**Idea.** Quantify, with fast diagnostics, how each heating-beam notch needed for background subtraction disturbs the edge reading for about 40-90 ms. Correct or flag those frames. This prices the modulation that modulation-free analysis would remove.
+
+**Prior work.**
+- NN-CES: main-beam modulation "may potentially cause plasma disturbances" ([A]).
+- Lee 2020: "large radial displacement" ([F-crit]).
+- NSTX-U: interpolated backgrounds across modulation give erroneous profiles at times ([S]).
+- NBI modulation is used as a transport probe ([A] AUG, PPCF 2022, 10.1088/1361-6587/ac5ae8).
+- Not found: a campaign-wide quantification of the reading's response to the diagnostic's own notches.
+
+**Support.**
+- 4.7: 1,394 notches. First row: T_i 0.819 [0.796, 0.838], ECEI 0.926, BES 0.656. Tenth row: 0.999.
+- 4.17: recovery in 41.0 [35.7, 46.8] ms (T_i) and 40.2 ms (ECEI).
+- 4.41: rotation 0.973; first-frame-only excess 0.030 of the level.
+- 4.42: the wall field changes in 12 of 12 raw discharges.
+- Pedestal critique C4-A: the T_i ratio is below 0.5 in 16.7 % of events.
+
+**Still missing.** The cost in a downstream error (input-defined rows after a notch). [existing data, CPU] Attribution (displacement, temperature or fit) needs equilibrium and beam waveforms. [needs data that do not exist here]
+
+**Most likely failure.** The plant knows the notch times, so "correction" looks trivial. Attribution is impossible, so the result is a note.
+
+### C. The same estimator on MAST and transfer between devices (candidate C)
+
+**Idea.** Fit the same causal estimator on both devices and test which parts transfer.
+
+**Prior work.**
+- Transfer of a CXRS spectral network from HL-2A to HL-3 ([A] HL-3 NF 2026; [P] survey, Tian 2026).
+- DIII-D to KSTAR ELM zero-shot transfer and cross-machine disruption prediction ([P] survey rows 19-20).
+- Not found: transfer of a CXRS-T_i time-series estimator.
+
+**Support.** 4.12: on MAST, all inputs against hold +0.148 [+0.122, +0.177], of which Thomson +0.047 and D-alpha +0.023. On the gate set, the CES-only causal filter gives +0.076 [-0.006, +0.148] and offline interpolation +0.544. The fetched MAST files hold CXRS, Thomson, D-alpha, NBI power and density, and no co-located BES or ECEI (see N3's docstring).
+
+**Still missing.** A shared input set; only the CES history and the time step are common. Trees on CPU; the network variant needs a GPU.
+
+**Most likely failure.** What transfers is a history smoother. The distinctive part here (same-beam BES) has no MAST counterpart in these files, so "which parts transfer" has a trivial answer.
+
+### Ranking: novelty relative to what I could find × demonstrable with the existing files
+
+| rank | possibility | novelty (closest found) | demonstrable now | best form |
+|---|---|---|---|---|
+| 1 | **B** latency bridge | high in fusion: latency is removed (DIII-D real-time CER, NN-CES) or ignored (RTCAKENN), not bridged; the technique is known in economics and tracking | high: B.75 already holds in 4/4 designs at 650 ms; the real schedule holds in V1 and fails in the last block | the paper |
+| 2 | **D** sparse CES | moderate: SR papers lack native-rate truth for their target | high (CPU), but the motivation (S/N) is untestable | a section of the B paper |
+| 3 | **A** BES exposure gate | moderate: D-alpha ELM gating is standard; same-beam in-exposure gating is not found | moderate: statistics exist; no truth for "bad frame" | the input-quality layer of the B paper |
+| 4 | **F** modulation cost | low-moderate: stated qualitatively by the CES group | high for description, none for correction | a note (FED/JKPS) or a motivation paragraph in B |
+| 5 | **E** synthetic error bar | moderate in idea | low-moderate: different light signals on the two devices | exploratory |
+| 6 | **C** MAST transfer | low-moderate | low: no shared fast input | not recommended with these files |
+
+**The one I would build the paper around: B.** It is the only possibility with the shape of the accepted papers that is already mostly demonstrated on withheld data with these files:
+- the beam-modulation delay is a real, documented limitation (Lee 2020/2026);
+- the chord is where the modulation-free real-time readers are weakest;
+- at a fixed 650 ms delay the fast samples recover 0.41-0.51 of the accuracy lost in V1, V2 and V4, and 0.28 in V3 (N4, points);
+- the beam-free ECEI part is separately positive;
+- it runs in about 2 ms per frame on one CPU thread.
+
+It does not depend on the fast channels carrying information about the frame's own fit, which sections 2-3 showed to be the weak point. It uses them for the change of the level since the last delivered value. Placebo and stale-input controls show it is not schedule knowledge.
+
+Before writing:
+1. Resolve or bound the last-block failure under the real schedule (rolling-origin S).
+2. Fit one estimator for all ages, with the out-of-sequence update.
+3. Report the ECEI-only (beam-free) variant beside BES+ECEI.
+4. State plainly that analysis time is assumed zero, that L5 comes from the same analysis, and that no real-time spectral reader was compared.
+
+D can be a section, A the input gate, F the motivation paragraph.
+
+**First sentence of its abstract:** "At the pedestal top of KSTAR the charge-exchange ion temperature is analysed with beam-modulation background subtraction and therefore becomes available only after the next beam-off frame, 0.65 s late at the median; we propose to bridge this delay with the beam-emission and ECE-imaging signals sampled at the same radius in the present frame, and test on withheld frames of 639 discharges how much of the accuracy lost to the delay they recover."
+
+---
+
+## 7. Unregistered checks (N1-N4)
+
+N4 (`n4_b75_recovered_share.py` → `.out`) is arithmetic on the point RMSE tables of today's B.75 output. It computes the share of the staleness cost recovered by the fast samples, per design and rule. It has no intervals. B.75 registered its own "recovered share" readout, which should replace these numbers once recorded.
 
 | id | script | question | result | limits |
 |---|---|---|---|---|
@@ -311,6 +508,14 @@ Read levels are as defined in the header. "Lead" means the source was verified b
 | Murari et al., NF 58 (2018) | 10.1088/1741-4326/aaaf9c | [T] | C4 |
 | Grinsztajn et al. 2022 | 10.48550/arXiv.2207.08815 | [T] | C4 |
 | Pavone et al., PPCF 65 (2023) review | 10.1088/1361-6587/acc60f | [A] | background only |
+| Giannone, Reichlin, Small, J. Monet. Econ. 55 (2008) | 10.1016/j.jmoneco.2008.05.010 | [T] | 6b-B |
+| Bar-Shalom, out-of-sequence measurements, IEEE TAES 38 (2002) | 10.1109/taes.2002.1039398 | [A] | 6b-B |
+| Real-time CER at DIII-D, RSI 2026 | 10.1063/5.0350505 | [A] | 6b-B |
+| Temporal super-resolution at COMPASS, PPCF 2026 | 10.1088/1361-6587/ae72c6 | [A] | 6b-D |
+| Roles of KSTAR toward reactor-relevant diagnostics, PST 2026 | 10.1088/2058-6272/aeb854 | [A] | 6b-D |
+| NBI-modulation momentum transport at AUG, PPCF 64 (2022) | 10.1088/1361-6587/ac5ae8 | [A] | 6b-F |
+| BES as a beam monitor (ITER/JET reports found by search) | none | [S] | 6b-A |
+| B.75 output and the lead's checks | `docs/paper/b75_availability.md`, `docs/paper/b75_lead_checks.md` | [P-unrecorded] | 6b-B, 6b-D |
 | Fusion-ML validation survey (25 papers), methodology references | `docs/paper/validation_methods.md` | [P] (the survey's own read levels apply) | C4 |
 | RTCAKENN, EAST attention, COMPASS, EAST T_e/Z_eff, FusionMAE, TokaMark | as in the task brief | lead verified | C2, C4 |
 
