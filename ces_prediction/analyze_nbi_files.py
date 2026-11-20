@@ -176,7 +176,7 @@ def main():
       + "; ".join(f"{s} {np.median(e):.3f}" for s, e in zip(SRC, eff) if len(e)) + ". "
       "In the files above the voltage and the current of the source are of the usual size and the power column is not: the column is wrong, not the source. "
       "The on and off states of sections 2 to 4 are not affected by a wrong scale (a real power is above 0.1 MW); a negative offset reads as off. "
-      "Batch B.79 leaves these files out of every fit and score.\n")
+      "Batch B.79 reads its statements with the columns as delivered (its registration) and, beside that, refitted with these files left out of every fit and score.\n")
     OUT.write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
     print("written", OUT)
 
