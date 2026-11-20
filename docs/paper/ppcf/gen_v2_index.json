@@ -456,6 +456,20 @@
  },
  {
   "kind": "table",
+  "name": "\\TabStatBeightythree",
+  "what": "registered statements of B.83 (previous frame visible: against interpolation and the offline GP)",
+  "source": "b83_interp.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatBeightyfour",
+  "what": "registered statements of B.84 (one estimator fitted for every availability rule)",
+  "source": "b84_onefit.json statements.*",
+  "paper_map": "supplement (statement tables)"
+ },
+ {
+  "kind": "table",
   "name": "\\TabDataset",
   "what": "the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources",
   "source": "b82 part_E",
@@ -855,8 +869,316 @@
  },
  {
   "kind": "table",
+  "name": "\\TabLadder",
+  "what": "the main nowcast table: references, T0, TX, network rows on F and L5 (V1, previous frame visible)",
+  "source": "b83 estimators.V1.*; b73 per_estimator.V1|{F,L5}; b82 part_B.V1.D10 (within 10 % on L5)",
+  "paper_map": "4 (main)"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabVsReferences",
+  "what": "TX (and T0) against hold, PCHIP, causal and offline GP by design; ratio block V1",
+  "source": "b83 pairs.*.*.MSE skill and ratios; b73 per_estimator.*|L5.{TX[L5],T0[L5]}.over_G",
+  "paper_map": "4 (main)"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVone",
+  "what": "TX vs PCHIP on F, V1 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVonePt",
+  "what": "TX vs PCHIP on F, V1 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVone",
+  "what": "TX vs offline GP on F, V1 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVonePt",
+  "what": "TX vs offline GP on F, V1 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVone",
+  "what": "TX vs causal GP on F, V1 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVonePt",
+  "what": "TX vs causal GP on F, V1 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V1.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVone",
+  "what": "TX vs causal GP on L5, V1 (per cent, interval)",
+  "source": "docs/paper/b73_targets.json per_estimator.V1|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVonePt",
+  "what": "TX vs causal GP on L5, V1 (per cent, point)",
+  "source": "docs/paper/b73_targets.json per_estimator.V1|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVtwo",
+  "what": "TX vs PCHIP on F, V2 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVtwoPt",
+  "what": "TX vs PCHIP on F, V2 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVtwo",
+  "what": "TX vs offline GP on F, V2 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVtwoPt",
+  "what": "TX vs offline GP on F, V2 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVtwo",
+  "what": "TX vs causal GP on F, V2 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVtwoPt",
+  "what": "TX vs causal GP on F, V2 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V2.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVtwo",
+  "what": "TX vs causal GP on L5, V2 (per cent, interval)",
+  "source": "docs/paper/b73_targets.json per_estimator.V2|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVtwoPt",
+  "what": "TX vs causal GP on L5, V2 (per cent, point)",
+  "source": "docs/paper/b73_targets.json per_estimator.V2|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVthree",
+  "what": "TX vs PCHIP on F, V3 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVthreePt",
+  "what": "TX vs PCHIP on F, V3 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVthree",
+  "what": "TX vs offline GP on F, V3 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVthreePt",
+  "what": "TX vs offline GP on F, V3 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVthree",
+  "what": "TX vs causal GP on F, V3 (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVthreePt",
+  "what": "TX vs causal GP on F, V3 (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V3.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVthree",
+  "what": "TX vs causal GP on L5, V3 (per cent, interval)",
+  "source": "docs/paper/b73_targets.json per_estimator.V3|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVthreePt",
+  "what": "TX vs causal GP on L5, V3 (per cent, point)",
+  "source": "docs/paper/b73_targets.json per_estimator.V3|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVfoura",
+  "what": "TX vs PCHIP on F, V4a (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverPchipVfouraPt",
+  "what": "TX vs PCHIP on F, V4a (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over PCHIP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVfoura",
+  "what": "TX vs offline GP on F, V4a (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverOfflineVfouraPt",
+  "what": "TX vs offline GP on F, V4a (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over offline GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVfoura",
+  "what": "TX vs causal GP on F, V4a (per cent, interval)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpFVfouraPt",
+  "what": "TX vs causal GP on F, V4a (per cent, point)",
+  "source": "docs/paper/b83_interp.json pairs.V4a.TX over causal GP.MSE skill",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVfoura",
+  "what": "TX vs causal GP on L5, V4a (per cent, interval)",
+  "source": "docs/paper/b73_targets.json per_estimator.V4a|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\TXoverGpLfiveVfouraPt",
+  "what": "TX vs causal GP on L5, V4a (per cent, point)",
+  "source": "docs/paper/b73_targets.json per_estimator.V4a|L5.TX[L5].over_G",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MedRatioTXOfflineVone",
+  "what": "median absolute error ratio TX / offline GP, V1, F",
+  "source": "docs/paper/b83_interp.json",
+  "paper_map": "4"
+ },
+ {
+  "kind": "macro",
+  "name": "\\MedRatioTXOfflineVonePt",
+  "what": "the same, point",
+  "source": "docs/paper/b83_interp.json",
+  "paper_map": "4"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabLadderDesigns",
+  "what": "the F columns of the main table for V2, V3, V4a",
+  "source": "b83 estimators.{V2,V3,V4a}.*",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabOneFit",
+  "what": "one fit for every rule vs per-rule fits (V1 r2, V3, V4a; D10..S, K10)",
+  "source": "b84 cells.*",
+  "paper_map": "supplement / sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitDsixfiftyVone",
+  "what": "one fit TXall vs per-rule TX, D650, V1 (r2) (per cent, interval)",
+  "source": "docs/paper/b84_onefit.json cells.V1.D650.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitDsixfiftyVonePt",
+  "what": "one fit TXall vs per-rule TX, D650, V1 (r2) (per cent, point)",
+  "source": "docs/paper/b84_onefit.json cells.V1.D650.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitDtenVone",
+  "what": "one fit TXall vs per-rule TX, D10, V1 (r2) (per cent, interval)",
+  "source": "docs/paper/b84_onefit.json cells.V1.D10.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitDtenVonePt",
+  "what": "one fit TXall vs per-rule TX, D10, V1 (r2) (per cent, point)",
+  "source": "docs/paper/b84_onefit.json cells.V1.D10.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitKtenVone",
+  "what": "one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, interval)",
+  "source": "docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "macro",
+  "name": "\\OneFitKtenVonePt",
+  "what": "one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, point)",
+  "source": "docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX",
+  "paper_map": "sec. on use"
+ },
+ {
+  "kind": "table",
   "name": "\\TabStatSummary",
-  "what": "count of registered statements per batch B.73-B.82: hold, do not hold, expectations met",
+  "what": "count of registered statements per batch B.73-B.84: hold, do not hold, expectations met",
   "source": "statements blocks of b73..b81 JSON (counted)",
   "paper_map": "supplement (replaces the nine statement tables)"
  },
@@ -871,6 +1193,13 @@
   "kind": "table",
   "name": "\\TabStatNotHeldB",
   "what": "registered statements that do not hold (B.78-B.82)",
+  "source": "statements blocks of the batch JSON (holds = false)",
+  "paper_map": "supplement"
+ },
+ {
+  "kind": "table",
+  "name": "\\TabStatNotHeldC",
+  "what": "registered statements that do not hold (B.83-B.84)",
   "source": "statements blocks of the batch JSON (holds = false)",
   "paper_map": "supplement"
  },

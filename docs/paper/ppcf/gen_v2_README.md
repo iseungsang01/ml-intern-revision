@@ -71,6 +71,8 @@ This file is written by `make_tables_v2.py`; do not edit it by hand.
 | `\TabStatBeighty` (caption `\CapStatBeighty`) | registered statements of B.80 (coherence of the ECEI channels) | b80_ecei_gate.json statements.* | supplement (statement tables) |
 | `\TabStatBeightyone` (caption `\CapStatBeightyone`) | registered statements of B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3) | b81_controls.json statements.* | supplement (statement tables) |
 | `\TabStatBeightytwo` (caption `\CapStatBeightytwo`) | registered statements of B.82 (where the increment sits; robust error measures; specificity) | b82_localize.json statements.* | supplement (statement tables) |
+| `\TabStatBeightythree` (caption `\CapStatBeightythree`) | registered statements of B.83 (previous frame visible: against interpolation and the offline GP) | b83_interp.json statements.* | supplement (statement tables) |
+| `\TabStatBeightyfour` (caption `\CapStatBeightyfour`) | registered statements of B.84 (one estimator fitted for every availability rule) | b84_onefit.json statements.* | supplement (statement tables) |
 | `\TabDataset` (caption `\CapDataset`) | the data set: discharges, rows, absent steps, T_i and L5 ranges, beam power and sources | b82 part_E | sec. 2 (main) |
 | `\TabRobust` (caption `\CapRobust`) | robust error measures (MAE, median, p90, within 10/20 %) of T0, TX, O for V1 at D10, D650, S | b82 part_B.V1.{D10,D650,S} | 4.1 (main) |
 | `\TabRobustFull` (caption `\CapRobustFull`) | robust error measures for H, G, T0, TX, O, V1 at D10, D650, S | b82 part_B.V1.{D10,D650,S} | supplement |
@@ -80,9 +82,14 @@ This file is written by `make_tables_v2.py`; do not edit it by hand.
 | `\TabSeeds` (caption `\CapSeeds`) | seed spread of the increment (V4a, V4b, V1 r2 pooled; D650, S) | b82 part_D | supplement |
 | `\TabChange` (caption `\CapChange`) | increment by thirds of the change since the anchor row (V1, V3; D650, S) | b82 part_A.{V1,V3}.{D650,S}.all.c | supplement |
 | `\TabRobustDesigns` (caption `\CapRobustDesigns`) | robust measures TX vs T0 per design and rule, per-discharge skill | b82 part_B.* | supplement |
-| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.82: hold, do not hold, expectations met | statements blocks of b73..b81 JSON (counted) | supplement (replaces the nine statement tables) |
+| `\TabLadder` (caption `\CapLadder`) | the main nowcast table: references, T0, TX, network rows on F and L5 (V1, previous frame visible) | b83 estimators.V1.*; b73 per_estimator.V1/{F,L5}; b82 part_B.V1.D10 (within 10 % on L5) | 4 (main) |
+| `\TabVsReferences` (caption `\CapVsReferences`) | TX (and T0) against hold, PCHIP, causal and offline GP by design; ratio block V1 | b83 pairs.*.*.MSE skill and ratios; b73 per_estimator.*/L5.{TX[L5],T0[L5]}.over_G | 4 (main) |
+| `\TabLadderDesigns` (caption `\CapLadderDesigns`) | the F columns of the main table for V2, V3, V4a | b83 estimators.{V2,V3,V4a}.* | supplement |
+| `\TabOneFit` (caption `\CapOneFit`) | one fit for every rule vs per-rule fits (V1 r2, V3, V4a; D10..S, K10) | b84 cells.* | supplement / sec. on use |
+| `\TabStatSummary` (caption `\CapStatSummary`) | count of registered statements per batch B.73-B.84: hold, do not hold, expectations met | statements blocks of b73..b81 JSON (counted) | supplement (replaces the nine statement tables) |
 | `\TabStatNotHeld` (caption `\CapStatNotHeld`) | registered statements that do not hold (B.73-B.77) | statements blocks of the batch JSON (holds = false) | supplement |
 | `\TabStatNotHeldB` (caption `\CapStatNotHeldB`) | registered statements that do not hold (B.78-B.82) | statements blocks of the batch JSON (holds = false) | supplement |
+| `\TabStatNotHeldC` (caption `\CapStatNotHeldC`) | registered statements that do not hold (B.83-B.84) | statements blocks of the batch JSON (holds = false) | supplement |
 
 ## Prose macros (`gen_v2.tex`, end of file)
 
@@ -159,6 +166,46 @@ Naming: `Inc<Rule><Design>` = fast-channel increment (TX vs T0), `IncBeam` = TXN
 | `\MirnovAloneDsixfiftyVonePt` | Mirnov in place of the fast inputs (TM vs T0), D650, V1 (per cent, point) | docs/paper/b82_localize.json part_C.V1.D650.TM/T0 |
 | `\TXoverMirnovDsixfiftyVone` | fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, interval) | docs/paper/b82_localize.json part_C.V1.D650.TX/TM |
 | `\TXoverMirnovDsixfiftyVonePt` | fast inputs against Mirnov (TX vs TM), D650, V1 (per cent, point) | docs/paper/b82_localize.json part_C.V1.D650.TX/TM |
+| `\TXoverPchipVone` | TX vs PCHIP on F, V1 (per cent, interval) | docs/paper/b83_interp.json pairs.V1.TX over PCHIP.MSE skill |
+| `\TXoverPchipVonePt` | TX vs PCHIP on F, V1 (per cent, point) | docs/paper/b83_interp.json pairs.V1.TX over PCHIP.MSE skill |
+| `\TXoverOfflineVone` | TX vs offline GP on F, V1 (per cent, interval) | docs/paper/b83_interp.json pairs.V1.TX over offline GP.MSE skill |
+| `\TXoverOfflineVonePt` | TX vs offline GP on F, V1 (per cent, point) | docs/paper/b83_interp.json pairs.V1.TX over offline GP.MSE skill |
+| `\TXoverGpFVone` | TX vs causal GP on F, V1 (per cent, interval) | docs/paper/b83_interp.json pairs.V1.TX over causal GP.MSE skill |
+| `\TXoverGpFVonePt` | TX vs causal GP on F, V1 (per cent, point) | docs/paper/b83_interp.json pairs.V1.TX over causal GP.MSE skill |
+| `\TXoverGpLfiveVone` | TX vs causal GP on L5, V1 (per cent, interval) | docs/paper/b73_targets.json per_estimator.V1/L5.TX[L5].over_G |
+| `\TXoverGpLfiveVonePt` | TX vs causal GP on L5, V1 (per cent, point) | docs/paper/b73_targets.json per_estimator.V1/L5.TX[L5].over_G |
+| `\TXoverPchipVtwo` | TX vs PCHIP on F, V2 (per cent, interval) | docs/paper/b83_interp.json pairs.V2.TX over PCHIP.MSE skill |
+| `\TXoverPchipVtwoPt` | TX vs PCHIP on F, V2 (per cent, point) | docs/paper/b83_interp.json pairs.V2.TX over PCHIP.MSE skill |
+| `\TXoverOfflineVtwo` | TX vs offline GP on F, V2 (per cent, interval) | docs/paper/b83_interp.json pairs.V2.TX over offline GP.MSE skill |
+| `\TXoverOfflineVtwoPt` | TX vs offline GP on F, V2 (per cent, point) | docs/paper/b83_interp.json pairs.V2.TX over offline GP.MSE skill |
+| `\TXoverGpFVtwo` | TX vs causal GP on F, V2 (per cent, interval) | docs/paper/b83_interp.json pairs.V2.TX over causal GP.MSE skill |
+| `\TXoverGpFVtwoPt` | TX vs causal GP on F, V2 (per cent, point) | docs/paper/b83_interp.json pairs.V2.TX over causal GP.MSE skill |
+| `\TXoverGpLfiveVtwo` | TX vs causal GP on L5, V2 (per cent, interval) | docs/paper/b73_targets.json per_estimator.V2/L5.TX[L5].over_G |
+| `\TXoverGpLfiveVtwoPt` | TX vs causal GP on L5, V2 (per cent, point) | docs/paper/b73_targets.json per_estimator.V2/L5.TX[L5].over_G |
+| `\TXoverPchipVthree` | TX vs PCHIP on F, V3 (per cent, interval) | docs/paper/b83_interp.json pairs.V3.TX over PCHIP.MSE skill |
+| `\TXoverPchipVthreePt` | TX vs PCHIP on F, V3 (per cent, point) | docs/paper/b83_interp.json pairs.V3.TX over PCHIP.MSE skill |
+| `\TXoverOfflineVthree` | TX vs offline GP on F, V3 (per cent, interval) | docs/paper/b83_interp.json pairs.V3.TX over offline GP.MSE skill |
+| `\TXoverOfflineVthreePt` | TX vs offline GP on F, V3 (per cent, point) | docs/paper/b83_interp.json pairs.V3.TX over offline GP.MSE skill |
+| `\TXoverGpFVthree` | TX vs causal GP on F, V3 (per cent, interval) | docs/paper/b83_interp.json pairs.V3.TX over causal GP.MSE skill |
+| `\TXoverGpFVthreePt` | TX vs causal GP on F, V3 (per cent, point) | docs/paper/b83_interp.json pairs.V3.TX over causal GP.MSE skill |
+| `\TXoverGpLfiveVthree` | TX vs causal GP on L5, V3 (per cent, interval) | docs/paper/b73_targets.json per_estimator.V3/L5.TX[L5].over_G |
+| `\TXoverGpLfiveVthreePt` | TX vs causal GP on L5, V3 (per cent, point) | docs/paper/b73_targets.json per_estimator.V3/L5.TX[L5].over_G |
+| `\TXoverPchipVfoura` | TX vs PCHIP on F, V4a (per cent, interval) | docs/paper/b83_interp.json pairs.V4a.TX over PCHIP.MSE skill |
+| `\TXoverPchipVfouraPt` | TX vs PCHIP on F, V4a (per cent, point) | docs/paper/b83_interp.json pairs.V4a.TX over PCHIP.MSE skill |
+| `\TXoverOfflineVfoura` | TX vs offline GP on F, V4a (per cent, interval) | docs/paper/b83_interp.json pairs.V4a.TX over offline GP.MSE skill |
+| `\TXoverOfflineVfouraPt` | TX vs offline GP on F, V4a (per cent, point) | docs/paper/b83_interp.json pairs.V4a.TX over offline GP.MSE skill |
+| `\TXoverGpFVfoura` | TX vs causal GP on F, V4a (per cent, interval) | docs/paper/b83_interp.json pairs.V4a.TX over causal GP.MSE skill |
+| `\TXoverGpFVfouraPt` | TX vs causal GP on F, V4a (per cent, point) | docs/paper/b83_interp.json pairs.V4a.TX over causal GP.MSE skill |
+| `\TXoverGpLfiveVfoura` | TX vs causal GP on L5, V4a (per cent, interval) | docs/paper/b73_targets.json per_estimator.V4a/L5.TX[L5].over_G |
+| `\TXoverGpLfiveVfouraPt` | TX vs causal GP on L5, V4a (per cent, point) | docs/paper/b73_targets.json per_estimator.V4a/L5.TX[L5].over_G |
+| `\MedRatioTXOfflineVone` | median absolute error ratio TX / offline GP, V1, F | docs/paper/b83_interp.json |
+| `\MedRatioTXOfflineVonePt` | the same, point | docs/paper/b83_interp.json |
+| `\OneFitDsixfiftyVone` | one fit TXall vs per-rule TX, D650, V1 (r2) (per cent, interval) | docs/paper/b84_onefit.json cells.V1.D650.skills.TXall over TX |
+| `\OneFitDsixfiftyVonePt` | one fit TXall vs per-rule TX, D650, V1 (r2) (per cent, point) | docs/paper/b84_onefit.json cells.V1.D650.skills.TXall over TX |
+| `\OneFitDtenVone` | one fit TXall vs per-rule TX, D10, V1 (r2) (per cent, interval) | docs/paper/b84_onefit.json cells.V1.D10.skills.TXall over TX |
+| `\OneFitDtenVonePt` | one fit TXall vs per-rule TX, D10, V1 (r2) (per cent, point) | docs/paper/b84_onefit.json cells.V1.D10.skills.TXall over TX |
+| `\OneFitKtenVone` | one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, interval) | docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX |
+| `\OneFitKtenVonePt` | one fit TXall vs per-rule TX, K10, V1 (r2) (per cent, point) | docs/paper/b84_onefit.json cells.V1.K10.skills.TXall over TX |
 | `\IncDtenVone` | fast-channel increment, D10, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDtenVonePt` | fast-channel increment, D10, V1, L5 (per cent, point) | docs/paper/b75_availability.json main.V1/L5/common.all.D10.TX/T0 |
 | `\IncDsixfiftyVone` | fast-channel increment, D650, V1, L5 (per cent, interval) | docs/paper/b75_availability.json main.V1/L5/common.all.D650.TX/T0 |
@@ -414,6 +461,7 @@ Canvas widths are final: 16 cm for full-width figures, 10 cm for `figv2_sparse`;
 | `figv2_sparse` | RMSE of T0 and TX against the spacing of the CES values (V1), O as dashed line, equivalent spacing of TX at K10 (k' = 4.67 frames = 46.7 ms, cluster interval as error bar) | b78 `main.V1|L5.all.K*` | 4.5 |
 | `figv2_trace` | the example discharge in three 2 s windows (centred at the 25/50/75 % quantiles of its scored times): reported values, following level L5, T0 and TX under rule S (stored estimates), absent frames | caches `data/.b75/fits/V1_r2_k*__{T0,TX}__S__L5.npz`, `data/.b73/rows.npz`, `grid.npz` | 4.1 / 4.6 |
 | `figv2_trace_q25` | the same for the 25th-percentile discharge (second example) | same | supplement |
+| `figv2_nowcast` | the example discharge 31076 with the previous frame visible, target F: reported T_i, hold, PCHIP (waits), causal GP, TX[F] (B.73 stored), three 1 s windows, absent frames | caches `data/.b73/trees/V1_r2_k*__TX__F.npz`, `data/.b83/refs.npz`, `data/.b73/rows.npz` | 4 (main) |
 | `figv2_tau` | increment TX vs T0 (%, cluster interval) by the time since the last notch, (a) D650, (b) S, one series per design V1, V2, V3, V4 (fit to 31991); filled = excludes zero | b82 `part_A.*.{D650,S}.all.tau` | 4.2/4.3 (main) |
 | `figv2_limits` | (a) increment under S by block of shots, TX vs T0 and TXN vs TN (V1); (b) first row after a notch over the level before, T_i, BES, ECEI, by block (after the fact, no interval) | b75, b79 `main.V1|L5|S.<block>.S`; `b75_last_block.md` section (7) | 4.6 |
 

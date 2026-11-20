@@ -230,6 +230,8 @@ B75, B76, B78, B79, B80 = ("b75_availability.json", "b76_mast_availability.json"
 B73, B74, B77 = "b73_targets.json", "b74_exposure.json", "b77_correct.json"
 B81 = "b81_controls.json"
 B82 = "b82_localize.json"
+B83 = "b83_interp.json"
+B84 = "b84_onefit.json"
 
 
 def shot_tok(s, src, path):
@@ -1505,7 +1507,9 @@ STAT_BATCHES = [("B.73", B73, "previous frame visible: targets, designs, network
                 ("B.79", B79, "beam waveforms as inputs"),
                 ("B.80", B80, "coherence of the ECEI channels"),
                 ("B.81", B81, "controls; ECEI and BES halves under V2, V3"),
-                ("B.82", B82, "where the increment sits; robust errors; specificity")]
+                ("B.82", B82, "where the increment sits; robust errors; specificity"),
+                ("B.83", B83, "previous frame visible: against interpolation"),
+                ("B.84", B84, "one estimator fitted for every rule")]
 
 
 def expectation(v):
@@ -1543,12 +1547,12 @@ def tab_stat_summary():
     head = [r" & & regis- & & do not & definite & expectation \\",
             r"batch & question & tered & hold & hold & expectation & met \\"]
     body = tabular("@{}llrrrrr@{}", head, rows, "footnotesize", "4.5pt")
-    cap = (r"The registered statements of batches B.73 to B.82, counted from the result files: how many were "
+    cap = (r"The registered statements of batches B.73 to B.84, counted from the result files: how many were "
            r"registered, how many hold and do not hold by the registered rule, how many had a definite registered "
            r"expectation (a stated verdict, not ``uncertain'') and how many of those the outcome met. The statements "
            r"that do not hold are listed in table \ref{tab:statnotheld}; the complete lists, with the statements that "
            r"hold, are in the result files \texttt{docs/paper/b7x\_*.md} and \texttt{b8x\_*.md} of the repository.")
-    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.82: hold, do not hold, expectations met",
+    emit("StatSummary", body, cap, "count of registered statements per batch B.73-B.84: hold, do not hold, expectations met",
          "statements blocks of b73..b81 JSON (counted)", "supplement (replaces the nine statement tables)")
     return tot
 
@@ -1591,14 +1595,14 @@ def stat_rows(batches):
 
 def tab_stat_not_held():
     head = [r"batch & id & statement (as registered) & value [95 \% interval] & expected \\"]
-    parts = [("StatNotHeld", STAT_BATCHES[:5]), ("StatNotHeldB", STAT_BATCHES[5:])]
+    parts = [("StatNotHeld", STAT_BATCHES[:5]), ("StatNotHeldB", STAT_BATCHES[5:10]), ("StatNotHeldC", STAT_BATCHES[10:])]
     n = []
     for name, batches in parts:
         rows = stat_rows(batches)
         n.append(len(rows))
         body = tabular("@{}lllll@{}", head, rows, "footnotesize", "3pt")
         if name == "StatNotHeld":
-            cap = (r"The registered statements of B.73 to B.82 that do not hold (" + batches[0][0] + " to "
+            cap = (r"The registered statements of B.73 to B.84 that do not hold (" + batches[0][0] + " to "
                    + batches[-1][0] + r"). Values as registered: skills are signed fractions, not per cent; 95 \% "
                    r"intervals with shot clusters resampled (B.74: discharges; B.76: sessions). The complete lists, "
                    r"with the statements that hold, are in the result files \texttt{docs/paper/b7x\_*.md} and "
@@ -1959,6 +1963,182 @@ def b82_macros():
 
 
 # ----------------------------------------------------------------------------------------------
+# 10e. B.83 (nowcast ladder against interpolation) and B.84 (one fit for every rule)
+# ----------------------------------------------------------------------------------------------
+LAD = [("H", "hold", False), ("P", r"PCHIP$^{\dagger}$", True), ("G", "causal GP", False),
+       ("O", r"offline GP$^{\dagger}$", True), ("T0", "history-only estimator T0", False), ("TX", "the estimator TX", False)]
+NETS = [("c", "recurrent network, as built"), ("c2", "two-stage estimator, as built")]
+L5KEY = {"H": "H", "G": "G", "T0": "T0[L5]", "TX": "TX[L5]", "c": "c", "c2": "c2"}
+B82KEY = {"H": "H", "G": "G", "T0": "T0", "TX": "TX"}
+
+
+def tab_ladder():
+    b3, b7, b2 = J(B83), J(B73), J(B82)
+    s3, s7, s2 = src_of(B83), src_of(B73), src_of(B82)
+    e3 = b3["estimators"]["V1"]
+    l5 = b7["per_estimator"]["V1|L5"]
+    f7 = b7["per_estimator"]["V1|F"]
+    r2 = b2["part_B"]["V1"]["D10"]
+    rows = []
+    for k, lab, waits in LAD:
+        m = e3[k]
+        p = f"estimators.V1.{k}"
+        row = [lab, ev(m["RMSE"]["point"], s3, p + ".RMSE.point"), ev(m["MAE"]["point"], s3, p + ".MAE.point"),
+               ev(m["median absolute error"]["point"], s3, p + ".median absolute error.point"),
+               share_pct(m["share within 10 %"]["point"], s3, p + ".share within 10 %.point")]
+        if waits:
+            row += ["--", "--", "--"]
+        else:
+            c = l5[L5KEY[k]]
+            row += [ev(c["rmse_eV"], s7, f"per_estimator.V1|L5.{L5KEY[k]}.rmse_eV"),
+                    ev(c["median_abs_eV"], s7, f"per_estimator.V1|L5.{L5KEY[k]}.median_abs_eV"),
+                    share_pct(r2["estimators"][B82KEY[k]]["share within 10 %"]["point"], s2,
+                              f"part_B.V1.D10.estimators.{B82KEY[k]}.share within 10 %.point")]
+        rows.append(row)
+    rows.append("MID")
+    for k, lab in NETS:
+        c = f7[k]
+        c5 = l5[k]
+        rows.append([lab + r"$^{\ast}$", ev(c["rmse_eV"], s7, f"per_estimator.V1|F.{k}.rmse_eV"), "--",
+                     ev(c["median_abs_eV"], s7, f"per_estimator.V1|F.{k}.median_abs_eV"), "--",
+                     ev(c5["rmse_eV"], s7, f"per_estimator.V1|L5.{k}.rmse_eV"),
+                     ev(c5["median_abs_eV"], s7, f"per_estimator.V1|L5.{k}.median_abs_eV"), "--"])
+    head = [r" & \multicolumn{4}{c}{value of the frame (F)} & \multicolumn{3}{c}{level of the following frames (L5)} \\",
+            r"\cmidrule(lr){2-5}\cmidrule(lr){6-8}",
+            r"estimator & RMSE & MAE & median & within & RMSE & median & within \\",
+            r" & (eV) & (eV) & (eV) & 10\,\% & (eV) & (eV) & 10\,\% \\"]
+    body = tabular("@{}lrrrrrrr@{}", head, rows, "footnotesize", "4.5pt")
+    c3 = b3["counts"]["V1"]
+    c7 = b7["increments"]["V1|L5"]
+    c2 = r2["counts"]
+    cap = (r"Nowcasting the reported pedestal-top $T_i$ with the previous frame visible, random design V1 "
+           r"(points, mean over three re-partitions). F: the value of the frame, on the "
+           + cnt(c3["reference_rows"], s3, "counts.V1.reference_rows") + r" rows where every reference is defined; "
+           r"median: median absolute error; within 10\,\%: share of rows within 10\,\% of the value. L5: the level of "
+           r"the following frames; RMSE and median on all " + cnt(c7["rows"], s7, "increments.V1|L5.rows")
+           + r" rows with L5, share within 10\,\% on the common set of " + cnt(c2["rows"], s2, "part_B.V1.D10.counts.rows")
+           + r" rows. $^{\dagger}$Waits for the next value (not causal); it reads rows inside the window of L5 and is "
+           r"not scored against L5. $^{\ast}$Trained on the reading of the frame; scored on all "
+           + cnt(b7["rows_info"]["d1_rows"], s7, "rows_info.d1_rows") + r" rows (F) and all rows with L5.")
+    emit("Ladder", body, cap, "the main nowcast table: references, T0, TX, network rows on F and L5 (V1, previous frame visible)",
+         "b83 estimators.V1.*; b73 per_estimator.V1|{F,L5}; b82 part_B.V1.D10 (within 10 % on L5)", "4 (main)")
+
+
+def tab_vs_references():
+    b3, b7 = J(B83), J(B73)
+    s3, s7 = src_of(B83), src_of(B73)
+    rows = []
+    for d in ("V1", "V2", "V3", "V4a"):
+        pr = b3["pairs"][d]
+        pe = b7["per_estimator"][f"{d}|L5"]
+        row = [design_label(d).replace("V4 chronological, fit to", "V4, fit to")]
+        for k in ("TX over hold", "TX over PCHIP", "TX over causal GP", "TX over offline GP", "T0 over offline GP"):
+            row.append(pct(pr[k]["MSE skill"], s3, f"pairs.{d}.{k}.MSE skill", "stack"))
+        row.append(pct(pe["TX[L5]"]["over_G"], s7, f"per_estimator.{d}|L5.TX[L5].over_G", "stack"))
+        row.append(pct(pe["T0[L5]"]["over_G"], s7, f"per_estimator.{d}|L5.T0[L5].over_G", "stack"))
+        rows.append(row)
+    rows.append("MID")
+    rows.append(r" & \multicolumn{4}{c}{\textit{TX over T0 (fast-channel increment)}} & & & \\")
+    rows.append(r" & V1 random & V2 clusters & V3 rolling & V4, fit to " + shot_tok(31991, src_of(B75), "block key") + r" & & & \\")
+    for tgt, lab in (("F", "value of the frame (F)"), ("L5", "level (L5)")):
+        row = [lab]
+        for d in ("V1", "V2", "V3", "V4a"):
+            row.append(pct(b7["increments"][f"{d}|{tgt}"]["cells"]["TX/T0"], s7, f"increments.{d}|{tgt}.cells.TX/T0", "stack"))
+        rows.append(row + ["", "", ""])
+    rows.append("MID")
+    rows.append(r" & \multicolumn{3}{c}{\textit{V1, F: ratio TX / reference}} & & & & \\")
+    rows.append(r" & median & MAE & 90th pct. & & & & \\")
+    for k, lab in (("TX over PCHIP", "TX / PCHIP"), ("TX over offline GP", "TX / offline GP")):
+        pr = b3["pairs"]["V1"][k]
+        rows.append([lab] + [ratio(pr[m], s3, f"pairs.V1.{k}.{m}") for m in
+                             ("median absolute error ratio", "MAE ratio", "p90 absolute error ratio")] + ["", "", "", ""])
+    head = [r" & \multicolumn{5}{c}{value of the frame (F)} & \multicolumn{2}{c}{level (L5)} \\",
+            r"\cmidrule(lr){2-6}\cmidrule(lr){7-8}",
+            r" & TX vs & TX vs & TX vs & TX vs & T0 vs & TX vs & T0 vs \\",
+            r"design & hold & PCHIP & causal GP & offline GP & offline GP & causal GP & causal GP \\"]
+    body = tabular("@{}lccccccc@{}", head, rows, "footnotesize", "3pt")
+    cap = (r"The estimator against each reference, previous frame visible: reduction of the MSE in per cent by "
+           r"design (F: rows where every reference is defined; L5: all rows with L5). PCHIP and the offline GP wait "
+           r"for the next value. Middle block: TX over T0, the fast-channel increment, by design on all rows where "
+           r"the target is defined. Lower block: ratios of the median, mean and 90th-percentile absolute error, V1, F "
+           r"(bold: the interval excludes one). Intervals: 95 \%, shot clusters resampled; bold (reductions): the "
+           r"interval excludes zero.")
+    emit("VsReferences", body, cap, "TX (and T0) against hold, PCHIP, causal and offline GP by design; ratio block V1",
+         "b83 pairs.*.*.MSE skill and ratios; b73 per_estimator.*|L5.{TX[L5],T0[L5]}.over_G", "4 (main)")
+    for d in ("V1", "V2", "V3", "V4a"):
+        pr = b3["pairs"][d]
+        pe = b7["per_estimator"][f"{d}|L5"]
+        dn = DNAME[d]
+        pct_macro("TXoverPchip" + dn, pr["TX over PCHIP"]["MSE skill"], s3, f"pairs.{d}.TX over PCHIP.MSE skill", f"TX vs PCHIP on F, {d}", "4")
+        pct_macro("TXoverOffline" + dn, pr["TX over offline GP"]["MSE skill"], s3, f"pairs.{d}.TX over offline GP.MSE skill", f"TX vs offline GP on F, {d}", "4")
+        pct_macro("TXoverGpF" + dn, pr["TX over causal GP"]["MSE skill"], s3, f"pairs.{d}.TX over causal GP.MSE skill", f"TX vs causal GP on F, {d}", "4")
+        pct_macro("TXoverGpLfive" + dn, pe["TX[L5]"]["over_G"], s7, f"per_estimator.{d}|L5.TX[L5].over_G", f"TX vs causal GP on L5, {d}", "4")
+    cell = b3["pairs"]["V1"]["TX over offline GP"]["median absolute error ratio"]
+    pt, ci_ = ratio_parts(cell, s3, "pairs.V1.TX over offline GP.median absolute error ratio")
+    pt = pt.replace(r"\textbf{", "").replace("}", "")
+    macro("MedRatioTXOfflineVone", pt + "~" + ci_, "median absolute error ratio TX / offline GP, V1, F", s3, "4")
+    macro("MedRatioTXOfflineVonePt", pt, "the same, point", s3, "4")
+
+
+def tab_ladder_designs():
+    b3 = J(B83)
+    s3 = src_of(B83)
+    rows = []
+    for d in ("V2", "V3", "V4a"):
+        rows.append(r"\multicolumn{5}{@{}l}{\textit{" + design_label(d) + ", "
+                    + cnt(b3["counts"][d]["reference_rows"], s3, f"counts.{d}.reference_rows") + r" rows}} \\")
+        for k, lab, waits in LAD:
+            m = b3["estimators"][d][k]
+            p = f"estimators.{d}.{k}"
+            rows.append([lab, ev(m["RMSE"]["point"], s3, p + ".RMSE.point"), ev(m["MAE"]["point"], s3, p + ".MAE.point"),
+                         ev(m["median absolute error"]["point"], s3, p + ".median absolute error.point"),
+                         share_pct(m["share within 10 %"]["point"], s3, p + ".share within 10 %.point")])
+        if d != "V4a":
+            rows.append("MID")
+    head = [r"estimator & RMSE (eV) & MAE (eV) & median (eV) & within 10\,\% \\"]
+    body = tabular("@{}lrrrr@{}", head, rows, "footnotesize", "6pt")
+    cap = (r"As the F columns of table \ref{tab:ladder} for the other designs (previous frame visible, target F, "
+           r"rows where every reference is defined). $^{\dagger}$Waits for the next value.")
+    emit("LadderDesigns", body, cap, "the F columns of the main table for V2, V3, V4a", "b83 estimators.{V2,V3,V4a}.*", "supplement")
+
+
+ONE_EST = ["TX", "TXa", "TXall", "TXraw", "TXrel"]
+
+
+def tab_one_fit():
+    b4 = J(B84)
+    s4 = src_of(B84)
+    rows = []
+    for d in ("V1", "V3", "V4a"):
+        first = True
+        for r in ("D10", "D100", "D650", "D1000", "S", "K10"):
+            c = b4["cells"][d][r]
+            p = f"cells.{d}.{r}"
+            rm = c["rmse_eV"]
+            sk = c["skills"]
+            lab = {"V1": "V1 random (r2)", "V3": "V3 rolling origin", "V4a": "V4, fit to " + shot_tok(31991, src_of(B75), "block key")}[d]
+            rows.append([lab if first else "", r] + [ev(rm.get(e), s4, f"{p}.rmse_eV.{e}") if e in rm else "--" for e in ONE_EST]
+                        + [pct(sk.get("TXall over TX"), s4, f"{p}.skills.TXall over TX", "stack"),
+                           pct(sk.get("TXall over T0all"), s4, f"{p}.skills.TXall over T0all", "stack")])
+            first = False
+        if d != "V4a":
+            rows.append("MID")
+    head = [r" & & \multicolumn{5}{c}{RMSE (eV)} & TXall & TXall \\", r"\cmidrule(lr){3-7}",
+            r"design & rule & TX & TXa & TXall & TXraw & TXrel & vs TX & vs T0all \\"]
+    body = tabular("@{}llrrrrrcc@{}", head, rows, "footnotesize", "3.5pt")
+    cap = (r"One estimator for every availability rule (target L5). TX: fitted under each rule; TXa: fitted with "
+           r"the previous frame visible and applied to the rule; TXall: one fit on the rows of every rule of the "
+           r"mixture (D10 to D1000 and S), the age of the history as an input; TXraw: the same with raw windows "
+           r"instead of the hand-made scalars; TXrel: without absolute levels (D650 and S only). K10 is not in "
+           r"the mixture. Reductions of the MSE in per cent. Intervals: 95 \%, shot clusters resampled; bold: the "
+           r"interval excludes zero.")
+    emit("OneFit", body, cap, "one fit for every rule vs per-rule fits (V1 r2, V3, V4a; D10..S, K10)", "b84 cells.*", "supplement / sec. on use")
+    for r, rn in (("D650", "Dsixfifty"), ("D10", "Dten"), ("K10", "Kten")):
+        pct_macro("OneFit" + rn + "Vone", b4["cells"]["V1"][r]["skills"]["TXall over TX"], s4,
+                  f"cells.V1.{r}.skills.TXall over TX", f"one fit TXall vs per-rule TX, {r}, V1 (r2)", "sec. on use")
+
+
+# ----------------------------------------------------------------------------------------------
 # 11. prose macros
 # ----------------------------------------------------------------------------------------------
 DNAME = {"V1": "Vone", "V2": "Vtwo", "V3": "Vthree", "V4a": "Vfoura", "V4b": "Vfourb",
@@ -2152,6 +2332,7 @@ Canvas widths are final: 16 cm for full-width figures, 10 cm for `figv2_sparse`;
 | `figv2_sparse` | RMSE of T0 and TX against the spacing of the CES values (V1), O as dashed line, equivalent spacing of TX at K10 (k' = 4.67 frames = 46.7 ms, cluster interval as error bar) | b78 `main.V1|L5.all.K*` | 4.5 |
 | `figv2_trace` | the example discharge in three 2 s windows (centred at the 25/50/75 % quantiles of its scored times): reported values, following level L5, T0 and TX under rule S (stored estimates), absent frames | caches `data/.b75/fits/V1_r2_k*__{T0,TX}__S__L5.npz`, `data/.b73/rows.npz`, `grid.npz` | 4.1 / 4.6 |
 | `figv2_trace_q25` | the same for the 25th-percentile discharge (second example) | same | supplement |
+| `figv2_nowcast` | the example discharge 31076 with the previous frame visible, target F: reported T_i, hold, PCHIP (waits), causal GP, TX[F] (B.73 stored), three 1 s windows, absent frames | caches `data/.b73/trees/V1_r2_k*__TX__F.npz`, `data/.b83/refs.npz`, `data/.b73/rows.npz` | 4 (main) |
 | `figv2_tau` | increment TX vs T0 (%, cluster interval) by the time since the last notch, (a) D650, (b) S, one series per design V1, V2, V3, V4 (fit to 31991); filled = excludes zero | b82 `part_A.*.{D650,S}.all.tau` | 4.2/4.3 (main) |
 | `figv2_limits` | (a) increment under S by block of shots, TX vs T0 and TXN vs TN (V1); (b) first row after a notch over the level before, T_i, BES, ECEI, by block (after the fact, no interval) | b75, b79 `main.V1|L5|S.<block>.S`; `b75_last_block.md` section (7) | 4.6 |
 
@@ -2243,7 +2424,9 @@ def main():
                             ("Bseventynine", B79, "B.79 (beam waveforms as inputs)"),
                             ("Beighty", B80, "B.80 (coherence of the ECEI channels)"),
                             ("Beightyone", B81, "B.81 (controls of the fast inputs; ECEI and BES halves under V2, V3)"),
-                            ("Beightytwo", B82, "B.82 (where the increment sits; robust error measures; specificity)")):
+                            ("Beightytwo", B82, "B.82 (where the increment sits; robust error measures; specificity)"),
+                            ("Beightythree", B83, "B.83 (previous frame visible: against interpolation and the offline GP)"),
+                            ("Beightyfour", B84, "B.84 (one estimator fitted for every availability rule)")):
         tab_statements(batch, f, title)
     tab_dataset()
     tab_robust()
@@ -2254,6 +2437,10 @@ def main():
     tab_change()
     tab_robust_designs()
     b82_macros()
+    tab_ladder()
+    tab_vs_references()
+    tab_ladder_designs()
+    tab_one_fit()
     tot = tab_stat_summary()
     nnh = tab_stat_not_held()
     print("statement totals (registered, hold, do not hold, definite, met):", tot, " not-held rows per table:", nnh)

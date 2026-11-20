@@ -63,7 +63,7 @@ Section, figure and table numbers without the prefix S refer to the main text. N
 those of the main text: T0 is the history-only estimator, TX the estimator of the paper,
 L5 the level of the following frames, F the reading of the frame; D10, D$d$, S and K$k$
 are the availability rules; V1 to V4 and M1 to M4 the validation designs. The labels B.73
-to B.82 are the registered batches; for each, the registration, the code, the result file
+to B.84 are the registered batches; for each, the registration, the code, the result file
 with every readout and the record of the independent recomputation are in the public
 repository named in the main text (\texttt{ces\_prediction/experiments/} and
 \texttt{docs/paper/}). The supplement of the earlier version of this work, with the
@@ -110,8 +110,8 @@ power, voltage and current of the six sources of the two beam boxes
 (Table~\ref{tab:nbisources}). The first source of the first box is never on. An absent
 frame is a notch of the two sources of the first box that run
 (Table~\ref{tab:nbinotch}); the power in the first row after a notch is a sample taken
-while the beam returns. A \Ti{} value is written whichever of those two sources is on
-(Table~\ref{tab:nbistates}). In the 13 earliest shot files the power columns of the second
+while the beam returns. A \Ti{} value is written whichever of those two sources is on. In
+the 13 earliest shot files the power columns of the second
 box cannot be used (values above 5\,MW or below $-0.1$\,MW); the batch with beam inputs
 reads the columns as delivered and shows the refit without those files beside it
 (Table~\ref{tab:refit}).
@@ -128,13 +128,6 @@ reads the columns as delivered and shows the refit without those files beside it
   \caption{\CapNbiNotch}
   \label{tab:nbinotch}
   \TabNbiNotch
-\end{table}
-
-\begin{table}[tbp]
-  \centering
-  \caption{\CapNbiStates}
-  \label{tab:nbistates}
-  \TabNbiStates
 \end{table}
 
 \paragraph{Rows with a constant ECEI.} In part of the discharges the four ECEI channels
@@ -177,8 +170,7 @@ discharges.
 \section{Definitions}
 \label{sec:sdefs}
 
-\paragraph{Rows.} Table~\ref{tab:sets} gives the row sets and Table~\ref{tab:scored} the
-rows scored under each design. A segment ends at a gap of 0.5\,s or more; no estimator
+\paragraph{Rows.} Table~\ref{tab:sets} gives the row sets. A segment ends at a gap of 0.5\,s or more; no estimator
 reads across it.
 
 \begin{table}[tbp]
@@ -186,13 +178,6 @@ reads across it.
   \caption{\CapSets}
   \label{tab:sets}
   \TabSets
-\end{table}
-
-\begin{table}[tbp]
-  \centering
-  \caption{\CapScored}
-  \label{tab:scored}
-  \TabScored
 \end{table}
 
 \paragraph{Rules.} Under D$d$ a value is visible at row $t$ when its stamp is at most
@@ -227,20 +212,23 @@ under V1 and V2 one of the three re-partitions or assignments is drawn first. Th
 discharge form resamples discharges. Verdicts use the cluster form.
 
 % =========================================================================
-\section{Stale history: further tables}
+\section{The estimator in use: further tables}
 \label{sec:sstale}
 
 Table~\ref{tab:rulesdesigns} repeats Table~\ref{tab:rules} for the other designs and
-Table~\ref{tab:ladder} gives the increment along the whole ladder of delays.
+Table~\ref{tab:incladder} gives the increment along the whole ladder of delays.
+Table~\ref{tab:onefit} asks whether the second stage is bound to the condition it was
+fitted for: one fit across all ages of the history, scored under every rule and under a
+rule it was not fitted on (a value every tenth frame), a regression on raw windows in
+place of the hand-made scalars, and the scalars without the absolute fast levels.
 Table~\ref{tab:asfitted} compares estimators fitted with the previous frame visible and
 then given a stale history with those fitted under the rule. Table~\ref{tab:anchor}
-separates the six anchor scalars. Table~\ref{tab:vsreading} sets the estimate against the
-reading of the frame itself, Table~\ref{tab:fifths} gives the rolling-origin design by
-fifth of the shot list with a size-matched control, and Table~\ref{tab:timing} the
+separates the six anchor scalars. Table~\ref{tab:fifths} gives the rolling-origin design
+by fifth of the shot list with a size-matched control, and Table~\ref{tab:timing} the
 computation time. Table~\ref{tab:robustdesigns} gives the robust error measures under
-every design, Table~\ref{tab:change} the increment by the size of the change of the fast
-level since the anchor row, and Table~\ref{tab:seeds} the spread of the increment over the
-seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
+every design and Table~\ref{tab:seeds} the spread of the increment over the seed of the
+regression. Figures~\ref{fig:trace} and~\ref{fig:trace2} show the estimates under the
+beam-modulation schedule on the example discharge and on a second one.
 
 \begin{table}[tbp]
   \centering
@@ -255,8 +243,15 @@ seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
 \begin{table}[tbp]
   \centering
   \caption{\CapIncrementLadder}
-  \label{tab:ladder}
+  \label{tab:incladder}
   \TabIncrementLadder
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapOneFit}
+  \label{tab:onefit}
+  \TabOneFit
 \end{table}
 
 \begin{table}[tbp]
@@ -271,13 +266,6 @@ seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
   \caption{\CapAnchorScalars}
   \label{tab:anchor}
   \TabAnchorScalars
-\end{table}
-
-\begin{table}[tbp]
-  \centering
-  \caption{\CapVsReading}
-  \label{tab:vsreading}
-  \TabVsReading
 \end{table}
 
 \begin{table}[tbp]
@@ -303,17 +291,20 @@ seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
 
 \begin{table}[tbp]
   \centering
-  \caption{\CapChange}
-  \label{tab:change}
-  \TabChange
-\end{table}
-
-\begin{table}[tbp]
-  \centering
   \caption{\CapSeeds}
   \label{tab:seeds}
   \TabSeeds
 \end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_trace}
+  \caption{The example discharge under the beam-modulation schedule S, in three windows:
+  reported \Ti{} (dots), the level of the following frames (black), the history-only
+  estimate T0 and the estimate TX with fast inputs. Vertical lines: absent frames
+  (notches). The estimates were made with the discharge in the test fold.}
+  \label{fig:trace}
+\end{figure}
 
 \begin{figure}[tbp]
   \centering
@@ -325,8 +316,43 @@ seed of the regression. Figure~\ref{fig:trace2} is the second example discharge.
 \end{figure}
 
 % =========================================================================
-\section{Beam waveforms as inputs}
+\section{What the fast diagnostics add: tables}
 \label{sec:sbeam}
+
+The properties of the fast-channel increment listed in \S\ref{sec:res:fast} were measured
+with the newest CES value 0.65\,s old (D650) and under the beam-modulation schedule (S).
+Table~\ref{tab:which} separates the two halves of the fast inputs and adds the beam
+scalars, Table~\ref{tab:controls} gives the two controls under every design,
+Table~\ref{tab:tau} the increment by the time since the last beam notch and
+Table~\ref{tab:specificity} the specificity controls.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Which diagnostic, and beyond the beam waveforms: reduction of the MSE of the level estimate (target L5) in per cent, with the history 0.65\,s old (D650) and under the beam-modulation schedule (S). TE and TB: the ECEI or the BES half of the fast inputs; TN and TXN: T0 and TX with the 19 beam scalars. ``Both, beam'': the fast diagnostics after the beam waveforms are given; ``beam, both'': the beam waveforms after the fast diagnostics. Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:which}
+  \TabWhich
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{The two controls (target L5), reduction of the MSE in per cent. ``Permuted'': the fast scalars shuffled over rows and the estimator refitted, against T0. ``At the anchor row'': the fast scalars taken at the row of the newest visible CES value instead of row $t$, against T0. ``Present over anchor row'': TX against that estimator. Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:controls}
+  \TabControls
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{The fast-channel increment by the time since the last beam notch (target L5), reduction of the MSE in per cent, with the history 0.65\,s old (D650) and under the beam-modulation schedule (S). ``No notch before'': rows with no absent frame earlier in their segment (they have no visible value under S). Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:tau}
+  \TabTau
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{Specificity (target L5), reduction of the MSE in per cent. Mirnov: seven scalars built from the two Mirnov signals of the files exactly as the fast scalars are built, in place of them (against T0), against them (TX against that estimator) and added to them (against TX). Other discharge: the fast scalars of each row replaced by those of another discharge at the same time in the discharge, against T0. BES columns: the BES half built from one radial column of the array alone, against T0. Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:specificity}
+  \TabSpecificity
+\end{table}
 
 The 19 beam scalars are built from the beam files: the power of the first box, of the
 second box and their total at row $t$, at the anchor row and the difference; running means
@@ -334,36 +360,7 @@ of the total; which sources are on; and the voltage of source NB1B. Table~\ref{t
 sets the registered readout, with the power columns as delivered, beside the refit without
 the 13 files whose columns for the second box are invalid. The implementation reported
 those files before any fit; the refit was run after the registered readout had been read
-and is therefore a sensitivity. The verdicts are the same. Figure~\ref{fig:tau} draws the
-increment by the time since the last notch. Figure~\ref{fig:which} draws
-Table~\ref{tab:which} of the main text, and Table~\ref{tab:controlsother} gives the two
-controls for the other conditions and for MAST.
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=\linewidth]{figv2_tau}
-  \caption{The fast-channel increment by the time since the last beam notch
-  (Table~\ref{tab:tau} of the main text) by validation design, (a) with the history
-  0.65\,s old and (b) under the beam-modulation schedule. Filled: the 95\,\% cluster
-  interval excludes zero.}
-  \label{fig:tau}
-\end{figure}
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=\linewidth]{figv2_which}
-  \caption{The reductions of Table~\ref{tab:which} by validation design, (a) with the
-  history 0.65\,s old and (b) under the beam-modulation schedule, and (c) the controls of
-  Table~\ref{tab:controls}. Filled: the 95\,\% cluster interval excludes zero.}
-  \label{fig:which}
-\end{figure}
-
-\begin{table}[tbp]
-  \centering
-  \caption{\CapControlsOther}
-  \label{tab:controlsother}
-  \TabControlsOther
-\end{table}
+and is therefore a sensitivity. The verdicts are the same.
 
 \begin{table}[tbp]
   \centering
@@ -382,10 +379,18 @@ density. A chord enters at a frame when it lies 1.5 to 5\,cm inside the edge of 
 Thomson density profile of that frame; a row needs a good \Ti{} value, a Thomson value at
 the chord's radius at frame $t$ and at the anchor frame, and a defined level of the next
 five frames. No frame is hidden by a beam modulation, so a delay D$d$ is imposed by
-withholding the values younger than $d$. Table~\ref{tab:mastcost} gives the cost of
-staleness, the increment and the recovered share by design. A readout with D-alpha as a
+withholding the values younger than $d$. Table~\ref{tab:mast} gives the errors by delay
+and Table~\ref{tab:mastcost} the cost of staleness, the increment and the recovered share
+by design. A readout with D-alpha as a
 further input is in the result file of B.76; its scale is set over the whole shot and is
 therefore not causal within a shot, and it is not used here.
+
+\begin{table}[tbp]
+  \centering
+  \caption{MAST, pedestal-top band, target L5: RMSE by delay of the charge-exchange history under the random (M1) and the chronological design (M4), on the rows complete under all delays. TX adds the Thomson scalars of the same radius. RT multiplies the held value by the ratio of the Thomson $T_e$ at the present and at the anchor frame; RTa fits an exponent $\alpha$ and an offset to that ratio in logarithms.}
+  \label{tab:mast}
+  \TabMastRmse
+\end{table}
 
 \begin{table}[tbp]
   \centering
@@ -442,14 +447,23 @@ Table~\ref{tab:correct} the variant that reads and corrects the value of the fra
 \end{table}
 
 % =========================================================================
-\section{The previous frame visible}
+\section{The nowcast condition: further tables}
 \label{sec:sprev}
 
-Every estimator of the earlier version of this work read the CES value of the previous
-frame (rule D10) and was scored on the reading of the frame (target F). B.73 repeated
-those estimators on the one definition of the data used here, with both targets and all
-four designs. Table~\ref{tab:dten} gives the reductions by the fast inputs and
-Table~\ref{tab:network} every estimator under the random design.
+With the previous frame visible (the nowcast condition, D10), Table~\ref{tab:ladderdesigns}
+repeats the estimators of Table~\ref{tab:ladder} on the value of the frame for the other
+designs; the two references that wait for the next value, PCHIP and the offline GP, are
+computed with the row left out and cannot be formed on the last measured row of a block.
+Table~\ref{tab:dten} gives the reductions by the fast inputs by design and target and
+Table~\ref{tab:network} every estimator under the random design, among them the recurrent
+network and its two-stage form.
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapLadderDesigns}
+  \label{tab:ladderdesigns}
+  \TabLadderDesigns
+\end{table}
 
 The recurrent network has two LSTM branches that run forward in time over every grid
 row. The \Ti{} branch reads the fast channels, the time step and, per target, the last
@@ -486,7 +500,7 @@ as registered (a skill is a signed fraction; the main text prints 100 times the 
 its 95\,\% interval and the expectation. The complete lists, with the statements that
 hold, the intervals with discharges resampled and the readouts that carry no statement,
 are in the result files of the repository (\texttt{docs/paper/b73\_targets.md} to
-\texttt{b82\_localize.md}).
+\texttt{b84\_onefit.md}).
 
 \begin{table}[tbp]
   \centering
@@ -561,6 +575,18 @@ time since the last notch was recomputed from the grid stamps and equals the bat
 every row; the increments by its classes, the robust measures of the random design, the
 pooled values of the specificity controls and the seed spread were recomputed from the
 stored estimates and are equal.
+
+\paragraph{B.83 (the nowcast against the interpolation that waits).} PCHIP was recomputed
+with an independent implementation on the rows of 60 discharges drawn at random, through
+every measured value of the row's block with the row left out, and equals the batch's
+reference exactly on all but two of them; those two lie beside a stretch without a kept
+row, where the block of the reference ends and the grid segment does not. The statement
+values were recomputed from the stored estimates and the references and are equal.
+
+\paragraph{B.84 (is the second stage bound to rules).} The eleven statement values, the
+RMSE values of the per-rule, applied, single-fit, raw-window and level-free estimators and
+the increment of the single fit along the rules were pooled again from the stored
+estimates and are equal.
 
 \FloatBarrier
 \bibliographystyle{unsrtnat}

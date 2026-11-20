@@ -654,6 +654,69 @@ def fig_tau():
     save(fig, "tau", data, toks)
 
 
+# ----------------------------------------------------------------------------------------------
+# 10. nowcast with the previous frame visible (B.73 TX[F], B.83 PCHIP)
+# ----------------------------------------------------------------------------------------------
+def fig_nowcast(med):
+    c = caches()
+    rows, grid = c["rows"], c["grid"]
+    shot, f = med[1], med[2]
+    idx_l, est_l = [], []
+    for k in range(5):
+        z = np.load(ROOT / f"data/.b73/trees/V1_r2_k{k}__TX__F.npz")
+        idx_l.append(z["idx"])
+        est_l.append(z["est"])
+    idx = np.concatenate(idx_l)
+    est = np.concatenate(est_l)
+    m = rows["shot"][idx] == shot
+    ridx, tx = idx[m], est[m]
+    o = np.argsort(rows["gi"][ridx])
+    ridx, tx = ridx[o], tx[o]
+    refs = np.load(ROOT / "data/.b83/refs.npz")
+    pchip = refs["P"][ridx]
+    hold = rows["hold"][ridx]
+    gp = rows["gp"][ridx]
+    y = rows["y"][ridx]
+    tr = grid["time"][rows["gi"][ridx]]
+    a, b = grid["off"][f] + 1, grid["off"][f + 1] - 1
+    tg, tig = grid["time"][a:b], grid["ti"][a:b]
+    nb, na = absent_steps(grid, f)
+    qs = np.quantile(tr, [0.25, 0.5, 0.75])
+    half = 0.5
+    fig, axes = plt.subplots(1, 3, figsize=(W, 7.0 * CM), sharey=True, layout="constrained")
+    data = {"shot": int(shot), "rule": "previous frame visible (D10), target F, random design V1 re-partition r2",
+            "window_rule": "three 1 s windows centred at the 25, 50 and 75 % quantiles of the times of the discharge's scored rows",
+            "selection": "example discharge of fig_problem (selection rule in figv2_problem.json)", "windows": []}
+    toks = [str(shot)]
+    for ax, qc in zip(axes, qs):
+        lo, hi = qc - half, qc + half
+        mg = (tg >= lo) & (tg <= hi)
+        mr = (tr >= lo) & (tr <= hi)
+        ax.plot(tg[mg], tig[mg], "o", ms=2.6, color="#000000", label="reported $T_i$", zorder=5)
+        ax.step(tr[mr], hold[mr], where="post", color=C["H"], lw=0.9, label="hold")
+        ax.plot(tr[mr], pchip[mr], color="#D55E00", lw=0.9, ls="--", label="PCHIP (waits for the next value)")
+        ax.plot(tr[mr], gp[mr], color=C["G"], lw=0.9, label="causal GP")
+        ax.plot(tr[mr], tx[mr], color=C["TX"], lw=1.2, label="the estimator TX")
+        for x in na[(na >= lo) & (na <= hi)]:
+            ax.axvline(x, color="#F0B48C", lw=0.6, zorder=0)
+        ax.set_xlim(lo, hi)
+        ax.set_xlabel("time (s)")
+        ax.grid(axis="y", lw=0.3, color="#DDDDDD")
+        data["windows"].append({"t_lo_s": float(lo), "t_hi_s": float(hi), "scored_rows": int(mr.sum()),
+                                "time_s": tr[mr].tolist(), "F_eV": y[mr].tolist(), "hold_eV": hold[mr].tolist(),
+                                "pchip_eV": pchip[mr].tolist(), "causal_gp_eV": gp[mr].tolist(), "TX_eV": tx[mr].tolist(),
+                                "grid_time_s": tg[mg].tolist(), "grid_ti_eV": tig[mg].tolist(),
+                                "absent_step_first_row_after_s": na[(na >= lo) & (na <= hi)].tolist()})
+    axes[0].set_ylabel("$T_i$ (eV)")
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="outside lower center", ncol=3, fontsize=7.5)
+    fig.suptitle(f"discharge {shot}, previous frame visible, value of the frame; vertical lines: absent frames",
+                 fontsize=8.5, x=0.02, ha="left")
+    data["source"] = ("data/.b73/trees/V1_r2_k*__TX__F.npz (idx into data/.b73/rows.npz), data/.b83/refs.npz (P), "
+                      "data/.b73/rows.npz (hold, gp, y), data/.b73/grid.npz")
+    save(fig, "nowcast", data, toks)
+
+
 def main():
     info, med, q25, sel = select_example()
     print("example discharge (median):", med[1], "skill %.3f" % med[0], "candidates", info["candidates"],
@@ -668,6 +731,7 @@ def main():
     fig_trace(info, q25, sel, "trace_q25")
     fig_limits()
     fig_tau()
+    fig_nowcast(med)
 
 
 if __name__ == "__main__":
