@@ -59,7 +59,7 @@
   "kind": "table",
   "name": "\\TabWhich",
   "what": "ECEI only, BES only, both; beam alone; both given beam; beam given both (D650, S, per design)",
-  "source": "b81 main.*.{D650,S}.{TE,TB}/T0; b75 main.*.{D650,S}.TX/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX}",
+  "source": "b75 main.{V1,V4a,V4b}.{D650,S}.{TE,TB}/T0 and main.*.{D650,S}.TX/T0; b81 main.{V2,V3}.{D650,S}.{TE,TB}/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX}",
   "paper_map": "4.2 (main)"
  },
  {

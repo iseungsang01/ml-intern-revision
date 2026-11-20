@@ -424,7 +424,8 @@ def fig_which():
             c9 = B79["main"][f"{d}|L5|common"]["all"]["D650"] if r == "D650" else B79["main"][f"{d}|L5|S"]["all"]["S"]
             c1 = B81["main"][d][r]
             for i, (key, lab, col, mk, src) in enumerate(est):
-                cell = {"b75": c5, "b79": c9, "b81": c1}[src][key]
+                # TE, TB: B.75 where it registered them (V1, V4a, V4b), B.81 only for V2 and V3
+                cell = c5[key] if (src == "b81" and key in c5) else {"b75": c5, "b79": c9, "b81": c1}[src][key]
                 group(ax, j, i, k, len(designs), cell, col, mk, f"{r}|{d}|{key}")
         yt = [(len(designs) - 1 - j) * (k + 1.5) + (k - 1) / 2 for j in range(len(designs))]
         ax.set_yticks(yt)
@@ -456,9 +457,10 @@ def fig_which():
     hs = [Line2D([], [], marker=mk, color=col, ls="-", lw=0.9, ms=3.6, label=lab) for key, lab, col, mk, src in est]
     hs += [Line2D([], [], marker=mk, color=col, ls="-", lw=0.9, ms=3.6, label=lab) for key, lab, col, mk in ctl]
     fig.legend(handles=hs, loc="outside lower center", ncol=3)
-    data["note"] = ("filled marker: 95 % cluster (MAST session) interval excludes zero; target L5; TE, TB from B.81 "
-                    "(V2, V3 fitted there; V1, V4 the B.75 fits); controls from B.81 (KSTAR, D650) and B.76 (MAST M1, D100)")
-    data["source"] = ("b81 main.*.{D650,S}.{TE,TB}/T0 and main.*.D650.{TXp/T0,TXo/T0,TX/TXo}; b75 main.*.{D650,S}.TX/T0; "
+    data["note"] = ("filled marker: 95 % cluster (MAST session) interval excludes zero; target L5; TE, TB of V1, V4 from B.75, "
+                    "of V2, V3 from B.81; controls from B.81 (KSTAR, D650) and B.76 (MAST M1, D100)")
+    data["source"] = ("b75 main.{V1,V4a,V4b}.{D650,S}.{TE,TB}/T0 and main.*.{D650,S}.TX/T0; b81 main.{V2,V3}.{D650,S}.{TE,TB}/T0 "
+                      "and main.*.D650.{TXp/T0,TXo/T0,TX/TXo}; "
                       "b79 main.*.{D650,S}.{TN/T0,TXN/TN}; b76 main.M1|L5|common.all.controls")
     save(fig, "which", data, toks)
 

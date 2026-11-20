@@ -543,8 +543,11 @@ def tab_which():
             c1 = b1["main"][d][r]
             k1 = f"main.{d}.{r}"
             rows.append([design_label(d) if r == "D650" else "", r,
-                         pct(c1["TE/T0"], src_of(B81), k1 + ".TE/T0", "stack"),
-                         pct(c1["TB/T0"], src_of(B81), k1 + ".TB/T0", "stack"),
+                         # B.75 where it registered the cell (V1, V4a, V4b); B.81 only for V2, V3
+                         (pct(c5["TE/T0"], src_of(B75), k5 + ".TE/T0", "stack") if "TE/T0" in c5
+                          else pct(c1["TE/T0"], src_of(B81), k1 + ".TE/T0", "stack")),
+                         (pct(c5["TB/T0"], src_of(B75), k5 + ".TB/T0", "stack") if "TB/T0" in c5
+                          else pct(c1["TB/T0"], src_of(B81), k1 + ".TB/T0", "stack")),
                          pct(c5["TX/T0"], src_of(B75), k5 + ".TX/T0", "stack"),
                          pct(c9["TN/T0"], src_of(B79), k9 + ".TN/T0", "stack"),
                          pct(c9["TXN/TN"], src_of(B79), k9 + ".TXN/TN", "stack"),
@@ -556,14 +559,14 @@ def tab_which():
     body = tabular("@{}llcccccc@{}", head, rows, "footnotesize", "3.2pt")
     cap = (r"Which diagnostic, and beyond the beam waveforms: reduction of the MSE in per cent (target L5), "
            r"history 0.65~s old (D650, common set) and beam-modulation schedule (S, S set). TE and TB are T0 "
-           r"with the ECEI or the BES half of the fast inputs (V2 and V3 fitted in B.81, V1 and V4 in B.75); TN is "
+           r"with the ECEI or the BES half of the fast inputs (V1 and V4 from B.75; V2 and V3 fitted in B.81); TN is "
            r"T0 with the 19 beam scalars; TXN is TX with them. ``Both, beam'': the fast diagnostics after the beam "
            r"waveforms are given; ``beam, both'': the beam waveforms after the fast diagnostics. Beam columns as "
            r"delivered (registered readout). Intervals: 95 \%, shot clusters resampled; bold: the interval excludes zero.")
     reg("0.65", src_of(B75), "age_under_S.L5.newest_value_age_s.quantiles.0.5", "median age in s, two decimals")
     reg("19", src_of(B79), "beam_scalars (list length)", "count")
     emit("Which", body, cap, "ECEI only, BES only, both; beam alone; both given beam; beam given both (D650, S, per design)",
-         "b81 main.*.{D650,S}.{TE,TB}/T0; b75 main.*.{D650,S}.TX/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX}", "4.2 (main)")
+         "b75 main.{V1,V4a,V4b}.{D650,S}.{TE,TB}/T0 and main.*.{D650,S}.TX/T0; b81 main.{V2,V3}.{D650,S}.{TE,TB}/T0; b79 main.*.{D650,S}.{TN/T0,TXN/TN,TXN/TX}", "4.2 (main)")
 
 
 def lead_controls_b75():
@@ -1784,7 +1787,7 @@ Canvas widths are final: 16 cm for full-width figures, 10 cm for `figv2_sparse`;
 | `figv2_rules` | schematic of the availability rules on a 10 ms frame axis: fast samples to t; D10; Dd (d = 60 ms drawn); S (before the latest notch); Kk (k = 5 drawn) | none (drawn) | sec. 3 |
 | `figv2_ladder` | RMSE against the delay of the history: (a) KSTAR V1 (hold, causal GP, T0, TX; O as dashed line, named in the legend; rule S as open diamonds at the median age 0.65 s, S set), (b) MAST M1 | b75 `main.V1|L5|common.all.D*.rmse_eV`, `main.V1|L5|S.all.S.rmse_eV`; b76 `main.M1|L5|common.all.D*.rmse_eV` | 4.1, 4.4 |
 | `figv2_designs` | forest plot of the fast-channel increment (%, cluster/session interval; filled = excludes zero): KSTAR D10, D650, S x V1..V4b; MAST D5, D100 x M1..M4 | b75, b76 `TX/T0` | 4.3, 4.4 |
-| `figv2_which` | (a) D650, (b) S: per design TE/T0, TB/T0 (B.81), TX/T0, TN/T0, TXN/TN; (c) the B.81 controls under D650 per design (fast inputs permuted, fast inputs at the anchor row, present over anchor row) and MAST M1 D100 (B.76) | b81, b75, b79, b76 | 4.2 |
+| `figv2_which` | (a) D650, (b) S: per design TE/T0, TB/T0 (V1, V4 from B.75; V2, V3 from B.81), TX/T0 (B.75), TN/T0, TXN/TN; (c) the B.81 controls under D650 per design (fast inputs permuted, fast inputs at the anchor row, present over anchor row) and MAST M1 D100 (B.76) | b81, b75, b79, b76 | 4.2 |
 | `figv2_sparse` | RMSE of T0 and TX against the spacing of the CES values (V1), O as dashed line, equivalent spacing of TX at K10 (k' = 4.67 frames = 46.7 ms, cluster interval as error bar) | b78 `main.V1|L5.all.K*` | 4.5 |
 | `figv2_trace` | the example discharge in three 2 s windows (centred at the 25/50/75 % quantiles of its scored times): reported values, following level L5, T0 and TX under rule S (stored estimates), absent frames | caches `data/.b75/fits/V1_r2_k*__{T0,TX}__S__L5.npz`, `data/.b73/rows.npz`, `grid.npz` | 4.1 / 4.6 |
 | `figv2_trace_q25` | the same for the 25th-percentile discharge (second example) | same | supplement |

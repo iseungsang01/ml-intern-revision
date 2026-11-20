@@ -1,6 +1,6 @@
 {
  "generator": "docs/paper/ppcf/make_tables_v2.py",
- "n_tokens": 1752,
+ "n_tokens": 1747,
  "tokens": {
   "222,672": [
    {
@@ -981,8 +981,8 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TB/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|S.all.S.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -1003,8 +1003,8 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TE/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TE/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -2231,8 +2231,8 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TE/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.TE/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -2244,11 +2244,6 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.block 32002-32310.S.TX/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.TE/T0.point",
-    "transform": "100 x skill, one decimal"
    },
    {
     "source": "docs/paper/b80_ecei_gate.json",
@@ -3225,8 +3220,8 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TB/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D650.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -3252,11 +3247,6 @@
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.applied T0: refit over applied.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -3610,11 +3600,6 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TE/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M1|L5|common.all.controls.TXo/T0.session[1]",
     "transform": "100 x skill, one decimal (session interval)"
@@ -3865,8 +3850,8 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TB/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -3882,11 +3867,6 @@
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.applied TX: refit over applied.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -4031,11 +4011,6 @@
    {
     "source": "docs/paper/b79_beam_inputs.json",
     "path": "main.V3|L5|common.all.D650.TN/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -4496,11 +4471,6 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TB/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V4b|L5.all.K10.TX/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
@@ -4523,6 +4493,11 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.TE/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
     "source": "docs/paper/b81_controls.json",
     "path": "main.V1.D650.TXo/T0.point",
     "transform": "100 x skill, one decimal"
@@ -4535,11 +4510,6 @@
    {
     "source": "docs/paper/b78_sparse.json",
     "path": "main.V2|L5.all.K1.TX/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -4995,8 +4965,8 @@
     "transform": "100 x skill, one decimal (session interval)"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TB/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -5493,8 +5463,8 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TE/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D650.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -5521,11 +5491,6 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|L5.TE[L5].over_G.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TE/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "8.4": [
@@ -5533,6 +5498,11 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M2|L5|common.all.D15.TX/T0.session[0]",
     "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.TE/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
     "source": "docs/paper/b81_controls.json",
@@ -5572,11 +5542,6 @@
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|common.all.D650.applied TX: refit over applied.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -5638,13 +5603,8 @@
     "transform": "100 x skill, one decimal (session interval)"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TB/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TE/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
@@ -5655,11 +5615,6 @@
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|common.all.D650.TX/O.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.TB/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -5826,11 +5781,6 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D25.TX/T0.session[1]",
     "transform": "100 x skill, one decimal (session interval)"
-   },
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TB/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "-2.4": [
@@ -6143,18 +6093,13 @@
     "transform": "100 x skill, one decimal"
    },
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TE/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.TE/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M3|L5|common.all.D100.TX/O.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.TE/T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
@@ -7241,8 +7186,8 @@
   ],
   "22.9": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TE/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D650.TE/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -7274,62 +7219,30 @@
     "source": "docs/paper/b73_targets.json",
     "path": "per_estimator.V1|L5.TX[L5].over_G.point",
     "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TE/T0.point",
-    "transform": "100 x skill, one decimal"
    }
   ],
-  "28.9": [
+  "29.1": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TE/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D650.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|common.all.D150.TX/O.session[1]",
-    "transform": "100 x skill, one decimal (session interval)"
-   },
-   {
     "source": "docs/paper/b80_ecei_gate.json",
-    "path": "cells.V1|D650.class middle.TE/T0.cluster[1]",
+    "path": "cells.V1|D650.all.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "24.6": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TB/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D650.TB/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|D650.all.TB/T0.point",
     "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TB/T0.point",
-    "transform": "100 x skill, one decimal"
-   }
-  ],
-  "19.9": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.D650.TB/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b79_beam_inputs.json",
-    "path": "main.V1|L5|common.all.D650.TN/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M1|L5|DA.all.D100.TD/T0.session[1]",
-    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "14.8": [
@@ -7374,6 +7287,18 @@
     "source": "docs/paper/b73_targets.json",
     "path": "increments.V1|F.cells.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "19.9": [
+   {
+    "source": "docs/paper/b79_beam_inputs.json",
+    "path": "main.V1|L5|common.all.D650.TN/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|DA.all.D100.TD/T0.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "20.5": [
@@ -7452,49 +7377,22 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "15.6": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TE/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V1|L5.all.K20.TX/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b80_ecei_gate.json",
-    "path": "cells.V1|S.all.TE/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "per_estimator.V1|F.TB[F].over_G.point",
-    "transform": "100 x skill, one decimal"
-   }
-  ],
   "28.6": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TE/T0.cluster[1]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
     "source": "docs/paper/b81_controls.json",
     "path": "main.V4b.D650.TX/TXo.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.TE/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "24.2": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V1.S.TB/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|S.all.S.TB/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -7516,11 +7414,6 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V3|L5|common.all.D300.applied T0: refit over applied.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|S.all.S.TB/T0.point",
-    "transform": "100 x skill, one decimal"
    }
   ],
   "25.3": [
@@ -8197,8 +8090,8 @@
   ],
   "17.7": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TE/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.TE/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -8210,61 +8103,12 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|S.all.S.applied TXa/T0a.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.TE/T0.point",
-    "transform": "100 x skill, one decimal"
-   }
-  ],
-  "8.5": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TE/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b78_sparse.json",
-    "path": "main.V3|L5.all.K20.TX/T0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b77_correct.json",
-    "path": "designs.V1.all.TX/T0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b77_correct.json",
-    "path": "designs.V2.all.TX/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D100.applied TXa/T0a.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D100.applied TXa/T0a.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|S.all.S.applied TXa/T0a.point",
-    "transform": "100 x skill, one decimal"
-   }
-  ],
-  "30.6": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TE/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "-1.4": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TB/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.TB/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -8286,17 +8130,24 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|S.all.S.applied TX: refit over applied.point",
     "transform": "100 x skill, one decimal"
+   }
+  ],
+  "-25.7": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.TB/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "20.3": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|common.all.D650.TB/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
    },
    {
     "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.TB/T0.point",
-    "transform": "100 x skill, one decimal"
-   }
-  ],
-  "-26.7": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TB/T0.cluster[0]",
+    "path": "main.V1|L5|common.all.D650.TX8/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -8391,30 +8242,37 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "-24.2": [
+  "-24.8": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TE/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "-4.7": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TB/T0.point",
-    "transform": "100 x skill, one decimal"
-   },
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4a|L5|S.all.S.TB/T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
-  "-31.7": [
+  "-31.9": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.S.TB/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "25.6": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4a|L5|S.all.S.TB/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M4|L5|common.all.D50.TX/O.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
    }
   ],
   "-10.0": [
@@ -8474,10 +8332,69 @@
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
-  "9.4": [
+  "4.8": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TE/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
    {
     "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TB/T0.point",
+    "path": "main.V4a.D650.TXo/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b77_correct.json",
+    "path": "designs.V1.all.CX/C0.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "increments.V4a|L5.cells.TX/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "increments.V4b|L5.cells.TE/T0.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "increments.V2|F.cells.TX/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "increments.V2|F.cells.KX/K0.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D1000.applied TXa/T0a.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D300.applied T0: refit over applied.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "29.5": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TE/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D300.applied T0: refit over applied.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "9.4": [
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TB/T0.point",
     "transform": "100 x skill, one decimal"
    },
    {
@@ -8493,8 +8410,8 @@
   ],
   "-6.3": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.D650.TB/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|common.all.D650.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -8550,29 +8467,19 @@
   ],
   "-29.6": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TE/T0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.TE/T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
-  "-59.3": [
+  "-59.8": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TE/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|S.all.S.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "3.7": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TE/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
    {
     "source": "docs/paper/b75_availability.json",
     "path": "main.V4b|L5|S.all.S.TE/T0.cluster[1]",
@@ -8591,15 +8498,15 @@
   ],
   "-9.6": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TB/T0.point",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|S.all.S.TB/T0.point",
     "transform": "100 x skill, one decimal"
    }
   ],
-  "-26.8": [
+  "-26.7": [
    {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4b.S.TB/T0.cluster[0]",
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V4b|L5|S.all.S.TB/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -9063,48 +8970,6 @@
    {
     "source": "docs/paper/b81_controls.json",
     "path": "main.V4a.D650.TXo/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "4.8": [
-   {
-    "source": "docs/paper/b81_controls.json",
-    "path": "main.V4a.D650.TXo/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b77_correct.json",
-    "path": "designs.V1.all.CX/C0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "increments.V4a|L5.cells.TX/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "increments.V4b|L5.cells.TE/T0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "increments.V2|F.cells.TX/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b73_targets.json",
-    "path": "increments.V2|F.cells.KX/K0.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D1000.applied TXa/T0a.point",
-    "transform": "100 x skill, one decimal"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|common.all.D300.applied T0: refit over applied.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -11056,6 +10921,18 @@
     "transform": "ratio, 3 decimals (session interval)"
    }
   ],
+  "28.9": [
+   {
+    "source": "docs/paper/b76_mast_availability.json",
+    "path": "main.M1|L5|common.all.D150.TX/O.session[1]",
+    "transform": "100 x skill, one decimal (session interval)"
+   },
+   {
+    "source": "docs/paper/b80_ecei_gate.json",
+    "path": "cells.V1|D650.class middle.TE/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
   "1.359": [
    {
     "source": "docs/paper/b76_mast_availability.json",
@@ -11575,18 +11452,6 @@
     "source": "docs/paper/b76_mast_availability.json",
     "path": "main.M4|L5|common.all.D50.TX/O.session[0]",
     "transform": "100 x skill, one decimal (session interval)"
-   }
-  ],
-  "25.6": [
-   {
-    "source": "docs/paper/b76_mast_availability.json",
-    "path": "main.M4|L5|common.all.D50.TX/O.session[1]",
-    "transform": "100 x skill, one decimal (session interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.TB/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "1.638": [
@@ -12383,6 +12248,23 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
+  "15.6": [
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V1|L5.all.K20.TX/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b80_ecei_gate.json",
+    "path": "cells.V1|S.all.TE/T0.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b73_targets.json",
+    "path": "per_estimator.V1|F.TB[F].over_G.point",
+    "transform": "100 x skill, one decimal"
+   }
+  ],
   "2.283": [
    {
     "source": "docs/paper/b78_sparse.json",
@@ -12656,6 +12538,38 @@
     "source": "docs/paper/b73_targets.json",
     "path": "increments.V4a|L5.cells.TX/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
+   }
+  ],
+  "8.5": [
+   {
+    "source": "docs/paper/b78_sparse.json",
+    "path": "main.V3|L5.all.K20.TX/T0.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b77_correct.json",
+    "path": "designs.V1.all.TX/T0.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b77_correct.json",
+    "path": "designs.V2.all.TX/T0.cluster[1]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V1|L5|common.all.D100.applied TXa/T0a.cluster[0]",
+    "transform": "100 x skill, one decimal (cluster interval)"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|common.all.D100.applied TXa/T0a.point",
+    "transform": "100 x skill, one decimal"
+   },
+   {
+    "source": "docs/paper/b75_availability.json",
+    "path": "main.V2|L5|S.all.S.applied TXa/T0a.point",
+    "transform": "100 x skill, one decimal"
    }
   ],
   "15.4": [
@@ -13110,20 +13024,6 @@
    {
     "source": "docs/paper/b79_beam_inputs.json",
     "path": "main.V1|L5|S.block from 32312.S.TXN/TN.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "-24.8": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.TE/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "-59.8": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4b|L5|S.all.S.TE/T0.cluster[0]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -13735,18 +13635,6 @@
    {
     "source": "docs/paper/b80_ecei_gate.json",
     "path": "cells.V1|D650.class high.TXN/TN.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "29.1": [
-   {
-    "source": "docs/paper/b80_ecei_gate.json",
-    "path": "cells.V1|D650.all.TE/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TE/T0.cluster[1]",
     "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
@@ -15160,13 +15048,6 @@
     "transform": "RMSE in eV, one decimal"
    }
   ],
-  "29.5": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V2|L5|common.all.D300.applied T0: refit over applied.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
   "39.8": [
    {
     "source": "docs/paper/b75_availability.json",
@@ -15788,18 +15669,6 @@
     "source": "docs/paper/b75_availability.json",
     "path": "main.V1|L5|common.all.D650.rmse_eV.TX8",
     "transform": "RMSE in eV, one decimal"
-   }
-  ],
-  "20.3": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V1|L5|common.all.D650.TX8/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   },
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.TB/T0.cluster[1]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "204.0": [
@@ -19033,20 +18902,6 @@
     "source": "docs/paper/b81_controls.json",
     "path": "statements.E8.value.point",
     "transform": "as registered, signed three decimals"
-   }
-  ],
-  "-25.7": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|common.all.D650.TB/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
-   }
-  ],
-  "-31.9": [
-   {
-    "source": "docs/paper/b75_availability.json",
-    "path": "main.V4a|L5|S.all.S.TB/T0.cluster[0]",
-    "transform": "100 x skill, one decimal (cluster interval)"
    }
   ],
   "46.7": [
