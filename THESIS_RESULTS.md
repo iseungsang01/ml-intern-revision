@@ -445,3 +445,23 @@ Reading. One fit across the ages of the history serves the conditions it was fit
 **Corrections in the manuscript** (no number of a table changed): the count 627 of the abstract explained in section 4.1 (222,005 of 222,672 rows, 627 of 635 discharges have a reference that waits); "level with" replaced by "no difference is established"; the reading paragraph of the discussion rewritten by design; "the lowest error found" scoped to the previous frame visible; the delay of about a second attributed; the recurrent network alone separated from its two-stage form; the chronological lower end of the increment on the value of the frame named; notches, Mirnov and the sparse rule scoped by design; the rolling-origin fifth below its control named in the main text; MAST Thomson no longer called a fast input; the offline GP specified; the supplement's title and its definition of the level scalar corrected; Bishop 1993, Svensson 1999 and Abbate 2021 cited. Main text 18 pages, supplement 28; `check_numbers_v2.py` passes.
 
 **Verdict.** The estimate for PPCF stays inside the range of rounds 11 to 17. Two analyses that the grader asks for need only the files in hand and belong to the first question of the paper: the same regression with the next values visible (accuracy against the permitted lag), and the main table re-scored without rows after a notch and at low BES level. Neither is registered yet.
+
+## Cleanup of the repository and the memory; B.86 (2026-11-21)
+
+**Cleanup.** On the author's word ("헷갈릴만한 옛연구들은 repo 및 메모리에서 최대한 제거"; "연구 배선도 확인해서 고아 노드가 필요 없다면 제거하고 … readme에 배선 잘된 방향대로 정리해서 작성"): the wiring of the repository was computed from real imports and file reads; what the current line (D1, B.70 onward, the manuscript chain, the presentation builders, the tests of kept code) does not reach was removed in two passes (commits 7a23d95 and 44b74d4; 473 files, 47 experiment directories). The records were cut to the current line and `README.md` was rewritten as the wiring. Everything removed is in the history up to e86adaf.
+
+**B.86, MAST from the core to the edge** (`PREREGISTRATION_B86.md`, addendum 1; `docs/paper/b86_mast_radius.md`, `b86_checks.md`, `b86_lead_checks.md`). The estimator of B.76 refitted in five bands by distance inside the edge of the Thomson density profile (1.5 to 5, 5 to 10, 10 to 20, 20 to 35, 35 to 60 cm; 145,048 to 1,074,935 rows), target the level of the following frames, previous frame visible (D5) and history 100 ms old (D100), designs M1 and M3, sessions resampled.
+
+| statement | result | verdict | expectation |
+|---|---|---|---|
+| R1, five bands: M1, D100, TX over T0 above zero | +0.296 [+0.246, +0.354] in E to +0.704 [+0.671, +0.735] in B3 | holds in all five | holds |
+| R2, five bands: M1, D5 | +0.104 [+0.074, +0.135] in E to +0.198 [+0.182, +0.213] in B4 | holds in all five | holds in E, uncertain inside |
+| R3, five bands: M3, D100 | +0.209 [+0.095, +0.305] in E to +0.658 [+0.585, +0.716] in B3 | holds in all five | holds in E, uncertain inside |
+| R4, five bands: M1, D5, T0 over the causal GP | +0.180 [+0.119, +0.244] in E to +0.312 in B4 | holds in all five | holds |
+| R5: the cost of staleness is larger in E than in B5 | -2.272 [-2.622, -1.927] (E 1.678, B5 3.951) | does not hold | holds |
+| R6: the Thomson increment at D100 is larger in E than in B5 | -0.304 [-0.357, -0.245] | does not hold | uncertain |
+| R7: the share of TX within 10 % of the level is larger in B5 than in E | +0.133 [+0.116, +0.149] (B5 0.673, E 0.541) | holds | holds |
+
+Reported: against the references that wait, on the value of the frame, the nowcast has the higher MSE on MAST (TX over PCHIP -0.034 [-0.120, +0.047] in E, -0.190 to -0.104 inside with intervals below zero). The four checks passed before the readout; the lead's recomputation agrees (400,657 rows of 266 shots rebuilt from the value arrays, statement values equal, interval ends within 0.006).
+
+**Verdict.** On MAST the same estimator applies from the core to the edge, and Thomson scattering at the chord's radius adds to a stale charge-exchange history at every radius. Against the expectation, the cost of a stale history and the Thomson increment are larger inside than at the edge. The share of estimates within 10 % of the level is higher inside and reaches 0.680 at most. These are statements about MAST; no statement is made about the KSTAR core.
