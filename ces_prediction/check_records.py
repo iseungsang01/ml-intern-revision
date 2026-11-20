@@ -79,6 +79,7 @@ SOURCES = (
     "docs/paper/b75_availability.md",
     "docs/paper/b75_checks.md",
     "docs/paper/b75_lead_checks.md",
+    "docs/paper/b75_last_block.md",
     "docs/paper/b76_mast_availability.md",
     "docs/paper/b76_checks.md",
     "docs/paper/b76_lead_checks.md",
