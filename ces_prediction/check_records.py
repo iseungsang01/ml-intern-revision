@@ -88,6 +88,7 @@ SOURCES = (
     "docs/paper/b78_sparse.md",
     "docs/paper/b78_checks.md",
     "docs/paper/b78_lead_checks.md",
+    "docs/paper/nbi_files.md",
     "docs/paper/prior_work_missing_ti.md",
     "docs/paper/review_loop/critique_20261120_novelty.md",
     "docs/paper/validation_methods.md",

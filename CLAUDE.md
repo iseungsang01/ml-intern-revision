@@ -22,6 +22,7 @@ python ces_prediction/inspect_split.py        # validate fixed split / manifest
 python ces_prediction/analyze_data_evidence.py  # missingness ledger + MC aliasing + Te/NBI probe
 python ces_prediction/analyze_foundations.py    # checks every derivation in docs/theory_foundations.md (data + frozen npz)
 python ces_prediction/analyze_file_rules.py     # how the 10 ms files relate to the raw 1 us deliveries (grid, snapshots, beam blips)
+python ces_prediction/analyze_nbi_files.py      # what the NBI files (data/nbi/) are: rows, sources, notches, CES values by source state
 python ces_prediction/check_records.py          # numbers of PROJECT_KNOWLEDGE.md and PAPER_DESIGN.md against their sources
 ```
 
