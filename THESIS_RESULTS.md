@@ -8756,3 +8756,48 @@ Reading. Under the random design the increment is not confined to the rows after
 ### Independent grading, round 17 (2026-11-20)
 
 A fresh grader with the instructions of round 16 read the two PDFs of the manuscript with B.82 written in (commit 1ba9a8b): PPCF accept 13 %, Fusion Engineering and Design 30 %, Review of Scientific Instruments 22 %, sent to referees 55 %; reject and resubmit. Round 16 before B.82: 15 %, 32 %, 27 %, 60 %. The report, its ranked concerns and the places it found inconsistent are in `docs/paper/review_loop/grade17_20261120.md`; the sentences and captions were corrected. Its three highest-ranked changes are a validation of the target with the schedule rule in time order as the primary analysis, a shorter paper on what a present-time signal is worth as a function of the age of the CES value without "co-located" in the title, and new data. None was started; they wait for the author's decision.
+
+### The author's framing restored, B.83 and B.84 (2026-11-20 night to 2026-11-21)
+
+**Framing.** The author (2026-11-20 night): the framing set at the start is the better one. `PAPER_DESIGN.md` sections 1, 4 and 9 were rewritten for it (commit e2019b2): nowcasting at the pedestal top, the best model against interpolation and the like, at 10 ms in real time, with a demonstration of use where it applies. The line of the afternoon (bridging a late or sparse CES value) is dropped; its results move into the section on use.
+
+**B.83** (`PREREGISTRATION_B83.md`, addendum 1; CPU; stored estimates of B.73 and the interpolation references of B.70's code path; checks passed; `docs/paper/b83_interp.{md,json}`; lead's checks `docs/paper/b83_lead_checks.md`). Target: the value of the frame, previous frame visible. Intervals with shot clusters resampled.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| I1 V1: TX over PCHIP above zero | +0.278 [+0.235, +0.315] | holds | holds |
+| I2 V1: TX over the offline GP above zero | +0.059 [+0.026, +0.096] | holds | holds |
+| I3 V2: TX over PCHIP | +0.261 [+0.217, +0.297] | holds | holds |
+| I4 V2: TX over the offline GP | +0.037 [+0.006, +0.070] | holds | uncertain, leaning to holds |
+| I5 V3: TX over PCHIP | +0.224 [+0.165, +0.268] | holds | holds |
+| I6 V3: TX over the offline GP | -0.007 [-0.046, +0.028] | does not hold | uncertain |
+| I7 V4 (fit to 31991): TX over PCHIP | +0.153 [+0.065, +0.228] | holds | holds |
+| I8 V4 (fit to 31991): TX over the offline GP | -0.035 [-0.082, +0.014] | does not hold | uncertain |
+| I9 V1: T0 over PCHIP above zero | +0.209 [+0.162, +0.243] | holds | holds |
+| I10 V1: T0 over the offline GP contains zero or lies above | -0.031 [-0.056, -0.013] | does not hold | holds |
+| I11 V1: median absolute error, TX / offline GP, below one | 1.059 [1.014, 1.105] | does not hold | does not hold |
+| I12 V1: median absolute error, TX / PCHIP, below one | 1.043 [0.974, 1.104] | does not hold | does not hold |
+| I13 V1: MAE, TX / offline GP, below one | 0.977 [0.955, 1.001] | does not hold | uncertain |
+| I14 V1: 90th percentile, TX / offline GP, below one | 0.947 [0.925, 0.970] | holds | holds |
+
+Reported, V1 (hold, PCHIP, causal GP, offline GP, T0, TX): RMSE 231.8, 204.9, 191.9, 179.4, 182.2, 174.1 eV; median absolute error 45.3, 38.1, 44.0, 37.5, 41.7, 39.7 eV; share within 10 % of the value 0.545, 0.592, 0.571, 0.618, 0.591, 0.609.
+
+Reading. The nowcast, which does not wait for the next value, has a lower MSE than PCHIP under all four designs and than the offline GP under the random and the cluster-blocked design; in time order it is level with the offline GP. The advantage is in the mean squared error and the upper tail; the median error of the interpolation that waits is slightly lower. The history-only estimate does not reach the offline GP; the fast diagnostics are what carries the nowcast past it.
+
+**B.84** (`PREREGISTRATION_B84.md`, addendum 1; CPU, 60 fits; checks passed; `docs/paper/b84_onefit.{md,json}`; lead's checks `docs/paper/b84_lead_checks.md`). The author's remark: the second stage is bound to rules. Target L5; V1 = re-partition r2.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| U1 V1, D650: one fit across ages not worse than the per-rule TX by more than 5 % | +0.000 [-0.021, +0.022] | holds | uncertain, leaning to holds |
+| U2 V1, D10: the same | -0.062 [-0.087, -0.039] | does not hold | uncertain, leaning to holds |
+| U3 V1, S: the same | +0.047 [+0.008, +0.085] | holds | uncertain |
+| U4 V1, D650: one fit over the fit made with the previous frame visible and applied | +0.502 [+0.403, +0.568] | holds | holds |
+| U5 V1, D650: TXall over T0all | +0.359 [+0.304, +0.403] | holds | holds |
+| U6 V1, K10 (not in the mixture): TXall over the per-rule T0 | -0.036 [-0.138, +0.067] | does not hold | uncertain, leaning to holds |
+| U7 V3, D650: one fit not worse than the per-rule TX by more than 5 % | +0.080 [+0.050, +0.114] | holds | uncertain |
+| U8 V1, D650: raw windows not worse than the hand-made scalars by more than 5 % | -0.327 [-0.432, -0.230] | does not hold | uncertain |
+| U9 V3, D650: without absolute levels over the per-rule TX | +0.089 [+0.033, +0.154] | holds | uncertain |
+| U10 V4 (fit to 31991), S: without absolute levels over T0 | -0.004 [-0.156, +0.095] | does not hold | uncertain, leaning to does not hold |
+| U11 V1, D650: without absolute levels not worse than the per-rule TX by more than 5 % | -0.032 [-0.059, -0.001] | does not hold | uncertain |
+
+Reading. One fit across the ages of the history serves the conditions it was fitted on (equal at 0.65 s, lower under the schedule and in time order, 6 % higher with the previous frame visible) and does not carry to a scenario it was not fitted on (a value every tenth frame: 163.5 against 144.0 eV). A tree on raw windows is far worse than on the hand-made scalars. Without the absolute levels the estimate is better in time order and slightly worse in random folds; the last block under the schedule is not recovered. By the registered rule the paper's estimator is not changed. The author's remark is borne out: the second stage has to be refitted for the condition of use; a model with state trained across scenarios is the open step and needs a GPU.
