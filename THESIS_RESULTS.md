@@ -8716,3 +8716,39 @@ How it is built. No number is typed: `docs/paper/ppcf/make_tables_v2.py` reads t
 Two things were added while writing: the unregistered diagnostic on rows with a constant ECEI and the registered batch B.81 (entries above). One basis sentence of the discussion is new and is a statement of expectation, not a result: by the electron collision time of Wesson's Tokamaks multiplied by half the ion-to-electron mass ratio, electrons and deuterons exchange energy within ten to a few tens of milliseconds at a density of a few 10^19 m^-3 and an electron temperature of several hundred eV, which is short against the age of the CES value.
 
 Not carried from the earlier supplement: the rotation, the measurement regime, the design of the recurrent network and the replay with stopped updates; their numbers belong to the earlier populations and target.
+
+### Independent grading, round 16, and B.82 (2026-11-20)
+
+**Grading.** A separate agent in the role of a PPCF referee read the two frozen PDFs of the rewritten manuscript (commit ab344d7) and nothing else: PPCF accept 15 %, Fusion Engineering and Design 32 %, Review of Scientific Instruments 27 %, sent to referees 60 %; major revision. The report, its ranked concerns and the eleven places it found stronger than their table are in `docs/paper/review_loop/grade16_20261120.md`; the sentences were corrected (commit 7737a7b).
+
+**B.82.** Registration `PREREGISTRATION_B82.md` with addendum 1 (23 statements; the commit message of the registration says thirty, which is wrong). CPU: stored estimates of B.75, B.79 and B.81 for parts A and B, 520 boosted regressions for parts C and D; the five checks passed before the readout (`docs/paper/b82_checks.md`). Run by an AI agent under the author's supervision. Output `docs/paper/b82_localize.{md,json}`; the session lead's checks `docs/paper/b82_lead_checks.md`. Target L5; intervals with shot clusters resampled.
+
+| statement | value | verdict | expectation |
+|---|---|---|---|
+| A1 V1, D650, rows more than 300 ms after a notch: TX over T0 above zero | +0.264 [+0.215, +0.314] | holds | holds |
+| A2 V1, S, the same rows | +0.334 [+0.264, +0.404] | holds | holds |
+| A3 V3, D650, the same rows | +0.077 [-0.109, +0.200] | does not hold | uncertain, leaning to holds |
+| A4 V1, D650, rows with no notch before | +0.417 [+0.314, +0.504] | holds | holds |
+| A5 V1, S: increment up to 100 ms after a notch minus that above 300 ms, above zero | -0.110 [-0.214, -0.020] | does not hold | uncertain, leaning to holds |
+| A6 V1, D650, lowest third of the change since the anchor row | +0.191 [+0.125, +0.255] | holds | uncertain |
+| A7 V1, D650: highest third minus lowest third above zero | +0.221 [+0.148, +0.298] | holds | holds |
+| A8 V1, S, rows more than 300 ms after a notch: TXN over TN above zero | +0.256 [+0.184, +0.323] | holds | holds |
+| B1 V1, D650: MAE(TX) / MAE(T0) below one | 0.826 [0.795, 0.856] | holds | holds |
+| B2 V1, D650: ratio of the median absolute errors below one | 0.849 [0.802, 0.892] | holds | uncertain |
+| B3 V3, D650: MAE ratio below one | 0.951 [0.876, 1.044] | does not hold | uncertain, leaning to holds |
+| B4 V1, S: MAE ratio below one | 0.828 [0.791, 0.860] | holds | holds |
+| B5 V1, D650: share within 10 % of the level, TX minus T0, above zero | +0.049 [+0.036, +0.065] | holds | uncertain, leaning to holds |
+| B6 V1, D650: share of discharges with a positive skill of their own above one half | 0.831 [0.785, 0.877] | holds | holds |
+| B7 V4 (fit to 31991), D650: MAE ratio below one | 0.867 [0.719, 0.998] | holds | uncertain |
+| B8 V1, D650: ratio of the 90th percentiles below one | 0.815 [0.779, 0.850] | holds | holds |
+| C1 V1, D650: TM (Mirnov scalars in place of the fast ones) over T0 contains zero or lies below | +0.084 [+0.046, +0.119] | does not hold | uncertain |
+| C2 V1, D650: TX over TM above zero | +0.275 [+0.232, +0.316] | holds | holds |
+| C3 V3, D650: TX over TM above zero | +0.126 [-0.018, +0.213] | does not hold | uncertain, leaning to holds |
+| C4 V1, D650: TXs (fast inputs of another discharge at the same time) over T0 contains zero or lies below | -0.083 [-0.129, -0.046] | holds | holds |
+| C5 V1, S: the same | +0.019 [-0.012, +0.054] | holds | holds |
+| C6 V1, D650: TXM over TX contains zero or lies below | +0.022 [+0.004, +0.039] | does not hold | uncertain, leaning to holds |
+| C7 V1, S: TX over TM above zero | +0.273 [+0.211, +0.329] | holds | holds |
+
+Reported (V1, D650): absolute error of T0 / TX / the frame's own reading: MAE 142.3 / 117.6 / 91.9 eV, median 84.9 / 72.0 / 43.4 eV, 90th percentile 336.1 / 274.0 / 217.8 eV; shares within 10 % of the level 0.390 / 0.439 / 0.593, within 20 % 0.624 / 0.677 / 0.785. Increment by time since the last notch (up to 100 ms / 100 to 300 ms / above 300 ms / no notch before): V1, D650 +0.452 / +0.398 / +0.264 / +0.417; V1, S +0.224 / +0.342 / +0.334; V3, D650 +0.293 / +0.257 / +0.077 / +0.372. The three BES radial columns alone: +0.238, +0.246, +0.220. Over ten seeds of the regression the chronological increment (fit to 31991) lies between +0.216 and +0.239 at D650 and between -0.074 and +0.041 under S.
+
+Reading. Under the random design the increment is not confined to the rows after a notch, is present in the median error and in 0.831 of the discharges, and survives the beam scalars on the rows far from a notch. Under rolling origin two of these readings are not established (A3, B3). The estimate is less accurate than the reading of the frame itself in every robust measure (the equality in RMSE came from the large excursions of the reading). The Mirnov signals, which are not at the radius, carry an increment a quarter the size of that of the fast diagnostics: by the rule registered beforehand the manuscript says so and no sentence claims that the increment is specific to the radius. Fast inputs of another discharge at the same time give none.
