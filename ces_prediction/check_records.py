@@ -59,6 +59,8 @@ SOURCES = (
     "docs/paper/b86_mast_radius.md",
     "docs/paper/b86_checks.md",
     "docs/paper/b86_lead_checks.md",
+    "docs/paper/b87_latency.md",
+    "docs/paper/b87_lead_checks.md",
     "docs/paper/b80_ecei_gate.md",
     "docs/paper/b80_lead_checks.md",
     "docs/paper/b76_mast_availability.md",

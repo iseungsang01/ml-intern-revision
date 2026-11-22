@@ -155,6 +155,12 @@ B.85는 가용 조건을 섞어 학습한 순환 신경망(GPU)을 위해 비워
 
 ## 4. 다시 만드는 순서
 
+연구 방향 검토: [`docs/paper/research_direction_20261122.md`](docs/paper/research_direction_20261122.md)는 현 원고·D1 결과·공개 선행연구를 읽고 다음 실험의 선택 근거를 정리한다. `HANDOVER.md` 9절과 B.87 등록이 이를 읽는다.
+
+| 배치 | 읽는 것 | 만드는 것 | 누가 읽는가 |
+|---|---|---|---|
+| B.87 `b87_latency/` | B.73 rows/grid, 동일 회귀기·분할, B.87 등록·부록 | `data/.b87/`, `docs/paper/b87_latency.{md,json}`, checks, lead checks; `plot87.py`가 JSON에서 png/pdf 생성 | 연구 방향 검토, 기록; 독립 검증 완료, 원고 반영 전 |
+
 저장소 루트에서 `py`로 실행한다. 자료 배치와 환경은 `HANDOVER.md` 3절과 4절.
 
 ```bash

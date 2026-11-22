@@ -43,6 +43,8 @@ B.85 is reserved for the recurrent network trained across availability condition
 
 ## Infrastructure
 
+B.87 (`b87_latency/`, `PREREGISTRATION_B87.md`, addendum 1): matched history-only and fast-input regressions at timestamp horizons 0/10/20/50 ms; all B.73 validation units; CPU. Done, including independent lead checks: `docs/paper/b87_latency.{md,json,png,pdf}`, `b87_checks.md`, `b87_lead_checks.md`. A holds only in V1, B in none, C in all, D except V4a. Motivation and interpretation: `docs/paper/research_direction_20261122.md`.
+
 | dir | what it is | used by |
 |---|---|---|
 | `seq/` | the recurrent family: `seq_data.py` (full-grid causal inputs), `model_seq_v2.py` (the two-branch LSTM that is the comparison row of the paper) and its variants, `train_seq.py`, `eval_seq.py`. The registry `seq_models.py` still imports architecture variants of removed batches; they are not used by the current line | `b30_thinned`, `b55_sample_timing`, `b57_yardsticks`, `b59_inputs`, `b65_inclusive`, `b67_gated`, `b68_auxtarget`, `b70_d1`, `b73_targets`, `b83_interp` |
