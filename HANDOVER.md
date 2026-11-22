@@ -5,7 +5,7 @@
 ## 0. 한눈에
 
 - **무엇을 하는가.** KSTAR 2022 캠페인의 pedestal top 측정선(R = 2.198 m)에서 CES 이온 온도를, 다음 CES 값을 기다리지 않고 10 ms마다 추정한다(nowcasting). 입력은 그 측정선의 CES 이력과 같은 위치의 빠른 진단(BES 9채널, ECEI 4채널)이다.
-- **지금 상태.** 원고(`docs/paper/ppcf/main_ppcf.tex`, 본문 18쪽, 보충 29쪽)는 저자의 틀로 쓰여 있고 빌드와 수치 검사를 통과한다. 등록 배치는 B.86까지 있다. 독립 채점은 PPCF 13–20 %에 머문다(`docs/paper/review_loop/`).
+- **지금 상태.** 원고(`docs/paper/ppcf/main_ppcf.tex`, 본문 18쪽, 보충 29쪽)는 저자의 틀로 쓰여 있고 빌드와 수치 검사를 통과한다. B.87까지 완료 기록이 있고 B.85는 GPU 실행 중이다. 후속 B.88–B.90은 등록·검증 후 통합 supervisor가 B.85 완료를 기다리며 자동 순차 실행을 예약했다. 실제 PID·시각은 `docs/paper/queued_experiments_20261122.md`. 독립 채점은 PPCF 13–20 %에 머문다(`docs/paper/review_loop/`).
 - **GPU·후속 대기열 승인(2026-11-22).** 저자가 GPU와 Claude API 사용을 승인했고, 이어 우선 후보를 모두 자동 대기열에 설정하라고 지시했다. 현재 B.85를 유지하고 B.89 실행 속도 점검 → B.88 anchor/current → B.90 후보 일곱의 비교·추가 반복을 연결한다. 등록과 source-bound 검사를 따른다. B.69와 MAST의 옛 대기 학습은 이 승인으로 자동 재개하지 않는다. 실제 상태와 명령은 `docs/paper/queued_experiments_20261122.md`.
 
 ## 1. 먼저 읽을 것 (이 순서로)

@@ -34,3 +34,9 @@ B.89는 정상 종료 가능한 더 빠른 cuDNN 경로를 실제 입력으로 �
 상태는 waiting_dependency / running / failed / blocked_dependency / complete를 구분한다. 실패하면 다음 단계로 넘어가지 않고 자동 재시도하지 않는다. 재개 전 원인과 현재 source/config를 검사한다. 같은 해시·정상 종료가 증명된 fit만 재사용한다. 중복 supervisor는 안전한 Windows PID 조회와 lock으로 막는다. `os.kill(pid,0)`나 다른 프로세스 종료는 사용하지 않는다.
 
 CPU readiness와 진행자의 독립 입력·모델 식·loss·bootstrap 검사가 통과해야 supervisor를 시작한다. GPU smoke와 학습 검사는 의존 배치가 끝난 후 새 자식에서 수행한다. 대기열 설정 완료와 실험 결과 완료는 별개다. 실제 실행 PID·시각은 launch 확인 뒤 아래에 기록한다.
+
+## 실행 확인
+
+2026-11-22 **23:52:49 KST**, 숨김 통합 supervisor **PID955752** 시작. **23:52:55** 상태는 `waiting_dependency`, 의존 대상 `B85`, 예정 단계 `B89/B88/B90`임을 실제 JSON에서 확인했다. stderr는 비어 있었고 기존 B.85 supervisor PID947056도 계속 실행 중이었다. 이때 B.85는2/90 완료, 실패0, `V1_r2_k0__1702__X` 학습 중이었다. B.88/B.90 실제 GPU 자식은 아직 시작하지 않았다.
+
+최종 확인: 실제 입력·분할·가용 규칙, 모델의 streaming/reset/padding, 독립 GRU/observer 식과 NumPy 손실, 실제 B.87 예측의 명시적 재표집 bootstrap, 조기 판독 차단, B.89 정상 종료 CPU preflight 통과. 저장소 테스트89개 통과, 기록 검사 출처 없는 수치0. 코드·등록·배선은 main에 커밋·푸시했고 자료·키·다른 사용자의 발표 파일은 포함하지 않았다.

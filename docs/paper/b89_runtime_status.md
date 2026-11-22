@@ -4,4 +4,6 @@ Implementation and real-input CPU preflight passed. Two actual training prefixes
 
 No B.89 GPU benchmark has run. The scout waits for verified completion of B.85 and all 90 clean fit attestations before launching any CUDA child. It writes a recommendation only and cannot activate a backend for B.88 or B.90. Current B.85 execution is not modified or interrupted.
 
+Under registered addendum 2, both CPU reference and CUDA candidate keep the outer model in eval mode while recurrent modules use training-mode reserve buffers with dropout set to zero. This permits meaningful cuDNN backward checks without stochastic dropout; no optimizer update or model parameter change is introduced. Final CPU preflight passed with this mode, and its execution-mode metadata is bound to the latest source/input hash.
+
 The supported cache environment spelling is `TORCH_CUDNN_V8_API_LRU_CACHE_LIMIT=-1`, confirmed in the official [PyTorch CUDA environment documentation](https://docs.pytorch.org/docs/main/cuda_environment_variables.html). These API controls may not resolve the RNN teardown problem; no success or speedup is presumed. Parent-observed clean exit is mandatory even if a timing artifact was written.
