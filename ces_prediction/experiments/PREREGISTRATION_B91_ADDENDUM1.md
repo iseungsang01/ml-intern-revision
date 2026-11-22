@@ -1,0 +1,5 @@
+# B.91 addendum 1 - unequal actual prefixes and source binding
+
+2026-11-23 before runtime probes. If the first16 actual supervised segment prefixes all have the same capped length512, shorten ONLY the last prefix by one actual row and record this selection detail; this remains a real prefix and exercises right-padding. Never synthesize an observation or change a retained label. Source/software/input manifests are hashed before probes, source hash is rechecked in each fresh child and parent clean-exit attestations bind the exact output artifact.
+
+The completed Fable review supports dense/packed real profiling and exact cached validation as hypotheses, not measured gains. Its suggested V100/float16 persistent-algorithm speed expectation is not generalized to this GPU/FP32. Existing dense cuDNN teardown failures mean dense padding is not assumed to fix runtime. Preserve the main registration's bounded budget rather than expanding to Fable's proposed three-hour profiler. Report numerical-equivalence measurements; do not pool old/new fitted trajectories on the basis of one update test.
