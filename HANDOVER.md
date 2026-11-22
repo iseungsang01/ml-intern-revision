@@ -4,6 +4,10 @@
 
 ## 0. 한눈에
 
+**병렬 실행 개정(2026-11-23).** CPU_r2는 이전 프로세스 소실을 확인한 뒤 같은 검증된 큐로 재개했다. 단계 JSON만으로 실행 중이라고 판단하지 말고 `py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b92/cpu_r2`로 PID·생성 시각·독립 watcher heartbeat를 확인한다. 관측기는 중단을 감지하지만 기존 큐를 자동 재시작하지 않는다. `docs/paper/b93_supervisor.md` 참조.
+
+저자의 병렬/GPU 지시에 따라 B.93을 등록·커밋하고 기존 CPU 학습과 동시에 native CUDA의 실제 전체 epoch 및 두 작업 동시 실행을 검증 중이다. `data/.b93/progress93.json`, 최종 `runtime_decision93.json`이 실행 근거다. 첫 정상 종료만으로 전체 경로나 두 작업의 가속을 확정하지 않는다. B.94는 해당 결정의 독립 감사와 실제 dropout smoke를 통과한 경우에만 별도 캐시에서 후보 축소 실험을 실행하도록 사전 등록했다. B.92 소스·fit·CPU override를 바꾸거나 GPU fit과 합치지 않고 원래 suite 마감을 유지한다. `PREREGISTRATION_B93.md`, `PREREGISTRATION_B94.md` 참조.
+
 - **무엇을 하는가.** KSTAR 2022 캠페인의 pedestal top 측정선(R = 2.198 m)에서 CES 이온 온도를, 다음 CES 값을 기다리지 않고 10 ms마다 추정한다(nowcasting). 입력은 그 측정선의 CES 이력과 같은 위치의 빠른 진단(BES 9채널, ECEI 4채널)이다.
 - **지금 상태.** 원고(`docs/paper/ppcf/main_ppcf.tex`, 본문 18쪽, 보충 29쪽)는 저자의 틀로 쓰여 있고 빌드와 수치 검사를 통과한다. B.87까지 완료 기록이 있다. B.85와 이전 전체 큐는 저자의 2026-11-23 속도·후보 축소 지시로 checkpoint를 보존하고 중단했다. 현재 B.91 runtime 실측 뒤 B.92 축소 비교를 진행한다. 방법·상태는 `docs/paper/efficiency_decision_20261123.md`, `b91_runtime.md`, `b92_status.md`. 독립 채점은 PPCF 13–20 %에 머문다(`docs/paper/review_loop/`).
 - **GPU·후속 대기열 승인(2026-11-22).** 저자가 GPU와 Claude API 사용을 승인했고, 이어 우선 후보를 모두 자동 대기열에 설정하라고 지시했다. 현재 B.85를 유지하고 B.89 실행 속도 점검 → B.88 anchor/current → B.90 후보 일곱의 비교·추가 반복을 연결한다. 등록과 source-bound 검사를 따른다. B.69와 MAST의 옛 대기 학습은 이 승인으로 자동 재개하지 않는다. 실제 상태와 명령은 `docs/paper/queued_experiments_20261122.md`.
