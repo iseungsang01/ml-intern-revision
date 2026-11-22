@@ -38,8 +38,15 @@ were removed with their registrations and results (git history, last commit befo
 | `b84_onefit/` | `PREREGISTRATION_B84.md` | the author's remark that the second stage is too bound to rules: one fit across all ages of the history for every scenario (with a scenario it was not fitted on), raw windows in place of the hand-made scalars, and the scalars without absolute levels | done 2026-11-21 (`docs/paper/b84_onefit.md`, addendum 1): one fit across ages serves the conditions it was fitted on and does not carry to a scenario it was not fitted on; raw windows are far worse than the hand-made scalars; without absolute levels the estimate is better in time order; the paper's estimator is not changed |
 | `b86_mast_radius/` | `PREREGISTRATION_B86.md` | the author's question whether the structure reaches the inside: the estimator of B.76 on MAST in five bands from the pedestal top to the core (error, share within 10 %, cost of staleness, Thomson increment by radius) | done 2026-11-21 (`docs/paper/b86_mast_radius.md`, addendum 1): the Thomson increment holds in all five bands under both rules and both designs; the cost of staleness and the increment are larger inside than at the edge (R5, R6 do not hold); the share within 10 % is higher inside (R7 holds). Lead recomputation `docs/paper/b86_lead_checks.md` |
 
-B.85 is reserved for the recurrent network trained across availability conditions (GPU; specified in
-`HANDOVER.md` section 9.1, not registered yet).
+B.85 (`b85_unified/`) is registered in `PREREGISTRATION_B85.md` and pushed before runs.
+GPU and Claude API design review/code authoring authorized by the author on 2026-11-22.
+Direct dual-head F/L5 recurrent model and history-only twin, mixed availability training, held-out K10;
+all four validation designs. Implementation and independent input/bootstrap audits complete; 89 tests pass.
+Guarded hidden queue launched; waits for free GPU memory, then requires clean X/H smoke exits before
+the registered 90-run batch. Prior computational smoke finished but its unclean child exit is quarantined.
+No scientific results yet. Live reports `docs/paper/b85_smoke.md`, `b85_status.md` and ignored
+`data/.b85/queue_status.json`; authorship/failures in `b85_implementation_provenance.md`.
+`HANDOVER.md` section 9.1.
 
 ## Infrastructure
 
