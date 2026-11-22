@@ -12,6 +12,8 @@
 
 **실행 경로 수정(B.92 부록2).** CUDA dense cuDNN의 dropout0 배치는 빨랐지만 실제 dropout.1 smoke는 계산 후 비정상 종료했다. 성공한 학습으로 재사용하지 않고 원 기록을 보존했다. Pilot 전에 CPU dense MKLDNN8로 명시적 revision을 등록했다. 현재 namespace는 `data/.b92/cpu_r2/`, 선택 증거는 `.b92/production_override_r2.json`; 원래 B.91 결정과 실패한 `.b92/smoke/`를 덮어쓰지 않는다. 새 readiness/독립 검사와 dropout.1 정상 종료가 필요하다. 상태는 `docs/paper/b92_status.md` 및 cpu_r2의 queue_status.json을 읽고, 원래24h wall clock을 이어받는다.
 
+**실제 재개:** CPU_r2 readiness와 독립 감사를 통과했고 C/A/T의 실제 dropout.1 fresh smoke 모두 exit0을 확인했다. 2026-11-23 02:06:13 KST supervisor PID954168이 pilot에 들어갔다. 코드/등록/기록은 푸시했다. 상태 확인은 `Get-Content data/.b92/cpu_r2/queue_status.json`, 학습 로그는 같은 폴더의 `pilot/*/process.log`다. 이전 CUDA/전체 큐를 다시 띄우지 않는다. 끝난 fit와 진행 중인 fit, pilot 선택과 TEST 결과를 구분한다.
+
 ## 1. 먼저 읽을 것 (이 순서로)
 
 0. `README.md`: 저장소의 배선(무엇이 무엇을 읽는가)
