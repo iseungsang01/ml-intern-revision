@@ -32,7 +32,13 @@ def source_identity():
     sources={p.relative_to(ROOT).as_posix():sha(p) for p in TOP.glob('*.py')}
     assert sources and all(n in {Path(p).name for p in sources} for n in ('common94.py','runtime94.py','adapter94.py','bootstrap94.py','scheduler94.py'))
     clock=load(DATA/'.b92/suite_clock.json')
-    assert clock['sources']=={p.name:sha(p) for p in BASE.glob('*.py')},'Original suite source identity changed'
+    # The registered CPU revision continued the original clock while binding
+    # updated B92 execution sources; its provenance must never reset the cap.
+    continued=load(DATA/'.b92/cpu_r2/suite_clock.json')
+    assert continued['continued_from']=='data/.b92/suite_clock.json'
+    assert continued['previous_clock_sha256']==sha(DATA/'.b92/suite_clock.json')
+    assert float(continued['started'])==float(clock['started']),'CPU continuation reset original suite clock'
+    assert continued['sources']=={p.name:sha(p) for p in BASE.glob('*.py')},'Continued B92 source identity changed'
     expected={'started':float(clock['started']),'deadline':float(clock['started'])+86400,
               'original_clock_sha256':sha(DATA/'.b92/suite_clock.json'),'sources':sources}
     if (CACHE/'suite_clock.json').is_file():assert load(CACHE/'suite_clock.json')==expected,'B94 reset or rebound the suite clock'
