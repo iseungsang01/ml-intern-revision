@@ -5,8 +5,10 @@
 ## 0. 한눈에
 
 - **무엇을 하는가.** KSTAR 2022 캠페인의 pedestal top 측정선(R = 2.198 m)에서 CES 이온 온도를, 다음 CES 값을 기다리지 않고 10 ms마다 추정한다(nowcasting). 입력은 그 측정선의 CES 이력과 같은 위치의 빠른 진단(BES 9채널, ECEI 4채널)이다.
-- **지금 상태.** 원고(`docs/paper/ppcf/main_ppcf.tex`, 본문 18쪽, 보충 29쪽)는 저자의 틀로 쓰여 있고 빌드와 수치 검사를 통과한다. B.87까지 완료 기록이 있고 B.85는 GPU 실행 중이다. 후속 B.88–B.90은 등록·검증 후 통합 supervisor가 B.85 완료를 기다리며 자동 순차 실행을 예약했다. 실제 PID·시각은 `docs/paper/queued_experiments_20261122.md`. 독립 채점은 PPCF 13–20 %에 머문다(`docs/paper/review_loop/`).
+- **지금 상태.** 원고(`docs/paper/ppcf/main_ppcf.tex`, 본문 18쪽, 보충 29쪽)는 저자의 틀로 쓰여 있고 빌드와 수치 검사를 통과한다. B.87까지 완료 기록이 있다. B.85와 이전 전체 큐는 저자의 2026-11-23 속도·후보 축소 지시로 checkpoint를 보존하고 중단했다. 현재 B.91 runtime 실측 뒤 B.92 축소 비교를 진행한다. 방법·상태는 `docs/paper/efficiency_decision_20261123.md`, `b91_runtime.md`, `b92_status.md`. 독립 채점은 PPCF 13–20 %에 머문다(`docs/paper/review_loop/`).
 - **GPU·후속 대기열 승인(2026-11-22).** 저자가 GPU와 Claude API 사용을 승인했고, 이어 우선 후보를 모두 자동 대기열에 설정하라고 지시했다. 현재 B.85를 유지하고 B.89 실행 속도 점검 → B.88 anchor/current → B.90 후보 일곱의 비교·추가 반복을 연결한다. 등록과 source-bound 검사를 따른다. B.69와 MAST의 옛 대기 학습은 이 승인으로 자동 재개하지 않는다. 실제 상태와 명령은 `docs/paper/queued_experiments_20261122.md`.
+
+**최신 지시(2026-11-23, 위 전체 큐를 대체).** 저자가 현재 학습 가속과 확실한 소수 후보로 축소를 Fable API로 각각 분석하고 실행하라고 지시했다. 실제 claude-fable-5-2 두 완료 검토와 별도 설계 검토 후 B.91/B.92를 등록·푸시했다. B.85는 부록4에 따라 네 clean fit와 현재 epoch2 partial checkpoint를 보존하고 연구 소유 작업만 중단했다. 옛 suite와 B.88/B.89/B.90 전체 배정은 superseded이며 자동 재개하지 않는다. B.91의 일곱 경로·세 번 실측은 완료됐고, B.92는 C/A/TCN의 열두 pilot와 선택 pair의 최대 마흔여섯 추가 fit로 제한한다. `docs/paper/efficiency_decision_20261123.md`, `b91_runtime.md`, `b92_status.md`가 현재 판단·실측·실행 상태다. 전체15unit 단일 seed와 네 unit 세 seed를 섞어 전체 초기화 안정성이라고 쓰지 않는다.
 
 ## 1. 먼저 읽을 것 (이 순서로)
 
@@ -144,6 +146,8 @@ py docs/paper/ppcf/check_numbers_v2.py   # tex에 손으로 친 수치가 출처
 ## 9. 열린 일
 
 ### 9.1 GPU (B.85 재개 승인; 다른 배치는 대기)
+
+**현재는 B.91→B.92(2026-11-23).** 아래 B.85 유지·옛 통합 supervisor 실행 설명은 이전 승인 기록이다. 저자의 더 빠르고 작은 계획 지시가 우선한다. `b91_fast/checkpoint_stop91.py`는 현재 연구 PID·경로·checkpoint/RNG/source를 확인하고 중단 전에 보존했다. 완료된 B.85 네 fit는 clean, 중단 partial은 nonzero/incomplete로 남으며 기존 로그를 지우지 않는다. B.91은 dropout0 실제 배치에서 dense cuDNN을 선택했지만 그 배수를 전체 epoch나 실제 dropout.1 안정성으로 옮기지 않는다. B.92의 새 source-bound 입력/모델/loss 검증과 dropout.1 fresh smoke가 통과해야 fit를 진행한다. CPU/CUDA 결정·정상 종료·24h 상한과 무승격 중단은 새 등록을 따른다. 기존 B.69/MAST는 여전히 이 큐 밖이다.
 
 **후속 승인 추가(2026-11-22 밤).** 저자의 "다 세팅해줘"에 따라 새 통합 supervisor `ces_prediction/experiments/queued_suite_20261122.py`가 B.85 정상 완료를 기다린 뒤 B.89→B.88→B.90을 순차 실행한다. 각 사전등록·부록은 실행 전에 커밋했다. B.88은 명시적 측정 시점 anchor의 A/C 비교, B.90은 감쇠 GRU·causal TCN·두 대각 observer·Huber/Student-t/Gaussian loss 비교다. B.90의 추가 초기화 대상은 테스트를 읽기 전에 validation만으로 고정한다. 기존 B.85 소스·프로세스와 다른 GPU 프로세스는 건드리지 않는다. 상태·재개·실측 시간 해석은 `docs/paper/queued_experiments_20261122.md`, 병목 근거는 `docs/paper/runtime_plan_20261122.md`에 있다. 아래의 다른 미승인 배치 대기는 계속 적용한다.
 

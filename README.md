@@ -157,6 +157,14 @@ B.85는 가용 조건을 섞어 학습한 직접 출력 순환 신경망(GPU)이
 
 `ces_prediction/research/claude_method_scout_20261122.py`는 저자가 요청한 Claude API 기반 방법 탐색을 수행한다. 비식별 방법 설명만 전송하고 web search 질의·출처·모델·사용량·응답을 `data/.method_scout_20261122/`에 보존한다. 결과는 `docs/paper/method_scout_claude_20261122.md`; 우선순위와 따로 확인한 원천 문헌은 `docs/paper/method_selection_20261122.md`가 읽는다. 이 조사는 학습 실험이 아니며 B.85 학습 코드나 실행 조건을 바꾸지 않는다. 새 실험은 별도 사전등록 후에만 실행한다. `HANDOVER.md`가 이 후보 목록을 다음 설계에 연결한다.
 
+### 3.9 Fable 학습 가속·후보 축소와 현재 실행
+
+2026-11-23 저자의 요청으로 이전 B.89→B.88→B.90 전체 큐를 대체했다. `research/fable_efficiency_20261123.py`는 실제 `claude-fable-5-2` API로 학습 효율/후보 축소를 따로 검토했고, 정확한 최종 응답은 `docs/paper/fable_efficiency_20261123.md`, 채택·수정·토큰 사용·한계는 `efficiency_decision_20261123.md`가 읽는다. `candidate_reduction_notes_20261123.md`는 그 이전 대안이며 현재 규칙은 아니다.
+
+현재 배선: B.85 부록4와 `b91_fast/checkpoint_stop91.py` → source/RNG가 확인된 partial checkpoint 보존 및 기존 연구 작업만 중단 → `runtime91.py`가 `probe91.py`/`validation91.py`로 일곱 CPU/CUDA 경로와 정상 종료를 실측 → `.b91/runtime_decision.json` → B.92 축소 학습이다. `b91_fast/lead_checks/verify91.py`는 독립 float64 연산/gradient·NumPy 목적함수를, `verify_runtime_outputs91.py`는 전체 실행·종료 해시·타이밍 중앙값·검증 집계를 대조하며 `docs/paper/b91_*`가 결과를 읽는다. 기존 네 clean fit와 중단 checkpoint는 그대로 보존한다.
+
+`b92_reduced/{common92,runtime92,model92,prepare92,train92,run92,queue92,select92,predict92,readout92,checks92}.py`는 고정 의존 소스→실측 runtime→실제 train/val cache→기한 있는 학습·exit 검증→validation 선택→완료 뒤 추론·판독을 연결한다. Pilot C/A/T 세 구성의 열두 fit만 먼저 실행하고, 조건을 채운 한 pair만 최대 마흔여섯 fit 추가한다. 전체15unit·한 seed와 고정 네 unit·세 seed의 구간은 분리한다. `lead_checks/{verify92,verify_bootstrap92,verify_outputs92}.py`는 별도 모델/loss·재표집·완료 산출물 검증이며 `docs/paper/b92_*`가 읽는다. source pins는 `frozen_sources92.json`, 캐시/체크포인트/실행 상태는 ignored `data/.b92/`, 현재 상태 문서는 `b92_status.md`다. 테스트 성능으로 선택하거나 원고를 자동 교체하지 않는다.
+
 ## 4. 다시 만드는 순서
 
 연구 방향 검토: [`docs/paper/research_direction_20261122.md`](docs/paper/research_direction_20261122.md)는 현 원고·D1 결과·공개 선행연구를 읽고 다음 실험의 선택 근거를 정리한다. `HANDOVER.md` 9절과 B.87 등록이 이를 읽는다.
@@ -169,6 +177,8 @@ B.85는 가용 조건을 섞어 학습한 직접 출력 순환 신경망(GPU)이
 | B.89 `b89_runtime/` | B.85 실제 학습 segment 두 개, 동일 초기 모델·loss, 실행 환경 후보 | `data/.b89/`, `docs/paper/b89_runtime*` 정상 종료·동등성·실측 속도 권고 | 통합 대기열이 B.85 뒤/B.88 전에 실행; 권고만 하며 등록된 학습 backend는 자동 변경하지 않음 |
 | B.90 `b90_methods/` | B.85 고정 입력·학습 loop, B.88 의존 검증, `models90.py`의 후보 일곱, 등록·pins | `data/.b90/`의 210회 screen·validation-only promotion·120회 추가 fit, `b90_screen`/`b90_methods` JSON·MD 및 검사 | 통합 대기열이 B.88 뒤 실행; 모든 필수 fit·독립 검증 뒤 결과 검토, 원고 자동 교체 없음 |
 | `queued_suite_20261122.py` | 각 배치의 source-bound readiness·독립 검사·정상 완료 | `data/.queued_suite_20261122/{status.json,B89.log,B88.log,B90.log}`, phase별 exit 기록 | `docs/paper/queued_experiments_20261122.md`와 HANDOVER가 순서·상태·재개 방법을 안내 |
+
+위 B.88/B.89/B.90과 `queued_suite_20261122.py`의 전체 실행 계획은 2026-11-23 저자 요청으로 **superseded** 상태다. 이전 PID를 재개하지 않는다. 현재 실행은 B.91 가속 검증 → B.92 최대58fit이며 3.9절과 새 등록을 따른다. B.88/B.90의 고정 입력·모델 helper는 새 실험이 계속 읽는다.
 
 B.85의 `claude_review85.py`와 `claude_implement85.py`는 저자가 승인한 외부 설계 검토·신규 코드 작성 도구다. 키는 지정한 형제 저장소에서 실행 시 읽고 저장소에 남기지 않는다. 검토 원문은 `docs/paper/b85_claude_design_review.md`, 반영 여부는 등록 부록에 있다. `lead_checks/verify85.py`는 별도 코드로 가용 입력과 분할·정규화·인과성을 검사해 `b85_lead_checks.md`를 만든다. GPU 결과와 입력 검사 결과는 구분한다.
 
