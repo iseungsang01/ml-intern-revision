@@ -86,7 +86,7 @@ def main():
         md.append('')
         C.log(f'B87 readout {design} complete')
     C.save_json(C.PAPER/'b87_latency.json',out)
-    C.save_text(C.PAPER/'b87_latency.md','\n'.join(md)+'\n')
+    C.save_text(C.PAPER/'b87_latency.md','\n'.join(md).rstrip()+'\n')
 
 def fmt(v,digits=2):
     return f"{v['point']:.{digits}f} [{v['cluster'][0]:.{digits}f}, {v['cluster'][1]:.{digits}f}]"

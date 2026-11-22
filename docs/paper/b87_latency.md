@@ -180,4 +180,3 @@ Rows 20062; shots 95; clusters 19.
 | B | X0 over H5 | -0.0220 [-0.0482, -0.0036] | True | does not hold | false |
 | C | X5 over X0 | 0.0390 [0.0226, 0.0589] | True | holds | true |
 | D | X5 over H5 | 0.0178 [0.0015, 0.0323] | True | holds | uncertain |
-
