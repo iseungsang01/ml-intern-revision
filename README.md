@@ -24,6 +24,7 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 | 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
 |---|---|---|
+| `docs/paper/claim_robustness_20261123.md` | B.73–B.87 결과 JSON + 논문 설계 + 선행 연구 → 주장별 근거·반대 증거·추가 검증 조건 | 원고 검토 및 후속 실험의 주장 범위; 진행 중 NN 성능 근거 아님 |
 | `experiments/b93_gpu/profile93.py` → `worker93.py` | 등록 B.93 + B.92 실제 준비 자료/모델 → `data/.b93/` 전체 epoch 및 동시 실행 적격성 기록 | 별도 GPU 실행 개정의 사전 감사; 예측 성능 근거 아님 |
 | `experiments/b93_gpu/durable93.py`, `status93.py` | 정확한 PID·생성 시각 + 원래 마감 시각 → 생존 확인·heartbeat | `docs/paper/b93_supervisor.md`, 실행 상태 보고 |
 

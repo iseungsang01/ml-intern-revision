@@ -18,6 +18,8 @@
 
 **실제 재개:** CPU_r2 readiness와 독립 감사를 통과했고 C/A/T의 실제 dropout.1 fresh smoke 모두 exit0을 확인했다. 2026-11-23 02:06:13 KST supervisor PID954168이 pilot에 들어갔다. 코드/등록/기록은 푸시했다. 상태 확인은 `Get-Content data/.b92/cpu_r2/queue_status.json`, 학습 로그는 같은 폴더의 `pilot/*/process.log`다. 이전 CUDA/전체 큐를 다시 띄우지 않는다. 끝난 fit와 진행 중인 fit, pilot 선택과 TEST 결과를 구분한다.
 
+주장별 강건성과 차별점 검토는 `docs/paper/claim_robustness_20261123.md`에 있다. 기존 결과·반대 증거·판단을 바꿀 측정을 함께 적었으며, 진행 중 NN의 TEST 성능이나 새로운 물리의 확인으로 읽지 않는다.
+
 ## 1. 먼저 읽을 것 (이 순서로)
 
 0. `README.md`: 저장소의 배선(무엇이 무엇을 읽는가)
