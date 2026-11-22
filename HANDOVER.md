@@ -22,6 +22,8 @@
 
 ## 1. 먼저 읽을 것 (이 순서로)
 
+병렬 GPU 큐는 `docs/paper/b94_status.md`와 `py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b94`로 확인한다. B.93 전체 workload 동시 실행은 두 worker 기준을 통과했고, 별도 B.94 큐가 원래 마감으로 시작되었다. 상태 문서의 시작 사실과 현재 실제 학습 단계는 구분한다.
+
 0. `README.md`: 저장소의 배선(무엇이 무엇을 읽는가)
 1. `AGENTS.md` (Codex가 자동으로 읽는 요약) 또는 `CLAUDE.md` (같은 규칙의 원문)
 2. `PAPER_DESIGN.md` 1–10절: 논문의 목적, 용어, 표적, estimator, 검증 설계, 서술 규칙, 논문 지도
