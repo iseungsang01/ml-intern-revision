@@ -1,0 +1,5 @@
+# B.85 addendum 2 — FP32 backend control before training
+
+2026-11-22. First real-data CUDA plumbing smoke passed finite forward/backward but failed the untrained step-versus-batch prediction comparison: maximum normalized difference 9.59e-5 against the existing 1e-5 check. No epoch was trained and no scientific test error was computed. Preserve the failed log/checkpoint directory separately.
+
+Disable CUDA matmul and cuDNN TF32 for training and CUDA inference, retaining float32 tensors and the same comparison tolerance. This removes a backend-dependent precision shortcut; it does not change the registered architecture, loss, availability rules, splits, seeds, optimization, or decision statements. Retry the same real-data smoke. Record backend flags in run metadata and keep them fixed across full/twin and every initialization. If that does not resolve the check, diagnose the cause rather than silently relaxing the tolerance. CPU latency uses float32 and the actual held-out input trace, with no generated input data.
