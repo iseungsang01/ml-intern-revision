@@ -44,4 +44,3 @@ def promotion():
     return record
 def all_jobs():
     return screen_jobs()+[(m,u['name'],seed,v) for m in promotion()['promoted'] for u in select_units() for seed in INITS[1:] for v in VARIANTS]
-

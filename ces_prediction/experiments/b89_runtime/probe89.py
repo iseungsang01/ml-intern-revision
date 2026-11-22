@@ -29,6 +29,17 @@ def main():
     sys.path.insert(0,str(ROOT/'ces_prediction/experiments/b85_unified'))
     import common85 as M,data85 as D,train85 as T
     from model85 import create_model
+    def gradient_capable_no_dropout(model):
+        # cuDNN RNN backward requires train-mode reserve buffers. Keep the
+        # wrapper in eval mode and disable stochasticity in BOTH references.
+        model.eval()
+        for module in model.modules():
+            if isinstance(module,torch.nn.RNNBase):
+                module.train(True)
+                module.dropout=0.0
+            elif isinstance(module,torch.nn.Dropout):
+                module.p=0.0
+        return model
     assert M.select_units()[0]['name']==UNIT
     folder=ROOT/'data/.b85/runs'/f'{UNIT}__1701__X'
     stats=json.loads((folder/'stats.json').read_text());manifest=json.loads((folder/'manifest.json').read_text())
@@ -52,7 +63,7 @@ def main():
     selected=[{'fidx':int(s['fidx']),'segment':int(s['segment']),'rows':len(s['x']),
                'first_gi':int(s['gi'][0]),'last_gi':int(s['gi'][-1])} for s in segments]
     torch.manual_seed(1701)
-    cpu=create_model('X',1701).cpu().eval()
+    cpu=gradient_capable_no_dropout(create_model('X',1701).cpu())
     mu=torch.tensor(float(stats['ti_mu']));sd=torch.tensor(float(stats['ti_sd']))
     cpu.zero_grad(set_to_none=True);reference=cpu(x,lengths)
     reference_loss=T.compute_loss(reference,y,mask,mu,sd,'cpu');reference_loss.backward()
@@ -86,7 +97,7 @@ def main():
         # Imported frozen model/trainer pin cuDNN off. Override only inside THIS scout.
         torch.backends.cudnn.enabled=CANDIDATES[a.candidate]['cudnn']
         device=torch.device('cuda')
-        model=copy.deepcopy(cpu).to(device).eval()
+        model=gradient_capable_no_dropout(copy.deepcopy(cpu).to(device))
         bx,by,bm=x.to(device),y.to(device),mask.to(device)
         dmu,dsd=mu.to(device),sd.to(device)
         model.zero_grad(set_to_none=True);actual=model(bx,lengths)
@@ -124,6 +135,7 @@ def main():
             'weight_source':bind['weight_source'],'checks':checks,'timing':timing,'gpu':gpu,
             'numeric_differences':errors,'candidate_environment':CANDIDATES[a.candidate]['env'],
             'torch':torch.__version__,'cuda':torch.version.cuda,'allow_tf32':False,
+            'execution_mode':bind['execution_mode'],
             'cudnn_enabled':False if a.cpu_check else CANDIDATES[a.candidate]['cudnn']}
     save(output,result)
     print('Probe artifact written; eligibility still requires normal parent-observed exit zero',flush=True)

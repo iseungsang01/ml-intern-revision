@@ -60,6 +60,7 @@ def binding():
     payload={'sources':hashes,'inherited_sources':pins,'unit':UNIT,'seed':1701,'rule':'D10',
              'prefixes':2,'max_rows':128,'warmup':3,'steps':10,'repetitions':3,
              'candidates':CANDIDATES,'weight_source':'seed1701 initialization, cloned CPU to CUDA',
+             'execution_mode':{'wrapper_training':False,'rnn_training':True,'rnn_dropout':0.0},
              'software':{'python':sys.version,'torch':importlib.metadata.version('torch'),
                          'numpy':importlib.metadata.version('numpy')}}
     digest=hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()
