@@ -5,7 +5,7 @@ HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2]
 for d in ('b88_anchor','b90_methods'):sys.path.insert(0,str(HERE.parent/d))
 import common88 as B88
 import common85 as B85
-DATA,PAPER,C=B85.DATA,B85.PAPER,B85.C;CACHE=DATA/'.b92'
+DATA,PAPER,C=B85.DATA,B85.PAPER,B85.C;CACHE=DATA/'.b92/cpu_r2'
 RULES=tuple(B85.RULES);TRAIN_RULES=tuple(B85.TRAIN_RULES)
 PILOT_UNITS=('V1_r2_k0','V2_s1_k0','V3_q3','V4a')
 select_units,load_sources=B85.select_units,B85.load_sources

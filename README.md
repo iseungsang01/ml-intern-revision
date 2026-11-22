@@ -165,6 +165,8 @@ B.85는 가용 조건을 섞어 학습한 직접 출력 순환 신경망(GPU)이
 
 `b92_reduced/{common92,runtime92,model92,prepare92,train92,run92,queue92,select92,predict92,readout92,checks92}.py`는 고정 의존 소스→실측 runtime→실제 train/val cache→기한 있는 학습·exit 검증→validation 선택→완료 뒤 추론·판독을 연결한다. Pilot C/A/T 세 구성의 열두 fit만 먼저 실행하고, 조건을 채운 한 pair만 최대 마흔여섯 fit 추가한다. 전체15unit·한 seed와 고정 네 unit·세 seed의 구간은 분리한다. `lead_checks/{verify92,verify_bootstrap92,verify_outputs92}.py`는 별도 모델/loss·재표집·완료 산출물 검증이며 `docs/paper/b92_*`가 읽는다. source pins는 `frozen_sources92.json`, 캐시/체크포인트/실행 상태는 ignored `data/.b92/`, 현재 상태 문서는 `b92_status.md`다. 테스트 성능으로 선택하거나 원고를 자동 교체하지 않는다.
 
+실제 dropout.1 CUDA smoke는 종료 충돌로 실패했으며 pilot은 시작하지 않았다. B.92 부록2가 그 결과를 보존하고 **CPU dense MKLDNN8**의 새 실행 경로를 등록했다. `lead_checks/verify_override92.py`가 원 실측·실패·정상 종료 해시와 non-cuDNN 선택을 독립 검증한다. 현재 캐시와 상태는 `data/.b92/cpu_r2/`, 명시적 runtime 기록은 `data/.b92/production_override_r2.json`이다. 실패한 원 `.b92/smoke/`와 immutable B.91 결정은 변경하지 않는다.
+
 ## 4. 다시 만드는 순서
 
 연구 방향 검토: [`docs/paper/research_direction_20261122.md`](docs/paper/research_direction_20261122.md)는 현 원고·D1 결과·공개 선행연구를 읽고 다음 실험의 선택 근거를 정리한다. `HANDOVER.md` 9절과 B.87 등록이 이를 읽는다.

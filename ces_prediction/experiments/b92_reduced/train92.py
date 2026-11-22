@@ -44,6 +44,7 @@ def verify_complete(rd):
     if not (rd/'complete.json').exists():return False
     z=json.loads((rd/'config.json').read_text());h=z.pop('config_hash');assert h==M.digest(z) and z['sources']==M.sources() and z['frozen']==M.guard()
     assert z['runtime']['decision_sha256']==M.sha(M.DATA/'.b91/runtime_decision.json')
+    assert z['runtime']['production_override_sha256']==M.sha(M.DATA/'.b92/production_override_r2.json')
     assert M.sha(M.CACHE/'prepared'/f"{z['unit']}__{z['prepared_key']}.pt")==z['prepared_artifact_sha256']
     complete=json.loads((rd/'complete.json').read_text());exit=json.loads((rd/'process_exit.json').read_text())
     assert complete['config_hash']==h and exit['config_hash']==h and exit['returncode']==0

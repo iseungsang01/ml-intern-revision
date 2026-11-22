@@ -49,3 +49,11 @@ Pilot cap12epoch/10분, 확인 cap40epoch/20분, 기존 early-stop6과 일곱 �
 - 자동 원고 교체·SOTA·물리 발견·수락 가능성 추정은 하지 않는다. 우선 완결 가능한 직접 비교를 만든다.
 
 정확한 실행 규칙은 `PREREGISTRATION_B91.md`와 부록, `PREREGISTRATION_B92.md`가 우선한다. 초기106fit 대안 메모 `candidate_reduction_notes_20261123.md`는 현재 실행안이 아니다. 소스·입력·loss·판독의 독립 검증 후 실제 queue를 시작하고, 상태/실측은 b91_/b92_ 문서와 ignored cache의 artifact로 기록한다.
+
+## 실제 실행 경로의 검증 결과와 수정
+
+B.91은 일곱 경로의 세 번씩, 총21개 자식이 모두 정상 종료했다. 원래 CUDA packed native의 배치 중앙값은0.625471초, CUDA dense cuDNN은0.056705초로 dropout0 시험에서는11.03배였다. 부모가 모든 결과·exit 해시, 중앙값과 일곱 규칙 목적함수를 별도 코드로 재계산했다. 근거는 `b91_runtime_lead_checks.{md,json}`와 ignored 실제 probe 기록이다.
+
+그러나 **실제 dropout.1 C smoke는 계산을 마친 후0xc0000409로 종료**했다. 따라서11배 경로를 실제 학습에 채택했다고 해석하면 안 된다. 해당 complete 파일은 있어도 exit 증거가 nonzero이므로 완료로 재사용하지 않았고, pilot은 시작하지 않았다. 실패한 CUDA 산출물과 `.b92/queue_status.json`을 보존했다.
+
+B.92 부록2를 새로 커밋한 뒤, cuDNN을 쓰지 않는 실측 경로 가운데 가장 빠른 **CPU dense MKLDNN8**을 명시적으로 선택했다. 배치 중앙값0.116811초, 원래 경로 대비 약5.35배이며 이것도 전체 fit 배수는 아니다. 원래 immutable B.91 결정은 고치지 않고 `.b92/production_override_r2.json`에 원 결정·실패 exit·선택 CPU 결과 세 개의 해시와 규칙을 기록했다. 소스와 캐시는 새 `.b92/cpu_r2/`로 분리하고 입력/모델/loss/선택 목적함수/재표집 검증을 다시 실행한다. 새 CPU dropout.1 smoke가 정상 종료해야 실제 pilot을 시작한다. 기존24h clock은 이어받아 이미 쓴 시간을 지우지 않는다. 중간 fit의 device를 바꾸거나 실패를 성공으로 포장하지 않는다.

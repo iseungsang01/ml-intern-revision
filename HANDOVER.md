@@ -10,6 +10,8 @@
 
 **최신 지시(2026-11-23, 위 전체 큐를 대체).** 저자가 현재 학습 가속과 확실한 소수 후보로 축소를 Fable API로 각각 분석하고 실행하라고 지시했다. 실제 claude-fable-5-2 두 완료 검토와 별도 설계 검토 후 B.91/B.92를 등록·푸시했다. B.85는 부록4에 따라 네 clean fit와 현재 epoch2 partial checkpoint를 보존하고 연구 소유 작업만 중단했다. 옛 suite와 B.88/B.89/B.90 전체 배정은 superseded이며 자동 재개하지 않는다. B.91의 일곱 경로·세 번 실측은 완료됐고, B.92는 C/A/TCN의 열두 pilot와 선택 pair의 최대 마흔여섯 추가 fit로 제한한다. `docs/paper/efficiency_decision_20261123.md`, `b91_runtime.md`, `b92_status.md`가 현재 판단·실측·실행 상태다. 전체15unit 단일 seed와 네 unit 세 seed를 섞어 전체 초기화 안정성이라고 쓰지 않는다.
 
+**실행 경로 수정(B.92 부록2).** CUDA dense cuDNN의 dropout0 배치는 빨랐지만 실제 dropout.1 smoke는 계산 후 비정상 종료했다. 성공한 학습으로 재사용하지 않고 원 기록을 보존했다. Pilot 전에 CPU dense MKLDNN8로 명시적 revision을 등록했다. 현재 namespace는 `data/.b92/cpu_r2/`, 선택 증거는 `.b92/production_override_r2.json`; 원래 B.91 결정과 실패한 `.b92/smoke/`를 덮어쓰지 않는다. 새 readiness/독립 검사와 dropout.1 정상 종료가 필요하다. 상태는 `docs/paper/b92_status.md` 및 cpu_r2의 queue_status.json을 읽고, 원래24h wall clock을 이어받는다.
+
 ## 1. 먼저 읽을 것 (이 순서로)
 
 0. `README.md`: 저장소의 배선(무엇이 무엇을 읽는가)

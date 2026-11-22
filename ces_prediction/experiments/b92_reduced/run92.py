@@ -28,6 +28,7 @@ def run_job(job):
     budget=120 if stage.startswith('smoke') else 600 if stage=='pilot' else 1200
     timeout=min(budget if stage.startswith('smoke') else budget+120,remaining);rd.mkdir(parents=True,exist_ok=True)
     env={k:v for k,v in os.environ.items() if not k.startswith('CES_')};env.update(effective_env(stage,code,runtime));env['PYTHONUNBUFFERED']='1'
+    if runtime['device']=='cpu':env['CUDA_VISIBLE_DEVICES']='-1'
     command=[sys.executable,'-X','faulthandler','-u',str(M.HERE/'train92.py'),'--stage',stage,'--unit',u,'--seed',str(seed),'--code',code]
     started=time.time();timed_out=False
     with (rd/'process.log').open('a',encoding='utf8') as log:
