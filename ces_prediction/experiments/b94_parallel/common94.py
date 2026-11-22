@@ -3,10 +3,12 @@ import hashlib,json,subprocess,sys,time
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2];DATA=ROOT/'data';CACHE=DATA/'.b94'
 BASE=HERE.parent/'b92_reduced';sys.path.insert(0,str(BASE))
+sys.path.insert(0,str(HERE.parent/'b93_gpu'))
+from atomic93 import save_json
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def digest(z):return hashlib.sha256(json.dumps(z,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 def save(p,z):
-    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(z,sort_keys=True,indent=2),encoding='utf8');tmp.replace(p)
+    return save_json(p,z)
 def committed(p):
     rel=Path(p).relative_to(ROOT).as_posix()
     subprocess.run(['git','cat-file','-e','HEAD:'+rel],cwd=ROOT,check=True)
@@ -23,7 +25,7 @@ def guard():
     required|={p.relative_to(ROOT).as_posix() for p in owned}
     required.add(base_pin.relative_to(ROOT).as_posix())
     required|={(HERE.parent/'b93_gpu'/n).relative_to(ROOT).as_posix() for n in ('profile93.py','worker93.py')}
-    required|={(HERE.parent/'b93_gpu'/n).relative_to(ROOT).as_posix() for n in ('durable93.py','status93.py')}
+    required|={(HERE.parent/'b93_gpu'/n).relative_to(ROOT).as_posix() for n in ('durable93.py','status93.py','atomic93.py')}
     assert required<=set(pins),'All inherited execution modules must be pinned'
     for rel,h in pins.items():
         p=(ROOT/rel).resolve();assert not Path(rel).is_absolute() and p.is_relative_to(ROOT)

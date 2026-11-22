@@ -2,11 +2,12 @@
 import argparse,base64,json,math,os,re,subprocess,sys,time
 from pathlib import Path
 from status93 import process_identity,snapshot
+from atomic93 import save_json
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2]
 PYTHON=Path(sys.executable).with_name('python.exe') if os.name=='nt' else Path(sys.executable)
 
 def save(path,obj):
-    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(obj,indent=2,sort_keys=True),encoding='utf8');tmp.replace(path)
+    return save_json(path,obj)
 def safe_path(value):
     p=(ROOT/value).resolve() if not Path(value).is_absolute() else Path(value).resolve()
     assert p.is_relative_to(ROOT),'Path outside workspace';return p
