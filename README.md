@@ -22,6 +22,11 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 2. 배선도
 
+| 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
+|---|---|---|
+| `experiments/b93_gpu/profile93.py` → `worker93.py` | 등록 B.93 + B.92 실제 준비 자료/모델 → `data/.b93/` 전체 epoch 및 동시 실행 적격성 기록 | 별도 GPU 실행 개정의 사전 감사; 예측 성능 근거 아님 |
+| `experiments/b93_gpu/durable93.py`, `status93.py` | 정확한 PID·생성 시각 + 원래 마감 시각 → 생존 확인·heartbeat | `docs/paper/b93_supervisor.md`, 실행 상태 보고 |
+
 화살표는 "읽는다 → 만든다"의 방향이다. 굵은 테두리가 원고로 들어가는 길이다.
 
 ```mermaid

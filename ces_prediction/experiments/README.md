@@ -117,6 +117,8 @@ Re-running one of them may need inputs that the cleanup removed.
 
 ## Rules for a new batch
 
+B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.
+
 1. Register first (`HANDOVER.md` section 5): statements, rule of judgement, expectation, and the sentences of
    the paper for either outcome, committed before any run. Open choices go into an addendum before the readout.
    A registration is never edited afterwards.
