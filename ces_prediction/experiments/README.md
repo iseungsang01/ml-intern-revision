@@ -119,6 +119,8 @@ Re-running one of them may need inputs that the cleanup removed.
 
 B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.
 
+B.94 (`b94_parallel/`, `PREREGISTRATION_B94.md`): isolated fresh GPU execution of the unchanged reduced candidate protocol, with one/two independent fit processes selected from B.93 throughput evidence. Reuses the frozen B.92 loop through per-process adapters, independent mandatory stage audits, separate artifacts, and the original suite deadline. Existing CPU fits are not pooled; no TEST readout before the validation gate and confirmation requirements.
+
 1. Register first (`HANDOVER.md` section 5): statements, rule of judgement, expectation, and the sentences of
    the paper for either outcome, committed before any run. Open choices go into an addendum before the readout.
    A registration is never edited afterwards.

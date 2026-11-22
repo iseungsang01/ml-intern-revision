@@ -27,6 +27,10 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `docs/paper/claim_robustness_20261123.md` | B.73–B.87 결과 JSON + 논문 설계 + 선행 연구 → 주장별 근거·반대 증거·추가 검증 조건 | 원고 검토 및 후속 실험의 주장 범위; 진행 중 NN 성능 근거 아님 |
 | `experiments/b93_gpu/profile93.py` → `worker93.py` | 등록 B.93 + B.92 실제 준비 자료/모델 → `data/.b93/` 전체 epoch 및 동시 실행 적격성 기록 | 별도 GPU 실행 개정의 사전 감사; 예측 성능 근거 아님 |
 | `experiments/b93_gpu/durable93.py`, `status93.py` | 정확한 PID·생성 시각 + 원래 마감 시각 → 생존 확인·heartbeat | `docs/paper/b93_supervisor.md`, 실행 상태 보고 |
+| `experiments/b93_gpu/lead_checks/verify93.py` | 실제 배열·초기 가중치·모든 runtime/exit 원자료 → 독립 적격성 감사 | `docs/paper/b93_lead_checks.md`, B.94 실행 전 확인 |
+| `experiments/b94_parallel/common94.py`, `runtime94.py`, `adapter94.py` | 동결 B.92 학습 루프 + B.93 감사·선택 → 격리된 GPU 실행·출처·캐시 | B.94 새 프로세스만 적용; B.92 수정 없음 |
+| `experiments/b94_parallel/scheduler94.py` → `bootstrap94.py` | 등록 B.94 + 검증된 worker 개수 → smoke·pilot·선택·조건부 confirmation·readout | `data/.b94/`, 감사 후에만 `docs/paper/b94_*`로 출력 |
+| `experiments/b94_parallel/lead_checks/` | B.94 원자료·선택·출력 및 원래 마감 → pre/prepared/pilot/post 감사 | scheduler의 단계별 필수 gate |
 
 화살표는 "읽는다 → 만든다"의 방향이다. 굵은 테두리가 원고로 들어가는 길이다.
 
