@@ -165,12 +165,18 @@ B.85는 가용 조건을 섞어 학습한 직접 출력 순환 신경망(GPU)이
 |---|---|---|---|
 | B.87 `b87_latency/` | B.73 rows/grid, 동일 회귀기·분할, B.87 등록·부록 | `data/.b87/`, `docs/paper/b87_latency.{md,json}`, checks, lead checks; `plot87.py`가 JSON에서 png/pdf 생성 | 연구 방향 검토, 기록; 독립 검증 완료, 원고 반영 전 |
 | B.85 `b85_unified/` | B.73 D1 grid/rows·분할, B.75/B.78 가용 규칙·비교 추정, B.84 비교 추정, B.85 등록·부록 | `data/.b85/`의 manifest·GPU checkpoint·예측·상태, `docs/paper/b85_*` readiness/smoke/status/독립 검사; 전체 완료 후 scientific readout | `run85.py`가 입력 검사→GPU 학습→예측→판독을 연결, HANDOVER가 재개·상태를 안내 |
+| B.88 `b88_anchor/` | 고정 B.85 입력·학습 코드, 원래 측정 시점의 anchor 빠른 진단, 등록·source pins | `data/.b88/`, `docs/paper/b88_*` 입력·독립 bootstrap 검사와 상태, 완료 후 paired A/C 판독 | 아래 통합 대기열이 B.85 완료 뒤 실행; B.90이 정상 완료를 의존 |
+| B.89 `b89_runtime/` | B.85 실제 학습 segment 두 개, 동일 초기 모델·loss, 실행 환경 후보 | `data/.b89/`, `docs/paper/b89_runtime*` 정상 종료·동등성·실측 속도 권고 | 통합 대기열이 B.85 뒤/B.88 전에 실행; 권고만 하며 등록된 학습 backend는 자동 변경하지 않음 |
+| B.90 `b90_methods/` | B.85 고정 입력·학습 loop, B.88 의존 검증, `models90.py`의 후보 일곱, 등록·pins | `data/.b90/`의 210회 screen·validation-only promotion·120회 추가 fit, `b90_screen`/`b90_methods` JSON·MD 및 검사 | 통합 대기열이 B.88 뒤 실행; 모든 필수 fit·독립 검증 뒤 결과 검토, 원고 자동 교체 없음 |
+| `queued_suite_20261122.py` | 각 배치의 source-bound readiness·독립 검사·정상 완료 | `data/.queued_suite_20261122/{status.json,B89.log,B88.log,B90.log}`, phase별 exit 기록 | `docs/paper/queued_experiments_20261122.md`와 HANDOVER가 순서·상태·재개 방법을 안내 |
 
 B.85의 `claude_review85.py`와 `claude_implement85.py`는 저자가 승인한 외부 설계 검토·신규 코드 작성 도구다. 키는 지정한 형제 저장소에서 실행 시 읽고 저장소에 남기지 않는다. 검토 원문은 `docs/paper/b85_claude_design_review.md`, 반영 여부는 등록 부록에 있다. `lead_checks/verify85.py`는 별도 코드로 가용 입력과 분할·정규화·인과성을 검사해 `b85_lead_checks.md`를 만든다. GPU 결과와 입력 검사 결과는 구분한다.
 
 B.85의 `queue85.py`가 깨끗한 GPU smoke 후 본 배치와 후속 판독을 실행한다. `lead_checks/verify_readout85.py`는 기존 B.87 실자료 예측을 명시적으로 재표집하여 bootstrap 계산을 대조하고 `b85_readout_lead_checks.md`를 만든다. 실행·수정 이력은 `b85_implementation_provenance.md`, 런타임 상태는 `data/.b85/queue_status.json`과 `b85_smoke.md`/`b85_status.md`가 읽는 batch log에 있다. 본 배치 완료 전 과학적 성능 결과로 해석하지 않는다.
 
 B.85의 `diagnose_runtime85.py`는 실자료 CUDA 초기화·선형 연산·LSTM 경로와 정상 종료를 분리해 검사한다. 진단과 native ATen CUDA 고정, 깨끗한 X/H smoke, 본 배치 재개 기록은 `docs/paper/b85_runtime_fix.md`가 읽는다. 완료 판정은 checkpoint뿐 아니라 동일 설정 해시의 자식 프로세스 종료 코드도 확인한다.
+
+B.88/B.90의 `common`은 고정 의존 소스를, `data`/`models`는 입력·모델을, `adapter`는 독립 import한 고정 trainer의 로컬 callback만 연결한다. `train`/`run`/`queue`가 smoke와 정식 fit을, `predict`/`readout`이 완료 뒤 동일 행 판독을 담당한다. `checks`와 B.90의 `model_checks90.py`가 실제 입력·모델·loss를 검사하고 source 해시에 결합한다. `lead_checks/verify88.py`, `verify_readout88.py` 및 B.90의 `verify90.py`, `verify_bootstrap90.py`, `verify_outputs90.py`는 진행자가 별도로 만든 입력·모델 식·재표집·완료 산출물 검사이며 각 `b88_*lead_checks.md`/`b90_*lead_checks.md`가 읽는다. B.88의 `claude_author88.py` 요청·수정 이력은 `b88_implementation_provenance.md`에 있다. B.89의 `run89.py`는 `probe89.py`를 별도 자식으로 실행해 실제 입력의 시간과 종료를 확인한다. 실측 병목과 추정의 한계는 `docs/paper/runtime_plan_20261122.md`, 실제 실행 순서·자원 배정은 `docs/paper/queued_experiments_20261122.md`가 설명한다.
 
 저장소 루트에서 `py`로 실행한다. 자료 배치와 환경은 `HANDOVER.md` 3절과 4절.
 

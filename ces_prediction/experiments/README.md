@@ -53,6 +53,17 @@ No scientific results yet. Live reports `docs/paper/b85_smoke.md`, `b85_status.m
 
 ## Infrastructure
 
+Registered follow-up suite (author: set up all shortlisted methods, 2026-11-22):
+`queued_suite_20261122.py` waits for all clean B85 fits and its completed queue, then runs
+B89 runtime scout -> B88 explicit measurement-time anchor -> B90 method/loss screen and expansion.
+B88 has90 A/C fits; B90 runs all seven candidates at one initialization (210 fits), selects
+exactly two using validation-only mean normalized MSE ratios, then adds two initializations
+(120 fits). All four validation designs remain represented. This does not resume B69 or
+MAST training. Registrations B88/B89/B90 and immutable addenda define the scope.
+Input/CPU audits are separate from future GPU smokes and scientific results.
+See `docs/paper/queued_experiments_20261122.md` for logs, commands, states and runtime limits.
+Each queue stops on a failed/stale dependency or child, with no automatic retries.
+
 B.87 (`b87_latency/`, `PREREGISTRATION_B87.md`, addendum 1): matched history-only and fast-input regressions at timestamp horizons 0/10/20/50 ms; all B.73 validation units; CPU. Done, including independent lead checks: `docs/paper/b87_latency.{md,json,png,pdf}`, `b87_checks.md`, `b87_lead_checks.md`. A holds only in V1, B in none, C in all, D except V4a. Motivation and interpretation: `docs/paper/research_direction_20261122.md`.
 
 | dir | what it is | used by |
