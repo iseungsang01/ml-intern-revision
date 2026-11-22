@@ -212,10 +212,12 @@ def run_batch(unit_filter=None, init_filter=None, variant_filter=None, smoke=Fal
                 write_status(done, len(runs), failures, smoke, 'waiting_for_gpu', 'Preserving other GPU processes; waiting for at least 2500 MiB free.')
 
             print(f'[{i+1}/{len(runs)}] Training: {name}')
+            write_status(done, len(runs), failures, smoke, 'running', 'Active run: ' + name)
             log_file = LOGS_DIR / f'{name}.log'
 
             cmd = [
                 sys.executable,
+                '-X', 'faulthandler',
                 str(ROOT / 'ces_prediction' / 'experiments' / 'b85_unified' / 'train85.py'),
                 '--unit', r['unit'],
                 '--init', str(r['init']),
@@ -231,13 +233,25 @@ def run_batch(unit_filter=None, init_filter=None, variant_filter=None, smoke=Fal
             with open(log_file, 'w') as lf:
                 result = subprocess.run(cmd, env=env, stdout=lf, stderr=subprocess.STDOUT)
             exit_record = LOGS_DIR / (name + ('__smoke' if smoke else '') + '.exit.json')
-            exit_record.write_text(json.dumps({'returncode':result.returncode,'smoke':smoke,'run':name}),encoding='utf8')
+            run_dir = CACHE / ('smoke' if smoke else 'runs') / name
+            complete_path = run_dir / 'complete.json'
+            complete = json.loads(complete_path.read_text(encoding='utf8')) if complete_path.is_file() else {}
+            attestation = {'returncode':result.returncode,'smoke':smoke,'run':name,
+                           'config_hash':complete.get('config_hash'),
+                           'timestamp':time.strftime('%Y-%m-%dT%H:%M:%S')}
+            exit_record.write_text(json.dumps(attestation),encoding='utf8')
+            if run_dir.is_dir():
+                tmp_exit = run_dir / 'process_exit.tmp'
+                tmp_exit.write_text(json.dumps(attestation,indent=2),encoding='utf8')
+                tmp_exit.replace(run_dir / 'process_exit.json')
 
             if result.returncode != 0:
                 print(f'FAILED: {name}, child returncode={result.returncode} (see {log_file})')
                 failures.append(name)
                 break  # Stop on failure
             else:
+                if not is_complete(r['unit'], r['init'], r['variant'], smoke):
+                    raise RuntimeError('Child exited zero without verified completion: ' + name)
                 done += 1
 
             write_status(done, len(runs), failures, smoke)

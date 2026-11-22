@@ -30,3 +30,7 @@ This is not an exhaustive usage total: the first unsuccessful request's usage wa
 - An unrelated `llama-server.exe` subsequently occupied most GPU memory. It was not stopped or modified. The guarded queue waits for sufficient free memory, requires fresh X and H smoke processes to exit 0, and only then may enter the registered 90-run batch. A new nonzero child exit stops the queue without blind retry.
 
 Current scientific status: registered and implemented; full experiment is not complete. Runtime truth is in `data/.b85/queue_status.json`, `docs/paper/b85_smoke.md`, `docs/paper/b85_status.md` and per-run logs. Input checks and computational smoke checks are distinct from successful full-run validation and from scientific conclusions.
+
+## Runtime recovery and registered training started
+
+The subsequent GPU execution request isolated the failing cuDNN LSTM path using real inputs. Addendum 3 pins native ATen CUDA, preserving the registered model and learning settings. Fresh X/H smoke processes both exited zero; configuration-matched exit attestations are now mandatory for reuse and scientific readout. The full batch has started and its first registered epoch completed; all registered fits and the scientific readout remain pending. Exact diagnostics, preserved failures and live log paths are in `b85_runtime_fix.md`.

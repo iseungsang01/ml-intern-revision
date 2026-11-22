@@ -42,8 +42,11 @@ B.85 (`b85_unified/`) is registered in `PREREGISTRATION_B85.md` and pushed befor
 GPU and Claude API design review/code authoring authorized by the author on 2026-11-22.
 Direct dual-head F/L5 recurrent model and history-only twin, mixed availability training, held-out K10;
 all four validation designs. Implementation and independent input/bootstrap audits complete; 89 tests pass.
-Guarded hidden queue launched; waits for free GPU memory, then requires clean X/H smoke exits before
-the registered 90-run batch. Prior computational smoke finished but its unclean child exit is quarantined.
+Guarded hidden queue is running the registered 90-run batch after fresh X/H smoke processes both exited zero.
+The cuDNN LSTM teardown failure was isolated on real inputs; addendum 3 pins native ATen CUDA (not CPU).
+Every reused/completed model requires a configuration-matched clean-exit attestation.
+Runtime diagnosis and preserved failure history: `docs/paper/b85_runtime_fix.md`,
+with probe source `b85_unified/diagnose_runtime85.py`. Prior unclean artifacts remain quarantined.
 No scientific results yet. Live reports `docs/paper/b85_smoke.md`, `b85_status.md` and ignored
 `data/.b85/queue_status.json`; authorship/failures in `b85_implementation_provenance.md`.
 `HANDOVER.md` section 9.1.

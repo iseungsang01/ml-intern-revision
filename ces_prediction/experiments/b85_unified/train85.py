@@ -19,6 +19,7 @@ import torch
 import torch.nn as nn
 torch.backends.cuda.matmul.allow_tf32 = False
 torch.backends.cudnn.allow_tf32 = False
+torch.backends.cudnn.enabled = False  # B85 addendum 3: native ATen CUDA RNN path.
 from torch.nn.utils.rnn import pad_sequence
 
 from common85 import (
@@ -57,6 +58,12 @@ def verify_complete(run_dir):
     stats = json.loads((run_dir / 'stats.json').read_text(encoding='utf8'))
     if manifest_hash(manifest) != config['manifest_hash'] or stats_hash(stats) != config['stats_hash']:
         raise RuntimeError('Completion manifest/stats mismatch')
+    exit_path = run_dir / 'process_exit.json'
+    if not exit_path.is_file():
+        raise RuntimeError('Completion has no supervising runner clean-exit attestation')
+    exit_record = json.loads(exit_path.read_text(encoding='utf8'))
+    if exit_record.get('returncode') != 0 or exit_record.get('config_hash') != current:
+        raise RuntimeError('Completion child process did not exit cleanly for this configuration')
     return True
 
 
@@ -379,6 +386,7 @@ def train_unit(unit_name, init, variant, smoke=False):
             'weight_decay': 0.0001, 'clip': 1.0, 'dropout': 0.1,
             'patience': 2, 'early_stop': 6,
             'allow_tf32': False,
+            'cudnn_enabled': False,
             'manifest_hash': manifest_hash(manifest),
             'stats_hash': stats_hash(stats),
             'env_pins': {k: os.environ.get(k, ENV_PINS.get(k, '')) for k in ENV_PINS},

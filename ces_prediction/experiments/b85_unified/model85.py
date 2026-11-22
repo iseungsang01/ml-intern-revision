@@ -15,6 +15,7 @@ if _cuda_prior is not None:
 
 import torch
 import torch.nn as nn
+torch.backends.cudnn.enabled = False  # Native ATen CUDA; see B85 addendum 3.
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 sys.path.insert(0, str(ROOT / 'ces_prediction' / 'experiments' / 'seq'))
 from model_seq_v2 import SeqCESLSTMv2

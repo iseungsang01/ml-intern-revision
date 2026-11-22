@@ -115,7 +115,7 @@ B.76 (MAST 행 표와 추정)  data/.b76  └ B.86 (반경 대역별)
 | B.87 | 같은 회귀기의 미래 CES 허용 시점별 오차 | `b87_latency/` | `b87_latency.md`, `b87_lead_checks.md` |
 | B.85 | 가용 조건을 섞어 학습하는 직접 출력 순환 모델 | `b85_unified/` | `b85_*` readiness/smoke/status; 전체 배치 후 unified 판독 |
 
-B.85는 2026-11-22 등록·푸시했고 구현 중이다. 9.1절과 등록 파일을 따른다.
+B.85는 등록·구현·정상 종료 smoke를 마치고 본 배치를 실행 중이다. 9.1절과 등록 파일·부록을 따른다.
 
 ## 7. 원고
 
@@ -161,6 +161,8 @@ py docs/paper/ppcf/check_numbers_v2.py   # tex에 손으로 친 수치가 출처
 **B.85 실행 인계(2026-11-22).** 입력 검사와 별도 `lead_checks/verify85.py`가 통과했고, 판독 알고리즘은 `lead_checks/verify_readout85.py`로 기존 실자료의 예측을 명시적으로 재표집해 별도 검증했다. Claude 작성·수정 이력과 실패 기록은 `docs/paper/b85_implementation_provenance.md`에 있다. 본 실험 성능 판독은 아직 없다. CUDA smoke에서 계산 검사와 한 epoch는 끝났으나 자식 프로세스가 비정상 종료해 그 산출물은 격리했다. 깨끗한 X/H smoke 재시도를 모두 통과해야 본 배치가 시작된다. 다른 `llama-server.exe`의 VRAM 점유는 건드리지 않는다.
 
 `queue85.py`는 smoke → 등록한 본 배치 → 예측 → 판독을 연결하며, VRAM이 부족하면 대기하고 자식 프로세스 실패 시 중단한다. 자동 실행 상태는 `data/.b85/queue_status.json`, `docs/paper/b85_smoke.md`, `b85_status.md`, `data/.b85/logs/`를 확인한다. `py ces_prediction/experiments/b85_unified/run85.py --status`는 읽기 전용 상태 확인이다. 재개 전에는 기존 queue PID와 lock을 확인해 중복 실행하지 않는다. 학습 파일·정규화·설정·소스 해시가 맞는 완료 산출물만 재사용한다. 전체 배치가 끝나고 독립 판독 검증을 마치기 전에는 논문의 estimator를 바꾸지 않는다.
+
+**B.85 GPU 재개 기록.** `docs/paper/b85_runtime_fix.md` 참조. 실자료로 cuDNN LSTM 경로의 종료 오류를 분리했고 등록 부록에 따라 native ATen CUDA로 고정했다(CPU 학습 아님). 새 X/H smoke가 모두 정상 종료했으며 본 배치가 실행 중이다. 현재 queue 로그는 `data/.b85/queue_aten.log`와 `queue_aten.stderr.log`; 기존 `queue.log`는 과거 실패·대기 이력이다. `process_exit.json`의 종료 코드와 설정 해시가 맞아야 완료·재사용·판독을 허용한다. 실패한 산출물은 격리 보존했다. 실행 중에는 학습 소스를 고치지 않는다.
 
 ### 9.2 CPU로 할 수 있는 것
 
