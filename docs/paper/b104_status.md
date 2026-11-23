@@ -1,6 +1,30 @@
 # B.104: matched-trajectory budget follow-up
 
+## Running: 2026-11-24 00:36 KST
+
+Registration and all execution sources were committed/pushed as8dd55a6 before
+preparation or GPU work.89 tests and record checks passed. Prepared artifact,
+raw grid/rows, stats/manifests and prior four-worker qualification were bound.
+Four real-data GPU smoke children exited0; observer off/on validation losses
+in both epochs and all best/final parameters were bitwise equal for both models.
+Snapshot VAL reload and independent validation arithmetic passed.
+
+Production began00:29:59 KST: HISTORY1701/1702/1703 and FAST1701 are active;
+FAST1702/1703 are pending work-conserving slots. At00:36 all four had logged
+four complete epochs, no failure. GPU samples72-74%,3138MiB. These are progress
+observations, not TEST performance. SHORT states remain in CPU memory until
+fit completion to avoid disk I/O shifting the deadline.
+
+Tasks `B93_GPU_B104_budget` and `B93_Research_B104` are running; independent
+monitor CLI acceptance observed, including training/e4 progress notice. Suite
+clock began00:27:15 KST, nominal deadline03:27:15 KST, old B94 clock unchanged.
+Prediction24 files, registered readout, independent audit, explicit report
+publication and two bounded Claude post reviews are queued after all fits.
+No source modification is permitted while this batch is running.
+
 ## Preparation (2026-11-24 KST)
+
+The following paragraphs record the pre-launch state and are superseded above.
 
 Implementation now includes common104/train104 frozen-loop adapters,
 pipeline104, independent audit104, separate watch104, and Opus-generated

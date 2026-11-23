@@ -1,0 +1,309 @@
+{
+  "budget_cap_usd": 30.0,
+  "scope": "Additional deep review authorized after prior literature workflow; prior calls excluded",
+  "prices": {
+    "input_per_million": 8.0,
+    "output_per_million": 40.0,
+    "cache5m_write": 10.0,
+    "cache1h_write": 16.0,
+    "cache_read": 0.2
+  },
+  "pricing_source": "https://claude.com/pricing?currency=USD",
+  "pricing_docs": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "checked_date": "2026-11-24",
+  "estimated_spent_usd": 19.134767999999998,
+  "pending_or_uncertain_reserved_usd": 0,
+  "remaining_unreserved_usd": 10.865232000000002,
+  "invoice_cost_verified": false,
+  "method": "Official list prices times returned usage, no fast mode, cache directives or paid server tools. Before each call reserve110% of count_tokens estimate plus max output plus USD0.02. Taxes/account discounts not inferred.",
+  "calls": [
+    {
+      "stage": "01_closest_fusion_fulltext",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 132672,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 24576,
+        "output_tokens_details": {
+          "thinking_tokens": 23459
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "max_tokens",
+      "estimated_list_price_usd": 2.044416,
+      "response_sha256": "837b8d42d309fc119b912e442172b194307a6712360395197a0afc6a8e2a46ad",
+      "reserved_max_usd": 2.1705536000000003
+    },
+    {
+      "stage": "02_filter_code_fulltext",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 225521,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 24576,
+        "output_tokens_details": {
+          "thinking_tokens": 24576
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "max_tokens",
+      "estimated_list_price_usd": 2.787208,
+      "response_sha256": "bce6a3af4febd12f52d0ee5f7ceaf11f03d32b546efdc1880f5880d49d320e7a",
+      "reserved_max_usd": 2.9876248000000003
+    },
+    {
+      "stage": "03_report_target_likelihood",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 164136,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 20410,
+        "output_tokens_details": {
+          "thinking_tokens": 12600
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 2.129488,
+      "response_sha256": "7f6ccd1bbf7aa100adff3ac97f3790cd20c75815f2dca8c0f40b7b8913e05398",
+      "reserved_max_usd": 2.4474368
+    },
+    {
+      "stage": "04_representation_distillation",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 186440,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 24576,
+        "output_tokens_details": {
+          "thinking_tokens": 19803
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "max_tokens",
+      "estimated_list_price_usd": 2.47456,
+      "response_sha256": "c960d816cdcdf1a58a7e3cdc9496c13257bf3e90a0ac6630a7caafa8d922b0e1",
+      "reserved_max_usd": 2.6437120000000003
+    },
+    {
+      "stage": "05_completed_fusion_evidence",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 133849,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 9485,
+        "output_tokens_details": {
+          "thinking_tokens": 4982
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 1.450192,
+      "response_sha256": "3e0010436a46e68f5eb6af500c71e981ccd7e6786d3d2ffaedfbf92326b75bc1",
+      "reserved_max_usd": 3.1639512
+    },
+    {
+      "stage": "06_completed_filter_evidence",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 225592,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 7430,
+        "output_tokens_details": {
+          "thinking_tokens": 4123
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 2.101936,
+      "response_sha256": "8638b025a420f8219380c8139c6d1733fb051b564f22d4a63a2c3e329825ba3b",
+      "reserved_max_usd": 3.9712896
+    },
+    {
+      "stage": "08_completed_representation_evidence",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 191279,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 5647,
+        "output_tokens_details": {
+          "thinking_tokens": 2318
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 1.756112,
+      "response_sha256": "68d95ccc56e94e0eb258074bbdfe1b52850d51d2af5469a4672259567e1659b8",
+      "reserved_max_usd": 3.6693352000000004
+    },
+    {
+      "stage": "09_substantive_research_programs",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 53168,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 10983,
+        "output_tokens_details": {
+          "thinking_tokens": 5063
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 0.864664,
+      "response_sha256": "0d6da3eb57f7769e6b108b56e78d8ce906b92706d4375a08b408ee571a443a96",
+      "reserved_max_usd": 2.4539584
+    },
+    {
+      "stage": "10_adversarial_program_review",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 56766,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 13121,
+        "output_tokens_details": {
+          "thinking_tokens": 8518
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 0.978968,
+      "response_sha256": "f9e94dff385ceccf441d15b99e859a43ad3df6033aca7cf080ea5e045bea67c7",
+      "reserved_max_usd": 1.8302608000000002
+    },
+    {
+      "stage": "11_final_korean_decision",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 36657,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 15675,
+        "output_tokens_details": {
+          "thinking_tokens": 7814
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 0.920256,
+      "response_sha256": "e51dbbe7efab005edcc42202cca0d6344dcd164eab471c49daa2cbd9776262b9",
+      "reserved_max_usd": 2.3086616
+    },
+    {
+      "stage": "12_corrected_korean_plan",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 22336,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 11609,
+        "output_tokens_details": {
+          "thinking_tokens": 4279
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 0.643048,
+      "response_sha256": "23dfc05c0b0177e90c4215793284b14943530ae9c3f64e70f86bdcf2e0f306dc",
+      "reserved_max_usd": 2.1826368
+    },
+    {
+      "stage": "13_delayed_measurement_source_addendum",
+      "model": "claude-fable-5-2",
+      "usage": {
+        "input_tokens": 91555,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 6287,
+        "output_tokens_details": {
+          "thinking_tokens": 2821
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_list_price_usd": 0.98392,
+      "response_sha256": "403cdf081f40f93767cc2f43fb5a3cc72e092c17ecacbd7071551d5bc6e482a6",
+      "reserved_max_usd": 1.8087240000000002
+    }
+  ]
+}

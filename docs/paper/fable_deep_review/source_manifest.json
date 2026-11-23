@@ -1,0 +1,105 @@
+{
+  "pdfs": [
+    {
+      "file": "beta_nll.pdf",
+      "sha256": "3590083e3529772877aa6f0920c1902ac1adf503492ebb20da180ea7f2883ab7",
+      "bytes": 7465975,
+      "public_primary_source": true
+    },
+    {
+      "file": "compass_pdf.pdf",
+      "sha256": "2c639e4ae90eb12d54d12b43bbb2db1feece0ca49296d9be8aa478d1c45ca146",
+      "bytes": 15626801,
+      "public_primary_source": true
+    },
+    {
+      "file": "delayed_state.pdf",
+      "sha256": "9a7bd39b3f250ac46e2260d0320b8049e82ccedc7fe5445c60a1cb93a8a76788",
+      "bytes": 652346,
+      "public_primary_source": true
+    },
+    {
+      "file": "distillation.pdf",
+      "sha256": "ce6789e21df1c908593c68cf9cdc8e7e333f5fac26c05aef7bd8cce21ab396ba",
+      "bytes": 407729,
+      "public_primary_source": true
+    },
+    {
+      "file": "faithful.pdf",
+      "sha256": "cf87cb835a82f7c5b0479fd2dd0975d7cb626a3a345530d2771a1bf2ae212c8d",
+      "bytes": 6376816,
+      "public_primary_source": true
+    },
+    {
+      "file": "rtcakenn_pdf.pdf",
+      "sha256": "a45109ff2ee4aca0206d82505e044301e18e770cf611617047a9d9b28ab0b00e",
+      "bytes": 4590570,
+      "public_primary_source": true
+    },
+    {
+      "file": "ts2vec.pdf",
+      "sha256": "24783992080266234820e077f29a49de36d44fc71bf4c9553ffe6afd1207f4ff",
+      "bytes": 1270740,
+      "public_primary_source": true
+    },
+    {
+      "file": "bishop.pdf",
+      "sha256": "927f58b08078ead4475977f188e1a6af7997cf6d2882db178f39cb42b5610e2a",
+      "bytes": 465286,
+      "public_primary_source": true
+    },
+    {
+      "file": "cru.pdf",
+      "sha256": "bb068b3e46bced14abb015730ad57cb18ba21ab0f3f6af992e2e25756ab88466",
+      "bytes": 1270899,
+      "public_primary_source": true
+    },
+    {
+      "file": "kalmannet.pdf",
+      "sha256": "d26c2ce0bcaa08bb6cb27b74822d5dee3e0a45b21e6ee553addca0bd07f9167f",
+      "bytes": 2702836,
+      "public_primary_source": true
+    },
+    {
+      "file": "rkn.pdf",
+      "sha256": "2659f54c5f810d2033aa3086b415616a72be2715a08acbf032f399d9647ea895",
+      "bytes": 534875,
+      "public_primary_source": true
+    }
+  ],
+  "original_files_committed": false,
+  "code_repositories": "Pinned GitHub source blobs/commits in ignored source bundles; Zenodo Diag2Diag archive hash recorded",
+  "source_access_errors": [
+    {
+      "name": "rtcakenn_pdf",
+      "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad142f/pdf",
+      "bytes": 4590570,
+      "content_type": "application/pdf;charset=UTF-8",
+      "sha256": "a45109ff2ee4aca0206d82505e044301e18e770cf611617047a9d9b28ab0b00e",
+      "prefix": "b'%PDF-1.7\\n%\\xe2\\xe3\\xcf\\xd3\\n2 0 obj\\n<</Rect[71.9 600.44 116.81 607.84]/Su'"
+    },
+    {
+      "name": "compass_pdf",
+      "url": "https://iopscience.iop.org/article/10.1088/1361-6587/ae72c6/pdf",
+      "bytes": 15626801,
+      "content_type": "application/pdf;charset=UTF-8",
+      "sha256": "2c639e4ae90eb12d54d12b43bbb2db1feece0ca49296d9be8aa478d1c45ca146",
+      "prefix": "b'%PDF-1.7\\n%\\xe2\\xe3\\xcf\\xd3\\n2 0 obj\\n<</Rect[71.9 600.44 116.81 607.84]/Su'"
+    },
+    {
+      "name": "nnces_xml",
+      "url": "https://api.elsevier.com/content/article/pii/S0920379625007148?httpAccept=text/xml",
+      "error": "HTTPError: HTTP Error 429: Too Many Requests"
+    },
+    {
+      "name": "nnces_pdf",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0920379625007148/pdfft?isDTMRedir=true&download=true",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "rtcakenn_2282123",
+      "url": "https://www.osti.gov/api/v1/records/2282123",
+      "error": "HTTPError: HTTP Error 404: "
+    }
+  ]
+}

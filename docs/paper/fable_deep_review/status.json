@@ -1,0 +1,31 @@
+{
+  "complete": true,
+  "final_report": "12_corrected_korean_plan.md",
+  "budget_cap_usd": 30.0,
+  "estimated_list_price_usd": 19.134767999999998,
+  "paid_calls": 12,
+  "incomplete_original_attempts": [
+    "01_closest_fusion_fulltext",
+    "02_filter_code_fulltext",
+    "04_representation_distillation"
+  ],
+  "scientific_fits_started": 0,
+  "gpu_runs_started": 0,
+  "test_informed_exploratory": true,
+  "independent_confirmation_required": true,
+  "superseded_final_report": "11_final_korean_decision.md",
+  "final_gate_binding": {
+    "post_audit_sha256": "91d13da2b4a08a44c30d869c7caccf0879d0da25c83098fef247f849978353c8",
+    "readout_sha256": "61ed4b6a54ca01197fd779c88f3e138e302aab64afc056bc009ba7519d757930",
+    "selection_sha256": "ff94e786cb947b86417e6c0cabf057df6807bbfec771b5a26379630ec8891176",
+    "post_cells": 136
+  },
+  "source_addendum": "13_delayed_measurement_source_addendum.md",
+  "host_summary": "DECISION.md",
+  "verification": {
+    "pytest_passed": 89,
+    "python_syntax_check_passed": true,
+    "budget_and_usage_reconciled": true,
+    "inventory_hashes_match": 7
+  }
+}

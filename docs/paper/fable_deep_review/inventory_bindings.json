@@ -1,0 +1,9 @@
+{
+  "ces_prediction/experiments/PREREGISTRATION_B92.md": "5b45a10657285f5ad293bfac9ff1e99de14db4da1c7ded6689bfb0b1f51c52ba",
+  "ces_prediction/experiments/PREREGISTRATION_B90.md": "e0f12c4e9cb82bad7ecd933985a1f13687dc4655b6dc72840962e1e126f5c4d1",
+  "ces_prediction/experiments/b92_reduced/model92.py": "64951153796374940ec82e0a341d106397045dc2234bdd3c37ee9eec5af113d5",
+  "ces_prediction/experiments/b92_reduced/common92.py": "53133944d7d351262ea41eb949bc13de193d055d23b65f4a9a71a6cc72320669",
+  "ces_prediction/experiments/b98_physics/model98.py": "37a952f6a2c6ef5b7634f29c4bbdeafd6ee8ce9b62464fb96c4344ced0133812",
+  "ces_prediction/experiments/seq/seq_data.py": "60f1a43cce460c5653d12dcf704228d13ab4ea072187fd1e7a486bb70cb49038",
+  "ces_prediction/experiments/b84_onefit/fits84.py": "455b80416c4297dbb6260a20fc24d16bacf5655a589134e2dbebe67bfaab01ad"
+}
