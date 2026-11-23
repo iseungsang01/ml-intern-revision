@@ -8,7 +8,7 @@ G=C.G
 sys.path.insert(0,str(G.HERE))
 
 def sources():
-    paths=[HERE/'repair101.py',HERE.parent/'PREREGISTRATION_B101.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM6.md']
+    paths=[HERE/'repair101.py',HERE.parent/'PREREGISTRATION_B101.md',HERE.parent/'PREREGISTRATION_B101_ADDENDUM1.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM6.md']
     for p in paths:G.committed(p)
     return {p.relative_to(ROOT).as_posix():G.sha(p) for p in paths}
 
@@ -16,6 +16,19 @@ def prepared():
     z=json.loads((CACHE/'prepared.json').read_text());assert z['sources']==sources()
     assert z['frozen']==G.guard() and time.time()<z['deadline']
     return z
+
+def baselines(report):
+    from adapter94 import activate
+    activate();import readout92 as R
+    files={}
+    units={u for s in report['scopes'].values() for u in s['units']}
+    for u in units:
+        for rule in R.M.RULES:
+            for target in ('F','L5'):
+                for learner in ('T0','TX')+(('TXfresh',) if (rule,target)==('D10','F') else ()):
+                    p=R.B.baseline_path(u,learner,rule,target)
+                    files[p.relative_to(ROOT).as_posix()]=G.sha(p) if p.exists() else None
+    return files
 
 def prepare():
     CACHE.mkdir(exist_ok=True);assert not (CACHE/'prepared.json').exists()
@@ -34,7 +47,8 @@ def prepare():
     preds={p.name:G.sha(p) for p in (G.CACHE/'predictions').glob('*.npz')};assert len(preds)==368
     archive=CACHE/'prior';assert not archive.exists()
     journal={str(p.relative_to(G.CACHE)):G.sha(p) for p in paths}
-    z={'sources':sources(),'frozen':G.guard(),'deadline':G.clock()['deadline'],'predictions':preds,'prior_files':journal,'collision_cells':collision,'time':time.time()}
+    fits={str(p.relative_to(ROOT)):G.sha(p) for stage in ('pilot','confirm') for name in ('best.pt','config.json','complete.json','process_exit.json') for p in (G.CACHE/stage).glob('*/'+name)}
+    z={'sources':sources(),'frozen':G.guard(),'deadline':G.clock()['deadline'],'predictions':preds,'prior_files':journal,'collision_cells':collision,'time':time.time(),'baselines':baselines(old),'fit_files':fits,'selection_sha256':G.sha(G.CACHE/'selection.json')}
     assert time.time()<z['deadline'];G.save(CACHE/'archive_intent.json',z)
     archive.mkdir()
     for p in paths:
@@ -50,7 +64,7 @@ def readout():
     from adapter94 import activate
     activate();import readout92 as R
     import numpy as np
-    seen=set();repaired=[]
+    seen=set();repaired=[];controls=set()
     def cell(name,rows,pred,support,mask,head,codes,baselines,notes):
         scope,design,key=name.split('/',2);identity=(scope,design,key);assert identity not in seen;seen.add(identity)
         original=old['scopes'][scope]['designs'][design]['cells'][key];out=copy.deepcopy(original)
@@ -68,17 +82,35 @@ def readout():
         if 'TX' in original['supplementary_tree_pairs']:
             labels={'cluster':rows['clus'][idx],'discharge':rows['fidx'][idx]}
             out['metrics']['TX']=R.B.metrics(name+'/TX',pred['TX'][:,idx,head],truth[idx],labels)
+            if 'TH' not in controls:
+                assert R.B.metrics(name+'/TH',pred['TH'][:,idx,head],truth[idx],labels)==original['metrics']['TH'];controls.add('TH')
+            e=pred['TX'][:,idx,head]-truth[idx]
+            for metric,v in [('RMSE',np.sqrt((e**2).mean(1))),('MAE',np.abs(e).mean(1)),('medianAE',np.median(np.abs(e),axis=1))]:
+                assert np.allclose(out['metrics']['TX'][metric]['per_init'],v,rtol=1e-10,atol=1e-10)
+                assert np.isclose(out['metrics']['TX'][metric]['point'],v.mean(),rtol=1e-10,atol=1e-10)
             # Reconstructed metrics are checked below and by the original post audit.
             expected_cell['metrics']['TX']=copy.deepcopy(out['metrics']['TX']);repaired.append(name)
+        elif 'TX' not in controls:
+            labels={'cluster':rows['clus'][idx],'discharge':rows['fidx'][idx]}
+            assert R.B.metrics(name+'/TX',pred['TX'][:,idx,head],truth[idx],labels)==original['metrics']['TX'];controls.add('TX')
+        out['metrics']={k:out['metrics'][k] for k in (*codes,*[k for k in out['metrics'] if k not in codes])}
         expected['scopes'][scope]['designs'][design]['cells'][key]=expected_cell
-        print('Repaired '+name,flush=True)
+        print(('Repaired ' if 'TX' in original['supplementary_tree_pairs'] else 'Carried ')+name,flush=True)
         return out
     R.cell=cell;R.latency=lambda unit,code,runtime:copy.deepcopy(old['latency'][code])
     R.main();actual=json.loads((G.CACHE/'readout.json').read_text())
-    assert len(seen)==136 and len(repaired)==z['collision_cells']
+    assert len(seen)==136 and len(repaired)==z['collision_cells'] and controls=={'TX','TH'}
     assert actual==expected,'Unexpected change outside repaired metrics/tree namespace'
     assert all(G.sha(G.CACHE/'predictions'/n)==h for n,h in z['predictions'].items())
-    G.save(CACHE/'repair_checks.json',{'all_pass':True,'repaired':repaired,'predictions_unchanged':True,'unaffected_content_unchanged':True,'sources':sources(),'readout_sha256':G.sha(G.CACHE/'readout.json')})
+    assert {p.name for p in (G.CACHE/'predictions').glob('*.npz')}==set(z['predictions'])
+    assert baselines(old)==z['baselines']
+    assert all(G.sha(ROOT/n)==h for n,h in z['fit_files'].items()) and G.sha(G.CACHE/'selection.json')==z['selection_sha256']
+    report=G.CACHE/'reports/b94_methods.json';md=G.CACHE/'reports/b94_methods.md'
+    assert json.loads(report.read_text())==actual and G.sha(md)!=z['prior_files']['reports/b94_methods.md']
+    names={'TX','TH','T0','TXfresh','TREE_TX','TREE_T0','TREE_TXfresh'}
+    def nonmetrics(text):return [line for line in text.splitlines() if not (line.startswith('| ') and line.split('|')[1].strip() in names)]
+    assert nonmetrics(md.read_text(encoding='utf8'))==nonmetrics((CACHE/'prior/reports/b94_methods.md').read_text(encoding='utf8'))
+    G.save(CACHE/'repair_checks.json',{'all_pass':True,'repaired':repaired,'control_metrics_exact':sorted(controls),'predictions_unchanged':True,'cached_cells_carried_forward':True,'original_post_audit_still_required':True,'sources':sources(),'readout_sha256':G.sha(G.CACHE/'readout.json'),'report_sha256':G.sha(report),'markdown_sha256':G.sha(md)})
 
 def queue():
     z=prepared();import scheduler94 as S
