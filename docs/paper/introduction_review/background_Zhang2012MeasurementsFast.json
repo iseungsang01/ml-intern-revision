@@ -1,0 +1,32 @@
+{
+  "key": "Zhang2012MeasurementsFast",
+  "citation": {
+    "title": "Measurements of the fast ion slowing-down times in the HL-2A tokamak and comparison to classical theory",
+    "authors": "Y. P. Zhang, M. Isobe, Yi Liu, G. L. Yuan, J. W. Yang, et al. (HL-2A Team)",
+    "year": 2012,
+    "venue": "Physics of Plasmas",
+    "volume": "19",
+    "pages": "112504",
+    "doi_or_arxiv": "10.1063/1.4768425"
+  },
+  "relevance": "unsuitable",
+  "topic": "Neutral-beam blip fast-ion slowing-down times on HL-2A, inferred from fission-chamber D-D neutron decay and compared with a classical Spitzer-based model.",
+  "own_question": "Do beam-injected fast deuterons slow down classically without significant loss under ohmic and ECRH conditions with varying Te and ne?",
+  "actual_method_and_evidence": "5 ms, 0.8 MW co-injected D beam blips. Neutron e-folding decay times were measured, e.g. about 13.1 ms ohmic and about 16.7 ms ECRH. They were compared with a classical slowing-down estimate whose Ti profile was assumed equal to Te. The source reports agreement near the core without ECRH. With ECRH, it reports a discrepancy that the authors attribute to Ti being lower than Te. Trends versus ne and Te are shown statistically.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. There is no CES, BES, ECEI, causal estimation, or nowcasting; the analysis is offline.",
+  "validation_if_relevant": "No predictive validation design or data split.",
+  "forbidden_inferences": [
+    "Any statement about CES impurity Ti, its timing, or its nowcastability",
+    "Treating the source's assumption that Ti equals Te as measured Ti",
+    "Generalizing an HL-2A fast-ion result to KSTAR pedestal ion temperature",
+    "Using it as evidence about fluctuation diagnostics or real-time control"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The topic is fast-ion slowing down measured with neutrons, which is unrelated to causal nowcasting of reported pedestal-top CES temperature. Its only tangential point is the authors' statement that ECRH raised Te far more than Ti. That is a single-shot remark, not a measurement useful to our study.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "c8f63d3222066db536c9fcdcf25001ac35c6dce7aeeb3842d4e5de95fd6f9539",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

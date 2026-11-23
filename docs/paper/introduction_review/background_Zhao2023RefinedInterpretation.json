@@ -1,0 +1,38 @@
+{
+  "key": "Zhao2023RefinedInterpretation",
+  "citation": {
+    "title": "Refined interpretation of electron temperature response to neutral beam injection at DIII-D",
+    "authors": "B. Zhao; M. E. Austin",
+    "year": "2023",
+    "venue": "Physics of Plasmas (per record hint; the PDF is a preprint dated 25 Sep 2023)",
+    "volume": "30 (hint)",
+    "pages": "112504 (hint)",
+    "doi_or_arxiv": "10.1063/5.0157020 (record hint only; not printed in the PDF)"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline interpretation of DIII-D ECE electron-temperature responses to modulated NBI to infer beam electron particle and power deposition profiles",
+  "own_question": "Can coherently averaged ECE Te trajectories at beam turn-on separate prompt cold-electron dilution from accumulating fast-ion heating? Do the inferred deposition profiles agree with TRANSP/NUBEAM?",
+  "actual_method_and_evidence": "A Taylor-expanded local balance model is fit to coherently averaged ECE data. The paper reports three discharges plus an illustrative shot and compares the results with Monte Carlo profiles and TS density responses. It reports a core discrepancy and a q=1.5 anomaly. There is no ion temperature, no CES, no nowcasting and no online use.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Beam modulation can perturb core ECE Te through cold-electron dilution as well as delayed heating. This is a possible confounder for electron-diagnostic features.",
+      "original_pdf_locator": "Sec. II–III, Eqs. 5, 12; Fig. 4",
+      "qualification": "This applies to DIII-D ECE electrons in specific regimes. It is not evidence about KSTAR ECEI voltages or impurity Ti.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline coherent averaging over 4–40 beam cycles; no causal setting.",
+  "validation_if_relevant": "Benchmark against Monte Carlo profiles only; no held-out data.",
+  "forbidden_inferences": [
+    "Any implication for CES impurity or main-ion Ti nowcasting",
+    "That ECEI predicts Ti",
+    "Real-time capability",
+    "Generalization to KSTAR"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude, or at most cite as an optional background aside on NBI effects on electron signals. It does not address our target, inputs or causal task.",
+  "supplied_source_mode": "full_original_pdf",
+  "supplied_pdf_pages": 41,
+  "supplied_pdf_sha256": "d3e6b92acad9e444b1c23269373c66aca284abfb05688e3e79e2eda51aa727da",
+  "source_scope_note": "Original PDF supplied including all pages"
+}

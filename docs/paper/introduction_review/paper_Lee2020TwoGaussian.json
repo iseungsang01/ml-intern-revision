@@ -1,0 +1,80 @@
+{
+  "key": "Lee2020TwoGaussian",
+  "citation": {
+    "title": "Two-Gaussian Fitting Method for Charge Exchange Spectroscopy on Measurements of Ion Temperature and Toroidal Plasma Flow Velocity in the KSTAR Tokamak",
+    "authors": "H. H. Lee; J. K. Lee; W. H. Ko",
+    "year": 2020,
+    "venue": "Fusion Science and Technology",
+    "volume": "76(7)",
+    "pages": "787-794",
+    "doi_or_arxiv": "10.1080/15361055.2020.1790712"
+  },
+  "scope_read": {
+    "pdf_pages": "1-9 (p1 publisher cover; p2-9 = journal pp787-794)",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read only from the rendered images. Validation uses one discharge, 11421, from a pre-2022 campaign. The paper gives no aggregate error metric. The XICS comparison is only cited (ref15)."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Under modulation, the background is obtained from beam-off frames.",
+      "verdict": "supported",
+      "source_finding": "In the example, the beam is modulated at 1 Hz with 10 ms off and 5 ms exposure. The background subtracted from each beam-on frame is interpolated from the two adjacent background frames. Routine KSTAR modulation is 1-5 Hz.",
+      "locator": "PDF p4, Sec II (journal p789); PDF p3, Sec I",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Conventional KSTAR CES analysis removes edge background by interpolating spectra from beam-off frames that bracket each beam-on frame, with modulation kept at a few hertz.",
+      "qualification": "The cited parameters come from the 11421 example. We do not know which analysis produced our KSTAR2022 labels."
+    },
+    {
+      "proposed_claim": "Accuracy and validity range of the two-Gaussian fit, especially at the edge.",
+      "verdict": "qualify",
+      "source_finding": "The fit uses a band-pass-weighted offset plus active and background Gaussians (Eqs 3-4). Results depend on the bounds placed on the background shift, which is searched upward from a single-Gaussian shift. Fig 5 at R=2.0 m shows modulation 1.79±0.14 keV and 141±4 km/s versus fit 1.94 keV and 130 km/s, with no fit uncertainty given. In Figs 6-7 the authors judge agreement good over most of the profile. They report the fit sometimes fails at the edge when VT is very low, and they expect larger absolute uncertainty than with modulation.",
+      "locator": "PDF p5-6, Sec III, Eqs 3-4; PDF p7, Sec III, Fig5; PDF p8, Figs 6-7, Sec IV",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "A modulation-free two-Gaussian decomposition has been shown on KSTAR to track modulation-based profiles qualitatively when toroidal flow is large. Its authors caution that it carries larger absolute uncertainty and can fail near the edge when rotation is low.",
+      "qualification": "No quantitative accuracy is established. The validity range is described qualitatively and rests on one discharge."
+    },
+    {
+      "proposed_claim": "Modulation-based reports are delayed relative to the frame they describe.",
+      "verdict": "qualify",
+      "source_finding": "The authors argue that analysis cannot start until the next beam-off frame, so a 1 s beam-on pulse implies at least 1 s delay. They describe the fit as more real-time compatible but not yet implemented, and say fit data are produced manually on request.",
+      "locator": "PDF p8-9, Sec IV",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Because background interpolation needs the following beam-off frame, modulation-based CES analysis is inherently delayed with respect to the frame it describes, as argued for KSTAR.",
+      "qualification": "This is reasoning, not measured arrival times. Do not assign a latency to our data."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "CES spectra near 529 nm (C VI); beam-off background frames for the modulation method",
+    "outputs": "Ti from active width; VT from active shift",
+    "causal_or_offline": "Modulation method runs between shots and needs a later background frame. The fit is per-frame in principle but is run manually and offline.",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "The fit is validated against modulation-analysis reports, not against independent truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none; the reference is the conventional CES report",
+    "unknowns": "aggregate error, number of discharges beyond 11421, edge failure rate"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "nothing",
+    "what_not_established": "compute time, real-time operation, report arrival times",
+    "locator": "PDF p8-9, Sec IV"
+  },
+  "forbidden_inferences": [
+    "that our KSTAR2022 labels used modulation or two-Gaussian analysis",
+    "any numeric latency of our reports",
+    "that the two-Gaussian fit is real-time deployed",
+    "that the fit equals physical Ti",
+    "a quantitative edge validity threshold",
+    "that ref15 (doi 10.13182/FST15-174) is this paper's DOI"
+  ],
+  "competing_or_complementary": "Complementary and upstream. It defines how labels are generated. A per-frame two-Gaussian analysis could refresh anchors and reduce the marginal need for nowcasting. Any benefit is untested.",
+  "bibtex": "@article{Lee2020TwoGaussian,author={Lee, H. H. and Lee, J. K. and Ko, W. H.},title={Two-Gaussian Fitting Method for Charge Exchange Spectroscopy on Measurements of Ion Temperature and Toroidal Plasma Flow Velocity in the {KSTAR} Tokamak},journal={Fusion Sci. Technol.},volume={76},number={7},pages={787--794},year={2020},doi={10.1080/15361055.2020.1790712}}",
+  "followup_sources_if_material": [
+    "S. Lee et al., Fusion Sci. Technol. 69(2) 555 (2016), doi 10.13182/FST15-174: CES/XICS validation",
+    "Provider documentation on which analysis and modulation produced the KSTAR2022 chord labels",
+    "W.-H. Ko et al., Rev. Sci. Instrum. 81 10D740 (2010): calibration"
+  ]
+}

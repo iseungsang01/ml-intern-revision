@@ -1,0 +1,47 @@
+{
+  "key": "Jung2026MachineLearningbased",
+  "citation": {
+    "title": "Machine learning-based plasma profile reconstruction in KSTAR",
+    "authors": "L. Jung, J. Kim, J. Kang",
+    "year": 2026,
+    "venue": "Journal of the Korean Physical Society",
+    "volume": "88",
+    "pages": "1079-1087",
+    "doi_or_arxiv": "10.1007/s40042-026-01580-1"
+  },
+  "relevance": "supporting",
+  "topic": "Neural-network surrogate of EPED-parameterized MCMC profile fitting (Ne, Te, Ti) on KSTAR",
+  "own_question": "Can a network map same-time TS/TCI/CES channel values and uncertainties to six EPED shape parameters, replacing slow MCMC fitting for between-shot analysis?",
+  "actual_method_and_evidence": "Dense TensorFlow networks, with separate models per profile and per campaign (2020–2022). Targets are MCMC-fitted parameters, and profiles are rebuilt analytically. Preprocessing uses IQR outlier removal and linear interpolation. Evidence is a figure comparison with MCMC and range-normalized MAE of about 2–7% (Table 3). Table 2 reports training-fit metrics only. The paper reports about 12 min for MCMC versus under 5 s for ML per 5-s shot.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "On KSTAR, an ML surrogate of an EPED-constrained MCMC fit has been reported to reproduce MCMC Ne/Te/Ti profiles while reducing processing time from minutes to seconds.",
+      "original_pdf_locator": "Abstract; Sec. 2.4; Table 3",
+      "qualification": "Labels are MCMC fits, not independent truth. Inputs are concurrent diagnostic values, so this is offline between-shot analysis rather than temporal nowcasting. The method is H-mode only. Timing figures are the authors' own reports.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Changes in diagnostic channel count and position between KSTAR campaigns led these authors to train campaign-specific models.",
+      "original_pdf_locator": "Sec. 2.2; Sec. 2.4",
+      "qualification": "This is the authors' rationale; no cross-campaign transfer was tested.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The input is same-time CES/TS values and errors, and the target is a fitted profile parameter set. There are no strictly past inputs and no BES/ECEI. Report arrival times are not measured. Ti is labelled as ion temperature without specifying impurity versus main ion.",
+  "validation_if_relevant": "The paper states evaluation on unseen same-year shots, but the split, its size and any shot-level independence are not described. No untouched campaign is used.",
+  "forbidden_inferences": [
+    "that this is current-report nowcasting or future prediction",
+    "that it was deployed in real time or used for control",
+    "that MCMC labels equal physical truth",
+    "that its Ti is main-ion Ti",
+    "that it generalizes across campaigns",
+    "that all prior KSTAR ML work is noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a KSTAR-specific contrast. It is a fit-emulation surrogate driven by same-time diagnostics, which frames our causal temporal nowcast of a single CES report from strictly past information. It also documents campaign-dependent diagnostic configurations.",
+  "bibtex_if_worth_citing": "@article{Jung2026MachineLearningbased,title={Machine learning-based plasma profile reconstruction in KSTAR},author={Jung, Laurent and Kim, Jaewook and Kang, Jisung},journal={Journal of the Korean Physical Society},volume={88},pages={1079--1087},year={2026},doi={10.1007/s40042-026-01580-1}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "58f9231e1685d7bcb43b1720a8ca414af6352d20e39b7d951fded58bfcdebad6",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

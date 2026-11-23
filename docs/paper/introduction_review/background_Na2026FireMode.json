@@ -1,0 +1,40 @@
+{
+  "key": "Na2026FireMode",
+  "citation": {
+    "title": "On FIRE mode in KSTAR",
+    "authors": "Na, Yong-Su; Park, S.J.; Han, H.; Lee, Janghyeok; Heo, C.; et al. (KSTAR Team)",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "026049",
+    "doi_or_arxiv": "10.1088/1741-4326/ae332f"
+  },
+  "relevance": "peripheral",
+  "topic": "Overview of the KSTAR FIRE-mode scenario: ion ITB, possible I-mode edge, MHD, fast-ion dilution, TGLF predictive modelling",
+  "own_question": "How is FIRE mode accessed, what characterizes its core, edge and MHD behaviour, and what explains its confinement enhancement?",
+  "actual_method_and_evidence": "Review of experiments across campaigns using CES ion-temperature profiles (edge Ti pedestal), TS/TCI density, ECEI coherence, BES WCM spectra and Mirnov data. Offline TRIASSIC power balance, CGYRO/GKW gyrokinetics and TGLF predictive modelling. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR FIRE-mode discharges, the CES-fitted edge ion-temperature profile showed a pedestal-like structure that was absent in the density profile. BES detected an edge weakly coherent mode in some shots.",
+      "original_pdf_locator": "Sec. 3.2; Figs. 10-12 (pp. 7-10)",
+      "qualification": "Applies only to USN discharges with q95~4. The I-mode identification is the authors' interpretation, and the WCM is not seen in every shot. The measurements are offline profile fits. The paper does not distinguish impurity Ti from main-ion Ti.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The paper contains no nowcasting, no CES report timing and no real-time inputs.",
+  "validation_if_relevant": "None applicable. TGLF predictions are compared with a single shot only.",
+  "forbidden_inferences": [
+    "Do not imply that this paper uses BES/ECEI to estimate CES temperature.",
+    "Do not imply that it addresses KSTAR 2022 data or our chord.",
+    "Do not attribute any mechanism to our estimators.",
+    "Do not treat CES Ti as independent truth.",
+    "Do not equate ECEI electron fluctuations with ion temperature."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This is optional context showing that pedestal ion temperature from CES and BES edge fluctuations are physically studied in KSTAR. It is not a nowcasting precedent, and it adds little that bears on our framing.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 23,
+  "supplied_pdf_sha256": "d81a202009b9664ffa52039e189ecc263acf29cab3f047e285967f0a4973849e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

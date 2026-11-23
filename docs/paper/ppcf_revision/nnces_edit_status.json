@@ -1,0 +1,41 @@
+{
+  "source_record": "docs/reference/nnces_source.json",
+  "source_pdf_sha256": "c323ab23a6ade8ad5e4c6ac8cd4daa6e009d72f670d089dc23a8daa53b57ae4f",
+  "before_tex_sha256": "fb664524e7188d7952aec019dbf357dcd4e922c3286ff74f0b677292951f96b6",
+  "after_tex_sha256": "f4f6535e5d298570f2713b222b1dce519b8dfa810d95aaa19c4ac5d9df14dafd",
+  "focused_review": {
+    "verdict": "corrections_required",
+    "corrections": [
+      {
+        "field": "intro_bridge",
+        "reason": "The bridge calls the nowcast causal, and that is true of its inputs. The label is different. The current-frame CES report comes from the conventional beam-modulation analysis, which interpolates the beam-on background using a later beam-off interval (PDF pp.1–2 Sec.1; p.3 Sec.2.2). So the label uses future information even though the inputs do not. The text should say this so that the causal input set (F) is not confused with a future-derived label (L5). The wording stays generic because the manuscript's macros are not known.",
+        "replacement": "The KSTAR network NN-CES~\\citep{Lee2026NeuralNetworkbased} and the estimator studied here answer adjacent questions and can in principle be connected. NN-CES maps the measured spectrum of the current frame to the reported \\Ti{} and toroidal rotation without beam modulation. Our nowcast maps CES values already available, together with current and past BES and ECEI signals, to an estimate of the current CES report before a new report is available. The first needs the raw spectrum of the frame; the second needs a causal record of earlier reports and faster diagnostics. Only the inputs of the nowcast are restricted to what exists when the frame is taken. The report it is trained and scored against comes from the conventional analysis, which uses a later beam-off background and so is not itself available at that moment. Our target is the report of the current frame, not a future temperature or a high-rate physical reconstruction. We hold only conventional-analysis labels and have not coupled the two."
+      }
+    ],
+    "source_checks": [
+      "p.1 Abstract: NN-CES infers Ti and vT directly from raw spectra; modulation uses the main heating beam; the work is framed as enabling modulation-free diagnostics with real-time potential. The constructive framing is preserved.",
+      "pp.1–2 Sec.1: the beam-on background is interpolated between the preceding and succeeding beam-off intervals. This supports 'including a later beam-off interval'.",
+      "p.2 Sec.2.2: beam-off at 1 Hz with a 10 ms interval, then subtraction and Gaussian fit (Eq.3).",
+      "p.3 Sec.2.2 (cont.), third limitation: waiting for the next beam-off interval makes fast-response analysis difficult.",
+      "p.3 Sec.3.1: MLP takes a 256-point raw spectrum and outputs Doppler shift and broadening. Ti and vT follow via Eq.4, so 'maps spectrum to reported Ti/rotation' is acceptable.",
+      "p.3 Sec.3.3: per-channel models; targets come from the conventional analysis; shot-wise 80/10/10 split.",
+      "p.4 Sec.3.4 and Fig.4: R² declines at R ≳ 2.2 m. The 'reported to decline toward the edge' wording is accurate and correctly limited to the KSTAR network. The chord at R = 2.198 m sits near this transition, and the paragraphs rightly make no edge-failure claim for it.",
+      "p.5 Fig.5: the edge channel CH16 is at R = 2.192 m. This is context only and needs no text change.",
+      "p.5 Sec.5: higher stability does not mean higher accuracy; the model inherits conventional-analysis errors; the edge limitation is acknowledged; the beam-off wait of up to 1 s precludes real-time analysis; RT-CES is a future goal.",
+      "p.5 Sec.5 timing: about 2 ms per frame for a CPU curve_fit versus about 210 ns per frame for single-batch GPU inference over the test set. This is throughput, not single-frame online latency. The paragraphs correctly cite no timing number.",
+      "Discussion: 'may reduce, and need not preserve' avoids claiming that a faster reader guarantees nowcast value. No integration, retraining, timing measurement or controller claims are made."
+    ],
+    "korean_assessment": "전반적으로 출처에 충실합니다. NN-CES는 상류 스펙트럼 판독기로, 나우캐스트는 하류 인과적 현재 보고값 추정기로 올바르게 구분되어 있습니다. 가장자리 성능 저하는 KSTAR 논문 보고(p.4, 그림 4)로 한정되어 있고, 결합·예측·성능 우위 주장도 없습니다. 저자의 건설적 프레이밍(실시간 가능성, RT-CES 목표)은 유지됩니다. 타이밍 수치를 인용하지 않은 것도 적절합니다. p.5의 210 ns는 단일 배치 처리량이지 단일 프레임 온라인 지연이 아니기 때문입니다. 실질적 수정은 하나입니다. 나우캐스트의 입력은 인과적이지만, 정답 라벨인 기존 분석 보고값은 이후 빔-오프 배경을 쓰는 미래 파생값입니다. 따라서 입력(F)과 라벨(L5)의 구분을 intro_bridge에 명시해야 합니다. 한국어 요약도 이에 맞게 한 줄 보완하기를 권합니다."
+  },
+  "independent_host_check": "The focused reviewer conflated the causal input set with target F and future-derived target L5. Both F and L5 are evaluation targets; neither current F nor future L5 is an online input. The host corrected this wording and removed an unsupported assertion about the exact background-processing timing of every supplied label. No new data or result was introduced. Final paragraphs retain hypothetical coupling.",
+  "new_full_manuscript_grade": false,
+  "scientific_runs": 0,
+  "compiled": true,
+  "main_pages": 21,
+  "number_checks_passed": true,
+  "tests_passed": 89,
+  "visual_checked_pages": [
+    2,
+    18
+  ]
+}

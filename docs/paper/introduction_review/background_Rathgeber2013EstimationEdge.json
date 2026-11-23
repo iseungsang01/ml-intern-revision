@@ -1,0 +1,39 @@
+{
+  "key": "Rathgeber2013EstimationEdge",
+  "citation": {
+    "title": "Estimation of edge electron temperature profiles via forward modelling of the electron cyclotron radiation transport at ASDEX Upgrade",
+    "authors": "S K Rathgeber, L Barrera, T Eich, R Fischer, B Nold, W Suttrop, M Willensdorfer, E Wolfrum and the ASDEX Upgrade Team",
+    "year": 2013,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "55",
+    "pages": "025004",
+    "doi_or_arxiv": "10.1088/0741-3335/55/2/025004"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline Bayesian forward modelling of ECE radiation transport for edge electron Te in ASDEX Upgrade H-modes.",
+  "own_question": "How can reliable edge electron Te profiles be obtained from optically thin and steep-gradient ECE data, including the shine-through peak?",
+  "actual_method_and_evidence": "ECE radiation-transport forward model inside integrated data analysis with lithium-beam and interferometer density. Shown on a few discharges, sensitivity scans, one synthetic reconstruction, and Thomson and Langmuir comparisons with profile shifts. Each forward evaluation takes about 0.13 s, and a full run per time point takes about 10 min.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Near steep H-mode edges, ECE radiation temperature can differ from local electron Te, so treating it as the local temperature can mislead; forward modelling has been used to address this offline.",
+      "original_pdf_locator": "Abstract; sections 3.1, 5, 8",
+      "qualification": "Electron ECE only, ASDEX Upgrade; offline analysis. Not about impurity CES, ion temperature, or KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline time-window profile fits. There is no causal nowcasting and no report-arrival analysis.",
+  "validation_if_relevant": "Validation is case studies, not held-out statistical validation.",
+  "forbidden_inferences": [
+    "Not evidence about the reliability of CES impurity Ti labels.",
+    "Not evidence that ECEI voltages carry information about ion temperature.",
+    "The 0.13 s and 10 min timings do not bear on our 10 ms budget.",
+    "Does not show that all prior work was noncausal or limited to electrons."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional citation only, if the paper explains why raw ECE-type signals are not calibrated local Te. Its diagnostic, quantity and machine differ from our work.",
+  "bibtex_if_worth_citing": "@article{Rathgeber2013EstimationEdge,title={Estimation of edge electron temperature profiles via forward modelling of the electron cyclotron radiation transport at ASDEX Upgrade},author={Rathgeber, S K and Barrera, L and Eich, T and Fischer, R and Nold, B and Suttrop, W and Willensdorfer, M and Wolfrum, E},journal={Plasma Phys. Control. Fusion},volume={55},pages={025004},year={2013},doi={10.1088/0741-3335/55/2/025004}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "73d9e7fba57b6e61afc26e0380a0f1c3b6b2fd3f17fc3c5a7de73e81db35c6aa",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

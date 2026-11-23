@@ -1,0 +1,38 @@
+{
+  "key": "Yoshida2025TransportConfinement",
+  "citation": {
+    "title": "Transport and confinement physics: Chapter 2 of the special issue: on the path to tokamak burning plasma operation",
+    "authors": "M. Yoshida, R.M. McDermott, C. Angioni, et al. (ITPA Transport and Confinement Topical Group)",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "033001 (132pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ad8ced"
+  },
+  "relevance": "peripheral",
+  "topic": "Review of ITPA transport and confinement progress: particle, impurity, heat and momentum transport, 3D fields, L-H transitions, confinement scaling, and reduced models.",
+  "own_question": "Summarizes the physics understanding and predictive modelling progress relevant to ITER since the 2007 ITER Physics Basis.",
+  "actual_method_and_evidence": "Narrative review of multi-machine experiments, databases, and gyrokinetic and quasilinear modelling. It contains no CES nowcasting, BES/ECEI-to-Ti estimation, or causal estimator work. CXRS diagnostic issues for impurity transport are discussed only briefly. KSTAR appears only in passing.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Impurity CXRS interpretation can be affected by beam-halo emission and by charge exchange with edge neutrals; edge neutral densities are poorly known.",
+      "original_pdf_locator": "Section 3.2.5–3.2.6, pp. 21–22",
+      "qualification": "This refers to impurity density and transport analysis, not to temperature labels or to KSTAR. It is suitable only as background on why CES labels are conventional rather than ground truth.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable; no report-timing or arrival-time information is given.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "Do not claim the review evaluates BES/ECEI estimators of CES Ti.",
+    "Do not equate impurity CXRS with main-ion Ti, or infer pedestal-top Ti dynamics on KSTAR from this source.",
+    "Do not use the review's statements about neural-network surrogates of transport models as support for diagnostic nowcasting."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The review is broad and off-target for our paper. At most, it could serve as a general citation on CXRS label caveats; otherwise it is optional.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 133,
+  "supplied_pdf_sha256": "0c56ad50596e28172949883f390d25d31538f63e25148cf153b56e5a03982370",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

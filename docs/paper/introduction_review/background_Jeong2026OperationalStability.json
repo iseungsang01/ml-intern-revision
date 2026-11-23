@@ -1,0 +1,32 @@
+{
+  "key": "Jeong2026OperationalStability",
+  "citation": {
+    "title": "Operational stability and beam transport constraints in long-pulse neutral beam injection on KSTAR",
+    "authors": "J.H. Jeong, S.C. Hong, B.S. Kim, J.Y. Jang, W. Cho, J.G. Kwak, S.J. Wang",
+    "year": 2026,
+    "venue": "Fusion Engineering and Design",
+    "volume": "233",
+    "pages": "116076",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2026.116076"
+  },
+  "relevance": "peripheral",
+  "topic": "KSTAR NBI long-pulse beam transport: perveance drift, re-ionization and stray-field deflection",
+  "own_question": "Which beam-transport constraints reduce effective neutral beam power in discharges longer than 100 s?",
+  "actual_method_and_evidence": "The authors compare two discharges (#21757 degraded, #34705 stable) using water-flow calorimetry, duct thermocouples, beam-duct pressure, a neutron-scaling estimate of delivered neutral beam power, and a simplified COMSOL trajectory calculation. They describe the results as qualitative and not causally established. The paper contains no CES, Ti, BES/ECEI, or nowcasting content.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. There are no CES reports, report timing, or nowcasting targets.",
+  "validation_if_relevant": "Two-shot qualitative comparison. There is no statistical or held-out validation.",
+  "forbidden_inferences": [
+    "That NBI power variation affects CES label quality in our dataset",
+    "Any information about CES reporting latency",
+    "That the 2022 campaign shots or the chord we use are discussed",
+    "That stray-field re-ionization is an established mechanism"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper is NBI engineering and does not address CES temperature, impurity versus main-ion Ti, BES/ECEI, or causal estimation. At most, it could serve as a generic reference that KSTAR NBI power can vary within a pulse. That use is not needed and could invite unsupported links to CES beam-dependent measurements, which this paper does not examine.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "21fa77c0f10c9c3b5314da1ff987dfe3e59941b55e0171f251bbc2d2aaa32af2",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

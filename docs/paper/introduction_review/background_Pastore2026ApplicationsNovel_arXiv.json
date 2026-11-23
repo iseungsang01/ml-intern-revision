@@ -1,0 +1,46 @@
+{
+  "key": "Pastore2026ApplicationsNovel_arXiv",
+  "citation": {
+    "title": "Applications of a novel model-based real-time observer for electron density profile control experiments in TCV",
+    "authors": "F. Pastore, O. Sauter, F. Felici, D. Kropackova, et al.",
+    "year": 2026,
+    "venue": "arXiv preprint",
+    "volume": "",
+    "pages": "38 pp.",
+    "doi_or_arxiv": "arXiv:2603.26310v1"
+  },
+  "relevance": "supporting",
+  "topic": "Real-time multi-rate fusion of slow Thomson scattering data and fast interferometer data for estimating the electron density profile on TCV, used for density control",
+  "own_question": "Can a RAPDENS-based EKF observer support density control in several scenarios: detachment upstream density, central density below ECH cutoff, and H-mode edge density?",
+  "actual_method_and_evidence": "The observer is an extended Kalman filter around a 1D transport model. It runs at 1 kHz using FIR data (10 kHz filtered) and real-time TS data arriving at about 60 Hz, held between updates by a zero-order hold. When TS data arrive, the pinch-to-diffusivity ratio is re-estimated with the source term neglected. The supporting evidence is TCV experiments compared against offline TS, plus an offline test of an alternative boundary condition. Covariance matrices were tuned by hand. Edge reconstruction is underestimated for rho > 0.8.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Model-based multi-rate observers have fused slow, spatially resolved TS data with fast interferometry to estimate electron density profiles between slow reports on TCV, and the estimates were used in feedback control.",
+      "original_pdf_locator": "Sec. 2.1, Sec. 3, Appendix A",
+      "qualification": "Electron density only, from electron diagnostics, with a physics-model EKF. This is not an impurity ion temperature or CES nowcast, and the work is not a data-driven estimator.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "In such observers, slow measurements can refresh model parameters and offsets, with zero-order hold applied between updates.",
+      "original_pdf_locator": "Sec. 2.2, Eq. 18, Appendix A",
+      "qualification": "This is the authors' design. Accuracy was compared only against offline TS, and convergence failures were reported.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are FIR (1 ms cycle) and RT-TS (60 Hz; 40 Hz in one shot). The target is the electron density profile, compared against offline TS. Actual TS arrival latency is not measured or reported.",
+  "validation_if_relevant": "Validation uses a handful of TCV shots with offline TS comparison and one offline ablation of the adaptive nu/D ratio. No held-out statistical design is described.",
+  "forbidden_inferences": [
+    "That this work addresses ion or impurity temperature, CES, or KSTAR",
+    "That BES/ECEI or turbulence signals were used",
+    "That it shows CES nowcasting is useful or real-time deployable",
+    "That all prior estimators are electron-only or model-based",
+    "That the GENE TEM results apply to our chord"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a concrete precedent for fusing slow and fast diagnostics to estimate the current state between slow reports, to be contrasted with our impurity CES target and data-driven setup.",
+  "bibtex_if_worth_citing": "@misc{Pastore2026Applications,title={Applications of a novel model-based real-time observer for electron density profile control experiments in TCV},author={Pastore, F. and Sauter, O. and Felici, F. and others},year={2026},eprint={2603.26310},archivePrefix={arXiv},primaryClass={physics.plasm-ph}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 38,
+  "supplied_pdf_sha256": "9bdf6f6dca5d79ebc9bd2302420370786c6701dfa0403642e7ea95e90f22936d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

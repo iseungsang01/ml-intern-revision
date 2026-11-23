@@ -1,0 +1,46 @@
+{
+  "key": "Cavedon2017PedestalEr",
+  "citation": {
+    "title": "Pedestal and Er profile evolution during an edge localized mode cycle at ASDEX Upgrade",
+    "authors": "M. Cavedon, T. Pütterich, E. Viezzer, F. M. Laggner, A. Burckhart, M. Dunne, R. Fischer, A. Lebschy, F. Mink, U. Stroth, M. Willensdorfer, E. Wolfrum, ASDEX Upgrade Team",
+    "year": 2017,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "59",
+    "pages": "105007",
+    "doi_or_arxiv": "10.1088/1361-6587/aa7ad0 (from the supplied record hint; not printed in the extracted text, so unverified)"
+  },
+  "relevance": "supporting",
+  "topic": "ELM-synchronized edge He2+ CXRS impurity Ti, density, flows and Er, compared with electron profiles from Li-BES, ECE, IDA and Thomson scattering, at ASDEX Upgrade",
+  "own_question": "How do ion and electron pedestal profiles, gradients and Er recover through a type-I ELM cycle, and does Er match the neoclassical estimate?",
+  "actual_method_and_evidence": "Offline conditional averaging over roughly 80 ELMs from dedicated AUG discharges. ELM onset was referenced to the divertor shunt current. Edge CXRS on the He2+ line had 65 µs acquisition; IDA electron profiles had about 100 µs. Profiles were mapped with a separatrix-shift correction and fitted with splines. The authors report that max ∇Ti recovers in about 4 ms, similar to ∇ne, while ∇Te takes about 7–8 ms. Er collapses toward L-mode-like values at the crash and recovers within about 3–4 ms. Er agrees with the neoclassical estimate within uncertainties, except a possible deviation 2–4 ms after the crash that the authors flag as uncertain.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Impurity-CXRS ion temperature at the pedestal can evolve on ELM-cycle timescales different from electron temperature, so electron-diagnostic proxies need not track the ion channel one-to-one.",
+      "original_pdf_locator": "Sec. 4, p.10-11; Fig. 6; Conclusions p.13",
+      "qualification": "Single AUG He2+ dataset with ELM-averaged offline analysis; this is He2+ impurity Ti, not main-ion Ti; not KSTAR and not carbon.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge CXRS mapping and profile behaviour are most uncertain shortly after ELM crashes (about 2 ms in this case).",
+      "original_pdf_locator": "Sec. 2.2, p.4; Sec. 5, p.12",
+      "qualification": "Specific to the AUG mapping procedure and these ELMs.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Time-synchronized offline profiles only. No causal or real-time inference, and no report-arrival timing.",
+  "validation_if_relevant": "Cross-checks against binned data, Thomson scattering, and NEOART at selected time points. Not applicable to nowcasting validation.",
+  "forbidden_inferences": [
+    "Do not claim BES/ECEI predicts Ti.",
+    "Do not transfer the AUG timescales to KSTAR or carbon CES.",
+    "Do not treat the Er deviation as established.",
+    "Do not equate impurity Ti with main-ion Ti.",
+    "Do not present this source as a real-time or causal method."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful as physics background on ion/electron decoupling and ELM-phase transients, which motivate why nowcasting with electron-side inputs is non-trivial. It is not a methods precedent.",
+  "bibtex_if_worth_citing": "@article{Cavedon2017PedestalEr,author={Cavedon, M. and P{\\\"u}tterich, T. and Viezzer, E. and others},title={Pedestal and {E_r} profile evolution during an edge localized mode cycle at {ASDEX} {U}pgrade},journal={Plasma Phys. Control. Fusion},volume={59},pages={105007},year={2017},doi={10.1088/1361-6587/aa7ad0}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "1859154171e539db7df659dbdcd495374f35e114d0a997270340e6d68cf2b02d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

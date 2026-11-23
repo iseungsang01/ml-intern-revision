@@ -1,0 +1,38 @@
+{
+  "key": "PazSoldan2024PlasmaPerformance",
+  "citation": {
+    "title": "Plasma performance and operational space with an RMP-ELM suppressed edge",
+    "authors": "C. Paz-Soldan, S. Gu, N. Leuthold, P. Lunia, P. Xie, M.W. Kim, S.K. Kim, N.C. Logan, J.-K. Park, W. Suttrop, Y. Sun, D.B. Weisberg, M. Willensdorfer, et al. (ASDEX Upgrade, DIII-D, EAST, KSTAR Teams)",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "096004",
+    "doi_or_arxiv": "10.1088/1741-4326/ad6014"
+  },
+  "relevance": "peripheral",
+  "topic": "Multi-device database (AUG, DIII-D, EAST, KSTAR) of stationary RMP-ELM-suppressed operating points, pedestal limits, and confinement regression",
+  "own_question": "What operational space and global performance do RMP-ELM-suppressed plasmas show across devices, and how does confinement scale?",
+  "actual_method_and_evidence": "Retrospective, manually curated stationary windows. KSTAR data come from 2016–2019, with equilibria recomputed. Confinement is fitted by KDE-weighted log-linear regression on random 90/75/60% subsets. The extracted text notes that Ti often exceeds Te, but it does not specify the ion species or the diagnostic. There is no CES chord analysis, no BES/ECEI, no time-resolved prediction, and no KSTAR 2022 data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Across these devices, much RMP-ELM-suppressed pedestal data has Ti above Te, attributed to ion-heating dominance and limited ECH.",
+      "original_pdf_locator": "Sec. 2.4, Fig. 5(b), p.6–7",
+      "qualification": "Database-level observation only. It is not KSTAR 2022, the Ti diagnostic and species are unstated, and it is not evidence about the CES chord.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The analysis uses stationary time-window averages with no nowcasting or report timing.",
+  "validation_if_relevant": "Random-subset regression is used for exponent uncertainty, not for predictive holdout. There is no untouched-data test.",
+  "forbidden_inferences": [
+    "Do not cite this paper as support for CES nowcasting, BES/ECEI utility, or 10 ms computation.",
+    "Do not treat Fig. 5(b) Ti as carbon-impurity CES on our chord.",
+    "Do not extend the database findings to KSTAR 2022."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this paper could offer optional context on the KSTAR RMP pedestal operating regime. It provides no method or evidence for our question, so exclusion is likely.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "a361ab920165aac07f48b5faa69b408e0745086012dd77f6b205352fb50cb303",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

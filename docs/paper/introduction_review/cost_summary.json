@@ -1,0 +1,16 @@
+{
+  "invoice_verified": false,
+  "list_price_usage_estimates_usd": {
+    "docs/paper/introduction_review/api_usage.json": 49.088072000000004,
+    "docs/paper/research_reader/api_usage.json": 0.781884,
+    "docs/paper/ppcf_revision/nnces_edit_usage.json": 2.283684
+  },
+  "corpus_and_reader_total_usd": 49.869956,
+  "corpus_and_reader_ceiling_usd": 50,
+  "manuscript_edit_total_usd": 2.283684,
+  "prior_deep_review_usd": 19.134768,
+  "prior_deep_plus_manuscript_edit_usd": 21.418452,
+  "original_deep_and_manuscript_allowance_usd": 30,
+  "combined_total_usd": 71.288408,
+  "no_further_paid_calls_planned": true
+}

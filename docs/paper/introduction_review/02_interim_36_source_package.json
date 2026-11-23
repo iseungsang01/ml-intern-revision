@@ -1,0 +1,413 @@
+{
+  "introduction_tex": "\\section{Introduction}\n\\label{sec:intro}\n\nThe ion temperature \\Ti{} at the edge of an H-mode plasma changes on several time scales. On KSTAR, charge-exchange spectroscopy (CES) has shown the \\Ti{} pedestal building up over tens to hundreds of milliseconds after the L--H transition and falling during ELM suppression by resonant magnetic perturbations~\\citep{Ko2015IonTemperature}. On ASDEX Upgrade, a dedicated sub-millisecond system has recorded the edge impurity temperature dropping and recovering within a few milliseconds of type-I ELM crashes~\\citep{Viezzer2018IonHeat}; such intra-ELM dynamics lie below the 10\\,ms grid used here. Requirement studies for burning-plasma devices ask for time resolution in a similar range: specifications developed for FIRE call for edge \\Ti{} profiles at 10\\,ms and about 10\\,\\% precision~\\citep{Young2008PlasmaMeasurements}, and the ITER specifications list edge \\Ti{} at 100\\,ms and 10\\,\\%~\\citep{Donne2007ChapterDiagnostics}. These are design targets for other devices, not demonstrated performance and not KSTAR requirements. Charge-exchange \\Ti{} has also served directly in feedback: on JT-60U a core \\Ti{} difference between two chords was regulated with neutral-beam power inside a 10\\,ms control cycle~\\citep{Yoshida2009RealTime}. Monitoring on such time scales is helped by an estimate that exists when a frame is taken. This paper examines one such capability: a causal \\emph{nowcast} of the reported carbon-impurity CES temperature on one pedestal-top chord of the KSTAR 2022 campaign, selected by the data provider.\n\nCES infers the temperature and rotation of an impurity ion from the Doppler width and shift of a line excited by charge exchange with neutral-beam atoms~\\citep{Fonck1984DeterminationPlasma}; the KSTAR instrument observes the C\\,VI line near 529\\,nm with a separate background view~\\citep{Ko2010ChargeExchange}. In the beam-modulation analysis described for KSTAR, the background of a beam-on frame is interpolated from the beam-off frames that bracket it~\\citep{Lee2020TwoGaussian,Lee2026NeuralNetworkbased}, and the authors of the former argue that such an analysis cannot start before the following beam-off frame. That is an argument about the procedure, not a measurement: we did not record when the reports in our files became available, and we assign them no delay. The reports are, moreover, conventional labels rather than independent physical truth. Charge-exchange spectra superpose active and passive emission that the analysis must separate~\\citep{Viezzer2011PassiveEdge}. Main-ion and carbon temperatures have been measured to differ in the edge of DIII-D, by tens of eV inside the pedestal top in H-mode and by more near the separatrix~\\citep{Haskey2018MainIon}. Occasional fit failures have been associated with abrupt outliers in KSTAR CES profiles~\\citep{Kim2024KineticProfile}. On the chord studied here some frames carry no usable report, and the reports that exist scatter from frame to frame (\\S\\ref{sec:data}). The simplest nowcast holds the last report.\n\nOne established response works on the spectrum itself. Neural networks trained on conventionally fitted spectra have long been used to read charge-exchange line parameters. At JET~\\citep{Bishop1993AutomaticAnalysis,Svensson1999AnalysisJet} a monitoring demonstration delivered \\Ti{} profiles at the 50\\,ms exposure cadence, and a recent example comes from HL-3~\\citep{Tian2026RealTimeCxrs}. At DIII-D a simplified real-time fit is reported to deliver values every 5\\,ms with a delay of a few milliseconds; its agreement with the offline automatic analysis is lower on edge chords than on core chords~\\citep{Chrystal2026RealTime}. On KSTAR, a two-Gaussian fit~\\citep{Lee2020TwoGaussian} and the NN-CES network~\\citep{Lee2026NeuralNetworkbased} both dispense with beam-off frames. NN-CES is a per-chord network trained on modulation-analysis results that maps a single beam-on spectrum to Doppler shift and width. Its authors report close agreement with the modulation analysis inside $R\\approx2.2$\\,m and weaker agreement farther out, where they point to strong passive emission, and they name real-time CES as a future goal. We have not examined how NN-CES behaves on the chord studied here. All of these methods read a spectrum that has been recorded, and their reference is the conventional fit, not an independent measurement.\n\nSpectrum reading and temporal nowcasting can therefore be viewed as two stages that may be coupled. An upstream reader such as NN-CES turns a measured spectrum into a report~\\citep{Lee2026NeuralNetworkbased}; a downstream estimator uses the history of such reports. Ours takes strictly past CES reports together with current and past BES and ECEI snapshots, and estimates the current report before that report is available; it does not need the current CES spectrum. This is nowcasting of a pending report. It is not forecasting of a future physical temperature or profile, as in profile prediction about 200\\,ms ahead from present profiles, plasma history and proposed actuator trajectories~\\citep{Abbate2021DatadrivenProfile}. A faster upstream reader would refresh the anchors on which the nowcast rests, and could equally reduce the marginal need for it; which effect prevails has to be measured. We did not implement this coupling: the evaluation uses conventional CES reports as supplied, and the connection to NN-CES is an untested proposal.\n\nA second body of work estimates slow or missing measurements from other signals. A real-time kinetic-profile reconstruction at DIII-D takes charge-exchange data among its inputs and is trained with input dropout, so that it still returns profiles, including an ion temperature profile, when those data are absent; its ion temperature in that regime was assessed qualitatively~\\citep{Shousha2023MachineLearningbased}. Faster diagnostics have been mapped to Thomson-scattering electron density and temperature at DIII-D~\\citep{Jalalvand2025MultimodalSuperresolution} and COMPASS~\\citep{Imrek2026TemporalSuperresolution} without the slow diagnostic as an input. Agreement was checked at the available Thomson samples, so the behaviour between samples rests on consistency arguments rather than on independent high-rate measurements. On TCV, a Kalman observer built on a transport model merges fast interferometry with slower Thomson scattering, using the slow diagnostic to correct the fast one between samples~\\citep{Pastore2023ModelBased}. We do not suggest that this literature is noncausal or restricted to electron quantities. The present study asks a differently timed question about one measured ion-temperature chord, with past reports of the same diagnostic as anchors. Its fast inputs are BES~\\citep{Lampert2015CombinedHydrogen} and ECEI~\\citep{Yun2014Quasi3d} voltage snapshots on the 10\\,ms grid. BES light depends mainly on density, and ECEI is used chiefly for relative electron-temperature fluctuations, but modelling for ASDEX Upgrade indicates that edge ECEI can also respond to density~\\citep{Vanovac2018EffectsDensity}. We therefore use the snapshots as uncalibrated predictors, not as calibrated electron temperature or density and not as full-rate turbulence measurements.\n\nThe paper is organized around testable comparisons:\n\\begin{enumerate}\\setlength{\\itemsep}{1pt}\\setlength{\\parskip}{0pt}\n\\item Which causal estimators are useful when scored against hold, a causal Gaussian-process estimator and two-sided interpolation of the monotone piecewise-cubic family~\\citep{fritsch1980}, which needs the next report and so serves as an offline reference (\\S\\ref{sec:res:best})?\n\\item What information do BES and ECEI add to the CES history (\\S\\ref{sec:res:fast})?\n\\item Do the answers persist under four validation designs, which are given equal weight, and does the computation fit within a 10\\,ms frame (\\S\\ref{sec:res:designs})?\n\\end{enumerate}\nOptional application analyses (\\S\\ref{sec:res:use}) and the conditions under which the estimator does not help (\\S\\ref{sec:res:limits}) follow. Two targets are reported. F is the CES report of the current frame. L5 is a level computed offline as the median of at least three of the five subsequent reports. Both are targets only: neither the current F nor the future-derived L5 is an input available online.\n\nThe estimators are assembled from familiar models, and no algorithmic priority is claimed; the contribution is an application-specific empirical evaluation. The results concern one chord and one reused campaign, and no untouched data exist, so the validation intervals call for corresponding caution. Meeting a computation budget is not a real-time deployment, and no physical mechanism is identified.",
+  "citation_map": [
+    {
+      "corpus_key": "Ko2015IonTemperature",
+      "bib_key": "Ko2015IonTemperature",
+      "reason": "Same title and DOI 10.1088/0029-5515/55/8/083013 in audit and existing entry.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Viezzer2018IonHeat",
+      "bib_key": "Viezzer2018IonHeat",
+      "reason": "Not in the existing bibliography. Viezzer2020Dynamics and Viezzer2011PassiveEdge are different papers with different DOIs. New entry taken from the audited bibtex (DOI 10.1088/1741-4326/aaa22f).",
+      "existing": false
+    },
+    {
+      "corpus_key": "Young2008PlasmaMeasurements",
+      "bib_key": "Young2008PlasmaMeasurements",
+      "reason": "Same title and DOI 10.13182/FST08-A1673; journal version, pp. 281-303.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Donne2007ChapterDiagnostics",
+      "bib_key": "Donne2007ChapterDiagnostics",
+      "reason": "Same title and DOI 10.1088/0029-5515/47/6/S07.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Yoshida2009RealTime",
+      "bib_key": "Yoshida2009RealTime",
+      "reason": "Same title and DOI 10.1016/j.fusengdes.2009.04.006.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Fonck1984DeterminationPlasma",
+      "bib_key": "Fonck1984DeterminationPlasma",
+      "reason": "Not in the existing bibliography. New entry from the audited bibtex. No DOI is added because none is printed in the audited PDF.",
+      "existing": false
+    },
+    {
+      "corpus_key": "Ko2010ChargeExchange",
+      "bib_key": "Ko2010ChargeExchange",
+      "reason": "Same title and DOI 10.1063/1.3496991 (RSI 81, 10D740). Not Ko2010KstarCesSystem, which is the IEEE TPS paper with a different DOI.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Lee2020TwoGaussian",
+      "bib_key": "Lee2020TwoGaussian",
+      "reason": "Same title and DOI 10.1080/15361055.2020.1790712.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Lee2026NeuralNetworkbased",
+      "bib_key": "Lee2026NeuralNetworkbased",
+      "reason": "Same title and DOI 10.1016/j.fusengdes.2025.115518.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Viezzer2011PassiveEdge",
+      "bib_key": "Viezzer2011PassiveEdge",
+      "reason": "Same title and DOI 10.1088/0741-3335/53/3/035002.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Haskey2018MainIon",
+      "bib_key": "Haskey2018MainIon",
+      "reason": "Matched by exact title and author list. The audited PDF is a preprint with no journal metadata, so the PPCF 60, 105001 and DOI in the existing entry are not confirmed by the audit.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Kim2024KineticProfile",
+      "bib_key": "Kim2024KineticProfile",
+      "reason": "Same title and DOI 10.1088/1741-4326/ad7304.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Bishop1993AutomaticAnalysis",
+      "bib_key": "Bishop1993AutomaticAnalysis",
+      "reason": "Same title, authors, PPCF 35, 765-773. The audited PDF prints no DOI; the DOI in the existing entry comes from the bibliography, not the audit.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Svensson1999AnalysisJet",
+      "bib_key": "Svensson1999AnalysisJet",
+      "reason": "Same title, authors, PPCF 41, 315-338. The audited PDF prints no DOI; the DOI in the existing entry comes from the bibliography, not the audit.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Tian2026RealTimeCxrs",
+      "bib_key": "Tian2026RealTimeCxrs",
+      "reason": "Same title and DOI 10.1088/1741-4326/aeb037. The existing key is kept although the volume year is 2027 (published online 22 Oct 2026); the audit's alternative key Tian2027RealTimeCXRS is not used.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Chrystal2026RealTime",
+      "bib_key": "Chrystal2026RealTime",
+      "reason": "Matched by exact title and author list. The audited PDF prints no venue, year or DOI, so the RSI 97, 103501 and DOI in the existing entry are not confirmed by the audit.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Abbate2021DatadrivenProfile",
+      "bib_key": "Abbate2021DatadrivenProfile",
+      "reason": "Same title and DOI 10.1088/1741-4326/abe08d. Not Abbate2025Combining.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Shousha2023MachineLearningbased",
+      "bib_key": "Shousha2023MachineLearningbased",
+      "reason": "Same title and DOI 10.1088/1741-4326/ad142f; publication year is 2024 despite the key.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Jalalvand2025MultimodalSuperresolution",
+      "bib_key": "Jalalvand2025MultimodalSuperresolution",
+      "reason": "Same title and DOI 10.1038/s41467-025-63492-1.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Imrek2026TemporalSuperresolution",
+      "bib_key": "Imrek2026TemporalSuperresolution",
+      "reason": "Same title and DOI 10.1088/1361-6587/ae72c6. The legacy key is retained; the author is Imrisek, as the existing entry already has it.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Pastore2023ModelBased",
+      "bib_key": "Pastore2023ModelBased",
+      "reason": "Same title and DOI 10.1016/j.fusengdes.2023.113615. Not the 2026 Nuclear Fusion paper.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Lampert2015CombinedHydrogen",
+      "bib_key": "Lampert2015CombinedHydrogen",
+      "reason": "Same title and DOI 10.1063/1.4923251.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Yun2014Quasi3d",
+      "bib_key": "Yun2014Quasi3d",
+      "reason": "Same title and DOI 10.1063/1.4890401. Not Yun2010DevelopmentKstar or Yun2011TwoDimensionalVisualization.",
+      "existing": true
+    },
+    {
+      "corpus_key": "Vanovac2018EffectsDensity",
+      "bib_key": "Vanovac2018EffectsDensity",
+      "reason": "Same title and DOI 10.1088/1361-6587/aaa7ac.",
+      "existing": true
+    },
+    {
+      "corpus_key": "fritsch1980",
+      "bib_key": "fritsch1980",
+      "reason": "Same title, authors, SIAM J. Numer. Anal. 17(2), 238-246. The audited PDF prints no DOI; the DOI in the existing entry comes from the bibliography, not the audit.",
+      "existing": true
+    }
+  ],
+  "new_bibtex": [
+    {
+      "bib_key": "Viezzer2018IonHeat",
+      "corpus_key": "Viezzer2018IonHeat",
+      "entry": "@article{Viezzer2018IonHeat,author={Viezzer, E. and Cavedon, M. and Fable, E. and Laggner, F. M. and McDermott, R. M. and others},title={Ion heat transport dynamics during edge localized mode cycles at {ASDEX} {Upgrade}},journal={Nuclear Fusion},volume={58},pages={026031},year={2018},doi={10.1088/1741-4326/aaa22f}}"
+    },
+    {
+      "bib_key": "Fonck1984DeterminationPlasma",
+      "corpus_key": "Fonck1984DeterminationPlasma",
+      "entry": "@article{Fonck1984DeterminationPlasma,author={Fonck, R. J. and Darrow, D. S. and Jaehnig, K. P.},title={Determination of plasma-ion velocity distribution via charge-exchange recombination spectroscopy},journal={Phys. Rev. A},volume={29},number={6},pages={3288--3309},year={1984}}"
+    }
+  ],
+  "claim_to_source": [
+    {
+      "paragraph": 1,
+      "claim": "On KSTAR, CES shows the Ti pedestal building up over tens to hundreds of ms after the L-H transition and falling during RMP ELM suppression.",
+      "corpus_keys": [
+        "Ko2015IonTemperature"
+      ],
+      "locators": "PDF p4 Sec 3A, Figs 2-3; p8 Sec 3D, Figs 11-12",
+      "caveat": "Carbon-impurity quantities from earlier campaigns, not shown to match the 2022 configuration. The source says ELM-scale Ti drops are hard to see. No latency information."
+    },
+    {
+      "paragraph": 1,
+      "claim": "On ASDEX Upgrade, edge impurity temperature dropped and recovered within a few ms of type-I ELM crashes, measured with a dedicated sub-ms system.",
+      "corpus_keys": [
+        "Viezzer2018IonHeat"
+      ],
+      "locators": "PDF p3 Sec 2; p6 Sec 5.1, Fig 5; p8 Sec 5.2, Fig 7",
+      "caveat": "AUG, specific seeded discharges, rho_pol 0.95-1.0, ELM-synchronised, offline. The source does not address nowcasting. The remark that this lies below our 10 ms grid is ours."
+    },
+    {
+      "paragraph": 1,
+      "claim": "FIRE-derived specifications call for edge Ti profiles at 10 ms and about 10% precision.",
+      "corpus_keys": [
+        "Young2008PlasmaMeasurements"
+      ],
+      "locators": "FIRE attribution: journal p.288, Sec II.C; entries: Table III, journal p.289",
+      "caveat": "A design requirement for time resolution, not a computation budget and not KSTAR-specific. The earlier 'p. 288, table III' locator is corrected: the table is on p.289."
+    },
+    {
+      "paragraph": 1,
+      "claim": "ITER specifications list edge Ti at 100 ms and 10%.",
+      "corpus_keys": [
+        "Donne2007ChapterDiagnostics"
+      ],
+      "locators": "PDF p.9 (S344), Table 2 cont., measurement 28",
+      "caveat": "Applies to r/a>0.9 with spatial resolution TBD. An ITER target; the source gives edge Ti no explicit control role. The pedestal-top chord is not equated with r/a>0.9."
+    },
+    {
+      "paragraph": 1,
+      "claim": "On JT-60U a two-chord core Ti difference was regulated with neutral-beam power inside a 10 ms control cycle.",
+      "corpus_keys": [
+        "Yoshida2009RealTime"
+      ],
+      "locators": "p.3 Sec 3; p.4 Sec 4.1, Eqs 1-2; Figs 5, 7, 8",
+      "caveat": "Core chords only (r/a <= 0.55); no edge or pedestal chord was controlled. The feedback signal was the measurement itself, not an estimate."
+    },
+    {
+      "paragraph": 2,
+      "claim": "CES infers impurity temperature and rotation from the Doppler width and shift of a beam-excited charge-exchange line.",
+      "corpus_keys": [
+        "Fonck1984DeterminationPlasma"
+      ],
+      "locators": "p.1-2 Sec I, Eq (1); p.11 Sec III, Eq (22)",
+      "caveat": "Holds when Doppler broadening dominates. The source does not treat the KSTAR carbon line."
+    },
+    {
+      "paragraph": 2,
+      "claim": "The KSTAR instrument observes C VI near 529 nm with a separate background view.",
+      "corpus_keys": [
+        "Ko2010ChargeExchange"
+      ],
+      "locators": "p2 Abstract, Sec II; p3 Sec III, Fig 1",
+      "caveat": "Describes the 2010 instrument; the 2022 configuration is not documented in the source."
+    },
+    {
+      "paragraph": 2,
+      "claim": "In the KSTAR beam-modulation analysis the background of a beam-on frame is interpolated from bracketing beam-off frames; the authors of Lee2020 argue the analysis cannot start before the following beam-off frame.",
+      "corpus_keys": [
+        "Lee2020TwoGaussian",
+        "Lee2026NeuralNetworkbased"
+      ],
+      "locators": "Lee2020: PDF p4 Sec II; p8-9 Sec IV. Lee2026: p1 Sec 1; p2 Sec 2.2",
+      "caveat": "The delay is the authors' reasoning, not a measured arrival time. The text does not say which analysis produced the 2022 labels and assigns no latency."
+    },
+    {
+      "paragraph": 2,
+      "claim": "Charge-exchange spectra superpose active and passive emission that must be separated.",
+      "corpus_keys": [
+        "Viezzer2011PassiveEdge"
+      ],
+      "locators": "PDF p2-3 Abstract, Sec 1; p4-5 Sec 2.1, Fig 2",
+      "caveat": "AUG source; it does not quantify bias in active Ti. That this makes reports 'conventional labels' is our interpretation."
+    },
+    {
+      "paragraph": 2,
+      "claim": "Main-ion and carbon temperatures differ in the DIII-D edge: tens of eV inside the pedestal top in H-mode, more near the separatrix.",
+      "corpus_keys": [
+        "Haskey2018MainIon"
+      ],
+      "locators": "p4 Sec II.B, Figs 4(c,d), 5(b); p7 Sec III",
+      "caveat": "Two DIII-D shots; in L-mode the temperatures agreed within error bars; part of the gap may be spectroscopic (Zeeman). No inference for the KSTAR chord. Journal metadata are not confirmed by the audited PDF."
+    },
+    {
+      "paragraph": 2,
+      "claim": "Occasional fit failures have been associated with abrupt outliers in KSTAR CES profiles.",
+      "corpus_keys": [
+        "Kim2024KineticProfile"
+      ],
+      "locators": "p3 Sec 1; p5 Sec 2.2; pp11-12 App A, Figs A1-A2",
+      "caveat": "The link rests on a reported tendency plus one illustrated case; no outlier rate is given. The source does not state the impurity species."
+    },
+    {
+      "paragraph": 2,
+      "claim": "Some frames on the studied chord carry no usable report and reports scatter from frame to frame.",
+      "corpus_keys": [],
+      "locators": "This study, \\S\\ref{sec:data}",
+      "caveat": "Statement about our own data, carried over from the initial draft; not from a literature source."
+    },
+    {
+      "paragraph": 3,
+      "claim": "Neural networks trained on conventionally fitted spectra have long been used to read charge-exchange line parameters at JET; a monitoring demonstration delivered Ti profiles at the 50 ms exposure cadence.",
+      "corpus_keys": [
+        "Bishop1993AutomaticAnalysis",
+        "Svensson1999AnalysisJet"
+      ],
+      "locators": "Bishop: PDF p6 Sec 3; p7-9 Sec 4. Svensson: PDF p24 Sec 9; p18-21 Sec 8",
+      "caveat": "Bishop is preliminary and offline, with no real-time implementation. The Svensson demonstration was monitoring only, on a simplified pipeline, and its networks were trained on synthetic spectra regenerated from fit parameters."
+    },
+    {
+      "paragraph": 3,
+      "claim": "A recent neural-network reader exists for HL-3.",
+      "corpus_keys": [
+        "Tian2026RealTimeCxrs"
+      ],
+      "locators": "p3 Sec 2.1-2.2; p5 Sec 3.2; p6 Table 3",
+      "caveat": "Labels are least-squares fits with human inspection; only offline inference time was measured. No deployment or accuracy claim is made in the text."
+    },
+    {
+      "paragraph": 3,
+      "claim": "At DIII-D a simplified real-time fit is reported to deliver values every 5 ms with a few-ms delay; agreement with the offline automatic analysis is lower on edge chords than on core chords.",
+      "corpus_keys": [
+        "Chrystal2026RealTime"
+      ],
+      "locators": "p1 Abstract, Sec I; p2-3 Sec II; p4 Sec III; p5 Figs 4-5",
+      "caveat": "Timing is stated as typical values, not a measured distribution. The reference is the offline automatic fit, not physical truth; edge data include chords outside the confined plasma."
+    },
+    {
+      "paragraph": 3,
+      "claim": "The KSTAR two-Gaussian fit and NN-CES both dispense with beam-off frames.",
+      "corpus_keys": [
+        "Lee2020TwoGaussian",
+        "Lee2026NeuralNetworkbased"
+      ],
+      "locators": "Lee2020: PDF p5-6 Sec III, Eqs 3-4. Lee2026: p3 Sec 3.1",
+      "caveat": "The two-Gaussian fit rests on one discharge, is run manually, and its authors caution about edge failures at low rotation. NN-CES still needs modulation labels for training."
+    },
+    {
+      "paragraph": 3,
+      "claim": "NN-CES is a per-chord network trained on modulation-analysis results mapping one beam-on spectrum to Doppler shift and width; agreement is close inside R≈2.2 m and weaker farther out, where the authors point to strong passive emission; real-time CES is a stated future goal.",
+      "corpus_keys": [
+        "Lee2026NeuralNetworkbased"
+      ],
+      "locators": "p3 Sec 3.1, Eqs 4-7; p4 Sec 3.4, Fig 4; p5 Sec 5",
+      "caveat": "Fig 4 values are approximate and the edge attribution is the authors' interpretation. The text explicitly does not claim anything about NN-CES on our chord. No online deployment was shown."
+    },
+    {
+      "paragraph": 4,
+      "claim": "An upstream reader such as NN-CES turns a measured spectrum into a report; the coupling to a downstream nowcast is an untested proposal.",
+      "corpus_keys": [
+        "Lee2026NeuralNetworkbased"
+      ],
+      "locators": "p3 Sec 3.1; p5 Sec 5",
+      "caveat": "The two-stage view and the refresh-anchors versus reduced-need trade-off are our framing. Nothing was implemented or measured."
+    },
+    {
+      "paragraph": 4,
+      "claim": "Profile forecasting predicts about 200 ms ahead from present profiles, plasma history and proposed actuator trajectories.",
+      "corpus_keys": [
+        "Abbate2021DatadrivenProfile"
+      ],
+      "locators": "PDF p.4 Sec 2.1; Figs 2-3; Eq (2)",
+      "caveat": "Cited only as the forecasting contrast. The source predicts no ion temperature, and the text does not say it does."
+    },
+    {
+      "paragraph": 5,
+      "claim": "A DIII-D real-time kinetic-profile reconstruction uses charge-exchange inputs, is trained with input dropout and returns profiles including Ti without them; Ti in that regime was assessed qualitatively.",
+      "corpus_keys": [
+        "Shousha2023MachineLearningbased"
+      ],
+      "locators": "PDF p4 Table 1; p5-6 Sec 2; p13-15 Sec 4.2.2, Figs 10-12",
+      "caveat": "Targets are offline reconstructions, not independent truth. No quantitative Ti error without charge-exchange input is reported. The split unit is unknown, and no claim about it is made."
+    },
+    {
+      "paragraph": 5,
+      "claim": "Faster diagnostics were mapped to Thomson-scattering ne and Te at DIII-D and COMPASS without the slow diagnostic as input; agreement was checked at the available Thomson samples, so behaviour between samples rests on consistency arguments.",
+      "corpus_keys": [
+        "Jalalvand2025MultimodalSuperresolution",
+        "Imrek2026TemporalSuperresolution"
+      ],
+      "locators": "Jalalvand: p3 Results; p9-10 Methods, 'Validation methodology and limitations'. Imrisek: PDF p3 Sec 1; p4-5 Sec 2.1, Table 1; p15-17 Sec 3.4",
+      "caveat": "Describes these two sources only. Online causality is not established for either, and the text says nothing about it. No statement is made about their split designs."
+    },
+    {
+      "paragraph": 5,
+      "claim": "On TCV a transport-model Kalman observer merges fast interferometry with slower Thomson scattering, using the slow diagnostic to correct the fast one between samples.",
+      "corpus_keys": [
+        "Pastore2023ModelBased"
+      ],
+      "locators": "p.2 Sec 2.1; p.3-4 Sec 3.1-3.3, Eqs 12-18; p.6 Sec 5",
+      "caveat": "Electron density; evaluated offline on synthetic data and one discharge. No rates or real-time claims are stated in the text."
+    },
+    {
+      "paragraph": 5,
+      "claim": "BES light depends mainly on density.",
+      "corpus_keys": [
+        "Lampert2015CombinedHydrogen"
+      ],
+      "locators": "p2 Sec I; p6-7 Sec III G",
+      "caveat": "Authors' statement for the 2014-era system. Our voltages are not calibrated density, and the 2022 geometry is not documented in the source."
+    },
+    {
+      "paragraph": 5,
+      "claim": "ECEI is used chiefly for relative electron-temperature fluctuations.",
+      "corpus_keys": [
+        "Yun2014Quasi3d"
+      ],
+      "locators": "p.2 Sec I-II; p.4 Fig 6",
+      "caveat": "The source does not discuss calibration. Using raw voltages is our design decision, not the source's statement."
+    },
+    {
+      "paragraph": 5,
+      "claim": "Modelling for ASDEX Upgrade indicates that edge ECEI can also respond to density.",
+      "corpus_keys": [
+        "Vanovac2018EffectsDensity"
+      ],
+      "locators": "PDF p5-6 Sec 3; p8-9 Secs 5-6, Figs 9-10; p11 Sec 8",
+      "caveat": "Forward modelling for one AUG geometry and discharge; the source also finds Trad≈Te inside the separatrix for typical profiles. No numbers are transferred to KSTAR."
+    },
+    {
+      "paragraph": 6,
+      "claim": "The two-sided reference is of the monotone piecewise-cubic family and needs the next report.",
+      "corpus_keys": [
+        "fritsch1980"
+      ],
+      "locators": "PDF p.1 Sec 2, Eqs (1)-(2); p.2 Sec 2; p.3-5 Secs 3-4",
+      "caveat": "The source assumes globally monotone data. The variant actually implemented for non-monotone CES series must be specified in the methods section. That it needs both neighbouring reports is our inference from the interval construction."
+    },
+    {
+      "paragraph": "6-7",
+      "claim": "Questions, equal-weight validation designs, 10 ms computation, targets F and L5 as offline-only quantities, and scope limits.",
+      "corpus_keys": [],
+      "locators": "This study",
+      "caveat": "Author framing; no literature source and no result stated."
+    }
+  ],
+  "provenance": "Complete fields recovered from max_tokens response, not completed original synthesis"
+}

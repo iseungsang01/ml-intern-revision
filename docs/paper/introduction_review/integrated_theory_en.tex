@@ -1,0 +1,33 @@
+\section{Theoretical background}
+\label{sec:background}
+
+\subsection{Pedestal and ion-temperature measurement}
+The pressure at the top of the H-mode edge barrier is widely regarded as a strong determinant of global confinement, and pedestal-top values serve as boundary conditions for core transport models~\citep{Snyder2011FirstPrinciples}. On KSTAR the $T_i$ pedestal spans a few centimetres. It is usually characterized by fitted heights and widths~\citep{Ko2015IonTemperature}. This study uses one chord that the provider designated as pedestal-top. It does not redetermine the pedestal position for each discharge.
+
+\subsection{From a CES spectrum to a reported temperature}
+Charge exchange between neutral-beam atoms and fully stripped carbon produces excited ions emitting the C\,VI line. The active emission is weighted near the beam--line-of-sight intersection; passive emission along the line of sight can overlap it~\citep{Fonck1984DeterminationPlasma,Isler1994OverviewCharge,Viezzer2011PassiveEdge}.
+
+For a simplified Gaussian Doppler line, let $W_D$ be its standard deviation in wavelength after accounting for instrumental broadening, and $\lambda_0$ the rest wavelength. The carbon-ion temperature in energy units satisfies
+\begin{equation}
+ \Theta_C \equiv k_B T_C = m_C c^2\left(\frac{W_D}{\lambda_0}\right)^2 .
+\end{equation}
+Here $m_C$ is the carbon-ion mass and $c$ is the speed of light. The relation omits effects such as unresolved fine structure; actual spectral analysis must account for the instrumental response and line shape~\citep{Fonck1984DeterminationPlasma,Lee2026NeuralNetworkbased}. In the delivered files the energy-unit carbon-impurity temperature is denoted $T_i$. We use these reports and do not fit raw spectra.
+
+The result is therefore a carbon-impurity temperature produced by a defined analysis chain. It is not necessarily the main-ion temperature: the two have been measured to differ in the edge of DIII-D~\citep{Haskey2018MainIon}. NN-CES learns the same fitted parameters from raw spectra~\citep{Lee2026NeuralNetworkbased}. It reads spectra faster, but its reference remains the conventional analysis.
+
+\subsection{Spectrum reading versus report availability}
+Reading a spectrum and having a report available are separate steps. Once a spectrum has been read, its report can be appended to the history. Before that, the current report can be estimated only from information already present.
+
+Let $\mathcal{I}_t$ denote the past CES reports made visible by the specified availability rule at frame $t$ together with the BES and ECEI snapshots up to and including $t$. Our causal estimator is restricted to $\mathcal{I}_t$, sharing the past-and-present information restriction of filtering. Its supervised target is a reported quantity, rather than an identified physical state. Two-sided interpolation also uses later reports and has a smoothing-like information set~\citep{Shukla2020SurveyPrinciples,VanMulders2025ModelBased}. It is therefore an offline reference.
+
+The targets are F, the report of frame $t$, and L5, an offline median of measured values in the next five grid rows, requiring at least three measured values. Neither is ever part of $\mathcal{I}_t$. Nowcasting here means estimating the pending report of the current frame. It does not mean forecasting a future physical temperature, and a finer output grid alone does not demonstrate improved measurement resolution. In particular, intra-ELM dynamics below the delivered grid are not independently resolved by the present targets.
+
+\subsection{Candidate learning models}
+The candidates differ in how they use $\mathcal{I}_t$:
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item Hold carries the last report forward.
+\item A causal Gaussian process expresses smooth temporal correlation in the report history.
+\item Recurrent and history models carry a state across frames. The elapsed time since the last report can be supplied explicitly as a feature~\citep{Che2018RecurrentNeural}.
+\item Local temporal convolutions, including causal temporal convolutional networks, apply filters over a recent window of snapshots. They can detect short-lived patterns without a long memory.
+\end{itemize}
+Which of these helps is decided by matched comparisons of regression error and uncertainty, not by architecture alone. The completed comparisons and the planned network design are separated in Section~\ref{sec:intro} and in the Methods.

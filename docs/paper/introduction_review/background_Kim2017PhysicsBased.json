@@ -1,0 +1,38 @@
+{
+  "key": "Kim2017PhysicsBased",
+  "citation": {
+    "title": "Physics-based integrated modeling of the energy confinement time scaling laws for the H- and L-modes in the KSTAR-type tokamak model",
+    "authors": "J.Y. Kim, H.S. Han, L. Terzolo",
+    "year": 2017,
+    "venue": "Nuclear Fusion",
+    "volume": "57",
+    "pages": "076012 (17pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/aa623b"
+  },
+  "relevance": "peripheral",
+  "topic": "Integrated transport modeling (ASTRA with GLF23/MMM, plus EPED1) of global confinement scaling. Uses a KSTAR-type model with R=1.74 m, a=0.48 m.",
+  "own_question": "How do marginal-stability, turbulent and pedestal contributions produce the empirical stored-energy scaling with IP, Pin, BT and ne?",
+  "actual_method_and_evidence": "Simulation-only parameter scans. Stored energy is split into a marginal part, extrapolated to low power, and a turbulent part. The pedestal is set by EPED1 and iterated with the core to capture core-edge coupling. No experimental CES, BES or ECEI data is used. There is no time-resolved or causal analysis, and the work does not address diagnostics or nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In integrated modeling of a KSTAR-type H-mode, the core temperature profile is strongly tied to the pedestal-top boundary through profile stiffness.",
+      "original_pdf_locator": "Sec. 2.1, Fig. 1, Eqs. (1)-(2)",
+      "qualification": "This is a modeling result under GLF23 and EPED1 assumptions with a prescribed density profile. It is not a measurement and is not specific to impurity Ti.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The paper treats steady-state profiles and has no measurement timing.",
+  "validation_if_relevant": "Calculated scaling exponents are compared with the empirical IPB98 and ITER89 laws only. No data split is involved.",
+  "forbidden_inferences": [
+    "That pedestal-top CES Ti is predictable from BES or ECEI signals",
+    "That this paper validates any KSTAR 2022 measurement",
+    "That the stiffness exponents apply to carbon-impurity CES temperature dynamics"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper is at most optional background on why pedestal-top temperature matters for global confinement. It provides no diagnostic, timing or estimator evidence relevant to our nowcasting question.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "bbbdabfff50a950cd77f63f766d62b911f9fc5c8cd34a25b4a420c32a1f9a3e7",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

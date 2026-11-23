@@ -1,0 +1,46 @@
+{
+  "key": "Mazon2025Diagnostics",
+  "citation": {
+    "title": "Diagnostics: Chapter 8 of the special issue: on the path to tokamak burning plasma operation",
+    "authors": "D. Mazon, G. Vayakis, M. Walsh, G. Yun, S.-H. Hong, et al.",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "113001",
+    "doi_or_arxiv": "10.1088/1741-4326/adfc7c"
+  },
+  "relevance": "supporting",
+  "topic": "ITPA review of ITER diagnostics, including CXRS on metal walls, BES fluctuation feasibility, synthetic diagnostics and Kalman-type state estimation for control, and Bayesian integrated data analysis",
+  "own_question": "Status, design and R&D basis of ITER diagnostics and their analysis and control use",
+  "actual_method_and_evidence": "Review chapter. The CXRS subchapter describes JET metal-wall experience in which W nuisance lines complicate impurity CX ion-temperature fitting and require beam notches, Ne seeding and main-ion CX analysis. ITER CXRS time resolution is relaxed by diagnostic-neutral-beam modulation. Subchapter 10 describes model-based observers that fuse multiple diagnostics; density-profile Kalman estimation is supported by simulations only. Subchapter 11 presents Bayesian IDA, likelihoods, outlier-robust Student-t models and synergy between diagnostics, with synthetic ITER examples. No KSTAR CES nowcasting results are reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In metal-wall machines, CX impurity ion-temperature fitting can be degraded by overlapping tungsten nuisance lines, and CX measurement cadence can be constrained by beam modulation.",
+      "original_pdf_locator": "Section 4.3 and Section 4.1.3, pp. 65 and 68-69",
+      "qualification": "The evidence is JET and ITER-design experience, not KSTAR. It concerns impurity CX Ti, not electron or main-ion temperature.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Model-based state observers and Bayesian integration of heterogeneous diagnostics are established frameworks for estimating plasma quantities that a single diagnostic constrains incompletely.",
+      "original_pdf_locator": "Sections 10.2.2, 10.4.4 and 11.2-11.4.1, pp. 152-153, 160 and 162-168",
+      "qualification": "The examples are simulations and post-shot analyses, not demonstrated real-time CES nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not reported for CES report arrival. The ITER DNB-modulated CXRS time resolution is 200 ms to 1.5 s as a design value.",
+  "validation_if_relevant": "Synthetic and simulation studies; there is no held-out-campaign validation.",
+  "forbidden_inferences": [
+    "that prior CES/CXRS estimation work is noncausal",
+    "that the Kalman density observer was deployed in real time on ITER",
+    "that BES or ECEI carry Ti information",
+    "that this review validates our estimators",
+    "that ITER timing numbers apply to KSTAR"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include for background on CX impurity-Ti difficulties and on observer/IDA concepts; do not cite as a nowcasting precedent.",
+  "bibtex_if_worth_citing": "@article{Mazon2025Diagnostics,title={Diagnostics: Chapter 8 of the special issue: on the path to tokamak burning plasma operation},author={Mazon, D. and Vayakis, G. and Walsh, M. and Yun, G. and others},journal={Nuclear Fusion},volume={65},pages={113001},year={2025},doi={10.1088/1741-4326/adfc7c}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 196,
+  "supplied_pdf_sha256": "f16038245426adaab3182b96fd72e54c6fdea8d00c543d704d38a5ad68fcc04d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

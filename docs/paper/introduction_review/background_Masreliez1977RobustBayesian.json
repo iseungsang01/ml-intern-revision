@@ -1,0 +1,37 @@
+{
+  "key": "Masreliez1977RobustBayesian",
+  "citation": {
+    "title": "Robust Bayesian Estimation for the Linear Model and Robustifying the Kalman Filter",
+    "authors": "C. Johan Masreliez; R. Douglas Martin",
+    "year": 1977,
+    "venue": "IEEE Transactions on Automatic Control",
+    "volume": "AC-22",
+    "pages": "361-371",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Robust (heavy-tailed noise) Bayesian estimation for the linear model, and a robustified Kalman filter that uses bounded influence functions on innovations.",
+  "own_question": "How can a linear Gaussian Bayesian or Kalman estimate stay efficient when either the observation noise or the state noise is symmetric and heavy-tailed?",
+  "actual_method_and_evidence": "The paper derives min-max influence-function estimators and covariance bounds (Theorems 1-4). It assumes a Gaussian state prediction error, which the authors acknowledge is approximate. Evidence comes from scalar examples and a one-dimensional simulated Monte Carlo study (10 steps, 1000 runs). There is no plasma, diagnostic, or real data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "For background only: robust Kalman-type filters bound the influence of outlying innovations to limit sensitivity to heavy-tailed observation noise.",
+      "original_pdf_locator": "Sec. I and Sec. IV, Theorem 3, eqs. (17)-(21), pp. 362, 367-368",
+      "qualification": "Shown under the authors' assumptions and in simulated 1-D cases only. This is a concept we cite; our study did not implement it.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. These are generic sequential state estimates, not report nowcasting.",
+  "validation_if_relevant": "Simulation only, with a 1-D model and Gaussian-mixture observation noise.",
+  "forbidden_inferences": [
+    "Do not imply our estimators use robust influence functions or that robustness was tested on CES labels.",
+    "Do not transfer its simulated efficiency figures to KSTAR data.",
+    "Do not cite it as evidence about plasma diagnostics or CES label noise."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional citation only if the theory section discusses robustness to outlier CES reports. It is otherwise not needed.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "32d6ecff44205c88b530dffbacc7e1abebaba5bd800ac7a464a0e245c92a99d0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

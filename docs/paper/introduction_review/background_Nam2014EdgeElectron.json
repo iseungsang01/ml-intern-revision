@@ -1,0 +1,47 @@
+{
+  "key": "Nam2014EdgeElectron",
+  "citation": {
+    "title": "Edge electron density profiles and fluctuations measured by two-dimensional beam emission spectroscopy in the KSTAR",
+    "authors": "Y. U. Nam; S. Zoletnik; M. Lampert; Á. Kovácsik; H. M. Wi",
+    "year": 2014,
+    "venue": "Review of Scientific Instruments",
+    "volume": "85",
+    "pages": "11E434",
+    "doi_or_arxiv": "10.1063/1.4894839"
+  },
+  "relevance": "supporting",
+  "topic": "KSTAR 2D BES upgrade (32-channel APD array, 2 MHz sampling, roughly 1 cm resolution) and edge density and fluctuation behavior across L-H transitions, ELMs and H-L back transitions",
+  "own_question": "Can the upgraded, low-background BES provide relative edge density profiles and fluctuation patterns for fast transient events?",
+  "actual_method_and_evidence": "Instrument description and a few case studies. The data come from 2013-era shots #9163 and #9420-9422, not KSTAR2022. Stray-light blocking reduced background from about 30% to 2%. Photon intensity is treated as a proxy for relative ne without calibration. Fluctuation profiles are band-averaged autopower spectra computed over 20 ms windows. The paper gives a qualitative description of an ELM precursor and its phase delays, with a rough poloidal velocity and wavenumber estimate. It has no Te or Ti, no CES, no prediction, and no statistics across shots.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR BES measures edge density fluctuations with 2D APD channels at MHz sampling near the pedestal. The raw intensity mainly tracks relative electron density.",
+      "original_pdf_locator": "Abstract; Sec. I",
+      "qualification": "This describes the 2014 hardware. It reflects the source authors' assumption that other parameters are subordinate. It is a relative signal, not calibrated ne, and it does not describe the 2022 configuration.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge BES signals change around confinement transitions and ELM precursors. This motivates BES as possibly informative auxiliary input about edge state.",
+      "original_pdf_locator": "Secs. II-IV; Figs. 1-3",
+      "qualification": "The evidence is a small number of single-shot qualitative observations. The authors' interpretations, such as the claim that mid-frequency fluctuations play an important role in the L-H transition, are suggestive rather than demonstrated. The figures were not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "BES only, sampled at 2 MHz. The paper uses 0.1 ms intensity averages and 20 ms fluctuation windows. It has no CES targets and contains no information about report timing.",
+  "validation_if_relevant": "None. There is no held-out data and no quantitative validation.",
+  "forbidden_inferences": [
+    "BES predicts or informs CES carbon-impurity Ti, or electron temperature",
+    "the 2014 resolution and background values apply to KSTAR2022 data",
+    "the source demonstrates the physical mechanism of the L-H transition",
+    "the source involves real-time or online use",
+    "the 10 ms snapshots used in our study preserve the fluctuation content analyzed here",
+    "this source is representative of all prior BES work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "It is a suitable background citation for the KSTAR BES instrument and its sensitivity to edge transients. It gives no evidence about temperature nowcasting.",
+  "bibtex_if_worth_citing": "@article{Nam2014EdgeElectron,author={Nam, Y. U. and Zoletnik, S. and Lampert, M. and Kov{\\'a}csik, {\\'A}. and Wi, H. M.},title={Edge electron density profiles and fluctuations measured by two-dimensional beam emission spectroscopy in the KSTAR},journal={Rev. Sci. Instrum.},volume={85},pages={11E434},year={2014},doi={10.1063/1.4894839}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "afe2d4f4a1b0c92d28aa93aa9220c4f834f63945ca4b18aab16320873cbad013",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,46 @@
+{
+  "key": "Jia2026TimeSeries",
+  "citation": {
+    "title": "Time series regression network using exogenous variables for missing effective ion charge reconstruction in EAST tokamak",
+    "authors": "K. Jia, Z. Xu, Z.W. Wu, W. Gao, et al. and the EAST Team",
+    "year": 2027,
+    "venue": "Nuclear Fusion",
+    "volume": "67",
+    "pages": "016012",
+    "doi_or_arxiv": "10.1088/1741-4326/aeb432"
+  },
+  "relevance": "supporting",
+  "topic": "Offline ML reconstruction of a missing diagnostic signal (line-averaged Zeff from visible bremsstrahlung) on EAST from exogenous plasma signals",
+  "own_question": "Can missing or unreliable Zeff segments or whole shots be reconstructed post-discharge from 16 other plasma parameters?",
+  "actual_method_and_evidence": "The model is a CNN-BiGRU-Transformer encoder. It processes non-overlapping 1000 ms flat-top windows at 1 kHz. Inputs include offline-EFIT quantities. Labels are Zeff values smoothed with a Savitzky-Golay filter (59 points). The authors report a chronological 80/20 split of 1566 discharges (2023–2024). The 20% portion is divided into validation and test sets, but the exact proportions are not stated. Hyperparameters were tuned on validation MSE. Reported test results are R2 0.952, mean similarity 90.3% and coverage 91.4% (validation and test combined). Comparisons are against ablated deep-learning variants only. There is no comparison with hold-last-value, interpolation or Gaussian-process baselines.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "ML has been used for offline reconstruction of missing tokamak diagnostic signals, such as Zeff on EAST, from other measured plasma parameters.",
+      "original_pdf_locator": "Abstract; Sec. 1; Sec. 5 limitations",
+      "qualification": "Bidirectional and offline-EFIT-based; the authors state it is not intended for real-time use. Zeff is distinct from impurity CES Ti. The labels are conventional measurements, not independent physical truth.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Chronological splitting has been used to approximate application to later discharges from the same device.",
+      "original_pdf_locator": "Sec. 2.3; Sec. 5",
+      "qualification": "This is a single campaign period with no untouched external data. The authors themselves note that distribution shift remains a risk.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are two-sided within each window (BiGRU and self-attention) and include offline EFIT quantities. The task is noncausal reconstruction of the concurrent signal, not causal nowcasting or future prediction. Report arrival times are not addressed.",
+  "validation_if_relevant": "Chronological 80/20 split; the validation/test proportions within the 20% are unknown. No persistence or interpolation baselines. Overall uncertainty in measured Zeff is about ±20%. The coverage band is defined by each shot's Zeff standard deviation, not by diagnostic uncertainty.",
+  "forbidden_inferences": [
+    "That causal or online nowcasting was demonstrated",
+    "That this result applies to CES impurity Ti, KSTAR, BES or ECEI",
+    "That all prior reconstruction work is noncausal",
+    "That the SHAP results or the loop-voltage–resistivity reasoning establish a physical mechanism",
+    "That the deep model outperforms simple temporal baselines"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a contrasting example of offline, two-sided missing-signal reconstruction. It helps motivate our causal, current-report setting and our use of simple temporal baselines. It should not serve as evidence of performance for our task.",
+  "bibtex_if_worth_citing": "@article{Jia2026TimeSeries,title={Time series regression network using exogenous variables for missing effective ion charge reconstruction in {EAST} tokamak},author={Jia, K. and Xu, Z. and Wu, Z. W. and Gao, W. and others},journal={Nuclear Fusion},volume={67},pages={016012},year={2027},doi={10.1088/1741-4326/aeb432}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 17,
+  "supplied_pdf_sha256": "b985e8126f3376dd9deeb178fd698eae21a2f3fcb04c1e2a47775ba4fa032703",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

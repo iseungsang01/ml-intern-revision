@@ -1,0 +1,32 @@
+{
+  "key": "Stix1972HeatingToroidal",
+  "citation": {
+    "title": "Heating of toroidal plasmas by neutral injection",
+    "authors": [
+      "T. H. Stix"
+    ],
+    "year": 1972,
+    "venue": "Plasma Physics",
+    "volume": "14",
+    "pages": "367-384",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Neutral-beam ion-source scaling, beam neutralization and ionization, fast-ion orbits and thermalization, and analytic heating estimates for the planned ATC tokamak.",
+  "own_question": "Is fast-neutral injection a competitive heating method for experimental and reactor-scale tokamaks?",
+  "actual_method_and_evidence": "Analytic scaling and model calculations using cross sections, the Sivukhin slowing-down equation and guiding-center orbits. It presents a design study for ATC, a device then under construction. The extracted text contains no CES, BES or ECEI data and no measurements, forecasting or validation.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. The paper has no diagnostic inputs, CES reports or timing analysis.",
+  "validation_if_relevant": "None. The ATC injection numbers are predictions, not measurements.",
+  "forbidden_inferences": [
+    "Do not cite this paper as background on CES, charge-exchange spectroscopy or impurity Ti measurement. Its charge-exchange discussion covers beam neutralization and ionization only.",
+    "Do not treat the ATC heating estimates as achieved performance.",
+    "Do not link the paper to nowcasting, KSTAR or BES/ECEI."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper is historical NBI heating physics. At most it could serve as a generic beam-physics reference if CES beam-based charge exchange is mentioned, and the focused intro does not need that.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "1283378d65b18db62b8fff1fb3a691f2c7d5911c328cfa8654bc1ea440e51091",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "Yang2024TailoringTokamak",
+  "citation": {
+    "title": "Tailoring tokamak error fields to control plasma instabilities and transport",
+    "authors": "Yang, S.; Park, J.-K.; Jeon, Y.; Logan, N. C.; et al.",
+    "year": 2024,
+    "venue": "Nature Communications",
+    "volume": "15",
+    "pages": "1275",
+    "doi_or_arxiv": "10.1038/s41467-024-45454-1"
+  },
+  "relevance": "peripheral",
+  "topic": "n=1 error-field correction with 3D coils on KSTAR to suppress ELMs and avoid core locked modes; edge-localized RMP; avoiding H-mode transition to sustain high core Ti.",
+  "own_question": "Can 3D coil currents be optimized to keep edge resonant fields while minimizing core resonance?",
+  "actual_method_and_evidence": "The paper uses IPEC ideal-MHD coupling matrices with SVD and a core-null projection to design coil spectra. It reports KSTAR discharge comparisons (for example 26025–26027, 31357/31359) using Dα, Thomson, and CES rotation and Ti profiles, ECEI coherence, and BES bicoherence. The ion-temperature data come from CES; the extracted text does not specify the impurity species or chord. All analysis is offline. There is no nowcasting, estimator, or validation design.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR studies use CES-measured ion temperature and rotation profiles, alongside BES and ECEI fluctuation diagnostics, to characterize pedestal and core changes under 3D fields.",
+      "original_pdf_locator": "p4 (CES in Fig.4 text); p5–6 (ECEI, BES bicoherence; Fig.6 Ti)",
+      "qualification": "This is offline profile analysis of different discharges. It is not a real-time measurement and not related to report latency. The text does not state whether CES reflects impurity or main-ion Ti.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. CES report timing and latency are not discussed.",
+  "validation_if_relevant": "None. The evidence is a small set of discharge comparisons. No held-out data or statistical validation is reported.",
+  "forbidden_inferences": [
+    "Do not claim the paper shows BES or ECEI predict CES Ti.",
+    "Do not claim CES latency motivated this work.",
+    "Do not claim the KSTAR2022 campaign or our chord was used.",
+    "Do not treat the 100 million kelvin Ti as a validated label or the study's target."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this is an optional application-context citation: the 3D-field control literature uses CES Ti and BES/ECEI on KSTAR. It offers no support for nowcasting methods or timing claims. It can be omitted unless the applications paragraph needs a KSTAR control example.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "80579a17cb2dc364cf69791ff13448ade3534634978c6e4294eb0272d48c4a48",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "DuranMartin2024OutlierRobust",
+  "citation": {
+    "title": "Outlier-robust Kalman Filtering through Generalised Bayes",
+    "authors": "Duran-Martin, G.; Altamirano, M.; Shestopaloff, A. Y.; Sanchez-Betancourt, L.; Knoblauch, J.; Jones, M.; Briol, F.-X.; Murphy, K.",
+    "year": 2024,
+    "venue": "Proceedings of the 41st International Conference on Machine Learning (PMLR)",
+    "volume": "235",
+    "pages": "unknown",
+    "doi_or_arxiv": "arXiv:2405.05646"
+  },
+  "relevance": "peripheral",
+  "topic": "Generalised-Bayes weighted-likelihood Kalman/EKF/EnKF updates that down-weight outlying measurements",
+  "own_question": "Can closed-form filters stay robust to measurement outliers at KF-like cost?",
+  "actual_method_and_evidence": "The method scales the log-likelihood by a weight computed from the observation-prediction residual, using IMQ, Mahalanobis, or thresholded weights. For linear and EKF updates, the authors prove a bounded KL posterior influence function under stated conditions on the weight. Experiments are synthetic 2D tracking, corrupted UCI MLP regression, and Lorenz96 EnKF. No fusion-plasma or CES data are used.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Generalised-Bayes residual weighting is one documented way to make Kalman-type updates robust to outlying measurements while keeping closed-form updates.",
+      "original_pdf_locator": "Sec. 3, Prop. 3.1, Thm 3.2; App. C",
+      "qualification": "The proof covers linear and linearised Gaussian models. Robustness holds only for measurement outliers, not state outliers, and assumes known R_t and Q_t.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source contains no CES, BES, or ECEI data and no report-arrival timing.",
+  "validation_if_relevant": "Hyperparameters were tuned by Bayesian optimisation on the first trial and evaluated on the remaining trials. All data are synthetic or corrupted benchmarks.",
+  "forbidden_inferences": [
+    "Do not imply our estimators use WoLF.",
+    "Do not imply any plasma diagnostic validation.",
+    "Do not transfer the reported speed or accuracy results to our study.",
+    "Do not cite this paper as evidence about CES outlier rates."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite only if the theory section discusses robustness to outlying CES reports in a Kalman-style baseline. Otherwise omit.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 34,
+  "supplied_pdf_sha256": "8ebd166581f0a7329848733fe3f67ecb79fac15297dd3bdf9ca4f62e2a7502b1",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

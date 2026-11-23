@@ -1,0 +1,46 @@
+{
+  "key": "Pavone2019NeuralNetwork",
+  "citation": {
+    "title": "Neural network approximation of Bayesian models for the inference of ion and electron temperature profiles at W7-X",
+    "authors": "A Pavone, J Svensson, A Langenberg, U Höfel, S Kwak, N Pablant, R C Wolf, Wendelstein 7-X Team",
+    "year": 2019,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "61",
+    "pages": "075012",
+    "doi_or_arxiv": "10.1088/1361-6587/ab1d26"
+  },
+  "relevance": "supporting",
+  "topic": "Fast NN surrogate of Bayesian XICS inversion to Ti/Te profiles at W7-X.",
+  "own_question": "Can a CNN trained only on samples from a Minerva model's joint distribution approximate full Bayesian Ti/Te profile inference from XICS images?",
+  "actual_method_and_evidence": "500k synthetic 20x195 images were drawn from the prior plus a Gaussian likelihood. A LeNet-style CNN mapped them to 15-point profiles. Uncertainty came from a 10-member committee with Laplace weight posteriors. Testing used several OP1.1 shots against MCMC posterior means; agreement was shown in figures only, and some core Te mismatches fell within error bars. A k-NN distance check compared training-set priors (Table 2). Reported evaluation time was ~10 μs per point on one CPU, versus hours for MCMC. This is spatial inversion of a single frame, with no temporal or nowcasting component. Ti refers to argon impurity line widths, not CES carbon.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "NNs have been trained to approximate Bayesian spectrometer inversions, offering large speedups over MCMC profile inference at W7-X.",
+      "original_pdf_locator": "Abstract; Secs 6, 9",
+      "qualification": "Speedup is evaluation time per frame; it is offline testing, not real-time deployment. The ion temperature is from argon XICS.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Distance-to-training-set checks can flag when measured inputs lie outside synthetic training coverage.",
+      "original_pdf_locator": "Sec 8, Table 2",
+      "qualification": "The paper shows one measured image and a single prior comparison. It is a heuristic, not validated novelty detection.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are a single binned XICS image per time point. Targets are synthetic profiles. No past-report inputs and no arrival times are involved.",
+  "validation_if_relevant": "Synthetic test set from the same generator. Real-data comparison is to MCMC inference on several shots with a fixed magnetic configuration. No independent truth.",
+  "forbidden_inferences": [
+    "Do not cite as temporal nowcasting or CES work",
+    "Do not claim real-time deployment or KSTAR applicability",
+    "Do not claim quantitative agreement metrics beyond the figures",
+    "Do not equate argon XICS Ti with carbon CES Ti",
+    "Do not call the NN an online upstream reader in our pipeline"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "A useful example of fast upstream NN spectrum/profile inversion with explicit uncertainty. It can frame upstream reading as distinct from our downstream nowcast.",
+  "bibtex_if_worth_citing": "@article{Pavone2019NeuralNetwork,title={Neural network approximation of Bayesian models for the inference of ion and electron temperature profiles at W7-X},author={Pavone, A. and Svensson, J. and Langenberg, A. and H{\\\"o}fel, U. and Kwak, S. and Pablant, N. and Wolf, R. C.},journal={Plasma Phys. Control. Fusion},volume={61},pages={075012},year={2019},doi={10.1088/1361-6587/ab1d26}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "f1d73b98447f3a39d654f1301a093bcb850bb4079ebbb4cdbb1bf6c1cf420652",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

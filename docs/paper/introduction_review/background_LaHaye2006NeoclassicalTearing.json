@@ -1,0 +1,30 @@
+{
+  "key": "LaHaye2006NeoclassicalTearing",
+  "citation": {
+    "title": "Neoclassical tearing modes and their control",
+    "authors": "R. J. La Haye",
+    "year": 2006,
+    "venue": "Physics of Plasmas",
+    "volume": "13",
+    "pages": "055501",
+    "doi_or_arxiv": "10.1063/1.2180747"
+  },
+  "relevance": "peripheral",
+  "topic": "An invited review of neoclassical tearing mode (NTM) physics, onset/threshold scaling, seeding, and control by sawtooth regulation, applied helical fields, and LHCD/ECCD.",
+  "own_question": "What sets NTM onset and stabilization, and how can NTMs be controlled toward ITER?",
+  "actual_method_and_evidence": "Literature review using the modified Rutherford equation and multi-device results (TFTR, DIII-D, ASDEX Upgrade, JT-60U, JET, COMPASS-D). It does not address CES, impurity Ti, BES/ECEI-based temperature estimation, pedestal-top nowcasting, or KSTAR.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. The source reports real-time equilibrium reconstruction for ECCD alignment in DIII-D, but this is MHD control, not diagnostic nowcasting.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "Do not cite as support for CES temperature nowcasting or BES/ECEI information content.",
+    "Do not imply KSTAR NTM relevance, or that pedestal-top Ti relates to the islands discussed in the source.",
+    "Do not cite its real-time control as precedent for our timing or deployment claims."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The source concerns core MHD stability and control, not our target, inputs, or estimation task. Any link would be a generic statement that profile control matters, which the framing disallows.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "1162396ee79814c3f3e6d6860cd612e8528bc9b2469a69f45e729ac26379d180",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

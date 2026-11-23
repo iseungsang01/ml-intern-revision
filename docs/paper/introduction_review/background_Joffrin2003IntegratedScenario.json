@@ -1,0 +1,46 @@
+{
+  "key": "Joffrin2003IntegratedScenario",
+  "citation": {
+    "title": "Integrated scenario in JET using real-time profile control",
+    "authors": "Joffrin E, Crisanti F, Felton R, Litaudon X, Mazon D, Moreau D, Zabeo L, et al. (and contributors to the JET EFDA Programme)",
+    "year": 2003,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "45",
+    "pages": "A367-A383",
+    "doi_or_arxiv": "unknown (PII S0741-3335(03)69281-X; DOI not stated in supplied text)"
+  },
+  "relevance": "supporting",
+  "topic": "JET real-time diagnostics, including charge-exchange Ti and rotation, profile mapping, and feedback control for ITER-relevant scenarios",
+  "own_question": "How can real-time measurements, equilibrium reconstruction and model-based controllers improve integration and reliability of ITER-relevant scenarios at JET?",
+  "actual_method_and_evidence": "Overview paper. It describes upgraded real-time diagnostics. Charge exchange provides Ti(R) and rotation on 11 channels at a 50 ms source rate, versus 2 ms for ECE and other systems (Table 1). Charge-exchange processing is synchronized to neutral beams and uses five-Gaussian fitting in under 50 ms. Profiles are remapped onto the EQUINOX flux grid. Example single-discharge feedback experiments include R/LTi control by NBI and SVD/PI q-profile control. Evidence comes from example pulses. No statistical validation is given. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Charge-exchange ion-temperature profiles have been produced in real time at JET, at a slower source rate (about 50 ms) than ECE electron temperature (2 ms).",
+      "original_pdf_locator": "p.5 Table 1; p.6 section 2",
+      "qualification": "These are reported source rates, not measured end-to-end report arrival latency. The impurity species is not specified in the text. This is JET, not KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Real-time ion-temperature-derived quantities have been used as feedback inputs for profile control, e.g. R/LTi controlled with NBI power.",
+      "original_pdf_locator": "p.7 section 3.2; Fig. 3 caption p.8",
+      "qualification": "This is an example discharge with online control. It does not involve nowcasting or estimating missing reports.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "CX Ti is reported at about 50 ms and ECE Te at 2 ms. Profile mapping and equilibrium data are delivered at 20 ms. No inter-report estimation is performed.",
+  "validation_if_relevant": "Algorithms are described as tested on many pulses; EQUINOX was compared with EFIT on more than 500 discharges. Controllers are shown in individual pulses only. No held-out evaluation is reported.",
+  "forbidden_inferences": [
+    "Do not claim JET nowcast CX reports between arrivals.",
+    "Do not equate CX Ti here with carbon-impurity CES on KSTAR.",
+    "Do not treat the 50 ms source rate as a measured latency.",
+    "Do not use this source to claim the control benefit of our estimator.",
+    "Do not generalize to all prior work."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background motivating why slower ion-temperature reports matter for real-time control relative to faster electron diagnostics. It is not methodologically comparable to our study.",
+  "bibtex_if_worth_citing": "@article{Joffrin2003IntegratedScenario,title={Integrated scenario in JET using real-time profile control},author={Joffrin, E. and Crisanti, F. and Felton, R. and Litaudon, X. and Mazon, D. and Moreau, D. and Zabeo, L. and others},journal={Plasma Physics and Controlled Fusion},volume={45},pages={A367--A383},year={2003}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "2b4cf0a92edb5d18a5e1aa88c1dd491965226132a58805e466875c9d72c4ab15",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

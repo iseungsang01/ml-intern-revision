@@ -1,0 +1,45 @@
+{
+  "key": "Grierson2016HighResolution",
+  "citation": {
+    "title": "High Resolution Main-ion Charge Exchange Spectroscopy in the DIII-D H-mode Pedestal",
+    "authors": "B. A. Grierson, K. H. Burrell, C. Chrystal, R. J. Groebner, S. R. Haskey, D. H. Kaplan",
+    "year": 2016,
+    "venue": "Review of Scientific Instruments",
+    "volume": "87",
+    "pages": "11E545 (per record hint; not printed in extracted text)",
+    "doi_or_arxiv": "10.1063/1.4960604 (record hint; not verified in extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Instrumentation and first profiles from DIII-D edge main-ion (deuterium) CER with interleaved carbon impurity sightlines.",
+  "own_question": "Can a tangential, interleaved main-ion and impurity CER system resolve pedestal main-ion Ti, rotation, CX emission and beam emission?",
+  "actual_method_and_evidence": "Sixteen deuterium and nineteen impurity sightlines are interleaved, giving 8 mm inter-channel spacing. Spectra use typical 2.5 ms integration, with 200 µs stated as possible. Analysis uses beam-modulation background subtraction and offline multi-component spectral fitting. Results come from one ELMy H-mode discharge. In that discharge, carbon and deuterium Ti agree in the core but deviate near the separatrix. Main-ion rotation is about twice the carbon rotation at the separatrix.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In one DIII-D H-mode example, carbon-impurity and main-ion CER temperatures diverged near the separatrix. This supports describing our carbon CES label as species-specific rather than a generic ion temperature.",
+      "original_pdf_locator": "p.2-3, Sec. III, Fig. 4(c)",
+      "qualification": "The evidence is a single discharge on a different device (DIII-D, not KSTAR). The authors report a deviation, not a quantified bias.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "CER ion profiles are produced by offline spectral fitting with background subtraction and edge-specific assumptions on level populations. This makes reported CES values model-processed labels.",
+      "original_pdf_locator": "p.2, Sec. II, Fig. 3",
+      "qualification": "The source describes DIII-D analysis choices; KSTAR processing may differ. Report latency is not stated.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Gives integration times only. It does not give report arrival or analysis latency. It involves no BES/ECEI inputs and no nowcasting.",
+  "validation_if_relevant": "Single-discharge demonstration; no predictive validation.",
+  "forbidden_inferences": [
+    "Do not claim KSTAR carbon CES temperature equals main-ion temperature or is biased by a known amount.",
+    "Do not treat 200 µs integration as real-time report availability.",
+    "Do not cite this source as evidence for BES/ECEI-based estimation.",
+    "Do not generalize the factor-of-two rotation difference to temperature or to KSTAR."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include it as background on what CES labels represent: impurity versus main-ion differences and fitted-label processing. Keep the citation brief and do not use it for methods or timing.",
+  "bibtex_if_worth_citing": "@article{Grierson2016HighResolution,title={High resolution main-ion charge exchange spectroscopy in the {DIII-D} {H}-mode pedestal},author={Grierson, B. A. and Burrell, K. H. and Chrystal, C. and Groebner, R. J. and Haskey, S. R. and Kaplan, D. H.},journal={Rev. Sci. Instrum.},volume={87},pages={11E545},year={2016},doi={10.1063/1.4960604}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 3,
+  "supplied_pdf_sha256": "62d31a1d1a714b354c8b98a1aa9011d3a95be390efa646539f1014317d90abd9",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

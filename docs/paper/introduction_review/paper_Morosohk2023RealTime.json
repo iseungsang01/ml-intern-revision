@@ -1,0 +1,84 @@
+{
+  "key": "Morosohk2023RealTime",
+  "citation": {
+    "title": "Real-time Estimation of the Electron Temperature Profile in DIII-D by Leveraging Neural-Network Surrogate Models",
+    "authors": [
+      "Shira Morosohk",
+      "Eugenio Schuster"
+    ],
+    "year": "unknown (the PDF shows production placeholders; the key's 2023 is unverified)",
+    "venue": "unknown",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "unknown. p1 shows the placeholder xxx/xxxx. DOIs in the reference list belong to cited works."
+  },
+  "scope_read": {
+    "pdf_pages": "1-16",
+    "full_pdf_supplied": true,
+    "limitations": "This is a preprint without production metadata. Figure axes are partly unlabeled in the text extraction. The Ti/Te multiplier value is not given."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The model takes Ti as a multiple of Te",
+      "verdict": "supported",
+      "source_finding": "Ti is assumed to be a scalar multiple of Te. The assumption enters through the electron-ion exchange term.",
+      "locator": "p6, Sec 2.3, text following Eq. 10-11",
+      "kind": "derivation",
+      "allowed_intro_sentence": "In a model-based DIII-D Te observer, ion temperature entered the electron-ion exchange term as a fixed multiple of Te.",
+      "qualification": "This is a modelling simplification within one heating term. The multiplier is not reported. The paper does not estimate Ti."
+    },
+    {
+      "proposed_claim": "Results are offline tests, not real-time operation",
+      "verdict": "supported",
+      "source_finding": "The observer was run offline on archived DIII-D Thomson data. The authors state that integration into the PCS is in progress and planned for a later campaign.",
+      "locator": "p1 Abstract; p10 Sec 4.3; p12 Sec 5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "An extended-Kalman-filter observer combining a Te transport model with neural surrogates was demonstrated offline on DIII-D Thomson data, with real-time integration described as ongoing.",
+      "qualification": "No observer latency was measured. The 'real-time' in the title is the authors' design goal."
+    },
+    {
+      "proposed_claim": "The observer yields smoother profiles consistent with the data and better than the profile fits",
+      "verdict": "qualify",
+      "source_finding": "The evidence is visual agreement with the same Thomson data used as observer input. Q and R were tuned heuristically to look reasonable, and Q_mag was retuned for the second shot. The core-shape comparison against ZIPFIT and a real-time tanh fit is likewise visual.",
+      "locator": "p9-10 Sec 4.2, Eq. 31-32; p10-11 Sec 4.3; Figs 5-8 (p11-14); Fig 9 (p14)",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The authors reported visually closer agreement with core Thomson data than tanh-based fits for the shots shown.",
+      "qualification": "Two shots. No quantitative error metric. No independent truth."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Measured output y = core Thomson Te interpolated to 4 grid points. Actuator inputs u = line-average ne, P_ec, eight beam powers, Ip (p7 Eq. 24). Equilibrium is prescribed from shot 147634.",
+    "outputs": "Estimated Te profile for rho<=0.9; p14 Fig. 9 adds a linear extrapolation to the edge.",
+    "causal_or_offline": "Recursive filter: prediction followed by correction using the current measurement. Executed offline (p8 Eq. 27-28).",
+    "source_diagnostic_as_input": "Yes. Thomson data is both the input and the comparison reference.",
+    "reported_vs_physical_truth": "The comparison is to Thomson reports only."
+  },
+  "validation": {
+    "split_unit": "not_applicable for the observer. The NubeamNet surrogate used an 80/10/10 split of time slices, with test R2=0.937 (p4 Sec 2.2.1; p5 Fig. 2b).",
+    "temporal_order": "Sequential filtering in time. No held-out temporal protocol for the observer.",
+    "independent_truth": "none",
+    "unknowns": "Shot independence of the surrogates from the test shots; multiplier and constant values; quantitative accuracy."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "No observer timing. Surrogate speeds are stated: NubeamNet on the order of ms, MMM on the order of hundreds of ms (p4 Sec 2.2).",
+    "what_not_established": "Observer latency, PCS operation, real-time performance.",
+    "locator": "p4 Sec 2.2; p12 Sec 5"
+  },
+  "forbidden_inferences": [
+    "Do not state that the observer was deployed or ran in real time.",
+    "Do not attribute measured observer latency to this paper.",
+    "Do not describe Thomson agreement as physical truth.",
+    "Do not claim generalization beyond two shots.",
+    "Do not claim the paper estimates Ti or ion/impurity CES.",
+    "Do not use DOIs from its references as this paper's DOI.",
+    "Do not claim the paper is noncausal or that it represents all prior work."
+  ],
+  "competing_or_complementary": "Complementary. It is model-based filtering of a profile from current measurements. Our work is a temporal nowcast of a not-yet-available CES report from BES/ECEI snapshots and past CES reports. Cite it as an example of the physics-plus-surrogate estimation approach, not as a baseline we compared against.",
+  "bibtex": "@misc{Morosohk2023RealTime,title={Real-time Estimation of the Electron Temperature Profile in {DIII-D} by Leveraging Neural-Network Surrogate Models},author={Morosohk, Shira and Schuster, Eugenio},note={Preprint; venue, year, and DOI unverified}}",
+  "followup_sources_if_material": [
+    "Published version of this paper, to confirm venue, year, and DOI",
+    "Morosohk et al. 2021, Fusion Eng. Des. 163:112125 (NubeamNet), if surrogate timing is cited",
+    "Morosohk et al. 2021, Nucl. Fusion 61:106040 (MMMnet)"
+  ]
+}

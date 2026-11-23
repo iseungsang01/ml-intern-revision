@@ -1,0 +1,84 @@
+{
+  "key": "Imrek2026TemporalSuperresolution",
+  "citation": {
+    "title": "Temporal super-resolution of kinetic plasma profiles at COMPASS using neural networks",
+    "authors": "Imrisek M, Seidl J, Odložilík M, Šos M, Bílková P, Böhm P, Aksoy H, Scapini Weiand R, Alcaraz Aguado I, Mahieu R, Naydenkova D",
+    "year": 2026,
+    "venue": "Plasma Phys. Control. Fusion",
+    "volume": "68",
+    "pages": "065049",
+    "doi_or_arxiv": "10.1088/1361-6587/ae72c6 (this paper's own DOI, PDF p.2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-18",
+    "full_pdf_supplied": true,
+    "limitations": "PDF page = printed page + 1. Figure values were read visually. The proposed key misspells the surname; the paper uses Imrisek (Imríšek in ref [25])."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Past slow measurements are not used as inputs; fast signals map to TS-target profiles",
+      "verdict": "supported",
+      "source_finding": "Inputs are AXUV, SXR, interferometer, Dα/CIII, IPR, Ip, Uloop, coil supplies and position. TS profiles serve only as training targets. The MLP maps a single input snapshot to a profile.",
+      "locator": "PDF p.3 Sec.1 (para 2); p.4-5 Sec.2.1, Table 1; p.8 Fig.5",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "On COMPASS, a fully connected network mapped fast radiation, magnetic, interferometric and spectroscopic signals to Thomson-scattering Te and ne profiles, with Thomson data used only as training targets.",
+      "qualification": "No past-target anchors and no temporal history are used. Causality is not discussed."
+    },
+    {
+      "proposed_claim": "Edge errors are about 20%",
+      "verdict": "qualify",
+      "source_finding": "For the radiation-only model, Te error SD is about 10% in the core and about 20% at the edge; ne is broader. Radiation-only MAPE: Te about 5/16/32% (core/edge/near-SOL), ne about 12/15/24%. Table 3 gives lower values, e.g. Te edge 10.9% with smoothed inputs; that table's input set is not stated.",
+      "locator": "PDF p.8-9 Sec.3.1, Fig.7; p.10 Fig.8; p.11-12 Fig.12; p.14 Table 3",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Reported edge errors were of order 10-20%, rising in the scrape-off layer, relative to Thomson labels.",
+      "qualification": "Errors are measured against TS labels only, at TS times. Metrics differ between figures."
+    },
+    {
+      "proposed_claim": "Validation is split by discharge",
+      "verdict": "supported",
+      "source_finding": "An 80/20 split by discharge, plus five-fold cross-validation on the training set. Data cover shots 17000-21812.",
+      "locator": "PDF p.5 Sec.2.2; p.6 Sec.2.2",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Validation used held-out discharges with k-fold cross-validation.",
+      "qualification": "Chronological ordering and a separate untouched test set are not stated."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Fast signals sampled at up to 2 MHz, smoothed with a 100-sample (50 µs) moving average; window alignment not stated",
+    "outputs": "TS Te and ne profiles (TS repetition rate up to 120 Hz)",
+    "causal_or_offline": "Offline evaluation; causality unknown (not stated)",
+    "source_diagnostic_as_input": "No",
+    "reported_vs_physical_truth": "TS reported profiles serve as labels. The authors suggest the network suppresses TS outliers (Fig.11, PDF p.12); this is their interpretation, not independent truth."
+  },
+  "validation": {
+    "split_unit": "discharge",
+    "temporal_order": "not stated",
+    "independent_truth": "none; agreement is with TS",
+    "unknowns": "chronological split, centered vs trailing smoothing, test set beyond validation folds, confidence intervals"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Authors state inference of about 0.1 ms per profile; the measurement conditions are not described",
+    "what_not_established": "Real-time deployment, latency budget, and accuracy between TS times (sawtooth/ELM traces in Fig.18-19 are qualitative)",
+    "locator": "PDF p.17 Sec.4; p.15-17 Sec.3.4, Figs.18-19"
+  },
+  "forbidden_inferences": [
+    "that the method is causal or noncausal",
+    "real-time deployment",
+    "validated microsecond accuracy between TS samples",
+    "that it applies to CES or ion temperature",
+    "that its sensitivity maps identify physical mechanisms",
+    "that its 0.1 ms figure relates to our 10 ms grid",
+    "priority claims relative to our work"
+  ],
+  "competing_or_complementary": "Complementary. It maps an instantaneous fast-diagnostic snapshot to slow labels without anchoring on past reports. Our framing (strictly past CES reports plus BES/ECEI voltages, compared against hold, causal GP and two-sided interpolation) addresses a different timing question. It should not be framed as a deficiency of this paper.",
+  "bibtex": "@article{Imrisek2026TemporalSuperresolution,author={Imrisek, Martin and Seidl, Jakub and Odlo{\\v z}il{\\'i}k, Michal and {\\v S}os, Miroslav and B{\\'i}lkov{\\'a}, Petra and B{\\\"o}hm, Petr and Aksoy, Haluk and Scapini Weiand, Raul and Alcaraz Aguado, Iv{\\'a}n and Mahieu, Robin and Naydenkova, Diana},title={Temporal super-resolution of kinetic plasma profiles at {COMPASS} using neural networks},journal={Plasma Phys. Control. Fusion},volume={68},pages={065049},year={2026},doi={10.1088/1361-6587/ae72c6}}",
+  "followup_sources_if_material": [
+    "Clayton 2013 PPCF 55 095015 (ME-SXR to Te)",
+    "Shousha 2024 NF 64 026006 (DIII-D real-time profiles)",
+    "Jalalvand 2025 Nat. Commun. 16 8506 (multimodal super-resolution)",
+    "Pyragius 2024 arXiv:2407.18741 (ST40 SXR-TS); DOIs/IDs from the reference list, not this paper's"
+  ],
+  "source_key_as_returned": "Imrisek2026TemporalSuperresolution",
+  "key_normalization_note": "Legacy corpus key retained; actual author Imrisek. Raw API response unchanged."
+}

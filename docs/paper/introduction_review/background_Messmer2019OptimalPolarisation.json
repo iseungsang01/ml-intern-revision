@@ -1,0 +1,40 @@
+{
+  "key": "Messmer2019OptimalPolarisation",
+  "citation": {
+    "title": "Optimal MSE polarisation angle and q-profile estimation using Kalman filters and the plasma simulator RAPTOR",
+    "authors": "M C C Messmer, F Felici, O Sauter, A A Teplukhina, J P G Loenen, M Reich, R Fischer, D Rittich, R J E Jaspers, the ASDEX Upgrade Team and the EUROfusion MST1 team",
+    "year": 2019,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "61",
+    "pages": "035011",
+    "doi_or_arxiv": "10.1088/1361-6587/aaf7ed"
+  },
+  "relevance": "peripheral",
+  "topic": "EKF fusing RAPTOR current-diffusion/Te model with AUG MSE polarisation angles for q-profile estimation",
+  "own_question": "Can MSE-constrained RAPTOR, coupled to CHEASE, give accurate q-profile estimates?",
+  "actual_method_and_evidence": "Synthetic test with a perturbed model and 0.5 deg noise. One AUG shot (#33134) was compared with an IDE reference, giving a figure-of-merit reduction from 0.19 to 0.05. The analysis was offline with CHEASE, which is not real-time. Measurement covariance was derived from pi-sigma channel differences. A signal-loss test showed reversion toward the unconstrained model. The paper does not address CES, ion temperature, BES/ECEI, or data-driven nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Model-based recursive estimators such as an EKF have been used to merge physics-model predictions with noisy tokamak diagnostics in offline analyses that are described as real-time capable.",
+      "original_pdf_locator": "pp.2-4, Sec.1 and Sec.2.1, Eqs.2.1-2.9",
+      "qualification": "The target is the q-profile from MSE. It was shown offline on one AUG shot, and real-time use was stated as future work.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs were MSE angles on a 1-5 ms simulation step. The target was the q-profile, using a reference reconstruction (IDE) rather than truth. Measurement arrival latency was not studied.",
+  "validation_if_relevant": "Synthetic nominal case plus a single discharge, with no held-out set.",
+  "forbidden_inferences": [
+    "Do not cite as CES, Ti, impurity, or BES/ECEI evidence.",
+    "Do not claim a real-time deployment was demonstrated.",
+    "Do not treat IDE as physical truth.",
+    "Do not generalize from one shot.",
+    "Do not claim it supports our nowcasting performance."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background on model-based state observers only. It is not a comparator for our CES nowcasting.",
+  "bibtex_if_worth_citing": "@article{Messmer2019,title={Optimal MSE polarisation angle and q-profile estimation using Kalman filters and the plasma simulator RAPTOR},author={Messmer, M. C. C. and Felici, F. and Sauter, O. and others},journal={Plasma Phys. Control. Fusion},volume={61},pages={035011},year={2019},doi={10.1088/1361-6587/aaf7ed}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "8af74e56e74439789bf05df6c7fa7738f522617692ebfe5e6bb6684ad2e81120",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

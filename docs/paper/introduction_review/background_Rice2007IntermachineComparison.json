@@ -1,0 +1,31 @@
+{
+  "key": "Rice2007IntermachineComparison",
+  "citation": {
+    "title": "Inter-machine comparison of intrinsic toroidal rotation in tokamaks",
+    "authors": "J.E. Rice, A. Ince-Cushman, J.S. deGrassie, L.-G. Eriksson, Y. Sakamoto, A. Scarabosio, A. Bortolon, K.H. Burrell, B.P. Duval, C. Fenzi-Bonizec, M.J. Greenwald, R.J. Groebner, G.T. Hoang, Y. Koide, E.S. Marmar, A. Pochelon, Y. Podpaly",
+    "year": 2007,
+    "venue": "Nuclear Fusion",
+    "volume": "47",
+    "pages": "1618-1624",
+    "doi_or_arxiv": "10.1088/0029-5515/47/11/025"
+  },
+  "relevance": "peripheral",
+  "topic": "Multi-machine empirical scaling of intrinsic (no external momentum input) impurity toroidal rotation in H-mode and enhanced-confinement plasmas versus beta_N, rho*, and nu*.",
+  "own_question": "Does a dimensionless scaling unify intrinsic rotation across six tokamaks and permit an ITER extrapolation?",
+  "actual_method_and_evidence": "The study compiled published and database measurements from C-Mod, DIII-D, JET, JT-60U, TCV and Tore Supra. Rotation diagnostics were x-ray spectroscopy and CES. It applied simple fits and regressions, including M_A versus beta_N and power-law forms. The authors report a rough trend with beta_N and no evident trend with rho* or nu*. KSTAR is not included. Ion temperature appears only as a normalization and is not a prediction target. The paper uses no causal or temporal estimation.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. The paper contains no nowcasting, no report timing, and no use of BES or ECEI.",
+  "validation_if_relevant": "Only in-sample fits pooled across machines were performed. There was no held-out data or validation design.",
+  "forbidden_inferences": [
+    "That the paper studies CES temperature nowcasting or KSTAR.",
+    "That the beta_N scaling identifies a physical mechanism; the authors leave this open.",
+    "That the ITER rotation extrapolation is demonstrated performance."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper concerns rotation scaling rather than causal estimation of CES Ti reports. At most, it could serve as generic background that impurity spectroscopy measures intrinsic rotation, but that point is not needed for the stated framing.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "a68e5410d9f2e734dd44ac9346a2c9bf0e78578561c741bafd0003c2777bab07",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

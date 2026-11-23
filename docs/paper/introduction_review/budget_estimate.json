@@ -1,0 +1,177 @@
+{
+  "method": "Free official token counts over full extracted paper texts, not PDF-image review",
+  "paid_generation_calls": 0,
+  "input_tokens": 7228440,
+  "groups": [
+    {
+      "group": 0,
+      "input_tokens": 144527,
+      "paid": false
+    },
+    {
+      "group": 1,
+      "input_tokens": 274833,
+      "paid": false
+    },
+    {
+      "group": 2,
+      "input_tokens": 229968,
+      "paid": false
+    },
+    {
+      "group": 3,
+      "input_tokens": 219930,
+      "paid": false
+    },
+    {
+      "group": 4,
+      "input_tokens": 237040,
+      "paid": false
+    },
+    {
+      "group": 5,
+      "input_tokens": 241930,
+      "paid": false
+    },
+    {
+      "group": 6,
+      "input_tokens": 58523,
+      "paid": false
+    },
+    {
+      "group": 7,
+      "input_tokens": 292301,
+      "paid": false
+    },
+    {
+      "group": 8,
+      "input_tokens": 236145,
+      "paid": false
+    },
+    {
+      "group": 9,
+      "input_tokens": 247498,
+      "paid": false
+    },
+    {
+      "group": 10,
+      "input_tokens": 256587,
+      "paid": false
+    },
+    {
+      "group": 11,
+      "input_tokens": 206055,
+      "paid": false
+    },
+    {
+      "group": 12,
+      "input_tokens": 247691,
+      "paid": false
+    },
+    {
+      "group": 13,
+      "input_tokens": 249152,
+      "paid": false
+    },
+    {
+      "group": 14,
+      "input_tokens": 238514,
+      "paid": false
+    },
+    {
+      "group": 15,
+      "input_tokens": 234999,
+      "paid": false
+    },
+    {
+      "group": 16,
+      "input_tokens": 246556,
+      "paid": false
+    },
+    {
+      "group": 17,
+      "input_tokens": 132260,
+      "paid": false
+    },
+    {
+      "group": 18,
+      "input_tokens": 359130,
+      "paid": false
+    },
+    {
+      "group": 19,
+      "input_tokens": 209996,
+      "paid": false
+    },
+    {
+      "group": 20,
+      "input_tokens": 124682,
+      "paid": false
+    },
+    {
+      "group": 21,
+      "input_tokens": 296715,
+      "paid": false
+    },
+    {
+      "group": 22,
+      "input_tokens": 228449,
+      "paid": false
+    },
+    {
+      "group": 23,
+      "input_tokens": 236077,
+      "paid": false
+    },
+    {
+      "group": 24,
+      "input_tokens": 217417,
+      "paid": false
+    },
+    {
+      "group": 25,
+      "input_tokens": 231625,
+      "paid": false
+    },
+    {
+      "group": 26,
+      "input_tokens": 232388,
+      "paid": false
+    },
+    {
+      "group": 27,
+      "input_tokens": 239764,
+      "paid": false
+    },
+    {
+      "group": 28,
+      "input_tokens": 229761,
+      "paid": false
+    },
+    {
+      "group": 29,
+      "input_tokens": 83576,
+      "paid": false
+    },
+    {
+      "group": 30,
+      "input_tokens": 299265,
+      "paid": false
+    },
+    {
+      "group": 31,
+      "input_tokens": 245086,
+      "paid": false
+    }
+  ],
+  "eligible_unique_text_papers": 250,
+  "opus_input_only_usd_at_4_per_million": 28.91376,
+  "opus_max_output_usd_at_1024_tokens_per_paper": 5.12,
+  "exclusions": [
+    "Huber1964RobustEstimation",
+    "KFE2026DiagnosticsDataUserGuide",
+    "Lee2026NeuralNetworkbased_user",
+    "Shukla2021MultitimeAttention"
+  ],
+  "not_included": "Per-paper task prompt, figures, scan-only PDF, Fable draft, Opus synthesis and potential corrections"
+}

@@ -1,0 +1,47 @@
+{
+  "key": "Lee2022MeasurementCarbon",
+  "citation": {
+    "title": "The measurement of carbon density profile using charge exchange spectroscopy in KSTAR",
+    "authors": "J. K. Lee, H. H. Lee, W. H. Ko, B. Na, J. Ko, M. W. Lee, S. G. Lee",
+    "year": 2022,
+    "venue": "AIP Advances",
+    "volume": "12",
+    "pages": "055111",
+    "doi_or_arxiv": "10.1063/5.0080075"
+  },
+  "relevance": "supporting",
+  "topic": "KSTAR CES (C VI 529.05 nm, NBI-1) C6+ density profiles; methodology and RMP-ELM-suppression case",
+  "own_question": "Can absolute C6+ density profiles be obtained from KSTAR CES using ADAS CX rates and a KSTAR-adapted beam penetration code, and how do they evolve under RMPs?",
+  "actual_method_and_evidence": "Absolute intensity calibration with a halogen source; ADAS effective CX rates for n=1 and n=2; KSTARBEAM beam densities; Zeff assumed 2, with a sensitivity scan over 2-4. Active spectrum obtained by beam-modulation background subtraction and a single-Gaussian fit. Ti and V_T errors come from the fitted width and shift; density errors are statistical intensity errors only. Results come from one discharge (26421), with profiles at 4.3, 5.9, 6.8 and 7.6 s. Text-only source; figures not checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR CES infers C6+ (impurity) temperature and toroidal rotation from Doppler broadening and shift of the C VI n=8-7 CX line driven by NBI-1. The C6+ temperature is treated as approximately the main-ion temperature.",
+      "original_pdf_locator": "p.3 Sec. II; p.4-5 Sec. III E",
+      "qualification": "The Ti equality is the authors' equilibration argument, not a measurement. Labels are conventional fitted reports, not independent truth.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "KSTAR CES uses beam modulation to subtract passive and edge background before the active-CX fit. This links reported values to beam-on/off timing.",
+      "original_pdf_locator": "p.3-4 Sec. II; p.5 Fig. 5 caption",
+      "qualification": "No report cadence, latency or arrival time is given. The real-time two-Gaussian approach is cited as future work, not demonstrated here.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "No CES integration time, report cadence or latency is stated. Analysis is offline; real-time density measurement is only proposed.",
+  "validation_if_relevant": "Single discharge. The Zeff sensitivity scan is not independent validation. No uncertainty on beam density is propagated.",
+  "forbidden_inferences": [
+    "CES reports are real-time or have known latency",
+    "C6+ temperature equals main-ion temperature as measured fact",
+    "results generalize to 2022 campaign or our chord",
+    "Zeff=2 validated by independent measurement",
+    "RMP carbon recovery mechanism identified",
+    "BES/ECEI relevance"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful KSTAR-specific background on how CES impurity temperature reports are produced: line choice, beam modulation and Gaussian-fit uncertainty. It is not about temperature nowcasting and gives no timing information.",
+  "bibtex_if_worth_citing": "@article{Lee2022MeasurementCarbon,title={The measurement of carbon density profile using charge exchange spectroscopy in {KSTAR}},author={Lee, J. K. and Lee, H. H. and Ko, W. H. and Na, B. and Ko, J. and Lee, M. W. and Lee, S. G.},journal={AIP Advances},volume={12},pages={055111},year={2022},doi={10.1063/5.0080075}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "d5843f13e04f77f29a095765ad9c5801857f6fa70ffdf8910a4590f6c35aa7a7",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

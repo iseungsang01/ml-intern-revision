@@ -1,0 +1,39 @@
+{
+  "key": "Boyer2019FeedbackControl",
+  "citation": {
+    "title": "Feedback control of stored energy and rotation with variable beam energy and perveance on DIII-D",
+    "authors": "M.D. Boyer, K.G. Erickson, B.A. Grierson, D.C. Pace, J.T. Scoville, J. Rauch, B.J. Crowley, J.R. Ferron, S.R. Haskey, D.A. Humphreys, R. Johnson, R. Nazikian, C. Pawley",
+    "year": 2019,
+    "venue": "Nuclear Fusion",
+    "volume": "59",
+    "pages": "076004 (13pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ab17f5"
+  },
+  "relevance": "peripheral",
+  "topic": "Feedback control of stored energy and toroidal rotation on DIII-D using variable neutral-beam voltage and perveance",
+  "own_question": "Can the new in-shot beam voltage and perveance variation be used for model-based MIMO feedback control of power, torque, stored energy and rotation without beam modulation?",
+  "actual_method_and_evidence": "Observer with disturbance estimation, steady-state and transient box-constrained QP, and lag compensation for beam current. Demonstrated on a few DIII-D shots. Rotation feedback used a single real-time impurity CER channel. The paper notes that beam modulation can reduce the availability of reliable CER measurements. No temperature nowcasting, no BES/ECEI inputs and no KSTAR data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Real-time impurity charge-exchange rotation measurements have been used as feedback signals in DIII-D beam control, with measurement rate tied to the duty cycle of the viewed beam.",
+      "original_pdf_locator": "Sec. 2.1, p.2; Sec. 2.2, p.3",
+      "qualification": "The signal was rotation, not Ti. Arrival timing was not quantified, and the work concerns DIII-D, not KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Single CER channel fitted in real time. Update rate depends on beam duty cycle. No report latency was measured.",
+  "validation_if_relevant": "Experimental demonstration shots only. No held-out predictive validation.",
+  "forbidden_inferences": [
+    "Does not show that CES Ti nowcasting improves control",
+    "Does not concern electron diagnostics, BES or ECEI",
+    "Not evidence on main-ion versus impurity Ti",
+    "Do not generalize to KSTAR or to all prior work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include only as an optional, brief application-context citation showing that CER-derived quantities feed real-time control. It is not needed for the core nowcasting framing.",
+  "bibtex_if_worth_citing": "@article{Boyer2019FeedbackControl,title={Feedback control of stored energy and rotation with variable beam energy and perveance on DIII-D},author={Boyer, M.D. and Erickson, K.G. and Grierson, B.A. and Pace, D.C. and Scoville, J.T. and Rauch, J. and Crowley, B.J. and Ferron, J.R. and Haskey, S.R. and Humphreys, D.A. and Johnson, R. and Nazikian, R. and Pawley, C.},journal={Nuclear Fusion},volume={59},pages={076004},year={2019},doi={10.1088/1741-4326/ab17f5}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "4b45b25ee9eb0610b16bd54b07f4aca545cf0fd48c6eb4351655e6211e863773",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

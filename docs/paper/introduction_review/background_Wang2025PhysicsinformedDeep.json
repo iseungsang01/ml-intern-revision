@@ -1,0 +1,38 @@
+{
+  "key": "Wang2025PhysicsinformedDeep",
+  "citation": {
+    "title": "Physics-informed deep learning model for line-integral diagnostics across fusion devices",
+    "authors": "Cong Wang, Weizhe Yang, Haiping Wang, Renjie Yang, Jing Li, Zhijun Wang, Yixiong Wei, Xianli Huang, Chenshu Hu, Zhaoyang Liu, Xinyao Yu, Changqing Zou, Zhifeng Zhao",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "076022",
+    "doi_or_arxiv": "10.1088/1741-4326/ade0ce"
+  },
+  "relevance": "peripheral",
+  "topic": "Physics-informed neural surrogate for 2D soft x-ray tomographic inversion on EAST and HL-2A",
+  "own_question": "Can response-matrix information and a back-projection loss term improve neural reconstruction of 2D SXR emissivity from line-integral chords?",
+  "actual_method_and_evidence": "Snapshot mapping from chord signals to F-B or NSGPT inversion profiles, evaluated with random 70/20/10 splits on synthetic and experimental datasets. Reported inference times are milliseconds on a GPU. The work has no temporal or causal nowcasting, does not use CES or ion temperature, and does not test real-time deployment.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Neural surrogates trained on conventional inversion outputs have been used to accelerate SXR profile reconstruction. Their accuracy is bounded by the quality of the labels.",
+      "original_pdf_locator": "Sec.1 p.3; Sec.2.3 and Table 1 p.6-7",
+      "qualification": "The targets are inversion outputs, not physical truth. The authors report back-projection mismatch of about 5% for the experimental labels.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Input is single-time SXR chord data and the target is a same-time inversion profile. Report arrival time was not studied.",
+  "validation_if_relevant": "Random sample splits with no shot-wise or held-out-campaign separation stated. No uncertainty information was available.",
+  "forbidden_inferences": [
+    "Do not cite as evidence for CES, ion temperature or temporal nowcasting.",
+    "Do not treat the reported ms timings as real-time deployment.",
+    "Do not present the inversion labels as ground truth."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include at most as a single example citation that neural surrogates of diagnostic inversions are trained against conventional labels. Its line-integral setting differs from ours, so it should not be used beyond that point.",
+  "bibtex_if_worth_citing": "@article{Wang2025PhysicsinformedDeep,title={Physics-informed deep learning model for line-integral diagnostics across fusion devices},author={Wang, Cong and others},journal={Nuclear Fusion},volume={65},pages={076022},year={2025},doi={10.1088/1741-4326/ade0ce}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 33,
+  "supplied_pdf_sha256": "06b8b6a8f6d395189871153a6b63fc93f765b346703ade2727506465ef78504f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

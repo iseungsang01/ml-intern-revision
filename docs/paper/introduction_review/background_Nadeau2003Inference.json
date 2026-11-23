@@ -1,0 +1,44 @@
+{
+  "key": "Nadeau2003Inference",
+  "citation": {
+    "title": "Inference for the Generalization Error",
+    "authors": "Claude Nadeau; Yoshua Bengio",
+    "year": 2003,
+    "venue": "Machine Learning",
+    "volume": "52",
+    "pages": "239-281",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Variance estimation and hypothesis testing for repeated random train/test cross-validation estimates of generalization error and of differences between algorithms",
+  "own_question": "How can the variance of the repeated-split cross-validation estimator be estimated so that tests and confidence intervals account for training-set as well as test-example variability?",
+  "actual_method_and_evidence": "Theoretical decomposition of the variance into covariance terms. The paper argues that no general unbiased variance estimator that is linear or quadratic in the losses exists. It proposes two estimators: a corrected resampled t-test, which uses the heuristic correlation n2/n with the variance factor (1/J+n2/n1), and a conservative Z based on half-splits. Simulations use 1000 datasets each for regression, Gaussian classification, and subsampled UCI letter recognition. Naive t and resampled t tests were often liberal. The corrected tests showed size closer to nominal, but they were sometimes liberal or conservative. Data are assumed i.i.d.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Overlapping repeated train/test splits produce correlated fold estimates. Treating them as independent can underestimate variance and make comparisons appear significant too often.",
+      "original_pdf_locator": "Sec. 2, Eq. (8); Sec. 4 items 2 and 5; Table 1",
+      "qualification": "Shown for i.i.d. examples under random subsampling. Our time-series campaign is not i.i.d., so this supports caution only, not a validated correction.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Paired loss differences between two estimators on shared splits are a standard object for statistical comparison.",
+      "original_pdf_locator": "Sec. 1, Eq. (4); Sec. 5",
+      "qualification": "Their reported performance comes from the authors' simulations, not from fusion data.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "not applicable",
+  "validation_if_relevant": "Random subsampling with J around 15 and M of 5 to 10 is recommended for i.i.d. data. The paper offers no temporal, blocked, or shot-wise design.",
+  "forbidden_inferences": [
+    "Do not claim that corrected resampled t or conservative Z is valid for autocorrelated shot/time data.",
+    "Do not claim that we used these tests unless they were actually implemented.",
+    "Do not generalize to all CV practice in fusion."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful as statistical background for uncertainty when comparing estimators across validation designs. Its i.i.d. assumption limits direct transfer to our data.",
+  "bibtex_if_worth_citing": "@article{Nadeau2003Inference,title={Inference for the Generalization Error},author={Nadeau, Claude and Bengio, Yoshua},journal={Machine Learning},volume={52},pages={239--281},year={2003}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 43,
+  "supplied_pdf_sha256": "39ce55ef06063e4b8fedbb2d352d5e6ee11338fb7bc770edf18d3436a5210574",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

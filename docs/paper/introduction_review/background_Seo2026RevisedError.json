@@ -1,0 +1,39 @@
+{
+  "key": "Seo2026RevisedError",
+  "citation": {
+    "title": "Revised error field assessment in KSTAR with profile diagnostics of resonant field penetration",
+    "authors": "Seo G.-G., Han S.-J., Kim J., Lee Y., Yang S.M., Juhn J.W., Park J.-K.",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "126043",
+    "doi_or_arxiv": "10.1088/1741-4326/aeac69"
+  },
+  "relevance": "peripheral",
+  "topic": "Assessment of the n=1 intrinsic error field in KSTAR using compass scans, with ECE and CES timing used to identify q=2 penetration.",
+  "own_question": "What is the present intrinsic error-field amplitude and direction in KSTAR, and how can the local penetration time be defined?",
+  "actual_method_and_evidence": "The study used 2025-campaign MID, OFFMID and H-mode compass scans, GPEC overlap-field comparison, one rotating-RMP shot and a reversed-Bt scan. The authors report that CES toroidal-rotation sampling carries a ±5 ms timing uncertainty. CES appears only as rotation profiles for offline event timing. The paper does not address temperature nowcasting, BES/ECEI estimators or KSTAR2022 data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In a KSTAR error-field study, CES rotation and ECE were combined offline to time local q=2 events. The authors cite a ±5 ms CES sampling uncertainty.",
+      "original_pdf_locator": "Sec. 2, pp. 3-4; Fig. 3 caption",
+      "qualification": "This concerns rotation, not Ti, and a different campaign and purpose. It does not establish CES report latency or arrival times.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The paper uses offline post-shot event timing only. It defines no online inputs.",
+  "validation_if_relevant": "The evidence is cross-configuration consistency across 8 discharges. These are not estimator validation designs.",
+  "forbidden_inferences": [
+    "Do not treat ±5 ms as our CES cadence or latency.",
+    "Do not cite this paper as support for nowcasting carbon-impurity Ti.",
+    "Do not imply this paper used BES/ECEI for temperature estimation.",
+    "Do not generalize its 2025 conditions to KSTAR2022."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude, or at most cite as a minor example of offline KSTAR CES/ECE timing use. Its topic does not match our study.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "1a327d9d7559baa48da3463f942d4f7fc9ed6518dccb0d496df9c7bef5209429",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,80 @@
+{
+  "key": "Yun2014Quasi3d",
+  "citation": {
+    "title": "Quasi 3D ECE imaging system for study of MHD instabilities in KSTAR",
+    "authors": "G. S. Yun, W. Lee, M. J. Choi, J. Lee, M. Kim, J. Leem, Y. Nam, G. H. Choe, H. K. Park, H. Park, D. S. Woo, K. W. Kim, C. W. Domier, N. C. Luhmann Jr., N. Ito, A. Mase, S. G. Lee",
+    "year": 2014,
+    "venue": "Review of Scientific Instruments",
+    "volume": "85",
+    "pages": "11D820",
+    "doi_or_arxiv": "10.1063/1.4890401 (this paper's own DOI, p.2 abstract)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-4 (p.1 publisher cover; pp.2-4 article, Figs.1-6, refs)",
+    "full_pdf_supplied": true,
+    "limitations": "This is a 3-page proceedings paper describing the 2014 hardware. Its configuration (field of view placement, channel frequencies, polarization mode) may differ in KSTAR 2022 and is unknown. Polarization wording is inconsistent between p.2 Sec.II and p.4 Sec.III.C. Calibration is not discussed."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "ECEI field of view and resolution",
+      "verdict": "supported",
+      "source_finding": "Each array box has 24 vertically stacked Schottky detectors. Combined with 8 radial IF channels (IF 2.5-9 GHz, RF 80-140 GHz), this gives a field of view of about 50 cm height by 15 cm width, spatial resolution of 2 cm or better, and time resolution of 2 microseconds or better.",
+      "locator": "p.2, Sec.II; Fig.1",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The KSTAR ECEI systems image electron cyclotron emission on a 24 x 8 channel grid covering roughly 50 x 15 cm, with spatial resolution of about 2 cm and microsecond-scale time resolution [Yun2014].",
+      "qualification": "These are instrument specifications, not a validation result. We use only 10 ms-grid snapshots, not full-rate data. The location of the 2022 field of view relative to the CES chord must come from our own data, not this paper."
+    },
+    {
+      "proposed_claim": "Signals are suitable to treat as uncalibrated voltages / no absolute calibration provided",
+      "verdict": "qualify",
+      "source_finding": "The paper does not address absolute calibration. Its demonstration image shows normalized emission-temperature fluctuation amplitude (delta T_ECE over mean T_ECE). It frames the system as imaging Te fluctuations.",
+      "locator": "p.4, Fig.6 and caption; p.2, Sec.I",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "ECEI is used mainly to image relative electron-temperature fluctuations, typically shown as normalized amplitudes [Yun2014]; here we use its 10 ms-grid detector voltage snapshots directly as predictor inputs, without conversion to calibrated Te.",
+      "qualification": "The paper's silence does not establish that ECEI is uncalibrated. The choice to use raw voltages is our design decision and should be attributed to us, not to the source."
+    },
+    {
+      "proposed_claim": "Two toroidally separated ECEI systems over a wide field range",
+      "verdict": "supported",
+      "source_finding": "The second ECEI system sits 1/16 of the torus away from the first (about 70 cm at the center, 90 cm at the LFS edge). Operation spans B0 = 1.7-3.5 T, with polarization rotators enabling O1 imaging at high field. New array-box shielding gave about 40 dB noise reduction in lab tests.",
+      "locator": "p.2 abstract; p.3 Sec.II, Sec.III.C, Fig.4; p.4 Sec.III.D, Fig.5",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "KSTAR operates two ECEI systems separated toroidally by 1/16 of the torus, usable across a broad toroidal-field range [Yun2014].",
+      "qualification": "The 40 dB figure comes from lab tests, not plasma operation. It is unknown which system or systems our 2022 dataset uses."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (instrument paper)",
+    "outputs": "not_applicable",
+    "causal_or_offline": "not_applicable",
+    "source_diagnostic_as_input": "ECEI is our predictor input. This paper describes hardware, not an estimator.",
+    "reported_vs_physical_truth": "ECEI measures emission temperature (T_ECE), not independent Te truth. The paper contains no CES content."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "2022 channel configuration, calibration state, and spatial overlap with the CES chord"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Detector time resolution of 2 microseconds or better (specification) and lab noise reduction of about 40 dB",
+    "what_not_established": "Any real-time processing, latency, or nowcasting use. Nothing here bears on our 10 ms computation budget.",
+    "locator": "p.2 Sec.II; p.4 Sec.III.D"
+  },
+  "forbidden_inferences": [
+    "ECEI provides absolute Te, or ECEI is documented as uncalibrated",
+    "The 2014 field of view or frequencies apply unchanged to KSTAR 2022",
+    "ECEI resolves pedestal-top ion or carbon temperature",
+    "The quasi-3D capability is used or needed in our study",
+    "Real-time availability of ECEI data",
+    "Priority claims based on this paper's 'for the first time' statement"
+  ],
+  "competing_or_complementary": "Complementary instrument reference. It is not an estimator and does not compete with our study.",
+  "bibtex": "@article{Yun2014Quasi3d,author={Yun, G. S. and Lee, W. and Choi, M. J. and Lee, J. and Kim, M. and Leem, J. and Nam, Y. and Choe, G. H. and Park, H. K. and Park, H. and Woo, D. S. and Kim, K. W. and Domier, C. W. and Luhmann, Jr., N. C. and Ito, N. and Mase, A. and Lee, S. G.},title={Quasi {3D} {ECE} imaging system for study of {MHD} instabilities in {KSTAR}},journal={Rev. Sci. Instrum.},volume={85},pages={11D820},year={2014},doi={10.1063/1.4890401}}",
+  "followup_sources_if_material": [
+    "Yun et al., Rev. Sci. Instrum. 81, 10D930 (2010): the first KSTAR ECEI system (ref.4; obtain its own DOI from the source)",
+    "KSTAR 2022 ECEI configuration and calibration documentation from the data provider",
+    "J. Lee et al., Rev. Sci. Instrum. 85, 063505 (2014) (ref.19), only if the 3D/ELM context is cited"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "key": "Pastore2023ModelBased",
+  "citation": {
+    "title": "Model-based electron density estimation using multiple diagnostics on TCV",
+    "authors": "F. Pastore, F. Felici, T.O.S.J. Bosman, C. Galperti, O. Sauter, B. Vincent, N.M.T. Vu, and the TCV team",
+    "year": 2023,
+    "venue": "Fusion Engineering and Design",
+    "volume": "192",
+    "pages": "113615 (article number)",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2023.113615 (this paper's own DOI, p.1 footer)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-9",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read only as rendered. Details of the RAPDENS model and the Kalman-gain tuning are deferred to cited works [15,26]."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The observer and Thomson rates are 1 kHz and 60 Hz.",
+      "verdict": "qualify",
+      "source_finding": "The interferometer (FIR) is sampled at 20 kHz, and Thomson scattering (TS) provides up to 117 points at up to 60 Hz. For the TCV shot, FIR is subsampled at 1 kHz, as on one TCV control node, and one in three TS samples is discarded because of a noisier laser. The paper never states the observer's own update or computation rate.",
+      "locator": "p.3 Sec.3.1; p.6 Sec.5 and Fig.7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On TCV, a model-based Kalman observer fused interferometry, subsampled at 1 kHz, with Thomson scattering available at up to 60 Hz to estimate the electron density profile.",
+      "qualification": "60 Hz is the TS maximum; the effective TS rate used in the shot analysis was lower. 1 kHz is the FIR input rate, not a measured observer latency."
+    },
+    {
+      "proposed_claim": "The results are real-time.",
+      "verdict": "qualify",
+      "source_finding": "The shot analysis is an offline replay using signals identical to those in the TCV real-time system. The authors state the results are representative of real-time performance. Real-time use and analysis across many discharges are listed as future work. Earlier real-time RAPDENS use is attributed to [18], not demonstrated here.",
+      "locator": "p.6 Sec.5; p.8 Sec.6; p.2 Sec.1",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The multi-rate reconstruction was evaluated offline on synthetic data and on one TCV discharge, using inputs matching the real-time control system.",
+      "qualification": "Do not describe this as a real-time deployment or as a timing demonstration."
+    },
+    {
+      "proposed_claim": "The estimated quantity is the electron density profile.",
+      "verdict": "supported",
+      "source_finding": "The state is the B-spline coefficients of the flux-surface-averaged electron density n_e(rho,t), plus vessel and wall particle inventories (and optional disturbances). Synthetic TS and FIR measurements are produced via a time-varying mapping H_k built from LIUQE equilibria. A per-chord FIR scale factor kappa, computed from the last TS-updated state, corrects FIR offsets between TS samples.",
+      "locator": "p.2 Sec.2.1 Eqs.1,7,8; p.3-4 Sec.3.2 Eqs.12-16; p.4 Sec.3.3 Eqs.17-18",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Model-based observers have combined fast line-integrated and slow local density measurements, using the slow diagnostic to recalibrate the fast one between samples.",
+      "qualification": "The quantity is electron density, not CES ion or impurity temperature. TS serves as a filter input, not a held-out target."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Real FIR line integrals (subsampled to 1 kHz, fringe-jump corrected), real TS local n_e, gas-valve flux, LIUQE magnetics-only equilibrium, and an L-H state flag from a real-time detector.",
+    "outputs": "n_e(rho,t) spline profile and synthetic FIR/TS predictions.",
+    "causal_or_offline": "The filter is causal (recursive EKF using current and past measurements) but was run offline.",
+    "source_diagnostic_as_input": "Yes. TS and FIR are both inputs, and TS is also the comparison reference.",
+    "reported_vs_physical_truth": "The authors assume TS gives correct local values (Raman-calibrated). Agreement is with TS, not with independent truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable: one synthetic scenario plus one discharge (#73631); no train/test split.",
+    "temporal_order": "Sequential filtering.",
+    "independent_truth": "Only in the synthetic test, which used fixed circular geometry and imposed FIR offsets (Sec.4, Figs.3-5). None in the shot analysis.",
+    "unknowns": "No quantitative error metrics or uncertainty intervals. Covariances were hand-tuned on the same shot (Eqs.19-22). Generalization to other discharges is untested."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing on computation time.",
+    "what_not_established": "Latency, real-time execution in this work, and multi-shot robustness.",
+    "locator": "p.6 Sec.5; p.8 Sec.6"
+  },
+  "forbidden_inferences": [
+    "The paper demonstrated real-time operation",
+    "1 kHz is a measured observer runtime",
+    "TS is independent physical truth",
+    "The method estimates temperature or impurity quantities",
+    "Results generalize across discharges",
+    "Kappa smoothing was implemented (it is only suggested)"
+  ],
+  "competing_or_complementary": "Complementary. It fuses slow local and fast integrated measurements, with a transport model, to estimate the current density state. We instead nowcast the slow CES report from fast BES/ECEI snapshots and past reports, without a transport model.",
+  "bibtex": "@article{Pastore2023ModelBased,title={Model-based electron density estimation using multiple diagnostics on {TCV}},author={Pastore, F. and Felici, F. and Bosman, T.O.S.J. and Galperti, C. and Sauter, O. and Vincent, B. and Vu, N.M.T. and {TCV team}},journal={Fusion Engineering and Design},volume={192},pages={113615},year={2023},doi={10.1016/j.fusengdes.2023.113615}}",
+  "followup_sources_if_material": [
+    "Blanken et al. 2019, Fusion Eng. Des. 147 [18]: verify the real-time claims there before citing them",
+    "Blanken et al. 2018, Fusion Eng. Des. 126 [15]: model and EKF details"
+  ]
+}

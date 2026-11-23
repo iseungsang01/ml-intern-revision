@@ -1,0 +1,46 @@
+{
+  "key": "Yun2011TwoDimensionalVisualization",
+  "citation": {
+    "title": "Two-Dimensional Visualization of Growth and Burst of the Edge-Localized Filaments in KSTAR H-Mode Plasmas",
+    "authors": "G. S. Yun, W. Lee, M. J. Choi, J. Lee, H. K. Park, B. Tobias, C. W. Domier, N. C. Luhmann Jr., A. J. H. Donné, J. H. Lee (KSTAR Team)",
+    "year": 2011,
+    "venue": "Physical Review Letters",
+    "volume": "107",
+    "pages": "045004",
+    "doi_or_arxiv": "10.1103/PhysRevLett.107.045004"
+  },
+  "relevance": "supporting",
+  "topic": "KSTAR ECEI 2-D imaging of ELM filament growth, saturation and crash in the pedestal",
+  "own_question": "How do ELM filaments evolve inside the LCFS before and during the crash?",
+  "actual_method_and_evidence": "Phenomenological ECEI observations of relative ECE-intensity fluctuations from the 2010 campaign, using roughly 1 µs resolution and 24x8 channels per array. Example shots are discussed with EFIT and CES context. The paper reports three filament stages: growth, quasi-steady state and crash. Mode number, rotation and timescales are estimates. ECE intensity is not cleanly equal to Te near or outside the LCFS. No statistical validation is reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR ECEI images pedestal-region ELM filament structure and dynamics in 2-D, motivating ECEI as a source of edge information.",
+      "original_pdf_locator": "pp.3-6, Figs.1-3",
+      "qualification": "The data are from the 2010 campaign, not KSTAR2022. The paper reports qualitative example observations. The ECEI quantity is ECE intensity, which the source treats as approximately local only where the plasma is optically thick or gray.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "ECE intensity inside filaments and outside the LCFS can depend on density and optical depth, so ECEI signals are not calibrated Te.",
+      "original_pdf_locator": "p.5",
+      "qualification": "This rests on the authors' illustrative estimate, not a calibration study.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "ECEI at about 1 µs offline. CES is used only for context: impurity versus main-ion species is unspecified, and ion-temperature and toroidal-rotation values are quoted. There is no CES nowcasting and no 10 ms grid.",
+  "validation_if_relevant": "None; this is a case-based observational study.",
+  "forbidden_inferences": [
+    "ECEI predicts or nowcasts CES Ti",
+    "Findings transfer to KSTAR2022 or our chord",
+    "ECE intensity equals Te at the edge",
+    "Real-time capability",
+    "Peeling-ballooning identification proven"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background on KSTAR ECEI edge sensitivity and on caveats in interpreting ECE intensity. It is not evidence for our estimator.",
+  "bibtex_if_worth_citing": "@article{Yun2011TwoDimensionalVisualization,title={Two-Dimensional Visualization of Growth and Burst of the Edge-Localized Filaments in {KSTAR} H-Mode Plasmas},author={Yun, G. S. and Lee, W. and Choi, M. J. and Lee, J. and Park, H. K. and Tobias, B. and Domier, C. W. and Luhmann, Jr., N. C. and Donn{\\'e}, A. J. H. and Lee, J. H.},journal={Phys. Rev. Lett.},volume={107},pages={045004},year={2011},doi={10.1103/PhysRevLett.107.045004}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "9cae1fab2a1c6892634fef2c309000d93fb9f5f33993d9334ddd2048a88ba937",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

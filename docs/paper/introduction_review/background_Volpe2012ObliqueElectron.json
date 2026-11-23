@@ -1,0 +1,39 @@
+{
+  "key": "Volpe2012ObliqueElectron",
+  "citation": {
+    "title": "Oblique electron-cyclotron-emission radial and phase detector of rotating magnetic islands applied to alignment and modulation of electron-cyclotron-current-drive for neoclassical tearing mode stabilization",
+    "authors": "F. Volpe; M. E. Austin; G. Campbell; T. Deterly",
+    "year": 2012,
+    "venue": "Review of Scientific Instruments",
+    "volume": "83",
+    "pages": "103507",
+    "doi_or_arxiv": "10.1063/1.4758780"
+  },
+  "relevance": "peripheral",
+  "topic": "Analog real-time use of uncalibrated two-channel oblique ECE on DIII-D. Used to phase-lock and modulate ECCD to rotating NTM O-points and to check radial alignment.",
+  "own_question": "Can oblique ECE, viewed along an ECCD-equivalent line of sight, toroidally and radially localize rotating islands for ECCD control?",
+  "actual_method_and_evidence": "Two-channel heterodyne radiometer (108.25/111.25 GHz). Analog subtractor, comparator and microcontroller-programmed phase shifter, with near-flat phase reported over 1–7 kHz. Example DIII-D discharges show modulated ECCD correlated with Mirnov signals. A phase jump between channels coincided with ECCD/q=3/2 alignment. The paper shows these as examples only; it gives no statistical validation and makes no comparison to estimators.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Uncalibrated ECE voltage fluctuations have been used directly in real-time analog control without temperature calibration (DIII-D example).",
+      "original_pdf_locator": "Sec. V; Sec. III B; Fig. 4",
+      "qualification": "This concerns electron emission for NTM/ECCD phase control. It is not ion-temperature or CES nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Online analog signal path. Mode frequencies of 1–10 kHz, with video bandwidth stated as sufficient. These timings are not comparable to our 10 ms grid.",
+  "validation_if_relevant": "Example discharges only; no held-out design.",
+  "forbidden_inferences": [
+    "Evidence for BES/ECEI predicting CES impurity Ti",
+    "Calibrated Te from raw voltages generally",
+    "Achieved NTM stabilization performance from this paper alone",
+    "Prior work in general is electron-only"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional analogy for real-time use of raw uncalibrated voltage signals. Exclude from the core framing.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "840e514cbb8271ee7409047795e5ba7cd45ba1555db14e5f96c791c975a09a37",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

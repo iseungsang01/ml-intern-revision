@@ -1,0 +1,46 @@
+{
+  "key": "McDermott2017ExtensionsCharge",
+  "citation": {
+    "title": "Extensions to the charge exchange recombination spectroscopy diagnostic suite at ASDEX Upgrade",
+    "authors": "R. M. McDermott, A. Lebschy, B. Geiger, C. Bruhn, M. Cavedon, M. Dunne, R. Dux, R. Fischer, A. Kappatou, T. Pütterich, E. Viezzer, ASDEX Upgrade Team",
+    "year": 2017,
+    "venue": "Review of Scientific Instruments",
+    "volume": "88",
+    "pages": "073508",
+    "doi_or_arxiv": "10.1063/1.4993131"
+  },
+  "relevance": "supporting",
+  "topic": "Design, calibration and spectral analysis of an AUG core LFS-HFS CXRS system that measures boron/nitrogen impurity Ti, rotation and density",
+  "own_question": "Can a new beam-viewing CXRS system provide calibrated LFS-HFS impurity profiles at useful time resolution, and which atomic effects must be corrected?",
+  "actual_method_and_evidence": "Instrument paper. It describes optical heads, spectrometers, wavelength, intensity and instrument-function calibration, fitting of active and passive spectra with CXSFIT, and LOS-integrated localisation. The authors give example profiles from discharge 32866 and model calculations of cross-section and Zeeman effects. Integration time is typically 10 ms, with special cases down to about 2.5 ms (camera minimum 2.41 ms). The work is offline and contains no prediction or nowcasting. It concerns AUG, not KSTAR, and boron, not carbon.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported CXRS impurity Ti results from processing: spectral fitting, instrument-function and calibration handling, and atomic corrections such as Zeeman/fine structure via correction curves. Reported labels are therefore conventional processed estimates, not direct truth.",
+      "original_pdf_locator": "Sec. III-V, pp. 073508-5 to -11; Fig. 14",
+      "qualification": "AUG-specific pipeline. The authors report Zeeman errors of 10-20% near pedestal tops when uncorrected. This should not be transferred to the KSTAR carbon chord.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "CXRS measures impurity-ion quantities localised by the intersection of the line of sight with the neutral beam. Each report is an exposure-integrated spectrum, typically about 10 ms at AUG.",
+      "original_pdf_locator": "Sec. I-II, Eq. (1)-(2), pp. 073508-1 to -5",
+      "qualification": "These are integration times, not report arrival or analysis latency. Between-shot analysis is mentioned, but real-time availability is not.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Exposure is 2.41 ms minimum and typically 10 ms. Report latency and arrival times are not given.",
+  "validation_if_relevant": "Cross-diagnostic LFS agreement (CER/CMR) and LFS-HFS overlay, shown on example discharges. There is no held-out or statistical validation.",
+  "forbidden_inferences": [
+    "KSTAR CES latency or accuracy",
+    "main-ion Ti or electron quantities",
+    "real-time CXRS availability",
+    "that labels are physical truth",
+    "applicability to carbon at KSTAR"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful as background on how CXRS impurity-temperature labels are produced and corrected, and on exposure-scale timing. It does not address nowcasting.",
+  "bibtex_if_worth_citing": "@article{McDermott2017ExtensionsCharge,title={Extensions to the charge exchange recombination spectroscopy diagnostic suite at ASDEX Upgrade},author={McDermott, R. M. and Lebschy, A. and Geiger, B. and Bruhn, C. and Cavedon, M. and Dunne, M. and Dux, R. and Fischer, R. and Kappatou, A. and P{\\\"u}tterich, T. and Viezzer, E. and {ASDEX Upgrade Team}},journal={Rev. Sci. Instrum.},volume={88},pages={073508},year={2017},doi={10.1063/1.4993131}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "af0b0c09641b920a8216cf74172f91ebdb9bfff40cdba2ec473f55bf352cb343",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "Hahn2020AdvancesChallenges",
+  "citation": {
+    "title": "Advances and challenges in KSTAR plasma control toward long-pulse, high-performance experiments",
+    "authors": "Hahn, S.-h.; Han, H.; Woo, M.H.; et al.",
+    "year": 2020,
+    "venue": "Fusion Engineering and Design",
+    "volume": "156",
+    "pages": "111622",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2020.111622"
+  },
+  "relevance": "peripheral",
+  "topic": "Overview of the KSTAR plasma control system: hardware, magnetic and kinetic control, fault handling and planned upgrades.",
+  "own_question": "Summarize the KSTAR PCS enhancements and the challenges anticipated for long-pulse operation.",
+  "actual_method_and_evidence": "This is a descriptive engineering review. It reports a baseline control cycle of 20 kHz and real-time magnetics digitizers at 20 kHz. It describes real-time density feedback and beta_p feedback using the NBI. It reports a feasibility test of electron temperature profile control that used ECE at a 0.5 s control cycle. It mentions SVM and LSTM classifiers for L-H transitions and ELMs. CES, BES, ECEI and ion temperature are not used as real-time inputs.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "The KSTAR PCS was described as running kinetic feedback (density, beta_p) and only a feasibility-level electron temperature profile control that used ECE at a 0.5 s cycle.",
+      "original_pdf_locator": "p.3 Sec.3.2; p.6 Sec.4",
+      "qualification": "This is the paper's state as of 2018–2020. The temperature control concerns electrons, not impurity ion temperature. It is not evidence about the availability of CES reports.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant to CES. No CES latency or report-arrival information is given.",
+  "validation_if_relevant": "None relevant.",
+  "forbidden_inferences": [
+    "That KSTAR has a real-time CES or ion-temperature control loop",
+    "That a 20 kHz PCS cycle implies our 10 ms computation would be deployable",
+    "That this source shows a need for, or benefit of, Ti nowcasting",
+    "Generalizing to all prior work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional as general KSTAR control context only. It provides no evidence on CES, BES/ECEI or nowcasting.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "b0d3d9dc365fede77a39b327a19c12777e8fc80d178acaa0aa6da5df5f32ff8e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

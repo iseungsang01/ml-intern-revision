@@ -1,0 +1,73 @@
+{
+  "key": "Bates2024CrossValidation",
+  "citation": {
+    "title": "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
+    "authors": "Bates, S.; Hastie, T.; Tibshirani, R.",
+    "year": 2024,
+    "venue": "Journal of the American Statistical Association",
+    "volume": "119(546)",
+    "pages": "1434-1445",
+    "doi_or_arxiv": "10.1080/01621459.2023.2197686 (this paper's own DOI, PDF p.1-2; DOIs in its reference list belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-13",
+    "full_pdf_supplied": true,
+    "limitations": "The online supplement was not supplied. This includes the proofs, Algorithm 1, the bootstrap results, F.10 (regularization) and F.11 (high-dimensional regression)."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Cross-validation estimates average error across training sets rather than the error of the fitted model.",
+      "verdict": "qualify",
+      "source_finding": "The formal proof covers only the homoscedastic Gaussian linear model with OLS, squared-error loss and linearly invariant estimators. In that setting, the CV estimate is independent of the fitted model's error given X. Under Gaussian features and proportional asymptotics, it is asymptotically uncorrelated with that error. A logistic-regression simulation shows similar but weaker behaviour. Under regularization, the authors report that CV tracks the fitted model's error weakly.",
+      "locator": "PDF p.5 Sec 3.1, Def 1, Thm 1, Cor 1; p.6 Thm 2, Cor 2-3, Fig 4; p.7 Fig 5; p.11 Fig 8; p.12 Sec 7",
+      "kind": "derivation",
+      "allowed_intro_sentence": "For OLS linear models, cross-validated error has been shown to estimate average error over hypothetical training sets more precisely than the error of the specific fitted model [Bates2024]. We therefore read validation scores as evidence about estimator classes under each validation design.",
+      "qualification": "Do not extend the proof to GP, interpolation or nonlinear nowcasters. Elsewhere it is simulation evidence or author interpretation."
+    },
+    {
+      "proposed_claim": "Naive CV confidence intervals can undercover.",
+      "verdict": "supported",
+      "source_finding": "In sparse logistic regression with n=90 and p=1000, intervals with a nominal 10% miscoverage gave 31% miscoverage. The cause identified is correlation among fold errors that the naive variance estimate ignores. In the OLS simulation, naive coverage was poor until n reached about 400.",
+      "locator": "PDF p.2 Sec 1.1; p.3 Fig 1; p.8 Sec 4.1, Fig 6; p.12 Fig 10, Sec 7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Because the same observations serve for both training and testing, naive cross-validation intervals can be too narrow even with i.i.d. data [Bates2024].",
+      "qualification": "These are simulations and subsampled UCI data under i.i.d. random folds. The miscoverage magnitudes do not transfer to our data."
+    },
+    {
+      "proposed_claim": "Nested CV gives approximately correct interval coverage.",
+      "verdict": "qualify",
+      "source_finding": "The MSE estimator is unbiased for the MSE of (K-1)-fold CV at sample size n(K-1)/K. The authors' rescaling to sample size n is not guaranteed to be unbiased. Coverage was closer to nominal across the simulations, but not uniformly: on the CC real-data example at n=50, the lower-tail miscoverage was 13% against a 5% target. Nested CV required about 1000 times more model fits.",
+      "locator": "PDF p.9 Lemma 3, Thm 3, Sec 4.3.2; p.10 Table 1; p.11 Table 2; p.12 Table 3, Fig 10, Sec 7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Nested cross-validation was proposed to estimate this variance and improved coverage in the reported i.i.d. examples [Bates2024].",
+      "qualification": "Cite this only if we actually use it. Coverage is not guaranteed."
+    }
+  ],
+  "input_target_timing": "not_applicable: this is a paper on prediction-error estimation and has no nowcasting inputs, targets or timing.",
+  "validation": {
+    "split_unit": "Random K-fold partitions of observations assumed i.i.d. (PDF p.4 Sec 2); real-data subsamples with the remaining observations used as the test set (p.11 Sec 6).",
+    "temporal_order": "Not addressed. The setting is i.i.d.",
+    "independent_truth": "The simulations use known generating models. The real datasets use held-out labels, with no distinction drawn between reported labels and physical truth.",
+    "unknowns": "Behaviour under temporal or within-campaign dependence and under blocked splits."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "For the Sec 1.1 example, nested CV took about 10 s on a personal computer and required about 1000 times more model fits.",
+    "what_not_established": "Any bearing on our 10 ms computation constraint, or on any real-time use.",
+    "locator": "PDF p.12 Sec 7"
+  },
+  "forbidden_inferences": [
+    "That the theorems apply to our nowcasters or to dependent time-series data.",
+    "That nested CV yields valid intervals for our four validation designs.",
+    "That the 31% miscoverage figure or the 1.6 widening factor transfers to our setting.",
+    "That the paper addresses whether CES labels match physical temperature.",
+    "That a reused campaign is validated by this paper.",
+    "That DOIs in its reference list identify this paper."
+  ],
+  "competing_or_complementary": "Complementary methodological caution about what validation scores and intervals estimate. It does not compete with the nowcasting task.",
+  "bibtex": "@article{Bates2024CrossValidation,title={Cross-Validation: What Does It Estimate and How Well Does It Do It?},author={Bates, Stephen and Hastie, Trevor and Tibshirani, Robert},journal={Journal of the American Statistical Association},volume={119},number={546},pages={1434--1445},year={2024},doi={10.1080/01621459.2023.2197686}}",
+  "followup_sources_if_material": [
+    "Bayle et al. (2020) and Austern & Zhou (2020), cited at PDF p.3, if we report asymptotic CV intervals.",
+    "A source on CV under temporal dependence, if we make interval claims. None is identified in this paper."
+  ]
+}

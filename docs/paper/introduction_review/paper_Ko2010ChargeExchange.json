@@ -1,0 +1,90 @@
+{
+  "key": "Ko2010ChargeExchange",
+  "citation": {
+    "title": "Charge exchange spectroscopy system calibration for ion temperature measurement in KSTAR",
+    "authors": [
+      "Won-Ha Ko",
+      "Hyungho Lee",
+      "Dongcheol Seo",
+      "Myeun Kwon"
+    ],
+    "year": 2010,
+    "venue": "Review of Scientific Instruments",
+    "volume": "81",
+    "pages": "10D740",
+    "doi_or_arxiv": "10.1063/1.3496991"
+  },
+  "scope_read": {
+    "pdf_pages": "1-4 (p1 publisher cover; pp2-4 article, Figs 1-5)",
+    "full_pdf_supplied": true,
+    "limitations": "Describes the 2010 initial system and calibration only. No plasma Ti profiles or uncertainties are shown. The 2022 chord configuration, fitting code and labels are not covered. Much of the text is future tense (planned 17-channel upgrade, NBI modulation)."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "KSTAR CES measures the C VI 529 nm charge-exchange line with a separate background view.",
+      "verdict": "supported",
+      "source_finding": "The bay M cassette views plasma and beam (active plus background). The bay A cassette views plasma only (background). Active and background fibres alternate at the spectrometer slit, alongside a Ne lamp fibre.",
+      "locator": "p2 Abstract and Sec II; p3 Sec III, Fig 1 caption",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "KSTAR CES infers ion temperature and toroidal rotation from C VI (529 nm) charge-exchange emission, using a dedicated background view to separate active from passive emission [Ko2010].",
+      "qualification": "This describes the 2010 instrument design. Background-subtraction performance is not demonstrated."
+    },
+    {
+      "proposed_claim": "Calibration procedure and channel layout.",
+      "verdict": "qualify",
+      "source_finding": "Position calibration was done by back-illuminating fibres, with spot size under 5 mm (Fig 3). Wavelength calibration used Ne I lines near 528.0, 529.8 and 530.5 nm with Gaussian fits; the reported instrumental width is 1.14 Å (Fig 4). Absolute intensity calibration used a KRISS-calibrated halogen integrating sphere, performed before and after cassette insertion (Fig 5). The unshifted C VI reference is monitored shot by shot from edge background accumulation. In 2010, 8 of 50 fibres (R=1.7–2.35 m) were used: 10 cm spacing in the core and 5 cm at the edge. A 17-point layout was calibrated for a future upgrade. The listed hardware is a 1.33 m Czerny–Turner spectrometer and a back-illuminated CCD with 10 ms time resolution.",
+      "locator": "pp2-3 Sec II; pp3-4 Sec III, Figs 3-5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "The diagnostic is position-, wavelength- and absolutely intensity-calibrated using back-illuminated fibres, Ne I reference lines and a calibrated integrating-sphere source [Ko2010].",
+      "qualification": "These results reflect the 2010 calibration, not the 2022 campaign. Whether the 10 ms CCD frame matches actual report availability is unknown."
+    },
+    {
+      "proposed_claim": "CES provides Ti from Doppler width on KSTAR.",
+      "verdict": "qualify",
+      "source_finding": "The paper states that ion temperature is derived from the CES spectra and gives the instrumental width. Only rotation is explicitly tied to Doppler shift. No Doppler-width formula, instrumental deconvolution procedure or Ti measurements are presented.",
+      "locator": "p2 Sec I; p3 Sec II; p4 Sec III",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Ion temperature is inferred from the C VI charge-exchange spectrum, with the instrumental line width characterised by lamp calibration [Ko2010].",
+      "qualification": "Cite a standard CES reference for Doppler broadening. This paper should not be cited as demonstrating Ti accuracy."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (instrument paper)",
+    "outputs": "Planned CES spectra yielding Ti and rotation per chord, every 10 ms",
+    "causal_or_offline": "not_applicable",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Calibration targets only; no comparison with independent Ti."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none presented",
+    "unknowns": [
+      "CES configuration in 2022",
+      "Pedestal-top chord radius",
+      "Ti uncertainty",
+      "Report latency"
+    ]
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Hardware time resolution of 10 ms (CCD) and an installed calibration chain",
+    "what_not_established": "Real-time Ti analysis, report latency, and fit runtime",
+    "locator": "p3 Sec II"
+  },
+  "forbidden_inferences": [
+    "That the 2022 chord geometry or spacing matches the 2010 layout",
+    "That Ti labels are available online at 10 ms",
+    "Ti accuracy or uncertainty values",
+    "That background subtraction is validated",
+    "That the planned 17-channel upgrade was in use in 2022",
+    "That the paper derives Ti from Doppler width explicitly"
+  ],
+  "competing_or_complementary": "Complementary: this is the provenance of the CES label instrument, not an estimator.",
+  "bibtex": "@article{Ko2010ChargeExchange,author={Ko, Won-Ha and Lee, Hyungho and Seo, Dongcheol and Kwon, Myeun},title={Charge exchange spectroscopy system calibration for ion temperature measurement in {KSTAR}},journal={Rev. Sci. Instrum.},volume={81},pages={10D740},year={2010},doi={10.1063/1.3496991}}",
+  "followup_sources_if_material": [
+    "A later KSTAR CES system/upgrade paper describing the 2022 configuration and analysis (identity unknown; to be located)",
+    "Ko, Oh, Kwon, IEEE Trans. Plasma Sci. 38, 996 (2010), cited as ref 4 for the optics design (its DOI is not given in this paper)",
+    "A standard CES Doppler-broadening and Ti-analysis reference"
+  ]
+}

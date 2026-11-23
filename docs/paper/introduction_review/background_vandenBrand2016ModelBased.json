@@ -1,0 +1,40 @@
+{
+  "key": "vandenBrand2016ModelBased",
+  "citation": {
+    "title": "A model-based, multichannel, real-time capable sawtooth crash detector",
+    "authors": "H van den Brand, M R de Baar, M van Berkel, T C Blanken, F Felici, E Westerhof, M Willensdorfer, ASDEX Upgrade Team, EUROfusion MST1 Team",
+    "year": 2016,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "58",
+    "pages": "075002",
+    "doi_or_arxiv": "10.1088/0741-3335/58/7/075002"
+  },
+  "relevance": "peripheral",
+  "topic": "Causal, multichannel detection of sawtooth crash times in ASDEX Upgrade ECE electron-temperature data. Method: an interacting multiple model (IMM) estimator built on Kalman filters.",
+  "own_question": "Can the spatial redistribution pattern across ECE channels, combined with flat-mixing crash models, detect crash times causally within a 1 kHz step budget?",
+  "actual_method_and_evidence": "Profiles are represented with 11 cubic B-splines. Six hypotheses are used: no-crash (identity model) plus five mixing radii. Data: seven windows from five AUG discharges, downsampled to 1 kHz. Detection times are compared against human visual labels, with the same parameters used for all windows. All visually labeled crashes were detected, plus a few extra detections that were interpreted as partial reconnections. Mixing radius was judged poorly fitted in many cases. Timing was reported for offline Matlab/mex runs on a non-real-time OS; there was no deployment.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Recursive Kalman-type estimators have been used causally on multichannel profile diagnostics. One example is an IMM detector for sawtooth crashes in AUG ECE data.",
+      "original_pdf_locator": "Abstract; Sec 2.3, Algorithm 1; Sec 3.3",
+      "qualification": "This is event detection of electron-temperature crashes, not nowcasting of an impurity-ion CES report. Its labels are visual inspection, not independent truth.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are filtered ECE channels at 1 kHz with no ion or CES data. Report arrival latency is not addressed. Sub-ms or few-ms step times are offline benchmarks, not a deployed system.",
+  "validation_if_relevant": "Seven hand-selected windows with visual crash labels. There was no independent test set and no comparison against baselines.",
+  "forbidden_inferences": [
+    "that it nowcasts ion or impurity temperature",
+    "that it validates real-time deployment",
+    "that its timing transfers to our 10 ms task",
+    "that prior causal work is electrons-only or that all prior work is noncausal",
+    "mixing-radius accuracy"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional one-line citation as an example of causal, model-based multichannel state estimation in tokamaks. It does not bear on the CES nowcasting target or on BES/ECEI information.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 17,
+  "supplied_pdf_sha256": "f45f4e937b889969a9635359652dd7b724d173e3888fae37994ff705fd4e0e81",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

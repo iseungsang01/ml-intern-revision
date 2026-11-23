@@ -1,0 +1,1528 @@
+{
+  "state": "all_eligible_sources_individually_reviewed_and_prose_integrated",
+  "source_file_unit_not_distinct_works": true,
+  "total_pdf_files": 254,
+  "eligible_public_unique_source_files": 251,
+  "reading_modes": {
+    "full_pdf": 41,
+    "full_text": 210,
+    "held": 1,
+    "duplicate": 2
+  },
+  "figure_limit": "Full extracted text does not constitute visual checking of figures/equations. Even PDF-supplied audits retain source-specific visual/legibility caveats.",
+  "duplicate_versions_may_still_represent_same_work": true,
+  "source_records": [
+    {
+      "key": "Abbate2021DatadrivenProfile",
+      "pdf_sha256": "3b0154e4b1ebc55305846481eb3679e1161c71c85fdc34dcf2ab5e133eed7af2",
+      "audit": "docs/paper/introduction_review/paper_Abbate2021DatadrivenProfile.json",
+      "audit_sha256": "1d0e6be8f5474391bd9ea27c670562cf2cc8cc1d12e7a2c039b5a31d78aca499"
+    },
+    {
+      "key": "Abbate2025Combining",
+      "pdf_sha256": "7ba164dddf5b5ea85b69d29fe019609b6211664c8259cfd54af976a8de70fa3e",
+      "audit": "docs/paper/introduction_review/background_Abbate2025Combining.json",
+      "audit_sha256": "01ebf2b82c981e2c70fd898bad04f48adabd931582b7d855d5c4aeeab26cd2a5"
+    },
+    {
+      "key": "Agamennoni2012ApproximateInference",
+      "pdf_sha256": "6a925c9f6c23c91bd1ed91facfc7ef80427e1c2ea948bfd91af3d5c9417bc3fb",
+      "audit": "docs/paper/introduction_review/background_Agamennoni2012ApproximateInference.json",
+      "audit_sha256": "61d7f46912911e35360da92bff20a6927e05d5d021481e4679a6cc59d8a9368c"
+    },
+    {
+      "key": "Allen1992NeuralNetwork",
+      "pdf_sha256": "0530c34763d7d8699bdd4989f0ee9469c5f16a9a89e41f5a1be9cda2af0c25c7",
+      "audit": "docs/paper/introduction_review/background_Allen1992NeuralNetwork.json",
+      "audit_sha256": "77da34b074e76f0e8c168b7fc1f1699a2044645a9c50383269e6404b214a3a37"
+    },
+    {
+      "key": "Baltruaitis2018MultimodalMachine",
+      "pdf_sha256": "b47dcd9ce7d6c3971adc39e56e4574668ede4eb9fb051b03726e0c5b1ad3e19b",
+      "audit": "docs/paper/introduction_review/background_Baltruaitis2018MultimodalMachine.json",
+      "audit_sha256": "1d425b6aa25ea8514e031f301c1979a38af29b8a9bdf5d901c2fb6364439ad63"
+    },
+    {
+      "key": "Bandyopadhyay2025DisruptionsControl",
+      "pdf_sha256": "48bd0a975bf621c74486cedc1ef3d70191696a02c41a69b10880e3a5bdfbb464",
+      "audit": "docs/paper/introduction_review/background_Bandyopadhyay2025DisruptionsControl.json",
+      "audit_sha256": "88821acbeb7f70caecfbe15594105f7a4e86473345ac33134c0d24b24070e23d"
+    },
+    {
+      "key": "Bates2024CrossValidation",
+      "pdf_sha256": "e607fd7125ac1c9394685137e09ad1d9e579db5957f178690e98d4043d8e99c9",
+      "audit": "docs/paper/introduction_review/paper_Bates2024CrossValidation.json",
+      "audit_sha256": "1e12a60edc894248b4d49be5f232177a7aa0e278c580eb02d4358c00d0e4fe90"
+    },
+    {
+      "key": "Baytas2017PatientSubtyping",
+      "pdf_sha256": "edd7ff72101be9cce99db8c994d5e53a81c5ad9345123839c0c1b7f3c35cebdc",
+      "audit": "docs/paper/introduction_review/background_Baytas2017PatientSubtyping.json",
+      "audit_sha256": "966421b754f82adb52a439b6cc4093dba55969e71a6938c4e4d0ada42f8613e6"
+    },
+    {
+      "key": "Bell2006CarbonPlume",
+      "pdf_sha256": "d2335ac2184f5ba938cce5d768f5af798f98243f90f17e58d44b103c502b96ce",
+      "audit": "docs/paper/introduction_review/background_Bell2006CarbonPlume.json",
+      "audit_sha256": "aeb35bf0bf2085a04a4fc5af5ac9bb7779e7a13be15fd0d9b68ae8d5e38fd017"
+    },
+    {
+      "key": "Biel2019DiagnosticsPlasma",
+      "pdf_sha256": "c34639e810d6a270f246d291ecea0706d2972fd30564dd55976f131ab1b971d2",
+      "audit": "docs/paper/introduction_review/background_Biel2019DiagnosticsPlasma.json",
+      "audit_sha256": "fffa671643bac7b4e8e962fd2a5e0efc1a5381cff8af23b4f4d76465fcb92674"
+    },
+    {
+      "key": "Bishop1993AutomaticAnalysis",
+      "pdf_sha256": "3c3f5762028854029776e72c09e213192116a9c4e2e9f1447c39b2c46d0892a1",
+      "audit": "docs/paper/introduction_review/paper_Bishop1993AutomaticAnalysis.json",
+      "audit_sha256": "1c8d83eedee0eb5644d5eb93c99485a4578e6121e13e9e87dc9914b6507e2718"
+    },
+    {
+      "key": "Blanken2019ModelBased",
+      "pdf_sha256": "0d51f7774623146df806478442e22a338f096534faed14e41b341de56b46572a",
+      "audit": "docs/paper/introduction_review/background_Blanken2019ModelBased.json",
+      "audit_sha256": "78f6892261c175a83cfafbc68e6df5008a98fb76d37778f51937bcf0d8a5cc8e"
+    },
+    {
+      "key": "Blom2002ParametrizationZeeman",
+      "pdf_sha256": "57d5c3fd2a9322dfcba94c045294e448e41f4fa5135b3785982af901377c52fb",
+      "audit": "docs/paper/introduction_review/background_Blom2002ParametrizationZeeman.json",
+      "audit_sha256": "c44e934f3e90ca93ef79ff4dc8b63dbecd3eb2ddc514e8f804f4a2ba3c724574"
+    },
+    {
+      "key": "Boileau1989DeductionTemperature",
+      "pdf_sha256": "338685a9cdbc88bd2e2f9175aede3043bc6982bfcbaa92b1dece7c449f406a07",
+      "audit": "docs/paper/introduction_review/background_Boileau1989DeductionTemperature.json",
+      "audit_sha256": "3bc51cad278d957997d862455c9e31ce489bb97d82638db414caa821a4e202aa"
+    },
+    {
+      "key": "Bosman2021ModelBased",
+      "pdf_sha256": "b0616c5a0b1b5c973bbe315a5a9bfe6967b126dc8196f1ab99d57617c8107305",
+      "audit": "docs/paper/introduction_review/background_Bosman2021ModelBased.json",
+      "audit_sha256": "89d82d194b97105a377cbabbba20478b55db2577824e815789bd6bd153709d39"
+    },
+    {
+      "key": "Boyer2019FeedbackControl",
+      "pdf_sha256": "4b45b25ee9eb0610b16bd54b07f4aca545cf0fd48c6eb4351655e6211e863773",
+      "audit": "docs/paper/introduction_review/background_Boyer2019FeedbackControl.json",
+      "audit_sha256": "cad6656dcc7596799ea8c20d398f16cd86f285bf1fcfa3c62240fbe7c26156e0"
+    },
+    {
+      "key": "Boyer2021PredictionElectron",
+      "pdf_sha256": "440916a12e0dbe1356fe3c578137594e59c73fe2879d54c7c18f7545759098eb",
+      "audit": "docs/paper/introduction_review/background_Boyer2021PredictionElectron.json",
+      "audit_sha256": "0251ad9942ebb8d7a0fe968d00679066ccd3ead7ed9f0b2bf3dc0a48053a416f"
+    },
+    {
+      "key": "Burrell2009EdgePedestal",
+      "pdf_sha256": "3d737790aa8b625baf80a64be4f5eba3f55ee2bd55c7cb221e57d9e997d744cb",
+      "audit": "docs/paper/introduction_review/background_Burrell2009EdgePedestal.json",
+      "audit_sha256": "4349036440fe272f759d674d2e704484d8dbd2f7112854ab6220558ca2879119"
+    },
+    {
+      "key": "CanoMegias2025MultiIon",
+      "pdf_sha256": "7dcbc1f2124cbfff75fa68d151aa051ea130f60a5b49d0578a609157318da1c6",
+      "audit": "docs/paper/introduction_review/background_CanoMegias2025MultiIon.json",
+      "audit_sha256": "0d554839eaa641df4655260c8bcbb549a4796fbfab7d42b772470a43d6802be5"
+    },
+    {
+      "key": "Cao2018BritsBidirectional",
+      "pdf_sha256": "6a3f516b2f8d8a418f7c907c9617e45dff673c04f0e73cd2b56307c4a67a09a0",
+      "audit": "docs/paper/introduction_review/background_Cao2018BritsBidirectional.json",
+      "audit_sha256": "deb32a53acc7e5105c397035fc7e6e8598e4272bd004f38ee3cb243c2979370b"
+    },
+    {
+      "key": "Caruana1997MultitaskLearning",
+      "pdf_sha256": "611e8dccecf73e1c86773909ae6cbf305f0b36a54035884e3e17cd2af4d5f012",
+      "audit": "docs/paper/introduction_review/background_Caruana1997MultitaskLearning.json",
+      "audit_sha256": "6f20d8dcafff2cbc75afaebef3896d80b866faac8439a314414c31a70d141161"
+    },
+    {
+      "key": "Cavedon2017PedestalEr",
+      "pdf_sha256": "1859154171e539db7df659dbdcd495374f35e114d0a997270340e6d68cf2b02d",
+      "audit": "docs/paper/introduction_review/background_Cavedon2017PedestalEr.json",
+      "audit_sha256": "3a8355386ef94cdbcfc9acbbbeffbdc32a5002451fe5fb5b959dbc0722b311ea"
+    },
+    {
+      "key": "Cha2024AnalysisNeoclassical",
+      "pdf_sha256": "564162fc17521c4997627d427b6b791e104e8cd7f5d26e1b606dc2fb18af3214",
+      "audit": "docs/paper/introduction_review/background_Cha2024AnalysisNeoclassical.json",
+      "audit_sha256": "811b7c1806cf0d5cc02bd1576f6d020c50996b650147de20adb8b724144eee34"
+    },
+    {
+      "key": "Chai2019FastEstimation",
+      "pdf_sha256": "bf7099dc064c27d6565f74678d993875c5ff31eb674be90b483899a531873e7d",
+      "audit": "docs/paper/introduction_review/paper_Chai2019FastEstimation.json",
+      "audit_sha256": "95b4d909db25b4a413a9d69753471287b701f4e8d9f89cd166adc4320e47b409"
+    },
+    {
+      "key": "Che2018RecurrentNeural",
+      "pdf_sha256": "c56c612a56770caaa97a7b20056009d6a84c227df641652d1ae0fad40fdefc7d",
+      "audit": "docs/paper/introduction_review/background_Che2018RecurrentNeural.json",
+      "audit_sha256": "2d15ad986ce9f62f07618358b07542eaeb593e82191f3bcd324ff4acd2c1c79b"
+    },
+    {
+      "key": "Chen2016RotationalShear",
+      "pdf_sha256": "a13cb53a7fe50a14ed993e3ad0c6b94c76c146da477bff07e7cfab0c781ab0c3",
+      "audit": "docs/paper/introduction_review/background_Chen2016RotationalShear.json",
+      "audit_sha256": "6cdcfe6e13dc8db38a3f3905fda053127048a6eae48f5a20d276b6253ca3f9c2"
+    },
+    {
+      "key": "Chen2019EffectEnergy",
+      "pdf_sha256": "4db411c10464a119ebf44f5f8bf48a9b16873e8c922ff07d4b6ee5efc9384071",
+      "audit": "docs/paper/introduction_review/background_Chen2019EffectEnergy.json",
+      "audit_sha256": "1a5ff7a22f514d1c4db14359745ce0bd206df5be64c1c92c91362e0928faaf12"
+    },
+    {
+      "key": "Chen2026FusionclipMultimodal",
+      "pdf_sha256": "46ee9e720b849ab33fc976cf9c81b2f5e44188525fb4e74192f99bcb5dd8ef8b",
+      "audit": "docs/paper/introduction_review/background_Chen2026FusionclipMultimodal.json",
+      "audit_sha256": "22461c7b2b33043c528c50afaa097eb8552efd3a589c2315941384484a9735dc"
+    },
+    {
+      "key": "chilenski2015",
+      "pdf_sha256": "4f3531f64fd77e1645e6fbe809e39180866e3b19b35cee3fff63ac1bf499fcbd",
+      "audit": "docs/paper/introduction_review/paper_chilenski2015.json",
+      "audit_sha256": "e1fc919554defffd0177e6346419d98026fc85eabd1b07716e3610a88c826434"
+    },
+    {
+      "key": "Chrystal2026RealTime",
+      "pdf_sha256": "30854212b44b4a10fa1d233096e6d0ae5f2b6afb94394b85dbde35e69a8c76d9",
+      "audit": "docs/paper/introduction_review/paper_Chrystal2026RealTime.json",
+      "audit_sha256": "4768deb6ba35c95c33fc6fa5212d7bac277c94fafa700e1d1a1eabe2106c1304"
+    },
+    {
+      "key": "Cole2011ObservationPeak",
+      "pdf_sha256": "665ddb4be805fa6ea07f8903559cdd9759dd501c6e7f14d069b99ae5840fec5c",
+      "audit": "docs/paper/introduction_review/background_Cole2011ObservationPeak.json",
+      "audit_sha256": "5eeb73d78d32a97c73b149cc77bce24217b82131de079c1b84594cb1721ae84a"
+    },
+    {
+      "key": "Conway2006HighThroughput",
+      "pdf_sha256": "3c2e6876872d367c90840a106a88127f44ca9366b982355c8c7022f05d756d7e",
+      "audit": "docs/paper/introduction_review/background_Conway2006HighThroughput.json",
+      "audit_sha256": "5c65f75c9e80d5822d827665e9576b6bd41c79774cb0e05613b9085a419f415f"
+    },
+    {
+      "key": "DeBock2012RealTime",
+      "pdf_sha256": "d8ecb76dd0525dfe1c0e7886ec9744307e697b0dd8dc84b82682da8e9f75f629",
+      "audit": "docs/paper/introduction_review/background_DeBock2012RealTime.json",
+      "audit_sha256": "9ef5bc8da1c1c864d5929904ba849c481d6d6026328b2381b19e8e6b9860b6c4"
+    },
+    {
+      "key": "DeBrouwer2019GruOde",
+      "pdf_sha256": "e031724444ea9911ff7cac7a1e4914fb71e074f3d1c5ff650344881a198ec800",
+      "audit": "docs/paper/introduction_review/background_DeBrouwer2019GruOde.json",
+      "audit_sha256": "7755ee977985c17227112c2e14f8646e0b7fee3173a090dfa11f1ec25d1b990a"
+    },
+    {
+      "key": "Denk2018AnalysisElectron",
+      "pdf_sha256": "09a9f773866fec9cf2cc12fb9d668f935c1a3155f638ef289c91a5ee01cf3177",
+      "audit": "docs/paper/introduction_review/background_Denk2018AnalysisElectron.json",
+      "audit_sha256": "b03b989e51e8236e9486614129838b15d67f00334549ca153fd0ac14fad5e8ce"
+    },
+    {
+      "key": "Diagnostics1999ChapterMeasurement",
+      "pdf_sha256": "0190be7435bd287ac08eaa80b9b901cc28e576d31fcc59c35ba6ee5716f3e588",
+      "audit": "docs/paper/introduction_review/background_Diagnostics1999ChapterMeasurement.json",
+      "audit_sha256": "9da83c21ccefc8117465aa08cd102bfbdc440e45a30292185d83b055cec98cb5"
+    },
+    {
+      "key": "doi_10_1016_j_fusengdes_2018_02_066",
+      "pdf_sha256": "5f61033758eda71c7201af6cb4c73d488b8d8a03257a667275d8c079d6f62590",
+      "audit": "docs/paper/introduction_review/background_doi_10_1016_j_fusengdes_2018_02_066.json",
+      "audit_sha256": "5ef72aa6fc11839ca4ada3acd1b5d7394d120c3868c85a228ce3483f11c234b7"
+    },
+    {
+      "key": "doi_10_1063_1_4755810",
+      "pdf_sha256": "9a804d413c7802100537de272f7121c1e830b46e5eaa642ea1b614e35b941b1c",
+      "audit": "docs/paper/introduction_review/background_doi_10_1063_1_4755810.json",
+      "audit_sha256": "5eb02fb9601820d037a8e729cb3995d03a116827f3ff0f844b8548e143abc9d6"
+    },
+    {
+      "key": "doi_10_1088_0029_5515_54_8_083003",
+      "pdf_sha256": "d4d880d186db35bb65f2412c566f2f0ce75ce44dbb958904eb9dedca5eea3ebb",
+      "audit": "docs/paper/introduction_review/background_doi_10_1088_0029_5515_54_8_083003.json",
+      "audit_sha256": "8e33b47640aa05c5e69d3bc9c6a3a56c0f193bd3218154163c433e0b593ea0f0"
+    },
+    {
+      "key": "doi_10_1088_1741_4326_ac4868",
+      "pdf_sha256": "b0c61a0c51c948bce76fe3c7b2dac33eeefcd2a6213e21d3f2b9e74dd65ba078",
+      "audit": "docs/paper/introduction_review/background_doi_10_1088_1741_4326_ac4868.json",
+      "audit_sha256": "889ee35e8f3b262623574831e0b46505e758a255b7e44d0da664692e718ca3d4"
+    },
+    {
+      "key": "Donne2007ChapterDiagnostics",
+      "pdf_sha256": "bc2c846f5756c3cbc1fe3322d30106f3535a308e3ef8edc3c84c18dedf77cf45",
+      "audit": "docs/paper/introduction_review/paper_Donne2007ChapterDiagnostics.json",
+      "audit_sha256": "085754bc4a765f9440ad6e91cc7dbb5bcc810a7ca5c3b94272154b51f4f4c2cf"
+    },
+    {
+      "key": "DuranMartin2024OutlierRobust",
+      "pdf_sha256": "8ebd166581f0a7329848733fe3f67ecb79fac15297dd3bdf9ca4f62e2a7502b1",
+      "audit": "docs/paper/introduction_review/background_DuranMartin2024OutlierRobust.json",
+      "audit_sha256": "bc9feb4e2e0a144b074b7cf8acfc0105fc2b9d1eb45c97a1811b578023ccbf7b"
+    },
+    {
+      "key": "elorrieta2019",
+      "pdf_sha256": "37ae50526e474ffb461bd77dc91892504b19e219825a1a64c8fc934fe87fd585",
+      "audit": "docs/paper/introduction_review/background_elorrieta2019.json",
+      "audit_sha256": "8ef077db9304b42a2233943568556c4f7e7114ea5930a82cd72b8e9af7ca2ea4"
+    },
+    {
+      "key": "eyheramendy2018",
+      "pdf_sha256": "af38387b7f6c9d1244f9b71cb065181d9fd165d206149bd41ae217340ffefaeb",
+      "audit": "docs/paper/introduction_review/background_eyheramendy2018.json",
+      "audit_sha256": "85171fcded2d124fe17c60affa86d7dfd998095072def853a8da4fbd224e6581"
+    },
+    {
+      "key": "Felici2011RealTime",
+      "pdf_sha256": "f0a9a9f40c4724f9e33671956234f538fc3d475716ea5aae5ef5b509cfad843a",
+      "audit": "docs/paper/introduction_review/background_Felici2011RealTime.json",
+      "audit_sha256": "392e0036e0a555c9f0cef9a36f154dd4a36be51d0272311f285f265911d03167"
+    },
+    {
+      "key": "Felici2014DynamicState",
+      "pdf_sha256": "05c36cf45623c1f928ed71af4ba975a5cbc4c6b5b435a16b7b0a7f98b0ed29d9",
+      "audit": "docs/paper/introduction_review/background_Felici2014DynamicState.json",
+      "audit_sha256": "fd9e1c5e7b68c817458f646634d35d0a740b239041a5358a2e63dea7e4073583"
+    },
+    {
+      "key": "Fenstermacher2025ProgressPedestal",
+      "pdf_sha256": "b8cb12200e952de24d93ff39b8871358ec5ac56724603e28010616415eb3db1e",
+      "audit": "docs/paper/introduction_review/background_Fenstermacher2025ProgressPedestal.json",
+      "audit_sha256": "d4f84fd61fb545abef924eb19257e104911bf81b45a56f6ad4f708512a4ee160"
+    },
+    {
+      "key": "Fitzpatrick1993InteractionTearing",
+      "pdf_sha256": "866bfd581495edc2e0f12c8d0506d68bce0507ae0e68384faad2db2e6f12ec01",
+      "audit": "docs/paper/introduction_review/background_Fitzpatrick1993InteractionTearing.json",
+      "audit_sha256": "1dff4aee9fbeb1c520ab0d8b8ad0b9dcd0bbd9593858cf431beef66e119ed771"
+    },
+    {
+      "key": "Fonck1983PlasmaTemperature",
+      "pdf_sha256": "9fdb11568ece392c58ce13dea639131c65ffad2e6cf27d8350f751024511fe13",
+      "audit": "docs/paper/introduction_review/background_Fonck1983PlasmaTemperature.json",
+      "audit_sha256": "3a79b3822d875a49e58a0482e3b705a6551916e00dd431ca637421a9e322f9c0"
+    },
+    {
+      "key": "Fonck1984DeterminationPlasma",
+      "pdf_sha256": "e261ed55d34086ee847011456a5ed4f0033854e2a0b4eb1bf4ad550436d4b5a2",
+      "audit": "docs/paper/introduction_review/paper_Fonck1984DeterminationPlasma.json",
+      "audit_sha256": "a66160df917c1319c3ce171ac93d24a00632c5bb10e79ee8adaecf9d35b0066d"
+    },
+    {
+      "key": "fritsch1980",
+      "pdf_sha256": "8b4a262e91876016860870e7562ca24cb480f32a4831b289aa49e34e42f0fa5c",
+      "audit": "docs/paper/introduction_review/paper_fritsch1980.json",
+      "audit_sha256": "7fc0e2d413f70a67f838e1188264acfe6db997bf3e4c2f0f72b6716c9bf0e1a5"
+    },
+    {
+      "key": "Gallas2009Framework",
+      "pdf_sha256": "39f6891129276ff34d57ace873a55508a084cd900be63970cf89776bcbdab426",
+      "audit": "docs/paper/introduction_review/background_Gallas2009Framework.json",
+      "audit_sha256": "4fa306472234959299e259f9ad56d753cf1553c201ae278d1f32cea7df9f5eb2"
+    },
+    {
+      "key": "Gebetsberger2018Estimation",
+      "pdf_sha256": "c743a5134facd776cf2b9a866a7cb1802305c00b61394fb2adcfa96ca9cb670d",
+      "audit": "docs/paper/introduction_review/background_Gebetsberger2018Estimation.json",
+      "audit_sha256": "e85962e5dfdc94836283d522b6d89a9552c3a5ed7fe6b7131ef825e803bbb0c5"
+    },
+    {
+      "key": "Gill2024RealTime",
+      "pdf_sha256": "429df5486d5d387d5551ac0d5efac88346fb9fbc4225920aefd27b09adb0b58f",
+      "audit": "docs/paper/introduction_review/background_Gill2024RealTime.json",
+      "audit_sha256": "98e527113d89e589ebbd8cee4e50507633031747cdb8dbc9c4e111b017f8964e"
+    },
+    {
+      "key": "Gneiting2007StrictlyProper",
+      "pdf_sha256": "1472f855dce38b59a79e34d0db7ec30af0f25639efc82376951494fa380aebfb",
+      "audit": "docs/paper/introduction_review/background_Gneiting2007StrictlyProper.json",
+      "audit_sha256": "6a6101017839b90f2af5467aab3db0b0c261973717226b53a0fc1de5742a57ec"
+    },
+    {
+      "key": "Goddard2013Verification",
+      "pdf_sha256": "3fbd1669342881fe1f9f1daab658a8e0cd91a9dfa203857a44ad516217f51fd3",
+      "audit": "docs/paper/introduction_review/background_Goddard2013Verification.json",
+      "audit_sha256": "82872f48993d283c97b3b807474037b7f1de08499338f01358e0c765a17f7b73"
+    },
+    {
+      "key": "Goumiri2016ModelingControl",
+      "pdf_sha256": "12d512cbc72516596d958eafbe2e5011b8c0247c7219b2bc9eb5f97d40ce9df1",
+      "audit": "docs/paper/introduction_review/background_Goumiri2016ModelingControl.json",
+      "audit_sha256": "6d5dff2dbd77f55893e7c3dc7f419a3bdac2d098b7d459bb092ce625b17efacc"
+    },
+    {
+      "key": "Goumiri2017SimultaneousFeedback",
+      "pdf_sha256": "9916c84aa9f1b4c798510d0832c7cc9f74d71e697f6e93ef4d231cb86a46e2f5",
+      "audit": "docs/paper/introduction_review/background_Goumiri2017SimultaneousFeedback.json",
+      "audit_sha256": "2a0005adfc475eb96c8c0d6b57224919f3bced990b61e12f0fe983f0c1b9e047"
+    },
+    {
+      "key": "Gribov2007ChapterPlasma",
+      "pdf_sha256": "0579e038171b4bedf525b6eb5ec15a6b1155c73996152a911ad92931570ae590",
+      "audit": "docs/paper/introduction_review/background_Gribov2007ChapterPlasma.json",
+      "audit_sha256": "2d836536390cacf77b47913d7ca654721fe6e6d3367c44745c0bb06e4e2abe7b"
+    },
+    {
+      "key": "Grierson2016HighResolution",
+      "pdf_sha256": "62d31a1d1a714b354c8b98a1aa9011d3a95be390efa646539f1014317d90abd9",
+      "audit": "docs/paper/introduction_review/background_Grierson2016HighResolution.json",
+      "audit_sha256": "fb7450e31b8b8ae812d8e8fb19881c49974242e06c8d4b4261624b7016b7f4d7"
+    },
+    {
+      "key": "Gupta2026BenchmarkingSensor",
+      "pdf_sha256": "f22483b278a45c939b083e83674c4435a9ea64a1de8b66af48432b3136da67ac",
+      "audit": "docs/paper/introduction_review/background_Gupta2026BenchmarkingSensor.json",
+      "audit_sha256": "3ecfc748b99224b0f5da58a092d59646a1b6e39a45f326f7cf460acaaa36904a"
+    },
+    {
+      "key": "Hahn2016ProgressPlan",
+      "pdf_sha256": "9b5cdfb28c958b1e6d547e51101cf070f7e24ab2c352d7b2fbeaae21d8198cf1",
+      "audit": "docs/paper/introduction_review/background_Hahn2016ProgressPlan.json",
+      "audit_sha256": "01e598424de3838fe672b1dd239512f99341704c791d12ea7b6a2080b872a655"
+    },
+    {
+      "key": "Hahn2020AdvancesChallenges",
+      "pdf_sha256": "b0d3d9dc365fede77a39b327a19c12777e8fc80d178acaa0aa6da5df5f32ff8e",
+      "audit": "docs/paper/introduction_review/background_Hahn2020AdvancesChallenges.json",
+      "audit_sha256": "11f5c738e5334ff91ffcbfadb482bbfd9d60b424a96ebdddf67b2fba3710fe0b"
+    },
+    {
+      "key": "Han2024CriterionLong",
+      "pdf_sha256": "fdc5024726213c4826babfad327ed6fbf3510854ce2aa41f2b3bb07f4b359703",
+      "audit": "docs/paper/introduction_review/background_Han2024CriterionLong.json",
+      "audit_sha256": "6ba31da9f1c3aed16ceae97bf9dd526ee401e493d43d164669817efdce462eb9"
+    },
+    {
+      "key": "Haskey2017DeuteriumCharge",
+      "pdf_sha256": "4d51a737244c631dc49f1b53de590c2ffcdde6574ae95fdc0ad06935ad0b7eaa",
+      "audit": "docs/paper/introduction_review/background_Haskey2017DeuteriumCharge.json",
+      "audit_sha256": "fc07fc1339a6344b020fa8e4d960d15cd378bb7d3a91780a195452efc3f15af3"
+    },
+    {
+      "key": "Haskey2018ActiveSpectroscopy",
+      "pdf_sha256": "9cce26bc470074e9844f686adaee47ec77414fa742120f2aa19240bbabdd0192",
+      "audit": "docs/paper/introduction_review/background_Haskey2018ActiveSpectroscopy.json",
+      "audit_sha256": "a1f8a5e33921696724972000aace9b1037a1487e842f531f4ed2e269b8f32597"
+    },
+    {
+      "key": "Haskey2018MainIon",
+      "pdf_sha256": "73cdacac6dfa44089a172a3bac5edb511859ad24a31d200baeab691fb6b18c25",
+      "audit": "docs/paper/introduction_review/paper_Haskey2018MainIon.json",
+      "audit_sha256": "b6fb11f19a6101fcac82d3a2ef46ea51c3cad4e78dc409dab54757ec3586ca26"
+    },
+    {
+      "key": "Haskey2022ThermalTransport",
+      "pdf_sha256": "c26f5955a4d3b585dcf9e6591203f7e65c26473f7a2e418e0abec9f8af01c73d",
+      "audit": "docs/paper/introduction_review/background_Haskey2022ThermalTransport.json",
+      "audit_sha256": "22c773331bcdf93cfa8cdde59e25786e20886fa71f2e73e7f7df3077077a721e"
+    },
+    {
+      "key": "Haskey2026MachineLearning",
+      "pdf_sha256": "4cfdc905787656563f0cf2f9ac2958ab7401dbebc58be97a8b61f106891775ad",
+      "audit": "docs/paper/introduction_review/paper_Haskey2026MachineLearning.json",
+      "audit_sha256": "f9129d7970e71a101e5c429e16397f05a7ba0fe83b08cb528e9af473ee3e87d1"
+    },
+    {
+      "key": "Heidbrink1988ComparisonExperimental",
+      "pdf_sha256": "05295879c73b47e694c39dee876e0fbbfa64a1bcc24fe4c654391269c2d0dac0",
+      "audit": "docs/paper/introduction_review/background_Heidbrink1988ComparisonExperimental.json",
+      "audit_sha256": "f6092a6c1964eef1d1b383a9ba14f3195dc3b5298d3592ae67ecdcfd88f4523a"
+    },
+    {
+      "key": "Heidbrink1994BehaviourFast",
+      "pdf_sha256": "78b34e96c3db90ddc567d2805dfaca612343c32249e6a60ad026b5c05e78aa2d",
+      "audit": "docs/paper/introduction_review/background_Heidbrink1994BehaviourFast.json",
+      "audit_sha256": "daad3c3b38a74f013fdb1c26a923c29ddad2f48fc3e1a1b1d9cd1dbdc8bd830b"
+    },
+    {
+      "key": "Heo2025ExperimentalIdentification",
+      "pdf_sha256": "d1a8eb8281aa0b3e392d8587cec06757ce16cba5fcfad2b97102125a69ca8d03",
+      "audit": "docs/paper/introduction_review/background_Heo2025ExperimentalIdentification.json",
+      "audit_sha256": "abaafff2d3786237b58f307f03a9c78e9f6f37ad28b05803ea44c1c1f89fc8c6"
+    },
+    {
+      "key": "Herrmann1992RealTime",
+      "pdf_sha256": "59fec4158dc17bc64801ee3f809cf0253a89cd5b2d27fcd02a62be71d5e8e919",
+      "audit": "docs/paper/introduction_review/background_Herrmann1992RealTime.json",
+      "audit_sha256": "07784ae47c49ffb943d1ced973e32b8fc269278748f15cf4ba1aa5583a6a4f39"
+    },
+    {
+      "key": "Hey2002OxygenImpurity",
+      "pdf_sha256": "718a455d964a8371e00d68802d023704946b09c02ad4cd0ec0e0cf52cc8f6a93",
+      "audit": "docs/paper/introduction_review/background_Hey2002OxygenImpurity.json",
+      "audit_sha256": "ea09aa901e278bfd6eba03bff2cb7dd7eeab5c3640870356950c9c23bce894d1"
+    },
+    {
+      "key": "Hong2024ImpactStray",
+      "pdf_sha256": "47ef2dc84534158b0a2cedfed1e68dcfbfacd245439c3c1a2d5a6b0665d4dd3e",
+      "audit": "docs/paper/introduction_review/background_Hong2024ImpactStray.json",
+      "audit_sha256": "85248cb74f62a46c4813c096649dbd4103bfec13d03bbadfde9fd82c84c0d7c7"
+    },
+    {
+      "key": "Huber1964RobustEstimation",
+      "pdf_sha256": "0bd9e67b4910ebd47cb0349f673ca6c25307a4035dbcf0e98eeac567dd150ad4",
+      "audit": "docs/paper/introduction_review/background_Huber1964RobustEstimation.json",
+      "audit_sha256": "8821c6f6ef866f1484bbed40ff32aee3c88087513775c85b2d4be5fda54ffb80"
+    },
+    {
+      "key": "Humphreys2015NovelAspects",
+      "pdf_sha256": "936e624813e93b105ed16c5d6ac7384204f0a53595fa584bd449f682947ef8ac",
+      "audit": "docs/paper/introduction_review/background_Humphreys2015NovelAspects.json",
+      "audit_sha256": "67c0f515b559c83898f20e4e1cd139d8c640460b4b8bcbdbfc97fe1a71fb1021"
+    },
+    {
+      "key": "ICHIKAWA2025ApplicationData",
+      "pdf_sha256": "17a7f29fa96d911f30cc5a321a5c705c7c787104e84c1f5e63b807392108627d",
+      "audit": "docs/paper/introduction_review/background_ICHIKAWA2025ApplicationData.json",
+      "audit_sha256": "77e53908e6e3c6f8a6ee377299a554cf468aaa207a8e6ed77df1c271fb956a9a"
+    },
+    {
+      "key": "Ilse2018AttentionbasedDeep",
+      "pdf_sha256": "9da16d3f18f46d29d3f947201b3aae195543e6b2354f878fbc06cf6c3765b199",
+      "audit": "docs/paper/introduction_review/background_Ilse2018AttentionbasedDeep.json",
+      "audit_sha256": "b4bc4a3f31e800735cbc04982db39b695249ba2b91b79bdafa7971a773590a69"
+    },
+    {
+      "key": "Imrek2026TemporalSuperresolution",
+      "pdf_sha256": "6f41d333bf9478c08e080f7ac6cbdd469d34c671902fec207d700af498819891",
+      "audit": "docs/paper/introduction_review/paper_Imrek2026TemporalSuperresolution.json",
+      "audit_sha256": "5ec67b958e2139cacea3f62386286332f2b1b8c65fc148c4dd527abae466e399"
+    },
+    {
+      "key": "Isler1994OverviewCharge",
+      "pdf_sha256": "4c9886a5f9981768b026eeac4760feb980aafe4eddf4c4af6245cea9a7d614b0",
+      "audit": "docs/paper/introduction_review/background_Isler1994OverviewCharge.json",
+      "audit_sha256": "11ada9802b82444bf52d3277a7f8f7cdea2ffbfe513c4df70feaa63109c2e070"
+    },
+    {
+      "key": "ITER1999Chapter2",
+      "pdf_sha256": "91991337be060e67293e3c45a6187cab43eccd0c9f78f14e46867a0ad8ea0289",
+      "audit": "docs/paper/introduction_review/background_ITER1999Chapter2.json",
+      "audit_sha256": "281ebffe4c92e78953a6878feab5c21b85ca936199bd370e20ad1bc6d8984131"
+    },
+    {
+      "key": "Jackson2024FairMast",
+      "pdf_sha256": "7dd26efa117446a51c2a1e4c38e0c424a119782e01e907113c79ad684d283742",
+      "audit": "docs/paper/introduction_review/background_Jackson2024FairMast.json",
+      "audit_sha256": "edaff3224565725ccd893c48924f55d30f5fb190cd8a473e68aa551475c7b7de"
+    },
+    {
+      "key": "Jalalvand2025MultimodalSuperresolution",
+      "pdf_sha256": "2c278fa1afee0d3645b4084c2995534abfc8735774915f99f9aaadd57d7394ee",
+      "audit": "docs/paper/introduction_review/paper_Jalalvand2025MultimodalSuperresolution.json",
+      "audit_sha256": "c513210c589ee511ab4d4bdb91ad416b74ee2abe9a46bc2dcbf6bf70cfbc9cae"
+    },
+    {
+      "key": "Jang2021DevelopmentUltrafast",
+      "pdf_sha256": "e3af8954331f5b06b7cdb516e17a88f012e031129a25c72551a91d2faee4cc41",
+      "audit": "docs/paper/introduction_review/paper_Jang2021DevelopmentUltrafast.json",
+      "audit_sha256": "6641cacd3abcc338de86475f161d6c9344c5d378539de3de630ee365cf3bdca2"
+    },
+    {
+      "key": "Jeong2010ElectronCyclotron",
+      "pdf_sha256": "54c2e4a7348780d9d9987851a017c0b3e6b50259fb21b5b1b07223d7c7f988fa",
+      "audit": "docs/paper/introduction_review/background_Jeong2010ElectronCyclotron.json",
+      "audit_sha256": "338a9595076af47443dcd56219d3250c60f515027ada8ea333f759a2e304d445"
+    },
+    {
+      "key": "Jeong2026OperationalStability",
+      "pdf_sha256": "21fa77c0f10c9c3b5314da1ff987dfe3e59941b55e0171f251bbc2d2aaa32af2",
+      "audit": "docs/paper/introduction_review/background_Jeong2026OperationalStability.json",
+      "audit_sha256": "c40138004161475ba1baf6b3f205efe8164b67e9e74ae8e9bbd7c8d940719cb9"
+    },
+    {
+      "key": "Jia2026TimeSeries",
+      "pdf_sha256": "b985e8126f3376dd9deeb178fd698eae21a2f3fcb04c1e2a47775ba4fa032703",
+      "audit": "docs/paper/introduction_review/background_Jia2026TimeSeries.json",
+      "audit_sha256": "3ca5a1ba921ccdb1ddcd674961a87e5f30a41443937f5d270c3c737acab9c161"
+    },
+    {
+      "key": "Joffrin2003IntegratedScenario",
+      "pdf_sha256": "2b4cf0a92edb5d18a5e1aa88c1dd491965226132a58805e466875c9d72c4ab15",
+      "audit": "docs/paper/introduction_review/background_Joffrin2003IntegratedScenario.json",
+      "audit_sha256": "7718ddcef5b95155f5d4035ac633de56b69865a37a9c938571092fac43155033"
+    },
+    {
+      "key": "Joung2018ImputationFaulty",
+      "pdf_sha256": "6b903bfc3a14ef649396d51203f1fa9fa31e407d145b85890031b9018091be88",
+      "audit": "docs/paper/introduction_review/paper_Joung2018ImputationFaulty.json",
+      "audit_sha256": "8c99c665717bd389b76e56a80e6856a5d05b3c65df1e7a3c9003ee8965a81a56"
+    },
+    {
+      "key": "Joung2023GsdeepnetMastering",
+      "pdf_sha256": "7aeb290c905435e286622fe05ee08d3cec8d84b84db1b8daa1ff0573297917bb",
+      "audit": "docs/paper/introduction_review/background_Joung2023GsdeepnetMastering.json",
+      "audit_sha256": "f63dfdbd8614589d5c223505cb37dbe5698912f0275db299dd26453d9cbfe29c"
+    },
+    {
+      "key": "Joung2026ExplainableTokamak",
+      "pdf_sha256": "9cc6f536c099951a9b4f5924af09a5a6530f9c7ac0b9284257e24f9a89b4bd5e",
+      "audit": "docs/paper/introduction_review/background_Joung2026ExplainableTokamak.json",
+      "audit_sha256": "a2298986c61ab08acc89021077bbd8464a9c680514106cef61319523e443e550"
+    },
+    {
+      "key": "Juhn2026FpgaBased",
+      "pdf_sha256": "127f35f0245da6a00751cb8f9686f8d52492e0f91aa13cc2dc99301b5f367250",
+      "audit": "docs/paper/introduction_review/background_Juhn2026FpgaBased.json",
+      "audit_sha256": "3670cb3f35957c54a079ec46552635c720feedf2316adb04151dacb2e1556c66"
+    },
+    {
+      "key": "Jung2026MachineLearningbased",
+      "pdf_sha256": "58f9231e1685d7bcb43b1720a8ca414af6352d20e39b7d951fded58bfcdebad6",
+      "audit": "docs/paper/introduction_review/background_Jung2026MachineLearningbased.json",
+      "audit_sha256": "2f3a21f8bbb47aad4be5ffeffca5d9683619dd235db1d1c5a05c6e301afdfc43"
+    },
+    {
+      "key": "Kaldas2026DevelopingAutoencoder",
+      "pdf_sha256": "1d9650265b57e7738c45792c5bedeedf5a910776fe7a4df24bf3d4e8fbdf604b",
+      "audit": "docs/paper/introduction_review/background_Kaldas2026DevelopingAutoencoder.json",
+      "audit_sha256": "5ed57b834301383dd6c0db240363a3785a6f9227b6026357d98a383d68d88fad"
+    },
+    {
+      "key": "Karlgaard2007HuberBased",
+      "pdf_sha256": "4f0571290c1de2056e080a08fdbae2cd70d7a174571d54173dd8a2c1d0f2d6c3",
+      "audit": "docs/paper/introduction_review/background_Karlgaard2007HuberBased.json",
+      "audit_sha256": "62efe8e3dcc91779ba51fe1a0f72abfaee016410daed05dae5a96ecf945b7ff6"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "pdf_sha256": "7bef03756cc1d7170af60910217a040403685c72413e89b0cf4618c67471a15e",
+      "audit": "docs/paper/introduction_review/background_KatesHarbeck2019PredictingDisruptive.json",
+      "audit_sha256": "aa04f9876bb9be9b6f157934ae536890a1a6d35a19ce028cfeeda0d997957bcf"
+    },
+    {
+      "key": "Keith2024RiskAware",
+      "pdf_sha256": "dcc36f1f2ca158b97e2233f8ddf4b284e0d24f43cc016f14b0ebc419ee3b12b3",
+      "audit": "docs/paper/introduction_review/background_Keith2024RiskAware.json",
+      "audit_sha256": "266692e64490ae89dd8976d6da89a75d49fa70cdbb8d59d80666f1673362d24c"
+    },
+    {
+      "key": "Kidger2020NeuralControlled",
+      "pdf_sha256": "9f2f75ceb2ae823445deaa527d3a30a76dbe839a1c3bed325317190093d643ae",
+      "audit": "docs/paper/introduction_review/background_Kidger2020NeuralControlled.json",
+      "audit_sha256": "8a3bb048b077d1e188321612dc54834f1e4c0fc0672f32a6a0736385289b3979"
+    },
+    {
+      "key": "Kim2017ObservationResonant",
+      "pdf_sha256": "67ccc4fa27502d4b43638ddb4f4041ee710b4b731bcf25354a13c9aa1dc7ddb9",
+      "audit": "docs/paper/introduction_review/background_Kim2017ObservationResonant.json",
+      "audit_sha256": "0831dc1a884d0ec70003f1008c74bb6a34ac525ed63371c869c8003091f6b2f3"
+    },
+    {
+      "key": "Kim2017PhysicsBased",
+      "pdf_sha256": "bbbdabfff50a950cd77f63f766d62b911f9fc5c8cd34a25b4a420c32a1f9a3e7",
+      "audit": "docs/paper/introduction_review/background_Kim2017PhysicsBased.json",
+      "audit_sha256": "c3b34f9e52d725915806e7e01c6c5607c867f4931eac7654c3cbd48081fd3b83"
+    },
+    {
+      "key": "Kim2018EnhancedFast",
+      "pdf_sha256": "a7a0b0c5d063d970b8b8fed2b89579877d8d7ea7a233ed30b26dcfe1e55d11d3",
+      "audit": "docs/paper/introduction_review/background_Kim2018EnhancedFast.json",
+      "audit_sha256": "94c18712d05ed0011e7993352a643a07b7bfaf4b9daaa79adfa510ea92592af4"
+    },
+    {
+      "key": "Kim2020PedestalElectron",
+      "pdf_sha256": "c35af29a84c4250f70f21e847439adbdb33a4202752699a98d619031397366d8",
+      "audit": "docs/paper/introduction_review/background_Kim2020PedestalElectron.json",
+      "audit_sha256": "6270fc1f23a0aafb21b8743af69f145ad58db86b39df96f9cb3576972e7468ae"
+    },
+    {
+      "key": "Kim2022OptimizationControlled",
+      "pdf_sha256": "cb715e29696e6678fd931579f2dce9382039107502e1d93b7101da2b4b2b7ed5",
+      "audit": "docs/paper/introduction_review/background_Kim2022OptimizationControlled.json",
+      "audit_sha256": "d6f43f42a4b92374d7043745fad3e17c70e55422e2ec74e1d967577f4a710ca9"
+    },
+    {
+      "key": "Kim2023LabviewProgramming",
+      "pdf_sha256": "7339ad7ea3b4442ebb22ebb7c6828765112afcd05d6e077dc272defd4ebbb421",
+      "audit": "docs/paper/introduction_review/background_Kim2023LabviewProgramming.json",
+      "audit_sha256": "9f5f3b5affd6cafc7ffb20a918379366b071940c320ae9bcc0c6fe6e47f12464"
+    },
+    {
+      "key": "Kim2024HighestFusion",
+      "pdf_sha256": "b0f0b9dafc14e4f35e2284bb8b32a4041f97064968a4c2908bcf8346c9e4a59e",
+      "audit": "docs/paper/introduction_review/background_Kim2024HighestFusion.json",
+      "audit_sha256": "c4f16a4c38b33c7f76c6abd696a867e74c15a3019b6d9e07663709a3692fff9b"
+    },
+    {
+      "key": "Kim2024KineticProfile",
+      "pdf_sha256": "1738dfef9635fcf4dcd18a1c1c2ea658f5aa215164a6a8007cf6f8a7d187beef",
+      "audit": "docs/paper/introduction_review/paper_Kim2024KineticProfile.json",
+      "audit_sha256": "0ae616d0a8e487a83c45f8843a6def2910f5702ebd80136b86d3e993a30c367f"
+    },
+    {
+      "key": "Kim2026AutomatedOutlier",
+      "pdf_sha256": "70def2d956ba702a32489219605334fc08027d5a16f3322df369722d81f016c0",
+      "audit": "docs/paper/introduction_review/background_Kim2026AutomatedOutlier.json",
+      "audit_sha256": "f069f02118a46f369c3135e45ff196999a4433c80c5367faee734276b9cfa788"
+    },
+    {
+      "key": "Kim2026RealTimeFeedback",
+      "pdf_sha256": "cf1a5738c9a100bb85dc3f549868c038f31123131bbc76af1822a8083269e31a",
+      "audit": "docs/paper/introduction_review/background_Kim2026RealTimeFeedback.json",
+      "audit_sha256": "acfc37403270db8338e469ed5de0e21b496bc760951c762629011de9d59266d1"
+    },
+    {
+      "key": "Kim2026RealTimePlasma",
+      "pdf_sha256": "5c05bea40843a5655649799c47a519a2801d21d0f02c897f8415c9fc5838ee4d",
+      "audit": "docs/paper/introduction_review/background_Kim2026RealTimePlasma.json",
+      "audit_sha256": "76ea502cf3f520994a4d3d80ebac64265578777d816634ef433471167bf19fde"
+    },
+    {
+      "key": "Kinsey2011IterPredictions",
+      "pdf_sha256": "42ea43afa552e2ed19bce68c02ce49a2f391125c01fea645ca23e975a680cb8c",
+      "audit": "docs/paper/introduction_review/background_Kinsey2011IterPredictions.json",
+      "audit_sha256": "eb4051a0c240fc23bb023447abb1c1ac8a883ef3f762a5912b08bf481ee26c46"
+    },
+    {
+      "key": "Ko2009KstarCharge",
+      "pdf_sha256": "56960e19db271296b16b9cdf6826c3f78b63951deb67977d9fa2ec3ac8063c12",
+      "audit": "docs/paper/introduction_review/background_Ko2009KstarCharge.json",
+      "audit_sha256": "2212c4c9f22e80f281ad316a040e4eb8b05e671648c67dcc7e5718637d38b3ce"
+    },
+    {
+      "key": "Ko2010ChargeExchange",
+      "pdf_sha256": "5716fc7b1e0db801a6a8331629c9f8f8bab255ea633199fcac6828bdb5aaf516",
+      "audit": "docs/paper/introduction_review/paper_Ko2010ChargeExchange.json",
+      "audit_sha256": "c583208832838e987e2c099493eb7816c59d2f2cb5bdcd877434277e37554cc3"
+    },
+    {
+      "key": "Ko2010KstarCesSystem",
+      "pdf_sha256": "682d20797cce5853166915c817e8a0a91bf2b7d503e53d80aff96b546e654ffd",
+      "audit": "docs/paper/introduction_review/background_Ko2010KstarCesSystem.json",
+      "audit_sha256": "26a19befb92861a4d04fb76d684d5986a3c6a86cae711a65620dafc2c486acad"
+    },
+    {
+      "key": "Ko2014RotationCharacteristics",
+      "pdf_sha256": "02b4a1541e673fdabfb132b9d91ee884e98e2ebebbf104418947ec4f251d85e8",
+      "audit": "docs/paper/introduction_review/background_Ko2014RotationCharacteristics.json",
+      "audit_sha256": "771219adc09ab411849e7866cc3c9bd46dfa9b441b5782481444bdbdf5061c32"
+    },
+    {
+      "key": "Ko2015IonTemperature",
+      "pdf_sha256": "560a58f6d62c0aecde6416d446c13c47a7267db57b15bd927fb87c46b22e957d",
+      "audit": "docs/paper/introduction_review/paper_Ko2015IonTemperature.json",
+      "audit_sha256": "94562532448f0559a42b98c917861a0dd6327f9adb858667b08fedb423d0feb1"
+    },
+    {
+      "key": "Ko2016CharacteristicsToroidal",
+      "pdf_sha256": "7a5f074f3cf63d2cce1f984b75ea6d76e2ddf2eb680148bcbb8c149dabaab9e6",
+      "audit": "docs/paper/introduction_review/background_Ko2016CharacteristicsToroidal.json",
+      "audit_sha256": "a91db12573dd02d506a862f38be5681346af7ff5661d9fdc6b73a3aeb7d6ca2a"
+    },
+    {
+      "key": "Ko2024OverviewKstar",
+      "pdf_sha256": "314b6ae79b8aff9fee0f90c7200715747585f42d7bb147909d6a6bcd0b29af6a",
+      "audit": "docs/paper/introduction_review/background_Ko2024OverviewKstar.json",
+      "audit_sha256": "4703867094cf3e198ced14873d0aa05737479387a376d4b8846c528f8fe69c3c"
+    },
+    {
+      "key": "Ko2026RolesKstar",
+      "pdf_sha256": "13890a6f367fa4f4cf8aa8d473ec1e67d3121221c02ba15ce909c9ab6d315a5c",
+      "audit": "docs/paper/introduction_review/background_Ko2026RolesKstar.json",
+      "audit_sha256": "fd411d2c322779c4a3f54da7cdbb9531cd92ee729545c299e12d09cb4e865e42"
+    },
+    {
+      "key": "KOBAYASHI2003DevelopmentFast",
+      "pdf_sha256": "cd3f3950a4ea4175d4c8c48432949b83c06c8d3782acbc52a3efa78fda05edf8",
+      "audit": "docs/paper/introduction_review/background_KOBAYASHI2003DevelopmentFast.json",
+      "audit_sha256": "ae3653ce4f10bfdcdb07792e2ef7e7090fccdef2cd74b198472442ac7d19df7b"
+    },
+    {
+      "key": "Kobayashi2007DevelopmentRealTime",
+      "pdf_sha256": "22f0e92d0def1998d855df55fe607464ca7011f3bf7559f5f22b9ff555a3cf49",
+      "audit": "docs/paper/introduction_review/background_Kobayashi2007DevelopmentRealTime.json",
+      "audit_sha256": "1ddc6f1c1673095325eaf803a1ff20a941a7898da0e0235e143d1dfc88f57e89"
+    },
+    {
+      "key": "Kwak2019MeasurementFast",
+      "pdf_sha256": "24f5e1365b86acd3814609e308b1975ea8fcb4cb8ce807b62831e452d2c95006",
+      "audit": "docs/paper/introduction_review/background_Kwak2019MeasurementFast.json",
+      "audit_sha256": "46eddd2e23803f62cdf6f515ff5128813524092beeeac69aded4e62779bc49a8"
+    },
+    {
+      "key": "Kwak2020KstarStatus",
+      "pdf_sha256": "8e737ee26ab19c31438994a95297c495362ab946d8ebf534a97ee95e9fac6f63",
+      "audit": "docs/paper/introduction_review/background_Kwak2020KstarStatus.json",
+      "audit_sha256": "eec14cc3326ac15cc306c4b2fcf17671d7fb2228d99deffaedc6d7e1b017e0db"
+    },
+    {
+      "key": "Kwak2025EstimationNeutral",
+      "pdf_sha256": "321d3ab8733b6eb9706609400eeed31e07c828c86dc3fbce1b404daea0c7335b",
+      "audit": "docs/paper/introduction_review/background_Kwak2025EstimationNeutral.json",
+      "audit_sha256": "75a9c6d75aaaac994dd7544e19cb3381867a4a3e31043d3a03e9ec8e246998b4"
+    },
+    {
+      "key": "Kwon2018DevelopmentReal",
+      "pdf_sha256": "178ccb77dfb61e417f97547f473edd5c8babf7c703aa4cb4aa2bb5da46195f42",
+      "audit": "docs/paper/introduction_review/background_Kwon2018DevelopmentReal.json",
+      "audit_sha256": "89a7507197b31b591dcf5fc3b4be7816a90f91298982f20c1da9f1e986bf3485"
+    },
+    {
+      "key": "Laborde2005ModelBased",
+      "pdf_sha256": "1ad4d00902f582b333cfe0d6ad18e5da323b23caaeb1abc9f0cedca19d37508f",
+      "audit": "docs/paper/introduction_review/background_Laborde2005ModelBased.json",
+      "audit_sha256": "c58d3339d11a8ffe49dae2178c31485311df559e38525c1d4c36d2ee6e59d757"
+    },
+    {
+      "key": "LaHaye2006NeoclassicalTearing",
+      "pdf_sha256": "1162396ee79814c3f3e6d6860cd612e8528bc9b2469a69f45e729ac26379d180",
+      "audit": "docs/paper/introduction_review/background_LaHaye2006NeoclassicalTearing.json",
+      "audit_sha256": "5ee0995bebc71e1eec543d79028ee960f445008c3acf6d6aa0e4e7a45997ab10"
+    },
+    {
+      "key": "Lampert2015CombinedHydrogen",
+      "pdf_sha256": "323680131360b911dadcd91c4e341de7820fabbd2904d95b74c3492493913042",
+      "audit": "docs/paper/introduction_review/paper_Lampert2015CombinedHydrogen.json",
+      "audit_sha256": "dd8da2b6ebd80e2821cd672323a9d17ca893f892f1c3e15521567810d0537b22"
+    },
+    {
+      "key": "Lampert2018ScrapeLayer",
+      "pdf_sha256": "d896ad65512ad603175004c45fa9fe976ec6752cf92d5fdb40fd50ae0b7cec9a",
+      "audit": "docs/paper/introduction_review/background_Lampert2018ScrapeLayer.json",
+      "audit_sha256": "26e5fc6ff76e308bc1fb04a36eb2298f0671f6c8574b43a671d7a72cc13a3a47"
+    },
+    {
+      "key": "Lanctot2016ErrorField",
+      "pdf_sha256": "eea96927167d1602e0323afa8a0ac349695778850bedf5a72ec862e3175dcebc",
+      "audit": "docs/paper/introduction_review/background_Lanctot2016ErrorField.json",
+      "audit_sha256": "477f4993fddb658eb010808e7ab141c9115190b62f020f87e420405193f34bfe"
+    },
+    {
+      "key": "Lee2011DevelopmentGrating",
+      "pdf_sha256": "13d46e32210068745a6bcee1355c636c2f2db86e8916178960630768b760c319",
+      "audit": "docs/paper/introduction_review/background_Lee2011DevelopmentGrating.json",
+      "audit_sha256": "4b139cdfccc2eb713ba9bd00cf1a92257ece2cea7e6adef408e7e9c954fcd4f2"
+    },
+    {
+      "key": "Lee2016ValidationToroidal",
+      "pdf_sha256": "bc618354afd98daffa9c87b73c2d04bc34cb256b1111bcee3a10cc5f0927dd48",
+      "audit": "docs/paper/introduction_review/background_Lee2016ValidationToroidal.json",
+      "audit_sha256": "4be60782308f55163e46f36d7f7d67c2f4246ba8d0b042c524f9286a87a793f2"
+    },
+    {
+      "key": "Lee2020CrossComparisons",
+      "pdf_sha256": "815adc880ab2df8a01460748037b87795c8fe4ff0bd4dbc10b07f0d8f078a4ae",
+      "audit": "docs/paper/introduction_review/background_Lee2020CrossComparisons.json",
+      "audit_sha256": "54e7ea679a3bbdb7ad15d0ac4a862b28e9c84f984195c8dcf61d2b4ee1db3f51"
+    },
+    {
+      "key": "Lee2020TwoGaussian",
+      "pdf_sha256": "c3088ee34d7dba659262b31c07b0d7a482c3ffdc6ff131bb0462dd733fd6ac24",
+      "audit": "docs/paper/introduction_review/paper_Lee2020TwoGaussian.json",
+      "audit_sha256": "ca67d45ef5e278cbb7c081ef913607da292ea0ee7be8f14363077bf263a5bbd1"
+    },
+    {
+      "key": "Lee2021SystematicEvaluation",
+      "pdf_sha256": "aafa894b90fd8725a923a37f8abc9c03ba26a0c342b802063ed9945d2bcc402f",
+      "audit": "docs/paper/introduction_review/background_Lee2021SystematicEvaluation.json",
+      "audit_sha256": "9370cd70b012f73ab6c018da51954b115ccc42159c874e9457d05493a0632029"
+    },
+    {
+      "key": "Lee2022MeasurementCarbon",
+      "pdf_sha256": "d5843f13e04f77f29a095765ad9c5801857f6fa70ffdf8910a4590f6c35aa7a7",
+      "audit": "docs/paper/introduction_review/background_Lee2022MeasurementCarbon.json",
+      "audit_sha256": "b509e6e2791ae4612bd97ab5c7ce6ed01c4b4c5c70147bb6fabddc1d191e180e"
+    },
+    {
+      "key": "Lee2022OverviewRecent",
+      "pdf_sha256": "0d81e6780a377fcd4ebf4390c99e8c52c2168ef9ef47a5c27595efb4ab9df064",
+      "audit": "docs/paper/introduction_review/background_Lee2022OverviewRecent.json",
+      "audit_sha256": "126b90cdd78ea8871543cc56590b3b09a79719fb983f94a9af65a83bb73d3763"
+    },
+    {
+      "key": "Lee2023EffectCoherent",
+      "pdf_sha256": "903230a0a30afb0bba8d9d6cc1b705bd5adaa894fc76d639df68eb61480ce587",
+      "audit": "docs/paper/introduction_review/background_Lee2023EffectCoherent.json",
+      "audit_sha256": "fa89a315e06857ba686e65ff23919f6e8be8db7c10ac0717f0cfb082dce32a25"
+    },
+    {
+      "key": "Lee2026NeuralNetworkbased",
+      "pdf_sha256": "5eae92d2cfd805b493824587a965ec1a63cd135404d5af7e9881b8716428afa3",
+      "audit": "docs/paper/introduction_review/paper_Lee2026NeuralNetworkbased.json",
+      "audit_sha256": "dc13ec7089d1ba93a9289a8b13c0c370cf80290fbf42a6c1943e5791d7c79d1a"
+    },
+    {
+      "key": "Lee2026SpatiotemporalStructure",
+      "pdf_sha256": "6e31f7fe5c6eef307effaf7b88c578dd53b16e6c893b9c16b034b8d70b830064",
+      "audit": "docs/paper/introduction_review/background_Lee2026SpatiotemporalStructure.json",
+      "audit_sha256": "f076ae71b5bb0ac6aa21e0ec05727dc6777a1c0d1d9f1d6059d7bc80a57cf3cf"
+    },
+    {
+      "key": "Lin2024PredictionPlasma",
+      "pdf_sha256": "b892f8cf92fa1db375d8eb5ec0f41cf327926e026daa277e72b216ed84d0d0ad",
+      "audit": "docs/paper/introduction_review/background_Lin2024PredictionPlasma.json",
+      "audit_sha256": "69c21ccdcc5de0e9deebe1c204b554d371240c9919f7edecd8fa3cdc432fb632"
+    },
+    {
+      "key": "Lipton2016ModelingMissing",
+      "pdf_sha256": "31e13c3806751f86272a7830cfb6ac871dbccf19691c9328545b24f0091cb39d",
+      "audit": "docs/paper/introduction_review/background_Lipton2016ModelingMissing.json",
+      "audit_sha256": "d733f701209e998ef30bfdf476c53102fd32cd5b4aa4ef3ceb066b5549530f00"
+    },
+    {
+      "key": "Litaudon2011RealTime",
+      "pdf_sha256": "34136bc92ecf1f2d3077e00f454bc34b13ee0d6aeeefd2b5d4b3646d4ce9156f",
+      "audit": "docs/paper/introduction_review/background_Litaudon2011RealTime.json",
+      "audit_sha256": "e8373edf6780dd2a50cb9544a0b625ab5fde127a1c701a1f1a3899bd853eed51"
+    },
+    {
+      "key": "Mantica2009ExperimentalStudy",
+      "pdf_sha256": "557a6b97b4c8682d5ba8aae1a05ea15a0682dff66333dffdd0fc6637baaf11c9",
+      "audit": "docs/paper/introduction_review/background_Mantica2009ExperimentalStudy.json",
+      "audit_sha256": "54a080876bc0290eb3e5d0477d58fe69a642edcdb92639705ddc8225e27b5387"
+    },
+    {
+      "key": "Masreliez1977RobustBayesian",
+      "pdf_sha256": "32d6ecff44205c88b530dffbacc7e1abebaba5bd800ac7a464a0e245c92a99d0",
+      "audit": "docs/paper/introduction_review/background_Masreliez1977RobustBayesian.json",
+      "audit_sha256": "6c2c5ad2896648bd12589550d99e0247b6faea4da58c449f20a14ae7ea28f3bc"
+    },
+    {
+      "key": "Matos2016DeepLearning",
+      "pdf_sha256": "3805c4a83d8a9c086e47ba88c6fbfffea39aefbaa60dd14abbebb25a2ca1d1bc",
+      "audit": "docs/paper/introduction_review/background_Matos2016DeepLearning.json",
+      "audit_sha256": "891318d285db61be41bd5816b62269b26508fc4debddf9c678beeda676ff101e"
+    },
+    {
+      "key": "Mazon2002RealTime",
+      "pdf_sha256": "de9674e772ab44f5bfaa9f021bc49915d47ccc4e1739af62e07e4ce65bfc8d20",
+      "audit": "docs/paper/introduction_review/background_Mazon2002RealTime.json",
+      "audit_sha256": "66736709c54490ed724f60f7d56dc2a3f8a9cf926df7e4c25e8b288255a8728f"
+    },
+    {
+      "key": "Mazon2025Diagnostics",
+      "pdf_sha256": "f16038245426adaab3182b96fd72e54c6fdea8d00c543d704d38a5ad68fcc04d",
+      "audit": "docs/paper/introduction_review/background_Mazon2025Diagnostics.json",
+      "audit_sha256": "98cd93016ad72d27d22936a8b0dadd9562f1d4b89b3693a8dafebad1b981ac37"
+    },
+    {
+      "key": "McDermott2017ExtensionsCharge",
+      "pdf_sha256": "af0b0c09641b920a8216cf74172f91ebdb9bfff40cdba2ec473f55bf352cb343",
+      "audit": "docs/paper/introduction_review/background_McDermott2017ExtensionsCharge.json",
+      "audit_sha256": "928d7dba3a8fb6000a074b09db6a82889e5e346ac01dc8033228195ec9f1677f"
+    },
+    {
+      "key": "Meister2001MeasurementPoloidal",
+      "pdf_sha256": "a782ec2dbdaa09c4e2124e12e318c182eac3c4b87571d8de969810b7284e5ea3",
+      "audit": "docs/paper/introduction_review/background_Meister2001MeasurementPoloidal.json",
+      "audit_sha256": "cfcadc0f3957d96481f8cf06666926a9debfd305e4d8aef3a609a2bd4165efe5"
+    },
+    {
+      "key": "Messmer2019OptimalPolarisation",
+      "pdf_sha256": "8af74e56e74439789bf05df6c7fa7738f522617692ebfe5e6bb6684ad2e81120",
+      "audit": "docs/paper/introduction_review/background_Messmer2019OptimalPolarisation.json",
+      "audit_sha256": "022268a29b164d4dad7b23e394b147767f20b759ccbb4194ef76dad1f58ca330"
+    },
+    {
+      "key": "MHD1999ChapterPlasma",
+      "pdf_sha256": "94311eec7444b8b046e8a227080a6df913cbeac747ec3cfe00a9c1cefecdaa29",
+      "audit": "docs/paper/introduction_review/background_MHD1999ChapterPlasma.json",
+      "audit_sha256": "8694a434422630a39bf6fb557c3715525d6caf03d7dc1992b4749e997acd07ac"
+    },
+    {
+      "key": "michoski2024",
+      "pdf_sha256": "c61ce72392eb21d1a1d675c0f5415709c2c8191a6281793ff844e7c86aea01fd",
+      "audit": "docs/paper/introduction_review/background_michoski2024.json",
+      "audit_sha256": "30cf3d3e80322c35e805236a02d9d4f92b57c09966ace860fdb1349732809439"
+    },
+    {
+      "key": "Mohammed2026CommissioningOperation",
+      "pdf_sha256": "c97f0f26cad02b0763647285e9a944dac3f7633e7c26a5c8fc1a8d39b24814a6",
+      "audit": "docs/paper/introduction_review/background_Mohammed2026CommissioningOperation.json",
+      "audit_sha256": "9cfea625331daa2472725ccf20852cd6393f0e0d0e608c01858e5280abe383f9"
+    },
+    {
+      "key": "Mohapatra2019RealtimeSensor",
+      "pdf_sha256": "f5e6923233f1eb3891dff33d1357476dae821d27eb935270b9eb165ea5607c8f",
+      "audit": "docs/paper/introduction_review/background_Mohapatra2019RealtimeSensor.json",
+      "audit_sha256": "77dd348efb9796de3d9017628aa4cad8a7114b4406ce43684d9d2bcce69ed06d"
+    },
+    {
+      "key": "Moreau2008TimeScale",
+      "pdf_sha256": "a269a37ec357e4ebab061d138ae8b939630163a20fb03e9d5c0714493369d351",
+      "audit": "docs/paper/introduction_review/background_Moreau2008TimeScale.json",
+      "audit_sha256": "f060fe8fb47081520512a350c2a3ab5992235c7ba76a49c2c7aa44fa4e195209"
+    },
+    {
+      "key": "Morishita2020DataAssimilation",
+      "pdf_sha256": "58221975fbedc62458c4e175f3c55d19c0a57f1075bdad31368ab0dffa462a05",
+      "audit": "docs/paper/introduction_review/background_Morishita2020DataAssimilation.json",
+      "audit_sha256": "3e090c4c999a161f8800897d8789e3178da2767519a5e6644b92a41c78db5b2d"
+    },
+    {
+      "key": "Morishita2024FirstApplication",
+      "pdf_sha256": "c68a46b4e40c1913b8b7cb74e3020b30b172ccca0a96f223101cf488a594701d",
+      "audit": "docs/paper/introduction_review/background_Morishita2024FirstApplication.json",
+      "audit_sha256": "a24c0d8dcb269f7a9d70a987c49a0d0418fc0d7db055227ddb207cb6358edbcc"
+    },
+    {
+      "key": "Morosohk2023RealTime",
+      "pdf_sha256": "2a7c12a2379fdd720addaf254accc0202f6749c520f794585cd179f48a751e3e",
+      "audit": "docs/paper/introduction_review/paper_Morosohk2023RealTime.json",
+      "audit_sha256": "2de6e40774709dac973f17122482b78e54fa87338353b2519cd74f68f5520853"
+    },
+    {
+      "key": "murphy1988",
+      "pdf_sha256": "128b8895590d01005e3f3061e02f9bdb043e306737bedb27019e5c14963df6f3",
+      "audit": "docs/paper/introduction_review/background_murphy1988.json",
+      "audit_sha256": "10e8120e4d9ffc0038ce9f2e916a182ef5633e3bbec0b221301106ec13676dcb"
+    },
+    {
+      "key": "Na2025IntegratedOperation",
+      "pdf_sha256": "f238623bcd2e1854fa3234d3478c3c4a72b3caeb2a10ac1df337ab469607ebe9",
+      "audit": "docs/paper/introduction_review/background_Na2025IntegratedOperation.json",
+      "audit_sha256": "9540857d747d9f8f502c960266cd700f384ef82eca3e92e486b383f3a8253e49"
+    },
+    {
+      "key": "Na2026FireMode",
+      "pdf_sha256": "d81a202009b9664ffa52039e189ecc263acf29cab3f047e285967f0a4973849e",
+      "audit": "docs/paper/introduction_review/background_Na2026FireMode.json",
+      "audit_sha256": "f86fbc90ca5ef885f9d3538c67e3c764c55bfc4fc03565ba5d02c6111c311e44"
+    },
+    {
+      "key": "Nadeau2003Inference",
+      "pdf_sha256": "39ce55ef06063e4b8fedbb2d352d5e6ee11338fb7bc770edf18d3436a5210574",
+      "audit": "docs/paper/introduction_review/background_Nadeau2003Inference.json",
+      "audit_sha256": "ed3e5eddcf71c3df539f3ab8fc7e1414183a264280dda193039adfd9246e84c6"
+    },
+    {
+      "key": "Nam2012AnalysisEdge",
+      "pdf_sha256": "2e1742ec2f5805397b7be34e43c9e57dc0dbb0c4d5d16447a373c6d22a5daf4e",
+      "audit": "docs/paper/introduction_review/background_Nam2012AnalysisEdge.json",
+      "audit_sha256": "82257235311ebe5c2f180b581f3b662edaae1213c19294a2753f892a9dc4c5bf"
+    },
+    {
+      "key": "Nam2014EdgeElectron",
+      "pdf_sha256": "afe2d4f4a1b0c92d28aa93aa9220c4f834f63945ca4b18aab16320873cbad013",
+      "audit": "docs/paper/introduction_review/background_Nam2014EdgeElectron.json",
+      "audit_sha256": "0b19e488f3666a876e1a537bc39865ec7c334d40c5f2a89eebab571b10483636"
+    },
+    {
+      "key": "Nam2026OverviewKstar",
+      "pdf_sha256": "6723082a8c1982c18ffac0812ce0e67e567f5658ac6c8373007ada046b11a3c5",
+      "audit": "docs/paper/introduction_review/background_Nam2026OverviewKstar.json",
+      "audit_sha256": "70a620ae15bd269276d7e6480b2d55627eddbf59a5a843c7aa1c968d3e16736e"
+    },
+    {
+      "key": "Neil2016PhasedLstm",
+      "pdf_sha256": "ca7cd2e3ff86c9db47e1ba7d5c22c40bb71a6182de441ac70b1003c2cd5dbda7",
+      "audit": "docs/paper/introduction_review/background_Neil2016PhasedLstm.json",
+      "audit_sha256": "02e431173dc999c14ac1aa43771e31ee43092e7f48d62e4913d53426e191e4fb"
+    },
+    {
+      "key": "Ogawa1988DeterminationTemperature",
+      "pdf_sha256": "5a0b414f9625042ad98f570eee387b8aebb8c6ef139eeb2c721ee26e0b21a307",
+      "audit": "docs/paper/introduction_review/background_Ogawa1988DeterminationTemperature.json",
+      "audit_sha256": "82188fb7ab8309de57402711045eab4f50fe1a77c368ed1b0cbc8142c21eb031"
+    },
+    {
+      "key": "Owen2007Pigeonhole",
+      "pdf_sha256": "ab56598c9e114153f7ed93e5e7c39703d39f397e003c8176990abb9e49906623",
+      "audit": "docs/paper/introduction_review/background_Owen2007Pigeonhole.json",
+      "audit_sha256": "b102aabeaf2dfd948b9acac120acbf6be82277171ce717b839c35ff446dd3b2e"
+    },
+    {
+      "key": "Park2011HighSpeed",
+      "pdf_sha256": "528152daa64f542b091c6411f3cf6a80477a9a1b41e541ef10340313d4879f70",
+      "audit": "docs/paper/introduction_review/background_Park2011HighSpeed.json",
+      "audit_sha256": "733df5b84fffde6e83bdc5e7caff6d7127a207a497ddaf8122f9f2b3dfb2c629"
+    },
+    {
+      "key": "Park2013RotationalResonance",
+      "pdf_sha256": "d6de42ec50aed097e426cef03a1b124bc09680041089c69debc9e7514911ec4b",
+      "audit": "docs/paper/introduction_review/background_Park2013RotationalResonance.json",
+      "audit_sha256": "3258243b3cb434894f93296618c78e74088448b825bdff1776bf309ea0c1d375"
+    },
+    {
+      "key": "Park2018FieldPhase",
+      "pdf_sha256": "e93c30e409f9f1dc8a3861803fa134a594ac78c27e85c331d98811c3e19770af",
+      "audit": "docs/paper/introduction_review/background_Park2018FieldPhase.json",
+      "audit_sha256": "e7c50697e8089e2eb93111195cde772e918c2acb833f465dc5000f1fcd3955f4"
+    },
+    {
+      "key": "Pastore2023ModelBased",
+      "pdf_sha256": "2b208a01be785f4ad3e10e71fcb241c670e5db19276417e960714b4469f33389",
+      "audit": "docs/paper/introduction_review/paper_Pastore2023ModelBased.json",
+      "audit_sha256": "81395aa48656276aa6837d8151e6888b7a649348528585d5e0d5af442279ab45"
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel",
+      "pdf_sha256": "d2172a2f53d13a9b7c009e75927461c3d07a6b65189d0a6e0e4f8b2d2d7e60b9",
+      "audit": "docs/paper/introduction_review/paper_Pastore2026ApplicationsNovel.json",
+      "audit_sha256": "611bc77224f166d140263b0255338272aada3dfaf794dafc311288bdc54b8277"
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel_arXiv",
+      "pdf_sha256": "9bdf6f6dca5d79ebc9bd2302420370786c6701dfa0403642e7ea95e90f22936d",
+      "audit": "docs/paper/introduction_review/background_Pastore2026ApplicationsNovel_arXiv.json",
+      "audit_sha256": "b619b81e3502fe4f4761122138d45cfb8412756a4b03cc5f629f522840dcbb68"
+    },
+    {
+      "key": "Pavlova2021StudiesHalo",
+      "pdf_sha256": "764ffb9f8f2f65d2404bc6847282f82890ce3e2dfc607d0cb0ab9eacd3306b8f",
+      "audit": "docs/paper/introduction_review/background_Pavlova2021StudiesHalo.json",
+      "audit_sha256": "7080194b2e205254ce7015ae7ba1fc94892716207cbfeed662ae21917a44e503"
+    },
+    {
+      "key": "Pavone2019NeuralNetwork",
+      "pdf_sha256": "f1d73b98447f3a39d654f1301a093bcb850bb4079ebbb4cdbb1bf6c1cf420652",
+      "audit": "docs/paper/introduction_review/background_Pavone2019NeuralNetwork.json",
+      "audit_sha256": "9b70b1e76a107597a38e5d2f23783b935e08cd92ed6ed1d2c6fcebc98cea3492"
+    },
+    {
+      "key": "PazSoldan2019EffectPlasma",
+      "pdf_sha256": "602287d04f79cb6b8a5e80c26d31abb9169f35c908049990cde31188fa51dfaa",
+      "audit": "docs/paper/introduction_review/background_PazSoldan2019EffectPlasma.json",
+      "audit_sha256": "a6ff7e583185337cf03385120de513f340e74b8923f2f81f12a4cc723bc000e5"
+    },
+    {
+      "key": "PazSoldan2024PlasmaPerformance",
+      "pdf_sha256": "a361ab920165aac07f48b5faa69b408e0745086012dd77f6b205352fb50cb303",
+      "audit": "docs/paper/introduction_review/background_PazSoldan2024PlasmaPerformance.json",
+      "audit_sha256": "1a52adc151dd5ae6619a3923b3e0c5d9a68f0642cc9f4051645ab8f86d7592bc"
+    },
+    {
+      "key": "Podesta2012RealTime",
+      "pdf_sha256": "69b3608f3b13e51faa5938c7e38c89be1143bc3c0c34652d0b22789b504ef09b",
+      "audit": "docs/paper/introduction_review/background_Podesta2012RealTime.json",
+      "audit_sha256": "e4f39fa8de7aae20dec78281763a629fab2ec58bc3197149f8918256f636cc59"
+    },
+    {
+      "key": "Podesta2016InitialOperation",
+      "pdf_sha256": "913ae26abbcce8e80710f8ffd4cf0d5a2880f11e5f2f21930dce7cad29a15082",
+      "audit": "docs/paper/introduction_review/background_Podesta2016InitialOperation.json",
+      "audit_sha256": "5f704a4db859f3a995200385bb21ba172110d1e31f75897fae3329e7455ac9b2"
+    },
+    {
+      "key": "Rasp2018NeuralNetworks",
+      "pdf_sha256": "3e985b930aea2f98a5302376722594b58f6dd6de20ef1c8de489f1984a3a81c5",
+      "audit": "docs/paper/introduction_review/background_Rasp2018NeuralNetworks.json",
+      "audit_sha256": "e29477edda87a064252a8a7a303bb1977f17255d1562bc1882e71ef99936a581"
+    },
+    {
+      "key": "Rath2022DataAugmentation",
+      "pdf_sha256": "97937820ab427c48f4d98da9b42a6704c41b37b376a0f41d5d2e44bc4f1ba4a8",
+      "audit": "docs/paper/introduction_review/background_Rath2022DataAugmentation.json",
+      "audit_sha256": "3638950ddee71898f55df2b1aa7c955efb79996165acc3f8358c296cd37fd923"
+    },
+    {
+      "key": "Rathgeber2013EstimationEdge",
+      "pdf_sha256": "73d9e7fba57b6e61afc26e0380a0f1c3b6b2fd3f17fc3c5a7de73e81db35c6aa",
+      "audit": "docs/paper/introduction_review/background_Rathgeber2013EstimationEdge.json",
+      "audit_sha256": "d964f91416859617ded35b50e1f712734dd824171cd7423ed48fdbab3ae3213a"
+    },
+    {
+      "key": "Ravuri2021SkilfulPrecipitation",
+      "pdf_sha256": "ca5f10f9deb516da9672272e277cee3b2a729ddf60513942afa574380c48a44b",
+      "audit": "docs/paper/introduction_review/background_Ravuri2021SkilfulPrecipitation.json",
+      "audit_sha256": "820939d856b700f5aa9dfcc4968a3094bb8b8ac7179c4045e4461f02be2e9d29"
+    },
+    {
+      "key": "Reimerdes2007ReducedCritical",
+      "pdf_sha256": "b9b282ca42064ce666946b0afbee6a81b27d8f10eba0bc4506650670a7b5a315",
+      "audit": "docs/paper/introduction_review/background_Reimerdes2007ReducedCritical.json",
+      "audit_sha256": "8f888dbe2b01b0f460f97c2848c3ecf33a4b0dfdd50d370e13177c0c3f1a75cd"
+    },
+    {
+      "key": "reinsch1967",
+      "pdf_sha256": "bc4224b6bdfb7184d61d2fec45681cd63324fd4e87772de4c5a5f99ae708443c",
+      "audit": "docs/paper/introduction_review/background_reinsch1967.json",
+      "audit_sha256": "27ce6d040fa5eb713894a9a62b56e7ec8a06306927823b6f74bc42c3ca50cc32"
+    },
+    {
+      "key": "Ren2010Nonparametric",
+      "pdf_sha256": "70864c3ddc4d560eaae4fb858b40fdd671aa48a88425538ac6527c38d3c9433e",
+      "audit": "docs/paper/introduction_review/background_Ren2010Nonparametric.json",
+      "audit_sha256": "e10380804c7457082732a36f737cb6cec312773127b9799a58e89c231024939e"
+    },
+    {
+      "key": "Rice2007IntermachineComparison",
+      "pdf_sha256": "a68e5410d9f2e734dd44ac9346a2c9bf0e78578561c741bafd0003c2777bab07",
+      "audit": "docs/paper/introduction_review/background_Rice2007IntermachineComparison.json",
+      "audit_sha256": "d73d1b6d4b9746c1d668e2fa366f34517661013aae7ca52fbc6b1c73523e82aa"
+    },
+    {
+      "key": "Roth2013StudentsT",
+      "pdf_sha256": "3dfb14ea9581a7d0512ef153bc35f8ec25eff52f33c946113bafb9ceafa042ab",
+      "audit": "docs/paper/introduction_review/background_Roth2013StudentsT.json",
+      "audit_sha256": "1f5741388ca21d9b6c8091b5b650df4358c54f9f8493f7c647db574562b2ccc5"
+    },
+    {
+      "key": "Rothstein2026EnablingIntegrated",
+      "pdf_sha256": "90ee2a9a0b26458c63e96469d27c3a3e3e6ace4e2f73a73e89536dea22117217",
+      "audit": "docs/paper/introduction_review/background_Rothstein2026EnablingIntegrated.json",
+      "audit_sha256": "d2beccba5430ee73dc5f702480405d64f29901bb8f52e5d5f8804aa62f5219f9"
+    },
+    {
+      "key": "Rubanova2019LatentOrdinary",
+      "pdf_sha256": "b8405e684da02cade38248aa3d0351c5d7aa5817d7dde453be1448c1abfc79aa",
+      "audit": "docs/paper/introduction_review/background_Rubanova2019LatentOrdinary.json",
+      "audit_sha256": "9592176279c42071919a066b25f2f23cf2d909bcdf2f5cd8dcdf0e2497123f69"
+    },
+    {
+      "key": "Ryter2011SimultaneousAnalysis",
+      "pdf_sha256": "f772eb6f144d841c5506613d3ffb0839c098413b22f09137e308e5a396f70c89",
+      "audit": "docs/paper/introduction_review/background_Ryter2011SimultaneousAnalysis.json",
+      "audit_sha256": "262c9652663b8fb5ada890dcddc5e7baf5bb478e9166cb324987f0bb8c9d12d1"
+    },
+    {
+      "key": "Sabbagh2023DisruptionEvent",
+      "pdf_sha256": "9162c0d0ea17471a53fc08830bcb07a66a6f6bda35e3105117f470fca615eee9",
+      "audit": "docs/paper/introduction_review/background_Sabbagh2023DisruptionEvent.json",
+      "audit_sha256": "85c4286b028d2763beaaca05b078436d16082e88bb469dedb1ddba174520990f"
+    },
+    {
+      "key": "Santos2010RealTime",
+      "pdf_sha256": "8500f65b5e5f28cfdb60eac0e8a3e511ba3f9aae863765bdcfaacb82376c5b38",
+      "audit": "docs/paper/introduction_review/background_Santos2010RealTime.json",
+      "audit_sha256": "725a2c2e3dca9869e10e969ce939b812216a83e415a081ff1935af02688105fc"
+    },
+    {
+      "key": "Santos2017RealTime",
+      "pdf_sha256": "fc94ab9eb0a91d42426d8151e30a11f59528ea7b5c6aba897a1a2cc11c0e749b",
+      "audit": "docs/paper/introduction_review/background_Santos2017RealTime.json",
+      "audit_sha256": "447cb9422d6ef79816028141c7e7d74fb483d04564c96252d8785fcc857d9049"
+    },
+    {
+      "key": "Saravanan2020Hierarchical",
+      "pdf_sha256": "9cf572a48bb07570dd8dcd9aae6bc26ed5b8dcb0d6909b7d05534b315ac0841a",
+      "audit": "docs/paper/introduction_review/background_Saravanan2020Hierarchical.json",
+      "audit_sha256": "43cd6ec84d86810ce55a2a798056bfe2cfba8a04e676327b66a76b6281282b27"
+    },
+    {
+      "key": "Scoville2007SimultaneousFeedback",
+      "pdf_sha256": "4fdc5c03a6c2f573921149addb42d352f919e0e95bf44ab02753eecc88f16bee",
+      "audit": "docs/paper/introduction_review/background_Scoville2007SimultaneousFeedback.json",
+      "audit_sha256": "437902a8eb37fcf29a3b319b9a11acb3b08b0e17296195f6de5919857e6be439"
+    },
+    {
+      "key": "Seo2026RevisedError",
+      "pdf_sha256": "1a327d9d7559baa48da3463f942d4f7fc9ed6518dccb0d496df9c7bef5209429",
+      "audit": "docs/paper/introduction_review/background_Seo2026RevisedError.json",
+      "audit_sha256": "58bc69c3b2514f449009f412d9cc4070277ef17c81367e827a3c95759272d3eb"
+    },
+    {
+      "key": "Shi2015ConvolutionalLstm",
+      "pdf_sha256": "6b83643820fa049a9cdf30621385bd5d33c67408d348a93edb6c59ed247986ef",
+      "audit": "docs/paper/introduction_review/background_Shi2015ConvolutionalLstm.json",
+      "audit_sha256": "e4cf7d11601d330403dc1b9dddaeb35ed614afbaf0a860e990415243012dc5cd"
+    },
+    {
+      "key": "Shin2022PreemptiveDriven",
+      "pdf_sha256": "965ccb3b74e9a66648d0234ecb618207ed58c947c21e0251a77fc9344adb604e",
+      "audit": "docs/paper/introduction_review/background_Shin2022PreemptiveDriven.json",
+      "audit_sha256": "992bea930c53de717f280e0e1899a9773c24bda2fdbf7ec3428996b93c1e25d7"
+    },
+    {
+      "key": "Shousha2023MachineLearningbased",
+      "pdf_sha256": "67c46ec9b899cbfcff3d9dbc4a5ec4bd6726a03618e74ca42b356f0adfe13533",
+      "audit": "docs/paper/introduction_review/paper_Shousha2023MachineLearningbased.json",
+      "audit_sha256": "bc8278f38fbfdc61e0e7f8bbd684c8a57ec003edff467c8f1647878608a99966"
+    },
+    {
+      "key": "Shukla2019InterpolationPrediction",
+      "pdf_sha256": "dda110c2c8983d6b27452cf3e73ec686bfb2980da4a14312e25dfb2ccc608d64",
+      "audit": "docs/paper/introduction_review/background_Shukla2019InterpolationPrediction.json",
+      "audit_sha256": "6f13f1872f103cf73f6e013f3da1acb86f006259c07dd748fc83157e0d51842a"
+    },
+    {
+      "key": "Shukla2020SurveyPrinciples",
+      "pdf_sha256": "8e1c62f998435a2aa93d0feb39a69de2362ee378e5c50b8b4d6429d693fa2f9c",
+      "audit": "docs/paper/introduction_review/background_Shukla2020SurveyPrinciples.json",
+      "audit_sha256": "0060d28b45539a6afd03f36ae46b733918ef9010da510426695c97d9a5a1efde"
+    },
+    {
+      "key": "Shukla2021MultiTime",
+      "pdf_sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+      "audit": "docs/paper/introduction_review/background_Shukla2021MultiTime.json",
+      "audit_sha256": "e7b4d8deaa35ced93bde0819e41b682d96ef29551f923c0527d792d6c4cf1d8e"
+    },
+    {
+      "key": "Snyder2009DevelopmentValidation",
+      "pdf_sha256": "2538ff5e3ff627a7a7411ad0147e23460f61193f65002310d7d053498e596b6e",
+      "audit": "docs/paper/introduction_review/background_Snyder2009DevelopmentValidation.json",
+      "audit_sha256": "4e82c1b5908c5a36300e80a03e50778eaae0472b439ecbad0ede7f0e0e368262"
+    },
+    {
+      "key": "Snyder2011FirstPrinciples",
+      "pdf_sha256": "14bbd912b597a75bf0b9538f1144ae7e205596f63fdeb57015589633bee0c858",
+      "audit": "docs/paper/introduction_review/paper_Snyder2011FirstPrinciples.json",
+      "audit_sha256": "42c44d2900792c0a55e4f4be07704da54ee2176e07df324c0c740c48c258781f"
+    },
+    {
+      "key": "Solomon2008CharacterizationCross",
+      "pdf_sha256": "d08e943f2f936b040031b4899ed64835c80c24183d0cc94c01b3a979a60099df",
+      "audit": "docs/paper/introduction_review/background_Solomon2008CharacterizationCross.json",
+      "audit_sha256": "5cf8a202f8f33a80bcfd2bd99e1c5e4028100aa2d2e78c61ec855f6759383d25"
+    },
+    {
+      "key": "Stix1972HeatingToroidal",
+      "pdf_sha256": "1283378d65b18db62b8fff1fb3a691f2c7d5911c328cfa8654bc1ea440e51091",
+      "audit": "docs/paper/introduction_review/background_Stix1972HeatingToroidal.json",
+      "audit_sha256": "2ed968b8ce519a3b4cbf02573bcc074b03a94c6d950e9ac24d3d82e2dacba334"
+    },
+    {
+      "key": "Sussillo2013OpeningBlackBox",
+      "pdf_sha256": "29e37a06e035dc7a0e2dac5255917a462d9db99418be5751cd2f2ccdd309e449",
+      "audit": "docs/paper/introduction_review/background_Sussillo2013OpeningBlackBox.json",
+      "audit_sha256": "ad8c080f8e3fc294eec1cbdf3548b61f98a35c9e88d90fc66b799835b0f6a889"
+    },
+    {
+      "key": "Svensson1999AnalysisJet",
+      "pdf_sha256": "5468ab6d88802c6fd1735bb546561671cad4897d8443c496cc48c52a222fa364",
+      "audit": "docs/paper/introduction_review/paper_Svensson1999AnalysisJet.json",
+      "audit_sha256": "0036b4931378bf88045887f190b1a10fdc6bd754afd08dfedd0bdde9366ee7ce"
+    },
+    {
+      "key": "Tala2009EvidenceInward",
+      "pdf_sha256": "a00a5d83179e57a9ff56827fda22f94a42bd41ffc36b67a408e6f5abd300a02a",
+      "audit": "docs/paper/introduction_review/background_Tala2009EvidenceInward.json",
+      "audit_sha256": "d217513350474780b3f12ad6703cbc37c8ec11343433e480dd10f176b6a07f23"
+    },
+    {
+      "key": "Thorman2021VisibleSpectroscopy",
+      "pdf_sha256": "ca2c45df39b7388ee824e35f4415a5ee558ae052b72a22018ce812a515bd6a25",
+      "audit": "docs/paper/introduction_review/background_Thorman2021VisibleSpectroscopy.json",
+      "audit_sha256": "af91c44d0009f5275827e9db5d0d9c879040bf301933d7f226a0ed1210070abe"
+    },
+    {
+      "key": "Tian2026RealTimeCxrs",
+      "pdf_sha256": "5c750cbd8157963dd02d6fc2c0098fa058860a4a92b15ee6afe8bbf0787b81ac",
+      "audit": "docs/paper/introduction_review/paper_Tian2026RealTimeCxrs.json",
+      "audit_sha256": "39ee4e422e988c21c60d15e996b51b064ea9b25469b3d6119436646c67728469"
+    },
+    {
+      "key": "Tobin2026AvoidanceDisruptions",
+      "pdf_sha256": "9662fd722bcfbdf26366fedfb91cbe38dcec7677681005d28abd183c5386e5c0",
+      "audit": "docs/paper/introduction_review/background_Tobin2026AvoidanceDisruptions.json",
+      "audit_sha256": "d9b1c07bde4d27c33400c61c10ba2992d3006315bfaf17401c1d6146c586438d"
+    },
+    {
+      "key": "Tresset2002DimensionlessCriterion",
+      "pdf_sha256": "2eba446beb087da6df797f99cd5985b5b32cefc8c02e9a9a0ff6d753b134b508",
+      "audit": "docs/paper/introduction_review/background_Tresset2002DimensionlessCriterion.json",
+      "audit_sha256": "8cc4c963216052b6680eeb5e8cefb769a4d4954e13e99ead6405455653e76997"
+    },
+    {
+      "key": "vandenBrand2016ModelBased",
+      "pdf_sha256": "f45f4e937b889969a9635359652dd7b724d173e3888fae37994ff705fd4e0e81",
+      "audit": "docs/paper/introduction_review/background_vandenBrand2016ModelBased.json",
+      "audit_sha256": "6de197a0d99abe2983dc250df83affebff80a58c5d039000e3d18df6d706d479"
+    },
+    {
+      "key": "VanMulders2025ModelBased",
+      "pdf_sha256": "0a15bcf4cc6679d3381fbabf19a159d9e3dfb583c33721e30fee5595504c3205",
+      "audit": "docs/paper/introduction_review/background_VanMulders2025ModelBased.json",
+      "audit_sha256": "a5295d9cdb34c0bee98c9d8455e1289126a1ff952d68cd9c80628ff6bd877c9e"
+    },
+    {
+      "key": "VanMulders2026ModelBased",
+      "pdf_sha256": "f3561003e148fe2d51dad6020eab60bca6035fef65e7783d0f082c2e4853c659",
+      "audit": "docs/paper/introduction_review/background_VanMulders2026ModelBased.json",
+      "audit_sha256": "1ecb4387ffb966f1fb4575a13cb02c38248893a44bbcf2843d20a3d99cf77e94"
+    },
+    {
+      "key": "Vanovac2018EffectsDensity",
+      "pdf_sha256": "bfa80d97f8c331162f6cebd31bd6c76de5a21763dc9e27819ad3e1d22c3bf406",
+      "audit": "docs/paper/introduction_review/paper_Vanovac2018EffectsDensity.json",
+      "audit_sha256": "e54bcd688bcb3b9c44f2971fec56ea41ca4fa6bf96570195b6257f9c73283fa1"
+    },
+    {
+      "key": "Viezzer2011PassiveEdge",
+      "pdf_sha256": "cff15938ca02d13013a01a841878dbafc4e2dcf82c25c44afe8c247095534124",
+      "audit": "docs/paper/introduction_review/paper_Viezzer2011PassiveEdge.json",
+      "audit_sha256": "a73ee8ee38ad3cb23b379aee08327f3d05bab510e9a4372c17c65d1ebb9adfc9"
+    },
+    {
+      "key": "Viezzer2013HighAccuracy",
+      "pdf_sha256": "c707655f43ad087c9a508089d35a37e818707e85ab2132cbe76d301b53885bfe",
+      "audit": "docs/paper/introduction_review/background_Viezzer2013HighAccuracy.json",
+      "audit_sha256": "0de87b2666024bb664267bd3d5cbbbafb82f8049288a8c82060c0bfc2fe08036"
+    },
+    {
+      "key": "Viezzer2014EvidenceNeoclassical",
+      "pdf_sha256": "7682e261b391fc413163c7d89a8bc4ddaf77a7fdb9eaa9e2d40c4e3613158bf9",
+      "audit": "docs/paper/introduction_review/background_Viezzer2014EvidenceNeoclassical.json",
+      "audit_sha256": "c62f16dd028feeef6a7e6581599a65807e1aa51b0a8a16be143933d4790c8b20"
+    },
+    {
+      "key": "Viezzer2018IonHeat",
+      "pdf_sha256": "2b905233e2e82f79ef780b2fd9031b4e4ddf5c0877ee1b1e6473f761583def77",
+      "audit": "docs/paper/introduction_review/paper_Viezzer2018IonHeat.json",
+      "audit_sha256": "6ebea909847f1253c23e791516a02e9c31f25fb3b58134ba107e6bdf3b21b0f5"
+    },
+    {
+      "key": "Viezzer2020Dynamics",
+      "pdf_sha256": "ce2fd592689a15a0f34a8dfcb95e362afc9891f7e1487de8c755614c9facd410",
+      "audit": "docs/paper/introduction_review/background_Viezzer2020Dynamics.json",
+      "audit_sha256": "58ce2d75d02a205372d14d665cef6dbfda0d4122308ab4b379cdd55be04cd985"
+    },
+    {
+      "key": "Volpe2012ObliqueElectron",
+      "pdf_sha256": "840e514cbb8271ee7409047795e5ba7cd45ba1555db14e5f96c791c975a09a37",
+      "audit": "docs/paper/introduction_review/background_Volpe2012ObliqueElectron.json",
+      "audit_sha256": "6566c6b5a812f532a8e5013182a9bc7942f6495cebc980ffaffa3f6a99ac5f60"
+    },
+    {
+      "key": "vonHellermann1995CrossSection",
+      "pdf_sha256": "a04b0f24b609089183830cdeb87c94881ab516d2aa0d1e991428c7a0de1222f6",
+      "audit": "docs/paper/introduction_review/background_vonHellermann1995CrossSection.json",
+      "audit_sha256": "58108aa20e6ba4be6e13fe607d223c1a7a6b22614de1acf762ec48cc67914f34"
+    },
+    {
+      "key": "Wakatsuki2021TemperatureGradient",
+      "pdf_sha256": "edcc794960a6c4551afe546d12604323a934703bc3302cf38ae911b6be87aa20",
+      "audit": "docs/paper/introduction_review/background_Wakatsuki2021TemperatureGradient.json",
+      "audit_sha256": "a039f9b97c0813db302819a4a13b182741b8b1be60619af091280c3d6bd59609"
+    },
+    {
+      "key": "Wang2025PhysicsinformedDeep",
+      "pdf_sha256": "06b8b6a8f6d395189871153a6b63fc93f765b346703ade2727506465ef78504f",
+      "audit": "docs/paper/introduction_review/background_Wang2025PhysicsinformedDeep.json",
+      "audit_sha256": "b8e37b4a9e4a0aa170b1ce20d7c1cb5c4ae4f08fa67a6419e69ae69424cf4d1e"
+    },
+    {
+      "key": "Wang2025TimeSeries",
+      "pdf_sha256": "10f2ee7452988f6ec817c7e8008093739d25935498a45aba0122639470e45cf3",
+      "audit": "docs/paper/introduction_review/paper_Wang2025TimeSeries.json",
+      "audit_sha256": "1513eae84c59a3bc20d8d90ce07b7e377dd8e09b374f3ff641d1bacce7e7f8b3"
+    },
+    {
+      "key": "Weerakody2021ReviewIrregular",
+      "pdf_sha256": "95bcff0bf246d9a5f8bb26c6f7e1f382dbe98f7bec47a32b4e18c642e85ab20a",
+      "audit": "docs/paper/introduction_review/background_Weerakody2021ReviewIrregular.json",
+      "audit_sha256": "5216dae84f09a09336e4c6996dd2d633ce762bf34d343627bf8a09320d65690d"
+    },
+    {
+      "key": "Wei2023ReconstructionTokamak",
+      "pdf_sha256": "87c831f8f4b06c9583323d774633ba5d650921ad083e00212bff3b5dfe5835ca",
+      "audit": "docs/paper/introduction_review/background_Wei2023ReconstructionTokamak.json",
+      "audit_sha256": "b557d8c033e413ba914035d6ad80a0395b18bfc413701b180e3b32e2d56b1d87"
+    },
+    {
+      "key": "Weissgerber2015Beyond",
+      "pdf_sha256": "7207d698b755ec973540b869e750e57e3f3f8caea3b2f64a0f8714a229d1ae76",
+      "audit": "docs/paper/introduction_review/background_Weissgerber2015Beyond.json",
+      "audit_sha256": "2f785f34dc38f8ea025758c936dcb32dbb66dcdf7dfbe7444f9de0e4b0d4671a"
+    },
+    {
+      "key": "Yang2021ParametricDependencies",
+      "pdf_sha256": "203f47d6d2b0a5f24d515d40958f12497d1388f5093e1b12211a9e5d860ef0bf",
+      "audit": "docs/paper/introduction_review/background_Yang2021ParametricDependencies.json",
+      "audit_sha256": "e5adbff385c797d52295963ba3ef5dc35b91ce9a83d1d9c4874f538e6936468c"
+    },
+    {
+      "key": "Yang2024TailoringTokamak",
+      "pdf_sha256": "80579a17cb2dc364cf69791ff13448ade3534634978c6e4294eb0272d48c4a48",
+      "audit": "docs/paper/introduction_review/background_Yang2024TailoringTokamak.json",
+      "audit_sha256": "c05f2f3e9bd2d8fff98fedda8fa8245cabb3cb1503ae95d639f4759ef6e20ee7"
+    },
+    {
+      "key": "Yang2026FusionmaeSelfsupervised",
+      "pdf_sha256": "269b42220bc788f4c16e986622c26cc95b032f104af8c5dd014b9b5a1cbf9886",
+      "audit": "docs/paper/introduction_review/paper_Yang2026FusionmaeSelfsupervised.json",
+      "audit_sha256": "748babff165d0e3e08e400a9b3f6eb56128535f2befff3038e05c7790a3aa873"
+    },
+    {
+      "key": "Yoshida2007FastMeasurement",
+      "pdf_sha256": "592d0e1c2bd9879fad4f66f9086555a977604356d022600a808fef17aba8b46a",
+      "audit": "docs/paper/introduction_review/background_Yoshida2007FastMeasurement.json",
+      "audit_sha256": "eb04636f959080350116caa99ae6187a557fd51cbcd5a0718212d8775dfd7483"
+    },
+    {
+      "key": "Yoshida2009RealTime",
+      "pdf_sha256": "e60dd4a5a36f15d5fdce8159b03146f9ce669de70b3a9d667250e5ddd247bf6d",
+      "audit": "docs/paper/introduction_review/paper_Yoshida2009RealTime.json",
+      "audit_sha256": "b1b19560ae8a68036b2c8975b8b3cc31909e8429ce84519e1ec1b2da9608c764"
+    },
+    {
+      "key": "Yoshida2012CoreEdge",
+      "pdf_sha256": "bc08911348ee3204e9ffb8cf46210a0c1176b2c0c2313a651d1e2e8f8510e922",
+      "audit": "docs/paper/introduction_review/background_Yoshida2012CoreEdge.json",
+      "audit_sha256": "e77588fd99bc0e95c9b16a5d750929aaadf541b7fa66da14ed0dd72badb1d695"
+    },
+    {
+      "key": "Yoshida2025TransportConfinement",
+      "pdf_sha256": "0c56ad50596e28172949883f390d25d31538f63e25148cf153b56e5a03982370",
+      "audit": "docs/paper/introduction_review/background_Yoshida2025TransportConfinement.json",
+      "audit_sha256": "3691e21fdef53ead1036ac6b72cc922f06b4281a28a3b8ddecab6465944c67df"
+    },
+    {
+      "key": "Young2008PlasmaMeasurements",
+      "pdf_sha256": "b14426d24a8aa6a0ae5630d6a4d4391e2fdb7eac7d470dfb6b3af1cbe21b0adf",
+      "audit": "docs/paper/introduction_review/paper_Young2008PlasmaMeasurements.json",
+      "audit_sha256": "f1fe8274fc89e856ad4431b45a62799a4fc51ac5715b867e240afaf21d875858"
+    },
+    {
+      "key": "Young2008PlasmaMeasurements_PPPL-4276",
+      "pdf_sha256": "e4472c2de1f554e353a5f8807c3868297144fafa1836e6fa1d4783dfbd0b8519",
+      "audit": "docs/paper/introduction_review/background_Young2008PlasmaMeasurements_PPPL-4276.json",
+      "audit_sha256": "e4e5edb016105b0cb44f69b149f8bdea0de79be18322f061bf6e7bc4435e372e"
+    },
+    {
+      "key": "Yu2022DiagnosingPedestal",
+      "pdf_sha256": "4edf9340c046a1b6542ed1e3529291e632773d204b8171b8489083e81059884d",
+      "audit": "docs/paper/introduction_review/background_Yu2022DiagnosingPedestal.json",
+      "audit_sha256": "781d71a1ca9d4c4ee9e5b89711b437f4912ced1d18a4aef3e2d76c29198d406b"
+    },
+    {
+      "key": "Yun2010DevelopmentKstar",
+      "pdf_sha256": "d91ad31315dcaaab65b537523a6315562ca9d483cba6bb804ed14fa120e4e988",
+      "audit": "docs/paper/introduction_review/background_Yun2010DevelopmentKstar.json",
+      "audit_sha256": "7b5ecb771d26784d8354883c478d120ddffb9d52ffa9899b099afc2ed01556e0"
+    },
+    {
+      "key": "Yun2011TwoDimensionalVisualization",
+      "pdf_sha256": "9cae1fab2a1c6892634fef2c309000d93fb9f5f33993d9334ddd2048a88ba937",
+      "audit": "docs/paper/introduction_review/background_Yun2011TwoDimensionalVisualization.json",
+      "audit_sha256": "b52b561cfaa364406d734c4a7d3c88f23044e0de1577d328f66730f936549853"
+    },
+    {
+      "key": "Yun2014Quasi3d",
+      "pdf_sha256": "0a4c4a83535861a93691bfe5ad239977b407bf4b19bacfca76ebd0e475fa89f7",
+      "audit": "docs/paper/introduction_review/paper_Yun2014Quasi3d.json",
+      "audit_sha256": "7e90dcd7ce17baf5a96d8e66246a7c22a8bee618fb85f0d076a6f47062b1a558"
+    },
+    {
+      "key": "Zhang2012MeasurementsFast",
+      "pdf_sha256": "c8f63d3222066db536c9fcdcf25001ac35c6dce7aeeb3842d4e5de95fd6f9539",
+      "audit": "docs/paper/introduction_review/background_Zhang2012MeasurementsFast.json",
+      "audit_sha256": "c606ac2e6a608b417360987b6c9196978499f32182ae7cbf374a9709610adb32"
+    },
+    {
+      "key": "Zhao2023RefinedInterpretation",
+      "pdf_sha256": "d3e6b92acad9e444b1c23269373c66aca284abfb05688e3e79e2eda51aa727da",
+      "audit": "docs/paper/introduction_review/background_Zhao2023RefinedInterpretation.json",
+      "audit_sha256": "198e9dd00ea38303786873d281fbc1955ed9956bde55aaff5048b51b85294635"
+    },
+    {
+      "key": "Zheng2024RealtimeEquilibrium",
+      "pdf_sha256": "4e2756e7ae03f6d1d3b7674d5f5d95d1af56097d7fdce8a5cb5bf2bb38b61510",
+      "audit": "docs/paper/introduction_review/background_Zheng2024RealtimeEquilibrium.json",
+      "audit_sha256": "fd381b54a2cd25b7c463046bf79853dd4801003d5c7a45cd93fbbb71a448ae21"
+    },
+    {
+      "key": "Zhu2019NewTrends",
+      "pdf_sha256": "8a49fd63c979e433285ecd29e9825984d589d70df37a94e467b5db783d3db7f3",
+      "audit": "docs/paper/introduction_review/background_Zhu2019NewTrends.json",
+      "audit_sha256": "02e5df02b69cd87abaecdba97debb6157aa2ba63e4c2d19ca23011bf849bc2aa"
+    },
+    {
+      "key": "Zimmermann2026DependenceMomentum",
+      "pdf_sha256": "c1092f976249f2dfb3502c774cdb81f49f606e104d8ad902bce0368c13bf687f",
+      "audit": "docs/paper/introduction_review/background_Zimmermann2026DependenceMomentum.json",
+      "audit_sha256": "d8f082feb1850269084f54689f13f5c89683e81b5ae536db65fab9d1dd4fdddd"
+    }
+  ],
+  "new_fits": 0,
+  "gpu_runs": 0,
+  "whole_manuscript_regraded": false,
+  "prior_incomplete_responses": "Preserved; recovered complete fields only; not counted as completed synthesis or grades",
+  "final_writing_provenance": "manuscript_writing_provenance.json",
+  "reader": "../research_reader/index.html"
+}

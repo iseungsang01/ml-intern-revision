@@ -1,0 +1,95 @@
+{
+  "cap_usd": 3.0,
+  "pricing_source": "https://claude.com/pricing?currency=USD",
+  "prices_per_million_input_output": {
+    "claude-fable-5-2": [
+      8,
+      40
+    ],
+    "claude-opus-5-5": [
+      4,
+      20
+    ]
+  },
+  "invoice_verified": false,
+  "estimated_or_reserved_usd": 2.283684,
+  "prior_deep_review_usd": 19.134767999999998,
+  "combined_usd": 21.418452,
+  "calls": [
+    {
+      "stage": "01_source_edit",
+      "model": "claude-fable-5-2",
+      "request_sha256": "6ff602f6be16be51895f2144e40684dfcb996600a3227e34cc661d93571380d0",
+      "reserved_usd": 0.575424,
+      "usage": {
+        "input_tokens": 25880,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 4773,
+        "output_tokens_details": {
+          "thinking_tokens": 1556
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.39796,
+      "response_sha256": "b930543a8f50be96d9273ea088fea12ab678fcbd8af3aee9d63e3ca13f249f15"
+    },
+    {
+      "stage": "02_focused_review",
+      "model": "claude-opus-5-5",
+      "request_sha256": "d4f39bfa11f845730499cecf98e4e0a99f3da3d426af9eb7299a895eba3203e4",
+      "reserved_usd": 0.2707704,
+      "usage": {
+        "input_tokens": 29066,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 3059,
+        "output_tokens_details": {
+          "thinking_tokens": 1258
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.177444,
+      "response_sha256": "0f499783f38bb90fd616d56954fc6ddfe3c3eb53baf43cb2159f0ce1b75cc150"
+    },
+    {
+      "stage": "03_source_grounded_thesis_sections",
+      "model": "claude-opus-5-5",
+      "request_sha256": "9fb729f54ea7ebdde162bda3937c706872cee8d2c23d7944afed49fc95e5e70b",
+      "reserved_usd": 2.029542,
+      "usage": {
+        "input_tokens": 345005,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 16413,
+        "output_tokens_details": {
+          "thinking_tokens": 3137
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 1.70828,
+      "response_sha256": "b07b331eca1c36e47320ca6f217a9ebbcadf47479d0781b3c05c63f4d310aeab"
+    }
+  ]
+}

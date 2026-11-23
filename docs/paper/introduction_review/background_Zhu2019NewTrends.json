@@ -1,0 +1,38 @@
+{
+  "key": "Zhu2019NewTrends",
+  "citation": {
+    "title": "New trends in microwave imaging diagnostics and application to burning plasma",
+    "authors": "Y. Zhu, J.-H. Yu, M. Chen, B. Tobias, N.C. Luhmann Jr.",
+    "year": 2019,
+    "venue": "IEEE Transactions on Plasma Science",
+    "volume": "47(5)",
+    "pages": "2110-2130 (from supplied citation hint; not visible in extracted text)",
+    "doi_or_arxiv": "10.1109/TPS.2019.2911476 (identifier hint; not printed in the extracted text, unverified)"
+  },
+  "relevance": "peripheral",
+  "topic": "Tutorial review of microwave diagnostics: ECE, ECEI, MIR, synthetic diagnostics, SoC receivers, wide-bandgap electronics, and imaging optics.",
+  "own_question": "How microwave imaging diagnostics work, and which hardware and modelling advances extend them toward burning plasmas.",
+  "actual_method_and_evidence": "Narrative tutorial. It reviews cold-plasma dispersion, ECE optical depth, and reflectometry phase relations, then summarizes published ECEI and MIR observations from several devices, including KSTAR MIR hardware. It also describes synthetic-diagnostic forward modelling and an LCP ECEI module cross-calibrated against Thomson scattering on DIII-D. It contains no CES or ion-temperature content and no nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "ECEI passively measures 2D electron-temperature fluctuations, and relative fluctuation analysis does not require absolute calibration. This is electron information, not impurity-ion temperature.",
+      "original_pdf_locator": "Sec. II, Eqs. (8)-(12), pp. 2-4",
+      "qualification": "Relies on the optically thick assumption. Our inputs are uncalibrated ECEI voltage snapshots.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. No CES, no report timing, no 10 ms grid.",
+  "validation_if_relevant": "Not applicable. The cited synthetic-diagnostic correlation threshold of 0.6 belongs to MIR design, not to our validation designs.",
+  "forbidden_inferences": [
+    "ECEI measures ion or carbon-impurity temperature",
+    "This source shows that ECEI predicts CES temperature",
+    "The described KSTAR hardware matches the KSTAR2022 configuration",
+    "Synthetic diagnostics validate our estimator"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background citation only, for the nature of ECEI electron-temperature signals. It is not evidence for ion-temperature nowcasting, and a dedicated ECEI or BES reference would serve better.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 20,
+  "supplied_pdf_sha256": "8a49fd63c979e433285ecd29e9825984d589d70df37a94e467b5db783d3db7f3",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

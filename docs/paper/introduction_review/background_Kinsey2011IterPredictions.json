@@ -1,0 +1,32 @@
+{
+  "key": "Kinsey2011IterPredictions",
+  "citation": {
+    "title": "ITER predictions using the GYRO verified and experimentally validated trapped gyro-Landau fluid transport model",
+    "authors": "J.E. Kinsey, G.M. Staebler, J. Candy, R.E. Waltz, R.V. Budny",
+    "year": 2011,
+    "venue": "Nuclear Fusion",
+    "volume": "51",
+    "pages": "083001",
+    "doi_or_arxiv": "10.1088/0029-5515/51/8/083001"
+  },
+  "relevance": "peripheral",
+  "topic": "Quasilinear TGLF turbulent transport model, verified against GYRO nonlinear simulations, validated on DIII-D/JET/TFTR profiles, and used for steady-state ITER fusion projections.",
+  "own_question": "Can a reduced gyro-Landau-fluid model reproduce gyrokinetic fluxes and measured temperature and density profiles, and what does it predict for ITER performance?",
+  "actual_method_and_evidence": "The authors compared TGLF fluxes with 191 GYRO simulations and reported RMS errors in the energy and particle diffusivities. They predicted steady-state Ti, Te and ne profiles with XPTOR for 151 discharges and compared them with time-averaged measured profiles, excluding the region inside q=1. ITER projections used prescribed pedestal boundary conditions and sources taken from TRANSP. The paper involves no time-resolved estimation, no BES or ECEI inputs, no CES report labels and no causal or nowcasting framing.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. The work predicts steady-state transport profiles; it does not nowcast or forecast reports at specific times.",
+  "validation_if_relevant": "Profile-database comparison of model predictions against time-averaged measurements. This is not a held-out temporal validation.",
+  "forbidden_inferences": [
+    "Do not cite as evidence for nowcasting CES temperature or for using BES/ECEI as predictors.",
+    "Do not treat profile-stiffness claims as evidence that pedestal-top CES Ti is predictable on 10 ms timescales.",
+    "Do not equate the Ti profiles validated in this paper with carbon-impurity CES reports.",
+    "Do not cite as an example of noncausal prior work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper is a physics-transport modelling study with no bearing on causal estimation of diagnostic reports. At most it could support optional general background on why ion temperature matters, but it is not needed for that.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "42ea43afa552e2ed19bce68c02ce49a2f391125c01fea645ca23e975a680cb8c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

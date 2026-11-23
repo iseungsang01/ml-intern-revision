@@ -1,0 +1,46 @@
+{
+  "key": "Lin2024PredictionPlasma",
+  "citation": {
+    "title": "Prediction of plasma rotation velocity and ion temperature profiles in EAST Tokamak using artificial neural network models",
+    "authors": "Lin Z., Zhang H., Wang F., Bae C., Fu J., Shen Y., Dai S., Jin Y., Lu D., Fu S., Ji H., Lyu B.",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "106061",
+    "doi_or_arxiv": "10.1088/1741-4326/ad73e8"
+  },
+  "relevance": "supporting",
+  "topic": "Neural-network replacement of Voigt fitting for EAST x-ray crystal spectrometer (Ar XVII) line-integrated Ti and relative rotation, plus CNN emulation of non-circular Abel inversion.",
+  "own_question": "Can DNN/CNN map raw XCS spectra (and EFIT scalars) directly to fitted line-integrated or inverted Ti/rotation faster than conventional fitting?",
+  "actual_method_and_evidence": "Labels come from the conventional nonlinear Voigt least-squares fit (530 shots, 2649 time slices). GA-initialized 2x9 DNN and 10-layer CNN were evaluated by R2 and Laplace error parameters. A test R2 of 0.9625 is reported for the DNN. Average per-profile times are reported as 1.126 s for fitting, 0.044 s for DNN and 0.031 s for CNN; the CNN uncertainty is computed by varying the input range. Inverted-profile CNN results are compared with CXRS on selected shots. Evaluation is offline. The text describes the split as random 70/20/10, and test-set independence is not stated.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior work has trained NNs to emulate conventional spectral fitting of XCS argon spectra on EAST, reporting per-profile inference in tens of ms versus about 1 s for fitting.",
+      "original_pdf_locator": "Sec. 2.4, Fig. 13; Sec. 2.1",
+      "qualification": "The source maps a current-frame spectrum to that frame's fit, i.e. an upstream spectrum reader. It does not do temporal nowcasting from past reports. The quantity is Ar impurity line-integrated Ti, and evaluation was offline with no real-time deployment.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Such emulators are trained on conventional fit outputs as labels, so they reproduce the fit rather than independent truth.",
+      "original_pdf_locator": "Sec. 2.1; Sec. 3.1.1",
+      "qualification": "Our reading of the method. CXRS comparisons are few shots only.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Input is the current frame's raw XCS spectrum (101 pixels), plus EFIT scalars for the inverted-profile model. Target is the same-frame fit. Accumulation is roughly 0.09 s needed for the stated R2 thresholds. No report arrival latency was measured.",
+  "validation_if_relevant": "Random train/validation/test split within the EAST data; for the CNN the validation set was merged into training. A detector-shift shot is shown as a single robustness example. No campaign-held-out set is reported.",
+  "forbidden_inferences": [
+    "Do not say it nowcasts or forecasts temperature in time.",
+    "Do not claim real-time control was demonstrated.",
+    "Do not equate Ar XVII XCS line-integrated Ti with KSTAR carbon CES or with main-ion Ti.",
+    "Do not claim it shows downstream nowcasting is unnecessary or that it helps.",
+    "Do not treat >10x speedup as deployed latency."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as the example of NN upstream spectrum reading. It contrasts with our downstream causal nowcast and supports the point that faster readers could refresh anchors.",
+  "bibtex_if_worth_citing": "@article{Lin2024PredictionPlasma,title={Prediction of plasma rotation velocity and ion temperature profiles in EAST Tokamak using artificial neural network models},author={Lin, Zichao and Zhang, Hongming and Wang, Fudi and others},journal={Nucl. Fusion},volume={64},pages={106061},year={2024},doi={10.1088/1741-4326/ad73e8}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "b892f8cf92fa1db375d8eb5ec0f41cf327926e026daa277e72b216ed84d0d0ad",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

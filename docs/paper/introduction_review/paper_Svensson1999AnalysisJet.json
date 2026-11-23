@@ -1,0 +1,79 @@
+{
+  "key": "Svensson1999AnalysisJet",
+  "citation": {
+    "title": "Analysis of JET charge exchange spectra using neural networks",
+    "authors": "J Svensson, M von Hellermann, R W T König",
+    "year": 1999,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "41",
+    "pages": "315-338",
+    "doi_or_arxiv": "DOI not printed in PDF; PII S0741-3335(99)96879-3. Verify the DOI externally; do not take one from the reference list."
+  },
+  "scope_read": {
+    "pdf_pages": "1-25 (p1 is the download cover; journal pp315-338 are PDF pp2-25)",
+    "full_pdf_supplied": true,
+    "limitations": "The real-time system details are in ref [17] and were not supplied. Figure values were read visually."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "A real-time NN-based Ti profile diagnostic was demonstrated at JET",
+      "verdict": "qualify",
+      "source_finding": "The paper reports a demonstration diagnostic built on a simplified version of the Fig. 11 pipeline. It produced Ti profiles every 50 ms during JET pulses for direct monitoring, running on the PC that controlled CCD readout. Feedback control is described only as possible. Sec 2.1 states a requirement of a few ms per spectrum; no per-spectrum timing is measured in this paper.",
+      "locator": "PDF p24, Sec 9; PDF p3, Sec 2.1; Fig 11 on PDF p19",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Neural-network inversion of charge-exchange spectra has been reported in a monitoring-only real-time demonstration producing JET ion-temperature profiles at the 50 ms exposure cadence [Svensson1999].",
+      "qualification": "Monitoring only, with no control loop. Ti only, from a simplified pipeline. Timing details are deferred to [17]."
+    },
+    {
+      "proposed_claim": "The method handles blending of active CX with passive edge emission",
+      "verdict": "qualify",
+      "source_finding": "Active C VI CX is blended with passive CX near the separatrix and with an electron-impact edge line (Fig 1). Conventional multi-Gaussian least-squares fits (Eqs 1-2) can be ambiguous and need expert input. The networks map the composite spectrum directly to fit-defined parameters, trained on synthetic spectra regenerated from fitted parameter vectors. In a sensitivity analysis the line wings carried the most weight (Fig 7). There is no explicit component separation.",
+      "locator": "PDF p4-5, Sec 2.2, Fig 1, Eqs 1-2; PDF p12, Sec 5.3, Fig 7; PDF p13, Sec 5.4",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Because passive edge emission blends with the active charge-exchange line, conventional fitting can require expert intervention; trained networks have been used to map composite spectra directly to fit-model parameters [Svensson1999].",
+      "qualification": "Labels are defined by the least-squares fit model; they are not independently separated physical components."
+    },
+    {
+      "proposed_claim": "Fast error bars and confidence measures accompany NN outputs",
+      "verdict": "supported",
+      "source_finding": "Three measures are used. (1) Photon-noise error is propagated by linearization from hidden-neuron values (Eqs 11-15) and agrees with Monte Carlo (Fig 8). (2) Committee spread across nets trained on independently resampled sets estimates the variance term (Eq 19); it is combined with photon noise in quadrature (Eq 20). (3) A Gaussian-mixture novelty detector screens inputs (Figs 9-10). Committee error rises as novelty approaches threshold in one pulse (Fig 16).",
+      "locator": "PDF pp14-15 Sec 6.1, Fig 8; PDF pp15-16 Sec 6.2; PDF p18 Eq 19; PDF p21 Eq 20; PDF p24 Fig 16",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Earlier NN charge-exchange analysis paired outputs with photon-noise, committee-spread and novelty-based confidence measures [Svensson1999].",
+      "qualification": "The photon-noise term assumes linearity and independent inputs. Committee spread is described as only a rough variance measure. Fig 16 is a single example."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Single-frame CES spectrum, pixel-summed to 98 inputs per radial position",
+    "outputs": "Ti, rotation, total active CX flux per radius; bremsstrahlung via a separate network",
+    "causal_or_offline": "Per-frame spectrum inversion with no temporal forecasting; this is an upstream spectrum reader",
+    "source_diagnostic_as_input": "Yes, the CES spectrum itself",
+    "reported_vs_physical_truth": "Targets are least-squares fit parameters; spectra are synthesized from them. This is not independent physical truth."
+  },
+  "validation": {
+    "split_unit": "Spectra. The test set is about 17,000 synthetic spectra built from least-squares fits of real spectra (PDF p18-20, Sec 8.1)",
+    "temporal_order": "Test spectra come from experiments after training-set compilation, up to about 0.75 yr after the latest training point (PDF p19-20)",
+    "independent_truth": "No; ground truth is the parameters that generated the synthetic spectra. Mean relative error 3.3% (Ti), 3.9% (rotation), 2.8% (flux) vs noise limits 1.9%, 1.6%, 0.6% (Table 2, PDF p21)",
+    "unknowns": "Pulse-level overlap; confidence intervals; results on real spectra beyond example comparisons with least squares (Figs 13-15)"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Profiles were produced every 50 ms in the demonstration; per-spectrum latency is not measured here",
+    "what_not_established": "Closed-loop control, latency budget, reliability statistics",
+    "locator": "PDF p24 Sec 9; PDF p3 Sec 2.1"
+  },
+  "forbidden_inferences": [
+    "Do not state that the networks were used for feedback control",
+    "Do not claim a measured ms-scale latency",
+    "Do not treat outputs as physical truth or as independent of CES fitting",
+    "Do not describe this as temporal nowcasting or as using BES/ECEI",
+    "Do not compare its accuracy with ours"
+  ],
+  "competing_or_complementary": "Complementary. It is an upstream reader of the current spectrum, whereas our work is a downstream temporal nowcast. A faster upstream reader could refresh our anchors or reduce the need for nowcasting; neither effect was tested.",
+  "bibtex": "@article{Svensson1999AnalysisJet,author={Svensson, J. and von Hellermann, M. and K{\\\"o}nig, R. W. T.},title={Analysis of {JET} charge exchange spectra using neural networks},journal={Plasma Phys. Control. Fusion},volume={41},pages={315--338},year={1999}}",
+  "followup_sources_if_material": [
+    "Ref [17]: Svensson, von Hellermann, König 1998, Proc. ICANN98, for real-time details",
+    "Ref [3]: Bishop, Roach, von Hellermann 1993, PPCF 35 765",
+    "Ref [4]: Baker, Groebner, Burrell 1994, PPCF 36 109 (DIII-D CER)"
+  ]
+}

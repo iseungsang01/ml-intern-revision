@@ -1,0 +1,81 @@
+{
+  "key": "Tian2026RealTimeCxrs",
+  "citation": {
+    "title": "Real-time CXRS analysis on HL-3 tokamak with reliable neural networks and cross-device transfer learning",
+    "authors": "Tian W., Yang Z., Long T., Yang S., Wu H., Yu D., He X., Tang C., Ke R., Xu M., Gao Z., Chen W., Zhong W., Shi Z.",
+    "year": "2027 (volume year; published online 22 Oct 2026)",
+    "venue": "Nuclear Fusion",
+    "volume": "67",
+    "pages": "016004 (17pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/aeb037 (this paper's own DOI, PDF p2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-18 (all; p1 is a download cover)",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read visually. No code or data were available. Validation-set construction inside the folds is not specified."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Real-time deployment was run",
+      "verdict": "qualify",
+      "source_finding": "The paper measures offline inference time: 0.56 ms per 32-channel profile on an RTX 4090 with an i7 CPU, and 5.6 ms for a 10-model ensemble. The authors define 'real-time' as removing the fitting bottleneck. They state that the 25 ms CCD exposure exceeds the roughly 10 ms control requirement and that hardware upgrades would be needed.",
+      "locator": "p2 §1 (final paragraphs); p5 §3.2; p6 Table 3 and text; p14 §6 (third limitation) and App. A",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Neural-network readers of CXRS spectra can cut per-profile analysis time to sub-millisecond GPU inference on HL-3, although diagnostic cadence remains set by camera exposure [Tian].",
+      "qualification": "No plasma-control-system integration and no end-to-end latency were reported."
+    },
+    {
+      "proposed_claim": "Labels are conventional fits, not independent truth",
+      "verdict": "supported",
+      "source_finding": "Labels come from least-squares multi-Gaussian fits with human inspection of each spectrum. The authors acknowledge that accuracy depends on label quality. Cross-checks against stored energy, SX, Thomson scattering and XICS are described as qualitative or limited.",
+      "locator": "p3 §2.1–2.2; p13 §6 (first limitation); p15 App. A, Figs A1–A2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Such readers are trained to reproduce conventionally fitted, expert-screened CXRS results.",
+      "qualification": "Agreement with these labels is not agreement with physical Ti."
+    },
+    {
+      "proposed_claim": "Edge behaviour",
+      "verdict": "qualify",
+      "source_finding": "Outermost channels 1–4 degrade (Ti MRE about 10–30%), attributed to low SNR, pcx/ei overlap and only 300–1000 samples per channel. The pedestal channels 5–8 perform close to mid-radius levels. MC-dropout uncertainty is elevated at both the edge and the hot core, and channel-averaged uncertainty correlates with absolute error (r>0.9).",
+      "locator": "p10 §4.2, Fig. 8(a,c,d); p11 Fig. 9; p5 §3.2",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Reported accuracy of spectrum readers varies across radius and degrades where signal and training data are sparse near the edge [Tian].",
+      "qualification": "These are HL-3 channel results and do not transfer to our KSTAR pedestal-top chord."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Current-frame single-channel 200-pixel CXRS spectrum (baseline-subtracted, z-scored) plus a channel index",
+    "outputs": "Ti (keV) and vt for the same frame",
+    "causal_or_offline": "Same-frame spectral inversion. There is no temporal forecasting or nowcasting.",
+    "source_diagnostic_as_input": "Yes: the CXRS spectrum itself is the input",
+    "reported_vs_physical_truth": "The model reproduces fitted labels, not physical truth"
+  },
+  "validation": {
+    "split_unit": "Discharge-level; repeated 5-fold CV ×3 over 190 HL-3 shots (11974–13669)",
+    "temporal_order": "Random splits, not chronological (p3 §2.2)",
+    "independent_truth": "None; cross-diagnostic consistency checks only (App. A)",
+    "unknowns": "How the early-stopping validation set relates to the test fold. No untouched hold-out campaign. No confidence intervals beyond fold/seed SD and paired t-tests."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "GPU inference time per profile, single model and ensemble",
+    "what_not_established": "Acquisition-to-output latency, data transfer, PCS deployment, and actual report-arrival timing",
+    "locator": "p5 §3.2; p6 Table 3; p2 §1"
+  },
+  "forbidden_inferences": [
+    "The model was deployed in real-time control",
+    "0.56 ms is end-to-end latency",
+    "Labels equal physical Ti",
+    "HL-3 edge or pedestal accuracy applies to KSTAR",
+    "The paper nowcasts a CES report before its spectrum is available",
+    "Transfer-learning gains generalise to other devices without alignment",
+    "Our method improves on this one in any respect"
+  ],
+  "competing_or_complementary": "Complementary upstream spectrum reader. It shortens fitting latency and could refresh anchors for a downstream temporal nowcast, possibly reducing that nowcast's marginal value. This interaction was untested by both works. It uses no BES/ECEI and does not address the interval between reports.",
+  "bibtex": "@article{Tian2027RealTimeCXRS,title={Real-time {CXRS} analysis on {HL-3} tokamak with reliable neural networks and cross-device transfer learning},author={Tian, Wenjing and Yang, Zongyu and Long, Ting and Yang, Shuosu and Wu, Hao and Yu, Deliang and He, Xiaoxue and Tang, Chenchong and Ke, Rui and Xu, Min and Gao, Zhe and Chen, Wei and Zhong, Wulyu and Shi, Zhongbing},journal={Nuclear Fusion},volume={67},pages={016004},year={2027},doi={10.1088/1741-4326/aeb037}}",
+  "followup_sources_if_material": [
+    "Jain et al. 2023, arXiv:2309.08687 (cited ref [6]; DIII-D CXRS fitting time of about 15 min per 10,000 spectra)",
+    "Yoshida et al. 2009, Fusion Eng. Des. 84 2206 (cited ref [7]; fast CXRS real-time feedback on JT-60U)",
+    "Tian et al. 2025, Acta Phys. Sin. 74 078901 (cited ref [17]; prior HL-2A NN-CXRS work)"
+  ]
+}

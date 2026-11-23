@@ -1,0 +1,39 @@
+{
+  "key": "Tobin2026AvoidanceDisruptions",
+  "citation": {
+    "title": "Avoidance of Disruptions on KSTAR due to Vertical Displacement Events via Novel Real-Time Stability Assessment",
+    "authors": "M. Tobin, S. A. Sabbagh, V. Zamkovska, G. Bustos-Ramirez, H. K. Lee, J. R. Jepson, J. Riquezes, F. Sheehan, G. Tillinghast, K. Erickson, R. Shousha, Y. Lee, J. Barr, M. H. Woo, Y. S. Park",
+    "year": "2026 (accepted manuscript; header dated 14 April 2026)",
+    "venue": "Unknown (AIP accepted manuscript; journal name not stated in extracted text)",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "10.1063/5.0320639 (printed in the manuscript's own 'please cite' banner)"
+  },
+  "relevance": "peripheral",
+  "topic": "Real-time KSTAR VDE stability metric computed from magnetics-derived PCA current-density surrogate, used for shape and ECCD avoidance control.",
+  "own_question": "Can a semi-empirical vertical force-gradient metric, fed by a fast linear magnetics-to-PCA current-profile model, forecast and avoid VDEs on KSTAR?",
+  "actual_method_and_evidence": "Authors report a linear map from 144 magnetic probes to the top-10 PCA amplitudes of magnetics-only EFIT current profiles. They report R2 0.994 on 16,794 points from 100 shots. These profiles are EFIT reference labels, not independent truth. Least-squares tuning of the M* matrix used 50 shots; the authors report 82.3% shot-level recall on 400 validation shots from the same campaign. They also report avoidance experiments in three scenarios. The PCS surrogate is reported as about 167x faster than rtEFIT; no absolute timing is stated. Nothing in the paper concerns CES, Ti, BES, ECEI or temporal nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "On KSTAR, fast linear surrogates trained on reconstruction outputs have been reported as substitutes for slower reconstruction-derived quantities in real-time control.",
+      "original_pdf_locator": "p.5-6, Sec. II B, Eqs. 13-15",
+      "qualification": "Reproduces magnetics-only EFIT labels, not physical truth. The target is a spatial current profile, not a temporal nowcast of an ion-temperature report. Field: current density, not ion temperature.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are magnetic probe measurements at the same time; the target is the concurrent EFIT current profile. This is a same-time spatial surrogate, not a forecast or a nowcast of a delayed report. The relative speed-up is reported; the absolute latency is unknown.",
+  "validation_if_relevant": "Separate shot ranges from one campaign; how independent the splits are is unclear. The year labels conflict: the text cites 2024 and 2025 campaigns, and the summary says 2024. The paper reports no untouched-campaign test.",
+  "forbidden_inferences": [
+    "Do not infer anything about CES, ion temperature, BES or ECEI.",
+    "Do not treat EFIT-label R2 as physical accuracy.",
+    "Do not cite its VDE recall or speed-up as evidence for our task.",
+    "Do not call it a nowcasting precedent."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional analogy for fast surrogate estimation on KSTAR. The diagnostic, physical quantity and temporal question all differ from ours, so it is likely best omitted.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "9662fd722bcfbdf26366fedfb91cbe38dcec7677681005d28abd183c5386e5c0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

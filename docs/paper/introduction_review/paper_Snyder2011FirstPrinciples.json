@@ -1,0 +1,74 @@
+{
+  "key": "Snyder2011FirstPrinciples",
+  "citation": {
+    "title": "A first-principles predictive model of the pedestal height and width: development, testing and ITER optimization with the EPED model",
+    "authors": "P.B. Snyder, R.J. Groebner, J.W. Hughes, T.H. Osborne, M. Beurskens, A.W. Leonard, H.R. Wilson, X.Q. Xu",
+    "year": 2011,
+    "venue": "Nuclear Fusion",
+    "volume": "51",
+    "pages": "103016 (8pp)",
+    "doi_or_arxiv": "10.1088/0029-5515/51/10/103016 (this paper's own DOI, from the PDF p2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-9 (p1 is the publisher cover; article pp1-8 are PDF pp2-9)",
+    "full_pdf_supplied": true,
+    "limitations": "The text was extracted from the PDF, so some symbols (for example Δ and exponents) are garbled. Figures were read from embedded images and captions."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Pedestal-top conditions strongly affect global confinement and fusion performance.",
+      "verdict": "qualify",
+      "source_finding": "The paper opens by stating that the pedestal height, defined as the pressure at the top of the edge transport barrier, strongly affects global confinement and fusion performance. It also states that predicting this height is essential for ITER and power-plant performance.",
+      "locator": "PDF p2 (article p1), Sec.1 Introduction, para 1",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The pressure at the top of the H-mode edge barrier is widely regarded as a strong determinant of global confinement and fusion performance [Snyder2011].",
+      "qualification": "The source makes this claim about total pedestal pressure. It does not make it about ion temperature, carbon CES temperature, or any single chord. The claim is motivational and is not demonstrated within this paper."
+    },
+    {
+      "proposed_claim": "A higher pedestal improves global confinement and stability.",
+      "verdict": "qualify",
+      "source_finding": "The authors argue that pedestal formation raises global pressure and broadens the profile, partly through gradient-scale-length-driven core turbulence. They state that confinement and stability generally increase with pedestal height.",
+      "locator": "PDF p2, Sec.1, para 2; Fig.1(a) (PDF p3)",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Because core profiles tend to be tied to the edge through gradient-scale-length-driven turbulence, a higher pedestal generally improves both global confinement and stability [Snyder2011].",
+      "qualification": "The source qualifies this with 'generally'. The mechanism is asserted in the introduction and is not tested in this paper."
+    },
+    {
+      "proposed_claim": "Pedestal-top values serve as boundary conditions for core transport prediction.",
+      "verdict": "qualify",
+      "source_finding": "The paper defines a pedestal 'top' two tanh half-widths inside the barrier centre as an interface location for core models such as TGLF. It reports that TGLF work, cited as [33], indicates a top value of about 0.9 in βNped is needed for high-performance ITER operation.",
+      "locator": "PDF p9, Sec.5; Fig.10 and caption",
+      "kind": "requirement",
+      "allowed_intro_sentence": "Pedestal-top values are commonly used as the boundary condition linking edge and core transport models [Snyder2011].",
+      "qualification": "The 0.9 βNped requirement belongs to cited work [33], not to this paper. The quantity is normalized pressure, not temperature."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Eight scalar parameters: Bt, Ip, R, a, δ, κ, ne,ped and βN,global (PDF p6, Sec.3).",
+    "outputs": "Pedestal pressure height and width in normalized poloidal flux (the average of Te and ne widths).",
+    "causal_or_offline": "Offline stability-model prediction of a quasi-steady pedestal state. It is not a time-resolved estimator.",
+    "source_diagnostic_as_input": "None. For comparison, C-Mod pedestal height was taken as twice the Thomson electron pressure (PDF p8, Sec.4).",
+    "reported_vs_physical_truth": "Comparisons are made against measured pedestal pressure with an assumed 15% uncertainty (Fig.8 caption)."
+  },
+  "validation": "not_applicable (this is a physics model, not an estimator paper)",
+  "runtime_or_deployment": {
+    "what_was_measured": "No runtime was measured.",
+    "what_not_established": "Real-time use, computational cost, and applicability to KSTAR.",
+    "locator": "Not reported anywhere in the paper."
+  },
+  "forbidden_inferences": [
+    "That this source establishes ion-temperature or CES-temperature importance specifically",
+    "That its predictive accuracy (ratio 1.02±0.20 over 20 discharges) transfers to KSTAR or to our target",
+    "That EPED is a temporal nowcasting baseline or competitor",
+    "That EPED or prior work is noncausal or electron-only",
+    "The ITER Q=10 statement as an established result (the authors call these initial indications)",
+    "Any physical mechanism in our data"
+  ],
+  "competing_or_complementary": "Complementary. EPED predicts quasi-steady pedestal pressure height and width from stability constraints. Our paper estimates the current CES report on a 10 ms grid before that report is available. The two address different problems.",
+  "bibtex": "@article{Snyder2011FirstPrinciples,title={A first-principles predictive model of the pedestal height and width: development, testing and ITER optimization with the EPED model},author={Snyder, P. B. and Groebner, R. J. and Hughes, J. W. and Osborne, T. H. and Beurskens, M. and Leonard, A. W. and Wilson, H. R. and Xu, X. Q.},journal={Nuclear Fusion},volume={51},pages={103016},year={2011},doi={10.1088/0029-5515/51/10/103016}}",
+  "followup_sources_if_material": [
+    "Kinsey J.E. et al 2011 Nucl. Fusion 51 083001 (cited as [33]): read before claiming that core performance depends on the pedestal-top boundary.",
+    "A source that directly addresses ion-temperature or CES pedestal measurements, if the intro wants a Ti-specific motivation."
+  ]
+}

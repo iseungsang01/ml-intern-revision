@@ -1,0 +1,38 @@
+{
+  "key": "Kidger2020NeuralControlled",
+  "citation": {
+    "title": "Neural Controlled Differential Equations for Irregular Time Series",
+    "authors": "Patrick Kidger, James Morrill, James Foster, Terry Lyons",
+    "year": 2020,
+    "venue": "Advances in Neural Information Processing Systems 33 (NeurIPS 2020)",
+    "volume": "33",
+    "pages": "unknown (arXiv version 25 pp.)",
+    "doi_or_arxiv": "arXiv:2005.08926"
+  },
+  "relevance": "peripheral",
+  "topic": "Continuous-time sequence model (Neural CDE) for irregularly sampled, partially observed time series; machine-learning benchmarks, not plasma.",
+  "own_question": "How can a Neural ODE incorporate data that arrives after the initial condition? The authors propose driving the hidden state with an interpolated data path.",
+  "actual_method_and_evidence": "Natural cubic spline interpolation of the data, with time added as a channel, forms the driving path X. Training uses adjoint backpropagation. The paper includes universal-approximation and subsumption proofs (Appendices B and C). Classification experiments use CharacterTrajectories, PhysioNet sepsis and Speech Commands, comparing against GRU and ODE-RNN baselines over 5 runs with random 70/15/15 splits. The authors state in Sec. 6.4 that cubic splines are non-causal, so the reported setup cannot run in real time.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Continuous-time models for irregular sampling exist. In Neural CDEs, the hidden state is driven by an interpolated observation path.",
+      "original_pdf_locator": "Sec. 3, Eq. 3; Sec. 6.4 'Choice of X'",
+      "qualification": "The authors themselves say spline-based X uses future observations (non-causal). This is ML classification work, not nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The interpolation path at time t depends on later samples. The paper has no arrival-time or online evaluation.",
+  "validation_if_relevant": "Random splits on non-plasma datasets. There is no held-out campaign analogue.",
+  "forbidden_inferences": [
+    "Do not claim Neural CDEs are causal or suitable for real-time use as published.",
+    "Do not transfer the reported accuracy or memory results to CES/BES/ECEI.",
+    "Do not imply we implemented a Neural CDE."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background on irregular-sampling ML models. Its non-causal interpolation contrasts with our strictly-past inputs. It is not needed for the core framing.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 25,
+  "supplied_pdf_sha256": "9f2f75ceb2ae823445deaa527d3a30a76dbe839a1c3bed325317190093d643ae",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

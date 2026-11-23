@@ -1,0 +1,39 @@
+{
+  "key": "Lampert2018ScrapeLayer",
+  "citation": {
+    "title": "2D scrape-off layer turbulence measurement using Deuterium beam emission spectroscopy on KSTAR",
+    "authors": "M. Lampert, S. Zoletnik, J. G. Bak, Y. U. Nam, KSTAR Team",
+    "year": 2018,
+    "venue": "Physics of Plasmas",
+    "volume": "25",
+    "pages": "042507",
+    "doi_or_arxiv": "10.1063/1.5017295"
+  },
+  "relevance": "peripheral",
+  "topic": "Characterization of KSTAR beam emission spectroscopy (BES) for SOL/edge blob and hole statistics in one L-mode shot and one H-mode shot.",
+  "own_question": "Can the KSTAR deuterium BES system measure 2D SOL and edge turbulence, and how does it compare with a reciprocating probe?",
+  "actual_method_and_evidence": "Offline analysis of 2 MHz APD signals (4x16 channels) from two shots. Processing included FIR filtering, subtraction of an NBI 5 kHz oscillation, time-lag separatrix estimation, skewness and kurtosis profiles, and conditional averaging. The authors report an effective SOL resolution of about 2–3 cm and an electronic-noise-dominated SOL. The paper does not involve CES, Ti, nowcasting, or 10 ms snapshots.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR BES light fluctuations have been analyzed offline as a density-fluctuation proxy near the edge. The source reports caveats, including NBI power-supply oscillations that had to be removed.",
+      "original_pdf_locator": "Sec. III.A–B, pp. 3–5",
+      "qualification": "The source's proxy assumption is negligible beam attenuation and constant beam profile in the SOL and edge. Signals were uncalibrated. Our BES inputs are 10 ms voltage snapshots, not this fluctuation analysis.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable: no temperature target and no causal prediction. Analysis was retrospective, with offline filtering.",
+  "validation_if_relevant": "Two shots only. Comparison with a probe was qualitative and made in one L-mode shot.",
+  "forbidden_inferences": [
+    "That BES fluctuations predict CES or impurity ion temperature.",
+    "That BES information is real-time or causal.",
+    "That its pedestal-region results apply to our chord or to the 2022 campaign.",
+    "That BES-derived quantities are calibrated ne."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this is an optional citation for the KSTAR BES diagnostic context and its offline caveats. It is not evidence for incremental information content toward CES nowcasting.",
+  "bibtex_if_worth_citing": "@article{Lampert2018ScrapeLayer,title={2D scrape-off layer turbulence measurement using Deuterium beam emission spectroscopy on KSTAR},author={Lampert, M. and Zoletnik, S. and Bak, J. G. and Nam, Y. U. and {KSTAR Team}},journal={Physics of Plasmas},volume={25},pages={042507},year={2018},doi={10.1063/1.5017295}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "d896ad65512ad603175004c45fa9fe976ec6752cf92d5fdb40fd50ae0b7cec9a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

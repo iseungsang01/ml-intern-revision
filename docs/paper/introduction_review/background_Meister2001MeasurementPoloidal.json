@@ -1,0 +1,45 @@
+{
+  "key": "Meister2001MeasurementPoloidal",
+  "citation": {
+    "title": "Measurement of poloidal flow, radial electric field and E × B shearing rates at ASDEX Upgrade",
+    "authors": "H. Meister, A. Kallenbach, A.G. Peeters, A. Kendl, J. Hobirk, S.D. Pinches, ASDEX Upgrade Team",
+    "year": 2001,
+    "venue": "Nuclear Fusion",
+    "volume": "41",
+    "pages": "1633-1644",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Charge-exchange impurity spectroscopy: energy-dependent rate coefficient and finite-lifetime/gyro-motion corrections to apparent C5+ temperature and velocity; Er and E×B shear at ASDEX Upgrade.",
+  "own_question": "Can corrected CXRS poloidal and toroidal C5+ data give Er and E×B shearing rates that test shear-decorrelation transport reduction?",
+  "actual_method_and_evidence": "The authors compute analytical cross-section corrections for toroidal chords and numerical lifetime and gyro-averaged corrections for poloidal chords. They test these corrections on one locked-mode phase in which raw vθ of up to about 8 km/s is reduced to within the stated ±6 km/s resolution. They also compare ωE×B with linear ITG growth rates in two ASDEX Upgrade discharges. All processing is offline. In the same article, the authors state that their results support but do not prove the shear-decorrelation model.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported CXRS impurity temperatures and velocities are model-processed quantities. The energy-dependent charge-exchange rate coefficient and viewing geometry can produce apparent line widths and shifts that require correction.",
+      "original_pdf_locator": "Sec. 2, pp. 1635-1637; Figs 2-3, 6-7; Eq. (3)",
+      "qualification": "Shown for C5+ 529 nm at ASDEX Upgrade. The paper reports Ti corrections of only a few per cent and toroidal-velocity corrections of up to 20%. This is not evidence about KSTAR CES.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Such labels are conventional diagnostic reports rather than independent physical truth, which motivates treating CES reports as targets.",
+      "original_pdf_locator": "Sec. 2.2-2.3, pp. 1636-1639",
+      "qualification": "This is our interpretation. The paper validates its corrections only with one locked-mode discharge, and the effective lifetime remains under investigation.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Measures impurity (C5+) ion quantities, not main-ion Ti, and not electron diagnostics. The time resolution for carbon is described only as rather low. No arrival times or nowcasting are reported.",
+  "validation_if_relevant": "One locked-mode test discharge; no held-out data.",
+  "forbidden_inferences": [
+    "Do not imply that the paper supports BES/ECEI nowcasting.",
+    "Do not state that its correction magnitudes apply to KSTAR CES.",
+    "Do not present E×B shear causation as proven.",
+    "Do not describe its processing as real-time."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include for theoretical background: it gives a concrete source on why CES temperature reports depend on atomic and geometry modelling, which supports framing the labels as conventional reports.",
+  "bibtex_if_worth_citing": "@article{Meister2001MeasurementPoloidal,title={Measurement of poloidal flow, radial electric field and {E}$\\times${B} shearing rates at {ASDEX} {U}pgrade},author={Meister, H. and Kallenbach, A. and Peeters, A. G. and Kendl, A. and Hobirk, J. and Pinches, S. D. and {ASDEX Upgrade Team}},journal={Nuclear Fusion},volume={41},number={11},pages={1633--1644},year={2001}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "a782ec2dbdaa09c4e2124e12e318c182eac3c4b87571d8de969810b7284e5ea3",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

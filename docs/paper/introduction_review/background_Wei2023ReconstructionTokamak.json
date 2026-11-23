@@ -1,0 +1,46 @@
+{
+  "key": "Wei2023ReconstructionTokamak",
+  "citation": {
+    "title": "Reconstruction of tokamak plasma safety factor profile using deep learning",
+    "authors": "Wei X., Sun S., Tang W., Lin Z., Du H., Dong G.",
+    "year": 2023,
+    "venue": "Nuclear Fusion",
+    "volume": "63",
+    "pages": "086020",
+    "doi_or_arxiv": "10.1088/1741-4326/acdf00"
+  },
+  "relevance": "supporting",
+  "topic": "Deep-learning surrogate for MSE-constrained (EFIT02) q profile on DIII-D, without MSE input",
+  "own_question": "Can available non-MSE signals reproduce the EFIT02 q profile more closely than magnetics-only EFIT01, quickly enough for a PCS?",
+  "actual_method_and_evidence": "An ensemble of CNN/FC networks takes Te and ne profiles, a Mirnov spectrum and 0D scalars, including EFIT01 q95. It is trained by MSE loss against EFIT02 q. Data are DIII-D shots split by shot into train, validation and test sets, with slices every 25 ms. On the test set, the average MSE is 0.165 versus 0.232 for EFIT01, and the median MSE is 0.064 versus 0.080. The authors report that SGTC-QR is more accurate in the core region and less accurate near the edge. In an ablation that zeroes inputs, Ip, li and beta matter most. Inference time is reported as under 1 ms; real-time deployment is not demonstrated. The authors treat EFIT02 as the reference, and they report a case where expert analysis disagreed with EFIT02. Several reported counts are internally inconsistent: about 12,000 equilibria, 26,400 equilibria and 164,782 test slices.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior ML work has learned a diagnostic-constrained reconstruction product (EFIT02 q) from other available signals, treating that conventional reconstruction as the training label.",
+      "original_pdf_locator": "pp.2-4, Sec.2, Table 1",
+      "qualification": "Electron profiles and magnetics on DIII-D, q profile; not CES impurity Ti and not temporal nowcasting. EFIT02 is a reconstruction, not independent truth.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors report lower test MSE than EFIT01 relative to EFIT02, with sub-ms inference described as PCS-compatible.",
+      "original_pdf_locator": "pp.4-5, Sec.3, Figs.3-5",
+      "qualification": "Compatibility is the authors' assertion and no deployment was shown; edge errors are larger. The figures were not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs and target are taken from the same time slice, so this is same-time reconstruction rather than causal nowcasting. Report arrival timing is not addressed.",
+  "validation_if_relevant": "Random shot-level train/validation/test split from one device. The 40-model ensemble is selected using validation data. There is no external-device test.",
+  "forbidden_inferences": [
+    "that CES or ion temperature was studied",
+    "that real-time deployment occurred",
+    "that SGTC-QR recovers physical truth",
+    "that it supports BES/ECEI incremental value",
+    "that all prior ML reconstruction is same-time or electron-only"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This is a useful analogue for learning a diagnostic-derived conventional label from other signals with fast inference. It differs from our study in target, diagnostics and timing structure, so it should be cited only as context.",
+  "bibtex_if_worth_citing": "@article{Wei2023ReconstructionTokamak,title={Reconstruction of tokamak plasma safety factor profile using deep learning},author={Wei, Xishuo and Sun, Shuying and Tang, William and Lin, Zhihong and Du, Hongfei and Dong, Ge},journal={Nuclear Fusion},volume={63},pages={086020},year={2023},doi={10.1088/1741-4326/acdf00}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "87c831f8f4b06c9583323d774633ba5d650921ad083e00212bff3b5dfe5835ca",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

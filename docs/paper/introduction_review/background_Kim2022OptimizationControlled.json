@@ -1,0 +1,47 @@
+{
+  "key": "Kim2022OptimizationControlled",
+  "citation": {
+    "title": "Optimization of 3D controlled ELM-free state with recovered global confinement for KSTAR with n = 1 resonant magnetic field perturbation",
+    "authors": "S.K. Kim, R. Shousha, S.H. Hahn, A.O. Nelson, J. Wai, S.M. Yang, J.-K. Park, R. Nazikian, N.C. Logan, Y.M. Jeon, Y. In, J.H. Lee, J. Kim, C.Y. Lee, Y.-S. Na, E. Kolemen",
+    "year": 2022,
+    "venue": "Nuclear Fusion",
+    "volume": "62",
+    "pages": "026043",
+    "doi_or_arxiv": "10.1088/1741-4326/ac4369"
+  },
+  "relevance": "supporting",
+  "topic": "Adaptive real-time n=1 RMP amplitude control on KSTAR. The paper reports carbon-impurity CES Ti pedestal dynamics and BES/ECEI edge fluctuations.",
+  "own_question": "Can Dα-based adaptive RMP control keep ELM suppression while recovering confinement? What role does Ti pedestal widening play?",
+  "actual_method_and_evidence": "This is a single main discharge (#26004), with one comparison locking shot (#26014). The real-time controller used Dα-derived ELM frequency only. CES data for C6+ impurities were averaged over 100 ms and fitted offline with tanh functions. The analysis also includes offline stability calculations (EPED/MISHKA), transport analysis (ASTRA/NCLASS), and linear CGYRO runs. BES/ECEI coherence was analyzed offline. In this discharge, the authors report that fluctuations rose at ELM-suppression onset, coincident with Ti pedestal widening, and were insensitive to RMP amplitude. No figures were visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In one KSTAR RMP discharge, the carbon-impurity CES Ti pedestal is reported to respond differently to RMP amplitude during the degradation and recovery phases. The reported response was larger in the recovery phase. This makes pedestal-top impurity Ti a dynamically relevant quantity during ELM control.",
+      "original_pdf_locator": "Sec. 2.2, Figs. 1(c), 2(c), 3; Sec. 4.1",
+      "qualification": "The measurement is impurity (C6+) Ti, not main-ion Ti, and comes from a single discharge. Profiles were 100 ms averaged and fitted offline; Ti was not used as a real-time input. The authors' interpretation is hysteresis.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors report that BES/ECEI edge fluctuation coherence near ψN~0.96 coincided in time with ELM-suppressed phases and with Ti pedestal broadening. They interpret this as supporting a turbulence-driven increase in ion heat diffusivity.",
+      "original_pdf_locator": "Sec. 4.3, Figs. 9-11",
+      "qualification": "The link is correlational and from offline spectral analysis. The mechanism is the authors' interpretation, supported only by linear gyrokinetic runs. Fluctuations measured are electron-channel quantities (δTe, δne), not ion quantities.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The only real-time input was Dα ELM frequency. CES timing is given as 100 ms averaging only; CES report arrival latency is not stated and remains unknown. BES/ECEI were used offline only.",
+  "validation_if_relevant": "There is no predictive validation and no data split; this is an experimental case study.",
+  "forbidden_inferences": [
+    "That BES/ECEI predict CES Ti",
+    "That a Ti nowcast was used or needed in the control loop",
+    "Main-ion Ti behavior",
+    "A causal turbulence mechanism",
+    "Generality beyond #26004 or to KSTAR2022 data",
+    "That prior work is noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as motivation that pedestal impurity Ti evolves on control-relevant timescales and co-varies with edge BES/ECEI fluctuations under RMP. Do not cite it as nowcasting precedent.",
+  "bibtex_if_worth_citing": "@article{Kim2022OptimizationControlled,title={Optimization of 3D controlled ELM-free state with recovered global confinement for KSTAR with n = 1 resonant magnetic field perturbation},author={Kim, S.K. and Shousha, R. and Hahn, S.H. and others and Kolemen, E.},journal={Nuclear Fusion},volume={62},pages={026043},year={2022},doi={10.1088/1741-4326/ac4369}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "cb715e29696e6678fd931579f2dce9382039107502e1d93b7101da2b4b2b7ed5",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

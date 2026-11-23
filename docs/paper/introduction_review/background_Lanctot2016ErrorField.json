@@ -1,0 +1,39 @@
+{
+  "key": "Lanctot2016ErrorField",
+  "citation": {
+    "title": "Error field optimization in DIII-D using extremum seeking control",
+    "authors": "M.J. Lanctot, K.E.J. Olofsson, M. Capella, D.A. Humphreys, N. Eidietis, J.M. Hanson, C. Paz-Soldan, E.J. Strait, M.L. Walker",
+    "year": "unknown from text (hint: 2016)",
+    "venue": "unknown from text; extracted text says submitted to Plasma Phys. Control. Fusion, hint says Nucl. Fusion",
+    "volume": "unknown (hint: 56)",
+    "pages": "unknown (hint: 076003)",
+    "doi_or_arxiv": "unverified hint 10.1088/0029-5515/56/7/076003"
+  },
+  "relevance": "peripheral",
+  "topic": "Closed-loop n=1 error-field correction on DIII-D using extremum seeking, with real-time CER rotation as the objective",
+  "own_question": "Can an extremum-seeking loop find optimal I-coil currents within a single H-mode discharge?",
+  "actual_method_and_evidence": "A Simulink-generated PCS algorithm applies a 5 Hz dither and uses real-time CER toroidal rotation of chord(s) as the objective. In one discharge (155601), it converged near known optimal currents after about 25 dither periods. A 0D momentum model was also simulated. No CES temperature, BES/ECEI, or nowcasting is involved.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Real-time CER analysis has been used inside a tokamak plasma control system as a control input (DIII-D rotation).",
+      "original_pdf_locator": "Sec. 3, pp.5-6, element 6; Sec. 4, Fig. 5",
+      "qualification": "Applies to impurity rotation at DIII-D, not temperature or KSTAR; gives no latency or report-timing data.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "CER rotation is used as a real-time loop input; the source reports no arrival-time or latency numbers.",
+  "validation_if_relevant": "Single-discharge demonstration plus a comparison discharge; no held-out validation.",
+  "forbidden_inferences": [
+    "CES temperature nowcasting has been done",
+    "CER report latency is known",
+    "applies to KSTAR or BES/ECEI",
+    "main-ion physics"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional citation only, as an example of using real-time CER in a control loop. Its topic is error-field control, not temperature estimation.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "eea96927167d1602e0323afa8a0ac349695778850bedf5a72ec862e3175dcebc",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

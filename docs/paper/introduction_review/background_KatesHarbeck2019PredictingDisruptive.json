@@ -1,0 +1,39 @@
+{
+  "key": "KatesHarbeck2019PredictingDisruptive",
+  "citation": {
+    "title": "Predicting disruptive instabilities in controlled fusion plasmas through deep learning",
+    "authors": "Kates-Harbeck, J.; Svyatkovskiy, A.; Tang, W.",
+    "year": 2019,
+    "venue": "Nature",
+    "volume": "568",
+    "pages": "526-531",
+    "doi_or_arxiv": "10.1038/s41586-019-1116-4"
+  },
+  "relevance": "peripheral",
+  "topic": "Disruption prediction on DIII-D and JET with a CNN plus LSTM model, using scalar signals and profiles",
+  "own_question": "Can deep learning give disruption alarms 30 ms before the event, including on a machine not used for training?",
+  "actual_method_and_evidence": "The model is trained on archival shots resampled to a 1 ms grid using the last known value. Signals that are time-centred filtered are shifted so the model sees no future data. Results are offline AUCs compared against gradient-boosted trees and other classical models. There is no CES, ion-temperature, BES or ECEI-voltage nowcasting, and no closed-loop deployment.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Earlier tokamak machine-learning work enforced causality by resampling to the last known value and time-shifting noncausally filtered database signals.",
+      "original_pdf_locator": "Methods, 'Data and preprocessing' and 'Data challenges' (p.7)",
+      "qualification": "This was offline archival preprocessing for disruption alarms. It says nothing about CES report timing.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The target is a disruption label at a 30 ms deadline. This is event forecasting, not current-report nowcasting.",
+  "validation_if_relevant": "Random shot splits are used for DIII-D. JET is evaluated with a carbon-wall to ITER-like-wall split. Cross-machine tests are also reported.",
+  "forbidden_inferences": [
+    "It does not validate CES or impurity Ti nowcasting.",
+    "Its offline AUCs do not imply real-time feasibility for our task.",
+    "It does not show that prior work generally ignored causality.",
+    "Its profile-importance result does not transfer to BES/ECEI incremental information."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional citation only, as a precedent for causal preprocessing of fusion time series. The task, targets and diagnostics differ from our study.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "7bef03756cc1d7170af60910217a040403685c72413e89b0cf4618c67471a15e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

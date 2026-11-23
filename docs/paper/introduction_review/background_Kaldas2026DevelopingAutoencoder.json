@@ -1,0 +1,40 @@
+{
+  "key": "Kaldas2026DevelopingAutoencoder",
+  "citation": {
+    "title": "Developing Autoencoder Models for Multi-Diagnostic Electron Density Processing in Tokamaks within a Scientific Machine Learning Framework",
+    "authors": "S. Kaldas, R. Rossi, I. Wyss, M. Gelfusa, P. Gaudio",
+    "year": 2026,
+    "venue": "Journal of Fusion Energy",
+    "volume": "45",
+    "pages": "26 (article number; 17 pp.)",
+    "doi_or_arxiv": "10.1007/s10894-026-00568-w"
+  },
+  "relevance": "peripheral",
+  "topic": "The paper uses autoencoders to fuse synthetic TS, interferometer and polarimeter electron-density signals in a virtual tokamak (TokaLab).",
+  "own_question": "The authors ask whether multi-diagnostic and supervised autoencoders reduce reconstruction error relative to single-diagnostic models under injected noise and faults.",
+  "actual_method_and_evidence": "The data are 30,000 synthetic equilibria with an analytic n_e(psi) profile, 10% Gaussian noise and 1% zeroed or outlier points. Training used a single random 70/15/15 split. Results are reported as RMSE/MRE against ideal synthetic values. An Int/Pol-to-TS cross-diagnostic mapping is included as a static, same-instant mapping. The reported 0.24 ms per-sample CPU inference is offline benchmarking only, not a deployment.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Synthetic-data autoencoder fusion of electron-density diagnostics has been explored as a route to robustness against noise and faults.",
+      "original_pdf_locator": "Abstract; pp.3-6; Tables 2-4",
+      "qualification": "The study is synthetic and electron-only, uses analytic profiles, and does not involve CES, ion temperature, KSTAR or temporal prediction.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are same-instant snapshots, so there is no causal or temporal dimension. The authors motivate inferring TS between laser pulses, but they do not test this with time series.",
+  "validation_if_relevant": "Validation uses a random split of i.i.d. synthetic samples. No experimental or untouched-campaign data are used.",
+  "forbidden_inferences": [
+    "That the approach applies to CES or impurity Ti.",
+    "That it was validated on real data or deployed in real time.",
+    "That its accuracy transfers to KSTAR.",
+    "That it is causal nowcasting.",
+    "That the 0.24 ms timing is relevant to our 10 ms budget claims."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, cite it as an adjacent example of ML multi-diagnostic fusion. Its target, data and design do not overlap with ours.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 17,
+  "supplied_pdf_sha256": "1d9650265b57e7738c45792c5bedeedf5a910776fe7a4df24bf3d4e8fbdf604b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

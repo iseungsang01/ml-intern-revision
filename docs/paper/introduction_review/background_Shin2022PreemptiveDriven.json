@@ -1,0 +1,39 @@
+{
+  "key": "Shin2022PreemptiveDriven",
+  "citation": {
+    "title": "Preemptive RMP-driven ELM crash suppression automated by a real-time machine-learning classifier in KSTAR",
+    "authors": "Shin, Giwook; Han, H.; Kim, M.; Hahn, S.-H.; Ko, W.H.; et al.",
+    "year": 2022,
+    "venue": "Nuclear Fusion",
+    "volume": "62",
+    "pages": "026035",
+    "doi_or_arxiv": "10.1088/1741-4326/ac412d"
+  },
+  "relevance": "peripheral",
+  "topic": "Real-time LSTM classifier of L/I/H/ELM states in the KSTAR PCS that triggers preprogrammed n=1 RMP; CES Ti profiles are used only offline for comparison.",
+  "own_question": "Can ML-detected L-H transitions trigger preemptive RMP so that initial ELM crashes are suppressed?",
+  "actual_method_and_evidence": "The classifier inputs are D-alpha and line-averaged density, downsampled to 1 kHz. Reported inference is about 800 μs in the PCS. The classifier was validated on 448 of 533 2018-campaign H-mode shots, with about 95% accuracy. Supporting evidence is a few demonstration discharges. CES Ti profiles and pedestal slopes are compared offline. The source does not estimate or nowcast CES.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR, real-time ML inference has been embedded in the PCS. One example is an LSTM state classifier operating at a 1 kHz control cycle.",
+      "original_pdf_locator": "p.3–4, Sec. 2.1–2.2",
+      "qualification": "This is classification of confinement state from D-alpha and density. It does not estimate temperature, does not use BES/ECEI, and does not use CES as an input or a target.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are D-alpha (20 kHz) and interferometer density (10 kHz), downsampled to 1 kHz. Targets are discrete plasma-state labels. CES is used only for post-shot Ti analysis, with profiles averaged within 30 ms.",
+  "validation_if_relevant": "The validation split method and the label provenance are not specified here; they are referenced to prior work.",
+  "forbidden_inferences": [
+    "Do not treat this as prior CES nowcasting or Ti estimation.",
+    "Do not cite its accuracy as relevant to our estimators.",
+    "Do not claim that the CES Ti results apply to our chord or to the 2022 campaign.",
+    "Do not infer CES report latency from this source."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this could serve as a brief citation showing precedent for real-time ML in the KSTAR PCS. It is not otherwise relevant to our target or our inputs.",
+  "bibtex_if_worth_citing": "@article{Shin2022PreemptiveDriven,title={Preemptive RMP-driven ELM crash suppression automated by a real-time machine-learning classifier in KSTAR},author={Shin, Giwook and others},journal={Nuclear Fusion},volume={62},pages={026035},year={2022},doi={10.1088/1741-4326/ac412d}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "965ccb3b74e9a66648d0234ecb618207ed58c947c21e0251a77fc9344adb604e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

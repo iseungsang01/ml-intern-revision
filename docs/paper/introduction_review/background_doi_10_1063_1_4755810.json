@@ -1,0 +1,46 @@
+{
+  "key": "doi_10_1063_1_4755810",
+  "citation": {
+    "title": "High-resolution charge exchange measurements at ASDEX Upgrade",
+    "authors": "E. Viezzer, T. Pütterich, R. Dux, R. M. McDermott, ASDEX Upgrade Team",
+    "year": 2012,
+    "venue": "Review of Scientific Instruments",
+    "volume": "83",
+    "pages": "103501",
+    "doi_or_arxiv": "10.1063/1.4755810"
+  },
+  "relevance": "supporting",
+  "topic": "CXRS hardware upgrades at AUG: impurity Ti, rotation, and density; edge poloidal view; calibration and atomic-physics corrections",
+  "own_question": "How can core and edge impurity CXRS at AUG be upgraded for higher temporal and spatial resolution and accurate edge rotation?",
+  "actual_method_and_evidence": "This is an instrument description. It reports CCD and spectrometer upgrades with exposure times down to 3.5 ms in the core and 1.9–2.2 ms at the edge, plus a new poloidal edge view. Spectra are fitted with multiple Gaussians separating active and passive lines. Wavelength is calibrated shot-to-shot with a neon lamp; uncertainty is reported as <1 km/s. CX cross-section and gyro-motion effects are simulated, and a Zeeman correction factor is applied. Profiles from different systems show reported agreement in Ti. All analysis is offline, from AUG, using B5+, N7+ and C6+ lines. It does not involve KSTAR.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported impurity CES temperatures are model-dependent products. They come from multi-Gaussian spectral fits with instrument-width deconvolution and correction factors, for example for Zeeman splitting.",
+      "original_pdf_locator": "Sec. II (pp.2-3); Sec. V D, Fig. 16 (pp.9-10)",
+      "qualification": "Applies to AUG practice. This supports treating CES reports as conventional labels rather than physical truth. KSTAR processing may differ.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "CXRS integration and repetition times of a few ms are achievable instrumentally; AUG reported 1.9–3.5 ms.",
+      "original_pdf_locator": "Abstract; Sec. II-III (pp.2-5)",
+      "qualification": "These are exposure and repetition times, not latency from measurement to reported value. This source gives no report arrival or availability timing.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Exposure and repetition times only. Analysis latency and report availability are unknown.",
+  "validation_if_relevant": "The source cross-checks between CXRS systems and estimates calibration uncertainty. It contains no predictive or estimator validation.",
+  "forbidden_inferences": [
+    "That CES reports are available in real time",
+    "That AUG timing or uncertainty applies to KSTAR 2022",
+    "That impurity Ti equals main-ion Ti",
+    "That this source addresses nowcasting, BES/ECEI fusion, or NN-CES",
+    "That ELM-synchronized offline averaging is causal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background on how impurity CES temperatures are produced, their correction chain, and achievable exposure times. This motivates treating reports as labels. It is not a predictive-methods precedent.",
+  "bibtex_if_worth_citing": "@article{Viezzer2012RSI,title={High-resolution charge exchange measurements at ASDEX Upgrade},author={Viezzer, E. and P{\\\"u}tterich, T. and Dux, R. and McDermott, R. M. and {ASDEX Upgrade Team}},journal={Rev. Sci. Instrum.},volume={83},pages={103501},year={2012},doi={10.1063/1.4755810}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "9a804d413c7802100537de272f7121c1e830b46e5eaa642ea1b614e35b941b1c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

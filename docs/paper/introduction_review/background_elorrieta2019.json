@@ -1,0 +1,39 @@
+{
+  "key": "elorrieta2019",
+  "citation": {
+    "title": "Discrete-time autoregressive model for unequally spaced time-series observations",
+    "authors": "Elorrieta, F.; Eyheramendy, S.; Palma, W.",
+    "year": 2019,
+    "venue": "Astronomy & Astrophysics",
+    "volume": "627",
+    "pages": "A120",
+    "doi_or_arxiv": "10.1051/0004-6361/201935560"
+  },
+  "relevance": "peripheral",
+  "topic": "Complex irregular autoregressive (CIAR) model for unequally spaced time series. The model uses a state-space representation and Kalman filtering, and is applied to astronomical light curves.",
+  "own_question": "Can a discrete-time irregular AR model capture negative as well as positive autocorrelation, and can it forecast unobserved points?",
+  "actual_method_and_evidence": "The authors fit a complex AR(1) process with a latent imaginary part by Kalman-recursion maximum likelihood. Monte Carlo tests (n=300) use simulated irregular sampling. Applications are residuals of harmonic fits to OGLE/Hipparcos variable-star light curves. One-step forecasts with intervals are shown on an AGN K-band light curve, using an expanding window over the last 10%. The paper reports no fusion diagnostics, no exogenous inputs and no real-time timing.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "State-space autoregressive models with time-varying transition matrices can produce Kalman-filter one-step predictions and intervals for irregularly sampled series. In this model the prediction uncertainty depends on the time gap.",
+      "original_pdf_locator": "Sect. 2.3–2.5, Eqs. (11)–(16); Sect. 4.4",
+      "qualification": "Univariate astronomy demonstration only. It is not evidence for CES nowcasting or for exogenous BES/ECEI inputs. The statement that intervals widen with gap size is the authors' observation about Fig. 7b and was not visually checked here.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Univariate only: past observations are used to forecast the next irregular observation. There are no exogenous inputs, and report-arrival latency is not modeled.",
+  "validation_if_relevant": "Simulations, plus one expanding-window forecast on a single AGN light curve. No held-out-campaign analogue exists.",
+  "forbidden_inferences": [
+    "The paper does not show the model suits plasma or CES data.",
+    "It does not show the model is causal-GP-equivalent or better than hold baselines for our task.",
+    "It does not demonstrate real-time feasibility.",
+    "It does not establish that irregular AR is standard in fusion."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite only optionally, in theoretical background, as an example of Kalman-based modeling of irregular sampling relevant to strictly past, irregular CES reports. It is not needed unless a state-space baseline is discussed. Our project did not implement it.",
+  "bibtex_if_worth_citing": "@article{elorrieta2019,title={Discrete-time autoregressive model for unequally spaced time-series observations},author={Elorrieta, Felipe and Eyheramendy, Susana and Palma, Wilfredo},journal={Astronomy \\& Astrophysics},volume={627},pages={A120},year={2019},doi={10.1051/0004-6361/201935560}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "37ae50526e474ffb461bd77dc91892504b19e219825a1a64c8fc934fe87fd585",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

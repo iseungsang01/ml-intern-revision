@@ -1,0 +1,80 @@
+{
+  "key": "Kim2024KineticProfile",
+  "citation": {
+    "title": "Kinetic profile inference with outlier detection using support vector machine regression and Gaussian process regression",
+    "authors": "Kim M., Ko W.H., Kwak S., Joung S., Lee W., Kim B., Kim D., Lee J.H., Sung C., Na Y.-S., Ghim Y.-C.",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "106052 (13pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ad7304 (this paper's own DOI, PDF p2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-14 (p1 cover; article pp1-13)",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read from rendered pages. The paper does not state the CES impurity species. It gives no runtime numbers."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The GP is a spatial profile regression at a single time slice, not a temporal model.",
+      "verdict": "supported",
+      "source_finding": "The GP is defined over measurement positions in major radius R. It uses a Gibbs kernel with core/edge length scales and pedestal location/width, plus gradient constraints at the axis and wall. Each profile is fitted at one time slice. Hyper-parameters are handled by MAP or by NUTS marginalization.",
+      "locator": "p6 Sec 3.1 Eqs 15-19; p8 Sec 3.3 Eq 25; pp8-10 Sec 4, Figs 6-8",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "GP regression has been applied to KSTAR CES ion-temperature data as a spatial profile fit at individual time slices, with an SVMR screen to remove outliers before fitting [Kim2024].",
+      "qualification": "This describes this paper only. Do not generalize it to all prior GP work."
+    },
+    {
+      "proposed_claim": "KSTAR CES reports contain occasional abrupt outliers caused by spectral-fit failures.",
+      "verdict": "qualify",
+      "source_finding": "Outliers were labelled by hand as abrupt changes in both space and time, using profiles at t0±10 ms. The authors report that such points tend to coincide with poor fits. One shown case is a Levenberg-Marquardt Gaussian fit failure. The authors describe outliers as quite low in number but give no rate. The 120-profile dataset was deliberately balanced, with 60 profiles containing outliers.",
+      "locator": "p3 Sec 1; p5 Sec 2.2; pp11-12 App A, Figs A1-A2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Reported CES temperatures are fitted products, and isolated fit failures can produce abrupt outliers in the reported values [Kim2024].",
+      "qualification": "The causal link rests on a tendency plus one illustrated case. Labelling was subjective and used future frames. No frequency can be cited."
+    },
+    {
+      "proposed_claim": "The method is real-time or causal.",
+      "verdict": "unsupported",
+      "source_finding": "The motivation is automated outlier removal for large offline profile datasets, for example as neural-network training data. MAP is described only qualitatively as fast. No timing or deployment is reported.",
+      "locator": "p3 Sec 1; p7 Sec 3.2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "",
+      "qualification": "Do not cite this paper for latency or online use."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "CES-reported Ti values and their uncertainties at multiple R positions in one time slice, plus imposed gradient priors",
+    "outputs": "Posterior Ti(R) profile and gradient; per-point outlier flags",
+    "causal_or_offline": "Offline, spatial, within a single frame. Outlier labelling used neighbouring past and future frames.",
+    "source_diagnostic_as_input": "Yes. The CES reports are both the input and the fitted quantity.",
+    "reported_vs_physical_truth": "The paper works with reported Ti. There is no independent truth, and outlier labels involve subjective judgement (App A)."
+  },
+  "validation": {
+    "split_unit": "Profiles: 120 from 2017-2022, randomly split 84/36 (7:3). Test F1 0.857, precision 0.783, recall 0.947 (p5 Sec 2.3; p6 Table 2).",
+    "temporal_order": "Not preserved; the split was random across campaigns.",
+    "independent_truth": "None.",
+    "unknowns": "Whether frames from the same shot appear in both training and test sets. Population outlier rate. Performance on a single chord or a single campaign."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing timed.",
+    "what_not_established": "Latency, real-time feasibility, deployment.",
+    "locator": "p7 Sec 3.2 (qualitative statement only)"
+  },
+  "forbidden_inferences": [
+    "Citing an outlier rate",
+    "Transferring the SVMR F1 to our chord or to 2022 data",
+    "Treating CES Ti as physical truth",
+    "Assuming the impurity is carbon based on this paper",
+    "Treating this GP as a causal nowcaster",
+    "Claiming all KSTAR GP work is spatial",
+    "Claiming the CES routine is now fixed (authors say only that it is being improved)"
+  ],
+  "competing_or_complementary": "Complementary. It is an offline spatial cleaner and profile fitter. It could motivate robustness of the reported label in our setting. It is not a comparator for causal temporal nowcasting, and it does not show that hold or causal-GP baselines fail.",
+  "bibtex": "@article{Kim2024KineticProfile,author={Kim, Minseok and Ko, W. H. and Kwak, Sehyun and Joung, Semin and Lee, Wonjun and Kim, B. and Kim, D. and Lee, J. H. and Sung, Choongki and Na, Yong-Su and Ghim, Y.-C.},title={Kinetic profile inference with outlier detection using support vector machine regression and {G}aussian process regression},journal={Nuclear Fusion},volume={64},pages={106052},year={2024},doi={10.1088/1741-4326/ad7304}}",
+  "followup_sources_if_material": [
+    "Ko et al. 2010, KSTAR CES system papers [55,56]: check the impurity species and CES time resolution before citing the 10 ms value mentioned on p5",
+    "Chilenski et al. 2015, Nucl. Fusion 55 023012 [34]: Gibbs-kernel GP with hyper-parameter marginalization (a cited work; its DOI is not given here)"
+  ]
+}

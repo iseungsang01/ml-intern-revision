@@ -1,0 +1,38 @@
+{
+  "key": "Saravanan2020Hierarchical",
+  "citation": {
+    "title": "Application of the hierarchical bootstrap to multi-level data in neuroscience",
+    "authors": "Varun Saravanan; Gordon J. Berman; Samuel J. Sober",
+    "year": 2020,
+    "venue": "bioRxiv preprint (version posted April 28, 2020)",
+    "volume": null,
+    "pages": "1-20",
+    "doi_or_arxiv": "10.1101/819334"
+  },
+  "relevance": "peripheral",
+  "topic": "Hierarchical (cluster) bootstrap for nested, non-independent data; neuroscience examples. Not about plasma, CES, or nowcasting.",
+  "own_question": "Does sequential resampling over hierarchy levels control Type-I error and retain power, compared with pooled, summarized, and LMM analyses?",
+  "actual_method_and_evidence": "Poisson-firing simulations with subject-level Gaussian offsets. Pooled t-tests showed inflated false positives (about 46% to 96%). The hierarchical bootstrap stayed near 5% for clustered data but was conservative for independent data. It had more power than summarizing in small-N settings. Real reanalyses used songbird and fly datasets. Its pboot is described by the authors as a direct hypothesis probability; that is the authors' interpretation, not established fact.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "When samples are nested within clusters (e.g., many frames per shot), treating them as independent can understate uncertainty. Shot-level (cluster) resampling is one way to account for this.",
+      "original_pdf_locator": "pp.5-7, Sec. 2.5 Eq. 2 (design effect); Sec. 3.1.1, Fig. 2",
+      "qualification": "The evidence comes from neuroscience simulations, not plasma data. Applying shot-level resampling to our uncertainty estimates would be our own methodological choice.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable.",
+  "validation_if_relevant": "Simulation false-positive and power curves only. There are no temporal holdouts.",
+  "forbidden_inferences": [
+    "Do not cite as evidence on CES/BES/ECEI or nowcast accuracy.",
+    "Do not present pboot as a validated posterior probability.",
+    "Do not claim the bootstrap is unbiased in all cases; it was conservative for independent data."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional methods citation, usable only if we report shot-clustered bootstrap intervals. It is irrelevant to the introduction's physics framing.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 20,
+  "supplied_pdf_sha256": "9cf572a48bb07570dd8dcd9aae6bc26ed5b8dcb0d6909b7d05534b315ac0841a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,38 @@
+{
+  "key": "doi_10_1088_1741_4326_ac4868",
+  "citation": {
+    "title": "Integrated control of individual plasma scalars with simultaneous neoclassical tearing-mode suppression",
+    "authors": "Pajares A., Schuster E., Thome K.E., Welander A.S., Barr J.L., Eidietis N.W., Humphreys D.A.",
+    "year": 2022,
+    "venue": "Nuclear Fusion",
+    "volume": "62",
+    "pages": "036018",
+    "doi_or_arxiv": "10.1088/1741-4326/ac4868"
+  },
+  "relevance": "peripheral",
+  "topic": "DIII-D integrated feedback control architecture with supervisory/exception handling and optimization-based actuator management. It controls W, volume-average rotation, q0, qe and NTM island width.",
+  "own_question": "Can individual-scalar controllers and NTM-suppression controllers share NBI, ECH&CD and Ip actuators through real-time optimization? The tests use COTSIM simulations and one FF-only/FF+FB DIII-D shot pair (185362, 185374).",
+  "actual_method_and_evidence": "The controllers are Lyapunov-based robust controllers built on 0D models. Arbitration uses a slack-variable optimization weighted by priorities. The paper assumes real-time estimates of W, Ωφ, q and w exist from reconstruction. It does not address nowcasting of CES ion temperature or diagnostic latency. The experimental evidence is one FF-only and one FF+FB shot in a high-qmin scenario. In those shots, q0 controllability was low and the ECCD was mis-steered because of a PCS setup issue. The authors judged the observed modes to be likely TMs rather than NTMs.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Integrated tokamak control architectures assume that real-time estimates of plasma state quantities are available to feedback controllers.",
+      "original_pdf_locator": "Sec. 2 and Sec. 4.1.1 (p.4, p.6)",
+      "qualification": "The estimated quantities here are W, rotation, q and island width. The paper says nothing about CES Ti or impurity temperature. Treat it as motivation only. It does not show that a nowcast would improve control.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "No CES, BES or ECEI inputs. The only timing information given is the feedback filter cutoff and that rotation measurements require NBI modulation. Report latency is unknown.",
+  "validation_if_relevant": "Validation is a single shot comparison plus simulation. It does not use held-out data splits.",
+  "forbidden_inferences": [
+    "Do not imply that this paper used CES nowcasts or needs them.",
+    "Do not cite it as evidence that a temperature nowcast improves control performance.",
+    "Do not generalize this paper's measurement assumptions to all integrated control work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, cite it once as an optional application context: control systems consume real-time state estimates. It has no bearing on our estimator, inputs, targets or validation.",
+  "bibtex_if_worth_citing": "@article{Pajares2022NF,title={Integrated control of individual plasma scalars with simultaneous neoclassical tearing-mode suppression},author={Pajares, A. and Schuster, E. and Thome, K.E. and Welander, A.S. and Barr, J.L. and Eidietis, N.W. and Humphreys, D.A.},journal={Nucl. Fusion},volume={62},pages={036018},year={2022},doi={10.1088/1741-4326/ac4868}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 23,
+  "supplied_pdf_sha256": "b0c61a0c51c948bce76fe3c7b2dac33eeefcd2a6213e21d3f2b9e74dd65ba078",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

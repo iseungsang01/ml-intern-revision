@@ -1,0 +1,46 @@
+{
+  "key": "Young2008PlasmaMeasurements_PPPL-4276",
+  "citation": {
+    "title": "Plasma Measurements: An Overview of Requirements and Status",
+    "authors": "K. M. Young",
+    "year": 2008,
+    "venue": "Princeton Plasma Physics Laboratory Report PPPL-4276 (FS&T Chapter 1 preprint)",
+    "volume": "",
+    "pages": "",
+    "doi_or_arxiv": "10.2172/960426 (identifier hint for the PPPL report, OSTI 960426; not verified from the extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Review of tokamak diagnostic requirements, the complementarity of diagnostics, and the use of measurements for control.",
+  "own_question": "Which plasma measurements, at what quality, are needed for physics and control, especially for ITER/burning plasmas, and which techniques provide them?",
+  "actual_method_and_evidence": "Narrative review. Requirement tables are derived mainly from ITER specifications, and the edge table is attributed to FIRE. The review cites prior device results. It contains no new data analysis, no CES nowcasting, and no KSTAR material.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Charge-exchange recombination spectroscopy (CXRS) using impurity line Doppler width and shift is a workhorse method for ion temperature and rotation. It depends on neutral beams, and the review lists it as continuous during the beam pulse.",
+      "original_pdf_locator": "Sec. II.A (p.11); Sec. II.F (p.25); Table I (p.52 of PDF)",
+      "qualification": "The measured temperature is the impurity ion temperature, not the main-ion temperature. The tabulated values (for example a/30 spatial and 10 ms temporal resolution) are requirements, not achieved performance.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Different diagnostics have complementary physics and timing characteristics: continuous, pulsed, or swept; local or line-integrated. Measurements increasingly feed real-time control.",
+      "original_pdf_locator": "Sec. I (pp.5-6); Sec. III and Table VII (pp.27-29, 59 of PDF)",
+      "qualification": "This is a general rationale only. The review does not show that beam emission spectroscopy (BES) or electron cyclotron emission imaging (ECEI) can inform ion temperature.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The review gives no CES report latency or arrival times. The 10 ms figures are requirements only.",
+  "validation_if_relevant": "None.",
+  "forbidden_inferences": [
+    "The review demonstrates that BES or ECEI predicts CES ion temperature.",
+    "The 10 ms requirement has been achieved on KSTAR.",
+    "CES impurity temperature equals the main-ion temperature or the physical truth.",
+    "Prior work is all noncausal.",
+    "The review supports a real-time deployment of our method."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Suitable as a general background citation for the roles of CXRS, diagnostic complementarity, and diagnostics in control. It is not direct evidence for our task.",
+  "bibtex_if_worth_citing": "@techreport{Young2008PPPL4276,title={Plasma Measurements: An Overview of Requirements and Status},author={Young, Kenneth M.},institution={Princeton Plasma Physics Laboratory},number={PPPL-4276},year={2008},doi={10.2172/960426}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 60,
+  "supplied_pdf_sha256": "e4472c2de1f554e353a5f8807c3868297144fafa1836e6fa1d4783dfbd0b8519",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

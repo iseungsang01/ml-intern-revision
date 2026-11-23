@@ -1,0 +1,32 @@
+{
+  "key": "Zheng2024RealtimeEquilibrium",
+  "citation": {
+    "title": "Real-time equilibrium reconstruction by multi-task learning neural network based on HL-3 tokamak",
+    "authors": "G.H. Zheng, Z.Y. Yang, S.F. Liu, R. Ma, X.W. Gong, A. Wang, S. Wang, W.L. Zhong",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "126041",
+    "doi_or_arxiv": "10.1088/1741-4326/ad8014"
+  },
+  "relevance": "peripheral",
+  "topic": "Neural-network surrogate of offline EFIT magnetic equilibrium reconstruction on HL-3; multi-task outputs (8 shape/q parameters, 129x129 flux and current density).",
+  "own_question": "Can a fast NN reproduce offline EFIT outputs from 68 magnetic channels at sub-millisecond inference?",
+  "actual_method_and_evidence": "Supervised regression on 1159 HL-3 shots. Shot-ordered splits: 70% train, 20% validation used for model selection, 10% test. Labels are offline EFIT outputs, not independent truth. Reported inference times are 0.08–0.45 ms on an A100 with TensorRT, not measured in a control loop. Extrapolation was tested by shot number and by plasma current. No CES, BES/ECEI, ion temperature, or temporal nowcasting.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Same-time-slice magnetic inputs map to same-slice EFIT outputs; no causal temporal structure and no report latency.",
+  "validation_if_relevant": "Chronological shot split, with validation reused for selection. Current-interval extrapolation and a small augmentation experiment using later shots are reported; no real-time deployment.",
+  "forbidden_inferences": [
+    "Do not cite as evidence for CES/ion-temperature nowcasting or BES/ECEI utility.",
+    "Do not treat its sub-ms GPU timing as real-time deployment or as relevant to our 10 ms grid.",
+    "Do not present EFIT-label agreement as physical truth.",
+    "Do not generalize it to claim all prior ML equilibrium work is single-task or noncausal."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Different quantity, diagnostics and task. At most, it could serve as one example of NN surrogates for offline codes evaluated with shot-chronological splits. Optional; likely exclude.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "4e2756e7ae03f6d1d3b7674d5f5d95d1af56097d7fdce8a5cb5bf2bb38b61510",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

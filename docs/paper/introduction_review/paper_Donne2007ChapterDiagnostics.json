@@ -1,0 +1,80 @@
+{
+  "key": "Donne2007ChapterDiagnostics",
+  "citation": {
+    "title": "Chapter 7: Diagnostics",
+    "authors": "Donné A.J.H., Costley A.E., Barnsley R., et al. and the ITPA Topical Group on Diagnostics",
+    "year": 2007,
+    "venue": "Nuclear Fusion",
+    "volume": "47",
+    "pages": "S337–S384",
+    "doi_or_arxiv": "10.1088/0029-5515/47/6/S07 (this paper's DOI, from the p.2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1–49 (p.1 is a download cover; article pp.2–49)",
+    "full_pdf_supplied": true,
+    "limitations": "Table 7 assigns status by colour, and the extracted text loses the colour key, so the assessed status of each row cannot be read. ITER design and requirements review only; no estimator, dataset or KSTAR content."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Edge ion temperature requirement: 100 ms, 10%, with a defined spatial range.",
+      "verdict": "qualify",
+      "source_finding": "Row 28 sets edge Ti at r/a>0.9: range 0.05–10 keV, 100 ms time resolution, 10% accuracy, spatial resolution TBD. Core Ti at r/a<0.9: 0.5–40 keV, 100 ms, a/10, 10%.",
+      "locator": "PDF p.9 (S344), Table 2 cont., measurement 28",
+      "kind": "requirement",
+      "allowed_intro_sentence": "ITER diagnostic specifications list edge ion temperature (r/a>0.9) at 100 ms time resolution and 10% accuracy, with spatial resolution still to be determined [Donné 2007].",
+      "qualification": "These are ITER targets, not KSTAR requirements and not achieved performance. The edge spatial resolution is TBD, so no number should be cited for it. Do not equate a pedestal-top chord with r/a>0.9 unless this is shown separately."
+    },
+    {
+      "proposed_claim": "Role of Ti in control.",
+      "verdict": "qualify",
+      "source_finding": "Table 1 lists core Ti as a control measurement from the D/T phase onward, and core Ti(r) for evaluation. Steady-state control adds high-resolution Te/Ti gradient measurements. The text suggests ITB control may work better on Te/Ti/rotation gradients than on q. Edge Ti is not given an explicit control role.",
+      "locator": "PDF p.6 (S341) Table 1; PDF p.5 (S340) §2.1.2; PDF p.17 (S352) §3.4",
+      "kind": "requirement",
+      "allowed_intro_sentence": "ITER planning treats core ion temperature and, for advanced scenarios, ion-temperature gradients as candidate control quantities, for example for transport-barrier control [Donné 2007].",
+      "qualification": "Gradient control is stated as plausible ('may be more successful'), not demonstrated. Do not attribute an edge-Ti control role to this source."
+    },
+    {
+      "proposed_claim": "Carbon charge-exchange spectroscopy is a planned basis for Ti.",
+      "verdict": "supported",
+      "source_finding": "The authors state that ITER Ti will rely on the C VI charge-exchange spectrum. They expect S/N above 30 near the axis, extrapolated from JET data. Passive x-ray crystal spectroscopy is presented as a complementary Ti method.",
+      "locator": "PDF pp.17–18 (S352–S353), §3.4",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Charge-exchange spectroscopy on intrinsic carbon is a planned primary route to ion temperature on ITER [Donné 2007].",
+      "qualification": "The S/N figure is a projection, not a measurement. CES-derived Ti remains a reported diagnostic quantity, not independent truth."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable",
+    "outputs": "not_applicable",
+    "causal_or_offline": "not_applicable",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "The paper discusses consistency cross-checks (Fig.9, p.17) and possible ECE/Thomson disagreement under distorted distributions (p.15). It does not treat any diagnostic as ground truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "How the Table 2 numbers were derived is only referenced, to [7] and [11]."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing. These are specifications and design status.",
+    "what_not_established": "Any latency or real-time Ti delivery. The 100 ms figure is a resolution target, not a computation budget.",
+    "locator": "PDF p.9 Table 2"
+  },
+  "forbidden_inferences": [
+    "that the ITER 100 ms/10% targets apply to KSTAR or to our chord",
+    "that our 10 ms grid 'meets' or 'exceeds' an ITER requirement",
+    "that edge Ti is specified as a control input",
+    "that the Te justification in Table 3 (10 ms) applies to Ti",
+    "that the ITER CXRS performance is demonstrated",
+    "that CES labels are physical truth",
+    "that the edge spatial resolution is specified"
+  ],
+  "competing_or_complementary": "Complementary motivation. It provides context for why Ti and its gradients matter and how often they are needed. It neither proposes nor evaluates nowcasting.",
+  "bibtex": "@article{Donne2007ChapterDiagnostics,\n title={Chapter 7: Diagnostics},\n author={Donn{\\'e}, A. J. H. and Costley, A. E. and Barnsley, R. and others},\n journal={Nuclear Fusion},\n volume={47},\n number={6},\n pages={S337--S384},\n year={2007},\n doi={10.1088/0029-5515/47/6/S07}\n}",
+  "followup_sources_if_material": [
+    "ITER Physics Expert Group on Diagnostics 1999 Nucl. Fusion 39 2541 (ref [7], origin of the requirements)",
+    "von Hellermann M. et al 2004 Rev. Sci. Instrum. 75 3458 (ref [98], ITER CXRS performance); the DOIs of these cited papers are not given in this PDF"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "key": "Ogawa1988DeterminationTemperature",
+  "citation": {
+    "title": "Determination of Ion Temperature and Toroidal Rotation Velocity via Charge-Exchange Recombination Spectroscopy",
+    "authors": "Hiroaki Ogawa; Yukitoshi Miura; Satoshi Kasai",
+    "year": 1988,
+    "venue": "Japanese Journal of Applied Physics",
+    "volume": "27",
+    "pages": "808-815",
+    "doi_or_arxiv": "unknown (not printed in supplied PDF)"
+  },
+  "relevance": "supporting",
+  "topic": "Early CXRS measurement of ion temperature and toroidal rotation on JFT-2M from H-alpha and C VI (n=7-6) lines during NBI",
+  "own_question": "Can CXRS give localized, time-resolved Ti and relative rotation in JFT-2M?",
+  "actual_method_and_evidence": "Single-monochromator, photomultiplier, shot-to-shot wavelength scans. H-alpha required bi-Gaussian unfolding of cold and hot components. C VI profiles were fitted with a single Gaussian at r=0 and ±0.1 m. C VI Ti agreed with NPA within the stated error after a fine-structure correction. Relative rotation saturated near 5.4e4 m/s at the center. Profiles required 10-15 discharges. The authors also report an instrumental 0.3 ms amplifier response, but data were plotted at 5 ms intervals.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Carbon CXRS infers impurity-ion temperature from Doppler width of a charge-exchange-excited C VI line, localized at beam-sightline intersection; this underlies conventional CES labels.",
+      "original_pdf_locator": "p.808 §1; p.812-813 §3.2, Fig.11",
+      "qualification": "Measures C6+ temperature; equating with main-ion Ti is an assumption. Shown on JFT-2M, not KSTAR.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Reported CES temperature depends on processing choices (instrument width, l-mixing fine-structure correction, Gaussian fit), so labels are processed estimates rather than independent truth.",
+      "original_pdf_locator": "p.814 §4",
+      "qualification": "Correction factors were taken from cited prior work. Cross-check against NPA agreed within error, with CXRS somewhat lower, which the authors attribute to plasma shift.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline, multi-shot profile assembly. No real-time reporting, no report latency, and no BES/ECEI. The 0.3 ms figure is amplifier response, not report availability.",
+  "validation_if_relevant": "Comparison with NPA within experimental error only; no statistical split.",
+  "forbidden_inferences": [
+    "CES report latency on KSTAR",
+    "carbon Ti equals main-ion Ti",
+    "CXRS is real-time or online",
+    "NPA is independent ground truth",
+    "support for nowcasting performance",
+    "DOIs of cited references belong to this paper"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "A historical, concrete basis for carbon CES Ti labels and their processing-dependence. It is background only; it does not bear on nowcasting.",
+  "bibtex_if_worth_citing": "@article{Ogawa1988,title={Determination of Ion Temperature and Toroidal Rotation Velocity via Charge-Exchange Recombination Spectroscopy},author={Ogawa, Hiroaki and Miura, Yukitoshi and Kasai, Satoshi},journal={Japanese Journal of Applied Physics},volume={27},number={5},pages={808--815},year={1988}}",
+  "supplied_source_mode": "full_original_pdf",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "5a0b414f9625042ad98f570eee387b8aebb8c6ef139eeb2c721ee26e0b21a307",
+  "source_scope_note": "Original PDF supplied including all pages"
+}

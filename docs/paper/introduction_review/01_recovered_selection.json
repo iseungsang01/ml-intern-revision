@@ -1,0 +1,431 @@
+{
+  "screening_method": "Screened every supplied record from its key, citation/identifier hint, page count and first-pages excerpt only (title, abstract, opening paragraphs). This is not full-text reading: any claim that depends on a method section, table, figure or page number is listed under source_limited_claims and must be confirmed in the full-PDF audit. Excerpts were treated as untrusted data, and text inside them was not followed as instruction. Selection favoured (a) direct measurement or estimation papers closest to the task (charge-exchange report production, modulation-free and real-time spectrum readers, fast-to-slow diagnostic reconstruction, multi-rate observers, missing-sensor reconstruction), (b) a few primary physics and requirement sources, and (c) a minimal set of estimator/validation references. Reviews of 100+ pages, generic ML papers and off-topic tokamak work were excluded as groups. Duplicate records of one work (journal vs report/preprint) were reduced to the journal version. DOIs visible inside 'You may also like' panels or reference lists were not taken as the source's own DOI. Metadata oddities to resolve: key 'Imrek2026TemporalSuperresolution' shows first author 'Imrisek' in the excerpt; Tian2026RealTimeCxrs and Jia2026TimeSeries show volume year 2027 in the excerpt; Chai2019FastEstimation is the only EAST charge-exchange reader in the corpus. Current-introduction keys Hu2026RealTimeIon, Wang2026FusingGlobal and rasmussen2006 have no corpus record and are unresolved.",
+  "selected": [
+    {
+      "key": "Lee2026NeuralNetworkbased",
+      "priority": 1,
+      "role": "Local upstream spectrum reader (KSTAR NN-CES)",
+      "why_full_read": "Central to the upstream/downstream framing; the excerpt describes background estimation by interpolating between preceding and succeeding beam-off intervals and prediction of Ti and toroidal rotation from raw spectra without modulation.",
+      "proposed_claim_to_check": "Exact inputs and outputs; whether agreement with modulation analysis declines toward the edge and at what radius (the current intro's R >~ 2.2 m is not visible in the excerpt); whether real-time operation was demonstrated or only called a potential; whether the training labels are the conventional modulation results."
+    },
+    {
+      "key": "Lee2020TwoGaussian",
+      "priority": 1,
+      "role": "KSTAR conventional beam-modulation analysis and modulation-free two-Gaussian fit",
+      "why_full_read": "Defines how the reports used as labels are produced on KSTAR.",
+      "proposed_claim_to_check": "How the background is obtained under modulation (which beam-off frames); stated accuracy and validity range of the two-Gaussian fit, especially at the edge."
+    },
+    {
+      "key": "Ko2010ChargeExchange",
+      "priority": 1,
+      "role": "KSTAR CES instrument and calibration",
+      "why_full_read": "Primary instrument reference for the measured chord.",
+      "proposed_claim_to_check": "Measured line (C VI 529 nm), separate background view, calibration procedure, channel layout; whether it supports the statement that CES provides Ti from Doppler width on KSTAR."
+    },
+    {
+      "key": "Chrystal2026RealTime",
+      "priority": 1,
+      "role": "Real-time simplified-fit charge-exchange analysis in a plasma control system (DIII-D)",
+      "why_full_read": "Closest operational real-time reader; the current intro claims lower accuracy on edge views.",
+      "proposed_claim_to_check": "Whether edge views are reported as less accurate than core views (not in the excerpt); latency and cadence as stated; what 'within 20% of the most accurate automatic analysis' refers to."
+    },
+    {
+      "key": "Tian2026RealTimeCxrs",
+      "priority": 1,
+      "role": "Recent neural-network CXRS reader (HL-3) with uncertainty and transfer learning",
+      "why_full_read": "Recent competitor among spectrum readers.",
+      "proposed_claim_to_check": "Whether real-time deployment was run or only inference speed measured; label source; edge behaviour; publication year/volume metadata."
+    },
+    {
+      "key": "Chai2019FastEstimation",
+      "priority": 2,
+      "role": "EAST neural-network CXRS reader",
+      "why_full_read": "Only EAST charge-exchange reader in the corpus; replaces the unresolved Hu2026RealTimeIon.",
+      "proposed_claim_to_check": "Two central chords only? Trained on conventional-fit labels? Offline feasibility study versus real-time implementation."
+    },
+    {
+      "key": "Bishop1993AutomaticAnalysis",
+      "priority": 2,
+      "role": "Early neural-network analysis of JET charge-exchange spectra",
+      "why_full_read": "Establishes that spectrum-reading networks are long-standing, so no algorithmic priority is implied.",
+      "proposed_claim_to_check": "Scope (approximate solution, initial guess for least squares); any real-time implementation claimed."
+    },
+    {
+      "key": "Svensson1999AnalysisJet",
+      "priority": 2,
+      "role": "JET neural-network charge-exchange analysis with confidence measures",
+      "why_full_read": "Abstract mentions a real-time Ti profile diagnostic demonstration.",
+      "proposed_claim_to_check": "What was demonstrated in real time; treatment of passive edge emission; error-bar method."
+    },
+    {
+      "key": "Haskey2026MachineLearning",
+      "priority": 2,
+      "role": "ML spectral fitting and correction for main-ion charge exchange (DIII-D)",
+      "why_full_read": "Recent reader for a different (main-ion) spectrum; guards against over-generalising about readers.",
+      "proposed_claim_to_check": "Whether real-time use is claimed or only fast bulk analysis; stated agreement with least-squares fits; pedestal-top correction sizes."
+    },
+    {
+      "key": "Yoshida2009RealTime",
+      "priority": 2,
+      "role": "Real-time charge-exchange Ti profile used in feedback (JT-60U)",
+      "why_full_read": "Shows charge-exchange Ti has been used for control, motivating timeliness.",
+      "proposed_claim_to_check": "Controlled quantity (Ti gradient over r/a ~0.25-0.5 per abstract), cycle time, radial points; whether any edge/pedestal chord was used."
+    },
+    {
+      "key": "Jang2021DevelopmentUltrafast",
+      "priority": 2,
+      "role": "KSTAR ultrafast CES hardware (UFCES)",
+      "why_full_read": "Hardware route that raises the measurement rate; must be described accurately as complementary.",
+      "proposed_claim_to_check": "Design/simulation versus measured plasma data; number of radial positions; stated time resolution is simulated."
+    },
+    {
+      "key": "Fonck1984DeterminationPlasma",
+      "priority": 2,
+      "role": "Primary physics of charge-exchange recombination spectroscopy",
+      "why_full_read": "Primary source for the Doppler-width principle and known line-profile distortions.",
+      "proposed_claim_to_check": "Statement of the principle; listed effects that can distort profiles (fine structure, l-mixing, plume)."
+    },
+    {
+      "key": "Viezzer2011PassiveEdge",
+      "priority": 2,
+      "role": "Passive edge emission in carbon charge-exchange spectra (ASDEX Upgrade)",
+      "why_full_read": "Supports the statement that edge spectra carry background components that complicate analysis.",
+      "proposed_claim_to_check": "Whether the paper quantifies impact on derived Ti or only models the passive line; transferability claims."
+    },
+    {
+      "key": "Haskey2018MainIon",
+      "priority": 2,
+      "role": "Main-ion versus carbon impurity edge temperature and rotation differences (DIII-D)",
+      "why_full_read": "Supports treating carbon CES values as conventional labels rather than the bulk-ion temperature.",
+      "proposed_claim_to_check": "Size and location of D+ versus C6+ temperature difference (abstract: at the separatrix); whether a difference is reported at the pedestal top."
+    },
+    {
+      "key": "Kim2024KineticProfile",
+      "priority": 1,
+      "role": "KSTAR CES Ti profile inference with outlier detection (SVM regression + GP)",
+      "why_full_read": "Documents outliers in KSTAR CES data and is the local GP reference; likely a two-sided (profile, not causal) method.",
+      "proposed_claim_to_check": "Whether the GP is spatial (profile) rather than temporal; nature and frequency of outliers; any real-time claim."
+    },
+    {
+      "key": "Young2008PlasmaMeasurements",
+      "priority": 1,
+      "role": "Measurement requirements overview",
+      "why_full_read": "Current intro cites p. 288 and table III for the 10 ms edge figure, attributed to FIRE.",
+      "proposed_claim_to_check": "Exact table entries for edge ion temperature (time resolution, accuracy) and which device study they come from; journal version versus PPPL-4276 pagination."
+    },
+    {
+      "key": "Donne2007ChapterDiagnostics",
+      "priority": 1,
+      "role": "ITER diagnostics requirements",
+      "why_full_read": "Current intro attributes 100 ms and 10% for edge ion temperature to this chapter.",
+      "proposed_claim_to_check": "Exact requirement row for (edge) ion temperature: time resolution, accuracy, spatial range; its role in control."
+    },
+    {
+      "key": "Snyder2011FirstPrinciples",
+      "priority": 3,
+      "role": "Primary physics: pedestal height and global performance",
+      "why_full_read": "Supports the opening sentence on why the pedestal top matters.",
+      "proposed_claim_to_check": "The statement concerns pedestal pressure height, not Ti specifically; check wording so the intro does not over-attribute."
+    },
+    {
+      "key": "Viezzer2018IonHeat",
+      "priority": 2,
+      "role": "Edge ion heat transport during ELM cycles with sub-ms edge Ti",
+      "why_full_read": "Shows pedestal Ti changes on short time scales and is physically consequential.",
+      "proposed_claim_to_check": "Time scales of Ti change and recovery; measurement technique and its time resolution."
+    },
+    {
+      "key": "Ko2015IonTemperature",
+      "priority": 2,
+      "role": "KSTAR Ti and toroidal-rotation pedestal measured by CES",
+      "why_full_read": "Local evidence that KSTAR CES resolves a Ti pedestal and its evolution across transitions and ELMs.",
+      "proposed_claim_to_check": "CES time resolution used; pedestal-top location; behaviour across L-H/H-L and with RMP."
+    },
+    {
+      "key": "Shousha2023MachineLearningbased",
+      "priority": 1,
+      "role": "RTCAKENN: real-time kinetic profile reconstruction including carbon Ti (DIII-D)",
+      "why_full_read": "Inconvenient close prior: outputs an ion temperature profile and runs without charge-exchange data.",
+      "proposed_claim_to_check": "Whether it is memoryless; accuracy of Ti specifically when CER inputs are dropped; how edge Ti is defined in the training target (the current intro's claim that it is extrapolated from Te is not in the excerpt)."
+    },
+    {
+      "key": "Jalalvand2025MultimodalSuperresolution",
+      "priority": 1,
+      "role": "Diag2Diag: fast diagnostics reconstruct a slow diagnostic (Thomson scattering)",
+      "why_full_read": "Closest competitor in construction (fast-to-slow diagnostic fusion).",
+      "proposed_claim_to_check": "Inputs (ECE, interferometer, others), target (TS Te/ne only?), causality of inference, validation design, any ion quantity."
+    },
+    {
+      "key": "Imrek2026TemporalSuperresolution",
+      "priority": 1,
+      "role": "COMPASS temporal super-resolution of Te/ne from fast radiation diagnostics",
+      "why_full_read": "Direct fast-diagnostic-to-slow-profile prior in PPCF.",
+      "proposed_claim_to_check": "Whether past slow measurements are used as inputs; causal or not; edge error figures; discharge-level validation split; correct author spelling for the key."
+    },
+    {
+      "key": "Yang2026FusionmaeSelfsupervised",
+      "priority": 2,
+      "role": "Self-supervised model inferring missing diagnostic signals (HL-3)",
+      "why_full_read": "Missing-sensor prior ('virtual backup diagnosis').",
+      "proposed_claim_to_check": "Which signals are reconstructed, whether any ion temperature or charge-exchange channel is included, and how the stated accuracy is defined."
+    },
+    {
+      "key": "Wang2025TimeSeries",
+      "priority": 2,
+      "role": "Time-series regression reconstructing missing electron temperature (EAST)",
+      "why_full_read": "Missing-diagnostic reconstruction with a time-series model.",
+      "proposed_claim_to_check": "Offline or real-time; causal inputs; validation design and the meaning of the stated confidence level."
+    },
+    {
+      "key": "Abbate2021DatadrivenProfile",
+      "priority": 2,
+      "role": "Data-driven profile prediction from actuators and state history (DIII-D)",
+      "why_full_read": "Forecasting counterpart; needed to separate nowcasting a report from forecasting a future state.",
+      "proposed_claim_to_check": "Predicted profiles (does it include Ti?), horizon, inputs, and train/test separation."
+    },
+    {
+      "key": "Pastore2023ModelBased",
+      "priority": 1,
+      "role": "Multi-rate model-based observer (TCV electron density)",
+      "why_full_read": "Closest multi-rate state-estimation prior: slow Thomson and fast interferometry merged with a transport model.",
+      "proposed_claim_to_check": "Actual rates of observer and Thomson system (the current intro's 1 kHz/60 Hz are not in the excerpt); offline versus real-time results; estimated quantity."
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel",
+      "priority": 2,
+      "role": "Real-time application of the multi-rate density observer in control (TCV)",
+      "why_full_read": "Shows a multi-rate observer in closed-loop use; journal version chosen over the arXiv duplicate.",
+      "proposed_claim_to_check": "What was run in real time; handling of diagnostic faults; differences between journal and preprint versions."
+    },
+    {
+      "key": "Morosohk2023RealTime",
+      "priority": 2,
+      "role": "Observer for electron temperature profile with neural-network surrogates (DIII-D)",
+      "why_full_read": "Observer prior; the current intro claims it takes Ti as a multiple of Te.",
+      "proposed_claim_to_check": "Treatment of Ti in the model; offline tests versus real-time implementation (abstract says offline tests)."
+    },
+    {
+      "key": "Joung2018ImputationFaulty",
+      "priority": 3,
+      "role": "KSTAR real-time imputation of missing magnetic signals (Bayesian + GP)",
+      "why_full_read": "Local missing-sensor prior with a real-time constraint.",
+      "proposed_claim_to_check": "What 'real time' means (computation time versus deployment); number of missing signals handled."
+    },
+    {
+      "key": "Lampert2015CombinedHydrogen",
+      "priority": 2,
+      "role": "KSTAR BES instrument",
+      "why_full_read": "Instrument reference for one of the fast predictor diagnostics.",
+      "proposed_claim_to_check": "Channel geometry, bandwidth, what the signal measures (beam emission related to density); dependence on the heating beam."
+    },
+    {
+      "key": "Yun2014Quasi3d",
+      "priority": 2,
+      "role": "KSTAR ECEI instrument",
+      "why_full_read": "Instrument reference for the second fast predictor diagnostic.",
+      "proposed_claim_to_check": "Field of view, resolution, whether absolute calibration is provided (supports treating signals as uncalibrated voltages)."
+    },
+    {
+      "key": "Vanovac2018EffectsDensity",
+      "priority": 2,
+      "role": "Interpretation limits of ECEI at the plasma edge (ASDEX Upgrade)",
+      "why_full_read": "Supports not interpreting edge ECEI voltages as calibrated electron temperature.",
+      "proposed_claim_to_check": "Shine-through and density contribution at the edge; whether conclusions are stated as general or device-specific."
+    },
+    {
+      "key": "fritsch1980",
+      "priority": 3,
+      "role": "Monotone piecewise cubic interpolation",
+      "why_full_read": "Method reference for the two-sided interpolation baseline.",
+      "proposed_claim_to_check": "Only that the method is a local monotone C1 interpolant; no further claim."
+    },
+    {
+      "key": "chilenski2015",
+      "priority": 3,
+      "role": "Gaussian-process regression for plasma profiles",
+      "why_full_read": "Fusion GP reference for the GP baseline family.",
+      "proposed_claim_to_check": "That the application is spatial profile fitting, not causal time-series estimation."
+    },
+    {
+      "key": "Bates2024CrossValidation",
+      "priority": 3,
+      "role": "What cross-validation estimates and interval coverage",
+      "why_full_read": "Supports cautious interpretation of validation intervals on a reused campaign.",
+      "proposed_claim_to_check": "Scope of the proof (linear model) and of the empirical statements on interval coverage."
+    }
+  ],
+  "excluded_topic_groups": [
+    {
+      "group": "Duplicate records of selected works (Young2008PlasmaMeasurements_PPPL-4276, Pastore2026ApplicationsNovel_arXiv)",
+      "reason": "Same work as a selected journal version; the audit should use the version of record and note pagination or author-list differences."
+    },
+    {
+      "group": "Large reviews and special-issue chapters (ITER1999Chapter2, Diagnostics1999ChapterMeasurement, MHD1999ChapterPlasma, Gribov2007ChapterPlasma, Mazon2025Diagnostics, Fenstermacher2025ProgressPedestal, Yoshida2025TransportConfinement, Na2025IntegratedOperation, Bandyopadhyay2025DisruptionsControl, Heidbrink1994BehaviourFast, Humphreys2015NovelAspects, Isler1994OverviewCharge)",
+      "reason": "Mostly 40-200 pages; not efficient for full-PDF audit when shorter primary sources carry the needed statements. Mazon2025Diagnostics is the natural reserve if the requirement tables need a current source."
+    },
+    {
+      "group": "Other charge-exchange instrument, physics and real-time papers not selected (Ko2009/Ko2010KstarCesSystem, Lee2011, Lee2022, Ko2014, Ko2016, Lee2016ValidationToroidal, Lee2020CrossComparisons, Boileau1989, Fonck1983, vonHellermann1995, Solomon2008, Chen2019EffectEnergy, Bell2006CarbonPlume, Blom2002, Hey2002, Thorman2021, Pavlova2021, doi_10_1063_1_4755810, McDermott2017, Conway2006, Grierson2016, Haskey2017, Haskey2018ActiveSpectroscopy, Haskey2022, CanoMegias2025, Podesta2012RealTime, Podesta2016, Kobayashi2003/2007, Yoshida2007FastMeasurement, Joffrin2003, Herrmann1992, Ogawa1988, Kim2023LabviewProgramming, Lin2024PredictionPlasma, Pavone2019)",
+      "reason": "Relevant background, but covered by a selected primary or closer paper within the 36-paper budget; several are reserves (Bell2006CarbonPlume and Lee2020CrossComparisons for label limits; Podesta2012RealTime and Kobayashi2007 for real-time readers)."
+    },
+    {
+      "group": "Disruption, instability and event prediction (KatesHarbeck2019, Keith2024, Rath2022, Sabbagh2023, Tobin2026, Joung2026ExplainableTokamak, Gill2024RealTime, Shin2022, vandenBrand2016)",
+      "reason": "Classification or forecasting of events, not estimation of a slow measured quantity; Gill2024RealTime and Joung2026 are reserves as examples of real-time BES use."
+    },
+    {
+      "group": "RMP/ELM control, error fields, NTM/ECCD, NTV and rotation/momentum physics (Kim2022, Kim2024HighestFusion, Park2018, Yang2024, PazSoldan2019/2024, Kim2020Pedestal, Kim2026RealTimeFeedback, Seo2026, Yang2021, Lanctot2016, Cha2024, LaHaye2006, Volpe2012, Fitzpatrick1993, Cole2011, Park2013, Kim2017Observation, Reimerdes2007, Rice2007, Tala2009, Yoshida2012, Zimmermann2026, Goumiri2016/2017, Scoville2007, Boyer2019, Burrell2009, Chen2016, Lee2026SpatiotemporalStructure, Heo2025, Yun2011)",
+      "reason": "Different physics questions; not needed for a nowcasting introduction."
+    },
+    {
+      "group": "Confinement, transport and scenario papers (Mantica2009, Ryter2011, doi_10_1088_0029_5515_54_8_083003, Kinsey2011, Kim2017PhysicsBased, Snyder2009, Cavedon2017, Viezzer2013/2014/2020, Meister2001, Tresset2002, Han2024, Na2026FireMode, Lee2023EffectCoherent, Ko2024Overview, Nam2026Overview, Kwak2020)",
+      "reason": "Only one primary physics source on pedestal importance is retained; the remainder would turn the introduction into a physics review."
+    },
+    {
+      "group": "Neutral-beam engineering and fast-ion studies (Hong2024, Jeong2026, Kwak2019, Kwak2025, Lee2021SystematicEvaluation, Stix1972, Heidbrink1988, Zhang2012, Zhao2023, Kim2018EnhancedFast)",
+      "reason": "Beam behaviour affects charge-exchange signal but is outside the stated scope; no beam-related claim is made in the introduction."
+    },
+    {
+      "group": "Control-system infrastructure and profile control (Hahn2016, Hahn2020, doi_10_1016_j_fusengdes_2018_02_066, Kwon2018, Park2011HighSpeed, Juhn2026, DeBock2012, Santos2010/2017, Mohammed2026, Rothstein2026, Kim2026RealTimePlasma, doi_10_1088_1741_4326_ac4868, Laborde2005, Moreau2008, Mazon2002, Litaudon2011, Wakatsuki2021, Biel2019)",
+      "reason": "Deployment context only; the paper claims no real-time deployment. Kim2026RealTimePlasma and Hahn2020 are reserves if a control-system timing statement is later needed."
+    },
+    {
+      "group": "Other observers, data assimilation and reconstruction networks (Felici2011, Felici2014, Blanken2019, Bosman2021, Messmer2019, VanMulders2025/2026, Morishita2020/2024, ICHIKAWA2025, Boyer2021, Abbate2025, Kaldas2026, Jung2026MachineLearningbased, Kim2026AutomatedOutlier, Joung2023, Wei2023, Zheng2024, Matos2016, Wang2025PhysicsinformedDeep, Jia2026TimeSeries, Mohapatra2019, Gupta2026, Chen2026Fusionclip, Clayton-type SXR work)",
+      "reason": "The observer and virtual-diagnostic families are represented by the closest members; Felici2014, Blanken2019, Kim2026AutomatedOutlier and Jia2026TimeSeries are the first reserves."
+    },
+    {
+      "group": "ECE/BES/ECEI papers not selected (Jeong2010, Yun2010, Nam2012, Nam2014, Lampert2018, Denk2018, Rathgeber2013, Yu2022, Zhu2019, Lee2022OverviewRecent, Ko2026RolesKstar, Jackson2024FairMast)",
+      "reason": "One instrument paper per diagnostic and one edge-interpretation paper suffice. Jackson2024FairMast is needed later only if the MAST sentence is retained."
+    },
+    {
+      "group": "Generic ML and irregular/missing time-series methods (Caruana1997, Baltruaitis2018, Ilse2018, Sussillo2013, Shi2015, Ravuri2021, Che2018, Cao2018, Lipton2016, Neil2016, Baytas2017, DeBrouwer2019, Rubanova2019, Kidger2020, Shukla2019/2020/2021, Weerakody2021, Allen1992)",
+      "reason": "The brief asks not to fill the list with generic ML; Che2018RecurrentNeural and Shukla2020SurveyPrinciples are reserves if a non-fusion missing-data citation is required."
+    },
+    {
+      "group": "Robust filtering, irregular autoregression and smoothing statistics (Agamennoni2012, DuranMartin2024, Roth2013, Karlgaard2007, Masreliez1977, Huber1964RobustEstimation [scan only, no text], elorrieta2019, eyheramendy2018, reinsch1967, michoski2024)",
+      "reason": "Method background beyond what the introduction needs; Huber1964 cannot be screened from the supplied record."
+    },
+    {
+      "group": "Forecast verification, scoring and resampling statistics (Gneiting2007, Gebetsberger2018, Rasp2018, Goddard2013, murphy1988, Nadeau2003, Gallas2009, Owen2007, Ren2010, Saravanan2020, Weissgerber2015)",
+      "reason": "One validation reference is retained; the others belong in the methods section and should be audited there (Ren2010 or Saravanan2020 for cluster resampling)."
+    }
+  ],
+  "outline": [
+    {
+      "paragraph": 1,
+      "purpose": "Scientific purpose and proposed usefulness",
+      "claims": [
+        "Pedestal height matters for global performance",
+        "Edge Ti evolves across transitions and ELM cycles",
+        "Requirement documents ask for edge Ti on 10-100 ms at about 10%",
+        "Proposed capability: a nowcast of the current reported CES value"
+      ],
+      "candidate_keys": [
+        "Snyder2011FirstPrinciples",
+        "Ko2015IonTemperature",
+        "Viezzer2018IonHeat",
+        "Young2008PlasmaMeasurements",
+        "Donne2007ChapterDiagnostics"
+      ]
+    },
+    {
+      "paragraph": 2,
+      "purpose": "How the charge-exchange report is produced and why it is a conventional label",
+      "claims": [
+        "Doppler-width principle",
+        "KSTAR carbon CES with background view",
+        "Beam-modulation background uses beam-off intervals around the frame",
+        "Arrival times not measured",
+        "Passive edge emission, impurity versus main-ion differences, outliers"
+      ],
+      "candidate_keys": [
+        "Fonck1984DeterminationPlasma",
+        "Ko2010ChargeExchange",
+        "Lee2020TwoGaussian",
+        "Lee2026NeuralNetworkbased",
+        "Viezzer2011PassiveEdge",
+        "Haskey2018MainIon",
+        "Kim2024KineticProfile"
+      ]
+    },
+    {
+      "paragraph": 3,
+      "purpose": "Upstream spectrum readers and faster hardware",
+      "claims": [
+        "Neural-network readers at JET, EAST, HL-3, KSTAR",
+        "Real-time simplified fit at DIII-D",
+        "ML fit for main-ion spectra",
+        "Feedback use at JT-60U",
+        "Two-Gaussian fit and UFCES on KSTAR"
+      ],
+      "candidate_keys": [
+        "Bishop1993AutomaticAnalysis",
+        "Svensson1999AnalysisJet",
+        "Chai2019FastEstimation",
+        "Tian2026RealTimeCxrs",
+        "Lee2026NeuralNetworkbased",
+        "Chrystal2026RealTime",
+        "Haskey2026MachineLearning",
+        "Yoshida2009RealTime",
+        "Lee2020TwoGaussian",
+        "Jang2021DevelopmentUltrafast"
+      ]
+    },
+    {
+      "paragraph": 4,
+      "purpose": "Connect upstream reading to downstream nowcasting without ranking",
+      "claims": [
+        "Reader maps an existing spectrum; nowcast estimates the current report before it exists",
+        "Nowcast, not forecast of a future physical temperature",
+        "Faster reading refreshes anchors and may reduce marginal need",
+        "Coupling not implemented; benefit needs validation"
+      ],
+      "candidate_keys": [
+        "Lee2026NeuralNetworkbased",
+        "Abbate2021DatadrivenProfile"
+      ]
+    },
+    {
+      "paragraph": 5,
+      "purpose": "Virtual diagnostics, multi-rate observers, missing-sensor priors, interpolation baselines and fast-diagnostic inputs",
+      "claims": [
+        "RTCAKENN tolerates missing charge-exchange input",
+        "Diag2Diag and COMPASS reconstruct slow electron diagnostics from fast ones",
+        "Missing-signal reconstruction at HL-3, EAST, KSTAR",
+        "Multi-rate observers at TCV and DIII-D",
+        "Interpolation and GP are two-sided",
+        "BES/ECEI used as uncalibrated predictors"
+      ],
+      "candidate_keys": [
+        "Shousha2023MachineLearningbased",
+        "Jalalvand2025MultimodalSuperresolution",
+        "Imrek2026TemporalSuperresolution",
+        "Yang2026FusionmaeSelfsupervised",
+        "Wang2025TimeSeries",
+        "Joung2018ImputationFaulty",
+        "Pastore2023ModelBased",
+        "Pastore2026ApplicationsNovel",
+        "Morosohk2023RealTime",
+        "fritsch1980",
+        "chilenski2015",
+        "Kim2024KineticProfile",
+        "Lampert2015CombinedHydrogen",
+        "Yun2014Quasi3d",
+        "Vanovac2018EffectsDensity"
+      ]
+    },
+    {
+      "paragraph": 6,
+      "purpose": "Precise question, what is evaluated, and scope",
+      "claims": [
+        "Causal estimate versus hold, causal GP and two-sided interpolation",
+        "Increment from BES/ECEI",
+        "Four validation designs with equal weight",
+        "10 ms computation",
+        "Targets F and L5 are never online inputs",
+        "One chord, one reused campaign, no deployment, no mechanism, no algorithmic priority"
+      ],
+      "candidate_keys": [
+        "Bates2024CrossValidation"
+      ]
+    }
+  ]
+}

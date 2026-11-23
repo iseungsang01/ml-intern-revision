@@ -1,0 +1,45 @@
+{
+  "key": "Morishita2024FirstApplication",
+  "citation": {
+    "title": "First application of data assimilation-based control to fusion plasma",
+    "authors": "Morishita, Y.; Murakami, S.; Kenmochi, N.; Funaba, H.; Yamada, I.; Mizuno, Y.; Nagahara, K.; Nuga, H.; Seki, R.; Yokoyama, M.; Ueno, G.; Osakabe, M.",
+    "year": 2024,
+    "venue": "Scientific Reports",
+    "volume": "14",
+    "pages": "137",
+    "doi_or_arxiv": "10.1038/s41598-023-49432-3"
+  },
+  "relevance": "supporting",
+  "topic": "Ensemble Kalman filter data assimilation of real-time Thomson Te/ne profiles into a TASK3D transport model for ECH power control on LHD (helical device).",
+  "own_question": "Can DA-based adaptive predictive control adjust ECH power so that central electron temperature reaches a target in LHD?",
+  "actual_method_and_evidence": "ASTI ran 256 TASK3D ensemble members with EnKF. It assimilated 10 Hz real-time Thomson electron Te/ne, mapped by an MLP to 11 rho points, every 0.3 s and switched gyrotrons every 0.1 s. In one shown discharge (#186500), central Te reached the 4 keV target. Reported prediction error was up to about 2 keV in the transient phase and about 0.2 keV in steady state. The authors state that performance did not exceed conventional PID control.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Sequential ensemble data assimilation has been used online in a fusion device to update a physics transport model using real-time electron profile measurements, with explicit observation-noise treatment.",
+      "original_pdf_locator": "pp.3-6, Methods, Eqs.(1)-(16); Table 1",
+      "qualification": "Electron Thomson data on an LHD helical device. Physics-model-based model-predictive control, not CES impurity Ti nowcasting. One discharge is shown.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "In that work, delayed or infrequent observations limited adaptation, and model mismatch caused large transient errors.",
+      "original_pdf_locator": "pp.7-9, Results; Discussion",
+      "qualification": "This is the authors' interpretation for their own system only.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs: Thomson Te/ne, with a reported delay of tens of ms; 0.3 s observation interval; 0.1 s control interval. Target: a future central Te setpoint. This is not current-report nowcasting.",
+  "validation_if_relevant": "Single control discharge shown. The MLP mapping used 58 discharges with a one-quarter test split. There is no held-out control-performance comparison.",
+  "forbidden_inferences": [
+    "Not evidence for CES, impurity or ion temperature, KSTAR, BES or ECEI.",
+    "Not evidence that DA outperforms PID or other baselines.",
+    "Not a general claim that prior fusion estimation is noncausal.",
+    "Our study did not implement DA or control."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful theory and background context: a causal Bayesian/DA framing for combining past measurements with models in real time, which contrasts with our empirical downstream nowcasting of current CES reports.",
+  "bibtex_if_worth_citing": "@article{Morishita2024FirstApplication,title={First application of data assimilation-based control to fusion plasma},author={Morishita, Yuya and Murakami, Sadayoshi and Kenmochi, Naoki and Funaba, Hisamichi and Yamada, Ichihiro and Mizuno, Yoshinori and Nagahara, Kazuki and Nuga, Hideo and Seki, Ryosuke and Yokoyama, Masayuki and Ueno, Genta and Osakabe, Masaki},journal={Scientific Reports},volume={14},pages={137},year={2024},doi={10.1038/s41598-023-49432-3}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "c68a46b4e40c1913b8b7cb74e3020b30b172ccca0a96f223101cf488a594701d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

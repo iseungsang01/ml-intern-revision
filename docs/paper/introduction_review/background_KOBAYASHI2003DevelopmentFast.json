@@ -1,0 +1,47 @@
+{
+  "key": "KOBAYASHI2003DevelopmentFast",
+  "citation": {
+    "title": "Development of Fast Charge Exchange Recombination Spectroscopy by Using Interference Filter Method in JT-60U",
+    "authors": "Kobayashi, S.; Sakasai, A.; Koide, Y.; Sakamoto, Y.; Kamada, Y.; Hatae, T.; Oyama, N.; Miura, Y.",
+    "year": 2003,
+    "venue": "J. Plasma Fusion Res.",
+    "volume": "79",
+    "pages": "1043-1050",
+    "doi_or_arxiv": "unknown"
+  },
+  "relevance": "supporting",
+  "topic": "Fast carbon-impurity (CVI 529.05 nm) CXRS on JT-60U using 3- and 7-channel interference-filter photomultiplier assemblies, compared with a CCD spectrometer",
+  "own_question": "Can filter-based CXRS resolve fast impurity Ti and rotation changes during minor collapses and ELMs, and does the 3-filter Gaussian assumption hold?",
+  "actual_method_and_evidence": "Intensity ratios I1/I2 and I3/I2 are mapped to Ti and Vr through precomputed polynomial fits that assume a Maxwellian line shape, with no nonlinear fitting. Integration was 0.8 ms for the 3-filter system, compared with 16.7 ms minimum (50 ms summed in the example) for CCD CXRS. Evidence comes from single reversed-shear minor-collapse and type-I ELM H-mode examples, with qualitative agreement against CCD. Seven-filter spectra appeared Gaussian on a few-ms scale. At S/N of about 4, the estimated errors were about 30% in Ti and 25 km/s in rotation. Real-time feedback through RTP was only planned.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Conventional CCD-based CES has limited time resolution; on JT-60U the minimum was 16.7 ms, which motivated hardware approaches to faster impurity-Ti measurement.",
+      "original_pdf_locator": "p.2 Sec.1; p.1 abstract",
+      "qualification": "JT-60U-specific hardware; this concerns carbon impurity Ti, not main-ion Ti; it is a measurement upgrade, not nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Upstream methods that avoid nonlinear spectral fitting, such as filter intensity-ratio mapping, have been proposed as candidates for real-time Ti estimation.",
+      "original_pdf_locator": "p.4-5 Sec.2.3, Eq.(3), Fig.3",
+      "qualification": "Feedback control was planned, not demonstrated. The method assumes Gaussian line shapes and has large errors at low S/N. Eq.(3) extracted imperfectly.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The source's inputs were filter photomultiplier intensities and its targets were CVI Ti and rotation, measured offline per frame. It contains no past-only prediction and gives no report arrival latency.",
+  "validation_if_relevant": "Validation is qualitative comparison against CCD CXRS and 7-filter spectra in a few discharges. There are no held-out splits and no statistical skill metrics.",
+  "forbidden_inferences": [
+    "The source did not achieve real-time control.",
+    "The source is not KSTAR evidence.",
+    "The source does not establish that the Gaussian assumption holds in general.",
+    "The source does not show that faster upstream CES removes the need for nowcasting.",
+    "The source does not provide physical-truth Ti.",
+    "The source does not address BES/ECEI information."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background on the upstream route to faster impurity CES: faster hardware and fit-free reading. It contrasts with our downstream causal nowcast of the current report, and it shows the label-noise limits of fast CES.",
+  "bibtex_if_worth_citing": "@article{Kobayashi2003FastCXRS,title={Development of Fast Charge Exchange Recombination Spectroscopy by Using Interference Filter Method in JT-60U},author={Kobayashi, Shinji and Sakasai, Akira and Koide, Yoshihiko and Sakamoto, Yoshiteru and Kamada, Yutaka and Hatae, Takaki and Oyama, Naoyuki and Miura, Yukitoshi},journal={J. Plasma Fusion Res.},volume={79},number={10},pages={1043--1050},year={2003}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "cd3f3950a4ea4175d4c8c48432949b83c06c8d3782acbc52a3efa78fda05edf8",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

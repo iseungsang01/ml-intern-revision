@@ -1,0 +1,46 @@
+{
+  "key": "Lee2020CrossComparisons",
+  "citation": {
+    "title": "Cross Comparisons of X-Ray Imaging Crystal Spectrometer and Charge Exchange Spectroscopy from KSTAR",
+    "authors": "S. G. Lee, W. H. Ko, KSTAR Team",
+    "year": 2020,
+    "venue": "Fusion Science and Technology",
+    "volume": "76",
+    "pages": "942-946",
+    "doi_or_arxiv": "10.1080/15361055.2020.1817705"
+  },
+  "relevance": "supporting",
+  "topic": "Cross-check of core impurity ion temperature and toroidal rotation on KSTAR. XICS measures Ar XVII and CES measures C VI 529.05 nm.",
+  "own_question": "Do XICS and CES agree on core toroidal rotation and ion temperature across discharge types, including NBI blips and modulation?",
+  "actual_method_and_evidence": "Time traces from several KSTAR discharges, measured at the magnetic axis. CES uses short NBI blips or beam modulation, typically 1-2 Hz and up to 5 Hz in one case. CES time resolution is 10 ms; XICS improved to 5 ms. The authors report reasonable to good agreement. Deviations seen at 1.4-2.0 s are speculatively attributed to CES background subtraction during fast density changes. The evidence is qualitative only: no error statistics are reported. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "On KSTAR, CES carbon impurity Ti/rotation requires NBI and is available only during beam-on intervals (blips or modulation). Typical integration is 10 ms. This motivates estimating the current report between or before CES samples.",
+      "original_pdf_locator": "p.2 Introduction; p.3 Sec. II; p.5 Sec. III",
+      "qualification": "Core chord at the magnetic axis, not the pedestal top. Ti is carbon impurity, not main-ion. The paper does not address report latency.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors suggest CES analysis can deviate during fast density evolution, possibly from background subtraction. This illustrates that CES labels are conventional estimates, not physical truth.",
+      "original_pdf_locator": "p.5 Sec. III, Fig. 5",
+      "qualification": "The cause is the authors' speculation and was not demonstrated.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "CES uses 10 ms frames with beam modulation of 1-5 Hz. Arrival or availability times are not reported.",
+  "validation_if_relevant": "Qualitative cross-diagnostic agreement on time traces; no quantitative metrics.",
+  "forbidden_inferences": [
+    "Do not state that XICS-CES agreement holds at the pedestal top or in KSTAR2022.",
+    "Do not treat agreement as validation of CES as independent truth.",
+    "Do not infer real-time CES availability or latency.",
+    "Do not claim the discrepancy cause was proven.",
+    "Do not generalize from this core-only work to all CES work."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Supports background on CES's dependence on NBI-timed sampling and on label uncertainty in KSTAR. It is limited by its core-only, qualitative evidence.",
+  "bibtex_if_worth_citing": "@article{Lee2020CrossComparisons,author={Lee, S. G. and Ko, W. H. and {KSTAR Team}},title={Cross Comparisons of X-Ray Imaging Crystal Spectrometer and Charge Exchange Spectroscopy from KSTAR},journal={Fusion Sci. Technol.},volume={76},number={8},pages={942--946},year={2020},doi={10.1080/15361055.2020.1817705}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "815adc880ab2df8a01460748037b87795c8fe4ff0bd4dbc10b07f0d8f078a4ae",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

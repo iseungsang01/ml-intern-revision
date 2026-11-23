@@ -1,0 +1,34 @@
+{
+  "key": "Zimmermann2026DependenceMomentum",
+  "citation": {
+    "title": "Dependence of Momentum Transport on the Dominant Turbulence Regime in the DIII-D Tokamak",
+    "authors": "C. F. B. Zimmermann, C. Chrystal, E. Perez, T. Tala, C. Angioni, S. Haskey, F. Khabanov, R. M. McDermott, G. McKee, A. Salmi, L. Schmitz",
+    "year": 2026,
+    "venue": "arXiv preprint (physics.plasm-ph)",
+    "doi_or_arxiv": "arXiv:2607.15484v1"
+  },
+  "relevance": "peripheral",
+  "topic": "Core toroidal momentum transport in DIII-D across an ITG-to-TEM transition, inferred from modulated-NBI torque experiments.",
+  "own_question": "How do the Prandtl number, pinch number and residual stress depend on the dominant turbulence regime and on E×B shearing?",
+  "actual_method_and_evidence": "Seven discharges with 6.25 Hz co/counter or co-only torque modulation. Rotation and Ti come from carbon-impurity CER. An ASTRA-based fit separates the diffusive, convective and residual-stress terms, with uncertainties from a global optimizer. Linear CGYRO and TGLF classify the turbulence regime, and CGYRO is compared with the experimental Prandtl and pinch numbers for two discharges. The appendix compares carbon and main-ion rotation-modulation amplitude and phase. The paper contains no estimator, nowcast, CES report-timing analysis or KSTAR data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In this DIII-D experiment, the modulation amplitude and phase of carbon and main-ion rotation agreed generally, and the authors treat carbon CER as representative of the bulk plasma.",
+      "original_pdf_locator": "p.2 Sec.2; pp.15-16 App.A, Fig.10",
+      "qualification": "This concerns rotation modulation, not temperature, and comes from one DIII-D campaign. The authors note that impurity amplitudes are slightly higher. It is not evidence about KSTAR carbon CES temperature.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors state that precise main-ion CER analysis requires beam modulation, and that this conflicted with the continuous impurity-rotation measurement their experiment needed.",
+      "original_pdf_locator": "p.15 App.A",
+      "qualification": "This is an author statement about DIII-D main-ion CER. It is not a measured report latency and says nothing about carbon CES on KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "reason_to_include_or_exclude": "Exclude from the Introduction and from the Theoretical background. The paper's question, quantity and device do not match the nowcasting framing. At most it could support an optional footnote on the trade-off between beam modulation and continuous measurement, and that point is already covered by the KSTAR sources.",
+  "supplied_source_mode": "full_original_pdf",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "c1092f976249f2dfb3502c774cdb81f49f606e104d8ad902bce0368c13bf687f",
+  "source_scope_note": "Full original PDF checked during final theoretical-background writing request",
+  "funding_ledger": "docs/paper/ppcf_revision/nnces_edit_usage.json"
+}

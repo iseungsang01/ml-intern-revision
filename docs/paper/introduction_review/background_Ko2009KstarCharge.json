@@ -1,0 +1,46 @@
+{
+  "key": "Ko2009KstarCharge",
+  "citation": {
+    "title": "KSTAR Charge Exchange Spectroscopy system",
+    "authors": "Won-Ha Ko",
+    "year": 2009,
+    "venue": "IEEE conference proceedings (exact venue not stated in extracted text)",
+    "volume": null,
+    "pages": null,
+    "doi_or_arxiv": null
+  },
+  "relevance": "supporting",
+  "topic": "Pre-installation design of the KSTAR CES diagnostic: optics, cassette, spectrometer, CCD, modulated NBI, and simulated S/N compared across machines",
+  "own_question": "How should a KSTAR CES system be designed, and how do its simulated S/N and detection efficiency compare with CES designs on other tokamaks?",
+  "actual_method_and_evidence": "This is a design description. It uses a 1.33 m Czerny-Turner spectrometer and a back-illuminated CCD, plans 30 chords with a 10 ms profile cadence, and requests NBI modulation at 5-10 Hz for background subtraction. S/N and detection efficiency come from von Hellermann's simulation code under assumed conditions (1 MW, r/a=0.3, 3e19 m^-3, CVI). The only hardware evidence is a bench test measuring visible lines in a helium discharge. No plasma CES temperature data are reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "The KSTAR CES design measures localized impurity (carbon) ion temperature and rotation from Doppler width and shift of beam-driven charge-exchange lines. It uses NBI modulation with time-slice background subtraction.",
+      "original_pdf_locator": "p1 Introduction; p2 Sec III.B",
+      "qualification": "This describes design intent in 2009. It concerns impurity Ti, not main-ion Ti. It does not describe the KSTAR2022 hardware actually used.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The planned KSTAR CES design targeted roughly 10 ms profile time resolution, with edge spatial resolution aimed at pedestal and H-mode studies.",
+      "original_pdf_locator": "p2 Sec III.C-D",
+      "qualification": "These are planned specifications, not measured performance. They give no report latency or arrival times. Whether this cadence holds for 2022 is unknown.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The 10 ms cadence is a design target only. Report availability and latency are not addressed.",
+  "validation_if_relevant": "Validation is limited to simulated S/N and a helium bench test. There is no plasma validation.",
+  "forbidden_inferences": [
+    "That 2022 KSTAR CES actually achieves 10 ms or the stated resolutions",
+    "That CES labels are physical truth",
+    "That the simulated S/N values describe our chord",
+    "That the paper addresses real-time or causal use",
+    "That Fig. 3-5 values were visually verified"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Useful as a background citation for the existence and principle of KSTAR CES (impurity CX lines, modulated NBI). It should be cited cautiously because the source is an early design paper with outdated specifications.",
+  "bibtex_if_worth_citing": "@inproceedings{Ko2009KstarCharge,title={KSTAR Charge Exchange Spectroscopy system},author={Ko, Won-Ha},year={2009},publisher={IEEE},note={Venue, pages and DOI to be verified}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "56960e19db271296b16b9cdf6826c3f78b63951deb67977d9fa2ec3ac8063c12",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

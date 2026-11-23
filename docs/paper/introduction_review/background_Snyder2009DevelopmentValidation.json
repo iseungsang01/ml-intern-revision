@@ -1,0 +1,39 @@
+{
+  "key": "Snyder2009DevelopmentValidation",
+  "citation": {
+    "title": "Development and validation of a predictive model for the pedestal height",
+    "authors": "P. B. Snyder, R. J. Groebner, A. W. Leonard, T. H. Osborne, H. R. Wilson",
+    "year": 2009,
+    "venue": "Physics of Plasmas",
+    "volume": "16",
+    "pages": "056118",
+    "doi_or_arxiv": "10.1063/1.3122146"
+  },
+  "relevance": "peripheral",
+  "topic": "EPED1 pedestal height/width model combining peeling-ballooning stability (ELITE, model equilibria) with a KBM-motivated width relation; validated on DIII-D.",
+  "own_question": "Can pedestal height and width be predicted from eight engineering/global inputs before an experiment?",
+  "actual_method_and_evidence": "Offline MHD stability scans plus an empirical width fit from 4122 DIII-D Thomson time slices. Comparison on 41 discharges gave predicted/observed height ratio 1.00±0.18. Inputs use measured pedestal density. Ti is set equal to Te in the model. There is no CES, BES/ECEI, or time-resolved nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Pedestal-top pressure strongly influences H-mode performance, which motivates monitoring pedestal-top quantities.",
+      "original_pdf_locator": "p.2 abstract and Sec. I",
+      "qualification": "Background motivation only. This is a steady inter-ELM model, not a source on ion temperature measurement.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are pre-shot or global parameters. The target is the pedestal maximum in the last 20% of the ELM cycle. The source does not address real-time timing.",
+  "validation_if_relevant": "Prior predictions were tested in a dedicated DIII-D experiment, plus random database discharges. The source does not report data splits for the width-coefficient fit.",
+  "forbidden_inferences": [
+    "Do not use this source to support carbon-impurity CES Ti nowcasting or BES/ECEI information.",
+    "Do not claim that EPED1 provides real-time estimates.",
+    "Do not treat its Ti=Te assumption as evidence about KSTAR ion temperature.",
+    "Do not generalize it to KSTAR without validation."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "It could optionally be cited as general pedestal-importance background. It has no bearing on the paper's methods, targets, or validation, so it can be omitted.",
+  "bibtex_if_worth_citing": "@article{Snyder2009DevelopmentValidation,title={Development and validation of a predictive model for the pedestal height},author={Snyder, P. B. and Groebner, R. J. and Leonard, A. W. and Osborne, T. H. and Wilson, H. R.},journal={Physics of Plasmas},volume={16},pages={056118},year={2009},doi={10.1063/1.3122146}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "2538ff5e3ff627a7a7411ad0147e23460f61193f65002310d7d053498e596b6e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

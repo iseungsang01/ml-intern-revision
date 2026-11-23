@@ -1,0 +1,31 @@
+{
+  "key": "Ren2010Nonparametric",
+  "citation": {
+    "title": "Nonparametric bootstrapping for hierarchical data",
+    "authors": "Shiquan Ren; Hong Lai; Wenjing Tong; Mostafa Aminzadeh; Xuezhang Hou; Shenghan Lai",
+    "year": 2010,
+    "venue": "Journal of Applied Statistics",
+    "volume": "37(9)",
+    "pages": "1487-1498",
+    "doi_or_arxiv": "10.1080/02664760903046102"
+  },
+  "relevance": "peripheral",
+  "topic": "Cluster-level versus lower-level nonparametric bootstrap resampling for nested random-effects (variance-components) data.",
+  "own_question": "Which nested resampling strategy best preserves the variance-covariance structure of unbalanced multilevel data?",
+  "actual_method_and_evidence": "The paper compares resampling strategies using bootstrap expected variance and covariance under a normal nested random-effects model. The data are cardiac HARP-MRI strain measurements nested as time points within segments within patients. The method is sampling the top level with replacement and the lower levels without replacement. The authors argue this top-level strategy is preferable because its expected covariance is smallest. They also report 1000 bootstrap replicates and a small two-level simulation. The source contains no fusion, time-series, or causal content.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. The source has no online inputs, report timing, or temporal targets.",
+  "validation_if_relevant": "There is no train/test split and no forecasting validation. The data are exchangeable nested observations, not temporally dependent shots or frames.",
+  "forbidden_inferences": [
+    "Do not use it as evidence for any temporal or block-bootstrap validity in time series.",
+    "Do not cite it as fusion or diagnostic evidence.",
+    "Do not claim it proves top-level resampling is optimal generally; the argument rests on the authors' covariance criterion under a normal nested model.",
+    "Do not treat the strain or MRI results as transferable to CES labels."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The source would be relevant only if our methods used a shot-level cluster bootstrap for uncertainty intervals, and then only as a methods citation, not in the introduction. Any such use would need a caveat: the source ignores within-shot temporal autocorrelation, so it does not address that issue for our data.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "70864c3ddc4d560eaae4fb858b40fdd671aa48a88425538ac6527c38d3c9433e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

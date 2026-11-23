@@ -1,0 +1,78 @@
+{
+  "key": "chilenski2015",
+  "citation": {
+    "title": "Improved profile fitting and quantification of uncertainty in experimental measurements of impurity transport coefficients using Gaussian process regression",
+    "authors": "M.A. Chilenski, M. Greenwald, Y. Marzouk, N.T. Howard, A.E. White, J.E. Rice, J.R. Walk",
+    "year": 2015,
+    "venue": "Nuclear Fusion",
+    "volume": "55",
+    "pages": "023012 (20pp)",
+    "doi_or_arxiv": "10.1088/0029-5515/55/2/023012 (this paper's own DOI, PDF p2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-21 (p1 publisher cover; journal page n = PDF page n+1)",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read visually. The open-source code (ref [34]) was not inspected."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The application is spatial profile fitting, not causal time-series estimation",
+      "verdict": "supported",
+      "source_finding": "Signals were time-averaged over a 0.4 s steady, sawtooth-averaged period of one C-Mod L-mode discharge. TS and ECE ne and Te were then fit as univariate functions of r/a. The prediction at each radius conditions on all observations, including data on both sides.",
+      "locator": "PDF p8 Sec.4, Figs.5-6; PDF p5 Eqs.(3)-(5)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "GPR has been used in tokamak analysis to fit time-averaged radial ne and Te profiles with uncertainty estimates on values and gradients [chilenski2015].",
+      "qualification": "The authors state that inputs may include time (R, Z, phi, t; PDF p4 Sec.3.1). This is an author claim and was not demonstrated in the paper."
+    },
+    {
+      "proposed_claim": "GPR gives posterior mean and covariance, including gradients, with hyperparameters set by MAP or marginalized by MCMC",
+      "verdict": "supported",
+      "source_finding": "Gradient uncertainty was substantially larger under MCMC than MAP for Te (median 9.0% vs 1.7%).",
+      "locator": "PDF p5 Eqs.(4)-(5); PDF p10 Table 5; PDF p17 Eqs.(C.14)-(C.19)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In that application, treating the GP hyperparameters as uncertain materially widened the gradient uncertainty compared with a point estimate [chilenski2015].",
+      "qualification": "This was shown for a single discharge. It does not transfer to CES reports or to temporal nowcasting."
+    },
+    {
+      "proposed_claim": "The GP fits were propagated to downstream code outputs",
+      "verdict": "qualify",
+      "source_finding": "Sixty-five filtered samples were propagated through STRAHL to obtain D and V. MAP and MCMC sampling gave similar D and V results.",
+      "locator": "PDF p11-13 Sec.5, Fig.9",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Samples drawn from GP profile fits can be propagated through analysis codes for uncertainty quantification [chilenski2015].",
+      "qualification": "This was offline Monte Carlo propagation. It is not an estimator benchmark."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Time-averaged TS ne and Te, plus ECE Te, versus r/a; artificial constraint points (Table 2, PDF p10)",
+    "outputs": "Smoothed profiles, gradients, a/L, and samples; STRAHL-derived D and V",
+    "causal_or_offline": "Offline, using both-sided spatial conditioning",
+    "source_diagnostic_as_input": "not_applicable (no CES, BES or ECEI; fit to the same diagnostic data)",
+    "reported_vs_physical_truth": "Fits target measured profiles. Physical truth is known only for synthetic data (PDF p19 App.C.6)."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "Synthetic cubic-spline truth with RMS error versus number of points, 5 noise realizations (PDF p19 Fig.C4). Experimental data were compared against a prior spline fit only.",
+    "unknowns": "No held-out discharges; behaviour on other discharges is unknown"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "No timing reported; only MCMC settings (400 walkers, 2000 steps, 1000 burn-in, 800x thinning)",
+    "what_not_established": "Wall-clock cost and any real-time suitability",
+    "locator": "PDF p9 Sec.4"
+  },
+  "forbidden_inferences": [
+    "That GPR cannot be used causally or temporally",
+    "That this paper benchmarked hold, causal or two-sided GP estimators",
+    "That its uncertainty figures apply to CES Ti or to KSTAR",
+    "Real-time deployment or speed",
+    "That the 11% Te offset relative to splines (PDF p12) is a general result",
+    "Any priority conclusion from this paper"
+  ],
+  "competing_or_complementary": "Complementary. It is the methodological background for the GP family. Our causalGP baseline is our own temporal construction.",
+  "bibtex": "@article{chilenski2015,title={Improved profile fitting and quantification of uncertainty in experimental measurements of impurity transport coefficients using Gaussian process regression},author={Chilenski, M.A. and Greenwald, M. and Marzouk, Y. and Howard, N.T. and White, A.E. and Rice, J.E. and Walk, J.R.},journal={Nuclear Fusion},volume={55},number={2},pages={023012},year={2015},doi={10.1088/0029-5515/55/2/023012}}",
+  "followup_sources_if_material": [
+    "Rasmussen & Williams 2006, Gaussian Processes for Machine Learning (cited ref [4]; no DOI given here), for general GP and temporal-kernel background"
+  ]
+}

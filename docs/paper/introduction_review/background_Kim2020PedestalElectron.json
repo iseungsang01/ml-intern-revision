@@ -1,0 +1,39 @@
+{
+  "key": "Kim2020PedestalElectron",
+  "citation": {
+    "title": "Pedestal electron collisionality and toroidal rotation during ELM-crash suppression phase under n = 1 RMP in KSTAR",
+    "authors": "Minwoo Kim, J. Lee, W. H. Ko, S.-H. Hahn, Y. In, Y. M. Jeon, W. Suttrop, S. K. Kim, G. Y. Park, J.-W. Juhn, J. H. Lee",
+    "year": 2020,
+    "venue": "Physics of Plasmas",
+    "volume": "27",
+    "pages": "112501",
+    "doi_or_arxiv": "10.1063/5.0024055"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline KSTAR pedestal database (n=1 RMP, 28 discharges) relating pedestal collisionality and C6+ CES rotation to ELM-crash suppression versus mitigation.",
+  "own_question": "Which pedestal-top parameters characterize RMP ELM-crash suppression and separate it from mitigation.",
+  "actual_method_and_evidence": "Uses Thomson scattering ne/Te and carbon-impurity CES Ti/Vtor, fitted offline with modified tanh profiles to data averaged over about 0.2 s. Applies a collisionality formula with Zeff=2 assumed. Includes MISHKA1 stability analysis, and LDA plus RFE on 7 standardized variables. No nowcasting, causal estimation, BES/ECEI inputs, or held-out validation is reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR CES provides carbon-impurity (C6+) Ti and rotation profiles that pedestal studies use offline, e.g., time-averaged and tanh-fitted.",
+      "original_pdf_locator": "p.3, Sec. II",
+      "qualification": "Impurity Ti, not main-ion Ti. The paper does not discuss CES latency or report timing.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Uses offline averages of about 0.2 s (±0.1 s) around times of interest. CES cadence and arrival times are not stated.",
+  "validation_if_relevant": "Uses LDA/RFE on a single dataset. No train/test split is described.",
+  "forbidden_inferences": [
+    "That CES latency motivates nowcasting",
+    "That BES/ECEI predict Ti",
+    "That LDA demonstrates predictive skill",
+    "That CES Ti is main-ion or physical truth"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include only as optional context: an example of offline use of KSTAR C6+ CES pedestal data. It provides no support for timing, estimation, or validation claims.",
+  "bibtex_if_worth_citing": "@article{Kim2020PedestalElectron,title={Pedestal electron collisionality and toroidal rotation during ELM-crash suppression phase under n = 1 RMP in KSTAR},author={Kim, Minwoo and others},journal={Physics of Plasmas},volume={27},pages={112501},year={2020},doi={10.1063/5.0024055}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "c35af29a84c4250f70f21e847439adbdb33a4202752699a98d619031397366d8",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

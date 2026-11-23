@@ -1,0 +1,38 @@
+{
+  "key": "Chen2026FusionclipMultimodal",
+  "citation": {
+    "title": "FusionCLIP: Multimodal Contrastive Pretraining for Fusion Plasma Diagnostics",
+    "authors": "Q. Chen, X. Wang, Q. Yang, H. Si, Z. Yan, G. Xu, J. Tang",
+    "year": 2026,
+    "venue": "arXiv preprint (header lists IEEE Transactions, venue unspecified)",
+    "volume": "unknown",
+    "pages": "1-9",
+    "doi_or_arxiv": "arXiv:2611.09493"
+  },
+  "relevance": "peripheral",
+  "topic": "Contrastive pretraining that pairs EAST visible-light video windows with 38 multi-rate diagnostic signals, evaluated on disruption prediction, ELM classification and H98 regression.",
+  "own_question": "Does video-signal contrastive pretraining with visual token selection and a timestamp-aware query encoder improve downstream EAST diagnostic tasks compared with general-purpose pretrained backbones?",
+  "actual_method_and_evidence": "The authors build EAST-MMD from 1307 discharges: 667 are used for pretraining and 640 for downstream tasks, with a discharge-level split of 447/96/97. Diagnostic variables keep their original timestamps. A Temporal Query Encoder uses 25 time queries per 50 ms window and a time-distance attention bias. They report an aggregate Joint score of 89.07%, plus ablations. The work uses one device and does not involve CES, ion temperature, BES/ECEI or nowcasting of reported values.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Multi-rate fusion diagnostic signals have been encoded using their original observation timestamps rather than by resampling onto a fixed grid, for example with time-query attention in a learned representation model on EAST.",
+      "original_pdf_locator": "Sec. II-A and Sec. II-D, Eqs. (8)-(10)",
+      "qualification": "This describes the authors' design, not a demonstration that it is superior for our task. Its scope is EAST, offline, and the targets are video, disruption, ELM and H98, not CES.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are 50 ms windows with a 2 ms stride. Disruption alarms are evaluated causally in chronological order. Real-time latency is not reported. H98 is computed offline from EFIT and used as a target only.",
+  "validation_if_relevant": "Single split by discharge on one device, with no external data. Thresholds are selected on the validation set.",
+  "forbidden_inferences": [
+    "Do not claim relevance to CES, Ti, or KSTAR.",
+    "Do not treat the TQE as validated for our signals.",
+    "Do not claim real-time deployment.",
+    "Do not generalize these results to all fusion machine learning work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional citation for timestamp-aware handling of asynchronous diagnostics. The device, task and modalities do not match our paper, so it is not needed.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "46ee9e720b849ab33fc976cf9c81b2f5e44188525fb4e74192f99bcb5dd8ef8b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

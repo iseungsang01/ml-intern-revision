@@ -1,0 +1,45 @@
+{
+  "key": "Solomon2008CharacterizationCross",
+  "citation": {
+    "title": "Characterization of cross-section correction to charge exchange recombination spectroscopy rotation measurements using co- and counter-neutral-beam views",
+    "authors": "W. M. Solomon; K. H. Burrell; R. Feder; A. Nagy; P. Gohil; R. J. Groebner",
+    "year": 2008,
+    "venue": "Review of Scientific Instruments",
+    "volume": "79",
+    "pages": "10F531",
+    "doi_or_arxiv": "10.1063/1.2957841"
+  },
+  "relevance": "supporting",
+  "topic": "Atomic-physics (energy-dependent charge-exchange cross-section) systematic corrections to CER carbon-impurity velocity on DIII-D",
+  "own_question": "Can paired co- and counter-beam CER views experimentally determine the cross-section correction to impurity toroidal rotation and validate the calculated (ADAS-based) correction?",
+  "actual_method_and_evidence": "The authors added seven counter-beam CER chords and used C VI 529 nm lines. They solved two measurements for two unknowns: toroidal velocity and the correction scalar. Results include example DIII-D discharges and a database of automated CERQUICK analyses. The authors report a tendency to overcorrect, with a median difference between corrected views of about 15%. They report that corrected views agree within 10 km/s at least 73% of the time. Analysis is offline. Temperature is not the target; rotation is.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported carbon CER quantities depend on atomic-physics modelling, so they are conventional processed labels rather than independent physical truth; one DIII-D study found calculated rotation corrections tend to overcorrect.",
+      "original_pdf_locator": "Abstract; Sec. III last paragraph; Sec. IV",
+      "qualification": "Applies to rotation (line shift) on DIII-D, not to Ti or KSTAR; the authors' explanation via the n=2 population is a hypothesis.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The energy-dependent cross-section effect scales mainly with ion temperature and also depends on beam energy, beam fractions and excited-state populations.",
+      "original_pdf_locator": "Sec. I; Sec. II first paragraph",
+      "qualification": "Stated for the apparent velocity correction only.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant; no timing, latency or nowcasting is addressed.",
+  "validation_if_relevant": "Paired-view consistency check across a multi-condition database; neither view is an independent ground truth.",
+  "forbidden_inferences": [
+    "Do not claim the paper quantifies CES Ti label error.",
+    "Do not transfer the 15% figure to KSTAR or to temperature.",
+    "Do not cite it as real-time or causal work.",
+    "Do not claim the n=2 enhancement is a demonstrated physical mechanism."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as brief support for treating CES reports as model-dependent labels. It is peripheral to the nowcasting method.",
+  "bibtex_if_worth_citing": "@article{Solomon2008CharacterizationCross,title={Characterization of cross-section correction to charge exchange recombination spectroscopy rotation measurements using co- and counter-neutral-beam views},author={Solomon, W. M. and Burrell, K. H. and Feder, R. and Nagy, A. and Gohil, P. and Groebner, R. J.},journal={Review of Scientific Instruments},volume={79},pages={10F531},year={2008},doi={10.1063/1.2957841}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "d08e943f2f936b040031b4899ed64835c80c24183d0cc94c01b3a979a60099df",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

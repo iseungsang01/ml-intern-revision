@@ -1,0 +1,45 @@
+{
+  "key": "Boileau1989DeductionTemperature",
+  "citation": {
+    "title": "The deduction of low-Z ion temperature and densities in the JET tokamak using charge exchange recombination spectroscopy",
+    "authors": "A. Boileau, M. von Hellermann, L. D. Horton, J. Spence, H. P. Summers",
+    "year": 1989,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "31",
+    "pages": "779-804",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Visible CXRS on JET: impurity Ti from Doppler widths of beam-excited lines; impurity densities from calibrated emissivities",
+  "own_question": "Can the beam-driven charge-exchange feature be isolated from edge emission to give central impurity Ti and density?",
+  "actual_method_and_evidence": "Offline constrained multi-Gaussian fits separate the broad charge-exchange feature from cold edge components and blends, with instrument deconvolution. C, O and He temperatures agreed within stated errors. For carbon, Tc followed central ECE Te through sawteeth in one high-density pulse. A C-O difference histogram was centred near zero. Densities depend on modelled effective rates and beam attenuation; the authors cross-checked them against bremsstrahlung Zeff and estimate about 40% density error. Single central chord on JET, not KSTAR.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In beam-based CES/CXRS, impurity ion temperature is conventionally inferred by fitting the Doppler width of an active charge-exchange line after separating passive edge components.",
+      "original_pdf_locator": "Section 3, pp. 785-788; Fig. 4",
+      "qualification": "This was offline fitting on JET with reported uncertainties of roughly 5-20% depending on line. The paper does not establish a universal procedure or a KSTAR label quality.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "CES-derived temperatures are model-dependent measurements of impurity ions, which motivates treating reports as conventional labels rather than independent truth.",
+      "original_pdf_locator": "Sections 3-4, pp. 786-797",
+      "qualification": "This is our interpretation. The source shows that fit constraints, blends and atomic modelling affect results, and that only impurity Ti is measured, not main-ion Ti.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The detector supports exposures down to 10 ms at 50 Hz for C VI 529 nm. Report latency and arrival times are not addressed.",
+  "validation_if_relevant": "Cross-species agreement, a single-pulse comparison with ECE Te, and a C-O histogram over 120 pulses. There is no held-out or predictive validation.",
+  "forbidden_inferences": [
+    "Do not cite it as evidence about KSTAR, BES/ECEI, or nowcasting.",
+    "Impurity Ti agreement does not prove equality with main-ion Ti in general.",
+    "The ECE agreement is a single equipartition case and is not a calibration of Ti.",
+    "Do not cite it for real-time CES availability or latency."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "A foundational source for how CES impurity temperatures are produced and what limits them. Useful for the theoretical background on the target label.",
+  "bibtex_if_worth_citing": "@article{Boileau1989DeductionTemperature,title={The deduction of low-Z ion temperature and densities in the JET tokamak using charge exchange recombination spectroscopy},author={Boileau, A. and von Hellermann, M. and Horton, L. D. and Spence, J. and Summers, H. P.},journal={Plasma Physics and Controlled Fusion},volume={31},number={5},pages={779--804},year={1989}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 27,
+  "supplied_pdf_sha256": "338685a9cdbc88bd2e2f9175aede3043bc6982bfcbaa92b1dece7c449f406a07",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

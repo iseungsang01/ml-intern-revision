@@ -1,0 +1,46 @@
+{
+  "key": "Viezzer2013HighAccuracy",
+  "citation": {
+    "title": "High-accuracy characterization of the edge radial electric field at ASDEX Upgrade",
+    "authors": "E. Viezzer, T. Pütterich, G.D. Conway, R. Dux, T. Happel, J.C. Fuchs, R.M. McDermott, F. Ryter, B. Sieglin, W. Suttrop, M. Willensdorfer, E. Wolfrum and the ASDEX Upgrade Team",
+    "year": 2013,
+    "venue": "Nuclear Fusion",
+    "volume": "53",
+    "pages": "053005",
+    "doi_or_arxiv": "10.1088/0029-5515/53/5/053005"
+  },
+  "relevance": "supporting",
+  "topic": "Edge CXRS on AUG: impurity Ti, rotation and density profiles, Er via the radial force balance, and ELM-synchronized profile evolution",
+  "own_question": "Can impurity CXRS determine the edge Er consistently across species, regimes, ELM cycles and MP phases?",
+  "actual_method_and_evidence": "Toroidal and poloidal edge CXRS used 2.2 ms integration. The authors built profiles offline, combining radial sweeps over windows of hundreds of ms with ELM-synchronized selection. Ti was obtained from the Doppler width of the active line, fitted with two Gaussians. Er from He2+, B5+, C6+ and Ne10+ agreed within the uncertainties. Profiles were aligned to Te from ECE and TS by assuming that the steepest gradients coincide, with stated accuracy of 2–3 mm. Data binned relative to the ELM suggested that profiles recover within about 2 ms after the crash.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "CES/CXRS ion temperature is inferred from the Doppler width of an active impurity charge-exchange line; it is a measured impurity-ion quantity that is often equated with Ti, based on equilibration arguments.",
+      "original_pdf_locator": "p.3 sec.2; Appendix p.13",
+      "qualification": "This was shown at AUG using B5+, not KSTAR carbon. The equilibration argument is the authors' estimate, and the authors note possible decoupling near the separatrix.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge kinetic profiles, including CXRS Ti, change rapidly around ELMs on millisecond timescales, which motivates attention to the temporal resolution of reports.",
+      "original_pdf_locator": "p.9-10 sec.6, Fig.13-14",
+      "qualification": "These are offline, ELM-binned results from a composite of many ELMs at 2.2 ms resolution. The authors themselves say the integration may be too long for quantitative judgement.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "2.2 ms CXRS integration time. Report arrival or latency is not given. No nowcasting and no BES/ECEI inputs are used.",
+  "validation_if_relevant": "Cross-species consistency and comparison with Doppler reflectometry. There is no predictive validation.",
+  "forbidden_inferences": [
+    "Do not use this paper as evidence about KSTAR CES latency or report arrival.",
+    "Do not treat CXRS Ti as independent physical truth.",
+    "Do not read the ELM-binned profiles as real-time capability.",
+    "Do not claim that prior work lacks nowcasting.",
+    "Do not equate impurity Ti with main-ion Ti without qualification."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background citation for how CXRS Ti is measured and for millisecond-scale edge profile dynamics. It is not a methods precedent for our study.",
+  "bibtex_if_worth_citing": "@article{Viezzer2013HighAccuracy,author={Viezzer, E. and P{\\\"u}tterich, T. and Conway, G. D. and others},title={High-accuracy characterization of the edge radial electric field at {ASDEX} Upgrade},journal={Nucl. Fusion},volume={53},pages={053005},year={2013},doi={10.1088/0029-5515/53/5/053005}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "c707655f43ad087c9a508089d35a37e818707e85ab2132cbe76d301b53885bfe",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

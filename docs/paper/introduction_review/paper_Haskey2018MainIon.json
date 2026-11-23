@@ -1,0 +1,81 @@
+{
+  "key": "Haskey2018MainIon",
+  "citation": {
+    "title": "Main ion and impurity edge profile evolution across the L- to H-mode transition on DIII-D",
+    "authors": "S. R. Haskey, B. A. Grierson, C. Chrystal, A. Ashourvan, K. H. Burrell, R. J. Groebner, E. A. Belli, L. Stagner, D. Battaglia, T. Stoltzfus-Dueck, A. Bortolon",
+    "year": "2018 (PDF dated 24 Oct 2018)",
+    "venue": "not stated in supplied PDF",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "unknown; DOIs in the reference list belong to cited works"
+  },
+  "scope_read": {
+    "pdf_pages": "1-9",
+    "full_pdf_supplied": true,
+    "limitations": "Preprint layout without journal metadata. Figure values were read from plots. DIII-D only, with two shots (164436 and 164988)."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The D+ versus C6+ temperature difference is largest at the separatrix.",
+      "verdict": "supported",
+      "source_finding": "In the ITER-baseline H-mode, the D+ temperature falls below half the C6+ temperature near the separatrix. In the low-power L-mode, the two temperatures agree within error bars except near the separatrix, where the gap grows slightly.",
+      "locator": "p1 Abstract; p4 Sec II.B, Fig.4(c), Fig.5(b); p7 Sec III",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Direct main-ion spectroscopy on DIII-D found edge deuterium temperatures below the carbon CER values, with the gap reaching more than a factor of two near the separatrix in a high-power H-mode.",
+      "qualification": "Shows a measured gap, not a general factor. The authors call atomic-physics cooling the likely cause. They also list in-out asymmetry, orbit-tail and Zeeman effects as candidates; no mechanism was isolated."
+    },
+    {
+      "proposed_claim": "A difference is also reported at the pedestal top.",
+      "verdict": "qualify",
+      "source_finding": "In the low-power H-mode, the D+ temperature is about 70 eV lower, roughly halfway between the C6+ and electron temperatures. The ITER case shows a similar difference inside the pedestal top. Unapplied Zeeman estimates could reduce the impurity-ion gap by about 30 eV. After the L-H transition the gap widens within the 5 ms integration time.",
+      "locator": "p4 Sec II.B, Fig.4(d), Fig.5(b); p5 Sec II.B, Fig.3(e-f)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Smaller but resolvable differences of tens of eV were reported inside the pedestal top in H-mode, and part of this may be spectroscopic in origin.",
+      "qualification": "In L-mode the temperatures were coupled within error bars inside the edge. The magnitude depends on regime and on the Zeeman treatment."
+    },
+    {
+      "proposed_claim": "Carbon CES temperature should be treated as a conventional label rather than the bulk-ion temperature.",
+      "verdict": "qualify",
+      "source_finding": "The authors note that ion temperatures are commonly assumed equal and argue that the observed differences make direct main-ion measurement important.",
+      "locator": "p4 Sec II.B; p7 Sec III",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Because impurity and main-ion temperatures can differ in the edge, we treat reported carbon CES temperature as a diagnostic label rather than as the bulk-ion temperature.",
+      "qualification": "The main-ion CER values are a modeled measurement, not independent truth. Results are from DIII-D and say nothing about the KSTAR chord."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (not an estimator paper; CER spectra with 5 ms integration, analysed offline)",
+    "outputs": "not_applicable",
+    "causal_or_offline": "offline profile analysis",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Compares two spectroscopic measurements; neither is presented as independent physical truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none claimed",
+    "unknowns": "Uncertainty in the temperature difference is read only from figure error bars."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "5 ms CER integration time; the paper states this was too slow to resolve the transition event itself.",
+    "what_not_established": "Any real-time use or report latency.",
+    "locator": "p2 Sec II; p4 Sec II.A"
+  },
+  "forbidden_inferences": [
+    "The KSTAR carbon CES chord shows a similar offset or ratio.",
+    "The factor of two applies at the pedestal top.",
+    "A cause has been identified (charge-exchange cooling is the authors' suggestion).",
+    "MICER is ground truth.",
+    "The paper concerns estimation or nowcasting.",
+    "Zeeman correction was applied."
+  ],
+  "competing_or_complementary": "Complementary. It motivates defining the target as the reported impurity CES value and does not compete with the estimator.",
+  "bibtex": "@article{Haskey2018MainIon,\n title={Main ion and impurity edge profile evolution across the L- to H-mode transition on DIII-D},\n author={Haskey, S. R. and Grierson, B. A. and Chrystal, C. and Ashourvan, A. and Burrell, K. H. and Groebner, R. J. and Belli, E. A. and Stagner, L. and Battaglia, D. and Stoltzfus-Dueck, T. and Bortolon, A.},\n year={2018},\n note={journal, volume, pages and DOI to be verified; not in supplied PDF}\n}",
+  "followup_sources_if_material": [
+    "Ref.14/17 (Haskey et al., MICER edge method)",
+    "Ref.50 (Blom and Jupén, Zeeman parametrization)",
+    "Ref.39 (Chrystal et al., edge CER upgrade)",
+    "Ref.53 (Churchill et al., poloidal asymmetries)"
+  ]
+}

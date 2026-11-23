@@ -1,0 +1,46 @@
+{
+  "key": "Ko2024OverviewKstar",
+  "citation": {
+    "title": "Overview of the KSTAR experiments toward fusion reactor",
+    "authors": "Won-Ha Ko, S.W. Yoon, W.C. Kim, J.G. Kwak, et al. and KSTAR Team",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "112010 (17pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ad3b1d"
+  },
+  "relevance": "peripheral",
+  "topic": "Programmatic overview of recent KSTAR scenarios, RMP ELM control, MHD control, turbulence, divertor and virtual KSTAR work.",
+  "own_question": "Summarizes recent KSTAR progress toward steady-state, high-beta, long-pulse operation and outlines near-term upgrades.",
+  "actual_method_and_evidence": "Review of cited experiments and simulations. Examples include a high-li βN≈3 discharge lasting 12 s, a 45 s RMP ELM-control period, ML L-H classification for RMP triggering, ECE/BES-type pedestal fluctuation analyses, and a digital-twin monitoring system. The extracted text does not describe CES nowcasting, CES report latency, or BES/ECEI-to-Ti estimation. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR has used a real-time ML classifier based on emission and density signals within its plasma control system to trigger RMP after the L-H transition.",
+      "original_pdf_locator": "Sec. 3.1, p.5",
+      "qualification": "This is a plasma-state classifier, not temperature estimation. The reported 800 µs inference time and 95% validation accuracy are the source's own results and should not be transferred to our study.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "KSTAR research programs emphasize long-pulse pedestal control, including RMP ELM suppression, where pedestal ion profiles respond to the applied RMPs.",
+      "original_pdf_locator": "Sec. 3.1-3.2, pp.5-8",
+      "qualification": "This is broad context only. The ion-pedestal observations are summarized from other cited work and do not specify the CES species or timing.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not reported for CES. The paper gives no CES arrival time and no impurity-versus-main-ion detail.",
+  "validation_if_relevant": "Not applicable to our task.",
+  "forbidden_inferences": [
+    "CES reports are delayed by a specific amount.",
+    "KSTAR has deployed temperature nowcasting.",
+    "BES/ECEI predicts Ti.",
+    "The ML classifier's performance applies to our estimators.",
+    "The 2022 campaign data split matches ours."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional citation for general KSTAR long-pulse and real-time PCS motivation. It contains no evidence on our CES nowcasting question, so other, more specific sources are preferable.",
+  "bibtex_if_worth_citing": "@article{Ko2024OverviewKstar,title={Overview of the KSTAR experiments toward fusion reactor},author={Ko, Won-Ha and others},journal={Nuclear Fusion},volume={64},pages={112010},year={2024},doi={10.1088/1741-4326/ad3b1d}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "314b6ae79b8aff9fee0f90c7200715747585f42d7bb147909d6a6bcd0b29af6a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

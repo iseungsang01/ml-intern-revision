@@ -1,0 +1,32 @@
+{
+  "key": "Baytas2017PatientSubtyping",
+  "citation": {
+    "title": "Patient Subtyping via Time-Aware LSTM Networks",
+    "authors": "Inci M. Baytas; Cao Xiao; Xi Zhang; Fei Wang; Anil K. Jain; Jiayu Zhou",
+    "year": 2017,
+    "venue": "Proceedings of KDD 2017 (ACM SIGKDD International Conference on Knowledge Discovery and Data Mining)",
+    "volume": null,
+    "pages": "65-74",
+    "doi_or_arxiv": "10.1145/3097983.3097997"
+  },
+  "relevance": "peripheral",
+  "topic": "An LSTM variant that discounts a learned short-term memory component by a decay function of the elapsed time between irregularly spaced records. It is applied to clustering of EHR and PPMI patient sequences.",
+  "own_question": "Can modelling the elapsed time inside the memory cell improve representations of irregularly sampled patient records for classification, target-sequence prediction and subtyping?",
+  "actual_method_and_evidence": "T-LSTM, defined in equations on pp.4-5, decays the short-term memory by g(Δt), for example 1/log(e+Δt). The source authors report three results. On synthetic EHR data, T-LSTM had a mean AUC of 0.91 (Table 1). On a synthetic clustering task, the mean Rand index was 0.96 (Table 2). On PPMI target prediction, the mean MSE was 0.50 versus 0.51 for LSTM (Table 4), a small difference within the reported standard deviations. The evidence comes from healthcare data only, with no plasma data and no timing or latency measurements.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Inputs are past records together with the elapsed gaps between them. The model performs offline sequence modelling and does not address real-time causal nowcasting of a currently pending report.",
+  "validation_if_relevant": "Validation used repeated random 70/30 splits, with no held-out campaign. This does not map onto our four validation designs.",
+  "forbidden_inferences": [
+    "Do not claim irregular-interval RNNs have been validated for CES or fusion diagnostics.",
+    "Do not imply that T-LSTM is part of our method or one of our baselines.",
+    "Do not cite the small PPMI MSE gap as evidence that time-aware models generally improve accuracy.",
+    "Do not equate EHR visit gaps with CES report latency."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional at most, as one example in a background sentence noting that gated recurrent models can take elapsed-time gaps as an input. It is not needed for our framing, our baselines or our evidence, and adds nothing physics-specific.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "edd7ff72101be9cce99db8c994d5e53a81c5ad9345123839c0c1b7f3c35cebdc",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

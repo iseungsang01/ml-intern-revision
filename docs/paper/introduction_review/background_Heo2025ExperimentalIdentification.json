@@ -1,0 +1,46 @@
+{
+  "key": "Heo2025ExperimentalIdentification",
+  "citation": {
+    "title": "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
+    "authors": "Heo, C.; Park, S.J.; Choi, G.J.; Kim, J.; Kim, E.-J.; Jeon, Y.M.; Choi, M.J.; Han, H.; Sung, C.; Hahm, T.S.; Na, Y.-S.",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "036003",
+    "doi_or_arxiv": "10.1088/1741-4326/adacfc (printed in the article header as its own DOI)"
+  },
+  "relevance": "supporting",
+  "topic": "Edge of KSTAR FIRE mode in the unfavorable (USN) configuration: CES Ti pedestal, L-mode-like edge ne, weakly coherent mode (WCM) in BES, and bicoherence.",
+  "own_question": "Whether the FIRE-mode edge shows I-mode-like features, and how edge turbulence relates to the temperature pedestal.",
+  "actual_method_and_evidence": "The analysis is offline. It uses BES cross-power, coherence, conditional k-f spectra, cross-bicoherence and auto-biphase on time windows (e.g., 0.2 s). The paper presents a scatter of summed coherence in two frequency bands against CES Ti,edge (rho_N about 0.94). This uses 672 time points from eight USN discharges (BT 1.8–1.9 T, Ip 0.5 MA). Points were binned and averaged; no predictive model was built. CES Ti was available only between beam blips. The edge Te pedestal was not resolved because of Thomson scattering uncertainty.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR FIRE-mode plasmas, the prominence of the edge BES WCM was reported to correlate with CES edge Ti (a pedestal-height proxy).",
+      "original_pdf_locator": "Sec. 3, Figs. 4–5, pp. 4–5",
+      "qualification": "Descriptive correlation from binned offline windows. It is not a causal estimator, not real-time, and not a test of incremental predictive information. The campaign and year are not stated.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "BES offers ion-scale 2D edge density-fluctuation data that is spectrally linked to edge ion-temperature structure, motivating BES as an auxiliary input.",
+      "original_pdf_locator": "Sec. 2 and Sec. 3, pp. 3–5",
+      "qualification": "Physics motivation only. The paper does not report mechanism identification for nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "CES Ti is reported only between NBI beam blips. Spectra used 0.2 s windows. No report-arrival times, latency, or ECEI usage are given. The paper does not say whether the CES Ti is impurity or main-ion.",
+  "validation_if_relevant": "None. There is no held-out data, train/test split, or predictive validation.",
+  "forbidden_inferences": [
+    "That BES predicts CES Ti causally or at a 10 ms resolution",
+    "That the discharges belong to the KSTAR2022 campaign or overlap with our data",
+    "That the CES Ti is carbon-impurity, unless verified elsewhere",
+    "That the regulatory or zonal-flow interpretation is proven",
+    "Generalizing these findings to all I-mode or pedestal regimes"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Cite as KSTAR-specific evidence that BES edge spectral features co-vary with CES edge Ti. This motivates testing whether BES adds incremental information, without implying predictive skill.",
+  "bibtex_if_worth_citing": "@article{Heo2025ExperimentalIdentification,title={Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR},author={Heo, Chweeho and Park, SangJin and Choi, GyungJin and Kim, Jaewook and Kim, Eun-jin and Jeon, YoungMu and Choi, Minjun J. and Han, Hyunsun and Sung, Choongki and Hahm, TaikSoo and Na, Yong-Su},journal={Nuclear Fusion},volume={65},pages={036003},year={2025},doi={10.1088/1741-4326/adacfc}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "d1a8eb8281aa0b3e392d8587cec06757ce16cba5fcfad2b97102125a69ca8d03",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

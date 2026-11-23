@@ -1,0 +1,46 @@
+{
+  "key": "vonHellermann1995CrossSection",
+  "citation": {
+    "title": "Analytical approximation of cross-section effects on charge exchange spectra observed in hot fusion plasmas",
+    "authors": "M von Hellermann, P Breger, J Frieling, R König, W Mandl, A Maas, H P Summers",
+    "year": 1995,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "37",
+    "pages": "71-94",
+    "doi_or_arxiv": "unknown (not stated in supplied text)"
+  },
+  "relevance": "supporting",
+  "topic": "Collision-energy-dependent CX emission-rate effects on apparent impurity temperature, velocity and intensity in Gaussian-fitted CES spectra (JET)",
+  "own_question": "Can cross-section effects on thermal CX spectra be approximated analytically and inverted to recover true Ti, rotation and intensity?",
+  "actual_method_and_evidence": "Fits a parametric emission-rate function and approximates it as an exponential with linear and quadratic terms, giving closed-form apparent width, shift and averaged rate, plus an algebraic inversion. Compares these with numerical velocity-space integration for C VI, He II and Be IV. Applies the method to JET pulses with D, T and He beams. The analytical-numerical agreement degrades for He II above about 10 keV.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported CES impurity temperatures come from model-dependent spectral fitting. Beam-energy-dependent CX cross sections can shift apparent temperature and velocity relative to the underlying distribution, so CES reports are conventional labels rather than direct physical truth.",
+      "original_pdf_locator": "Sec. 2, Eqs. (13)-(15); Sec. 4, Eqs. (16)-(17)",
+      "qualification": "Demonstrated for JET geometry and beams at high Ti. The size of the effect for KSTAR pedestal-top carbon CES is unknown.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Standard CES analysis assumes a Gaussian Doppler profile. That assumption can weaken when ion thermal velocities approach beam velocities.",
+      "original_pdf_locator": "Sec. 6 (pp. 92-93); Sec. 3",
+      "qualification": "This is the authors' interpretation, based on analytical-numerical divergence for He II. It is not a general accuracy bound.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline spectral correction only. No timing, latency, nowcasting or BES/ECEI content.",
+  "validation_if_relevant": "Analytical versus numerical model comparison, plus JET data examples. No held-out data and no independent Ti truth.",
+  "forbidden_inferences": [
+    "That KSTAR CES labels carry a specific bias magnitude",
+    "That this work involves real-time or causal estimation",
+    "Generalizing JET high-Ti results to pedestal-top conditions",
+    "Treating the corrected values as independent physical truth",
+    "Using it to motivate a new correction method in our study"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Supports the background framing that CES temperatures are processed, model-dependent impurity Ti labels. It is useful context for not calling labels truth, and is not a method we implement.",
+  "bibtex_if_worth_citing": "@article{vonHellermann1995CrossSection,author={von Hellermann, M. and Breger, P. and Frieling, J. and K{\\\"o}nig, R. and Mandl, W. and Maas, A. and Summers, H. P.},title={Analytical approximation of cross-section effects on charge exchange spectra observed in hot fusion plasmas},journal={Plasma Physics and Controlled Fusion},volume={37},pages={71--94},year={1995}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 25,
+  "supplied_pdf_sha256": "a04b0f24b609089183830cdeb87c94881ab516d2aa0d1e991428c7a0de1222f6",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

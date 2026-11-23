@@ -1,0 +1,39 @@
+{
+  "key": "Weerakody2021ReviewIrregular",
+  "citation": {
+    "title": "A review of irregular time series data handling with gated recurrent neural networks",
+    "authors": "P.B. Weerakody, K.W. Wong, G. Wang, W. Ela",
+    "year": 2021,
+    "venue": "Neurocomputing",
+    "volume": "441",
+    "pages": "161-178",
+    "doi_or_arxiv": "10.1016/j.neucom.2021.02.046"
+  },
+  "relevance": "peripheral",
+  "topic": "Review of gated RNN methods (LSTM/GRU variants) for missing values and irregular sampling, mostly in medical, environmental, traffic and activity data",
+  "own_question": "Which gated-RNN imputation-focused and prediction-focused techniques handle irregular time series?",
+  "actual_method_and_evidence": "Narrative literature review. It categorises methods by technique, including missing indicators, time-interval decay (GRU-D), bidirectional/seq2seq imputation, GANs, ODE-RNNs and modified cells. It compiles cross-paper metrics on PhysioNet, MIMIC-III and Beijing PM2.5 and notes that the setups are not consistent. It contains no plasma or fusion content and no new experiments.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Irregular-series methods often encode missingness indicators and elapsed time since the last observation, for example through decay toward a past value or a mean.",
+      "original_pdf_locator": "Sec. 5.1-5.2, Fig. 1 caption (pp. 162, 169)",
+      "qualification": "This is a review summary of other works. The cited results come from non-plasma datasets. It is background only and does not justify any implemented method.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. Several reviewed imputation methods are bidirectional and noncausal. No real-time timing is reported.",
+  "validation_if_relevant": "The review notes that comparisons across papers lack common setups. It reports no validation of its own.",
+  "forbidden_inferences": [
+    "that any gated-RNN method suits CES nowcasting",
+    "that cross-paper AUC/MAE rankings are valid comparisons",
+    "that the review covers plasma diagnostics or ion temperature",
+    "that all prior irregular-series work is noncausal"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional generic citation for using elapsed time since the last report and missingness as features. It is not needed for the fusion framing.",
+  "bibtex_if_worth_citing": "@article{Weerakody2021ReviewIrregular,title={A review of irregular time series data handling with gated recurrent neural networks},author={Weerakody, Philip B. and Wong, Kok Wai and Wang, Guanjin and Ela, Wendell},journal={Neurocomputing},volume={441},pages={161--178},year={2021},doi={10.1016/j.neucom.2021.02.046}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "95bcff0bf246d9a5f8bb26c6f7e1f382dbe98f7bec47a32b4e18c642e85ab20a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

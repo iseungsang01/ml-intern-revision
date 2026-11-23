@@ -1,0 +1,47 @@
+{
+  "key": "Haskey2018ActiveSpectroscopy",
+  "citation": {
+    "title": "Active spectroscopy measurements of the deuterium temperature, rotation, and density from the core to scrape off layer on the DIII-D tokamak",
+    "authors": "S. R. Haskey, B. A. Grierson, L. Stagner, C. Chrystal, A. Ashourvan, A. Bortolon, M. D. Boyer, K. H. Burrell, C. Collins, R. J. Groebner, D. H. Kaplan, N. A. Pablant",
+    "year": "2018 (manuscript dated 5 June 2018; published in the proceedings of the 22nd HTPD conference)",
+    "venue": "Unknown from supplied text; likely Review of Scientific Instruments, not verified",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "unknown"
+  },
+  "relevance": "supporting",
+  "topic": "Main-ion (deuterium) CER on DIII-D, compared with carbon-impurity CER. Covers spectral fitting, time-slice subtraction, FIDA treatment, and iterative collisional-radiative corrections.",
+  "own_question": "How can D+ temperature, rotation and density be measured from the core to the scrape-off layer, and what analysis is required to do so?",
+  "actual_method_and_evidence": "Uses a 32-chord MICER system. Spectra are fit with a C-language fitter (MICEFIT), and apparent values are corrected iteratively with FIDASIM. The paper tests sensitivity to the choice of passive time slice and to including FIDA, and compares D+ with C-VI profiles for an Ohmic case and an ITER baseline case. The evidence comes from a few example discharges and is offline only.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Conventional CER temperature on DIII-D comes from carbon-impurity C-VI emission. Main-ion and impurity rotation can differ substantially near the edge, so CES impurity labels are not main-ion truth.",
+      "original_pdf_locator": "p1 Introduction; p7 Sec IV, Figs 7-8",
+      "qualification": "Shown for DIII-D example discharges. In Fig 7 the carbon and deuterium temperatures were near identical, so the difference is demonstrated for rotation, not for Ti generally.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Charge-exchange analysis is offline and computationally heavy. Faster spectral fitting enabled between-shot fitting, but the atomic-physics iterations remained slow.",
+      "original_pdf_locator": "p3 Sec III A-III; p5 Sec III C; p8 Conclusions",
+      "qualification": "This applies to MICER on DIII-D, not to KSTAR CES. Between-shot fitting is not real-time operation.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Typical integration time is 5 ms, with beam blips used for beam-on/beam-off subtraction. In the Ohmic case, measurements come every 400 ms. No report-arrival latency is given.",
+  "validation_if_relevant": "No ML validation is involved; the paper reports consistency checks across passive time-slice choices only.",
+  "forbidden_inferences": [
+    "Do not use it as evidence about KSTAR CES latency.",
+    "It does not show that impurity temperature is wrong in general.",
+    "It does not support BES/ECEI nowcasting.",
+    "Do not describe it as real-time deployment.",
+    "Do not equate main-ion Ti with our carbon labels.",
+    "Do not take the DOI from the reference list."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background establishing that our labels are impurity CES measurements rather than main-ion truth, and that CES analysis is cadence- and compute-limited. Cite it briefly.",
+  "bibtex_if_worth_citing": "@article{Haskey2018ActiveSpectroscopy,title={Active spectroscopy measurements of the deuterium temperature, rotation, and density from the core to scrape off layer on the DIII-D tokamak},author={Haskey, S. R. and Grierson, B. A. and Stagner, L. and others},year={2018},note={Venue, volume, pages and DOI to verify}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "9cce26bc470074e9844f686adaee47ec77414fa742120f2aa19240bbabdd0192",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,40 @@
+{
+  "key": "Cha2024AnalysisNeoclassical",
+  "citation": {
+    "title": "Analysis of neoclassical tearing mode stabilization experiment by electron cyclotron injection in KSTAR",
+    "authors": "M. Cha, M. Woo, S.-h. Hahn, Y.-S. Park, M. J. Choi, J.-K. Park, B.-h. Park, A. Rothstein, E. Kolemen, Y.-S. Na",
+    "year": 2024,
+    "venue": "EPJ Web of Conferences (EC22)",
+    "volume": "313",
+    "pages": "02005",
+    "doi_or_arxiv": "10.1051/epjconf/202431302005"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline analysis of 2/1 NTM stabilization by EC with PCS minimum-seeking control in KSTAR shot #31747 (2022 campaign)",
+  "own_question": "Was the 2/1 NTM stabilized by aligned ECCD, as assessed with a simplified MRE in TRIASSIC?",
+  "actual_method_and_evidence": "Single shot. Mirnov phase analysis and ECEI phase inversion were used to identify the mode. TORAY ECCD was computed on MSE-constrained EFIT equilibria. Simplified-MRE terms were computed offline. The paper reports that EC-related terms were negative after 7.3 s, when normalized misalignment was below 0.5. No CES ion-temperature data, nowcasting, or prediction validation is reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR ECEI was used to infer electron-temperature fluctuation structure, including island phase inversion, in a 2022 discharge.",
+      "original_pdf_locator": "p.3-4, Sec. 2.3, Fig. 4",
+      "qualification": "Electron diagnostic used for offline mode identification. It is not a calibrated Te input and not an ion or CES diagnostic. Figure not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable; the paper has no temporal nowcast target. The PCS used boxcar-averaged n=1 amplitude; no latency figures are given.",
+  "validation_if_relevant": "Only a single-shot interpretive analysis; no held-out data.",
+  "forbidden_inferences": [
+    "Do not cite as evidence on CES impurity Ti or nowcasting",
+    "Do not claim ECEI improves Ti estimation",
+    "Do not generalize to all KSTAR work",
+    "Do not treat MRE attribution as proven mechanism",
+    "Do not cite Wehner/Prater DOIs as this paper's DOI"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Only tangential: it is a KSTAR 2022 example of ECEI use and of real-time PCS control. It offers no grounding for the targets, inputs, or validation design. Exclude unless a brief ECEI-context citation is needed.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "564162fc17521c4997627d427b6b791e104e8cd7f5d26e1b606dc2fb18af3214",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

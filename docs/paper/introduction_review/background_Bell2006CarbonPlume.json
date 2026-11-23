@@ -1,0 +1,45 @@
+{
+  "key": "Bell2006CarbonPlume",
+  "citation": {
+    "title": "Carbon ion plume emission produced by charge exchange with neutral beams on National Spherical Torus Experiment",
+    "authors": "R. E. Bell",
+    "year": 2006,
+    "venue": "Review of Scientific Instruments",
+    "volume": "77",
+    "pages": "10E902",
+    "doi_or_arxiv": "10.1063/1.2217012"
+  },
+  "relevance": "supporting",
+  "topic": "Nonlocal carbon C5+ plume emission contaminating CHERS spectra (n=8-7, 5290.5 Å) on NSTX",
+  "own_question": "Can carbon plume emission seen in background CHERS sightlines of high-rotation NSTX plasmas be identified and modeled, and what does it imply for Ti/V/nC interpretation?",
+  "actual_method_and_evidence": "One NSTX discharge (116313, 676 ms). The plume component is inferred by subtracting a reconstructed edge spectrum from background-sightline spectra. Modeling uses field-line mapping from the equilibrium, 3D beam attenuation, and published atomic rates. Modeled line shape and shift agree with the inferred plume component. Modeled amplitude is low, increasingly so at larger radius. Measured and modeled plume/CX brightness profiles show a 9 cm radial shift. Plume brightness reaches up to ~20% of CX brightness for the innermost views. Spectral comparisons appear in figures, which were not visually checked here.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported impurity CES temperatures are model-dependent spectral inferences: nonlocal emission such as carbon plume emission, which is prompt with the beam and not removed by beam modulation, can contaminate charge-exchange spectra. This supports treating CES reports as conventional labels rather than physical truth.",
+      "original_pdf_locator": "p.2 Introduction; p.4-5 Results",
+      "qualification": "Shown in one high-rotation NSTX shot, in background sightlines; magnitude on KSTAR pedestal-top chords is unknown.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The author states that accounting for plume emission is needed for accurate Ti, V and nC, and is harder at low rotation.",
+      "original_pdf_locator": "p.4-5 Results",
+      "qualification": "This is the author's interpretation, not a quantified Ti error.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline spectral analysis. No timing, real-time processing, or nowcasting is involved.",
+  "validation_if_relevant": "Single discharge; model-measurement comparison only.",
+  "forbidden_inferences": [
+    "That plume contamination affects our KSTAR chord or labels by any specific amount",
+    "That CES Ti errors were quantified",
+    "Generalizing to all CES systems or to main-ion Ti",
+    "Any relevance to BES/ECEI, nowcasting, or real-time use"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as one concrete, source-grounded example of why CES reports are processed labels subject to nonlocal-emission systematics. Cite it briefly in the background section.",
+  "bibtex_if_worth_citing": "@article{Bell2006CarbonPlume,author={Bell, R. E.},title={Carbon ion plume emission produced by charge exchange with neutral beams on National Spherical Torus Experiment},journal={Rev. Sci. Instrum.},volume={77},pages={10E902},year={2006},doi={10.1063/1.2217012}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "d2335ac2184f5ba938cce5d768f5af798f98243f90f17e58d44b103c502b96ce",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

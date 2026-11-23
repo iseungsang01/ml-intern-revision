@@ -1,0 +1,39 @@
+{
+  "key": "Mazon2002RealTime",
+  "citation": {
+    "title": "Real-time control of internal transport barriers in JET",
+    "authors": "D Mazon, X Litaudon, D Moreau, M Riva, G Tresset, Y Baranov, A Bécoulet, J M Chareau, F Crisanti, R Dux, R Felton, E Joffrin, et al.",
+    "year": 2002,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "44",
+    "pages": "1087-1104",
+    "doi_or_arxiv": "unknown (PII S0741-3335(02)31766-4; DOI not stated in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Real-time feedback control of JET electron ITBs using an ECE-derived normalized Te-gradient (rho*_Te) with ICRH/NBI actuators",
+  "own_question": "Can ITB strength, quantified by max rho*_Te computed in real time, be controlled via heating power, alone or jointly with the neutron rate?",
+  "actual_method_and_evidence": "48-channel ECE radiometer sampled at 1 kHz, approximately calibrated using coefficients from prior pulses. Quantities sent to the controller at 100 Hz. PI control was simulated in ASTRA, then applied in experiments. Evidence comes from individual JET pulses (e.g. 53496, 53568, 53570, 53697) plus one uncontrolled comparison pulse. This is electron-temperature control. It involves no CES, no impurity Ti, no nowcasting or estimator comparison, and no statistical validation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Real-time tokamak control has used approximately calibrated raw diagnostic signals, since full calibration of JET ECE data was available only after the pulse.",
+      "original_pdf_locator": "p.5 (journal p.1090), sec 2.1",
+      "qualification": "Electron ECE in JET, not CES or KSTAR. Calibration accuracy is described qualitatively only.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "ECE acquired at 1 kHz; outputs sent at 100 Hz. The authors state ITB onset timing within about ±10 ms. Measured latency is unknown.",
+  "validation_if_relevant": "Demonstrations on individual pulses only. No held-out data or error statistics.",
+  "forbidden_inferences": [
+    "Do not cite as CES/impurity-Ti or ion-temperature nowcasting work.",
+    "Do not claim it shows prior work is noncausal or electrons-only in general.",
+    "Do not imply our estimator enables ITB control or real-time deployment.",
+    "Do not transfer JET timing figures to KSTAR."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background showing that ITB/profile-gradient feedback motivates timely profile signals. It is not evidence for our target, inputs or method. Cite only for a brief applications-context sentence, if at all.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "de9674e772ab44f5bfaa9f021bc49915d47ccc4e1739af62e07e4ce65bfc8d20",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "Pavlova2021StudiesHalo",
+  "citation": {
+    "title": "Studies of the halo effect in the charge exchange recombination spectroscopy edge measurements at ITER",
+    "authors": "Pavlova G S, Serov S V, Tugarinov S N, von Hellerman M",
+    "year": 2021,
+    "venue": "Journal of Physics: Conference Series",
+    "volume": "2055",
+    "pages": "012002",
+    "doi_or_arxiv": "10.1088/1742-6596/2055/1/012002"
+  },
+  "relevance": "peripheral",
+  "topic": "Simulated contribution of beam-halo charge exchange to ITER CXRS Edge line intensity, line shape, and spatial resolution, using the SOS code.",
+  "own_question": "How much could the beam halo bias ITER edge CXRS density, temperature, and velocity measurements, and how much could it degrade their spatial resolution?",
+  "actual_method_and_evidence": "This is a simulation-only study. The authors used the SOS code with a diffusion model of the halo. They simulated a 100 keV hydrogen beam for three ITER scenarios over 0.5≤ρ≤1. They report that the halo raises line intensity by up to 20% for impurities and 32% for deuterium. They report Ti and velocity shifts under 1%. They report spatial-resolution loss of about 1.5 cm for He and 2.5 cm for D. They propose an atomic-data uncertainty bound of 20% as a conservative estimate. No experimental data and no KSTAR data were used.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Beam-halo charge exchange can add emission outside the beam–sightline intersection, which can affect the locality of CXRS measurements.",
+      "original_pdf_locator": "p.2 Introduction; p.3 Sec 3.2-3.3",
+      "qualification": "Results are ITER simulations, not measurements. The magnitudes cannot be transferred to KSTAR carbon CES.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The paper contains no temporal, causal, or nowcasting content.",
+  "validation_if_relevant": "Model-based error estimates only. There is no experimental validation and no data split.",
+  "forbidden_inferences": [
+    "That KSTAR CES labels carry halo biases of these magnitudes.",
+    "That halo effects explain errors in our nowcasting.",
+    "That ITER requirements apply to KSTAR.",
+    "That these results are demonstrated, rather than simulated, performance."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional at most. It could support one theory sentence noting that CES labels are model-dependent conventional reports rather than independent truth. It is not needed for the causal-nowcasting framing.",
+  "bibtex_if_worth_citing": "@article{Pavlova2021StudiesHalo,title={Studies of the halo effect in the charge exchange recombination spectroscopy edge measurements at ITER},author={Pavlova, G. S. and Serov, S. V. and Tugarinov, S. N. and von Hellerman, M.},journal={J. Phys.: Conf. Ser.},volume={2055},pages={012002},year={2021},doi={10.1088/1742-6596/2055/1/012002}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "764ffb9f8f2f65d2404bc6847282f82890ce3e2dfc607d0cb0ab9eacd3306b8f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

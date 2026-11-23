@@ -1,0 +1,32 @@
+{
+  "key": "Cole2011ObservationPeak",
+  "citation": {
+    "title": "Observation of Peak Neoclassical Toroidal Viscous Force in the DIII-D Tokamak",
+    "authors": "A. J. Cole, J. D. Callen, W. M. Solomon, A. M. Garofalo, C. C. Hegna, M. J. Lanctot, H. Reimerdes, and the DIII-D Team",
+    "year": 2011,
+    "venue": "Physical Review Letters",
+    "volume": "106",
+    "pages": "225002",
+    "doi_or_arxiv": "10.1103/PhysRevLett.106.225002"
+  },
+  "relevance": "peripheral",
+  "topic": "DIII-D n=3 nonaxisymmetric-field NTV torque versus toroidal rotation; peak near Er≈0.",
+  "own_question": "Does NTV torque peak at low rotation, where Er≈0, as reduced theory predicts?",
+  "actual_method_and_evidence": "The NBI rotation feedback held CER carbon rotation at rho=0.67 fixed. Across several shots, the NTV torque was read from the jump in NBI torque after I-coil switch-on (TRANSP). Deuterium rotation came from NCLASS. Data were compared with a Padé-connected cylindrical model, with c_p fitted to 1.4; the NCLASS mean is about 0.7. The modeled peak is narrower than the data by about 3x. Poloidal CER data were available for only one shot. The analysis is offline physics, not nowcasting.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. The only real-time element is NBI feedback on CER carbon rotation, not a temperature nowcast. No timing figures fit our 10 ms framing.",
+  "validation_if_relevant": "Model–data comparison involves a fitted parameter and a few DIII-D shots. There is no predictive validation split.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence for CES temperature nowcasting or for using BES/ECEI information.",
+    "Do not treat CER carbon rotation feedback as precedent for causal Ti estimation.",
+    "Do not apply DIII-D results to KSTAR pedestal behaviour.",
+    "Do not present fitted c_p agreement as a validated prediction.",
+    "Do not equate the impurity (carbon) rotation measured here with main-ion quantities beyond the paper's own NCLASS conversion."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper addresses rotation and NTV physics and only incidentally uses impurity CER as a feedback signal. It does not inform the nowcasting problem, the estimators, or the validation design.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "665ddb4be805fa6ea07f8903559cdd9759dd501c6e7f14d069b99ae5840fec5c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

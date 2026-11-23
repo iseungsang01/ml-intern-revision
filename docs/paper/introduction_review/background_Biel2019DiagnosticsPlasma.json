@@ -1,0 +1,39 @@
+{
+  "key": "Biel2019DiagnosticsPlasma",
+  "citation": {
+    "title": "Diagnostics for plasma control – From ITER to DEMO",
+    "authors": "W. Biel, R. Albanese, R. Ambrosino, M. Ariola, et al.",
+    "year": 2019,
+    "venue": "Fusion Engineering and Design",
+    "volume": "146",
+    "pages": "465–472",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2018.12.092"
+  },
+  "relevance": "peripheral",
+  "topic": "Conceptual DEMO diagnostic-and-control suite: robustness, retracted front ends, redundancy, and mapping of diagnostics to control tasks",
+  "own_question": "Which diagnostic methods and integration approaches could support DEMO flat-top plasma control under nuclear, erosion and space constraints?",
+  "actual_method_and_evidence": "A design and requirements review, not an empirical study. It contains no CES, no KSTAR data and no nowcasting. Ion temperature appears only as a quantity that neutron spectroscopy (1 s resolution) or gamma spectroscopy could provide. Quoted neutron-camera accuracies are performance assessments, not measured control results.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reactor-oriented control concepts stress reliable diagnostics and combine measurements with control-oriented models, partly because front-end diagnostics may degrade.",
+      "original_pdf_locator": "p.2 Sec.1; p.3 Sec.2",
+      "qualification": "This is a DEMO conceptual requirement and the authors' view, not a demonstrated result. It does not address CES or the timing of temperature reports.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant; no report-latency or nowcasting analysis.",
+  "validation_if_relevant": "None; conceptual design only.",
+  "forbidden_inferences": [
+    "It does not show that a CES nowcast is needed or useful.",
+    "It does not establish requirements for KSTAR or for real-time Ti.",
+    "It does not show that prior diagnostics are noncausal.",
+    "Its redundancy factor of two is a tentative assumption, not a validated value."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this could be optional general background on why reactor-oriented control prefers robust, redundant diagnostics combined with models. It is not specific to impurity-ion CES nowcasting and can be omitted.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "c34639e810d6a270f246d291ecea0706d2972fd30564dd55976f131ab1b971d2",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

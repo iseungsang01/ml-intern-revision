@@ -1,0 +1,47 @@
+{
+  "key": "Kobayashi2007DevelopmentRealTime",
+  "citation": {
+    "title": "Development of Real-Time Measurement System of Charge Exchange Recombination Spectroscopy and Its Application to Feedback Control of Ion Temperature Gradient in JT-60U",
+    "authors": "S. Kobayashi, M. Yoshida, H. Takenaga, S. Sakata, Y. Kamada, Y. Sakamoto, Y. Koide, JT-60 Team",
+    "year": 2007,
+    "venue": "Plasma and Fusion Research",
+    "volume": "2",
+    "pages": "S1049",
+    "doi_or_arxiv": "10.1585/pfr.2.S1049"
+  },
+  "relevance": "supporting",
+  "topic": "Real-time carbon CXRS ion temperature profile from a filter-PMT assembly, used for feedback control of the ion temperature gradient in JT-60U",
+  "own_question": "Can a fast, fit-free filter CXRS analysis supply real-time Ti at several radii for feedback control of the Ti gradient via NB deposition?",
+  "actual_method_and_evidence": "Three Fabry-Perot filters on the CVI 529 nm line feed PMTs. Calibrated intensity ratios map to Ti through a polynomial fit function (Eq. 2), so no nonlinear spectral fitting is needed. ADC data are averaged over 60 ms. Ti at four points is computed in under 5 ms and sent to the control system every 10 ms. A single demonstration in an ELMy H-mode ITB plasma used PD control of core/edge NB units. The gradient tracked the reference during ramp-down but did not recover during ramp-up. Conventional CCD CXRS was used for analysis.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior work showed that carbon-impurity CXRS Ti can be produced in real time with an approximate, fit-free analysis. One JT-60U system supplied four radial points every 10 ms for gradient feedback.",
+      "original_pdf_locator": "Sec. 2, Eq. (2), Fig. 2 text, p.2",
+      "qualification": "The measurement uses specialized filter hardware and 60 ms averaging. It is a different machine, and it is upstream measurement rather than temporal nowcasting. The source reports no accuracy validation against CCD CXRS.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Real-time ion temperature profile information has been used as a control input, although control of the gradient proved difficult when confinement changed.",
+      "original_pdf_locator": "Sec. 3, Figs. 4-5, pp.3-4",
+      "qualification": "This was a single demonstration. The authors' attribution to ITB or confinement degradation was not established by transport analysis.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Input: filter-PMT intensities averaged over 60 ms. Output: impurity (carbon) Ti, computed in under 5 ms and updated every 10 ms. This is current measurement, not prediction. Main-ion Ti is not measured.",
+  "validation_if_relevant": "No quantitative accuracy or error assessment of the real-time Ti against CCD CXRS is reported. The control result comes from one discharge.",
+  "forbidden_inferences": [
+    "that our method was deployed in real time or used for control",
+    "that filter CXRS accuracy was validated",
+    "that the result generalizes to KSTAR or main-ion Ti",
+    "that the 60 ms averaging delay equals our report latency",
+    "that the confinement-degradation mechanism was proven",
+    "that all prior CXRS work was offline"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "This is a concrete precedent for a fast upstream CXRS reader of the kind we describe. Faster acquisition of this sort can refresh nowcast anchors and may reduce the marginal need for nowcasting. It also motivates optional control applications. It does not support any claim of nowcasting performance.",
+  "bibtex_if_worth_citing": "@article{Kobayashi2007DevelopmentRealTime,title={Development of Real-Time Measurement System of Charge Exchange Recombination Spectroscopy and Its Application to Feedback Control of Ion Temperature Gradient in {JT-60U}},author={Kobayashi, S. and Yoshida, M. and Takenaga, H. and Sakata, S. and Kamada, Y. and Sakamoto, Y. and Koide, Y. and {JT-60 Team}},journal={Plasma and Fusion Research},volume={2},pages={S1049},year={2007},doi={10.1585/pfr.2.S1049}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "22f0e92d0def1998d855df55fe607464ca7011f3bf7559f5f22b9ff555a3cf49",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

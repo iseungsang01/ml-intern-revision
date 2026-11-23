@@ -1,0 +1,39 @@
+{
+  "key": "Hey2002OxygenImpurity",
+  "citation": {
+    "title": "Oxygen ion impurity in the TEXTOR tokamak boundary plasma observed and analysed by Zeeman spectroscopy",
+    "authors": "Hey J D, Chu C C, Brezinsek S, Mertens Ph, Unterberg B",
+    "year": 2002,
+    "venue": "J. Phys. B: At. Mol. Opt. Phys.",
+    "volume": "35",
+    "pages": "1525-1553",
+    "doi_or_arxiv": "unknown (PII S0953-4075(02)31273-2; DOI not stated in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline Zeeman/Doppler analysis of C2+ and O+ edge lines at TEXTOR. Discusses possible O VI blending in the C VI CXR line used for ion temperature.",
+  "own_question": "Can oxygen radiation bias CXR-derived ion temperatures? Can C2+ and O+ edge temperatures be identified and modelled with Zeeman spectroscopy?",
+  "actual_method_and_evidence": "Passive multiplet-1 spectra were recorded by two spectrometers. Paschen–Back profiles were fitted for species temperatures and intensities. Results were compared with a collisional heating model. The authors estimate that unresolved O VI blending could cause up to about 14% underestimate of CXR ion temperature. The supplied text attributes this estimate to earlier work and does not demonstrate it here. All processing was offline and post-shot on TEXTOR, not KSTAR.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported CXR/CES impurity temperatures are model-dependent labels; unresolved impurity blending is one cited source of possible bias.",
+      "original_pdf_locator": "p.3 (1526), Introduction, final paragraphs",
+      "qualification": "This is the authors' estimate for the C VI 8-7 line under typical conditions, citing earlier work. It is not measured for KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. Integration ran from 50 ms to several seconds, offline. No nowcasting, report latency or BES/ECEI inputs.",
+  "validation_if_relevant": "Fit uncertainty is stated as 5–10% (C2+) and about 20% (O+). There is no held-out validation.",
+  "forbidden_inferences": [
+    "KSTAR CES labels are biased by oxygen",
+    "C2+/O+ edge temperatures equal pedestal-top CES temperature or main-ion Ti",
+    "evidence for causal nowcasting or real-time capability",
+    "the 14% figure is a demonstrated result in this paper"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this source supports a brief caveat that conventional CES labels are not independent truth. It is a different machine, different lines and different question, so optional citation only.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 30,
+  "supplied_pdf_sha256": "718a455d964a8371e00d68802d023704946b09c02ad4cd0ec0e0cf52cc8f6a93",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

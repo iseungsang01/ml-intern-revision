@@ -1,0 +1,31 @@
+{
+  "key": "Tresset2002DimensionlessCriterion",
+  "citation": {
+    "title": "A dimensionless criterion for characterizing internal transport barriers in JET",
+    "authors": "G. Tresset, X. Litaudon, D. Moreau, X. Garbet and Contributors to the EFDA-JET Work Programme",
+    "year": 2002,
+    "venue": "Nuclear Fusion",
+    "volume": "42",
+    "pages": "520-526",
+    "doi_or_arxiv": "unknown (PII S0029-5515(02)36315-4; DOI not stated in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline local ITB detection on JET using rho*_T = rho_s/L_T computed from ECE Te or CX Ti profiles, with an uncertainty-based confidence factor.",
+  "own_question": "Can a single dimensionless threshold identify the onset, location and evolution of ITBs across varied JET discharges?",
+  "actual_method_and_evidence": "rho*_T was computed from three-point logarithmic temperature gradients, with Gaussian error propagation assuming about 5% uncertainties. A threshold of about 1.4e-2 was tuned on reference discharge 48993. The criterion was then compared on 116 deuterium OS discharges, 84 of which had ITBs, against manual identification. The paper reports 5 weak barriers missed, 1 unconfirmed detection, onset-time uncertainty of about 150 ms and location error of 4.7 cm. There was no held-out split. The E×B interpretation is presented as heuristic dimensional analysis, partly illustrated with fluid simulations.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Offline profile analysis; real-time ITB control is mentioned only as an application in cited work. It does not nowcast reports, does not use BES/ECEI, and its CX Ti is charge-exchange Ti (carbon force balance is discussed for Er).",
+  "validation_if_relevant": "Threshold set on one reference shot, then compared to the authors' own manual analysis within the same database; not independent truth.",
+  "forbidden_inferences": [
+    "Not evidence for CES nowcasting or for BES/ECEI incremental information.",
+    "Does not establish a KSTAR pedestal-top threshold.",
+    "The E×B mechanism was not demonstrated.",
+    "Its real-time use was not shown in this paper."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Concerns core ITB characterization on JET rather than causal temporal estimation of pedestal CES reports. At most, it could be cited as background that gradient-based dimensionless indicators were proposed for real-time-friendly ITB identification; otherwise exclude.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "2eba446beb087da6df797f99cd5985b5b32cefc8c02e9a9a0ff6d753b134b508",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

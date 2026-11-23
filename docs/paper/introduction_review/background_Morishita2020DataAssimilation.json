@@ -1,0 +1,39 @@
+{
+  "key": "Morishita2020DataAssimilation",
+  "citation": {
+    "title": "Data assimilation system based on integrated transport simulation of Large Helical Device plasma",
+    "authors": "Morishita Y., Murakami S., Yokoyama M., Ueno G.",
+    "year": 2020,
+    "venue": "Nuclear Fusion",
+    "volume": "60",
+    "pages": "056001 (8pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ab7596"
+  },
+  "relevance": "peripheral",
+  "topic": "EnKF data assimilation of measured Te, Ti and density profiles into TASK3D transport simulation of one LHD NBI shot",
+  "own_question": "Can sequential Bayesian filtering jointly estimate temperatures, densities, turbulence-model coefficients and NBI deposition factors so that predictions track measured profiles?",
+  "actual_method_and_evidence": "EnKF with 2000 members, 60 radial grid points, and gyro-Bohm models. Fitted, time-interpolated profiles from one LHD shot (114053) are assimilated every 80 or 160 ms. The paper reports qualitative agreement with measurements, coefficient estimates and correlations, and a log-likelihood that depends on ensemble size. The run takes about 5 hours on 2000 cores, so it is not real time. The Ti diagnostic is not specified in the extracted text. There is no held-out validation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Sequential filtering (predict, then update with observations) has been used to fuse past fusion-plasma profile data into a model-based estimate, as background for causal estimation concepts.",
+      "original_pdf_locator": "pp.3-4, Eqs.(4)-(8); Sec.3",
+      "qualification": "This is an LHD physics-model EnKF run offline on a single shot. It does not use BES/ECEI, KSTAR or CES chord nowcasting, and its timing is far slower than real time.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are interpolated Te, Ti and density profiles, treated as observations at assimilation times. The target is the filtered state and short-term prediction. Diagnostic report latency is not addressed.",
+  "validation_if_relevant": "Single shot with no untouched data. Hyperparameters were selected by likelihood on the same data.",
+  "forbidden_inferences": [
+    "Do not state that it validates real-time capability or our 10 ms target.",
+    "Do not state that it concerns impurity CES or BES/ECEI.",
+    "Do not treat estimated C profiles as identified physics.",
+    "Do not generalize it to all prior work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional citation for the Kalman/data-assimilation concept in a theory aside. It does not address our task, baselines or diagnostics.",
+  "bibtex_if_worth_citing": "@article{Morishita2020DataAssimilation,title={Data assimilation system based on integrated transport simulation of Large Helical Device plasma},author={Morishita, Yuya and Murakami, Sadayoshi and Yokoyama, Masayuki and Ueno, Genta},journal={Nuclear Fusion},volume={60},pages={056001},year={2020},doi={10.1088/1741-4326/ab7596}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "58221975fbedc62458c4e175f3c55d19c0a57f1075bdad31368ab0dffa462a05",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

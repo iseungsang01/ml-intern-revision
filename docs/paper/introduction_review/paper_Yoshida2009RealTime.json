@@ -1,0 +1,74 @@
+{
+  "key": "Yoshida2009RealTime",
+  "citation": {
+    "title": "Real-time measurement and feedback control of ion temperature profile and toroidal rotation using fast CXRS system in JT-60U",
+    "authors": "M. Yoshida, Y. Sakamoto, M. Sueoka, Y. Kawamata, N. Oyama, T. Suzuki, Y. Kamada, the JT-60 Team",
+    "year": 2009,
+    "venue": "Fusion Engineering and Design",
+    "volume": "84",
+    "pages": "2206-2213",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2009.04.006 (this paper's own DOI, from the p.1 footer)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-8",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read from the rendered pages. The values discussed below were legible."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Charge-exchange Ti has been used as a real-time feedback-controlled quantity. The controlled quantity was a Ti gradient over r/a ~0.25-0.5.",
+      "verdict": "qualify",
+      "source_finding": "The controlled quantity, grad-Ti, is the Ti difference between two chords. It was r/a~0.25 minus 0.5 under PD and PID control, and r/a~0.3 minus 0.55 under Ti-dependent proportional gain. The actuator was the number of NB units. A separate loop controlled Vt at r/a~0.27.",
+      "locator": "p.4 Sec 4.1, Eqs.1-2; p.5 Fig.7; p.6 Fig.8; p.7 Sec 4.2, Fig.10; p.7 Sec 4.3, Eq.3, Fig.11",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Carbon CXRS ion temperature has been used directly in closed-loop control on JT-60U. There, neutral-beam power regulated a two-chord core Ti difference, which served as a proxy for internal transport barrier strength.",
+      "qualification": "This was JT-60U, not KSTAR. The control was core-region and two-point, not profile control. The source's own CX measurement was the feedback signal, not an estimate."
+    },
+    {
+      "proposed_claim": "Cycle time and number of radial points.",
+      "verdict": "supported",
+      "source_finding": "The CCD frame time was 2.5 ms, with 30 chords per frame. Four selectable chords were fitted (Levenberg-Marquardt Gaussian) within 10 ms. The control loop ran every 10 ms, and the time chart places the NB command in the following cycle. A 50 ms low-pass filter was applied to Ti. Real-time Ti came out about 5% below offline Ti.",
+      "locator": "p.2 Secs 1-2; p.3 Sec 3; p.4 Fig.4; p.5 Fig.5 and Sec 4.1 text",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "In that system, spectra were acquired every 2.5 ms, and Ti and Vt at four chords were fitted within a 10 ms control cycle. This shows that control use places explicit latency requirements on CX-derived quantities.",
+      "qualification": "The real-time agreement check was made against the offline fit of the same spectra, not against independent truth. Report arrival latency was not separately characterized."
+    },
+    {
+      "proposed_claim": "An edge/pedestal chord was used for control.",
+      "verdict": "unsupported",
+      "source_finding": "No edge or pedestal chord was used for control; all controlled points were at r/a≤0.55. Pedestal Ti stayed roughly constant during ITB control. Vt at r/a~0.9 and the D-alpha ELM traces were shown only as consequences of core Vt control. The authors state that Vt profile control was not yet demonstrated.",
+      "locator": "p.6 Fig.8e and Sec 4.1 text; p.7-8 Sec 4.3, Fig.12",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In the same work, edge rotation and ELM behaviour changed when core rotation was controlled, but the edge itself was not a controlled channel.",
+      "qualification": "Do not cite this paper as precedent for pedestal-top CES control or estimation."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "CVI 529.05 nm spectra from on-beam chords, with an off-beam chord for background subtraction and a Sm lamp for wavelength reference",
+    "outputs": "Ti and Vt at 4 chords, fed to PID logic that sets the number of NB units",
+    "causal_or_offline": "Causal real-time measurement and control, plus offline 30-chord reanalysis",
+    "source_diagnostic_as_input": "Yes. The CX spectrum itself is the input. No BES/ECEI and no temporal nowcasting were used.",
+    "reported_vs_physical_truth": "Real-time fit compared with offline fit of the same spectra. The stated error is ~5%."
+  },
+  "validation": "not_applicable (this is a diagnostic and control paper, not an estimator paper)",
+  "runtime_or_deployment": {
+    "what_was_measured": "Real-time fitting of 4 spectra within 10 ms on a 2-CPU PC, a 10 ms control loop, and closed-loop discharges E48179, E48182, E48944 and E47806",
+    "what_not_established": "Any relevance to KSTAR, to pedestal-top chords, or to report-availability delays in our setting. Gain generality is also not established: the authors note that gains need per-plasma optimization.",
+    "locator": "p.3 Sec 3; p.5 Fig.5; p.5-7 Figs.7,8,10,11; p.8 Sec 4.3 end"
+  },
+  "forbidden_inferences": [
+    "That this paper motivates or validates nowcasting of CES reports",
+    "That pedestal or edge Ti was controlled or measured in real time for control",
+    "That the ~5% real-time vs offline difference is accuracy against physical truth",
+    "That ELM control was achieved",
+    "That the method transfers to KSTAR",
+    "Citing [11-14,25] as noncausal or electron-only work"
+  ],
+  "competing_or_complementary": "Complementary. Faster upstream CX acquisition and fitting is an alternative route to timeliness, and it can reduce the marginal need for downstream nowcasting. Introduction framing: control use creates a latency requirement, which can be met by faster spectral readers and/or by a nowcast that estimates the current report before it arrives. The actual benefit of the latter requires validation.",
+  "bibtex": "@article{Yoshida2009RealTime,author={Yoshida, M. and Sakamoto, Y. and Sueoka, M. and Kawamata, Y. and Oyama, N. and Suzuki, T. and Kamada, Y. and {JT-60 Team}},title={Real-time measurement and feedback control of ion temperature profile and toroidal rotation using fast {CXRS} system in {JT-60U}},journal={Fusion Engineering and Design},volume={84},pages={2206--2213},year={2009},doi={10.1016/j.fusengdes.2009.04.006}}",
+  "followup_sources_if_material": [
+    "Refs [11-14,25] (Joffrin 2003; Heesterman 2003; Wade 2007; Penaflor 2005; Hillis 2004): real-time CCD CXRS on other devices, which the source says controlled Ti/Vt at one position. Their own DOIs need checking.",
+    "Ref [24] Koide 2001: the conventional JT-60U CXRS system (16.7 ms)"
+  ]
+}

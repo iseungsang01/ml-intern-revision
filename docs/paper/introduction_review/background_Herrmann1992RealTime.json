@@ -1,0 +1,39 @@
+{
+  "key": "Herrmann1992RealTime",
+  "citation": {
+    "title": "Real-time measurement of ion temperature and relative hydrogenic plasma composition by active charge exchange",
+    "authors": "W. Herrmann",
+    "year": 1992,
+    "venue": "Nuclear Fusion",
+    "volume": "32",
+    "pages": "1662-1666 (letter; extracted text spans 1662-1665/1666)",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Proposed active charge-exchange neutral-particle-analyser method to infer local main-ion (hydrogenic) Ti and isotope ratio from fluxes at two equal-velocity energy pairs.",
+  "own_question": "Can Ti and relative H/D/T composition be obtained in real time from doping-beam CX fluxes without other plasma or beam parameters?",
+  "actual_method_and_evidence": "Analytic derivation assuming Maxwellian species at equal temperature. It also includes error propagation, qualitative discussion of scattering and halo effects, and a helium-beam argument referencing prior reports. No experimental demonstration, implementation or measured latency is reported. The roughly 100 ms pulse length is an estimate.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Real-time ion-temperature and fuel-mix information has long been framed as a control need; one early proposal derived Ti from active CX neutral fluxes via a closed-form ratio.",
+      "original_pdf_locator": "p.1662 Introduction; p.1663 Sec.2 equations",
+      "qualification": "This was a theoretical proposal for main-ion NPA, not CES impurity spectroscopy, and was not demonstrated. Equations extracted poorly.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs were neutral fluxes integrated over a beam pulse of an estimated 100-200 ms. This is a direct measurement, not nowcasting, and the timing is not measured.",
+  "validation_if_relevant": "None; analytic estimates only.",
+  "forbidden_inferences": [
+    "That the method was implemented or validated",
+    "That it concerns carbon-impurity CES Ti",
+    "That its timescale is comparable to our 10 ms grid",
+    "That it shows prior Ti diagnostics are all non-real-time beyond the author's 1992 view"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional historical citation for the motivation behind real-time Ti. The diagnostic, species and approach differ from ours, and the source provides no evidence.",
+  "bibtex_if_worth_citing": "@article{Herrmann1992RealTime,author={Herrmann, W.},title={Real-time measurement of ion temperature and relative hydrogenic plasma composition by active charge exchange},journal={Nuclear Fusion},volume={32},number={9},pages={1662--1666},year={1992}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "59fec4158dc17bc64801ee3f809cf0253a89cd5b2d27fcd02a62be71d5e8e919",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

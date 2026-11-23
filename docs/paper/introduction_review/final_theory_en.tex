@@ -1,0 +1,33 @@
+\section{Theoretical background}
+\label{sec:background}
+
+\subsection{Pedestal and ion-temperature measurement}
+The pressure at the top of the H-mode edge barrier is widely regarded as a strong determinant of global confinement, and pedestal-top values serve as boundary conditions for core transport models~\citep{Snyder2011FirstPrinciples}. On KSTAR the $T_i$ pedestal spans a few centimetres. It is usually characterized by fitted heights and widths~\citep{Ko2015IonTemperature}. This study uses one chord that the provider designated as pedestal-top. It does not redetermine the pedestal position for each discharge.
+
+\subsection{From a CES spectrum to a reported temperature}
+A neutral-beam atom transfers an electron to a fully stripped carbon ion, and the excited C$^{5+}$ ion emits the C\,VI line near $\lambda_0=529.05$\,nm. Because the emission is concentrated where the line of sight crosses the beam, the measurement is localized~\citep{Fonck1984DeterminationPlasma,Isler1994OverviewCharge}. Passive edge emission lies on top of the active line, so the analysis must separate the two components~\citep{Viezzer2011PassiveEdge}.
+
+If the active line is fitted as a Gaussian with Doppler shift $\Delta\lambda$ and standard deviation $W_D$, the simplified relations are
+\begin{equation}
+ v_T = c\,\frac{\Delta\lambda}{\lambda_0},\qquad T_i = m_i c^2\left(\frac{W_D}{\lambda_0}\right)^2 .
+\end{equation}
+Here $W_D$ is the width after the fixed instrumental width has been removed. $m_i$ is the carbon-ion mass, and $T_i$ is expressed in energy units, that is, $k_B T_i$~\citep{Lee2026NeuralNetworkbased}. The relation neglects line-shape effects, such as unresolved fine structure, which can alter apparent widths~\citep{Fonck1984DeterminationPlasma}.
+
+The result is therefore a carbon-impurity temperature produced by a defined analysis chain. It is not necessarily the main-ion temperature: the two have been measured to differ in the edge of DIII-D~\citep{Haskey2018MainIon}. NN-CES learns the same fitted parameters from raw spectra~\citep{Lee2026NeuralNetworkbased}. It reads spectra faster, but its reference remains the conventional analysis.
+
+\subsection{Spectrum reading versus report availability}
+Reading a spectrum and having a report available are separate steps. Once a spectrum has been read, its report can be appended to the history. Before that, the current report can be estimated only from information already present.
+
+Let $\mathcal{I}_t$ denote the CES reports available before frame $t$ together with the BES and ECEI snapshots up to and including $t$. A causal estimator is any function of $\mathcal{I}_t$, which corresponds to filtering in state-estimation terms. Two-sided interpolation also uses later reports, which corresponds to smoothing~\citep{Shukla2020SurveyPrinciples,VanMulders2025ModelBased}. It is therefore an offline reference.
+
+The targets are F, the report of frame $t$, and L5, an offline median of at least three of the five subsequent reports. Neither is ever part of $\mathcal{I}_t$. Nowcasting here means estimating the pending report of the current frame. It does not mean forecasting a future physical temperature, and a finer output grid alone does not demonstrate improved measurement resolution.
+
+\subsection{Candidate learning models}
+The candidates differ in how they use $\mathcal{I}_t$:
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item Hold carries the last report forward.
+\item A causal Gaussian process expresses smooth temporal correlation in the report history.
+\item Recurrent and history models carry a state across frames. The elapsed time since the last report can be supplied explicitly as a feature~\citep{Che2018RecurrentNeural}.
+\item Local temporal convolutions, including causal temporal convolutional networks, apply filters over a recent window of snapshots. They can detect short-lived patterns without a long memory.
+\end{itemize}
+Which of these helps is decided by matched comparisons of regression error and uncertainty, not by architecture alone. The completed comparisons and the planned network design are separated in Section~\ref{sec:intro} and in the Methods.

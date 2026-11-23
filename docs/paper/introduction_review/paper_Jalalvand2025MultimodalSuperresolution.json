@@ -1,0 +1,82 @@
+{
+  "key": "Jalalvand2025MultimodalSuperresolution",
+  "citation": {
+    "title": "Multimodal super-resolution: discovering hidden physics and its application to fusion plasmas",
+    "authors": "Jalalvand A, Kim SK, Seo J, Hu Q, Curie M, Steiner P, Nelson AO, Na Y-S, Kolemen E",
+    "year": 2025,
+    "venue": "Nature Communications",
+    "volume": "16",
+    "pages": "8506 (article number; 14 pp.)",
+    "doi_or_arxiv": "10.1038/s41467-025-63492-1 (this paper; Zenodo 10.5281/zenodo.16748363 is its code, ref. 68)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-14",
+    "full_pdf_supplied": true,
+    "limitations": "Supplementary information, peer-review file and code were not supplied. Figures were read from the rendered pages."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Fast diagnostics reconstruct a slow diagnostic (TS) without the target as input.",
+      "verdict": "supported",
+      "source_finding": "An MLP maps interferometer, ECE, magnetics, CER and MSE inputs, plus ECE and interferometer first and second derivatives (236 features), to TS outputs. TS is excluded from the inputs. Training aligns each input's most recent sample to TS timestamps. Inference resamples inputs to 1 MHz.",
+      "locator": "p3 Results 'Generating super-resolution TS'; p5 Fig.3; p9 Methods 'Feature extraction'; p10 'Time-series model development'",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Multimodal reconstruction has been used to generate a synthetic, temporally dense representation of Thomson scattering from faster DIII-D diagnostics, without using TS itself as an input [Jalalvand2025].",
+      "qualification": "The output is a model-generated TS-like signal. It is not a validated MHz measurement."
+    },
+    {
+      "proposed_claim": "Target is TS Te/ne only; any ion quantity?",
+      "verdict": "supported",
+      "source_finding": "Outputs are 80 TS channels: 40 electron density and 40 electron temperature. The only ion-related quantity is carbon CER, which appears as a 58-channel, 200 Hz input held constant between samples. No ion temperature is predicted.",
+      "locator": "p9 Methods 'Feature extraction'; p3 Results; p5 Fig.3",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In that work the reconstructed quantities are electron density and temperature, and charge-exchange data enter only as slowly varying inputs.",
+      "qualification": "This describes this source only. Do not generalize to the wider literature."
+    },
+    {
+      "proposed_claim": "Inference is causal, and validation is a held-out design.",
+      "verdict": "qualify",
+      "source_finding": "Validation gives R2=0.92 on a validation set formed by an 80/20 split of about 3.4M points drawn from 4000 random 2017-2022 discharges (first 5 s of each). The split unit is not stated. Further checks are physics-consistency case studies: burst-mode TS, aggregated ELM cycles, an RMP comparison with simulation, and a q95 scan. The authors state no MHz TS ground truth exists. For the derivative features, the source says inputs were smoothed with 1 ms moving averages and derivatives taken over 1 ms windows, but does not say whether the windows are trailing or centred. Chebyshev and other filtering is applied in the post-analysis.",
+      "locator": "p4 Fig.4 text; p9 Methods 'Data acquisition','Feature extraction'; p10 'Validation methodology and limitations'; p6 RMP/q95 text; Figs 5-7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Its reconstructions were assessed against available TS samples and through consistency with known edge phenomena, rather than against independent high-rate measurements.",
+      "qualification": "Offline analysis. Online causality, the split unit and discharge-level independence are unknown."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Interferometer (4 ch, 1.66 MHz), ECE (40 ch, 500 kHz), magnetics (8 ch, 2 MHz), CER (58 ch, 200 Hz), MSE (38 ch, 4 kHz), plus ECE and interferometer derivatives",
+    "outputs": "TS ne and Te, 40 channels each. Separately, a CNN maps ECE spectrograms to interferometer spectrograms (L1 1.2e-3, AE-detector F1 0.82; p3, Fig.2).",
+    "causal_or_offline": "Offline retrospective analysis. Training alignment uses the most recent input samples, but derivative-window causality and the post-hoc filtering mean online causality is not established.",
+    "source_diagnostic_as_input": "No; TS is never used as an input, either past or current.",
+    "reported_vs_physical_truth": "Labels are conventional TS outputs, with uncertainty bounds used for augmentation. There is no independent truth."
+  },
+  "validation": {
+    "split_unit": "80/20 split of data points from 4000 discharges; the unit is not stated",
+    "temporal_order": "Not stated",
+    "independent_truth": "None; TS labels and physics-consistency checks only",
+    "unknowns": "Whether the case-study discharges (153761, 174823, 157545, 136219) were in training; split unit; leakage control"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing on runtime. The 1 MHz figure is the inference output grid, not a measured speed.",
+    "what_not_established": "Latency, real-time execution, control integration",
+    "locator": "p3 Results; p8 Conclusions; p5 Fig.3b"
+  },
+  "forbidden_inferences": [
+    "Real-time or online deployment",
+    "1 MHz SRTS validated as physical temperature",
+    "Discharge-level or temporally ordered held-out validation",
+    "R2=0.92 holds during ELM or burst intervals",
+    "Ion-temperature or CES estimation demonstrated",
+    "Transfer to KSTAR",
+    "The magnetic-island mechanism proven: this is the authors' interpretation of evidence they describe as supporting the theory",
+    "Any priority statement"
+  ],
+  "competing_or_complementary": "Complementary, closest in construction. Diag2Diag performs an offline, target-free reconstruction of electron TS profiles from fast DIII-D inputs at a 1 MHz grid. Our study instead nowcasts the current CES ion-temperature report on one KSTAR chord. It uses 10 ms BES/ECEI snapshots plus strictly past CES reports, compares against hold, causal GP and interpolation baselines, and uses four validation designs. Frame the work as an adjacent, differently posed question, not as an improvement on Diag2Diag.",
+  "bibtex": "@article{Jalalvand2025MultimodalSuperresolution,title={Multimodal super-resolution: discovering hidden physics and its application to fusion plasmas},author={Jalalvand, Azarakhsh and Kim, SangKyeun and Seo, Jaemin and Hu, Qiming and Curie, Max and Steiner, Peter and Nelson, Andrew Oakleigh and Na, Yong-Su and Kolemen, Egemen},journal={Nature Communications},volume={16},pages={8506},year={2025},doi={10.1038/s41467-025-63492-1}}",
+  "followup_sources_if_material": [
+    "Zenodo 10.5281/zenodo.16748363 (code: derivative-window causality, split unit)",
+    "Peer-review file and supplementary information of this paper",
+    "Player et al. 2022, Nucl. Fusion 62:126019 (ref. 58; uses measured TS among its inputs)"
+  ]
+}

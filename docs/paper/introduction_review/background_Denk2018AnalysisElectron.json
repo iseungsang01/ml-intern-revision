@@ -1,0 +1,39 @@
+{
+  "key": "Denk2018AnalysisElectron",
+  "citation": {
+    "title": "Analysis of electron cyclotron emission with extended electron cyclotron forward modeling",
+    "authors": "S S Denk, R Fischer, H M Smith, P Helander, O Maj, E Poli, J Stober, U Stroth, W Suttrop, E Westerhof, M Willensdorfer and the ASDEX Upgrade Team",
+    "year": 2018,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "60",
+    "pages": "105010",
+    "doi_or_arxiv": "10.1088/1361-6587/aadb2f"
+  },
+  "relevance": "peripheral",
+  "topic": "ECE radiation-transport forward modeling for Te profile inference in Bayesian integrated data analysis (IDA) at ASDEX Upgrade.",
+  "own_question": "Can a relativistic absorption coefficient combined with a Maxwell–Jüttner distribution model ECE shine-through, pseudo radial displacement, and X2/X3 harmonic overlap for routine Te reconstruction?",
+  "actual_method_and_evidence": "The authors compared radiation-transport models A, A′ and B against calibrated radiometer Trad from selected discharges, averaged over 1 ms. Te was fitted inside IDA, with SOL channels left out of the fit. Additional checks covered radiation drag, wall reflections and O-mode leakage. The paper defines no forecasting or temporal validation split.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "ECE signals do not always map to local cold-resonance Te. Forward modeling can account for down-shifted shine-through and harmonic overlap in offline profile inference.",
+      "original_pdf_locator": "pp.2-3 introduction; sec.4, pp.8-12",
+      "qualification": "The work concerns electron ECE on ASDEX Upgrade with calibrated Trad. It does not address ECEI voltage snapshots, KSTAR, or ion or impurity temperature.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline 1 ms averages of 1 MHz radiometer data. No nowcasting and no report-latency analysis.",
+  "validation_if_relevant": "Comparison with measured Trad, including SOL channels excluded from the fit, on a few shots. The study did not hold out any shots.",
+  "forbidden_inferences": [
+    "ECEI voltages encode calibrated Te in our study",
+    "relevance to CES impurity Ti",
+    "real-time capability",
+    "evidence for our estimators"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional single background citation. It could support a caution that raw ECE-type signals need forward modeling to be read as Te. It does not address our target, timing or validation designs.",
+  "bibtex_if_worth_citing": "@article{Denk2018AnalysisElectron,title={Analysis of electron cyclotron emission with extended electron cyclotron forward modeling},author={Denk, S. S. and Fischer, R. and Smith, H. M. and Helander, P. and Maj, O. and Poli, E. and Stober, J. and Stroth, U. and Suttrop, W. and Westerhof, E. and Willensdorfer, M. and {ASDEX Upgrade Team}},journal={Plasma Physics and Controlled Fusion},volume={60},pages={105010},year={2018},doi={10.1088/1361-6587/aadb2f}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "09a9f773866fec9cf2cc12fb9d668f935c1a3155f638ef289c91a5ee01cf3177",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,45 @@
+{
+  "key": "Blanken2019ModelBased",
+  "citation": {
+    "title": "Model-based real-time plasma electron density profile estimation and control on ASDEX Upgrade and TCV",
+    "authors": "T.C. Blanken, F. Felici, C. Galperti, O. Kudláček, F. Janky, A. Mlynek, L. Giannone, P.T. Lang, W. Treutterer, W.P.M.H. Heemels, M.R. de Baar",
+    "year": 2019,
+    "venue": "Fusion Engineering and Design",
+    "volume": "147",
+    "pages": "111211",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2019.05.030"
+  },
+  "relevance": "supporting",
+  "topic": "Real-time Extended Kalman filter estimation of electron density profiles, with diagnostic fault handling and feedback control, on AUG and TCV",
+  "own_question": "Can a model-based observer merge multiple density diagnostics, handle faults such as fringe jumps and invalid signals, and supply controlled quantities in experiments?",
+  "actual_method_and_evidence": "Uses the RAPDENS physics-based transport model inside an EKF. Interferometer, Bremsstrahlung and V1 forward models are used. Invalid channels are excluded through a selection matrix, and an FIR-based fringe-jump detector is applied. Real-time estimates are compared qualitatively with offline Thomson scattering in a few discharges. The paper reports false jump detections, underestimation of edge density, and no tracking of pellet transients. An H-infinity-tuned PI controller is used for TCV gas control. The target is electron density, not ion or impurity temperature. It is not a nowcast of delayed reports.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Recursive Bayesian/Kalman observers have been used in real time to merge diagnostics with a dynamic model and to exclude invalid channels for electron density estimation.",
+      "original_pdf_locator": "Sec. 2.3-2.4; Sec. 3.2.2; App. B (B.11-B.14)",
+      "qualification": "Covers electron density on AUG/TCV only; the estimator is a model-based filter, not a data-driven nowcaster. Agreement with Thomson scattering is shown qualitatively, with no quantitative error metrics.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Diagnostic faults and fast transients can corrupt real-time inputs, which motivates fault-aware estimation for control.",
+      "original_pdf_locator": "Sec. 1; Sec. 3.3.1-3.3.2; Sec. 6",
+      "qualification": "Faults discussed are interferometer fringe jumps and ICRH interference, not CES report latency.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Measurements are used at the 1.5 ms (AUG) and 1 ms (TCV) control cycle. The estimated quantity is the current electron density state. Report arrival delays are not studied.",
+  "validation_if_relevant": "Qualitative comparison with offline Thomson scattering on a few discharges (#34188, #34114, #54769, #55117). There is no held-out split and no quantitative error statistics.",
+  "forbidden_inferences": [
+    "Do not cite as ion, impurity or CES temperature estimation.",
+    "Do not cite as evidence that our BES/ECEI estimator works or meets 10 ms.",
+    "Do not claim the observer is validated against independent truth or that it is generally accurate.",
+    "Do not imply all prior real-time estimation is model-based or electrons-only."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful background for real-time recursive estimation, multi-diagnostic merging and validity handling in tokamak control. It is not a comparator for our task.",
+  "bibtex_if_worth_citing": "@article{Blanken2019ModelBased,title={Model-based real-time plasma electron density profile estimation and control on ASDEX Upgrade and TCV},author={Blanken, T.C. and Felici, F. and Galperti, C. and Kudl{\\'a}{\\v{c}}ek, O. and Janky, F. and Mlynek, A. and Giannone, L. and Lang, P.T. and Treutterer, W. and Heemels, W.P.M.H. and de Baar, M.R.},journal={Fusion Engineering and Design},volume={147},pages={111211},year={2019},doi={10.1016/j.fusengdes.2019.05.030}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "0d51f7774623146df806478442e22a338f096534faed14e41b341de56b46572a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

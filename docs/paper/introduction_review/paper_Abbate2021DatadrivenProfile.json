@@ -1,0 +1,80 @@
+{
+  "key": "Abbate2021DatadrivenProfile",
+  "citation": {
+    "title": "Data-driven profile prediction for DIII-D",
+    "authors": "J. Abbate; R. Conlin; E. Kolemen",
+    "year": 2021,
+    "venue": "Nuclear Fusion",
+    "volume": "61",
+    "pages": "046027 (12pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/abe08d (this paper's DOI, from its own header, PDF p.2)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-13 (PDF p.1 is the publisher cover; journal pp.1-12 correspond to PDF pp.2-13)",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read from extracted text and images. The code repository was not inspected. The forthcoming MPC paper was not available."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Predicted profiles include Ti",
+      "verdict": "unsupported",
+      "source_finding": "The model predicts iota, ne, Te, rotation and pressure. Ti and ion density are explicitly excluded because those signals are less reliable. Rotation is labelled 'ion rotation' (Zipfit, kHz), with no diagnostic detail given.",
+      "locator": "PDF p.3 (j.p.2) §1, last paragraph; PDF p.4 (j.p.3) §2.1 and Table 1",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Data-driven forecasting on DIII-D has predicted electron density, electron temperature, rotation, rotational transform and pressure profiles, but not ion temperature [Abbate2021].",
+      "qualification": "Do not equate their 'ion rotation' with a CES temperature target."
+    },
+    {
+      "proposed_claim": "Forecast horizon and inputs",
+      "verdict": "supported",
+      "source_finding": "The model predicts the change in each profile 200 ms (4 x 50 ms steps) ahead. Inputs are the present-step profiles, 300 ms of past actuators and parameters, and a 200 ms future actuator 'proposal'. The horizon was chosen from a histogram of tau_E.",
+      "locator": "PDF p.4 (j.p.3) §2.1; PDF p.5 Fig.2; PDF p.6 Fig.3; PDF p.3 Eq.(2)",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Neural-network forecasting has mapped present profiles, recent plasma history and proposed actuator trajectories to profile changes about one confinement time ahead [Abbate2021]. Our task instead estimates the current CES report from strictly past reports and current BES/ECEI snapshots, before that report is available.",
+      "qualification": "The paper calls its target a future state. It is a forecast, not a nowcast of a pending report."
+    },
+    {
+      "proposed_claim": "Train/test separation",
+      "verdict": "qualify",
+      "source_finding": "The split is by shot number from the same 2013-2018 pool. Last digit 0 forms the test set (389 shots, 15,132 samples). One other randomly chosen digit forms the validation set (415 shots, 15,772 samples). Training uses 3,117 shots (121,242 samples). The authors caution that reloaded, similar shots may let the network memorize discharge patterns. Test R^2 for PCA-coefficient changes is 0.61-0.82 for mode 1 and 0.37-0.58 for mode 2.",
+      "locator": "PDF p.7 (j.p.6) §2.3; PDF p.11 (j.p.10) Fig.11 and §3; PDF pp.11-12 §4",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Shot-held-out evaluation of such forecasters is complicated by repeated, similar discharges, a concern the authors themselves raise [Abbate2021].",
+      "qualification": "There is no temporal or campaign holdout, no reported uncertainty interval, and no quantitative persistence baseline."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Zipfit ne, Te and rotation plus EFIT01 iota and pressure (33 points) at time t; actuators (pinj, tinj, Ip target, density target) and shape/li/line-density parameters averaged on a 50 ms grid; future actuator proposals.",
+    "outputs": "Profile changes at t+200 ms.",
+    "causal_or_offline": "Offline forecasting. The authors note that Zipfit and EFIT use up to 20 ms of future diagnostic data, so the inputs are not fully causal (PDF p.4 §2.1).",
+    "source_diagnostic_as_input": "Yes. The present fitted profiles are inputs, and the same fitted profiles define the targets.",
+    "reported_vs_physical_truth": "Targets are Zipfit and EFIT01 reconstructions, not independent physical truth."
+  },
+  "validation": {
+    "split_unit": "shot (last digit of shot number)",
+    "temporal_order": "Not separated in time; all data come from the same campaigns.",
+    "independent_truth": "none",
+    "unknowns": "Per-campaign performance; uncertainty intervals; quantitative persistence or interpolation baselines; whether the 'previous' profile curves in Figs 6-7 imply any baseline metric (none is reported)."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "The authors state that one prediction takes a few tens of ms on a standard computer.",
+    "what_not_established": "No timing protocol or hardware specification is given. The authors also claim an MPC implementation on DIII-D using a reduced model running in hundreds of microseconds, but this is an author claim deferred to a forthcoming paper and is not demonstrated here.",
+    "locator": "PDF p.9 (j.p.8) §3; PDF p.11 (j.p.10) §4"
+  },
+  "forbidden_inferences": [
+    "The paper predicts Ti or CES temperature.",
+    "It is causal nowcasting of a pending report.",
+    "Real-time deployment was demonstrated in this paper.",
+    "Fitted profiles are physical truth.",
+    "Its tens-of-ms timing transfers to our 10 ms grid.",
+    "BES/ECEI were used as inputs.",
+    "It generalizes across campaigns or to untouched data.",
+    "Priority or novelty claims (the paper's own 'first attempt' wording should not be propagated)."
+  ],
+  "competing_or_complementary": "Complementary. It forecasts the actuator-conditioned future state over a ~200 ms horizon, whereas our study nowcasts the current-frame CES report from past reports and fluctuation-diagnostic snapshots. It can serve as an introduction contrast between forecasting and nowcasting, not as a baseline.",
+  "bibtex": "@article{Abbate2021DatadrivenProfile,\n title={Data-driven profile prediction for {DIII-D}},\n author={Abbate, J. and Conlin, R. and Kolemen, E.},\n journal={Nuclear Fusion},\n volume={61},\n pages={046027},\n year={2021},\n doi={10.1088/1741-4326/abe08d}\n}",
+  "followup_sources_if_material": [
+    "The authors' forthcoming MPC paper, only if a deployment claim is needed (no citation is given in this PDF)."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "key": "Fonck1983PlasmaTemperature",
+  "citation": {
+    "title": "Plasma ion temperature measurements via charge exchange recombination radiation",
+    "authors": "R. J. Fonck; R. J. Goldston; R. Kaita; D. E. Post",
+    "year": 1983,
+    "venue": "Applied Physics Letters",
+    "volume": "42",
+    "pages": "239-241",
+    "doi_or_arxiv": "10.1063/1.93893"
+  },
+  "relevance": "supporting",
+  "topic": "Foundational proposal and demonstration of CES/CXRS for measuring impurity ion temperature and rotation from Doppler-broadened charge-exchange lines",
+  "own_question": "Can Doppler profiles of low-Z impurity lines excited by charge exchange with beam neutrals give localized ion temperature?",
+  "actual_method_and_evidence": "PDX ohmic test: a modulated 28 keV diagnostic H0 beam was crossed with a grazing-incidence spectrometer sightline at r=5 cm. He+ 304 Å was observed in third order. Line profiles were built from shot-to-shot scans and fit with Gaussians, using the background line as the instrument function. The reported near-central Ti was 550±200 eV, versus 450±50 eV from passive charge-exchange analysis. The paper also gives modeled line intensities for PDX and TFTR, but no carbon pedestal data, no timing study, and no prediction.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "CES infers impurity ion temperature locally from Doppler widths of charge-exchange-excited lines where a neutral beam crosses a viewing chord, and line shifts can give rotation.",
+      "original_pdf_locator": "p.2 abstract and body; p.3 paragraphs on spatial resolution and rotation",
+      "qualification": "The measured quantity is impurity-line temperature, not main-ion or electron temperature. The rotation capability is described, not demonstrated here. The demonstration used He+, not C6+.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Reported CES temperature is a fitted spectral-analysis product that depends on the instrument function and photon statistics.",
+      "original_pdf_locator": "p.3-4, Fig. 2 discussion and uncertainty paragraph",
+      "qualification": "This is a single early low-signal example. Figures were not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Beam pulse 20 ms, modulated at 500 Hz. Profiles were accumulated shot-to-shot. The source gives no report latency or arrival times.",
+  "validation_if_relevant": "Single comparison with passive charge-exchange Ti on one plasma condition. There is no held-out or predictive validation.",
+  "forbidden_inferences": [
+    "CES labels are independent physical truth",
+    "applies directly to KSTAR carbon pedestal-top accuracy",
+    "demonstrated real-time or online CES",
+    "main-ion Ti equals the measured impurity temperature",
+    "supports BES/ECEI nowcasting performance",
+    "all prior Ti diagnostics are noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Cite this as the historical and conceptual basis for the CES label in the theory background. It does not provide evidence for the nowcasting method.",
+  "bibtex_if_worth_citing": "@article{Fonck1983PlasmaTemperature,title={Plasma ion temperature measurements via charge exchange recombination radiation},author={Fonck, R. J. and Goldston, R. J. and Kaita, R. and Post, D. E.},journal={Applied Physics Letters},volume={42},number={3},pages={239--241},year={1983},doi={10.1063/1.93893}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "9fdb11568ece392c58ce13dea639131c65ffad2e6cf27d8350f751024511fe13",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

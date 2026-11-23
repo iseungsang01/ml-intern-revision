@@ -1,0 +1,45 @@
+{
+  "key": "Diagnostics1999ChapterMeasurement",
+  "citation": {
+    "title": "Chapter 7: Measurement of plasma parameters",
+    "authors": "ITER Physics Expert Group on Diagnostics; ITER Physics Basis Editors",
+    "year": 1999,
+    "venue": "Nuclear Fusion",
+    "volume": "39",
+    "pages": "2541-2575",
+    "doi_or_arxiv": "unknown (not stated in supplied text)"
+  },
+  "relevance": "supporting",
+  "topic": "ITER diagnostic requirements, priorities, and feasibility assessment, including CXRS ion temperature and rotation, and the role of measurements in real-time control.",
+  "own_question": "Which plasma measurements ITER needs for protection, control, and physics, and whether proposed diagnostics can meet those needs.",
+  "actual_method_and_evidence": "Review and design assessment. It sets requirement tables and gives a qualitative capability classification (Table 5). Supporting evidence comes from design studies and simulations cited elsewhere. It reports no CES nowcasting, no ML, and no KSTAR data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reactor-scale requirements documents have treated ion temperature and plasma rotation profiles as needed for advanced control and physics evaluation. They have also identified meeting spatial and temporal resolution targets for these profiles as difficult.",
+      "original_pdf_locator": "Sec. 2.3 and Table 2 (pp. 2546-2548); Sec. 3.5-3.6 (pp. 2561-2563); Table 5(b)-(c) (pp. 2566-2568)",
+      "qualification": "These are ITER design projections (CXRS with a diagnostic beam; ~0.1 s for r/a>0.5 at high density), not measured performance. This concerns impurity CXRS, not KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Charge-exchange spectroscopy infers ion temperature from the Doppler width of impurity lines. It therefore reports impurity-ion properties, which can be combined with other methods to estimate Ti.",
+      "original_pdf_locator": "Sec. 3.5-3.6 (pp. 2561-2562)",
+      "qualification": "Background concept only. It does not establish that impurity temperature equals main-ion temperature or that CES labels are physical truth.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Provides requirement targets only (for example, ~100 ms general and ~1 ms for transients). It gives no CES report latency or arrival times.",
+  "validation_if_relevant": "Not applicable; there is no data validation.",
+  "forbidden_inferences": [
+    "ITER requirements are not achieved performance.",
+    "This source says nothing about BES/ECEI predicting CES or about nowcasting.",
+    "Do not generalize this source to all prior work or to KSTAR timing.",
+    "The listed DOI is unknown; do not take one from the references."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a canonical source showing that ion temperature and rotation measurement is control-relevant but resolution-limited. Use it for motivation only.",
+  "bibtex_if_worth_citing": "@article{ITER1999Diag,title={Chapter 7: Measurement of plasma parameters},author={{ITER Physics Expert Group on Diagnostics} and {ITER Physics Basis Editors}},journal={Nuclear Fusion},volume={39},number={12},pages={2541--2575},year={1999}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 36,
+  "supplied_pdf_sha256": "0190be7435bd287ac08eaa80b9b901cc28e576d31fcc59c35ba6ee5716f3e588",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

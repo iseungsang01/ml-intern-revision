@@ -1,0 +1,33 @@
+{
+  "key": "Cao2018BritsBidirectional",
+  "citation": {
+    "title": "BRITS: Bidirectional Recurrent Imputation for Time Series",
+    "authors": "W. Cao, D. Wang, J. Li, H. Zhou, L. Li, Y. Li",
+    "year": 2018,
+    "venue": "Advances in Neural Information Processing Systems 31 (NeurIPS 2018); supplied text is arXiv preprint v1",
+    "volume": "31",
+    "pages": "unknown (supplied text is the 12-page arXiv preprint)",
+    "doi_or_arxiv": "arXiv:1805.10572"
+  },
+  "relevance": "peripheral",
+  "topic": "RNN-based imputation of missing values in multivariate time series (air quality, ICU, activity data)",
+  "own_question": "How can missing time-series values be imputed and labels predicted jointly, without strong data-generating assumptions?",
+  "actual_method_and_evidence": "The method uses bidirectional LSTM imputation with a temporal-decay factor and optional cross-feature regression, plus a forward/backward consistency loss. It is trained jointly with a classification head. Evaluation uses artificially masked values (10% of observations) or the STMVL air-quality test protocol, scored by MAE/MRE, with AUC and accuracy for classification. There is no fusion data, no physics diagnostics, and no timing measurement.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "BRITS is bidirectional: imputation at step t uses future observations in the backward pass. That makes it offline and non-causal, so it is not comparable to our strictly-past CES nowcast. It can be cited only as an example of the generic two-sided imputation family.",
+  "validation_if_relevant": "Validation is by random masking or a month-based test split in non-plasma domains. This is not relevant to our campaign-reuse validation.",
+  "forbidden_inferences": [
+    "Do not present BRITS as a causal nowcaster or real-time estimator",
+    "Do not transfer its MAE or AUC results to CES or KSTAR",
+    "Do not cite it as evidence about BES/ECEI or impurity Ti",
+    "Do not imply our method derives from or improves on BRITS",
+    "Do not generalize its imputation setting to all prior time-series work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional. At most one clause could cite it as a representative learned two-sided (bidirectional) imputation method, to contrast with our causal setting, in the same family as our two-sided interpolation baseline. It is not needed and adds no plasma-specific grounding.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "6a3f516b2f8d8a418f7c907c9617e45dff673c04f0e73cd2b56307c4a67a09a0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "PazSoldan2019EffectPlasma",
+  "citation": {
+    "title": "The effect of plasma shape and neutral beam mix on the rotation threshold for RMP-ELM suppression",
+    "authors": "C. Paz-Soldan, R. Nazikian, L. Cui, B. C. Lyons, D. M. Orlov, A. Kirk, N. C. Logan, T. Osborne, W. Suttrop, D. Weisberg",
+    "year": "2019",
+    "venue": "Nuclear Fusion (per source record hint; not stated in the extracted text)",
+    "volume": "59 (per hint)",
+    "pages": "056012 (per hint)",
+    "doi_or_arxiv": "10.1088/1741-4326/ab04c0 (identifier hint only; not printed in the extracted text)"
+  },
+  "relevance": "peripheral",
+  "topic": "DIII-D RMP-ELM suppression rotation threshold: ExB zero-crossing location, upper-triangularity shape, and NBI torque mix.",
+  "own_question": "Which flow profile and pedestal conditions control the loss or access of RMP-ELM suppression?",
+  "actual_method_and_evidence": "Uses offline time-dependent profile fits of carbon CER (toroidal and poloidal C6+ flow) and Thomson data in 20–50 ms windows. Supported by M3D-C1 linear MHD modeling and TRANSP torque calculations. Dataset is DIII-D, not KSTAR. No nowcasting, BES/ECEI use, or prediction is performed.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Pedestal analyses on DIII-D have relied on offline-averaged carbon CER profiles.",
+      "original_pdf_locator": "Sec. 3.1, p.6–7",
+      "qualification": "Applies to rotation from carbon impurity measurements, not to impurity Ti nowcasting. Supports the background only and does not justify a real-time need.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline profiles every 20 ms, aggregating CER data taken every 2–5 ms. A 3 krad/s systematic uncertainty is assumed for CER. Report arrival latency is not addressed.",
+  "validation_if_relevant": "Not applicable; this is an observational threshold study.",
+  "forbidden_inferences": [
+    "Do not infer that KSTAR CES temperature nowcasting is needed or beneficial.",
+    "Do not treat CER rotation as equivalent to temperature.",
+    "Do not cite it as evidence of real-time control.",
+    "Do not generalize its findings to all prior work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Off-topic for causal CES Ti nowcasting from BES/ECEI. At most, it is an optional example of offline carbon CER pedestal analysis. Excluding it is recommended.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 31,
+  "supplied_pdf_sha256": "602287d04f79cb6b8a5e80c26d31abb9169f35c908049990cde31188fa51dfaa",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

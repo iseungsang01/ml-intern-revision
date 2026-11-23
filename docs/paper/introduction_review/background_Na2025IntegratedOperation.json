@@ -1,0 +1,38 @@
+{
+  "key": "Na2025IntegratedOperation",
+  "citation": {
+    "title": "Integrated operation scenarios: Chapter 6 of the special issue: on the path to tokamak burning plasma operation",
+    "authors": "Na Y.-S., Schuster E., Budny R.V., Garofalo A.M., Hahn S.-H., Kim H.-T., Koechl F., Polevoi A.R., et al. and ITPA Integrated Operation Scenario topical group",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "093001 (140pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ade79f"
+  },
+  "relevance": "peripheral",
+  "topic": "ITPA review of ITER operation scenarios, actuators, and model-based scenario control, including observers and real-time estimation",
+  "own_question": "What progress has been made since 2007 on ITER plasma initiation, low-activation, baseline, hybrid, and steady-state scenarios, actuators, and control?",
+  "actual_method_and_evidence": "This is a narrative multi-device review of experiments, code benchmarks, and integrated modeling. It contains no CES Ti nowcasting, no BES/ECEI-based estimation, and no KSTAR pedestal-top impurity-temperature evaluation. Section 8.3 discusses control-oriented models, dynamic state observers that combine predictive models with diagnostics, and real-time forecasting. The review describes these as concepts and cites examples; it does not establish performance for our task.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reviews of tokamak control describe dynamic state observers that combine fast predictive models with diagnostic data to estimate plasma states between measurements.",
+      "original_pdf_locator": "Section 8.3.2, Observers bullet (PDF p.97); Section 8.5.2, diagnostic interface layer",
+      "qualification": "This is general control context. It is not evidence that ion-temperature nowcasting is useful or feasible. The cited observer examples cover density, q, and Te, not CES Ti.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The review contains no CES report timing or arrival-time data.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "That ITER requires CES Ti nowcasting",
+    "That reviewed observers validate our estimator",
+    "That prior work lacks causal Ti estimation"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional single background citation for observer and real-time estimation context in plasma control. It is otherwise off-topic for our paper.",
+  "bibtex_if_worth_citing": "@article{Na2025IntegratedOperation,title={Integrated operation scenarios: Chapter 6 of the special issue: on the path to tokamak burning plasma operation},author={Na, Yong-Su and Schuster, Eugenio and Budny, Robert V. and others},journal={Nuclear Fusion},volume={65},pages={093001},year={2025},doi={10.1088/1741-4326/ade79f}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 141,
+  "supplied_pdf_sha256": "f238623bcd2e1854fa3234d3478c3c4a72b3caeb2a10ac1df337ab469607ebe9",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

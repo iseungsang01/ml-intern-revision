@@ -1,0 +1,32 @@
+{
+  "key": "Joung2023GsdeepnetMastering",
+  "citation": {
+    "title": "GS-DeepNet: mastering tokamak plasma equilibria with deep neural networks and the Grad–Shafranov equation",
+    "authors": "Joung, S.; Ghim, Y.-C.; Kim, J.; Kwak, S.; Kwon, D.; Sung, C.; Kim, D.; Kim, H.-S.; Bak, J. G.; Yoon, S. W.",
+    "year": 2023,
+    "venue": "Scientific Reports",
+    "volume": "13",
+    "pages": "15799",
+    "doi_or_arxiv": "10.1038/s41598-023-42991-5"
+  },
+  "relevance": "peripheral",
+  "topic": "Unsupervised neural-network MHD equilibrium reconstruction on KSTAR, constrained by magnetic diagnostics and the Grad–Shafranov equation.",
+  "own_question": "Can paired networks reconstruct the poloidal flux psi(R,Z), p' and ff' from external magnetic measurements without EFIT or manual sensor selection?",
+  "actual_method_and_evidence": "The work trains a Maxwell Net and a Force-Balance Net on about 10^4 time slices from 50 KSTAR discharges in the 2019 campaign, split 80/5/15 percent. The SVD solve uses a response matrix. Reconstructions were compared with EFIT shape parameters, with Thomson-derived pressure assuming p=2neTe in ohmic shots, and with MSE pitch angle. The authors report inference under 1 ms on 41x41 grids using an RTX A4000. The work does not address CES, Ti, BES/ECEI or temporal nowcasting.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "The inputs are same-time-slice magnetic measurements. Profiles are reconstructed for the current state, and the method does not forecast. No report-latency analysis is given. The 1 ms figure is the source's own timing claim and not ours.",
+  "validation_if_relevant": "The paper uses a random split of features drawn from 50 discharges. Discharge-level separation is unclear. Comparisons use EFIT as a reference, not as truth.",
+  "forbidden_inferences": [
+    "Do not imply that it predicts or nowcasts CES impurity Ti.",
+    "Do not imply that BES/ECEI were used.",
+    "Do not cite the 1 ms timing as applicable to our pipeline.",
+    "Do not treat it as real-time deployment evidence.",
+    "Do not use it as a precedent for our validation designs."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude, or cite only peripherally as an example of KSTAR ML equilibrium work. Its topic, inputs and targets differ from our CES nowcasting question.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "7aeb290c905435e286622fe05ee08d3cec8d84b84db1b8daa1ff0573297917bb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

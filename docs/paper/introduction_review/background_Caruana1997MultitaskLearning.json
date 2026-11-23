@@ -1,0 +1,38 @@
+{
+  "key": "Caruana1997MultitaskLearning",
+  "citation": {
+    "title": "Multitask Learning",
+    "authors": "Rich Caruana",
+    "year": 1997,
+    "venue": "Machine Learning",
+    "volume": "28",
+    "pages": "41-75",
+    "doi_or_arxiv": "unknown (not given in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Generic machine-learning method: training related tasks in parallel with shared representations as an inductive bias.",
+  "own_question": "Can the training signals of related extra tasks improve generalization on a main task? The paper covers backprop, kNN/kernel regression and decision trees.",
+  "actual_method_and_evidence": "The experiments cover simulated 1D-ALVINN, robot door images, Medis pneumonia risk with future lab tests as extra outputs, and robot sensory prediction. A shuffle test is used to rule out non-informational effects. The paper contains no fusion-plasma or CES content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Measurements available only offline, such as later values, can serve as auxiliary training targets without being used as run-time inputs.",
+      "original_pdf_locator": "Sec. 4.1; Sec. 2.3, Fig. 4, Table 3 (pp. 48-49, 55)",
+      "qualification": "The paper demonstrates this on pneumonia and robot domains only. Our study did not implement multitask training. This can serve as a background concept only, not as support for our L5 target design or our results.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The concept is that future or non-operational features may be used as training outputs but not as inputs. This parallels our rule that neither current F nor future L5 is an online input. The parallel is conceptual only.",
+  "validation_if_relevant": "The paper uses repeated runs with early stopping on halt sets. This is unrelated to our KSTAR validation designs.",
+  "forbidden_inferences": [
+    "Do not claim multitask learning helps CES nowcasting.",
+    "Do not treat L5 as evidence that we used multitask learning.",
+    "Do not transfer the reported percentage gains to our setting."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional. Cite only if the theory section discusses offline-only quantities as training signals versus run-time inputs. Otherwise omit.",
+  "bibtex_if_worth_citing": "@article{Caruana1997MultitaskLearning,title={Multitask Learning},author={Caruana, Rich},journal={Machine Learning},volume={28},pages={41--75},year={1997}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 35,
+  "supplied_pdf_sha256": "611e8dccecf73e1c86773909ae6cbf305f0b36a54035884e3e17cd2af4d5f012",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

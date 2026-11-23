@@ -1,0 +1,38 @@
+{
+  "key": "DeBrouwer2019GruOde",
+  "citation": {
+    "title": "GRU-ODE-Bayes: Continuous modeling of sporadically-observed time series",
+    "authors": "E. De Brouwer, J. Simm, A. Arany, Y. Moreau",
+    "year": 2019,
+    "venue": "Advances in Neural Information Processing Systems 32 (NeurIPS 2019)",
+    "volume": "32",
+    "pages": "unknown",
+    "doi_or_arxiv": "arXiv:1905.12374"
+  },
+  "relevance": "peripheral",
+  "topic": "Continuous-time filtering of irregularly, partially observed multivariate time series (GRU-ODE propagation between observations, GRU-Bayes update at observations).",
+  "own_question": "How to forecast sporadically observed multivariate series (synthetic SDEs, MIMIC-III EHR, USHCN climate) with a learned continuous-time filter.",
+  "actual_method_and_evidence": "Synthetic Ornstein-Uhlenbeck and Brusselator SDEs; MIMIC-III subset (21,250 patients, 96 variables) and USHCN (1,114 stations, subsampled). Forecasting of the next 3 measurements after an observation window. 5-fold CV with inner validation; reports NegLL/MSE versus NeuralODE-VAE, GRU-D, T-LSTM and others. The representation results for OU processes are theoretical constructions, not empirical demonstrations of physics. No fusion or plasma data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Background only: learned continuous-time filters can alternate propagation between irregular observations with updates when observations arrive.",
+      "original_pdf_locator": "Sec. 2.4, Fig. 2, Algorithm 1 (pp. 4-5)",
+      "qualification": "Concept from the machine-learning literature; not implemented in our study and not validated on CES or diagnostic voltages.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Forecasting of future observations from past irregular observations. This differs from our current-report CES nowcast. Computation latency is not reported.",
+  "validation_if_relevant": "Cross-validation within each dataset; no untouched external campaign. Tasks differ from ours.",
+  "forbidden_inferences": [
+    "Do not imply this method was applied to plasma, CES, BES or ECEI data.",
+    "Do not cite its EHR or climate results as evidence about nowcasting performance in fusion diagnostics.",
+    "Do not claim its continuity prior applies to our estimators.",
+    "Do not present it as a baseline we compared against."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional single citation in the theoretical background on irregular-sampling filtering. It is not needed for the fixed framing, and the paper should not suggest an algorithmic link that the study does not test.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 22,
+  "supplied_pdf_sha256": "e031724444ea9911ff7cac7a1e4914fb71e074f3d1c5ff650344881a198ec800",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

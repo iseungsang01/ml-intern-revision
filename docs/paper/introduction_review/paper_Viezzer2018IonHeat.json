@@ -1,0 +1,80 @@
+{
+  "key": "Viezzer2018IonHeat",
+  "citation": {
+    "title": "Ion heat transport dynamics during edge localized mode cycles at ASDEX Upgrade",
+    "authors": "E. Viezzer, M. Cavedon, E. Fable, F.M. Laggner, R.M. McDermott, et al.; ASDEX Upgrade Team; EUROfusion MST1 Team",
+    "year": 2018,
+    "venue": "Nuclear Fusion",
+    "volume": "58",
+    "pages": "026031 (9pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/aaa22f (this paper's own DOI, PDF p2 header; distinct from DOIs of cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-10 (PDF p1 cover; journal p1-9 = PDF p2-10), incl. Figs 1-7",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read visually only. Ref [26] (Ti/Te recovery comparison) and ref [19] (spectrometer) were not read."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Edge/pedestal Ti changes and recovers within a few ms around type-I ELMs.",
+      "verdict": "qualify",
+      "source_finding": "In an ELM-synchronized AUG D discharge (~85 Hz ELMs), separatrix Ti first rose at ELM onset and then the whole edge profile dropped. The pre-ELM profile recovered 3-4 ms after the crash, versus 60 ms energy confinement time. A single ELM in a He plasma showed a similar 3-4 ms recovery.",
+      "locator": "PDF p6, Sec 5.1, Fig 5; PDF p8, Sec 5.2, Fig 7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On ASDEX Upgrade, edge ion temperature measured with sub-ms charge-exchange spectroscopy has been reported to collapse and recover within roughly 3-4 ms of type-I ELM crashes [Viezzer2018].",
+      "qualification": "Results come from AUG, specific discharges, and the edge region (rho_pol 0.95-1.0). The D case is coherently averaged over ELMs. Separatrix uncertainties are large (PDF p6-7). This is not KSTAR, carbon CES, or a pedestal-top chord. The 3-4 ms scale is below the study's 10 ms grid, so do not imply that the nowcast resolves intra-ELM dynamics."
+    },
+    {
+      "proposed_claim": "Measurement technique and time resolution.",
+      "verdict": "supported",
+      "source_finding": "A fast edge CXRS spectrometer (up to 9 lines of sight) can run at 50 us integration but requires impurity seeding; standard edge systems run at 2.3 ms. The D case used He2+ at 65 us, rebinned to 100 us; the He case used 100 us, rebinned to 250 us. Ti is approximated by impurity temperature.",
+      "locator": "PDF p3, Sec 2; PDF p5-6, Sec 5.1; PDF p7, Sec 5.2",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Dedicated fast CXRS configurations with impurity seeding have resolved edge Ti on tens-of-microseconds integration times, compared with ms-scale standard systems [Viezzer2018].",
+      "qualification": "Applies to a dedicated, seeded, limited-chord configuration. It was used offline, not in real time."
+    },
+    {
+      "proposed_claim": "Ms-scale Ti dynamics motivate causal nowcasting of reported CES temperature.",
+      "verdict": "unsupported",
+      "source_finding": "The paper is offline interpretive/predictive ASTRA transport analysis. It addresses no estimators, nowcasting, BES/ECEI inputs, or report latency.",
+      "locator": "PDF p4, Sec 3; PDF p9, Sec 6",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Because pedestal Ti can evolve faster than typical CES reporting intervals, it is useful to ask whether a causal estimate of the current report can be formed from other fast diagnostics.",
+      "qualification": "This framing motivation is ours, not the source's. Do not cite the source as endorsing nowcasting."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (not an estimator paper). Transport inputs: ne, Te, Ti, Zeff, Prad, and sources into ASTRA (PDF p4, Sec 3).",
+    "outputs": "not_applicable",
+    "causal_or_offline": "Offline, ELM-synchronized and interpolated analysis (PDF p6)",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Measured impurity Ti is taken as a proxy for main-ion Ti, justified by fast equilibration (PDF p5). In He, main-ion and N temperatures roughly agree (PDF p7-8, Fig 6c)."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "not_applicable"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Spectrometer integration/rebinning times and the 100 us equilibrium mapping",
+    "what_not_established": "Any real-time processing, latency, or deployment",
+    "locator": "PDF p3, Sec 2; PDF p6, Sec 5.1"
+  },
+  "forbidden_inferences": [
+    "KSTAR or carbon-CES pedestal-top Ti behaves identically",
+    "The source supports or performs nowcasting or causal estimation",
+    "BES/ECEI carry Ti information",
+    "Our 10 ms grid resolves ELM crash dynamics",
+    "Neoclassical inter-ELM chi_i implies a physical mechanism for our estimator",
+    "The Ti-vs-Te recovery (4 vs 7-8 ms) is demonstrated here; it is attributed to ref [26] (PDF p5)",
+    "Real-time applicability"
+  ],
+  "competing_or_complementary": "Complementary physics context on edge Ti time scales. It is not a competing estimator.",
+  "bibtex": "@article{Viezzer2018IonHeat,author={Viezzer, E. and Cavedon, M. and Fable, E. and Laggner, F. M. and McDermott, R. M. and others},title={Ion heat transport dynamics during edge localized mode cycles at {ASDEX} {Upgrade}},journal={Nuclear Fusion},volume={58},pages={026031},year={2018},doi={10.1088/1741-4326/aaa22f}}",
+  "followup_sources_if_material": [
+    "Cavedon M. et al 2017 Plasma Phys. Control. Fusion 59 105007 (cited [26]: Ti/Te recovery times)",
+    "Cavedon M. et al 2017 Rev. Sci. Instrum. 88 043103 (cited [19]: fast CXRS spectrometer)"
+  ]
+}

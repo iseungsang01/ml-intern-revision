@@ -1,0 +1,78 @@
+{
+  "key": "Shousha2023MachineLearningbased",
+  "citation": {
+    "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D",
+    "authors": "Shousha R., Seo J., Erickson K., Xing Z., Kim S., Abbate J., Kolemen E.",
+    "year": 2024,
+    "venue": "Nuclear Fusion",
+    "volume": "64",
+    "pages": "026006 (18pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ad142f (this paper's DOI, from the PDF header; DOIs in the reference list belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-19 (journal pp1-18 = PDF pp2-19), including Figs 1-16, Table 1 and the Appendix",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read visually. CAKE edge-Ti details rest on the cited Xing 2021 paper, which was not read."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "RTCAKENN is memoryless.",
+      "verdict": "qualify",
+      "source_finding": "The authors describe it as a model with no memory. However, the PCS wrapper reuses the most recent valid data for each input, so stale inputs persist if a diagnostic stops.",
+      "locator": "PDF p13 §4.2.2; PDF p6 §3",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "RTCAKENN maps the latest available magnetic, MSE, TS and CER inputs to CAKE-like profiles with a network the authors describe as memoryless; the surrounding PCS logic holds the last valid input values.",
+      "qualification": "Holding the last valid input is not temporal modelling. Do not equate it with a causal forecaster."
+    },
+    {
+      "proposed_claim": "Ti accuracy is quantified when CER inputs are dropped.",
+      "verdict": "unsupported",
+      "source_finding": "The test regression (Ti R=0.937, sigma=0.068) was run without input dropout. The no-CER hardware test (#914928, which replays #195928 data) shows Ti only qualitatively, with no CAKE comparison. The authors report no clear deterioration pattern and defer a sensitivity analysis. The 15%/13% figures concern ne/Te from the core-edge variant.",
+      "locator": "PDF p5-6 §2, Fig 2(f); PDF p13-15 §4.2.2, Figs 10-12",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Input-dropout training lets RTCAKENN return physically plausible profiles without CER, although Ti accuracy in that regime was assessed only qualitatively.",
+      "qualification": "No quantitative no-CER Ti error is reported."
+    },
+    {
+      "proposed_claim": "In the training target, edge Ti is extrapolated from Te.",
+      "verdict": "qualify",
+      "source_finding": "The authors state that CAKE excludes edge C6+ temperature measurements and extrapolates bulk Ti at the edge using an assumed Ti/Te ratio 'stiffness'. 'Ion' quantities nominally denote C6+.",
+      "locator": "PDF p3 §2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "In the CAKE targets used by RTCAKENN, the edge ion temperature is not a direct carbon measurement but is extrapolated through an assumed Ti/Te ratio.",
+      "qualification": "This describes CAKE's method as reported by these authors. Verify the details in Xing et al. 2021. The extrapolation is via the Ti/Te ratio, not Te alone."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Bt and Ip; 15 MSE pitch angles; 8 RT-EFIT (R,Z) boundary points; RT-EFIT p and 1/q; TS ne and Te; CER Ti and rotation (Omega_tor) on a 33-point psi_N grid (PDF p4 Table 1, Fig 1; PDF p6 §3)",
+    "outputs": "CAKE-like p, j, 1/q, ne, Te, Ti(C6+) and Vtor on 121 points",
+    "causal_or_offline": "Uses same-time or latest-available inputs to reconstruct the current-time profile; it does not forecast an unavailable future report.",
+    "source_diagnostic_as_input": "Yes. The CER Ti being reconstructed is itself an input, except when dropped out.",
+    "reported_vs_physical_truth": "Targets are offline CAKE reconstructions, which include fitting and edge extrapolation assumptions, not independent physical truth."
+  },
+  "validation": {
+    "split_unit": "unknown. The data comprise 696 discharges and 18,959 time points; the test set has 1,334 time slices; there is a validation set used for early stopping. Whether the split is by shot is not stated (PDF p5 §2).",
+    "temporal_order": "unknown",
+    "independent_truth": "none; CAKE serves as the reference",
+    "unknowns": "Shot-level or temporal separation; uncertainty intervals; quantitative accuracy for the live discharges beyond the examples in Figs 3-5."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "PCS execution time of the 10-network ensemble plus overhead: about 13 ms in the initial version and about 7.7 ms in the later version, within a 20 ms CPU cycle. The model ran in DIII-D discharges.",
+    "what_not_established": "Use in closed-loop control; diagnostic arrival latency; accuracy relative to CAKE during missing-diagnostic operation.",
+    "locator": "PDF p14-15 §4.3, PDF p17 Fig 16"
+  },
+  "forbidden_inferences": [
+    "Calling RTCAKENN noncausal or electrons-only",
+    "Claiming validated no-CER Ti accuracy",
+    "Assuming a shot-wise or chronological split",
+    "Treating CAKE edge Ti as a measured carbon temperature",
+    "Claiming priority, or claiming that our task supersedes or beats it",
+    "Attributing our study to these authors"
+  ],
+  "competing_or_complementary": "Complementary. RTCAKENN reconstructs current profiles using current CER as an input and has a dropout fallback. Our task estimates the current CES report on one chord before it becomes available, using BES/ECEI snapshots and only strictly past CES reports. RTCAKENN could motivate why CES-independent estimates matter, but it is not a baseline on our task.",
+  "bibtex": "@article{Shousha2023MachineLearningbased,title={Machine learning-based real-time kinetic profile reconstruction in {DIII-D}},author={Shousha, Ricardo and Seo, Jaemin and Erickson, Keith and Xing, Zichuan and Kim, SangKyeun and Abbate, Joseph and Kolemen, Egemen},journal={Nuclear Fusion},volume={64},pages={026006},year={2024},doi={10.1088/1741-4326/ad142f}}",
+  "followup_sources_if_material": [
+    "Xing Z.A. et al 2021 CAKE, Fusion Eng. Des. 163 112163, to verify the edge Ti/Te extrapolation"
+  ]
+}

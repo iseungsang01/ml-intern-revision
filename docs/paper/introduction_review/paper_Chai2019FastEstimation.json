@@ -1,0 +1,82 @@
+{
+  "key": "Chai2019FastEstimation",
+  "citation": {
+    "title": "Fast estimation of ion temperature from EAST charge exchange recombination spectroscopy using neural network",
+    "authors": "Chai B, Li Y Y, Chen Z, Tao W, Zhou Y X, Mao S F, Luo Z P, Yu Y, Lyu B, Ye M Y",
+    "year": 2019,
+    "venue": "Plasma Science and Technology",
+    "volume": "21",
+    "pages": "105103 (5pp)",
+    "doi_or_arxiv": "10.1088/2058-6272/ab2674 (this paper's own DOI, from the PDF p2 header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-6 (p1 is a publisher cover page; article pp1-5 are PDF pp2-6; Figs 1-4 inspected)",
+    "full_pdf_supplied": true,
+    "limitations": "The training shot list, any per-shot training/test separation, the value of the regularization weight lambda, and the learning rate are not reported."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Only two central chords were modeled.",
+      "verdict": "supported",
+      "source_finding": "Two separate networks with the same architecture were trained, one for chord 10 (R=186.8 cm) and one for chord 7 (R=189.0 cm). The edge CXRS was not modeled.",
+      "locator": "PDF p5, Sec 3; PDF p3, Sec 2 (chord layout)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On EAST, feedforward networks were trained for two central CXRS chords to map individual spectra to ion temperature [Chai2019].",
+      "qualification": "Core chords only. No pedestal or edge chord was tested."
+    },
+    {
+      "proposed_claim": "The networks were trained on conventional-fit labels.",
+      "verdict": "supported",
+      "source_finding": "The training target is the ion temperature from the two-Gaussian least-squares fit (ACX+PCX). The loss is squared error against that fit plus weight decay. The authors note that systematic CXRS errors persist.",
+      "locator": "PDF p3, Sec 2, Eqs 1-2; PDF p5, Sec 3, Eq 5; PDF p5, Sec 4",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "The targets were outputs of the conventional fit, so agreement measures emulation of that fit rather than physical accuracy.",
+      "qualification": "Test MAPE was 2.60% (chord 10) and 3.10% (chord 7) relative to the fit (Fig 4)."
+    },
+    {
+      "proposed_claim": "This is an offline feasibility study, not a real-time implementation.",
+      "verdict": "supported",
+      "source_finding": "Inference timing was measured offline: 95 frames took about 12 ms on a desktop i5-6500 CPU, roughly 0.1 ms per frame, versus about 100 ms per frame for the fit. The authors state that integration and acquisition time must also be considered.",
+      "locator": "PDF p5, Sec 4; PDF p3, Sec 1; PDF p5, Sec 5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In an offline CPU benchmark, network inference took about 0.1 ms per frame, compared with about 100 ms for iterative fitting, which the authors present as a step toward real-time use [Chai2019].",
+      "qualification": "Real-time relevance is the authors' interpretation (author_claim). No plasma-control-system integration or end-to-end latency was demonstrated."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Current-frame CXRS spectrum: 41 background-subtracted, normalized pixels plus the background height and peak height (43 nodes).",
+    "outputs": "Ti (keV) for the same frame.",
+    "causal_or_offline": "Per-frame mapping with no temporal model. Training and evaluation were done offline.",
+    "source_diagnostic_as_input": "Yes. The network reads the CXRS spectrum itself, so it is an upstream spectrum reader.",
+    "reported_vs_physical_truth": "Reported conventional-fit Ti is the target. There is no independent physical truth."
+  },
+  "validation": {
+    "split_unit": "Training used 1878 frames from 20 shots. Testing used 95 frames from shot #63870.",
+    "temporal_order": "Not reported.",
+    "independent_truth": "None. The comparison is against the conventional fit.",
+    "unknowns": "Whether #63870 was excluded from the 20 training shots is not stated, though it is likely. Test-set MSE was monitored during training to check overfitting, so the test set was not untouched. Campaign diversity and uncertainty intervals are not reported."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Offline batch inference time on a desktop CPU.",
+    "what_not_established": "Real-time deployment, acquisition and integration latency, report arrival times, and feedback use.",
+    "locator": "PDF p5, Sec 4; PDF p3, Sec 1"
+  },
+  "forbidden_inferences": [
+    "That the method was deployed in real time or used in control",
+    "That the network is a temporal or causal nowcaster",
+    "That it measures physical truth",
+    "That it generalizes to pedestal or edge chords, other devices, or other campaigns",
+    "That the reported test MAPE is an untouched holdout estimate",
+    "That 0.1 ms is a total latency",
+    "That our study implements NN-CES coupling"
+  ],
+  "competing_or_complementary": "Complementary. Chai2019 shortens upstream spectrum-to-Ti reading. Our model estimates the current CES report before it is available, using BES/ECEI snapshots and strictly past reports. Faster reading could refresh our anchors but could also reduce the marginal value of nowcasting; whether either effect matters would need validation.",
+  "bibtex": "@article{Chai2019FastEstimation,author={Chai, Baoyue and Li, Yingying and Chen, Ze and Tao, Wei and Zhou, Yixuan and Mao, Shifeng and Luo, Zhengping and Yu, Yi and Lyu, Bo and Ye, Minyou},title={Fast estimation of ion temperature from {EAST} charge exchange recombination spectroscopy using neural network},journal={Plasma Science and Technology},volume={21},pages={105103},year={2019},doi={10.1088/2058-6272/ab2674}}",
+  "followup_sources_if_material": [
+    "Baker, Groebner, Burrell 1994, PPCF 36 109 (cited in this paper as earlier NN CXRS work; its DOI is not given here)",
+    "Bishop, Roach, von Hellermann 1993, PPCF 35 765 (cited NN charge-exchange analysis)",
+    "Svensson et al 1999, PPCF 41 315 (cited)",
+    "Kurihara et al 2008, FED 83 959 (the paper's source for the ~10 ms Ti control cycle; verify before reusing that figure)"
+  ]
+}

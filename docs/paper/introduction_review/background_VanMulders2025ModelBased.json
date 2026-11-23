@@ -1,0 +1,46 @@
+{
+  "key": "VanMulders2025ModelBased",
+  "citation": {
+    "title": "Model-based estimation of tokamak plasma profiles and physics parameters: algorithm overview and application to ITER",
+    "authors": "Van Mulders S., Felici F., McIntosh S.C., Carpanese F., Contré C.E., Coosemans R., Kudlácek O., Pastore F., Pinches S.D., Reisner M., Sauter O.",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "066006",
+    "doi_or_arxiv": "10.1088/1741-4326/add16e"
+  },
+  "relevance": "supporting",
+  "topic": "EKF/ERTSS state and parameter estimation of electron profiles and current density with RAPTOR, tested on synthetic ITER data",
+  "own_question": "Can a transport-model-based EKF recover jpar, Te and ne evolution, plus parameters such as Zeff and transport coefficients, from noisy synthetic TS and boundary-flux measurements?",
+  "actual_method_and_evidence": "The EKF combines RAPTOR physics predictions with noisy synthetic TS Te/ne and boundary-flux measurements. The measurements were made by adding white noise to a single DINA-JINTRAC Q=10 simulation; no experimental data were used. The authors report qualitative agreement with the simulation ground truth and RMSE traces. A cubic-spline interpolation in space and time (INTERPOS) slightly outperformed the EKF for Te recovery. A case with core TS dropped out is also shown. Smoothing (ERTSS) gave only modest gains.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Sequential Bayesian filters such as the EKF combine uncertain model predictions with noisy measurements. A filter uses only past and current data; a smoother also uses later data.",
+      "original_pdf_locator": "Sec. 3, 3.7, Appendix; Fig. 2",
+      "qualification": "Conceptual background only. Their setting is electron profiles in a simulation study, not CES impurity Ti.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "In one synthetic ITER study, a non-model space-time spline interpolation recovered Te slightly better than a model-based EKF when measurements were dense.",
+      "original_pdf_locator": "Sec. 4.4.4, Fig. 8",
+      "qualification": "Covers only synthetic white noise, dense TS and electron Te. This motivates comparing against interpolation baselines; it is not evidence about our data.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are synthetic TS at 0.5 s steps (one in 50 of the 10 ms TS samples) plus the boundary flux. Targets are simulated Te, ne and jpar. The reported ~240 s compute time for a 786 s discharge is offline, not a deployment result.",
+  "validation_if_relevant": "Validation uses a single simulated discharge with known ground truth, with covariances tuned against that truth. There is no experimental or held-out data.",
+  "forbidden_inferences": [
+    "Do not claim the paper addresses CES, impurity or ion temperature, BES/ECEI, or KSTAR.",
+    "Do not claim real-time deployment or experimental validation from this paper.",
+    "Do not claim model-based methods beat interpolation.",
+    "Do not generalize this paper to all prior work.",
+    "Do not treat simulation ground truth as analogous to our CES labels."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background for filter versus smoother causality and for the value of an interpolation baseline. Keep it out of the direct-precedent framing.",
+  "bibtex_if_worth_citing": "@article{VanMulders2025ModelBased,title={Model-based estimation of tokamak plasma profiles and physics parameters: algorithm overview and application to {ITER}},author={Van Mulders, S. and Felici, F. and McIntosh, S. C. and others},journal={Nuclear Fusion},volume={65},pages={066006},year={2025},doi={10.1088/1741-4326/add16e}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 34,
+  "supplied_pdf_sha256": "0a15bcf4cc6679d3381fbabf19a159d9e3dfb583c33721e30fee5595504c3205",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

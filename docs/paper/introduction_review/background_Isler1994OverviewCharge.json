@@ -1,0 +1,48 @@
+{
+  "key": "Isler1994OverviewCharge",
+  "citation": {
+    "title": "An overview of charge-exchange spectroscopy as a plasma diagnostic",
+    "authors": [
+      "R C Isler"
+    ],
+    "year": 1994,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "36",
+    "pages": "171-208",
+    "doi_or_arxiv": "unknown (not stated in supplied text)"
+  },
+  "relevance": "supporting",
+  "topic": "Review of charge-exchange spectroscopy: atomic physics, impurity densities, and impurity-ion temperature and rotation from Doppler width and shift.",
+  "own_question": "How charge-exchange excitation lines can be interpreted, and with what corrections and pitfalls, to diagnose fusion plasmas.",
+  "actual_method_and_evidence": "Narrative review. It compiles theoretical cross sections and state-mixing and excited-beam effects. It illustrates applications with published data from ATF, PDX, TFTR, TEXTOR, JET, CHS and JIPP TII-U. Text only was supplied, so no figures were visually checked. It contains no nowcasting, BES or ECEI fusion, or KSTAR content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "CES infers impurity-ion temperature and rotation from Doppler width and shift of beam-induced charge-exchange lines, such as the C VI 5292 Å line, localized where the sightline crosses the neutral beam.",
+      "original_pdf_locator": "p.172 items (i)-(iii); Section 4, pp.200-204",
+      "qualification": "The measurement is of impurity (e.g. carbon) ions, not directly main ions. This is a 1994 review and does not describe KSTAR systems.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Reported CES temperatures depend on analysis choices. Cold edge components, fine-structure and Zeeman splitting, plume emission, and energy-dependent cross sections can bias fitted widths. This supports treating CES reports as conventional labels rather than independent truth.",
+      "original_pdf_locator": "Sections 3.2 and 4, pp.195-205 (Figs 21, 25, 28)",
+      "qualification": "The magnitudes of these effects are device- and condition-specific. The cited figures were not inspected.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Reports multichannel cadences for other devices: complete profiles every 16.6 ms on JIPP TII-U, and other systems faster than 1 ms. Says nothing about report arrival latency or KSTAR 2022.",
+  "validation_if_relevant": "Not applicable. This is a review with no predictive validation.",
+  "forbidden_inferences": [
+    "Do not use it to state KSTAR CES cadence, latency or uncertainty.",
+    "Do not claim it shows CES temperature is main-ion temperature.",
+    "Do not cite it for real-time or nowcasting capability.",
+    "Do not claim it establishes BES or ECEI relationships to ion temperature.",
+    "Do not generalize its timing numbers to all CES systems."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a background reference for how carbon CES temperature is produced. It also supports the label-not-truth caveat through its discussion of line-shape systematics. Keep it as background only, not as evidence about our task.",
+  "bibtex_if_worth_citing": "@article{Isler1994OverviewCharge,author={Isler, R. C.},title={An overview of charge-exchange spectroscopy as a plasma diagnostic},journal={Plasma Physics and Controlled Fusion},volume={36},number={2},pages={171--208},year={1994}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 39,
+  "supplied_pdf_sha256": "4c9886a5f9981768b026eeac4760feb980aafe4eddf4c4af6245cea9a7d614b0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

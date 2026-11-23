@@ -1,0 +1,39 @@
+{
+  "key": "Bandyopadhyay2025DisruptionsControl",
+  "citation": {
+    "title": "MHD, disruptions and control physics: Chapter 4 of the special issue: on the path to tokamak burning plasma operation",
+    "authors": "Bandyopadhyay I., Igochine V., Sauter O., Sabbagh S.A., Park J.-K., et al. (ITPA MHD, Disruption and Control Topical Group)",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "103001 (121pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ade7a0"
+  },
+  "relevance": "peripheral",
+  "topic": "Review of MHD stability, disruption avoidance, prediction and mitigation, and ITER magnetic control",
+  "own_question": "Summarizes progress since the 2007 ITER Physics Basis update on sawteeth, [N]TMs, RWMs, error fields, disruptions and ITER vertical/shape control.",
+  "actual_method_and_evidence": "Literature review without new data. The disruption prediction section (3.3) reviews classifiers, recurrent and convolutional networks, and other ML predictors, plus related performance metrics. It notes that metric definitions are inconsistent across studies and emphasizes interpretability and cross-machine extrapolation. The review does not address carbon-impurity CES nowcasting, BES/ECEI-to-Ti inference, or report latency.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "The review notes that inconsistent performance metrics across ML disruption-prediction studies make comparisons difficult. It recommends common datasets and shared metrics.",
+      "original_pdf_locator": "Sec. 3.3.3.7 and 3.3.4, pp. 75-77",
+      "qualification": "The statement concerns disruption classifiers only. It is analogous to, but not evidence about, temperature nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The review covers disruption warning times, not the timing of CES reports.",
+  "validation_if_relevant": "Reviewed papers use train, validation and test splits. The review itself does no validation.",
+  "forbidden_inferences": [
+    "Do not cite this review as evidence of CES or ion-temperature nowcasting.",
+    "Do not infer KSTAR CES latency or real-time use from it.",
+    "Do not treat its ML performance ranges as applicable to our task.",
+    "Do not claim that prior ML work is all noncausal."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The overlap with our paper is minimal. At most, it could support a single optional sentence on the need for shared validation metrics in fusion ML.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 122,
+  "supplied_pdf_sha256": "48bd0a975bf621c74486cedc1ef3d70191696a02c41a69b10880e3a5bdfbb464",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

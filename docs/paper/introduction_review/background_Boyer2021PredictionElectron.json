@@ -1,0 +1,45 @@
+{
+  "key": "Boyer2021PredictionElectron",
+  "citation": {
+    "title": "Prediction of electron density and pressure profile shapes on NSTX-U using neural networks",
+    "authors": "M.D. Boyer and J. Chadwick",
+    "year": 2021,
+    "venue": "Nuclear Fusion",
+    "volume": "61",
+    "pages": "046024",
+    "doi_or_arxiv": "10.1088/1741-4326/abe08b"
+  },
+  "relevance": "supporting",
+  "topic": "Empirical NN prediction of electron density and pressure profile shapes on NSTX/NSTX-U, with an offline-simulated Kalman-filter correction using sparse measurements.",
+  "own_question": "Can fast NN models map scalar shape/current/volume-average inputs to ne and neTe profile shapes for estimation, control and planning?",
+  "actual_method_and_evidence": "The model uses PCA-reduced TRANSP-mapped Thomson profiles. It is a 3-member MLP ensemble with Monte Carlo dropout uncertainty. Train/validation/test splits were randomized by shot. A chronological retraining study on NSTX data mimicked online learning. A proof-of-concept Kalman filter on one NSTX-U shot fused NN predictions with 8 simulated low-resolution measurements. This is offline evaluation only. Timing is stated as an expectation based on a related model, not measured here.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior work proposed combining fast empirical profile predictions with sparse real-time measurements via a Kalman filter to estimate profiles between or beyond diagnostic updates.",
+      "original_pdf_locator": "Section 4, eqs. (1)-(8), Figs. 20-22",
+      "qualification": "Electron Thomson profiles on NSTX-U. Offline simulation on a single shot. Not ion/impurity CES. Not deployed.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Shot-wise data splitting was used to avoid overestimating generalization from correlated neighboring time slices.",
+      "original_pdf_locator": "Section 2.1",
+      "qualification": "Supports a validation-design rationale only, not our specific designs.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are scalars, including volume-averaged ne and neTe taken from offline profiles. Targets are the current-time profile shape, not a future state. The real-time Thomson system is described as having 17 ms sampling, which is a planned specification rather than a measured arrival time.",
+  "validation_if_relevant": "Randomized shot split plus a chronological retraining study. The single campaign was reused.",
+  "forbidden_inferences": [
+    "Do not treat this as a demonstration of real-time deployment or measured latency.",
+    "Do not extend it to ion temperature, CES, or BES/ECEI.",
+    "Do not present it as forecasting future physical temperature.",
+    "Do not characterize all prior work as noncausal or electron-only."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful as related precedent: an empirical NN combined with a sparse-measurement observer for profile estimation. Its targets, diagnostic and causal setup differ from ours.",
+  "bibtex_if_worth_citing": "@article{Boyer2021PredictionElectron,title={Prediction of electron density and pressure profile shapes on NSTX-U using neural networks},author={Boyer, M.D. and Chadwick, J.},journal={Nuclear Fusion},volume={61},pages={046024},year={2021},doi={10.1088/1741-4326/abe08b}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "440916a12e0dbe1356fe3c578137594e59c73fe2879d54c7c18f7545759098eb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

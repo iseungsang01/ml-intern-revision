@@ -1,0 +1,38 @@
+{
+  "key": "Lipton2016ModelingMissing",
+  "citation": {
+    "title": "Modeling Missing Data in Clinical Time Series with RNNs",
+    "authors": "Zachary C. Lipton; David C. Kale; Randall Wetzel",
+    "year": 2016,
+    "venue": "Proceedings of Machine Learning for Healthcare 2016 (JMLR W&C Track)",
+    "volume": "56",
+    "pages": "unknown (17-page arXiv version)",
+    "doi_or_arxiv": "arXiv:1606.04130"
+  },
+  "relevance": "peripheral",
+  "topic": "Missing-data indicators and imputation for RNN, MLP and logistic-regression multilabel classification of irregularly sampled clinical time series.",
+  "own_question": "Can binary missingness indicators and hand-engineered missingness features improve diagnosis classification from discretized PICU sequences, compared with zero-filling and forward-fill imputation?",
+  "actual_method_and_evidence": "The authors used about 10,401 CHLA PICU episodes with 13 hourly-binned variables and 128 diagnosis labels. They compared zero-fill, forward-fill/median imputation, indicators, and combinations across LSTM, MLP and logistic regression on one 80/10/10 split. The best reported micro AUC was 0.8730 for an LSTM using zeros plus indicators. Labels are static diagnoses; this is not nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In one clinical time-series study, irregular sampling discretized onto fixed time steps created missingness patterns. Adding binary missingness indicators to recurrent models improved reported classification over imputation alone.",
+      "original_pdf_locator": "Sections 2.1, 4.2, 5.1; Table 1",
+      "qualification": "Applies to a single dataset and split, with medical labels and a non-causal classification target. It offers at most an analogy for representing CES-report staleness or absence as an input; this paper did not test that use.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Hourly bins with forward-fill; inference uses the final step for a static label. No report latency or arrival timing is modeled.",
+  "validation_if_relevant": "Single train/validation/test split; no external or untouched data.",
+  "forbidden_inferences": [
+    "Missingness indicators will improve BES/ECEI CES nowcasting",
+    "Evidence about plasma diagnostics or causal estimators",
+    "Applicability of zero-fill findings to our inputs"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include optionally as a cross-domain example motivating explicit encoding of report staleness or availability. It is not plasma evidence and has no bearing on the novelty or performance framing.",
+  "bibtex_if_worth_citing": "@inproceedings{Lipton2016ModelingMissing,title={Modeling Missing Data in Clinical Time Series with RNNs},author={Lipton, Zachary C. and Kale, David C. and Wetzel, Randall},booktitle={Proceedings of Machine Learning for Healthcare},volume={56},year={2016},note={arXiv:1606.04130}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 17,
+  "supplied_pdf_sha256": "31e13c3806751f86272a7830cfb6ac871dbccf19691c9328545b24f0091cb39d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

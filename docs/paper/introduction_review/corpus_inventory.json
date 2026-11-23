@@ -1,0 +1,3722 @@
+{
+  "scope": "All local corpus PDFs; inventory is not full-text review",
+  "pdf_files": 254,
+  "total_pages": 4762,
+  "total_text_words": 2895406,
+  "unique_normalized_texts": 252,
+  "text_unavailable": [
+    "Huber1964RobustEstimation"
+  ],
+  "duplicate_text_groups": [
+    [
+      "Lee2026NeuralNetworkbased",
+      "Lee2026NeuralNetworkbased_user"
+    ],
+    [
+      "Shukla2021MultiTime",
+      "Shukla2021MultitimeAttention"
+    ]
+  ],
+  "papers": [
+    {
+      "key": "Abbate2021DatadrivenProfile",
+      "path": "data/literature/Abbate2021DatadrivenProfile.pdf",
+      "sha256": "3b0154e4b1ebc55305846481eb3679e1161c71c85fdc34dcf2ab5e133eed7af2",
+      "pages": 13,
+      "text_chars": 45421,
+      "text_words": 7328,
+      "normalized_text_sha256": "4f45c004027f81fb01011dcf19e024123c34904ebb3a203aea8d18f5ebac804a",
+      "doi_candidates": [
+        "10.1088/1741-4326/abe08d"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Abbate2025Combining",
+      "path": "data/literature/Abbate2025Combining.pdf",
+      "sha256": "7ba164dddf5b5ea85b69d29fe019609b6211664c8259cfd54af976a8de70fa3e",
+      "pages": 18,
+      "text_chars": 80163,
+      "text_words": 12664,
+      "normalized_text_sha256": "ca0a0def4a84d28e6978a5cfbce0f9399ca1aed33e90961f0905701bba6f4c3f",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad249d",
+        "10.1088/1741-4326/adc283"
+      ],
+      "metadata_title": "Combining physics-based and data-driven models for quantitatively accurate plasma profile prediction that extrapolates well; with application to DIII-D, AUG, and ITER tokamaks",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Agamennoni2012ApproximateInference",
+      "path": "data/literature/Agamennoni2012ApproximateInference.pdf",
+      "sha256": "6a925c9f6c23c91bd1ed91facfc7ef80427e1c2ea948bfd91af3d5c9417bc3fb",
+      "pages": 14,
+      "text_chars": 72051,
+      "text_words": 11382,
+      "normalized_text_sha256": "8d39828348b5e8b0330127866b77c2b24a7a4209c0aafc148667a7d6d708329c",
+      "doi_candidates": [
+        "10.1109/TSP.2012.2208106"
+      ],
+      "metadata_title": "Approximate Inference in State-Space Models With Heavy-Tailed Noise",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Allen1992NeuralNetwork",
+      "path": "data/literature/Allen1992NeuralNetwork.pdf",
+      "sha256": "0530c34763d7d8699bdd4989f0ee9469c5f16a9a89e41f5a1be9cda2af0c25c7",
+      "pages": 13,
+      "text_chars": 28620,
+      "text_words": 4822,
+      "normalized_text_sha256": "e2640f523c34aff13fac14511ef771c48c9c78695324ec0c0ca7b3068c302498",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Baltruaitis2018MultimodalMachine",
+      "path": "data/literature/Baltruaitis2018MultimodalMachine.pdf",
+      "sha256": "b47dcd9ce7d6c3971adc39e56e4574668ede4eb9fb051b03726e0c5b1ad3e19b",
+      "pages": 21,
+      "text_chars": 148128,
+      "text_words": 22498,
+      "normalized_text_sha256": "1a98b9ef8dd9abb2b0551df12ea392ff3b47f1ada82bbc1ba4734b74374048f9",
+      "doi_candidates": [
+        "10.1109/TPAMI.2018.2798607"
+      ],
+      "metadata_title": "Multimodal Machine Learning: A Survey and Taxonomy",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Bandyopadhyay2025DisruptionsControl",
+      "path": "data/literature/Bandyopadhyay2025DisruptionsControl.pdf",
+      "sha256": "48bd0a975bf621c74486cedc1ef3d70191696a02c41a69b10880e3a5bdfbb464",
+      "pages": 122,
+      "text_chars": 688673,
+      "text_words": 111969,
+      "normalized_text_sha256": "71d708370e22f870f53197899a3a8537a976004e51e78f45bd5a2e22cfd527f9",
+      "doi_candidates": [
+        "10.1088/1741-4326/ade7a0"
+      ],
+      "metadata_title": "MHD, disruptions and control physics Chapter 4 of the special issue: on the path to tokamak burning plasma operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Bates2024CrossValidation",
+      "path": "data/literature/Bates2024CrossValidation.pdf",
+      "sha256": "e607fd7125ac1c9394685137e09ad1d9e579db5957f178690e98d4043d8e99c9",
+      "pages": 13,
+      "text_chars": 62849,
+      "text_words": 10392,
+      "normalized_text_sha256": "fb406936100650afdcbfe76c60d630b4637cca0d4d3455d10c713907abf97f57",
+      "doi_candidates": [
+        "10.1080/01621459.2023.2197686"
+      ],
+      "metadata_title": "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Baytas2017PatientSubtyping",
+      "path": "data/literature/Baytas2017PatientSubtyping.pdf",
+      "sha256": "edd7ff72101be9cce99db8c994d5e53a81c5ad9345123839c0c1b7f3c35cebdc",
+      "pages": 10,
+      "text_chars": 60113,
+      "text_words": 9389,
+      "normalized_text_sha256": "e7f4b2d92f2c5a9a112273eda379891a2b2885a7c9513e608b77ee9315a6f015",
+      "doi_candidates": [
+        "10.1145/3097983.3097997"
+      ],
+      "metadata_title": "Patient Subtyping via Time-Aware LSTM Networks",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Bell2006CarbonPlume",
+      "path": "data/literature/Bell2006CarbonPlume.pdf",
+      "sha256": "d2335ac2184f5ba938cce5d768f5af798f98243f90f17e58d44b103c502b96ce",
+      "pages": 5,
+      "text_chars": 17913,
+      "text_words": 2923,
+      "normalized_text_sha256": "24fabf49c63c2ad0b1108a7891de4431f892c065d61341ae66b305ad70cc56f7",
+      "doi_candidates": [
+        "10.1063/1.2217012",
+        "10.1063/1.2217012\u0004"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Biel2019DiagnosticsPlasma",
+      "path": "data/literature/Biel2019DiagnosticsPlasma.pdf",
+      "sha256": "c34639e810d6a270f246d291ecea0706d2972fd30564dd55976f131ab1b971d2",
+      "pages": 8,
+      "text_chars": 54684,
+      "text_words": 8616,
+      "normalized_text_sha256": "472dca06789390afe6bffe7c7a425eb78ce7bca1d68c49973bff7f07be2d3c7c",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2018.12.092"
+      ],
+      "metadata_title": "Diagnostics for plasma control – From ITER to DEMO",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Bishop1993AutomaticAnalysis",
+      "path": "data/literature/Bishop1993AutomaticAnalysis.pdf",
+      "sha256": "3c3f5762028854029776e72c09e213192116a9c4e2e9f1447c39b2c46d0892a1",
+      "pages": 10,
+      "text_chars": 27042,
+      "text_words": 4288,
+      "normalized_text_sha256": "a5f6393ecb400a6388308e56cee7aabcd2c4578d839757090dda260078c10b46",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Blanken2019ModelBased",
+      "path": "data/literature/Blanken2019ModelBased.pdf",
+      "sha256": "0d51f7774623146df806478442e22a338f096534faed14e41b341de56b46572a",
+      "pages": 16,
+      "text_chars": 76921,
+      "text_words": 12909,
+      "normalized_text_sha256": "89f41c87e79d60363b34e06863fcc75005690d20d43a45fe27f20cfaabcce0c9",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2019.05.030"
+      ],
+      "metadata_title": "Model-based real-time plasma electron density profile estimation and control on ASDEX Upgrade and TCV",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Blom2002ParametrizationZeeman",
+      "path": "data/literature/Blom2002ParametrizationZeeman.pdf",
+      "sha256": "57d5c3fd2a9322dfcba94c045294e448e41f4fa5135b3785982af901377c52fb",
+      "pages": 14,
+      "text_chars": 37367,
+      "text_words": 6196,
+      "normalized_text_sha256": "eb0a150fcbcf7b29bcbd8e503d899e89f23f0f2c729726daf612f6e163a46a51",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Boileau1989DeductionTemperature",
+      "path": "data/literature/Boileau1989DeductionTemperature.pdf",
+      "sha256": "338685a9cdbc88bd2e2f9175aede3043bc6982bfcbaa92b1dece7c449f406a07",
+      "pages": 27,
+      "text_chars": 63648,
+      "text_words": 10633,
+      "normalized_text_sha256": "8570d18e71d4770f341999bb9a387e980509555330612cce1424e7d7c7da577a",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Bosman2021ModelBased",
+      "path": "data/literature/Bosman2021ModelBased.pdf",
+      "sha256": "b0616c5a0b1b5c973bbe315a5a9bfe6967b126dc8196f1ab99d57617c8107305",
+      "pages": 20,
+      "text_chars": 74983,
+      "text_words": 12572,
+      "normalized_text_sha256": "46584c81507b731af5deec7cabb8381b6e35096bd258e2a22b02ebe483222106",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Boyer2019FeedbackControl",
+      "path": "data/literature/Boyer2019FeedbackControl.pdf",
+      "sha256": "4b45b25ee9eb0610b16bd54b07f4aca545cf0fd48c6eb4351655e6211e863773",
+      "pages": 14,
+      "text_chars": 55057,
+      "text_words": 8778,
+      "normalized_text_sha256": "790869427f15c47d2c910fbd5d20a50195229e4e254f1b3f8e9609bf08a46bf4",
+      "doi_candidates": [
+        "10.1088/1741-4326/ab17f5"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Boyer2021PredictionElectron",
+      "path": "data/literature/Boyer2021PredictionElectron.pdf",
+      "sha256": "440916a12e0dbe1356fe3c578137594e59c73fe2879d54c7c18f7545759098eb",
+      "pages": 18,
+      "text_chars": 49350,
+      "text_words": 7930,
+      "normalized_text_sha256": "1b0c6a8ddf57dfa50702f9860e04ac85866ed00a355cd455a584bdacfabf19b2",
+      "doi_candidates": [
+        "10.1088/1741-4326/abe08b"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Burrell2009EdgePedestal",
+      "path": "data/literature/Burrell2009EdgePedestal.pdf",
+      "sha256": "3d737790aa8b625baf80a64be4f5eba3f55ee2bd55c7cb221e57d9e997d744cb",
+      "pages": 10,
+      "text_chars": 37956,
+      "text_words": 6064,
+      "normalized_text_sha256": "360d71841eada1ec22eabb6a135d4ad5992e7fabd07fa0db1b6cb6c2ee39bfb2",
+      "doi_candidates": [
+        "10.1088/0029-5515/49/8/085024"
+      ],
+      "metadata_title": "Edge pedestal control in quiescent H-mode discharges in DIII-D using co- plus counter-neutral beam injection",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "CanoMegias2025MultiIon",
+      "path": "data/literature/CanoMegias2025MultiIon.pdf",
+      "sha256": "7dcbc1f2124cbfff75fa68d151aa051ea130f60a5b49d0578a609157318da1c6",
+      "pages": 23,
+      "text_chars": 101267,
+      "text_words": 16614,
+      "normalized_text_sha256": "717920d48bc8dcf41e9036bbb3c9c6ad7705349c39036312402c8dc226ad487f",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad249d",
+        "10.1088/1741-4326/ad2be4",
+        "10.1088/1741-4326/adf3cb"
+      ],
+      "metadata_title": "Investigation of multi-ion heat and neoclassical transport using new edge main ion measurements at ASDEX Upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Cao2018BritsBidirectional",
+      "path": "data/literature/Cao2018BritsBidirectional.pdf",
+      "sha256": "6a3f516b2f8d8a418f7c907c9617e45dff673c04f0e73cd2b56307c4a67a09a0",
+      "pages": 12,
+      "text_chars": 39659,
+      "text_words": 6436,
+      "normalized_text_sha256": "888d0a7f3ca012fb2a5fb6d755190733ed10487b46edbe49893333a03233db2e",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Caruana1997MultitaskLearning",
+      "path": "data/literature/Caruana1997MultitaskLearning.pdf",
+      "sha256": "611e8dccecf73e1c86773909ae6cbf305f0b36a54035884e3e17cd2af4d5f012",
+      "pages": 35,
+      "text_chars": 99799,
+      "text_words": 16425,
+      "normalized_text_sha256": "eb14853e55cdefb1ebc783dc50df65d4e4023bea7ca4470b4ffd0e9c029fe30b",
+      "doi_candidates": [],
+      "metadata_title": "Multitask Learning",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Cavedon2017PedestalEr",
+      "path": "data/literature/Cavedon2017PedestalEr.pdf",
+      "sha256": "1859154171e539db7df659dbdcd495374f35e114d0a997270340e6d68cf2b02d",
+      "pages": 15,
+      "text_chars": 33969,
+      "text_words": 5539,
+      "normalized_text_sha256": "be0d3420ce1d8356b0b81655592a1c1a66ea157ab1d309101bd1550acc26add3",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Cha2024AnalysisNeoclassical",
+      "path": "data/literature/Cha2024AnalysisNeoclassical.pdf",
+      "sha256": "564162fc17521c4997627d427b6b791e104e8cd7f5d26e1b606dc2fb18af3214",
+      "pages": 6,
+      "text_chars": 21787,
+      "text_words": 3272,
+      "normalized_text_sha256": "8437f216da890d86554009cd90029ef309f6a8227888637d3949dfbb7d4ae193",
+      "doi_candidates": [
+        "10.1051/epjconf/202431302005"
+      ],
+      "metadata_title": "Analysis of neoclassical tearing mode stabilization experiment by electron cyclotron injection in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Chai2019FastEstimation",
+      "path": "data/literature/Chai2019FastEstimation.pdf",
+      "sha256": "bf7099dc064c27d6565f74678d993875c5ff31eb674be90b483899a531873e7d",
+      "pages": 6,
+      "text_chars": 22798,
+      "text_words": 4032,
+      "normalized_text_sha256": "470550cf16c3697675517359fef0fcff4e36393a1272d341db934bd2999d922c",
+      "doi_candidates": [
+        "10.1088/2058-6272/ab2674"
+      ],
+      "metadata_title": "Fast estimation of ion temperature from EAST charge exchange recombination spectroscopy using neural network",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Che2018RecurrentNeural",
+      "path": "data/literature/Che2018RecurrentNeural.pdf",
+      "sha256": "c56c612a56770caaa97a7b20056009d6a84c227df641652d1ae0fad40fdefc7d",
+      "pages": 12,
+      "text_chars": 57656,
+      "text_words": 9085,
+      "normalized_text_sha256": "93a708945d696f770afae902a77aeed2004d443288571bebb568c52024779ea5",
+      "doi_candidates": [
+        "10.1038/s41598-018-24271-9"
+      ],
+      "metadata_title": "Recurrent Neural Networks for Multivariate Time Series with Missing Values",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Chen2016RotationalShear",
+      "path": "data/literature/Chen2016RotationalShear.pdf",
+      "sha256": "a13cb53a7fe50a14ed993e3ad0c6b94c76c146da477bff07e7cfab0c781ab0c3",
+      "pages": 17,
+      "text_chars": 63633,
+      "text_words": 10336,
+      "normalized_text_sha256": "e9cb3513fa891e4cdc6ac07365a37edaf4e488244f77d03bd38b76246fa56d2a",
+      "doi_candidates": [
+        "10.1088/0029-5515/56/7/076011"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Chen2019EffectEnergy",
+      "path": "data/literature/Chen2019EffectEnergy.pdf",
+      "sha256": "4db411c10464a119ebf44f5f8bf48a9b16873e8c922ff07d4b6ee5efc9384071",
+      "pages": 7,
+      "text_chars": 38521,
+      "text_words": 6570,
+      "normalized_text_sha256": "4f5342272b3b15e3e101f7e1240cf40d2227ab87879bce1f2d8b2d23a04c73c1",
+      "doi_candidates": [
+        "10.1016/j.physleta.2019.01.032"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Chen2026FusionclipMultimodal",
+      "path": "data/literature/Chen2026FusionclipMultimodal.pdf",
+      "sha256": "46ee9e720b849ab33fc976cf9c81b2f5e44188525fb4e74192f99bcb5dd8ef8b",
+      "pages": 9,
+      "text_chars": 39283,
+      "text_words": 5573,
+      "normalized_text_sha256": "098da2fc0b3365079df78699444b97bd6308c9c9d0b67f65539c96d5c1f847ee",
+      "doi_candidates": [],
+      "metadata_title": "FusionCLIP: Multimodal Contrastive Pretraining for Fusion Plasma Diagnostics",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "chilenski2015",
+      "path": "data/literature/chilenski2015.pdf",
+      "sha256": "4f3531f64fd77e1645e6fbe809e39180866e3b19b35cee3fff63ac1bf499fcbd",
+      "pages": 21,
+      "text_chars": 91204,
+      "text_words": 15020,
+      "normalized_text_sha256": "2b537bfe7cefdb19139701b7b44398cefb04fadf0a5d2780f6001d3907d708ba",
+      "doi_candidates": [
+        "10.1088/0029-5515/55/2/023012"
+      ],
+      "metadata_title": "Improved profile fitting and quantification of uncertainty in experimental measurements of impurity transport coefficients using Gaussian process regression",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Chrystal2026RealTime",
+      "path": "data/literature/Chrystal2026RealTime.pdf",
+      "sha256": "30854212b44b4a10fa1d233096e6d0ae5f2b6afb94394b85dbde35e69a8c76d9",
+      "pages": 6,
+      "text_chars": 29001,
+      "text_words": 4812,
+      "normalized_text_sha256": "7eb59ef0793dc3f55d7ce38e2bf18df4e060a4a19d40cb49e3dc77bafd0dc69a",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Cole2011ObservationPeak",
+      "path": "data/literature/Cole2011ObservationPeak.pdf",
+      "sha256": "665ddb4be805fa6ea07f8903559cdd9759dd501c6e7f14d069b99ae5840fec5c",
+      "pages": 4,
+      "text_chars": 18647,
+      "text_words": 3267,
+      "normalized_text_sha256": "d093a54a1d022157c6837d35f2b9ee380a51d436d5b93e36e9f811f5e1cadfb6",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.106.225002"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Conway2006HighThroughput",
+      "path": "data/literature/Conway2006HighThroughput.pdf",
+      "sha256": "3c2e6876872d367c90840a106a88127f44ca9366b982355c8c7022f05d756d7e",
+      "pages": 4,
+      "text_chars": 13120,
+      "text_words": 2113,
+      "normalized_text_sha256": "ce75a72adcaa4a2b78c7d6505834ab942135d1487cc5ead4e5f81e40cbd1358f",
+      "doi_candidates": [
+        "10.1063/1.2354309",
+        "10.1063/1.2354309\u0005"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "DeBock2012RealTime",
+      "path": "data/literature/DeBock2012RealTime.pdf",
+      "sha256": "d8ecb76dd0525dfe1c0e7886ec9744307e697b0dd8dc84b82682da8e9f75f629",
+      "pages": 4,
+      "text_chars": 13580,
+      "text_words": 2232,
+      "normalized_text_sha256": "db02318b5e6df83c2428a71caf79bb1652831feaa86f7ad1ef91fc29dec75a06",
+      "doi_candidates": [
+        "10.1063/1.4732854"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "DeBrouwer2019GruOde",
+      "path": "data/literature/DeBrouwer2019GruOde.pdf",
+      "sha256": "e031724444ea9911ff7cac7a1e4914fb71e074f3d1c5ff650344881a198ec800",
+      "pages": 22,
+      "text_chars": 62234,
+      "text_words": 9804,
+      "normalized_text_sha256": "370b68697c002b6091c258d5edf3157198dd216d56a477d00b9b45695ce3ae35",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Denk2018AnalysisElectron",
+      "path": "data/literature/Denk2018AnalysisElectron.pdf",
+      "sha256": "09a9f773866fec9cf2cc12fb9d668f935c1a3155f638ef289c91a5ee01cf3177",
+      "pages": 16,
+      "text_chars": 64026,
+      "text_words": 11470,
+      "normalized_text_sha256": "38cc4b4497919d77258a60436efc021a3ca9d6eb9b80babf4119a1902706525f",
+      "doi_candidates": [
+        "10.1088/1361-6587/aadb2f"
+      ],
+      "metadata_title": "Analysis of electron cyclotron emission with extended electron cyclotron forward modeling",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Diagnostics1999ChapterMeasurement",
+      "path": "data/literature/Diagnostics1999ChapterMeasurement.pdf",
+      "sha256": "0190be7435bd287ac08eaa80b9b901cc28e576d31fcc59c35ba6ee5716f3e588",
+      "pages": 36,
+      "text_chars": 145210,
+      "text_words": 23181,
+      "normalized_text_sha256": "d403bda1178d85449d2f9881ffc9384309587fb9838b380e2bcfa8a739eb65bc",
+      "doi_candidates": [],
+      "metadata_title": "chap07.dvi",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "doi_10_1016_j_fusengdes_2018_02_066",
+      "path": "data/literature/doi_10_1016_j_fusengdes_2018_02_066.pdf",
+      "sha256": "5f61033758eda71c7201af6cb4c73d488b8d8a03257a667275d8c079d6f62590",
+      "pages": 5,
+      "text_chars": 29171,
+      "text_words": 4769,
+      "normalized_text_sha256": "796a3a6b8c1352faa90bb305eac093018bad87d4ccca3207eccd690f272716f4",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2018.02.066"
+      ],
+      "metadata_title": "Achievements and lessons learned from the operation of KSTAR plasma control system upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "doi_10_1063_1_4755810",
+      "path": "data/literature/doi_10_1063_1_4755810.pdf",
+      "sha256": "9a804d413c7802100537de272f7121c1e830b46e5eaa642ea1b614e35b941b1c",
+      "pages": 12,
+      "text_chars": 57696,
+      "text_words": 9643,
+      "normalized_text_sha256": "261a274d87926bcf7a136c8a57180feebe5ca7e409d1cbfb37064868f964af6c",
+      "doi_candidates": [
+        "10.1063/1.4755810"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "doi_10_1088_0029_5515_54_8_083003",
+      "path": "data/literature/doi_10_1088_0029_5515_54_8_083003.pdf",
+      "sha256": "d4d880d186db35bb65f2412c566f2f0ce75ce44dbb958904eb9dedca5eea3ebb",
+      "pages": 10,
+      "text_chars": 48406,
+      "text_words": 8464,
+      "normalized_text_sha256": "a7c1174c5fd90117984ee9502c07cdc7820819f2685bbf72e34615f458418929",
+      "doi_candidates": [
+        "10.1088/0029-5515/54/8/083003"
+      ],
+      "metadata_title": "Key role of the edge ion heat flux in the L--H transition physics",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "doi_10_1088_1741_4326_ac4868",
+      "path": "data/literature/doi_10_1088_1741_4326_ac4868.pdf",
+      "sha256": "b0c61a0c51c948bce76fe3c7b2dac33eeefcd2a6213e21d3f2b9e74dd65ba078",
+      "pages": 23,
+      "text_chars": 94348,
+      "text_words": 16595,
+      "normalized_text_sha256": "9712c9f2839bfc90d4b5bef4b939c24884733dbb83b798cee1a324e3a240320c",
+      "doi_candidates": [
+        "10.1088/1741-4326/ac4868"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Donne2007ChapterDiagnostics",
+      "path": "data/literature/Donne2007ChapterDiagnostics.pdf",
+      "sha256": "bc2c846f5756c3cbc1fe3322d30106f3535a308e3ef8edc3c84c18dedf77cf45",
+      "pages": 49,
+      "text_chars": 265435,
+      "text_words": 41731,
+      "normalized_text_sha256": "b6d5d30c7effa956204bcd54bfdd75a98613b0726960ff2c50d0b554f8bfda3e",
+      "doi_candidates": [
+        "10.1088/0029-5515/47/6/S07"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "DuranMartin2024OutlierRobust",
+      "path": "data/literature/DuranMartin2024OutlierRobust.pdf",
+      "sha256": "8ebd166581f0a7329848733fe3f67ecb79fac15297dd3bdf9ca4f62e2a7502b1",
+      "pages": 34,
+      "text_chars": 97241,
+      "text_words": 16921,
+      "normalized_text_sha256": "e7f85c1411aabe4a9dc46f8b358c8345da14f9d40169e4dd902e2e9e2dd0df6b",
+      "doi_candidates": [],
+      "metadata_title": " Outlier-robust Kalman Filtering through Generalised Bayes ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "elorrieta2019",
+      "path": "data/literature/elorrieta2019.pdf",
+      "sha256": "37ae50526e474ffb461bd77dc91892504b19e219825a1a64c8fc934fe87fd585",
+      "pages": 11,
+      "text_chars": 56077,
+      "text_words": 10511,
+      "normalized_text_sha256": "99d0242c87c319cedce59114b74c7c43a139211ffdaccfe4136e2527736f5868",
+      "doi_candidates": [
+        "10.1051/0004-6361/201935560"
+      ],
+      "metadata_title": "Discrete-time autoregressive model for unequally spaced time-series observations",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "eyheramendy2018",
+      "path": "data/literature/eyheramendy2018.pdf",
+      "sha256": "af38387b7f6c9d1244f9b71cb065181d9fd165d206149bd41ae217340ffefaeb",
+      "pages": 12,
+      "text_chars": 58572,
+      "text_words": 10149,
+      "normalized_text_sha256": "67fd57a73df4ad635b9bf9a01cb918ac9902efc6621ddbfc992c2590bb875055",
+      "doi_candidates": [
+        "10.1093/mnras/sty2487"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Felici2011RealTime",
+      "path": "data/literature/Felici2011RealTime.pdf",
+      "sha256": "f0a9a9f40c4724f9e33671956234f538fc3d475716ea5aae5ef5b509cfad843a",
+      "pages": 34,
+      "text_chars": 100228,
+      "text_words": 16367,
+      "normalized_text_sha256": "ee40f5e1f8470a0f282502e87fee1eb67cc4013db1513ecbbf10ef2f878e7ca5",
+      "doi_candidates": [
+        "10.1088/0029-5515/51/8/083052"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Felici2014DynamicState",
+      "path": "data/literature/Felici2014DynamicState.pdf",
+      "sha256": "05c36cf45623c1f928ed71af4ba975a5cbc4c6b5b435a16b7b0a7f98b0ed29d9",
+      "pages": 8,
+      "text_chars": 40590,
+      "text_words": 6689,
+      "normalized_text_sha256": "7e7882b14291985f673e914306f97c7a2a89c3058dd8e9c5b957c7f8ff987974",
+      "doi_candidates": [],
+      "metadata_title": "A dynamic state observer for real-time reconstruction of the tokamak plasma profile state and disturbances",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Fenstermacher2025ProgressPedestal",
+      "path": "data/literature/Fenstermacher2025ProgressPedestal.pdf",
+      "sha256": "b8cb12200e952de24d93ff39b8871358ec5ac56724603e28010616415eb3db1e",
+      "pages": 125,
+      "text_chars": 729695,
+      "text_words": 115759,
+      "normalized_text_sha256": "195d4ca0d755991f4ecfb0b927501bc8ce77fc26ddd6a35420cc6ed2108a99c4",
+      "doi_candidates": [
+        "10.1088/1741-4326/adb1f3"
+      ],
+      "metadata_title": "Progress in pedestal and edge physics Chapter 3 of the special issue: on the path to tokamak burning plasma operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Fitzpatrick1993InteractionTearing",
+      "path": "data/literature/Fitzpatrick1993InteractionTearing.pdf",
+      "sha256": "866bfd581495edc2e0f12c8d0506d68bce0507ae0e68384faad2db2e6f12ec01",
+      "pages": 37,
+      "text_chars": 141156,
+      "text_words": 23243,
+      "normalized_text_sha256": "1bc880a6b6ee6789930a9c0c7afc3968ad5342795f231d3f30caa5374e8c40f8",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Fonck1983PlasmaTemperature",
+      "path": "data/literature/Fonck1983PlasmaTemperature.pdf",
+      "sha256": "9fdb11568ece392c58ce13dea639131c65ffad2e6cf27d8350f751024511fe13",
+      "pages": 4,
+      "text_chars": 13966,
+      "text_words": 2255,
+      "normalized_text_sha256": "e5cdcfe4e194e7563b095f414b029dbfefc42d68efebe0b56e722e7fddbdf3ef",
+      "doi_candidates": [
+        "10.1063/1.93893"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Fonck1984DeterminationPlasma",
+      "path": "data/literature/Fonck1984DeterminationPlasma.pdf",
+      "sha256": "e261ed55d34086ee847011456a5ed4f0033854e2a0b4eb1bf4ad550436d4b5a2",
+      "pages": 22,
+      "text_chars": 90997,
+      "text_words": 16403,
+      "normalized_text_sha256": "3271e9a04dd30ffd4b9841ec92255ca42ff0fca331a846cc93d2c785ead1540a",
+      "doi_candidates": [],
+      "metadata_title": "Determination of plasma-ion velocity distribution via charge-exchange recombination spectroscopy",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "fritsch1980",
+      "path": "data/literature/fritsch1980.pdf",
+      "sha256": "8b4a262e91876016860870e7562ca24cb480f32a4831b289aa49e34e42f0fa5c",
+      "pages": 9,
+      "text_chars": 21877,
+      "text_words": 3779,
+      "normalized_text_sha256": "695e4cb58ce6430d231e7782f39dd4be9ed584b381e083ad9d6653b39e3002c0",
+      "doi_candidates": [],
+      "metadata_title": "Monotone Piecewise Cubic Interpolation | SIAM Journal on Numerical Analysis | Vol. 17, No. 2 | Society for Industrial and Applied Mathematics",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gallas2009Framework",
+      "path": "data/literature/Gallas2009Framework.pdf",
+      "sha256": "39f6891129276ff34d57ace873a55508a084cd900be63970cf89776bcbdab426",
+      "pages": 19,
+      "text_chars": 47216,
+      "text_words": 8002,
+      "normalized_text_sha256": "1902c1b00d1baa357202354d653c7962809a854c92ad66bed9b7fd5cc422b175",
+      "doi_candidates": [
+        "10.1080/03610920802610084"
+      ],
+      "metadata_title": "A Framework for Random-Effects ROC Analysis: Biases with the Bootstrap and Other Variance Estimators",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gebetsberger2018Estimation",
+      "path": "data/literature/Gebetsberger2018Estimation.pdf",
+      "sha256": "c743a5134facd776cf2b9a866a7cb1802305c00b61394fb2adcfa96ca9cb670d",
+      "pages": 16,
+      "text_chars": 56276,
+      "text_words": 8777,
+      "normalized_text_sha256": "47242ea6e677f9fcfd218a63e96df2f32b9545c1070c1244e0427898fedaf15b",
+      "doi_candidates": [
+        "10.1175/MWR-D-17-0364.1"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gill2024RealTime",
+      "path": "data/literature/Gill2024RealTime.pdf",
+      "sha256": "429df5486d5d387d5551ac0d5efac88346fb9fbc4225920aefd27b09adb0b58f",
+      "pages": 21,
+      "text_chars": 73024,
+      "text_words": 11848,
+      "normalized_text_sha256": "25bd5e0e7ff90afa82959438cd4fe07c30fba3ddb4dc0d415f234e0b8665671f",
+      "doi_candidates": [
+        "10.1088/2632-2153/ad605e"
+      ],
+      "metadata_title": "Real-time confinement regime detection in fusion plasmas with convolutional neural networks and high-bandwidth edge fluctuation measurements",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gneiting2007StrictlyProper",
+      "path": "data/literature/Gneiting2007StrictlyProper.pdf",
+      "sha256": "1472f855dce38b59a79e34d0db7ec30af0f25639efc82376951494fa380aebfb",
+      "pages": 21,
+      "text_chars": 113309,
+      "text_words": 18339,
+      "normalized_text_sha256": "878aeda1f87c7262c43ed3da8d2f273350e02817d0aa1ca61b77d0c5afd98f15",
+      "doi_candidates": [
+        "10.1198/016214506000001437"
+      ],
+      "metadata_title": "Strictly Proper Scoring Rules, Prediction, and Estimation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Goddard2013Verification",
+      "path": "data/literature/Goddard2013Verification.pdf",
+      "sha256": "3fbd1669342881fe1f9f1daab658a8e0cd91a9dfa203857a44ad516217f51fd3",
+      "pages": 28,
+      "text_chars": 101840,
+      "text_words": 15384,
+      "normalized_text_sha256": "cf424fd2359d8d9884bbaa739ab7681416b309d1e23b4a5af7165b5ea7d20709",
+      "doi_candidates": [
+        "10.1007/s00382-012-1481-2"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Goumiri2016ModelingControl",
+      "path": "data/literature/Goumiri2016ModelingControl.pdf",
+      "sha256": "12d512cbc72516596d958eafbe2e5011b8c0247c7219b2bc9eb5f97d40ce9df1",
+      "pages": 15,
+      "text_chars": 57433,
+      "text_words": 10059,
+      "normalized_text_sha256": "b9c88af4d52ba73f60041bcf666b05035835b60d03227ce79e8355c0263dbf0f",
+      "doi_candidates": [
+        "10.1088/0029-5515/56/3/036023"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Goumiri2017SimultaneousFeedback",
+      "path": "data/literature/Goumiri2017SimultaneousFeedback.pdf",
+      "sha256": "9916c84aa9f1b4c798510d0832c7cc9f74d71e697f6e93ef4d231cb86a46e2f5",
+      "pages": 44,
+      "text_chars": 71179,
+      "text_words": 12256,
+      "normalized_text_sha256": "cc86d388a8f671c6cece3bb2a22c205dc6fb3c542d71e6bc66894f06f48428d5",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gribov2007ChapterPlasma",
+      "path": "data/literature/Gribov2007ChapterPlasma.pdf",
+      "sha256": "0579e038171b4bedf525b6eb5ec15a6b1155c73996152a911ad92931570ae590",
+      "pages": 20,
+      "text_chars": 107148,
+      "text_words": 17041,
+      "normalized_text_sha256": "9568ade51ae8a42b579f6a20433759cce88bdc6a36fcd70a8946542aa98f402e",
+      "doi_candidates": [
+        "10.1088/0029-5515/47/6/S08"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Grierson2016HighResolution",
+      "path": "data/literature/Grierson2016HighResolution.pdf",
+      "sha256": "62d31a1d1a714b354c8b98a1aa9011d3a95be390efa646539f1014317d90abd9",
+      "pages": 3,
+      "text_chars": 15255,
+      "text_words": 2406,
+      "normalized_text_sha256": "66ab7866d3d6b20097a88a1fab4a700e5e530dd6afec50ce7ce511c4ab75b096",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Gupta2026BenchmarkingSensor",
+      "path": "data/literature/Gupta2026BenchmarkingSensor.pdf",
+      "sha256": "f22483b278a45c939b083e83674c4435a9ea64a1de8b66af48432b3136da67ac",
+      "pages": 15,
+      "text_chars": 65692,
+      "text_words": 9697,
+      "normalized_text_sha256": "653b23d13d9e55c9f5ce23edede9c9b5e37a2c822049360ced9a9718a9c7acf8",
+      "doi_candidates": [],
+      "metadata_title": "Benchmarking Sensor Robustness in Plasma Diagnostic Models: A Systematic Evaluation on TokaMark",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Hahn2016ProgressPlan",
+      "path": "data/literature/Hahn2016ProgressPlan.pdf",
+      "sha256": "9b5cdfb28c958b1e6d547e51101cf070f7e24ab2c352d7b2fbeaae21d8198cf1",
+      "pages": 5,
+      "text_chars": 29938,
+      "text_words": 4336,
+      "normalized_text_sha256": "83dd46f870e58d47ccde8a2d509cf143f018ead2a5b96bee39ff2d542b13e827",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2016.05.018"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Hahn2020AdvancesChallenges",
+      "path": "data/literature/Hahn2020AdvancesChallenges.pdf",
+      "sha256": "b0d3d9dc365fede77a39b327a19c12777e8fc80d178acaa0aa6da5df5f32ff8e",
+      "pages": 7,
+      "text_chars": 36767,
+      "text_words": 5910,
+      "normalized_text_sha256": "e008953d008001167558d14cfb1f3bf358849ebfa494165b7e800424355fa9ec",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2020.111622"
+      ],
+      "metadata_title": "Advances and challenges in KSTAR plasma control toward long-pulse, high-performance experiments",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Han2024CriterionLong",
+      "path": "data/literature/Han2024CriterionLong.pdf",
+      "sha256": "fdc5024726213c4826babfad327ed6fbf3510854ce2aa41f2b3bb07f4b359703",
+      "pages": 10,
+      "text_chars": 46646,
+      "text_words": 7784,
+      "normalized_text_sha256": "ef73ca8c1811a1e00911a030fed74da3cf3f3943739583d30becdb201d54ec1c",
+      "doi_candidates": [
+        "10.1063/5.0184007"
+      ],
+      "metadata_title": "Criterion for long sustained highly peaked ion temperature in diverted configuration of KSTAR tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Haskey2017DeuteriumCharge",
+      "path": "data/literature/Haskey2017DeuteriumCharge.pdf",
+      "sha256": "4d51a737244c631dc49f1b53de590c2ffcdde6574ae95fdc0ad06935ad0b7eaa",
+      "pages": 8,
+      "text_chars": 17770,
+      "text_words": 2846,
+      "normalized_text_sha256": "c528881051d3d77a4f23e81da6cc1d1ee0c22a52bb78e14609615da559dea146",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Haskey2018ActiveSpectroscopy",
+      "path": "data/literature/Haskey2018ActiveSpectroscopy.pdf",
+      "sha256": "9cce26bc470074e9844f686adaee47ec77414fa742120f2aa19240bbabdd0192",
+      "pages": 9,
+      "text_chars": 44229,
+      "text_words": 7323,
+      "normalized_text_sha256": "e8a8b8ef1cccdee8163b1a64a258b113b03d5a03cae4174111060ec99f517424",
+      "doi_candidates": [],
+      "metadata_title": "Active spectroscopy measurements of the deuterium temperature, rotation, and density from the core to scrape off layer on the DIII-D tokamak (invited)",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Haskey2018MainIon",
+      "path": "data/literature/Haskey2018MainIon.pdf",
+      "sha256": "73cdacac6dfa44089a172a3bac5edb511859ad24a31d200baeab691fb6b18c25",
+      "pages": 9,
+      "text_chars": 46897,
+      "text_words": 7725,
+      "normalized_text_sha256": "76ac862eb202f07a7bb1030245ec36d97507cd3ddc98f6a22ff0de1bdd81719f",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Haskey2022ThermalTransport",
+      "path": "data/literature/Haskey2022ThermalTransport.pdf",
+      "sha256": "c26f5955a4d3b585dcf9e6591203f7e65c26473f7a2e418e0abec9f8af01c73d",
+      "pages": 25,
+      "text_chars": 83003,
+      "text_words": 13344,
+      "normalized_text_sha256": "f46b8e5f24289bee68bf8e5743b3ad511c6eac1ad5d743d6f9b464bd23fc3c49",
+      "doi_candidates": [
+        "10.1063/5.0072155"
+      ],
+      "metadata_title": "Ion thermal transport in the H-mode edge transport barrier on DIII-D",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Haskey2026MachineLearning",
+      "path": "data/literature/Haskey2026MachineLearning.pdf",
+      "sha256": "4cfdc905787656563f0cf2f9ac2958ab7401dbebc58be97a8b61f106891775ad",
+      "pages": 13,
+      "text_chars": 57445,
+      "text_words": 9482,
+      "normalized_text_sha256": "df423a37f2817134a9dec413ad4e101ec279de5b31e4c37f6b71105cfef1f10a",
+      "doi_candidates": [
+        "10.1063/5.0350726"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Heidbrink1988ComparisonExperimental",
+      "path": "data/literature/Heidbrink1988ComparisonExperimental.pdf",
+      "sha256": "05295879c73b47e694c39dee876e0fbbfa64a1bcc24fe4c654391269c2d0dac0",
+      "pages": 6,
+      "text_chars": 21635,
+      "text_words": 3456,
+      "normalized_text_sha256": "58284571410e74341c9fd4482ae22af387dd62f3268e8b351a02554f467ebfd6",
+      "doi_candidates": [
+        "10.1088/0029-5515/28/10/018"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Heidbrink1994BehaviourFast",
+      "path": "data/literature/Heidbrink1994BehaviourFast.pdf",
+      "sha256": "78b34e96c3db90ddc567d2805dfaca612343c32249e6a60ad026b5c05e78aa2d",
+      "pages": 82,
+      "text_chars": 315174,
+      "text_words": 51370,
+      "normalized_text_sha256": "a908ad04a82027bf419618967faf5145e811dad24d453397a2882e49756a4933",
+      "doi_candidates": [
+        "10.1088/0029-5515/34/4/i07"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Heo2025ExperimentalIdentification",
+      "path": "data/literature/Heo2025ExperimentalIdentification.pdf",
+      "sha256": "d1a8eb8281aa0b3e392d8587cec06757ce16cba5fcfad2b97102125a69ca8d03",
+      "pages": 12,
+      "text_chars": 49230,
+      "text_words": 8126,
+      "normalized_text_sha256": "9a133c03c031964bc5e5a8f40ce07e8f0d2ae563d1d713c33330afe56fe3a5bc",
+      "doi_candidates": [
+        "10.1088/1741-4326/adacfc"
+      ],
+      "metadata_title": "Experimental identification of I-mode characteristics at the edge of FIRE mode in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Herrmann1992RealTime",
+      "path": "data/literature/Herrmann1992RealTime.pdf",
+      "sha256": "59fec4158dc17bc64801ee3f809cf0253a89cd5b2d27fcd02a62be71d5e8e919",
+      "pages": 6,
+      "text_chars": 23340,
+      "text_words": 3769,
+      "normalized_text_sha256": "42c2077c1f3a0b4f415f9406c757e5661a7158be3f2a6fbc66b5abde0ddecb63",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Hey2002OxygenImpurity",
+      "path": "data/literature/Hey2002OxygenImpurity.pdf",
+      "sha256": "718a455d964a8371e00d68802d023704946b09c02ad4cd0ec0e0cf52cc8f6a93",
+      "pages": 30,
+      "text_chars": 81881,
+      "text_words": 13755,
+      "normalized_text_sha256": "497d0607342d2524234ba19e377f940191fcaa2bc572761764a3f2e2d58017ac",
+      "doi_candidates": [],
+      "metadata_title": "d:\\",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Hong2024ImpactStray",
+      "path": "data/literature/Hong2024ImpactStray.pdf",
+      "sha256": "47ef2dc84534158b0a2cedfed1e68dcfbfacd245439c3c1a2d5a6b0665d4dd3e",
+      "pages": 19,
+      "text_chars": 30402,
+      "text_words": 4610,
+      "normalized_text_sha256": "40a2ea5296a5984d0123d912013300051df57df7645fc0bd9322993e8c9e8887",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Huber1964RobustEstimation",
+      "path": "data/literature/Huber1964RobustEstimation.pdf",
+      "sha256": "0bd9e67b4910ebd47cb0349f673ca6c25307a4035dbcf0e98eeac567dd150ad4",
+      "pages": 29,
+      "text_chars": 192,
+      "text_words": 22,
+      "normalized_text_sha256": "ac0845b2d75eb751b4de9cd0e37c8ce7ed1f091b3df8630a54608cd26ccab6cd",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": false,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Humphreys2015NovelAspects",
+      "path": "data/literature/Humphreys2015NovelAspects.pdf",
+      "sha256": "936e624813e93b105ed16c5d6ac7384204f0a53595fa584bd449f682947ef8ac",
+      "pages": 88,
+      "text_chars": 158593,
+      "text_words": 23612,
+      "normalized_text_sha256": "28ffd22bab6bb193945b792a01c414c9f4b32f7354911eab08fba4bc94ae8a26",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "ICHIKAWA2025ApplicationData",
+      "path": "data/literature/ICHIKAWA2025ApplicationData.pdf",
+      "sha256": "17a7f29fa96d911f30cc5a321a5c705c7c787104e84c1f5e63b807392108627d",
+      "pages": 10,
+      "text_chars": 37964,
+      "text_words": 6380,
+      "normalized_text_sha256": "07472156e420e347a30d1fc901c05c465d40a55265d7777ba2bc22ade1d0c7db",
+      "doi_candidates": [
+        "10.1585/pfr.20.1403036"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ilse2018AttentionbasedDeep",
+      "path": "data/literature/Ilse2018AttentionbasedDeep.pdf",
+      "sha256": "9da16d3f18f46d29d3f947201b3aae195543e6b2354f878fbc06cf6c3765b199",
+      "pages": 16,
+      "text_chars": 57670,
+      "text_words": 9040,
+      "normalized_text_sha256": "b4ecb0ec0323ad3bea571e7afb40647cb56e804f44347563cb061cddb078a7b5",
+      "doi_candidates": [],
+      "metadata_title": "Attention-based Deep Multiple Instance Learning",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Imrek2026TemporalSuperresolution",
+      "path": "data/literature/Imrek2026TemporalSuperresolution.pdf",
+      "sha256": "6f41d333bf9478c08e080f7ac6cbdd469d34c671902fec207d700af498819891",
+      "pages": 18,
+      "text_chars": 54553,
+      "text_words": 8102,
+      "normalized_text_sha256": "88ba0cb65f0e4833733ba9162102afa15a1392405beaad33de4854c7ca5393e9",
+      "doi_candidates": [
+        "10.1088/1361-6587/ae72c6"
+      ],
+      "metadata_title": "Temporal super-resolution of kinetic plasma profiles at COMPASS using neural networks",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Isler1994OverviewCharge",
+      "path": "data/literature/Isler1994OverviewCharge.pdf",
+      "sha256": "4c9886a5f9981768b026eeac4760feb980aafe4eddf4c4af6245cea9a7d614b0",
+      "pages": 39,
+      "text_chars": 93797,
+      "text_words": 15575,
+      "normalized_text_sha256": "f597d5dd8c471cd273962ab09aa24ee3d69e9f16be84b02998dec90dbdcb2f69",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "ITER1999Chapter2",
+      "path": "data/literature/ITER1999Chapter2.pdf",
+      "sha256": "91991337be060e67293e3c45a6187cab43eccd0c9f78f14e46867a0ad8ea0289",
+      "pages": 76,
+      "text_chars": 330195,
+      "text_words": 54334,
+      "normalized_text_sha256": "f86d5a225890869c944d8bb63d49096cb8557d24b84309ce44df5c2763452797",
+      "doi_candidates": [],
+      "metadata_title": "chap02.dvi",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jackson2024FairMast",
+      "path": "data/literature/Jackson2024FairMast.pdf",
+      "sha256": "7dd26efa117446a51c2a1e4c38e0c424a119782e01e907113c79ad684d283742",
+      "pages": 7,
+      "text_chars": 37447,
+      "text_words": 5749,
+      "normalized_text_sha256": "297ea6d93dd5c384bf8f12b4a162aa0d4cf74958342372f3242bb57b1415004e",
+      "doi_candidates": [
+        "10.1016/j.softx.2024.101869"
+      ],
+      "metadata_title": "FAIR-MAST: A fusion device data management system",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jalalvand2025MultimodalSuperresolution",
+      "path": "data/literature/Jalalvand2025MultimodalSuperresolution.pdf",
+      "sha256": "2c278fa1afee0d3645b4084c2995534abfc8735774915f99f9aaadd57d7394ee",
+      "pages": 14,
+      "text_chars": 76892,
+      "text_words": 11205,
+      "normalized_text_sha256": "7666fb34b65796a93d5f9ad4edc134d7e9b83984ab9cb9ba41ce2dd0eb74134b",
+      "doi_candidates": [
+        "10.1038/s41467-025-63492-1"
+      ],
+      "metadata_title": "Multimodal super-resolution: discovering hidden physics and its application to fusion plasmas",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jang2021DevelopmentUltrafast",
+      "path": "data/literature/Jang2021DevelopmentUltrafast.pdf",
+      "sha256": "e3af8954331f5b06b7cdb516e17a88f012e031129a25c72551a91d2faee4cc41",
+      "pages": 6,
+      "text_chars": 20868,
+      "text_words": 3361,
+      "normalized_text_sha256": "d4124f6ab92aa326e3548cff7be0f4c078dca2340dff93dd8b4861336ced2de9",
+      "doi_candidates": [
+        "10.1063/5.0043824"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jeong2010ElectronCyclotron",
+      "path": "data/literature/Jeong2010ElectronCyclotron.pdf",
+      "sha256": "54c2e4a7348780d9d9987851a017c0b3e6b50259fb21b5b1b07223d7c7f988fa",
+      "pages": 4,
+      "text_chars": 13720,
+      "text_words": 2382,
+      "normalized_text_sha256": "d033db8cafb8e7a19362ab0832ab046bbb5633a68f43db55013a6212d7d88b9b",
+      "doi_candidates": [
+        "10.1063/1.3491224",
+        "10.1063/1.3491224\u0005"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jeong2026OperationalStability",
+      "path": "data/literature/Jeong2026OperationalStability.pdf",
+      "sha256": "21fa77c0f10c9c3b5314da1ff987dfe3e59941b55e0171f251bbc2d2aaa32af2",
+      "pages": 9,
+      "text_chars": 54930,
+      "text_words": 7469,
+      "normalized_text_sha256": "6c5ab99f1d86389af5acbbd351f369f6a2b82fc8c86e57fec7a35bf32647d5fa",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2026.116076"
+      ],
+      "metadata_title": "Operational stability and beam transport constraints in long-pulse neutral beam injection on KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jia2026TimeSeries",
+      "path": "data/literature/Jia2026TimeSeries.pdf",
+      "sha256": "b985e8126f3376dd9deeb178fd698eae21a2f3fcb04c1e2a47775ba4fa032703",
+      "pages": 17,
+      "text_chars": 66773,
+      "text_words": 10315,
+      "normalized_text_sha256": "ddcf0cfdf2c9ec154d245c3579e75f9c5ff3b48b0b2829177b47245a8090308f",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad4270",
+        "10.1088/1741-4326/aeb432"
+      ],
+      "metadata_title": "Time series regression network using exogenous variables for missing effective ion charge reconstruction in EAST tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Joffrin2003IntegratedScenario",
+      "path": "data/literature/Joffrin2003IntegratedScenario.pdf",
+      "sha256": "2b4cf0a92edb5d18a5e1aa88c1dd491965226132a58805e466875c9d72c4ab15",
+      "pages": 18,
+      "text_chars": 50397,
+      "text_words": 8455,
+      "normalized_text_sha256": "928a909b99952ae55314d328ed4f33ede824a9c57c7132d8359d4945a681506a",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Joung2018ImputationFaulty",
+      "path": "data/literature/Joung2018ImputationFaulty.pdf",
+      "sha256": "6b903bfc3a14ef649396d51203f1fa9fa31e407d145b85890031b9018091be88",
+      "pages": 6,
+      "text_chars": 23870,
+      "text_words": 4091,
+      "normalized_text_sha256": "668b4f430529fc57712fa096602fbb1d84d243088ac59bdffb865626e01ef7c3",
+      "doi_candidates": [
+        "10.1063/1.5038938"
+      ],
+      "metadata_title": "Imputation of faulty magnetic sensors with coupled Bayesian and Gaussian processes to reconstruct the magnetic equilibrium in real time",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Joung2023GsdeepnetMastering",
+      "path": "data/literature/Joung2023GsdeepnetMastering.pdf",
+      "sha256": "7aeb290c905435e286622fe05ee08d3cec8d84b84db1b8daa1ff0573297917bb",
+      "pages": 15,
+      "text_chars": 80050,
+      "text_words": 12927,
+      "normalized_text_sha256": "b5889fd9e20e111186d5931d57c12bcdad7085c23623942315b4aa3ced22c748",
+      "doi_candidates": [
+        "10.1038/s41598-023-42991-5"
+      ],
+      "metadata_title": "GS-DeepNet: mastering tokamak plasma equilibria with deep neural networks and the Grad–Shafranov equation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Joung2026ExplainableTokamak",
+      "path": "data/literature/Joung2026ExplainableTokamak.pdf",
+      "sha256": "9cc6f536c099951a9b4f5924af09a5a6530f9c7ac0b9284257e24f9a89b4bd5e",
+      "pages": 13,
+      "text_chars": 76664,
+      "text_words": 10879,
+      "normalized_text_sha256": "6c0bae21abf6e7b6e2bcda29048b359235c0d38daa036271c3cb4d6b58425ca9",
+      "doi_candidates": [
+        "10.1038/s42005-026-02689-2"
+      ],
+      "metadata_title": "Explainable tokamak-agnostic forecasting of fusion plasma instability via megahertz turbulent fluctuations",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Juhn2026FpgaBased",
+      "path": "data/literature/Juhn2026FpgaBased.pdf",
+      "sha256": "127f35f0245da6a00751cb8f9686f8d52492e0f91aa13cc2dc99301b5f367250",
+      "pages": 5,
+      "text_chars": 25814,
+      "text_words": 4024,
+      "normalized_text_sha256": "56ba9a5d4259c306c91bf5a8d586a81ba65b8efc3f23a0c9559759689059cfff",
+      "doi_candidates": [
+        "10.1109/TPS.2026.3706725"
+      ],
+      "metadata_title": "An FPGA-Based, Full-Digital Phase Comparator of a Multi-chord Interferometer for Real-Time Density Control in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Jung2026MachineLearningbased",
+      "path": "data/literature/Jung2026MachineLearningbased.pdf",
+      "sha256": "58f9231e1685d7bcb43b1720a8ca414af6352d20e39b7d951fded58bfcdebad6",
+      "pages": 9,
+      "text_chars": 28497,
+      "text_words": 4222,
+      "normalized_text_sha256": "db377014f010a152b5b2e23c044a599274d206326d323f83e72eee3883a08578",
+      "doi_candidates": [
+        "10.1007/s40042-026-01580-1"
+      ],
+      "metadata_title": "Machine learning-based plasma profile reconstruction in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kaldas2026DevelopingAutoencoder",
+      "path": "data/literature/Kaldas2026DevelopingAutoencoder.pdf",
+      "sha256": "1d9650265b57e7738c45792c5bedeedf5a910776fe7a4df24bf3d4e8fbdf604b",
+      "pages": 17,
+      "text_chars": 65680,
+      "text_words": 9006,
+      "normalized_text_sha256": "78d2567a8332bee77b694467aca10a7c67fa2c6eccd61401f1ade12f3e74e355",
+      "doi_candidates": [
+        "10.1007/s10894-026-00568-w"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Karlgaard2007HuberBased",
+      "path": "data/literature/Karlgaard2007HuberBased.pdf",
+      "sha256": "4f0571290c1de2056e080a08fdbae2cd70d7a174571d54173dd8a2c1d0f2d6c3",
+      "pages": 7,
+      "text_chars": 29642,
+      "text_words": 5067,
+      "normalized_text_sha256": "f3a566ee06a771462f954eb0df402752592d083fc93db801e918210b07280206",
+      "doi_candidates": [
+        "10.2514/1.27968"
+      ],
+      "metadata_title": "Huber-Based Divided Difference Filtering",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "path": "data/literature/KatesHarbeck2019PredictingDisruptive.pdf",
+      "sha256": "7bef03756cc1d7170af60910217a040403685c72413e89b0cf4618c67471a15e",
+      "pages": 18,
+      "text_chars": 87359,
+      "text_words": 13567,
+      "normalized_text_sha256": "2b372d15539742ab4a2c14e45565c11498ea9276a9c6714bca3c27a9dcb7ddaa",
+      "doi_candidates": [
+        "10.1038/s41586-019-1116-4"
+      ],
+      "metadata_title": "Predicting disruptive instabilities in controlled fusion plasmas through deep learning",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Keith2024RiskAware",
+      "path": "data/literature/Keith2024RiskAware.pdf",
+      "sha256": "dcc36f1f2ca158b97e2233f8ddf4b284e0d24f43cc016f14b0ebc419ee3b12b3",
+      "pages": 19,
+      "text_chars": 62132,
+      "text_words": 9589,
+      "normalized_text_sha256": "ac8acd65ba37dbc7df2a02167ecf5c55adca1e923f2f2d89383b08a2e7da4e26",
+      "doi_candidates": [
+        "10.1007/s10894-024-00413-y"
+      ],
+      "metadata_title": "Risk-Aware Framework Development for Disruption Prediction: Alcator C-Mod and DIII-D Survival Analysis",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "KFE2026DiagnosticsDataUserGuide",
+      "path": "data/literature/KFE2026DiagnosticsDataUserGuide.pdf",
+      "sha256": "f6068f4ecbb81ff26f523412d50e7aa7215b2f1ff7f227caed4da599dbfe5a94",
+      "pages": 141,
+      "text_chars": 83832,
+      "text_words": 12803,
+      "normalized_text_sha256": "82ac1b51ba9c174cdb68f371ba465569897d8fae109cc679903b2766d7f67755",
+      "doi_candidates": [],
+      "metadata_title": "PowerPoint 프레젠테이션",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kidger2020NeuralControlled",
+      "path": "data/literature/Kidger2020NeuralControlled.pdf",
+      "sha256": "9f2f75ceb2ae823445deaa527d3a30a76dbe839a1c3bed325317190093d643ae",
+      "pages": 25,
+      "text_chars": 76157,
+      "text_words": 13324,
+      "normalized_text_sha256": "19f2f17166c8270819abac1805e6555cfef0627729c6780c9fc431ac7e69ecd4",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2017ObservationResonant",
+      "path": "data/literature/Kim2017ObservationResonant.pdf",
+      "sha256": "67ccc4fa27502d4b43638ddb4f4041ee710b4b731bcf25354a13c9aa1dc7ddb9",
+      "pages": 11,
+      "text_chars": 39138,
+      "text_words": 6205,
+      "normalized_text_sha256": "cef79ddf4a506a3ebde27f6368bfd766ff0f2b9083fa2527cd4dcab1e4d88661",
+      "doi_candidates": [
+        "10.1088/1741-4326/aa8382"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2017PhysicsBased",
+      "path": "data/literature/Kim2017PhysicsBased.pdf",
+      "sha256": "bbbdabfff50a950cd77f63f766d62b911f9fc5c8cd34a25b4a420c32a1f9a3e7",
+      "pages": 18,
+      "text_chars": 84678,
+      "text_words": 14730,
+      "normalized_text_sha256": "4ed82bb44f403fd03fa399cdd3129bfcb5f543de89c407c8a82174c0fb12cb53",
+      "doi_candidates": [
+        "10.1088/1741-4326/aa623b"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2018EnhancedFast",
+      "path": "data/literature/Kim2018EnhancedFast.pdf",
+      "sha256": "a7a0b0c5d063d970b8b8fed2b89579877d8d7ea7a233ed30b26dcfe1e55d11d3",
+      "pages": 12,
+      "text_chars": 47668,
+      "text_words": 8068,
+      "normalized_text_sha256": "3babed4ba870d7bf2f1cb69f12e2192303634d0729c3b6feb1ee6f642c6c9fcf",
+      "doi_candidates": [
+        "10.1063/1.5054178"
+      ],
+      "metadata_title": "Enhanced fast ion prompt loss due to resonant magnetic perturbations in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2020PedestalElectron",
+      "path": "data/literature/Kim2020PedestalElectron.pdf",
+      "sha256": "c35af29a84c4250f70f21e847439adbdb33a4202752699a98d619031397366d8",
+      "pages": 12,
+      "text_chars": 48161,
+      "text_words": 7825,
+      "normalized_text_sha256": "f553dbe87b5f074024619c1c7119d806abd8887a0f15aeb652e3c31d738a69a4",
+      "doi_candidates": [
+        "10.1063/5.0024055"
+      ],
+      "metadata_title": "Pedestal electron collisionality and toroidal rotation during ELM-crash suppression phase under n = 1 RMP in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2022OptimizationControlled",
+      "path": "data/literature/Kim2022OptimizationControlled.pdf",
+      "sha256": "cb715e29696e6678fd931579f2dce9382039107502e1d93b7101da2b4b2b7ed5",
+      "pages": 13,
+      "text_chars": 58543,
+      "text_words": 9198,
+      "normalized_text_sha256": "e40f57c5fd0ce789a24620852ef5d42f3905d2f2f65285f0e4039a31bf3abdc0",
+      "doi_candidates": [
+        "10.1088/1741-4326/ac4369"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2023LabviewProgramming",
+      "path": "data/literature/Kim2023LabviewProgramming.pdf",
+      "sha256": "7339ad7ea3b4442ebb22ebb7c6828765112afcd05d6e077dc272defd4ebbb421",
+      "pages": 5,
+      "text_chars": 14706,
+      "text_words": 2096,
+      "normalized_text_sha256": "4f542e1034d7723f928049e9af1e98a55c6657c842ca2b63aa818f91386bf17a",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2023.113549"
+      ],
+      "metadata_title": "LabVIEW programming for the KSTAR XICS towards real-time ion temperature measurement",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2024HighestFusion",
+      "path": "data/literature/Kim2024HighestFusion.pdf",
+      "sha256": "b0f0b9dafc14e4f35e2284bb8b32a4041f97064968a4c2908bcf8346c9e4a59e",
+      "pages": 11,
+      "text_chars": 64784,
+      "text_words": 9831,
+      "normalized_text_sha256": "871e1201f77ce3226dbb6b8bd94608546eded6dcdbb34073f1ab0bc2afb4d741",
+      "doi_candidates": [
+        "10.1038/s41467-024-48415-w"
+      ],
+      "metadata_title": "Highest fusion performance without harmful edge energy bursts in tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2024KineticProfile",
+      "path": "data/literature/Kim2024KineticProfile.pdf",
+      "sha256": "1738dfef9635fcf4dcd18a1c1c2ea658f5aa215164a6a8007cf6f8a7d187beef",
+      "pages": 14,
+      "text_chars": 54544,
+      "text_words": 9156,
+      "normalized_text_sha256": "e546e8cf0f036df1df2fcbaaa1b62c41b0e07e1572911b29228f8214f8b4ffa4",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad7304"
+      ],
+      "metadata_title": "Kinetic profile inference with outlier detection using support vector machine regression and Gaussian process regression",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2026AutomatedOutlier",
+      "path": "data/literature/Kim2026AutomatedOutlier.pdf",
+      "sha256": "70def2d956ba702a32489219605334fc08027d5a16f3322df369722d81f016c0",
+      "pages": 17,
+      "text_chars": 77548,
+      "text_words": 11894,
+      "normalized_text_sha256": "1d4f4a928f5f6100b6a0d91ac935f13b4207dc76a2965c652ef40f2ded65f047",
+      "doi_candidates": [
+        "10.1088/1741-4326/ae93dd"
+      ],
+      "metadata_title": "Automated outlier-robust Bayesian profile fitting for magnetically confined plasmas with modified Tanh profiles and good-and-bad Gaussian mixture likelihoods",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2026RealTimeFeedback",
+      "path": "data/literature/Kim2026RealTimeFeedback.pdf",
+      "sha256": "cf1a5738c9a100bb85dc3f549868c038f31123131bbc76af1822a8083269e31a",
+      "pages": 13,
+      "text_chars": 30276,
+      "text_words": 5206,
+      "normalized_text_sha256": "ad9a0a8251bbf06eac38cca636fb7f2e107a014080db8dba1f261b53d0beb2af",
+      "doi_candidates": [],
+      "metadata_title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kim2026RealTimePlasma",
+      "path": "data/literature/Kim2026RealTimePlasma.pdf",
+      "sha256": "5c05bea40843a5655649799c47a519a2801d21d0f02c897f8415c9fc5838ee4d",
+      "pages": 15,
+      "text_chars": 62483,
+      "text_words": 9033,
+      "normalized_text_sha256": "cae1b73ee50756e6a0c27f7def6afe19d0de6fc18e68943e7ac6d40e53db6209",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kinsey2011IterPredictions",
+      "path": "data/literature/Kinsey2011IterPredictions.pdf",
+      "sha256": "42ea43afa552e2ed19bce68c02ce49a2f391125c01fea645ca23e975a680cb8c",
+      "pages": 11,
+      "text_chars": 49189,
+      "text_words": 8245,
+      "normalized_text_sha256": "a4993a345ff3686ebbe35058e327d53935a5a84bdbcba05d9564ac10f3569d08",
+      "doi_candidates": [
+        "10.1088/0029-5515/51/8/083001"
+      ],
+      "metadata_title": "ITER predictions using GYRO verified and validated trapped gyro-Landau fluid transport model",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2009KstarCharge",
+      "path": "data/literature/Ko2009KstarCharge.pdf",
+      "sha256": "56960e19db271296b16b9cdf6826c3f78b63951deb67977d9fa2ec3ac8063c12",
+      "pages": 4,
+      "text_chars": 18993,
+      "text_words": 3146,
+      "normalized_text_sha256": "4ca9e214e664c6519c5ae4c10255eeb58f08b6a058a61f15d0fce70c0e07a829",
+      "doi_candidates": [],
+      "metadata_title": "KSTAR Charge Exchange Spectroscopy system",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2010ChargeExchange",
+      "path": "data/literature/Ko2010ChargeExchange.pdf",
+      "sha256": "5716fc7b1e0db801a6a8331629c9f8f8bab255ea633199fcac6828bdb5aaf516",
+      "pages": 4,
+      "text_chars": 14649,
+      "text_words": 2429,
+      "normalized_text_sha256": "c64e54cb0e726a4f05a4ae2e1ffcb725b87d1d66c742fee9040060ffa7c4d3ee",
+      "doi_candidates": [
+        "10.1063/1.3496991",
+        "10.1063/1.3496991\u0005"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2010KstarCesSystem",
+      "path": "data/literature/Ko2010KstarCesSystem.pdf",
+      "sha256": "682d20797cce5853166915c817e8a0a91bf2b7d503e53d80aff96b546e654ffd",
+      "pages": 5,
+      "text_chars": 24527,
+      "text_words": 4127,
+      "normalized_text_sha256": "c383c1287293cce98d9bbceb5dc6d504d619e3bb3c5a22d483c88a99e93f5694",
+      "doi_candidates": [
+        "10.1109/TPS.2010.2042182"
+      ],
+      "metadata_title": "KSTAR Charge Exchange Spectroscopy System",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2014RotationCharacteristics",
+      "path": "data/literature/Ko2014RotationCharacteristics.pdf",
+      "sha256": "02b4a1541e673fdabfb132b9d91ee884e98e2ebebbf104418947ec4f251d85e8",
+      "pages": 4,
+      "text_chars": 14662,
+      "text_words": 2429,
+      "normalized_text_sha256": "03682563a3daf85d285efaae86ce92cdefb468927aff2e1530f0a2e0b5f52a37",
+      "doi_candidates": [
+        "10.1063/1.4890402"
+      ],
+      "metadata_title": "Rotation characteristics during the resonant magnetic perturbation induced edge localized mode suppression on the KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2015IonTemperature",
+      "path": "data/literature/Ko2015IonTemperature.pdf",
+      "sha256": "560a58f6d62c0aecde6416d446c13c47a7267db57b15bd927fb87c46b22e957d",
+      "pages": 9,
+      "text_chars": 31821,
+      "text_words": 5754,
+      "normalized_text_sha256": "0350cd8ddd2c0fd8e02860bbec3bfebfbb2a5d6cd79d4b121c6fc43411ef51c4",
+      "doi_candidates": [
+        "10.1088/0029-5515/55/8/083013"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2016CharacteristicsToroidal",
+      "path": "data/literature/Ko2016CharacteristicsToroidal.pdf",
+      "sha256": "7a5f074f3cf63d2cce1f984b75ea6d76e2ddf2eb680148bcbb8c149dabaab9e6",
+      "pages": 9,
+      "text_chars": 39398,
+      "text_words": 6792,
+      "normalized_text_sha256": "b7f2604cce484e6ca53d2249be1f129b8b29788c7794692f84794a74ec389073",
+      "doi_candidates": [
+        "10.1063/1.4953425"
+      ],
+      "metadata_title": "Characteristics of toroidal rotation and ion temperature pedestals between ELM bursts in KSTAR H-mode plasmas",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2024OverviewKstar",
+      "path": "data/literature/Ko2024OverviewKstar.pdf",
+      "sha256": "314b6ae79b8aff9fee0f90c7200715747585f42d7bb147909d6a6bcd0b29af6a",
+      "pages": 18,
+      "text_chars": 65643,
+      "text_words": 10044,
+      "normalized_text_sha256": "3efae63cda03f8851b119d57a62f3538da68a95cbdf731da996981faf4aebbe7",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad3b1d"
+      ],
+      "metadata_title": "Overview of the KSTAR experiments toward fusion reactor",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ko2026RolesKstar",
+      "path": "data/literature/Ko2026RolesKstar.pdf",
+      "sha256": "13890a6f367fa4f4cf8aa8d473ec1e67d3121221c02ba15ce909c9ab6d315a5c",
+      "pages": 20,
+      "text_chars": 91831,
+      "text_words": 12987,
+      "normalized_text_sha256": "6b80ca5a0838a14fc1ecbe4d8f9be1b655bdd471e219deced8cc76611357c854",
+      "doi_candidates": [
+        "10.1088/2058-6272/aeb854"
+      ],
+      "metadata_title": " ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "KOBAYASHI2003DevelopmentFast",
+      "path": "data/literature/KOBAYASHI2003DevelopmentFast.pdf",
+      "sha256": "cd3f3950a4ea4175d4c8c48432949b83c06c8d3782acbc52a3efa78fda05edf8",
+      "pages": 8,
+      "text_chars": 27156,
+      "text_words": 4402,
+      "normalized_text_sha256": "d218293b56b83f7701150c62951a7b0430e55d1510d9547e6385ee95f2526141",
+      "doi_candidates": [],
+      "metadata_title": "7910Kobayashi",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kobayashi2007DevelopmentRealTime",
+      "path": "data/literature/Kobayashi2007DevelopmentRealTime.pdf",
+      "sha256": "22f0e92d0def1998d855df55fe607464ca7011f3bf7559f5f22b9ff555a3cf49",
+      "pages": 4,
+      "text_chars": 15841,
+      "text_words": 2668,
+      "normalized_text_sha256": "3f5e7d1afec0f75bfdd82422417e34e7c97e3ed64187dc685e27a51bd3178575",
+      "doi_candidates": [
+        "10.1585/pfr.2.S1049"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kwak2019MeasurementFast",
+      "path": "data/literature/Kwak2019MeasurementFast.pdf",
+      "sha256": "24f5e1365b86acd3814609e308b1975ea8fcb4cb8ce807b62831e452d2c95006",
+      "pages": 6,
+      "text_chars": 21530,
+      "text_words": 3539,
+      "normalized_text_sha256": "8131be32289d31d81f17ac7032de9220c0f23ce6209f62bac993d16457be9919",
+      "doi_candidates": [
+        "10.1016/j.net.2019.05.016"
+      ],
+      "metadata_title": "Measurement of fast ion life time using neutron diagnostics and its application to the fast ion instability at ELM suppressed KSTAR plasma by RMP",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kwak2020KstarStatus",
+      "path": "data/literature/Kwak2020KstarStatus.pdf",
+      "sha256": "8e737ee26ab19c31438994a95297c495362ab946d8ebf534a97ee95e9fac6f63",
+      "pages": 8,
+      "text_chars": 43400,
+      "text_words": 6867,
+      "normalized_text_sha256": "400d10c834f38b7f1ab56d5d302d6344967799aa71299105fbff65e6f49d85ed",
+      "doi_candidates": [
+        "10.1109/TPS.2020.2964776"
+      ],
+      "metadata_title": "KSTAR Status and Upgrade Plan Toward Fusion Reactor",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kwak2025EstimationNeutral",
+      "path": "data/literature/Kwak2025EstimationNeutral.pdf",
+      "sha256": "321d3ab8733b6eb9706609400eeed31e07c828c86dc3fbce1b404daea0c7335b",
+      "pages": 6,
+      "text_chars": 21722,
+      "text_words": 3436,
+      "normalized_text_sha256": "d88a87de2e30d1f169d65f83efd53b1a2d66b5ec66afe782fd73a1442466d7ec",
+      "doi_candidates": [
+        "10.1016/j.net.2024.08.057"
+      ],
+      "metadata_title": "Estimation of neutral beam injector power transferred to KSTAR plasmas",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Kwon2018DevelopmentReal",
+      "path": "data/literature/Kwon2018DevelopmentReal.pdf",
+      "sha256": "178ccb77dfb61e417f97547f473edd5c8babf7c703aa4cb4aa2bb5da46195f42",
+      "pages": 5,
+      "text_chars": 16551,
+      "text_words": 2705,
+      "normalized_text_sha256": "f5912333d19e6abf039d193cf23727fce8c930e5dd6edaac24c9ee4d9e944580",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2018.01.019"
+      ],
+      "metadata_title": "Development of a real-time data archive system for a KSTAR real-time network",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Laborde2005ModelBased",
+      "path": "data/literature/Laborde2005ModelBased.pdf",
+      "sha256": "1ad4d00902f582b333cfe0d6ad18e5da323b23caaeb1abc9f0cedca19d37508f",
+      "pages": 30,
+      "text_chars": 67990,
+      "text_words": 11785,
+      "normalized_text_sha256": "948cb93bac9d5db4bcb9d19040bcca748dd1699100bd1c92be1108d61d262c5f",
+      "doi_candidates": [
+        "10.1088/0741-3335/47/1/010"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "LaHaye2006NeoclassicalTearing",
+      "path": "data/literature/LaHaye2006NeoclassicalTearing.pdf",
+      "sha256": "1162396ee79814c3f3e6d6860cd612e8528bc9b2469a69f45e729ac26379d180",
+      "pages": 19,
+      "text_chars": 87593,
+      "text_words": 14952,
+      "normalized_text_sha256": "3fcff1166648d19db43e71d5150c9581697fa89a4ea5e16e83b24be9a568b5ae",
+      "doi_candidates": [
+        "10.1063/1.2180747",
+        "10.1063/1.2180747\u0004"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lampert2015CombinedHydrogen",
+      "path": "data/literature/Lampert2015CombinedHydrogen.pdf",
+      "sha256": "323680131360b911dadcd91c4e341de7820fabbd2904d95b74c3492493913042",
+      "pages": 11,
+      "text_chars": 50593,
+      "text_words": 8291,
+      "normalized_text_sha256": "aa50312de11f3a83c7884dd581d7153a27f0daadfde2e42627f8b3aadfcdf9f3",
+      "doi_candidates": [
+        "10.1063/1.4923251"
+      ],
+      "metadata_title": "Combined hydrogen and lithium beam emission spectroscopy observation system for Korea Superconducting Tokamak Advanced Research",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lampert2018ScrapeLayer",
+      "path": "data/literature/Lampert2018ScrapeLayer.pdf",
+      "sha256": "d896ad65512ad603175004c45fa9fe976ec6752cf92d5fdb40fd50ae0b7cec9a",
+      "pages": 12,
+      "text_chars": 57619,
+      "text_words": 9690,
+      "normalized_text_sha256": "1f1952bdaa8899ef2d8c2e5c06205b2ef01d06041f08b9db9211224540d23932",
+      "doi_candidates": [
+        "10.1063/1.5017295"
+      ],
+      "metadata_title": "2D scrape-off layer turbulence measurement using Deuterium beam emission spectroscopy on KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lanctot2016ErrorField",
+      "path": "data/literature/Lanctot2016ErrorField.pdf",
+      "sha256": "eea96927167d1602e0323afa8a0ac349695778850bedf5a72ec862e3175dcebc",
+      "pages": 19,
+      "text_chars": 44485,
+      "text_words": 7085,
+      "normalized_text_sha256": "9861198662cece45ceda5dc9f6b1b255113b83e506561480e5d5ecc4f59757ad",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2011DevelopmentGrating",
+      "path": "data/literature/Lee2011DevelopmentGrating.pdf",
+      "sha256": "13d46e32210068745a6bcee1355c636c2f2db86e8916178960630768b760c319",
+      "pages": 6,
+      "text_chars": 22908,
+      "text_words": 3755,
+      "normalized_text_sha256": "122e9571a5a54dab43b140ee6563e921f0becf638609ae9e15d5295e0b0dbcb9",
+      "doi_candidates": [
+        "10.1063/1.3606438"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2016ValidationToroidal",
+      "path": "data/literature/Lee2016ValidationToroidal.pdf",
+      "sha256": "bc618354afd98daffa9c87b73c2d04bc34cb256b1111bcee3a10cc5f0927dd48",
+      "pages": 6,
+      "text_chars": 12345,
+      "text_words": 1948,
+      "normalized_text_sha256": "4bee8ec159b158a2712ce7afa202ed6816ca323c3860c98c65b4646274a5ccea",
+      "doi_candidates": [
+        "10.13182/FST15-174"
+      ],
+      "metadata_title": "Validation of Toroidal Rotation and Ion Temperature in KSTAR Plasmas",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2020CrossComparisons",
+      "path": "data/literature/Lee2020CrossComparisons.pdf",
+      "sha256": "815adc880ab2df8a01460748037b87795c8fe4ff0bd4dbc10b07f0d8f078a4ae",
+      "pages": 6,
+      "text_chars": 13141,
+      "text_words": 1953,
+      "normalized_text_sha256": "3bc7169488da99e67bd30aab9e6a6c5516db026f1852184c47524886ae79f9b1",
+      "doi_candidates": [
+        "10.1080/15361055.2020.1817705"
+      ],
+      "metadata_title": "Cross Comparisons of X-Ray Imaging Crystal Spectrometer and Charge Exchange Spectroscopy from KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2020TwoGaussian",
+      "path": "data/literature/Lee2020TwoGaussian.pdf",
+      "sha256": "c3088ee34d7dba659262b31c07b0d7a482c3ffdc6ff131bb0462dd733fd6ac24",
+      "pages": 9,
+      "text_chars": 25923,
+      "text_words": 4084,
+      "normalized_text_sha256": "efc50a51b465d6d73a3e74b6e2d5d484fdafdf5ec4c322edebb03237335b9e23",
+      "doi_candidates": [
+        "10.1080/15361055.2020.1790712"
+      ],
+      "metadata_title": "Two-Gaussian Fitting Method for Charge Exchange Spectroscopy on Measurements of Ion Temperature and ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2021SystematicEvaluation",
+      "path": "data/literature/Lee2021SystematicEvaluation.pdf",
+      "sha256": "aafa894b90fd8725a923a37f8abc9c03ba26a0c342b802063ed9945d2bcc402f",
+      "pages": 7,
+      "text_chars": 34372,
+      "text_words": 5292,
+      "normalized_text_sha256": "4ae97918807e2fe729d9f33f6984e1f039fe6d9dea7b9ce2b064cbfac965f4b1",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2021.112870"
+      ],
+      "metadata_title": "Systematic evaluation of the effect of multi-ion-source neutral beam injection on motional Stark effect diagnostic in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2022MeasurementCarbon",
+      "path": "data/literature/Lee2022MeasurementCarbon.pdf",
+      "sha256": "d5843f13e04f77f29a095765ad9c5801857f6fa70ffdf8910a4590f6c35aa7a7",
+      "pages": 9,
+      "text_chars": 31294,
+      "text_words": 5227,
+      "normalized_text_sha256": "c4b59ef1093d43eb3d73779fc900ca2e13f5be8132842264264faab50411ba14",
+      "doi_candidates": [
+        "10.1063/5.0080075"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2022OverviewRecent",
+      "path": "data/literature/Lee2022OverviewRecent.pdf",
+      "sha256": "0d81e6780a377fcd4ebf4390c99e8c52c2168ef9ef47a5c27595efb4ab9df064",
+      "pages": 12,
+      "text_chars": 25416,
+      "text_words": 3901,
+      "normalized_text_sha256": "c6aed7311a4806ca263b659baca160c6be4e8beab4c511ab8aeaa9bc4c53387a",
+      "doi_candidates": [
+        "10.1088/1748-0221/17/01/C01065"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2023EffectCoherent",
+      "path": "data/literature/Lee2023EffectCoherent.pdf",
+      "sha256": "903230a0a30afb0bba8d9d6cc1b705bd5adaa894fc76d639df68eb61480ce587",
+      "pages": 22,
+      "text_chars": 98103,
+      "text_words": 15816,
+      "normalized_text_sha256": "82a18dd879e40dc4c3423be5f01c135330faf54f847c4ef7c0ef02f670a26d69",
+      "doi_candidates": [
+        "10.1088/1741-4326/acfd40"
+      ],
+      "metadata_title": "Effect of coherent edge-localized mode on transition to high-performance hybrid scenarios in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2026NeuralNetworkbased",
+      "path": "data/literature/Lee2026NeuralNetworkbased.pdf",
+      "sha256": "5eae92d2cfd805b493824587a965ec1a63cd135404d5af7e9881b8716428afa3",
+      "pages": 7,
+      "text_chars": 32108,
+      "text_words": 4877,
+      "normalized_text_sha256": "6bd174749aa9b960abe8e7a2c6a7c90990c1441833a7e045790c5a69145c8d59",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2025.115518"
+      ],
+      "metadata_title": "Neural network-based analysis of charge exchange spectra in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2026NeuralNetworkbased_user",
+      "path": "data/literature/Lee2026NeuralNetworkbased_user.pdf",
+      "sha256": "c323ab23a6ade8ad5e4c6ac8cd4daa6e009d72f670d089dc23a8daa53b57ae4f",
+      "pages": 7,
+      "text_chars": 32108,
+      "text_words": 4877,
+      "normalized_text_sha256": "6bd174749aa9b960abe8e7a2c6a7c90990c1441833a7e045790c5a69145c8d59",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2025.115518"
+      ],
+      "metadata_title": "Neural network-based analysis of charge exchange spectra in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lee2026SpatiotemporalStructure",
+      "path": "data/literature/Lee2026SpatiotemporalStructure.pdf",
+      "sha256": "6e31f7fe5c6eef307effaf7b88c578dd53b16e6c893b9c16b034b8d70b830064",
+      "pages": 15,
+      "text_chars": 65599,
+      "text_words": 10013,
+      "normalized_text_sha256": "94435f06904f970d894df3cc82e07b819490b72a9e528fade4a74bccb1c8aefc",
+      "doi_candidates": [
+        "10.1088/1741-4326/ae8679"
+      ],
+      "metadata_title": "Spatiotemporal structure of edge harmonic oscillation and its role in ELM-free QH-mode at KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lin2024PredictionPlasma",
+      "path": "data/literature/Lin2024PredictionPlasma.pdf",
+      "sha256": "b892f8cf92fa1db375d8eb5ec0f41cf327926e026daa277e72b216ed84d0d0ad",
+      "pages": 16,
+      "text_chars": 50173,
+      "text_words": 7746,
+      "normalized_text_sha256": "943d06c43952316632d466971f21f5e41e26bcc74020c90920bd66b985e01f97",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad73e8"
+      ],
+      "metadata_title": "Prediction of plasma rotation velocity and ion temperature profiles in EAST Tokamak using artificial neural network models",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Lipton2016ModelingMissing",
+      "path": "data/literature/Lipton2016ModelingMissing.pdf",
+      "sha256": "31e13c3806751f86272a7830cfb6ac871dbccf19691c9328545b24f0091cb39d",
+      "pages": 17,
+      "text_chars": 46128,
+      "text_words": 6967,
+      "normalized_text_sha256": "62d9a2c8dcb96ac44d79150663a3c93fa7e5c7acc5cd9b2f96da4e732ddcead0",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Litaudon2011RealTime",
+      "path": "data/literature/Litaudon2011RealTime.pdf",
+      "sha256": "34136bc92ecf1f2d3077e00f454bc34b13ee0d6aeeefd2b5d4b3646d4ce9156f",
+      "pages": 18,
+      "text_chars": 67762,
+      "text_words": 10573,
+      "normalized_text_sha256": "67472c6e70872a39524ade9523f2e8c2d984ee81bfcb5b9cdb2b8b6da2339736",
+      "doi_candidates": [
+        "10.13182/FST11-",
+        "10.13182/FST11-A11690"
+      ],
+      "metadata_title": "Real-Time Control of Advanced Scenarios for Steady-State Tokamak Operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Mantica2009ExperimentalStudy",
+      "path": "data/literature/Mantica2009ExperimentalStudy.pdf",
+      "sha256": "557a6b97b4c8682d5ba8aae1a05ea15a0682dff66333dffdd0fc6637baaf11c9",
+      "pages": 5,
+      "text_chars": 24512,
+      "text_words": 4265,
+      "normalized_text_sha256": "fea7fc71b82d540453565b72f80c476e23ebfd45eb445210ccf039ef2dce8178",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.102.175002"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Masreliez1977RobustBayesian",
+      "path": "data/literature/Masreliez1977RobustBayesian.pdf",
+      "sha256": "32d6ecff44205c88b530dffbacc7e1abebaba5bd800ac7a464a0e245c92a99d0",
+      "pages": 11,
+      "text_chars": 49325,
+      "text_words": 8699,
+      "normalized_text_sha256": "797fd030c0c50a3638e78982d6e5ce4ddabc5719bd4a9e16526157d1e7b1af4d",
+      "doi_candidates": [],
+      "metadata_title": "Robust bayesian estimation for the linear model and robustifying the Kalman filter",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Matos2016DeepLearning",
+      "path": "data/literature/Matos2016DeepLearning.pdf",
+      "sha256": "3805c4a83d8a9c086e47ba88c6fbfffea39aefbaa60dd14abbebb25a2ca1d1bc",
+      "pages": 8,
+      "text_chars": 32645,
+      "text_words": 5186,
+      "normalized_text_sha256": "cf16a2ecec90995454a1bdd3e6d02def40b8d0669d62678692efd2c266eecca9",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2016.11.006"
+      ],
+      "metadata_title": "Thermo-mechanical design of the extraction grids for RF negative ion source at HUST",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Mazon2002RealTime",
+      "path": "data/literature/Mazon2002RealTime.pdf",
+      "sha256": "de9674e772ab44f5bfaa9f021bc49915d47ccc4e1739af62e07e4ce65bfc8d20",
+      "pages": 19,
+      "text_chars": 48297,
+      "text_words": 8235,
+      "normalized_text_sha256": "7abd00a432958da4f99f776b0e199ffc07fc5a1154fe4de7d7380a7b04ca1499",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Mazon2025Diagnostics",
+      "path": "data/literature/Mazon2025Diagnostics.pdf",
+      "sha256": "f16038245426adaab3182b96fd72e54c6fdea8d00c543d704d38a5ad68fcc04d",
+      "pages": 196,
+      "text_chars": 912325,
+      "text_words": 146614,
+      "normalized_text_sha256": "e4e2e97ce7946b4e5e4626a95958e3b101a70bc94683b94ebc5152fec3ecf8e3",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad249d",
+        "10.1088/1741-4326/adfc7c"
+      ],
+      "metadata_title": "Diagnostics Chapter 8 of the special issue: on the path to tokamak burning plasma operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "McDermott2017ExtensionsCharge",
+      "path": "data/literature/McDermott2017ExtensionsCharge.pdf",
+      "sha256": "af0b0c09641b920a8216cf74172f91ebdb9bfff40cdba2ec473f55bf352cb343",
+      "pages": 12,
+      "text_chars": 56322,
+      "text_words": 9169,
+      "normalized_text_sha256": "f36b72041c83c90cac7ba29ed2434dcac0f62c32ce9132e5a65462426c628c19",
+      "doi_candidates": [
+        "10.1063/1.4993131"
+      ],
+      "metadata_title": "Extensions to the charge exchange recombination spectroscopy diagnostic suite at ASDEX Upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Meister2001MeasurementPoloidal",
+      "path": "data/literature/Meister2001MeasurementPoloidal.pdf",
+      "sha256": "a782ec2dbdaa09c4e2124e12e318c182eac3c4b87571d8de969810b7284e5ea3",
+      "pages": 13,
+      "text_chars": 42216,
+      "text_words": 7217,
+      "normalized_text_sha256": "f66a7453d5fd4fa436b13beeb313889a5cccfd3a1c706aec87125be57ff7a4c8",
+      "doi_candidates": [],
+      "metadata_title": "7111.dvi",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Messmer2019OptimalPolarisation",
+      "path": "data/literature/Messmer2019OptimalPolarisation.pdf",
+      "sha256": "8af74e56e74439789bf05df6c7fa7738f522617692ebfe5e6bb6684ad2e81120",
+      "pages": 12,
+      "text_chars": 47230,
+      "text_words": 8072,
+      "normalized_text_sha256": "686e80b74ecf249c9e3703d35b87676336330ca58ee868d8a1e3d543f5714401",
+      "doi_candidates": [
+        "10.1088/1361-6587/aaf7ed"
+      ],
+      "metadata_title": "Optimal MSE polarisation angle and q-profile estimation using Kalman filters and the plasma simulator RAPTOR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "MHD1999ChapterPlasma",
+      "path": "data/literature/MHD1999ChapterPlasma.pdf",
+      "sha256": "94311eec7444b8b046e8a227080a6df913cbeac747ec3cfe00a9c1cefecdaa29",
+      "pages": 50,
+      "text_chars": 195518,
+      "text_words": 31577,
+      "normalized_text_sha256": "d47396cd0f35a40124d02f7486c2d22b5f9bac98a64842d732f078485dac1d73",
+      "doi_candidates": [],
+      "metadata_title": "chap08.dvi",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "michoski2024",
+      "path": "data/literature/michoski2024.pdf",
+      "sha256": "c61ce72392eb21d1a1d675c0f5415709c2c8191a6281793ff844e7c86aea01fd",
+      "pages": 23,
+      "text_chars": 88212,
+      "text_words": 14453,
+      "normalized_text_sha256": "d39b22366af1e0ffaf0a16cdf7d13ce8ea59a3068b1b6131de7325a38bd8cf18",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad1af5"
+      ],
+      "metadata_title": "A Gaussian process guide for signal regression in magnetic fusion",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Mohammed2026CommissioningOperation",
+      "path": "data/literature/Mohammed2026CommissioningOperation.pdf",
+      "sha256": "c97f0f26cad02b0763647285e9a944dac3f7633e7c26a5c8fc1a8d39b24814a6",
+      "pages": 23,
+      "text_chars": 55436,
+      "text_words": 9382,
+      "normalized_text_sha256": "e1b4d2599136834011bdeb34da4d20d1321cbdff8635f312071ca02b8c4156d6",
+      "doi_candidates": [
+        "10.1088/1361-"
+      ],
+      "metadata_title": " ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Mohapatra2019RealtimeSensor",
+      "path": "data/literature/Mohapatra2019RealtimeSensor.pdf",
+      "sha256": "f5e6923233f1eb3891dff33d1357476dae821d27eb935270b9eb165ea5607c8f",
+      "pages": 8,
+      "text_chars": 33786,
+      "text_words": 5574,
+      "normalized_text_sha256": "433581fd9f5c95dff39be7a94d67588fe0ce7d00d41c5aec25a75e9d28110e78",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2019.111401"
+      ],
+      "metadata_title": "Real-time sensor fault detection in Tokamak using different machine learning algorithms",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Moreau2008TimeScale",
+      "path": "data/literature/Moreau2008TimeScale.pdf",
+      "sha256": "a269a37ec357e4ebab061d138ae8b939630163a20fb03e9d5c0714493369d351",
+      "pages": 39,
+      "text_chars": 174903,
+      "text_words": 29615,
+      "normalized_text_sha256": "37d8acee01ab070d0ab47035f9a2736b55b507ab4cbf32ab7e6a96b6e195de1e",
+      "doi_candidates": [
+        "10.1088/0029-5515/48/10/106001"
+      ],
+      "metadata_title": "Special Topic",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Morishita2020DataAssimilation",
+      "path": "data/literature/Morishita2020DataAssimilation.pdf",
+      "sha256": "58221975fbedc62458c4e175f3c55d19c0a57f1075bdad31368ab0dffa462a05",
+      "pages": 9,
+      "text_chars": 24559,
+      "text_words": 4053,
+      "normalized_text_sha256": "ffa0364171888b370b6bc70645d4f1a8d9d87acb9f4f8aa96494ca8fa146a7f6",
+      "doi_candidates": [
+        "10.1088/1741-4326/ab7596"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Morishita2024FirstApplication",
+      "path": "data/literature/Morishita2024FirstApplication.pdf",
+      "sha256": "c68a46b4e40c1913b8b7cb74e3020b30b172ccca0a96f223101cf488a594701d",
+      "pages": 11,
+      "text_chars": 51211,
+      "text_words": 7493,
+      "normalized_text_sha256": "980d56338634252934a7f1fb5b6d44bd1a20fabc2c5b4066f5ab98ca04db2fdc",
+      "doi_candidates": [
+        "10.1038/s41598-023-49432-3"
+      ],
+      "metadata_title": "First application of data assimilation-based control to fusion plasma",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Morosohk2023RealTime",
+      "path": "data/literature/Morosohk2023RealTime.pdf",
+      "sha256": "2a7c12a2379fdd720addaf254accc0202f6749c520f794585cd179f48a751e3e",
+      "pages": 16,
+      "text_chars": 46983,
+      "text_words": 7882,
+      "normalized_text_sha256": "1682c76d921934d32865bc8d7b472e15ef04b5c08212176bd1a9ee6242120e18",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "murphy1988",
+      "path": "data/literature/murphy1988.pdf",
+      "sha256": "128b8895590d01005e3f3061e02f9bdb043e306737bedb27019e5c14963df6f3",
+      "pages": 8,
+      "text_chars": 775,
+      "text_words": 128,
+      "normalized_text_sha256": "6e3a021c71c488a4dec9c2cea8cc229e8c6e4d18e22835e88995ba0c545a1852",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Na2025IntegratedOperation",
+      "path": "data/literature/Na2025IntegratedOperation.pdf",
+      "sha256": "f238623bcd2e1854fa3234d3478c3c4a72b3caeb2a10ac1df337ab469607ebe9",
+      "pages": 141,
+      "text_chars": 757873,
+      "text_words": 119813,
+      "normalized_text_sha256": "3ead9280af54bcd99175f0fc2714d9e7870b3f73957234a585b161dea61d445f",
+      "doi_candidates": [
+        "10.1088/1741-4326/ade79f"
+      ],
+      "metadata_title": "Integrated operation scenarios Chapter 6 of the special issue: on the path to tokamak burning plasma operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Na2026FireMode",
+      "path": "data/literature/Na2026FireMode.pdf",
+      "sha256": "d81a202009b9664ffa52039e189ecc263acf29cab3f047e285967f0a4973849e",
+      "pages": 23,
+      "text_chars": 80723,
+      "text_words": 13184,
+      "normalized_text_sha256": "22387a4a0c7f315ed29448859947586ecd67ba8e479310d8529fbd90373f46de",
+      "doi_candidates": [
+        "10.1088/1741-4326/ae332f"
+      ],
+      "metadata_title": "On FIRE mode in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Nadeau2003Inference",
+      "path": "data/literature/Nadeau2003Inference.pdf",
+      "sha256": "39ce55ef06063e4b8fedbb2d352d5e6ee11338fb7bc770edf18d3436a5210574",
+      "pages": 43,
+      "text_chars": 112054,
+      "text_words": 21167,
+      "normalized_text_sha256": "f2d4e3dccfca2fa3fd795ce312e7a68306698062f3874079b9e44b20df96d823",
+      "doi_candidates": [],
+      "metadata_title": "Inference for the Generalization Error",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Nam2012AnalysisEdge",
+      "path": "data/literature/Nam2012AnalysisEdge.pdf",
+      "sha256": "2e1742ec2f5805397b7be34e43c9e57dc0dbb0c4d5d16447a373c6d22a5daf4e",
+      "pages": 4,
+      "text_chars": 15218,
+      "text_words": 2418,
+      "normalized_text_sha256": "26446fab8a1feda0b766ee0e61f1f3a2214a93e87921516df7b8eff9eb6c6cef",
+      "doi_candidates": [
+        "10.1063/1.4739078"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Nam2014EdgeElectron",
+      "path": "data/literature/Nam2014EdgeElectron.pdf",
+      "sha256": "afe2d4f4a1b0c92d28aa93aa9220c4f834f63945ca4b18aab16320873cbad013",
+      "pages": 4,
+      "text_chars": 15649,
+      "text_words": 2553,
+      "normalized_text_sha256": "f3b3eec1acfc6b6c2ef32018d101a554b1ad9a01343c7fd3b2a752dad9d49e63",
+      "doi_candidates": [
+        "10.1063/1.4894839"
+      ],
+      "metadata_title": "Edge electron density profiles and fluctuations measured by two-dimensional beam emission spectroscopy in the KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Nam2026OverviewKstar",
+      "path": "data/literature/Nam2026OverviewKstar.pdf",
+      "sha256": "6723082a8c1982c18ffac0812ce0e67e567f5658ac6c8373007ada046b11a3c5",
+      "pages": 39,
+      "text_chars": 76352,
+      "text_words": 12476,
+      "normalized_text_sha256": "4d500295a3cd6fb84296add96785d2f02f6ecacedbf178b6f581a3232830b7a0",
+      "doi_candidates": [
+        "10.1088/1741-4326/ae8283"
+      ],
+      "metadata_title": " ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Neil2016PhasedLstm",
+      "path": "data/literature/Neil2016PhasedLstm.pdf",
+      "sha256": "ca7cd2e3ff86c9db47e1ba7d5c22c40bb71a6182de441ac70b1003c2cd5dbda7",
+      "pages": 9,
+      "text_chars": 34302,
+      "text_words": 5612,
+      "normalized_text_sha256": "e6740b676dc5f035af00c8f734a8b5f50c01c744acb76079685fe9d29a4c5b69",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ogawa1988DeterminationTemperature",
+      "path": "data/literature/Ogawa1988DeterminationTemperature.pdf",
+      "sha256": "5a0b414f9625042ad98f570eee387b8aebb8c6ef139eeb2c721ee26e0b21a307",
+      "pages": 9,
+      "text_chars": 770,
+      "text_words": 123,
+      "normalized_text_sha256": "b792a643cc48a618d3a741443735566dec3aebde1b299ac9406ce0e528b880ca",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Owen2007Pigeonhole",
+      "path": "data/literature/Owen2007Pigeonhole.pdf",
+      "sha256": "ab56598c9e114153f7ed93e5e7c39703d39f397e003c8176990abb9e49906623",
+      "pages": 26,
+      "text_chars": 50963,
+      "text_words": 9787,
+      "normalized_text_sha256": "2ba49c82fc93c6661a054b309b842626019b0f7a00e386a44ad61dfb4ede608c",
+      "doi_candidates": [
+        "10.1214/07-AOAS122"
+      ],
+      "metadata_title": "The pigeonhole bootstrap",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Park2011HighSpeed",
+      "path": "data/literature/Park2011HighSpeed.pdf",
+      "sha256": "528152daa64f542b091c6411f3cf6a80477a9a1b41e541ef10340313d4879f70",
+      "pages": 4,
+      "text_chars": 15688,
+      "text_words": 2616,
+      "normalized_text_sha256": "5ab82623f290ad1e14b3242139f5d073215610893271736e603d1370f0c9a3e0",
+      "doi_candidates": [],
+      "metadata_title": "High-speed Data Handling Using Reflective Memory Thread for Tokamak Plasma Control",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Park2013RotationalResonance",
+      "path": "data/literature/Park2013RotationalResonance.pdf",
+      "sha256": "d6de42ec50aed097e426cef03a1b124bc09680041089c69debc9e7514911ec4b",
+      "pages": 4,
+      "text_chars": 19773,
+      "text_words": 3389,
+      "normalized_text_sha256": "cb35fadbd14adb487f5409b130636bcbf18de9c12cce10a54a0704c3fe3a3c76",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.111.095002"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Park2018FieldPhase",
+      "path": "data/literature/Park2018FieldPhase.pdf",
+      "sha256": "e93c30e409f9f1dc8a3861803fa134a594ac78c27e85c331d98811c3e19770af",
+      "pages": 7,
+      "text_chars": 43368,
+      "text_words": 7419,
+      "normalized_text_sha256": "5798f4eec9d99ebde222c6c55c9c9b22377d6caef6c8b6e3af0633d1cf5ab060",
+      "doi_candidates": [
+        "10.1038/s41567-018-0268-8"
+      ],
+      "metadata_title": "3D field phase-space control in tokamak plasmas",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Pastore2023ModelBased",
+      "path": "data/literature/Pastore2023ModelBased.pdf",
+      "sha256": "2b208a01be785f4ad3e10e71fcb241c670e5db19276417e960714b4469f33389",
+      "pages": 9,
+      "text_chars": 51724,
+      "text_words": 8225,
+      "normalized_text_sha256": "0b00c454931dc8a6ccf4584869d8d8737a0121842026689880cfe4728f4229cf",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2023.113615"
+      ],
+      "metadata_title": "Model-based electron density estimation using multiple diagnostics on TCV",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel",
+      "path": "data/literature/Pastore2026ApplicationsNovel.pdf",
+      "sha256": "d2172a2f53d13a9b7c009e75927461c3d07a6b65189d0a6e0e4f8b2d2d7e60b9",
+      "pages": 38,
+      "text_chars": 150271,
+      "text_words": 24636,
+      "normalized_text_sha256": "6d8c7565e9b0982d5fe0864e49019b835f4190acd14eb73f18a838f1a9238f9b",
+      "doi_candidates": [
+        "10.1088/1741-4326/aeab66"
+      ],
+      "metadata_title": " ",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel_arXiv",
+      "path": "data/literature/Pastore2026ApplicationsNovel_arXiv.pdf",
+      "sha256": "9bdf6f6dca5d79ebc9bd2302420370786c6701dfa0403642e7ea95e90f22936d",
+      "pages": 38,
+      "text_chars": 140563,
+      "text_words": 22030,
+      "normalized_text_sha256": "52d4128630f5a1e02eab1228af7f365e60281e3fa7484f80d2d209c5ef9014d1",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad2be4"
+      ],
+      "metadata_title": "Applications of a novel model-based real-time observer for electron density profile control experiments in TCV",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Pavlova2021StudiesHalo",
+      "path": "data/literature/Pavlova2021StudiesHalo.pdf",
+      "sha256": "764ffb9f8f2f65d2404bc6847282f82890ce3e2dfc607d0cb0ab9eacd3306b8f",
+      "pages": 6,
+      "text_chars": 14780,
+      "text_words": 2366,
+      "normalized_text_sha256": "eac5e7b2e5ad8021a7824a679f73a1eba7cbb508e510c65532691726356f7abf",
+      "doi_candidates": [
+        "10.1088/1742-6596/2055/1/012002"
+      ],
+      "metadata_title": "Microsoft Word - Pavlova-eng-formatted",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Pavone2019NeuralNetwork",
+      "path": "data/literature/Pavone2019NeuralNetwork.pdf",
+      "sha256": "f1d73b98447f3a39d654f1301a093bcb850bb4079ebbb4cdbb1bf6c1cf420652",
+      "pages": 15,
+      "text_chars": 63132,
+      "text_words": 10664,
+      "normalized_text_sha256": "1c9e44d7cfb361124359541bb6d97711050019eba2513c9e67c1fa5d602513e9",
+      "doi_candidates": [
+        "10.1088/1361-6587/ab1d26"
+      ],
+      "metadata_title": "Neural network approximation of Bayesian models for the inference of ion and electron temperature profiles at W7-X",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "PazSoldan2019EffectPlasma",
+      "path": "data/literature/PazSoldan2019EffectPlasma.pdf",
+      "sha256": "602287d04f79cb6b8a5e80c26d31abb9169f35c908049990cde31188fa51dfaa",
+      "pages": 31,
+      "text_chars": 84348,
+      "text_words": 14059,
+      "normalized_text_sha256": "766291e3db193014e05399c7b9642ba16ac639825f3223b1a351152aefdeeb83",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "PazSoldan2024PlasmaPerformance",
+      "path": "data/literature/PazSoldan2024PlasmaPerformance.pdf",
+      "sha256": "a361ab920165aac07f48b5faa69b408e0745086012dd77f6b205352fb50cb303",
+      "pages": 14,
+      "text_chars": 61612,
+      "text_words": 9978,
+      "normalized_text_sha256": "226d14b643cf0a40a6c39ab7148f4926d35a1663eae4e3f8573258576cd6a4d1",
+      "doi_candidates": [
+        "10.1088/1741-4326/ac301f",
+        "10.1088/1741-4326/ad249d",
+        "10.1088/1741-4326/ad3b1d",
+        "10.1088/1741-4326/ad4270",
+        "10.1088/1741-4326/ad6014"
+      ],
+      "metadata_title": "Plasma performance and operational space with an RMP-ELM suppressed edge",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Podesta2012RealTime",
+      "path": "data/literature/Podesta2012RealTime.pdf",
+      "sha256": "69b3608f3b13e51faa5938c7e38c89be1143bc3c0c34652d0b22789b504ef09b",
+      "pages": 7,
+      "text_chars": 28426,
+      "text_words": 4789,
+      "normalized_text_sha256": "f9f1e7e9fa59013ee4ceaa024bb70c80d78b3f717301329022d2a2615fefb85f",
+      "doi_candidates": [
+        "10.1063/1.3692752"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Podesta2016InitialOperation",
+      "path": "data/literature/Podesta2016InitialOperation.pdf",
+      "sha256": "913ae26abbcce8e80710f8ffd4cf0d5a2880f11e5f2f21930dce7cad29a15082",
+      "pages": 11,
+      "text_chars": 37276,
+      "text_words": 6163,
+      "normalized_text_sha256": "144a88fc8fb12f6b62425d0f9d26ec558d798d4c10f3aab74654e7d50326ef8b",
+      "doi_candidates": [
+        "10.1088/0741-3335/58/12/125016"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rasp2018NeuralNetworks",
+      "path": "data/literature/Rasp2018NeuralNetworks.pdf",
+      "sha256": "3e985b930aea2f98a5302376722594b58f6dd6de20ef1c8de489f1984a3a81c5",
+      "pages": 16,
+      "text_chars": 71097,
+      "text_words": 10777,
+      "normalized_text_sha256": "a47e3f2aa2b6e985908a090e7a55479efac0f6e156f1807cccd3b5674ad3c961",
+      "doi_candidates": [
+        "10.1175/MWR-D-18-",
+        "10.1175/MWR-D-18-0187.1"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rath2022DataAugmentation",
+      "path": "data/literature/Rath2022DataAugmentation.pdf",
+      "sha256": "97937820ab427c48f4d98da9b42a6704c41b37b376a0f41d5d2e44bc4f1ba4a8",
+      "pages": 23,
+      "text_chars": 60325,
+      "text_words": 9520,
+      "normalized_text_sha256": "6cc339828ec3c2ff7bd5ec88745812d188a01e764e4e57ed75f78d1da345893a",
+      "doi_candidates": [
+        "10.1017/S0022377822000769"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rathgeber2013EstimationEdge",
+      "path": "data/literature/Rathgeber2013EstimationEdge.pdf",
+      "sha256": "73d9e7fba57b6e61afc26e0380a0f1c3b6b2fd3f17fc3c5a7de73e81db35c6aa",
+      "pages": 16,
+      "text_chars": 69728,
+      "text_words": 11325,
+      "normalized_text_sha256": "43e53777f759def09949542836828fa3d907850b2ebe922491480d4e393e5f2b",
+      "doi_candidates": [
+        "10.1088/0741-3335/55/2/025004"
+      ],
+      "metadata_title": "Edge Te profiles via forward modelling of ECE data",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ravuri2021SkilfulPrecipitation",
+      "path": "data/literature/Ravuri2021SkilfulPrecipitation.pdf",
+      "sha256": "ca5f10f9deb516da9672272e277cee3b2a729ddf60513942afa574380c48a44b",
+      "pages": 19,
+      "text_chars": 73248,
+      "text_words": 11239,
+      "normalized_text_sha256": "901c629f8172efebb21da1526907f85ab8346c48f0d9d274367331ca2245e1fb",
+      "doi_candidates": [
+        "10.1038/s41586-021-03854-z"
+      ],
+      "metadata_title": "Skilful precipitation nowcasting using deep generative models of radar",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Reimerdes2007ReducedCritical",
+      "path": "data/literature/Reimerdes2007ReducedCritical.pdf",
+      "sha256": "b9b282ca42064ce666946b0afbee6a81b27d8f10eba0bc4506650670a7b5a315",
+      "pages": 4,
+      "text_chars": 20051,
+      "text_words": 3391,
+      "normalized_text_sha256": "079c142c53a0d42a12e5a454ab0bc8a8d55f42b74507de32da3076054f70cae6",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.98.055001"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "reinsch1967",
+      "path": "data/literature/reinsch1967.pdf",
+      "sha256": "bc4224b6bdfb7184d61d2fec45681cd63324fd4e87772de4c5a5f99ae708443c",
+      "pages": 7,
+      "text_chars": 12958,
+      "text_words": 2325,
+      "normalized_text_sha256": "815407a29d3058a3bbc91f51caa084451c1f827664eb3d3d69efcd191a918fd8",
+      "doi_candidates": [],
+      "metadata_title": "Smoothing by spline functions",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ren2010Nonparametric",
+      "path": "data/literature/Ren2010Nonparametric.pdf",
+      "sha256": "70864c3ddc4d560eaae4fb858b40fdd671aa48a88425538ac6527c38d3c9433e",
+      "pages": 13,
+      "text_chars": 31973,
+      "text_words": 5339,
+      "normalized_text_sha256": "cf0f22a67037827891381632bcf2dd112e17a8b1df8af4ee248b0a5f0c84c484",
+      "doi_candidates": [
+        "10.1080/02664760903046102"
+      ],
+      "metadata_title": "Nonparametric bootstrapping for hierarchical data",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rice2007IntermachineComparison",
+      "path": "data/literature/Rice2007IntermachineComparison.pdf",
+      "sha256": "a68e5410d9f2e734dd44ac9346a2c9bf0e78578561c741bafd0003c2777bab07",
+      "pages": 8,
+      "text_chars": 36369,
+      "text_words": 6017,
+      "normalized_text_sha256": "2a7d9c7009b95131fd94b95d8322fc82350355b093c4dec1e021e8f696a000e1",
+      "doi_candidates": [
+        "10.1088/0029-5515/47/11/025"
+      ],
+      "metadata_title": "Comparison of intrinsic toroidal rotation in tokamaks",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Roth2013StudentsT",
+      "path": "data/literature/Roth2013StudentsT.pdf",
+      "sha256": "3dfb14ea9581a7d0512ef153bc35f8ec25eff52f33c946113bafb9ceafa042ab",
+      "pages": 6,
+      "text_chars": 22470,
+      "text_words": 3807,
+      "normalized_text_sha256": "2a1b18a778d5bf6548159d83baa93315f746bb7e32f3bb0033a3ddbb637ae114",
+      "doi_candidates": [],
+      "metadata_title": "A student's t filter for heavy tailed process and measurement noise",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rothstein2026EnablingIntegrated",
+      "path": "data/literature/Rothstein2026EnablingIntegrated.pdf",
+      "sha256": "90ee2a9a0b26458c63e96469d27c3a3e3e6ace4e2f73a73e89536dea22117217",
+      "pages": 15,
+      "text_chars": 68357,
+      "text_words": 10872,
+      "normalized_text_sha256": "4174cfb6db877a6098cb0c6764df28491a319977ebb7d78f398f21bfecc3cbaa",
+      "doi_candidates": [
+        "10.1088/1741-4326/ae7f9d"
+      ],
+      "metadata_title": "Enabling integrated AI control on DIII-D: a control system design with state-of-the-art experiments",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Rubanova2019LatentOrdinary",
+      "path": "data/literature/Rubanova2019LatentOrdinary.pdf",
+      "sha256": "b8405e684da02cade38248aa3d0351c5d7aa5817d7dde453be1448c1abfc79aa",
+      "pages": 21,
+      "text_chars": 58343,
+      "text_words": 9460,
+      "normalized_text_sha256": "b28875249bf87bfd3221b464c2572212d843c109e73da12ecfd088c726333593",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Ryter2011SimultaneousAnalysis",
+      "path": "data/literature/Ryter2011SimultaneousAnalysis.pdf",
+      "sha256": "f772eb6f144d841c5506613d3ffb0839c098413b22f09137e308e5a396f70c89",
+      "pages": 35,
+      "text_chars": 134199,
+      "text_words": 23494,
+      "normalized_text_sha256": "c2cb30c0ec3ffe91099f4594cf105c596152b97902aea2665886d473a153bfe4",
+      "doi_candidates": [
+        "10.1088/0029-5515/51/11/113016"
+      ],
+      "metadata_title": "Analysis of ion and electron heat transport by power modulation in JET",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Sabbagh2023DisruptionEvent",
+      "path": "data/literature/Sabbagh2023DisruptionEvent.pdf",
+      "sha256": "9162c0d0ea17471a53fc08830bcb07a66a6f6bda35e3105117f470fca615eee9",
+      "pages": 40,
+      "text_chars": 73404,
+      "text_words": 11324,
+      "normalized_text_sha256": "39d0f438c9adffe81776a1549c861af243dad2289fe168ba63ab6bb872ed739b",
+      "doi_candidates": [
+        "10.1063/5.0133825"
+      ],
+      "metadata_title": "Disruption event characterization and forecasting in tokamaks",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Santos2010RealTime",
+      "path": "data/literature/Santos2010RealTime.pdf",
+      "sha256": "8500f65b5e5f28cfdb60eac0e8a3e511ba3f9aae863765bdcfaacb82376c5b38",
+      "pages": 4,
+      "text_chars": 15260,
+      "text_words": 2366,
+      "normalized_text_sha256": "be6ff05ada3447559b4d018484e8d8e0630af2a129defd93fad3823c05946479",
+      "doi_candidates": [
+        "10.1063/1.3499640",
+        "10.1063/1.3499640\u0005"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Santos2017RealTime",
+      "path": "data/literature/Santos2017RealTime.pdf",
+      "sha256": "fc94ab9eb0a91d42426d8151e30a11f59528ea7b5c6aba897a1a2cc11c0e749b",
+      "pages": 4,
+      "text_chars": 24076,
+      "text_words": 3303,
+      "normalized_text_sha256": "14ba340ff85b8e35c322715f5c78ea58787e02ca596506c7ba336744bb41d6ec",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2017.03.016"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Saravanan2020Hierarchical",
+      "path": "data/literature/Saravanan2020Hierarchical.pdf",
+      "sha256": "9cf572a48bb07570dd8dcd9aae6bc26ed5b8dcb0d6909b7d05534b315ac0841a",
+      "pages": 20,
+      "text_chars": 91337,
+      "text_words": 14381,
+      "normalized_text_sha256": "c6311c75b90895889643c70856c59dbe6044abe1a9011a1ea08fc0d6a6c16863",
+      "doi_candidates": [
+        "10.1101/819334"
+      ],
+      "metadata_title": "Application of the Hierarchical Bootstrap to Multi-Level Data in Neuroscience",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Scoville2007SimultaneousFeedback",
+      "path": "data/literature/Scoville2007SimultaneousFeedback.pdf",
+      "sha256": "4fdc5c03a6c2f573921149addb42d352f919e0e95bf44ab02753eecc88f16bee",
+      "pages": 6,
+      "text_chars": 16669,
+      "text_words": 2763,
+      "normalized_text_sha256": "c8d4dd8e19a60a73ee48a15a7e56757b4aa55fac6656920492bdab73513b3bb3",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2007.04.031"
+      ],
+      "metadata_title": "doi:10.1016/j.fusengdes.2007.04.031",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Seo2026RevisedError",
+      "path": "data/literature/Seo2026RevisedError.pdf",
+      "sha256": "1a327d9d7559baa48da3463f942d4f7fc9ed6518dccb0d496df9c7bef5209429",
+      "pages": 10,
+      "text_chars": 37323,
+      "text_words": 6033,
+      "normalized_text_sha256": "d10286ebad08ff48b7a197d99ea33db95aadb1acf14c6b72a9419f0143d47bba",
+      "doi_candidates": [
+        "10.1088/1741-4326/aeac69"
+      ],
+      "metadata_title": "Revised error field assessment in KSTAR with profile diagnostics of resonant field penetration",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shi2015ConvolutionalLstm",
+      "path": "data/literature/Shi2015ConvolutionalLstm.pdf",
+      "sha256": "6b83643820fa049a9cdf30621385bd5d33c67408d348a93edb6c59ed247986ef",
+      "pages": 12,
+      "text_chars": 37326,
+      "text_words": 5966,
+      "normalized_text_sha256": "b0da75e42c479422ee732c945157289d5cac93ac2020798e34376648d02f805b",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shin2022PreemptiveDriven",
+      "path": "data/literature/Shin2022PreemptiveDriven.pdf",
+      "sha256": "965ccb3b74e9a66648d0234ecb618207ed58c947c21e0251a77fc9344adb604e",
+      "pages": 11,
+      "text_chars": 39132,
+      "text_words": 6420,
+      "normalized_text_sha256": "f7ec35b8821bb9dfd5e81275d0238d88911b136a7bc44b999b1a3bae069a102f",
+      "doi_candidates": [
+        "10.1088/1741-4326/ac412d"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shousha2023MachineLearningbased",
+      "path": "data/literature/Shousha2023MachineLearningbased.pdf",
+      "sha256": "67c46ec9b899cbfcff3d9dbc4a5ec4bd6726a03618e74ca42b356f0adfe13533",
+      "pages": 19,
+      "text_chars": 55204,
+      "text_words": 8366,
+      "normalized_text_sha256": "1b511a00554183a810643f6116c4db03be52fecd974fbf0720c4ef55eeccd93b",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad142f"
+      ],
+      "metadata_title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shukla2019InterpolationPrediction",
+      "path": "data/literature/Shukla2019InterpolationPrediction.pdf",
+      "sha256": "dda110c2c8983d6b27452cf3e73ec686bfb2980da4a14312e25dfb2ccc608d64",
+      "pages": 14,
+      "text_chars": 52115,
+      "text_words": 8075,
+      "normalized_text_sha256": "5879ac0d587bfb97566ffc5e40792ca7ebf8d8a93969a7e7fd0a772dc70146c0",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shukla2020SurveyPrinciples",
+      "path": "data/literature/Shukla2020SurveyPrinciples.pdf",
+      "sha256": "8e1c62f998435a2aa93d0feb39a69de2362ee378e5c50b8b4d6429d693fa2f9c",
+      "pages": 41,
+      "text_chars": 123705,
+      "text_words": 18705,
+      "normalized_text_sha256": "68cbff30bc06c25d3966d49d0a3f1a11541976fd123c085a2206992e62a0e933",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shukla2021MultiTime",
+      "path": "data/literature/Shukla2021MultiTime.pdf",
+      "sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+      "pages": 15,
+      "text_chars": 52704,
+      "text_words": 8162,
+      "normalized_text_sha256": "2fa0fcec3889e6c99fec83d91dd5fb0dce8703bc27d60fe2756059d0e31c0489",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Shukla2021MultitimeAttention",
+      "path": "data/literature/Shukla2021MultitimeAttention.pdf",
+      "sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+      "pages": 15,
+      "text_chars": 52704,
+      "text_words": 8162,
+      "normalized_text_sha256": "2fa0fcec3889e6c99fec83d91dd5fb0dce8703bc27d60fe2756059d0e31c0489",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Snyder2009DevelopmentValidation",
+      "path": "data/literature/Snyder2009DevelopmentValidation.pdf",
+      "sha256": "2538ff5e3ff627a7a7411ad0147e23460f61193f65002310d7d053498e596b6e",
+      "pages": 10,
+      "text_chars": 57533,
+      "text_words": 9258,
+      "normalized_text_sha256": "4f492fa99d7ff5b9c39d8b5d6a24e3333560f378ae5180940e90b1efd316378a",
+      "doi_candidates": [
+        "10.1063/1.3122146",
+        "10.1063/1.3122146\u0004"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Snyder2011FirstPrinciples",
+      "path": "data/literature/Snyder2011FirstPrinciples.pdf",
+      "sha256": "14bbd912b597a75bf0b9538f1144ae7e205596f63fdeb57015589633bee0c858",
+      "pages": 9,
+      "text_chars": 43572,
+      "text_words": 7015,
+      "normalized_text_sha256": "b5d6b25e7e3f8accdc527f003f7d605e4548149065fe4763d16ea2252183be4a",
+      "doi_candidates": [
+        "10.1088/0029-5515/51/10/103016"
+      ],
+      "metadata_title": "A first-principles predictive model of the pedestal height and width: development, testing and ITER optimization with the EPED model",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Solomon2008CharacterizationCross",
+      "path": "data/literature/Solomon2008CharacterizationCross.pdf",
+      "sha256": "d08e943f2f936b040031b4899ed64835c80c24183d0cc94c01b3a979a60099df",
+      "pages": 5,
+      "text_chars": 18140,
+      "text_words": 2817,
+      "normalized_text_sha256": "a9c88b166838ca3c8dc9779baaf151e6e57395c3c3e760a2f0e48a83995fa52b",
+      "doi_candidates": [
+        "10.1063/1.2957841",
+        "10.1063/1.2957841\u0004"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Stix1972HeatingToroidal",
+      "path": "data/literature/Stix1972HeatingToroidal.pdf",
+      "sha256": "1283378d65b18db62b8fff1fb3a691f2c7d5911c328cfa8654bc1ea440e51091",
+      "pages": 19,
+      "text_chars": 46675,
+      "text_words": 7935,
+      "normalized_text_sha256": "77393cd160615971524c35ec656b7915f5c1edfe39d9280264c77ebb3abff5bf",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Sussillo2013OpeningBlackBox",
+      "path": "data/literature/Sussillo2013OpeningBlackBox.pdf",
+      "sha256": "29e37a06e035dc7a0e2dac5255917a462d9db99418be5751cd2f2ccdd309e449",
+      "pages": 24,
+      "text_chars": 59353,
+      "text_words": 9671,
+      "normalized_text_sha256": "f00e439858ded132c59dd91e65e8247da3c7c3cc3e4eaf87ea7974bb9038065f",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Svensson1999AnalysisJet",
+      "path": "data/literature/Svensson1999AnalysisJet.pdf",
+      "sha256": "5468ab6d88802c6fd1735bb546561671cad4897d8443c496cc48c52a222fa364",
+      "pages": 25,
+      "text_chars": 65354,
+      "text_words": 11115,
+      "normalized_text_sha256": "ebde9d319f2ee1f8b8c9b56cf8bc10e1e21da1a1d0e4abf87cef6fda033264e2",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Tala2009EvidenceInward",
+      "path": "data/literature/Tala2009EvidenceInward.pdf",
+      "sha256": "a00a5d83179e57a9ff56827fda22f94a42bd41ffc36b67a408e6f5abd300a02a",
+      "pages": 4,
+      "text_chars": 19734,
+      "text_words": 3363,
+      "normalized_text_sha256": "5f3cda686ba9e675e88c2014ecc1c4aeade33746d76a3d279eeb1c30623169ef",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.102.075001"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Thorman2021VisibleSpectroscopy",
+      "path": "data/literature/Thorman2021VisibleSpectroscopy.pdf",
+      "sha256": "ca2c45df39b7388ee824e35f4415a5ee558ae052b72a22018ce812a515bd6a25",
+      "pages": 13,
+      "text_chars": 43196,
+      "text_words": 7488,
+      "normalized_text_sha256": "1d971d311440913e35d9f6501657ffa9a81df3baed3aabd9297af90b73d3198b",
+      "doi_candidates": [
+        "10.1088/1402-4896/ac387b"
+      ],
+      "metadata_title": "Visible spectroscopy of highly charged tungsten ions with the JET charge exchange diagnostic",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Tian2026RealTimeCxrs",
+      "path": "data/literature/Tian2026RealTimeCxrs.pdf",
+      "sha256": "5c750cbd8157963dd02d6fc2c0098fa058860a4a92b15ee6afe8bbf0787b81ac",
+      "pages": 18,
+      "text_chars": 69653,
+      "text_words": 10517,
+      "normalized_text_sha256": "1c3c21bf0886abf180a1dc30c033711aab873418d6e4be6c4f56ebf093af9527",
+      "doi_candidates": [
+        "10.1088/1741-4326/aeb037"
+      ],
+      "metadata_title": "Real-time CXRS analysis on HL-3 tokamak with reliable neural networks and cross-device transfer learning",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Tobin2026AvoidanceDisruptions",
+      "path": "data/literature/Tobin2026AvoidanceDisruptions.pdf",
+      "sha256": "9662fd722bcfbdf26366fedfb91cbe38dcec7677681005d28abd183c5386e5c0",
+      "pages": 11,
+      "text_chars": 56337,
+      "text_words": 8858,
+      "normalized_text_sha256": "cd6cff5e1de1e9d5d52d7511c0e15b43bdcc6f210cadf4bd042d09c704764e36",
+      "doi_candidates": [
+        "10.1063/5.0320639"
+      ],
+      "metadata_title": "Avoidance of disruptions on KSTAR due to vertical displacement events via novel real-time stability assessment",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Tresset2002DimensionlessCriterion",
+      "path": "data/literature/Tresset2002DimensionlessCriterion.pdf",
+      "sha256": "2eba446beb087da6df797f99cd5985b5b32cefc8c02e9a9a0ff6d753b134b508",
+      "pages": 8,
+      "text_chars": 35685,
+      "text_words": 5906,
+      "normalized_text_sha256": "6cacfdff5451247b9bf63b322ec654c3f2a07ce06e275fc1753189a6eb6701ca",
+      "doi_candidates": [],
+      "metadata_title": "d:\\",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "vandenBrand2016ModelBased",
+      "path": "data/literature/vandenBrand2016ModelBased.pdf",
+      "sha256": "f45f4e937b889969a9635359652dd7b724d173e3888fae37994ff705fd4e0e81",
+      "pages": 17,
+      "text_chars": 75539,
+      "text_words": 13789,
+      "normalized_text_sha256": "9f13bcf7387775861adfadddd8f919c6dd0fa2a3d93f642cccb148e859960524",
+      "doi_candidates": [
+        "10.1088/0741-3335/58/7/075002"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "VanMulders2025ModelBased",
+      "path": "data/literature/VanMulders2025ModelBased.pdf",
+      "sha256": "0a15bcf4cc6679d3381fbabf19a159d9e3dfb583c33721e30fee5595504c3205",
+      "pages": 34,
+      "text_chars": 154296,
+      "text_words": 25001,
+      "normalized_text_sha256": "3c24178e0544bc91edf4f51c38d958c5193259d1478d5cb87568946319a8bb4b",
+      "doi_candidates": [
+        "10.1088/1741-4326/add16e"
+      ],
+      "metadata_title": "Model-based estimation of tokamak plasma profiles and physics parameters: algorithm overview and application to ITER",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "VanMulders2026ModelBased",
+      "path": "data/literature/VanMulders2026ModelBased.pdf",
+      "sha256": "f3561003e148fe2d51dad6020eab60bca6035fef65e7783d0f082c2e4853c659",
+      "pages": 24,
+      "text_chars": 101821,
+      "text_words": 16354,
+      "normalized_text_sha256": "ef37e27d5b3b68b35c6fcbbc25b035cd5f7dd82f3ac4504453ac2fd726db8afc",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad8361",
+        "10.1088/1741-4326/ae2c0a"
+      ],
+      "metadata_title": "Model-based estimation of tokamak plasma profiles and physics parameters: integration with improved equilibrium reconstruction and experimental data",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Vanovac2018EffectsDensity",
+      "path": "data/literature/Vanovac2018EffectsDensity.pdf",
+      "sha256": "bfa80d97f8c331162f6cebd31bd6c76de5a21763dc9e27819ad3e1d22c3bf406",
+      "pages": 12,
+      "text_chars": 46500,
+      "text_words": 7747,
+      "normalized_text_sha256": "56a33b0d6c19ef7662063a2e37768d810aa0e845f8838ee3651a51fa495e1341",
+      "doi_candidates": [
+        "10.1088/1361-6587/aaa7ac"
+      ],
+      "metadata_title": "Effects of density gradients and fluctuations at the plasma edge on ECEI measurements at ASDEX Upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Viezzer2011PassiveEdge",
+      "path": "data/literature/Viezzer2011PassiveEdge.pdf",
+      "sha256": "cff15938ca02d13013a01a841878dbafc4e2dcf82c25c44afe8c247095534124",
+      "pages": 19,
+      "text_chars": 58378,
+      "text_words": 9560,
+      "normalized_text_sha256": "0e86cf3d2a1c06e344da91a6ce2451f20b391ab7ee6437ec06621b512046687b",
+      "doi_candidates": [
+        "10.1088/0741-3335/53/3/035002"
+      ],
+      "metadata_title": "Investigation of passive edge emission in CX spectra at ASDEX Upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Viezzer2013HighAccuracy",
+      "path": "data/literature/Viezzer2013HighAccuracy.pdf",
+      "sha256": "c707655f43ad087c9a508089d35a37e818707e85ab2132cbe76d301b53885bfe",
+      "pages": 14,
+      "text_chars": 60282,
+      "text_words": 10504,
+      "normalized_text_sha256": "e7385877b21d277074d530fe1ee940dde335e562eaf7899c7b61096ab2f68155",
+      "doi_candidates": [
+        "10.1088/0029-5515/53/5/053005"
+      ],
+      "metadata_title": "High-accuracy characterization of Er at AUG",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Viezzer2014EvidenceNeoclassical",
+      "path": "data/literature/Viezzer2014EvidenceNeoclassical.pdf",
+      "sha256": "7682e261b391fc413163c7d89a8bc4ddaf77a7fdb9eaa9e2d40c4e3613158bf9",
+      "pages": 6,
+      "text_chars": 26553,
+      "text_words": 4372,
+      "normalized_text_sha256": "be960b307aa981403242c38d32d706d89b4bbf22ab0c94de85260f2e537fb77d",
+      "doi_candidates": [
+        "10.1088/0029-5515/54/1/012003"
+      ],
+      "metadata_title": "Letter",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Viezzer2018IonHeat",
+      "path": "data/literature/Viezzer2018IonHeat.pdf",
+      "sha256": "2b905233e2e82f79ef780b2fd9031b4e4ddf5c0877ee1b1e6473f761583def77",
+      "pages": 10,
+      "text_chars": 39333,
+      "text_words": 6536,
+      "normalized_text_sha256": "3f73b66708d173b6d91797981c9bdc5b838640174bb1cb4c93087afe5b81ac1a",
+      "doi_candidates": [
+        "10.1088/1741-4326/aaa22f"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Viezzer2020Dynamics",
+      "path": "data/literature/Viezzer2020Dynamics.pdf",
+      "sha256": "ce2fd592689a15a0f34a8dfcb95e362afc9891f7e1487de8c755614c9facd410",
+      "pages": 11,
+      "text_chars": 38902,
+      "text_words": 6512,
+      "normalized_text_sha256": "4b55a86f7788e034ccbdeadb2159571656b5b8826dc4856ef17d4e94faf6cf80",
+      "doi_candidates": [
+        "10.1088/1361-6587/ab5b1d"
+      ],
+      "metadata_title": "Dynamics of the pedestal transport during edge localized mode cycles at ASDEX Upgrade",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Volpe2012ObliqueElectron",
+      "path": "data/literature/Volpe2012ObliqueElectron.pdf",
+      "sha256": "840e514cbb8271ee7409047795e5ba7cd45ba1555db14e5f96c791c975a09a37",
+      "pages": 7,
+      "text_chars": 28858,
+      "text_words": 4739,
+      "normalized_text_sha256": "5375c747d9283b0b25165a1782fabf682eb40cceee283618ec7366f369e3c500",
+      "doi_candidates": [
+        "10.1063/1.4758780"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "vonHellermann1995CrossSection",
+      "path": "data/literature/vonHellermann1995CrossSection.pdf",
+      "sha256": "a04b0f24b609089183830cdeb87c94881ab516d2aa0d1e991428c7a0de1222f6",
+      "pages": 25,
+      "text_chars": 42041,
+      "text_words": 7317,
+      "normalized_text_sha256": "17f78c73d73b68f60a929add1e8b7dbde4baf05402de7a1bb92326794ff6ec97",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Wakatsuki2021TemperatureGradient",
+      "path": "data/literature/Wakatsuki2021TemperatureGradient.pdf",
+      "sha256": "edcc794960a6c4551afe546d12604323a934703bc3302cf38ae911b6be87aa20",
+      "pages": 11,
+      "text_chars": 38419,
+      "text_words": 6426,
+      "normalized_text_sha256": "e91dea327709c92fc9bdb9fbef890d9867df4dd8e1ee0dfab7ae38b05e9a456e",
+      "doi_candidates": [
+        "10.1088/1741-4326/abe68d"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Wang2025PhysicsinformedDeep",
+      "path": "data/literature/Wang2025PhysicsinformedDeep.pdf",
+      "sha256": "06b8b6a8f6d395189871153a6b63fc93f765b346703ade2727506465ef78504f",
+      "pages": 33,
+      "text_chars": 78233,
+      "text_words": 12464,
+      "normalized_text_sha256": "1b08807ae70d32559ee96deb9b6beb3c98c9ceab36e880a3b8ed33cd5f764541",
+      "doi_candidates": [
+        "10.1088/1741-4326/ade0ce"
+      ],
+      "metadata_title": "Physics-informed deep learning model for line-integral diagnostics across fusion devices",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Wang2025TimeSeries",
+      "path": "data/literature/Wang2025TimeSeries.pdf",
+      "sha256": "10f2ee7452988f6ec817c7e8008093739d25935498a45aba0122639470e45cf3",
+      "pages": 12,
+      "text_chars": 52164,
+      "text_words": 7800,
+      "normalized_text_sha256": "e9e396c6bb7b8ab922755aee6c829eaa7ddb07a1d31b50b1764bf90a0b3d7b5d",
+      "doi_candidates": [
+        "10.1088/1741-4326/addb5f"
+      ],
+      "metadata_title": "Time series extrinsic regression for reconstructing missing electron temperature in tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Weerakody2021ReviewIrregular",
+      "path": "data/literature/Weerakody2021ReviewIrregular.pdf",
+      "sha256": "95bcff0bf246d9a5f8bb26c6f7e1f382dbe98f7bec47a32b4e18c642e85ab20a",
+      "pages": 18,
+      "text_chars": 129830,
+      "text_words": 19622,
+      "normalized_text_sha256": "12ffb086b8b97f927957b9fef1ef14bae017009661aa12d8c794c9a863e514d6",
+      "doi_candidates": [
+        "10.1016/j.neucom.2021.02.046"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Wei2023ReconstructionTokamak",
+      "path": "data/literature/Wei2023ReconstructionTokamak.pdf",
+      "sha256": "87c831f8f4b06c9583323d774633ba5d650921ad083e00212bff3b5dfe5835ca",
+      "pages": 10,
+      "text_chars": 33279,
+      "text_words": 5396,
+      "normalized_text_sha256": "8a4c6e4865c8b11cc85eaee4516acc4bf3028c1ed8e564db3e259a23b7d28cc5",
+      "doi_candidates": [
+        "10.1088/1741-4326/acdf00"
+      ],
+      "metadata_title": "Reconstruction of tokamak plasma safety factor profile using deep learning",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Weissgerber2015Beyond",
+      "path": "data/literature/Weissgerber2015Beyond.pdf",
+      "sha256": "7207d698b755ec973540b869e750e57e3f3f8caea3b2f64a0f8714a229d1ae76",
+      "pages": 10,
+      "text_chars": 32516,
+      "text_words": 4950,
+      "normalized_text_sha256": "0c3bec3dbed44a9d3f93d15b5a00da2e085c6729f1e815c0c462c63c36eea765",
+      "doi_candidates": [
+        "10.1371/journal",
+        "10.1371/journal.pbio.1002128",
+        "10.1371/journal.pbio.1002128.g001"
+      ],
+      "metadata_title": "Beyond Bar and Line Graphs: Time for a New Data Presentation Paradigm",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yang2021ParametricDependencies",
+      "path": "data/literature/Yang2021ParametricDependencies.pdf",
+      "sha256": "203f47d6d2b0a5f24d515d40958f12497d1388f5093e1b12211a9e5d860ef0bf",
+      "pages": 12,
+      "text_chars": 45177,
+      "text_words": 7655,
+      "normalized_text_sha256": "4285c812f1b1ab9ff191dd922272867b086cc22e17a879912faeb14a129c1263",
+      "doi_candidates": [
+        "10.1088/1741-4326/ac0165"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yang2024TailoringTokamak",
+      "path": "data/literature/Yang2024TailoringTokamak.pdf",
+      "sha256": "80579a17cb2dc364cf69791ff13448ade3534634978c6e4294eb0272d48c4a48",
+      "pages": 9,
+      "text_chars": 47863,
+      "text_words": 7812,
+      "normalized_text_sha256": "7d3f348c7db5f1771c88fe58e8034ad6bfcbe038cc74609704c431c4302b831b",
+      "doi_candidates": [
+        "10.1038/s41467-024-45454-1"
+      ],
+      "metadata_title": "Tailoring tokamak error fields to control plasma instabilities and transport",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yang2026FusionmaeSelfsupervised",
+      "path": "data/literature/Yang2026FusionmaeSelfsupervised.pdf",
+      "sha256": "269b42220bc788f4c16e986622c26cc95b032f104af8c5dd014b9b5a1cbf9886",
+      "pages": 13,
+      "text_chars": 60910,
+      "text_words": 8800,
+      "normalized_text_sha256": "c2d9a050cbf7a9a1b424a22b998e0d1b90b25b6c78a8cd4fda1a8e4ab2e2d65f",
+      "doi_candidates": [
+        "10.1038/s42005-026-02626-3"
+      ],
+      "metadata_title": "FusionMAE, a self-supervised pretrained model to optimize and simplify diagnostic and control of fusion plasma",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yoshida2007FastMeasurement",
+      "path": "data/literature/Yoshida2007FastMeasurement.pdf",
+      "sha256": "592d0e1c2bd9879fad4f66f9086555a977604356d022600a808fef17aba8b46a",
+      "pages": 4,
+      "text_chars": 13655,
+      "text_words": 2259,
+      "normalized_text_sha256": "d58aeb79f71976feecc1617f15af243609ddc4e99dc07b9b47919e74a66b9fe0",
+      "doi_candidates": [
+        "10.13182/FST07-A1382"
+      ],
+      "metadata_title": "Fast Measurement of Ion Temperature Using Filter Charge Exchange Recombination Spectroscopy System T",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yoshida2009RealTime",
+      "path": "data/literature/Yoshida2009RealTime.pdf",
+      "sha256": "e60dd4a5a36f15d5fdce8159b03146f9ce669de70b3a9d667250e5ddd247bf6d",
+      "pages": 8,
+      "text_chars": 33100,
+      "text_words": 5767,
+      "normalized_text_sha256": "a40fe422372f581f798964f6f5fe3e1558d0849d6b430b170ac202d7cb62a13f",
+      "doi_candidates": [
+        "10.1016/j.fusengdes.2009.04.006"
+      ],
+      "metadata_title": "doi:10.1016/j.fusengdes.2009.04.006",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yoshida2012CoreEdge",
+      "path": "data/literature/Yoshida2012CoreEdge.pdf",
+      "sha256": "bc08911348ee3204e9ffb8cf46210a0c1176b2c0c2313a651d1e2e8f8510e922",
+      "pages": 10,
+      "text_chars": 40707,
+      "text_words": 7168,
+      "normalized_text_sha256": "ba6c4135b67b420f8e28b228ad07ac849308d0228ad8d581725f31bb50f8b299",
+      "doi_candidates": [
+        "10.1088/0029-5515/52/2/023024"
+      ],
+      "metadata_title": "Core and edge toroidal rotation study in JT-60U",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yoshida2025TransportConfinement",
+      "path": "data/literature/Yoshida2025TransportConfinement.pdf",
+      "sha256": "0c56ad50596e28172949883f390d25d31538f63e25148cf153b56e5a03982370",
+      "pages": 133,
+      "text_chars": 764901,
+      "text_words": 121378,
+      "normalized_text_sha256": "b2b39bef9fd0efe7213f93a04e9759a7a2a875240f90f4c8ab1a7f6e5c40fc6a",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad8ced"
+      ],
+      "metadata_title": "Transport and confinement physics Chapter 2 of the special issue: on the path to tokamak burning plasma operation",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Young2008PlasmaMeasurements",
+      "path": "data/literature/Young2008PlasmaMeasurements.pdf",
+      "sha256": "b14426d24a8aa6a0ae5630d6a4d4391e2fdb7eac7d470dfb6b3af1cbe21b0adf",
+      "pages": 24,
+      "text_chars": 101466,
+      "text_words": 15805,
+      "normalized_text_sha256": "13e71a7620bc65698074ad30204b7d3c872f13b751a593f83022df415bb27451",
+      "doi_candidates": [
+        "10.13182/FST08-A1673"
+      ],
+      "metadata_title": "Chapter 1: Plasma Measurements: An Overview of Requirements and Status",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Young2008PlasmaMeasurements_PPPL-4276",
+      "path": "data/literature/Young2008PlasmaMeasurements_PPPL-4276.pdf",
+      "sha256": "e4472c2de1f554e353a5f8807c3868297144fafa1836e6fa1d4783dfbd0b8519",
+      "pages": 60,
+      "text_chars": 101798,
+      "text_words": 15127,
+      "normalized_text_sha256": "975ec4a60f5e420145663a24eda54d5c4db2cd6d74db7c2d670226f41e6ed91d",
+      "doi_candidates": [],
+      "metadata_title": "Plasma Measurements: An Overview of Requirements and Status",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yu2022DiagnosingPedestal",
+      "path": "data/literature/Yu2022DiagnosingPedestal.pdf",
+      "sha256": "4edf9340c046a1b6542ed1e3529291e632773d204b8171b8489083e81059884d",
+      "pages": 10,
+      "text_chars": 39096,
+      "text_words": 6147,
+      "normalized_text_sha256": "080cb271534fea89194207c2eef637875c25c48611611cc550cf5e4fd8228297",
+      "doi_candidates": [
+        "10.1063/5.0099168",
+        "10.1063/5.0099348",
+        "10.1063/5.0099912",
+        "10.1063/5.0101632"
+      ],
+      "metadata_title": "Diagnosing the pedestal magnetic field and magnetohydrodynamics radial structure with pedestal–scrape of layer electron cyclotron emission radiation inversion in H-mode plasma (invited)",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yun2010DevelopmentKstar",
+      "path": "data/literature/Yun2010DevelopmentKstar.pdf",
+      "sha256": "d91ad31315dcaaab65b537523a6315562ca9d483cba6bb804ed14fa120e4e988",
+      "pages": 4,
+      "text_chars": 16906,
+      "text_words": 2749,
+      "normalized_text_sha256": "1f930459290b44a77e69a519c6e6d6578c3d870c2ce2b97fa5434f87778df7b9",
+      "doi_candidates": [
+        "10.1063/1.3483209",
+        "10.1063/1.3483209\u0005"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yun2011TwoDimensionalVisualization",
+      "path": "data/literature/Yun2011TwoDimensionalVisualization.pdf",
+      "sha256": "9cae1fab2a1c6892634fef2c309000d93fb9f5f33993d9334ddd2048a88ba937",
+      "pages": 12,
+      "text_chars": 21015,
+      "text_words": 3435,
+      "normalized_text_sha256": "35ac3b642cf1cd586adc6cf25ac7b98a262d5db00d04aefe9baf20c210f047fc",
+      "doi_candidates": [
+        "10.1103/PhysRevLett.107.045004"
+      ],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Yun2014Quasi3d",
+      "path": "data/literature/Yun2014Quasi3d.pdf",
+      "sha256": "0a4c4a83535861a93691bfe5ad239977b407bf4b19bacfca76ebd0e475fa89f7",
+      "pages": 4,
+      "text_chars": 14168,
+      "text_words": 2269,
+      "normalized_text_sha256": "bc1ebd1fe5151079476ed972b54a9f868fffa073c030a9e6d707a59e65968686",
+      "doi_candidates": [
+        "10.1063/1.4890401"
+      ],
+      "metadata_title": "Quasi 3D ECE imaging system for study of MHD instabilities in KSTAR",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Zhang2012MeasurementsFast",
+      "path": "data/literature/Zhang2012MeasurementsFast.pdf",
+      "sha256": "c8f63d3222066db536c9fcdcf25001ac35c6dce7aeeb3842d4e5de95fd6f9539",
+      "pages": 8,
+      "text_chars": 30609,
+      "text_words": 5274,
+      "normalized_text_sha256": "819a7ea61e98a3e32b76e47e8fa92aebcd220fd03129d1032a70e83c673c0681",
+      "doi_candidates": [
+        "10.1063/1.4768425"
+      ],
+      "metadata_title": "untitled",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Zhao2023RefinedInterpretation",
+      "path": "data/literature/Zhao2023RefinedInterpretation.pdf",
+      "sha256": "d3e6b92acad9e444b1c23269373c66aca284abfb05688e3e79e2eda51aa727da",
+      "pages": 41,
+      "text_chars": 41735,
+      "text_words": 6786,
+      "normalized_text_sha256": "a1c5ff20e4340ee07ad9d4e06d47a6f139b1f140877f939c2262dae2552ee5c5",
+      "doi_candidates": [],
+      "metadata_title": "",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Zheng2024RealtimeEquilibrium",
+      "path": "data/literature/Zheng2024RealtimeEquilibrium.pdf",
+      "sha256": "4e2756e7ae03f6d1d3b7674d5f5d95d1af56097d7fdce8a5cb5bf2bb38b61510",
+      "pages": 18,
+      "text_chars": 64049,
+      "text_words": 10054,
+      "normalized_text_sha256": "7487a12d1a05af96101121f8961d4bdaa96ef004bff47ad790481d91a9e48f84",
+      "doi_candidates": [
+        "10.1088/1741-4326/ad8014"
+      ],
+      "metadata_title": "Real-time equilibrium reconstruction by multi-task learning neural network based on HL-3 tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Zhu2019NewTrends",
+      "path": "data/literature/Zhu2019NewTrends.pdf",
+      "sha256": "8a49fd63c979e433285ecd29e9825984d589d70df37a94e467b5db783d3db7f3",
+      "pages": 20,
+      "text_chars": 106495,
+      "text_words": 15862,
+      "normalized_text_sha256": "b1a961d9507b8583cb6b6d3d01289d51807e6b0eb9603f9516a7d60bbf3aede4",
+      "doi_candidates": [],
+      "metadata_title": "Microsoft Word - Revised manuscript_final_v2.docx",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    },
+    {
+      "key": "Zimmermann2026DependenceMomentum",
+      "path": "data/literature/Zimmermann2026DependenceMomentum.pdf",
+      "sha256": "c1092f976249f2dfb3502c774cdb81f49f606e104d8ad902bce0368c13bf687f",
+      "pages": 19,
+      "text_chars": 64779,
+      "text_words": 10153,
+      "normalized_text_sha256": "4ec4ca8bd6769ae6e60d348ed41d31009ef04802020e655e9544493bc16f19d9",
+      "doi_candidates": [],
+      "metadata_title": "Dependence of Momentum Transport on the Dominant Turbulence Regime in the DIII-D Tokamak",
+      "text_extractable": true,
+      "review_state": "inventoried_not_reviewed"
+    }
+  ]
+}

@@ -26,5 +26,19 @@
   "source_note": "docs/reference/nnces_source.md",
   "historical_fable_requests_supplied_this_full_pdf": false,
   "new_api_calls_for_this_correction": 0,
-  "interpretation": "Local availability and host reading corrected. Historical paid-request evidence remains unchanged."
+  "interpretation": "Local availability and host reading corrected. Historical paid-request evidence remains unchanged.",
+  "subsequent_full_pdf_supplied_reviews": {
+    "workflow": "ces_prediction/research/ppcf_nnces_edit.py",
+    "models": [
+      "claude-fable-5-2",
+      "claude-opus-5-5"
+    ],
+    "scope": "Focused introduction/discussion framing, not full agenda reranking or manuscript grading",
+    "record": "docs/paper/ppcf_revision/nnces_edit_status.json"
+  },
+  "subsequent_corpus_and_manuscript_reviews": {
+    "full_pdf_individual_audit": "docs/paper/introduction_review/paper_Lee2026NeuralNetworkbased.json",
+    "final_writing_provenance": "docs/paper/introduction_review/manuscript_writing_provenance.json",
+    "whole_manuscript_regraded": false
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "key": "Yoshida2007FastMeasurement",
+  "citation": {
+    "title": "Fast Measurement of Ion Temperature Using Filter Charge Exchange Recombination Spectroscopy System Towards Real-Time Plasma Control in JT-60U",
+    "authors": "M. Yoshida, S. Kobayashi, H. Takenaga, S. Sakata, Y. Kamada, JT-60 Team",
+    "year": 2007,
+    "venue": "Fusion Science and Technology",
+    "volume": "51(2T)",
+    "pages": "301-303",
+    "doi_or_arxiv": "10.13182/FST07-A1382"
+  },
+  "relevance": "supporting",
+  "topic": "Filter-based CXRS on JT-60U that gives fast Ti and rotation readings, used for real-time NB feedback of central Ti",
+  "own_question": "Can a three-filter CXRS with rapid ratio-based analysis measure Ti fast enough to support real-time feedback control on JT-60U?",
+  "actual_method_and_evidence": "The system uses three Fabry-Perot filters with photomultipliers. Precomputed intensity-ratio tables give Ti and Vr under an assumed Maxwellian spectrum, so no nonlinear fitting is needed. Minimum time resolution is stated as 0.16 ms, versus 16.7 ms for the CCD CXRS. The authors state a dynamic range of about 0.1-20 keV and up to 12 assemblies (6 spatial points). In real-time processing, data are accumulated for 4 ms and processed in 2 ms. The authors report one central-Ti (r/a~0.3) PD feedback demonstration on an ELMy H-mode shot (E46286), with Ti held within about 0.5 keV of the reference. Agreement with CCD is stated, not quantified. The impurity species is not stated in the extracted text; sensitivity plots span roughly 527-531 nm.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Faster upstream CXRS readout via filter spectroscopy with table lookup has been developed to reduce latency relative to CCD-based CXRS fitting on JT-60U.",
+      "original_pdf_locator": "p.2 Intro para 2; p.3 Sec II eq.(1); p.4 item (iv)",
+      "qualification": "JT-60U hardware; assumes a Maxwellian spectrum; the reported timings are this system's own, not ours.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Real-time CXRS-based Ti feedback via NB power has been demonstrated in one JT-60U experiment.",
+      "original_pdf_locator": "p.4 Sec III, Fig.4",
+      "qualification": "This is a single shot reported by the authors. It is control, not nowcasting. The measurement estimates the current state and is not a prediction.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are the source's own filter-PMT signals. Output is current Ti and Vr at a 4 ms accumulation plus 2 ms processing cadence. These are not BES/ECEI inputs and not a prediction.",
+  "validation_if_relevant": "Qualitative CCD agreement only; no held-out validation or statistical evaluation reported.",
+  "forbidden_inferences": [
+    "that filter CXRS makes our nowcasting unnecessary or necessary",
+    "that it applies to KSTAR or pedestal-top chords",
+    "that it measures main-ion Ti",
+    "that it gives physical truth or a quantified CCD accuracy",
+    "that all prior Ti work is slow or noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as an example of faster upstream CXRS reading and real-time Ti use. It supports our point that faster readers can refresh anchors and may reduce the need for downstream nowcasting.",
+  "bibtex_if_worth_citing": "@article{Yoshida2007FastMeasurement,title={Fast Measurement of Ion Temperature Using Filter Charge Exchange Recombination Spectroscopy System Towards Real-Time Plasma Control in {JT-60U}},author={Yoshida, M. and Kobayashi, S. and Takenaga, H. and Sakata, S. and Kamada, Y. and {JT-60 Team}},journal={Fusion Science and Technology},volume={51},number={2T},pages={301--303},year={2007},doi={10.13182/FST07-A1382}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "592d0e1c2bd9879fad4f66f9086555a977604356d022600a808fef17aba8b46a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,81 @@
+{
+  "key": "Lee2026NeuralNetworkbased",
+  "citation": {
+    "title": "Neural network-based analysis of charge exchange spectra in KSTAR",
+    "authors": "J.K. Lee, W.H. Ko, H.H. Lee, B. Kim, Y.H. Lee, G.W. Shin, J. Kim, J.M. Lee",
+    "year": 2026,
+    "venue": "Fusion Engineering and Design",
+    "volume": "222",
+    "pages": "115518 (article number; 7 pp.)",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2025.115518 (this paper's own DOI, p1 footer)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-7",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read visually. CES frame exposure time, the campaign year of #28275, the hyperparameter values and the per-channel R² numbers are not tabulated."
+  },
+  "relevance": "direct",
+  "claim_checks": [
+    {
+      "proposed_claim": "NN-CES maps a single raw spectrum to Doppler shift and width (giving C6+ Ti and toroidal rotation), trained on conventional beam-modulation labels.",
+      "verdict": "supported",
+      "source_finding": "Per-channel MLP: 256-point raw spectrum normalized by its frame maximum, two hidden layers of 256 units, outputs Δλ and W_D, converted to Ti and vT. Loss combines MSE against modulation-analysis targets with a Gaussian-shape term against the target spectrum. Background estimation interpolates between preceding and succeeding beam-off intervals (1 Hz, 10 ms off).",
+      "locator": "p1 Sec.1; p2 Sec.2.2 Eq.3; p3 Sec.3.1, Eqs.4-7; p4 Fig.3",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In KSTAR, a per-chord neural network has been trained on conventional beam-modulation analyses to read carbon CX Doppler shift and width directly from raw beam-on spectra, removing the need for beam-off background frames during inference [Lee2026].",
+      "qualification": "The labels are conventional analysis outputs, not independent truth. The model predicts the current frame only."
+    },
+    {
+      "proposed_claim": "Agreement with modulation analysis declines toward the edge, around R ≳ 2.2 m.",
+      "verdict": "supported",
+      "source_finding": "On held-out test-set R², shift is near 1 and width is about 0.9 inside about 2.2 m. Beyond that, the shift R² falls to about 0.2-0.3 and the width R² to about 0.4. The authors attribute this to a low active-to-passive signal ratio, ELMs and beam-on/off mismatch.",
+      "locator": "p4 Sec.3.4, Fig.4; p5 Sec.5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Its agreement with the modulation analysis is high inside R≈2.2 m and degrades toward the edge, where passive emission dominates [Lee2026].",
+      "qualification": "Fig.4 values are approximate. The attribution to edge conditions is the authors' interpretation. Whether our pedestal-top chord falls in this region must be stated separately."
+    },
+    {
+      "proposed_claim": "Real-time operation was demonstrated.",
+      "verdict": "qualify",
+      "source_finding": "Measured: about 2 ms per frame for curve_fit on a CPU, versus about 210 ns per frame for batched GPU inference on the test set. The authors argue that removing the beam-off wait (up to 1 s) enables continuous measurement. A real-time CES system is stated as a future goal.",
+      "locator": "p1 Abstract; p5 Sec.5",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The authors report sub-microsecond batched offline inference per frame and identify real-time CES as a future goal [Lee2026].",
+      "qualification": "No online deployment, single-frame latency or report arrival time was measured."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Current raw CES spectrum (256 points), one model per channel",
+    "outputs": "Δλ and W_D, converted to Ti and vT of C6+",
+    "causal_or_offline": "Inference uses the current frame only and needs no future beam-off data. Labels and evaluation are offline.",
+    "source_diagnostic_as_input": "Yes: the CES spectrum itself",
+    "reported_vs_physical_truth": "Targets are reported modulation-analysis values. The authors note the model inherits their errors and suggest a diagnostic-neutral-beam comparison (p5 Sec.5)."
+  },
+  "validation": {
+    "split_unit": "Shot-wise 80/10/10 over 321 discharges and 150,890 frames (p3 Sec.3.3)",
+    "temporal_order": "not stated",
+    "independent_truth": "none",
+    "unknowns": "Campaign years; whether the split was chronological. Error bars are the standard deviation of IQR-filtered residuals, not confidence intervals (p4 Sec.3.5)."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Offline per-frame compute time on CPU (curve fit) and GPU (batched inference)",
+    "what_not_established": "Plasma-control-system integration, end-to-end latency, data-arrival timing",
+    "locator": "p5 Sec.5"
+  },
+  "forbidden_inferences": [
+    "NN-CES was deployed in real time",
+    "NN-CES outputs are physical truth",
+    "NN-CES was coupled with our nowcaster",
+    "210 ns is the online latency",
+    "edge performance carries over to our chord",
+    "faster reading removes or guarantees the need for nowcasting",
+    "the model uses BES/ECEI or temporal history",
+    "the case-study fidelity in Figs.5-8 represents average performance (authors caution against this, p5)"
+  ],
+  "competing_or_complementary": "Complementary. It is an upstream reader that shortens spectrum-to-report processing. Our downstream nowcast estimates the current report before it is available, using past reports plus BES/ECEI. Any combined benefit is untested.",
+  "bibtex": "@article{Lee2026NeuralNetworkbased,title={Neural network-based analysis of charge exchange spectra in KSTAR},author={Lee, J.K. and Ko, W.H. and Lee, H.H. and Kim, B. and Lee, Y.H. and Shin, G.W. and Kim, J. and Lee, J.M.},journal={Fusion Engineering and Design},volume={222},pages={115518},year={2026},doi={10.1016/j.fusengdes.2025.115518}}",
+  "followup_sources_if_material": [
+    "Baker et al. 1994 PPCF 36:109; Bishop et al. 1993 PPCF 35:765; Svensson et al. 1999 PPCF 41:315 (earlier neural-network CX analysis cited on p2)",
+    "Ko et al. 2015 NF 55:083013 (KSTAR CES Ti/vT)"
+  ]
+}

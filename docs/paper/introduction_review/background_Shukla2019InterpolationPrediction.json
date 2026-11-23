@@ -1,0 +1,46 @@
+{
+  "key": "Shukla2019InterpolationPrediction",
+  "citation": {
+    "title": "Interpolation-Prediction Networks for Irregularly Sampled Time Series",
+    "authors": "S. N. Shukla, B. M. Marlin",
+    "year": 2019,
+    "venue": "International Conference on Learning Representations (ICLR 2019)",
+    "volume": "unknown",
+    "pages": "unknown (14-page arXiv version)",
+    "doi_or_arxiv": "arXiv:1909.07782"
+  },
+  "relevance": "supporting",
+  "topic": "Supervised learning from sparse, irregular, unaligned multivariate time series using RBF interpolation layers followed by a GRU",
+  "own_question": "Can semi-parametric interpolation onto a regular reference grid, with cross-channel sharing and an observation-intensity channel, support end-to-end classification and regression on sparse clinical series?",
+  "actual_method_and_evidence": "The method uses RBF smooth and high-pass interpolants, an intensity channel (sum of kernel weights), and learned cross-channel correlations. The interpolants feed a GRU. Training combines a supervised loss with a masked held-out-point reconstruction loss. Evidence comes from MIMIC-III mortality and length-of-stay prediction using 5-fold CV over a fixed 48 h window, and from a subsampled UWave dataset. Reported results are better mean metrics than GRU-D variants and GP-GRU, and comparable UWave accuracy to a GP adapter with reported faster training. The ablation finds the intensity channel informative. The kernels are two-sided over the whole window, so the interpolation is offline and noncausal.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior ML work maps irregular, unaligned multichannel observations onto a regular grid via learned kernel interpolation, sharing information across channels and encoding observation timing as an intensity channel.",
+      "original_pdf_locator": "Sec. 3.2.1, Eqs. 1-5; Sec. 2 final paragraph",
+      "qualification": "The interpolation is two-sided over a fixed window, not causal nowcasting. It was applied to clinical and gesture data, not plasma diagnostics.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Masked reconstruction of held-out observations has been used to prevent kernel interpolators from trivially fitting their inputs.",
+      "original_pdf_locator": "Sec. 3.2.3, Eq. 6; App. A.2.1 (20% holdout)",
+      "qualification": "This is a training-signal design, not evidence for CES label validity.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are a full 48 h window of observations. The target is an outcome observed after that window. No streaming, causal, or arrival-time setting is studied.",
+  "validation_if_relevant": "MIMIC-III uses 5-fold CV with early stopping on validation drawn from the training folds. UWave uses a standard train/test split. The study does not address temporal, leakage-aware, or campaign-level splits.",
+  "forbidden_inferences": [
+    "That this method is causal or suitable for real-time use",
+    "That it validates our 10 ms timing or our use of BES/ECEI inputs",
+    "That its MIMIC gains transfer to KSTAR CES nowcasting",
+    "That two-sided interpolation baselines are equivalent to its model",
+    "That intensity-channel usefulness implies a plasma physical mechanism"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background on irregular-sampling representation (cross-channel interpolation and an observation-timing channel). Contrast it explicitly with our strictly-past causal setting. Do not treat it as a performance benchmark.",
+  "bibtex_if_worth_citing": "@inproceedings{Shukla2019InterpolationPrediction,title={Interpolation-Prediction Networks for Irregularly Sampled Time Series},author={Shukla, Satya Narayan and Marlin, Benjamin M.},booktitle={International Conference on Learning Representations},year={2019},eprint={1909.07782},archivePrefix={arXiv}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "dda110c2c8983d6b27452cf3e73ec686bfb2980da4a14312e25dfb2ccc608d64",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

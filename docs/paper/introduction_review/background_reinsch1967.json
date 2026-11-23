@@ -1,0 +1,39 @@
+{
+  "key": "reinsch1967",
+  "citation": {
+    "title": "Smoothing by Spline Functions",
+    "authors": "Reinsch, Christian H.",
+    "year": 1967,
+    "venue": "Numerische Mathematik",
+    "volume": "10",
+    "pages": "177-183",
+    "doi_or_arxiv": "unknown (not in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "Cubic smoothing spline: minimize the integral of the squared second derivative subject to a weighted residual constraint",
+  "own_question": "How to construct an optimal smoothing (non-interpolating) cubic spline for approximate data",
+  "actual_method_and_evidence": "Variational derivation of a cubic spline with a Lagrange parameter found by Newton iteration from p=0. Includes an ALGOL procedure. Demonstrations: numerical derivatives of sin(x) rounded to four decimals, compared by mean-square error against difference quotients and interpolating splines, and one curve-plotting figure with n=100, S=90. The method is offline, batch and two-sided over the whole data set. It involves no time-series causality, no plasma data and no forecasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Smoothing splines trade fidelity to noisy ordinates, weighted by per-point uncertainty, against curvature. Setting the smoothing level to zero recovers cubic spline interpolation.",
+      "original_pdf_locator": "pp.177-178, Sec.2, eqs.(1)-(3)",
+      "qualification": "Applies to a fitted curve over all points (two-sided). It is relevant only as background if a two-sided interpolation or spline reference is discussed.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. Uses all data points simultaneously, so it is noncausal by construction.",
+  "validation_if_relevant": "Single synthetic example (rounded sin table) plus one illustrative plot. No held-out validation.",
+  "forbidden_inferences": [
+    "That our two-sided interpolation baseline is Reinsch's spline unless it is actually implemented as one",
+    "Any causal or real-time suitability",
+    "Any CES, plasma or KSTAR relevance",
+    "Generalizing it as representative of all prior smoothing work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite only if the paper describes a spline-based two-sided reference or smoothing step. Otherwise exclude, because it does not address causal nowcasting or diagnostics.",
+  "bibtex_if_worth_citing": "@article{reinsch1967,author={Reinsch, Christian H.},title={Smoothing by Spline Functions},journal={Numerische Mathematik},volume={10},pages={177--183},year={1967}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "bc4224b6bdfb7184d61d2fec45681cd63324fd4e87772de4c5a5f99ae708443c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

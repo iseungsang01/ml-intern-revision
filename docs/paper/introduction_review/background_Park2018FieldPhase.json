@@ -1,0 +1,39 @@
+{
+  "key": "Park2018FieldPhase",
+  "citation": {
+    "title": "3D field phase-space control in tokamak plasmas",
+    "authors": "Park, J.-K.; Jeon, Y.; In, Y.; Ahn, J.-W.; Nazikian, R.; Park, G.; Kim, J.; Lee, H.; Ko, W.; Kim, H.-S.; Logan, N. C.; Wang, Z.; Feibush, E. A.; Menard, J. E.; Zarnstorff, M. C.",
+    "year": 2018,
+    "venue": "Nature Physics",
+    "volume": "14",
+    "pages": "1223-1228",
+    "doi_or_arxiv": "10.1038/s41567-018-0268-8"
+  },
+  "relevance": "peripheral",
+  "topic": "Ideal plasma-response (IPEC) modeling of n=1/n=2 RMP coil phase space for ELM suppression without locked modes in KSTAR",
+  "own_question": "Which 3D coil configurations give ELM suppression without core locked-mode disruption?",
+  "actual_method_and_evidence": "IPEC resonant-field metrics for core and edge. Thresholds were calibrated at single empirical operating points. Predictions were compared with KSTAR coil-ramp discharges. Ti came from carbon CX emission with two-Gaussian fitting and is used only as a context trace. The paper contains no CES nowcasting, no BES/ECEI inference and no timing analysis.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR H-mode studies report ion temperature inferred from carbon charge-exchange emission. This is impurity Ti and not main-ion Ti.",
+      "original_pdf_locator": "p.2, Fig.1b caption",
+      "qualification": "Context only. This is not a pedestal-top chord nowcast, and the source does not discuss latency.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source does not address report arrival timing or causal inputs.",
+  "validation_if_relevant": "Experimental checks of predicted coil windows on selected discharges. These do not form a held-out data split.",
+  "forbidden_inferences": [
+    "This paper does not support the need for, or the feasibility of, real-time CES nowcasting.",
+    "It provides no evidence on the value of BES/ECEI for temperature estimation.",
+    "Its carbon CX Ti is not main-ion temperature or independent truth.",
+    "It should not be cited as KSTAR2022 data."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude, or at most cite as optional application context, for example RMP/ELM control in KSTAR. It does not bear on the nowcasting question.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "e93c30e409f9f1dc8a3861803fa134a594ac78c27e85c331d98811c3e19770af",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

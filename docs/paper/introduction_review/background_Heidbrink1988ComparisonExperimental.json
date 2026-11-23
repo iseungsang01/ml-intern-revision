@@ -1,0 +1,32 @@
+{
+  "key": "Heidbrink1988ComparisonExperimental",
+  "citation": {
+    "title": "Comparison of experimental and theoretical fast ion slowing-down times in DIII-D",
+    "authors": "W.W. Heidbrink, Jinchoon Kim, R.J. Groebner",
+    "year": 1988,
+    "venue": "Nuclear Fusion",
+    "volume": "28",
+    "pages": "1897-1901",
+    "doi_or_arxiv": "10.1088/0029-5515/28/10/018"
+  },
+  "relevance": "peripheral",
+  "topic": "Classical slowing-down of short deuterium beam pulses, inferred from the decay of d(d,n)3He neutron emission in DIII-D. The paper also uses these pulses for relative central deuterium density estimates.",
+  "own_question": "The paper asks whether beam-ion deceleration agrees with Sivukhin classical Coulomb drag.",
+  "actual_method_and_evidence": "Approximately 2 ms pulses of 74 keV D0 were injected into steady deuterium plasmas. Neutron decay times were compared with a test-particle calculation. The calculation used fitted Te and ne profiles and included H, D and C species. The authors report that the measured-to-theory decay-time ratio was about 0.85 ± 0.15, with stated agreement to within about 30%. The analysis was offline. It did not involve CES impurity Ti, BES/ECEI, nowcasting or a validation split.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. Neutron detection had sub-0.1 ms resolution. The analysis was retrospective and is unrelated to online estimation of CES reports.",
+  "validation_if_relevant": "The paper compares experiment with theory across a set of discharges. It has no held-out data and no causal evaluation.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence about carbon-impurity CES temperature or main-ion Ti measurement.",
+    "Do not cite it as prior work on causal nowcasting or on BES/ECEI fusion.",
+    "Do not cite it for KSTAR or pedestal-top relevance.",
+    "Do not treat its central nd estimate as an ion-temperature diagnostic."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper only addresses beam-ion slowing-down physics and neutron diagnostics. Classical ion-electron coupling is only tangential background, and our study does not require it.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "05295879c73b47e694c39dee876e0fbbfa64a1bcc24fe4c654391269c2d0dac0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

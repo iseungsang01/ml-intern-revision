@@ -1,0 +1,32 @@
+{
+  "key": "Kwon2018DevelopmentReal",
+  "citation": {
+    "title": "Development of a real-time data archive system for a KSTAR real-time network",
+    "authors": "Giil Kwon; Woongryol Lee; Taegu Lee; Jaesic Hong",
+    "year": 2018,
+    "venue": "Fusion Engineering and Design",
+    "volume": "127",
+    "pages": "202-206",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2018.01.019"
+  },
+  "relevance": "peripheral",
+  "topic": "KSTAR reflective-memory (RFM) network data archiving at 2 kHz, synchronized to the timing system, with post-shot MDSplus storage",
+  "own_question": "Can RFM real-time network data be archived deterministically and shared through MDSplus for network monitoring?",
+  "actual_method_and_evidence": "The authors built an EPICS/AsynDriver system on an MRG-R kernel using isolated cores. It stores RFM data in local memory at 2 kHz and transfers it to MDSplus after the shot. The test was a bench test: simulated PCS PF voltage commands were written at 5 kHz from one writer node. Over 100,000 loops, the reported period jitter was 6.84 μs. The archived and original traces are described as having the same shape for replayed shot 17650. No figures were visually checked.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Concerns archiving of control-network data, not CES/BES/ECEI inputs or report arrival. During the shot, data are stored locally and become accessible only after the post-shot transfer to MDSplus. Actual CES report latency is unknown.",
+  "validation_if_relevant": "Bench loop-jitter test and a single replayed simulated signal. No plasma-diagnostic validation.",
+  "forbidden_inferences": [
+    "Do not claim this measures CES, BES or ECEI latency or availability.",
+    "Do not claim KSTAR provides real-time CES temperature.",
+    "Do not cite the 6.84 μs jitter as relevant to our 10 ms computation.",
+    "Do not imply our pipeline was deployed on RFM.",
+    "Do not generalize to the KSTAR 2022 infrastructure."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. At most, it could support a generic statement that KSTAR uses an RFM real-time network with MDSplus post-shot archiving. It gives no information on ion-temperature diagnostics, nowcasting, or report timing.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "178ccb77dfb61e417f97547f473edd5c8babf7c703aa4cb4aa2bb5da46195f42",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

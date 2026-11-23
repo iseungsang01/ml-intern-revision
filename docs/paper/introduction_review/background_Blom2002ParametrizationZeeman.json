@@ -1,0 +1,39 @@
+{
+  "key": "Blom2002ParametrizationZeeman",
+  "citation": {
+    "title": "Parametrization of the Zeeman effect for hydrogen-like spectra in high-temperature plasmas",
+    "authors": "A Blom and C Jupén",
+    "year": 2002,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "44",
+    "pages": "1229-1241",
+    "doi_or_arxiv": "PII S0741-3335(02)34785-7 (DOI not printed in supplied text; likely 10.1088/0741-3335/44/7/316, verify)"
+  },
+  "relevance": "peripheral",
+  "topic": "Spectral line-shape modelling of hydrogen-like impurity CX lines: Zeeman/fine-structure broadening and temperature correction",
+  "own_question": "How can the unresolved Zeeman and fine-structure pattern be reduced to three Gaussian polarization components for ion-temperature fitting?",
+  "actual_method_and_evidence": "Exact Zeeman patterns were computed and Gaussians fitted per polarization group. Simple relations were found: σ split ∝B, and the ratio of Zeeman width to Doppler width scales as a power law in T. Parameters are tabulated for 44 transitions, including C VI. Synthetic refits reproduced temperatures typically within 5%. A temperature-dependent centre-wavelength shift was also noted. All evidence is simulation-based, assuming statistical populations; no plasma data validation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Conventional CES impurity temperatures depend on spectral-fitting choices; neglecting Zeeman/fine-structure broadening inflates apparent temperature, especially at low T.",
+      "original_pdf_locator": "Sec.1-2, Fig.2, Fig.6, Eq.(1)-(4)",
+      "qualification": "Synthetic C VI demonstration; correction magnitude depends on B, T, transition; statistical populations assumed.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable; offline spectrum-model fitting, no nowcasting or timing measurement.",
+  "validation_if_relevant": "Synthetic refits only; no experimental or held-out data.",
+  "forbidden_inferences": [
+    "That KSTAR CES labels used this parametrization",
+    "That CES labels are physical truth",
+    "That this supports nowcasting or BES/ECEI value",
+    "That it concerns main-ion Ti or real-time deployment"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Only optionally cite in background to explain that reported carbon CES temperatures are model-dependent fitted labels; not central to the temporal nowcasting question.",
+  "bibtex_if_worth_citing": "@article{Blom2002ParametrizationZeeman,author={Blom, A. and Jup{\\'e}n, C.},title={Parametrization of the {Zeeman} effect for hydrogen-like spectra in high-temperature plasmas},journal={Plasma Phys. Control. Fusion},volume={44},pages={1229--1241},year={2002}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "57d5c3fd2a9322dfcba94c045294e448e41f4fa5135b3785982af901377c52fb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

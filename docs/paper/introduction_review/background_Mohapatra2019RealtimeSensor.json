@@ -1,0 +1,31 @@
+{
+  "key": "Mohapatra2019RealtimeSensor",
+  "citation": {
+    "title": "Real-time sensor fault detection in Tokamak using different machine learning algorithms",
+    "authors": "Mohapatra, D.; Subudhi, B.; Daniel, R.",
+    "year": 2020,
+    "venue": "Fusion Engineering and Design",
+    "volume": "151",
+    "pages": "111401",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2019.111401"
+  },
+  "relevance": "peripheral",
+  "topic": "Supervised classification of synthetic magnetic-probe faults (stuck-at-zero, offset, additive noise), with FPGA/embedded implementation described",
+  "own_question": "Which of MLP, KNN, SVC, GNB, DT and RF best classifies injected faults in magnetic position sensors (Aditya-derived data) within a 10 kHz control-loop budget.",
+  "actual_method_and_evidence": "Scikit-learn classifiers were applied to windows of 5, 10 or 20 samples from about 14,000 samples built from one discharge with synthetically injected faults. The data were randomly shuffled into 60/20/20 train/test/validation splits. The authors report an RF accuracy of about 99.5 percent without noise faults and about 89 percent with noise faults. The extracted text reports no latency figures, and the hardware results are only qualitative. The paper does not address CES, ion temperature, BES/ECEI, or nowcasting.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Magnetic probes sampled at 10 kHz under a stated 100 µs loop requirement. The authors state this requirement but do not demonstrate measured timing.",
+  "validation_if_relevant": "Random shuffling of samples from one discharge. This likely leaks information through temporal correlation. There is no untouched data.",
+  "forbidden_inferences": [
+    "That ML-based diagnostics nowcasting or CES estimation was achieved",
+    "That FPGA timing was demonstrated",
+    "That faults are physical or that the accuracies generalize",
+    "That this represents all prior real-time ML work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This source shares only a generic real-time ML-on-diagnostics theme with our paper. Its task is fault classification of magnetic sensors, not causal estimation of impurity CES temperature. It would at most serve as an optional general example, so it is better omitted.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "f5e6923233f1eb3891dff33d1357476dae821d27eb935270b9eb165ea5607c8f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

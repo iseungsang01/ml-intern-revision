@@ -1,0 +1,46 @@
+{
+  "key": "Ko2026RolesKstar",
+  "citation": {
+    "title": "Roles of KSTAR toward reactor-relevant diagnostics",
+    "authors": "Ko, Jinseok; Nam, Yong Un",
+    "year": 2026,
+    "venue": "Plasma Science and Technology (accepted manuscript)",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "10.1088/2058-6272/aeb854"
+  },
+  "relevance": "supporting",
+  "topic": "Status review of KSTAR diagnostics mapped to reactor requirements; integrated, inference-based and virtual diagnostic frameworks",
+  "own_question": "How can KSTAR diagnostics, synthetic diagnostics and Bayesian or ML inference support reduced, robust reactor diagnostic sets?",
+  "actual_method_and_evidence": "Narrative review. It contains no new experiments or analysis. It summarizes cited KSTAR work, including NN-CES real-time analysis of CES spectra trained on roughly 150k frames [Lee 2021 RSI], Kalman magnetic–Hall sensor fusion, and real-time density control. It also proposes channel-ablation, information-gain and observability criteria, but does not demonstrate them.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "The review notes that CES provides routine Ti and rotation profiles on KSTAR. It cites a neural-network approach (NN-CES) for real-time analysis of CES spectra. This supports framing NN-CES as upstream spectral reading.",
+      "original_pdf_locator": "p.8-9 (Sec.3 text after sixth example); Table 2(a) CES row",
+      "qualification": "The review only reports these claims and cites the primary paper. Cite Lee et al 2021 RSI for NN-CES specifics. The review does not say whether the measured species is impurity or main-ion, and gives no latency figures.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The review frames sparse-measurement state estimation as a reactor-relevant motivation. It treats Bayesian or ML reconstruction from reduced sensor sets, and evaluation by removing channels, as a stated research direction.",
+      "original_pdf_locator": "Sec.5, p.14 paragraph on mandatory vs auxiliary diagnostics; Table 1 last row",
+      "qualification": "This is the authors' perspective; no quantitative demonstration is reported. The review also notes that CES depends on a neutral beam and optical access, which limits its use in a reactor.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Gives no CES report cadence, arrival latency, or BES/ECEI nowcasting.",
+  "validation_if_relevant": "None; this is a review.",
+  "forbidden_inferences": [
+    "Do not treat the review as evidence that NN-CES achieves a particular latency or accuracy.",
+    "Do not claim the review validates nowcasting or the use of BES/ECEI to inform CES.",
+    "Do not cite reactor requirement targets as performance KSTAR has achieved.",
+    "Do not infer that prior KSTAR inference work is noncausal or electron-only.",
+    "Do not claim the review's ablation and information-gain workflow has been implemented."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional context for motivating integrated inference from sparse diagnostics and for placing NN-CES upstream. The primary NN-CES paper should carry the specific claims.",
+  "bibtex_if_worth_citing": "@article{Ko2026RolesKstar,title={Roles of KSTAR toward reactor-relevant diagnostics},author={Ko, Jinseok and Nam, Yong Un},journal={Plasma Science and Technology},year={2026},doi={10.1088/2058-6272/aeb854},note={Accepted manuscript}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 20,
+  "supplied_pdf_sha256": "13890a6f367fa4f4cf8aa8d473ec1e67d3121221c02ba15ce909c9ab6d315a5c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

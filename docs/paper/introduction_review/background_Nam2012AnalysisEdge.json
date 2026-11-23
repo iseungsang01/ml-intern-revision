@@ -1,0 +1,46 @@
+{
+  "key": "Nam2012AnalysisEdge",
+  "citation": {
+    "title": "Analysis of edge density fluctuation measured by trial KSTAR beam emission spectroscopy system",
+    "authors": "Y. U. Nam; S. Zoletnik; M. Lampert; Á. Kovácsik",
+    "year": 2012,
+    "venue": "Review of Scientific Instruments",
+    "volume": "83",
+    "pages": "10D531",
+    "doi_or_arxiv": "10.1063/1.4739078"
+  },
+  "relevance": "supporting",
+  "topic": "Trial KSTAR BES (APD camera) design, installation and early edge density-fluctuation observations",
+  "own_question": "Is a direct-imaging APD BES design feasible on KSTAR, and what edge fluctuation features does the trial system reveal?",
+  "actual_method_and_evidence": "A 4×8 APD array is digitized at 2 MHz with 12-bit resolution. The paper reports measured photon flux relative to a simulation, along with signal-to-noise and background estimates. Viewing positions were calibrated with a visible camera. The paper presents spectrograms and cross-correlations of raw BES light signals from 2011-campaign shots. Reported observations include low-frequency suppression after the L-H transition, a beam-dependent broad peak at roughly 10–20 kHz, and an 8 µs delay between poloidal channels. The authors interpret this delay as poloidal rotation. These results are qualitative trial-system observations, not calibrated density.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR has a BES diagnostic that images beam emission with a 2D APD array at MHz sampling, sensitive to edge density fluctuations.",
+      "original_pdf_locator": "p.2 Sec. II, Fig. 2 caption area",
+      "qualification": "This was the 2011 trial system. The 2022 configuration may differ, and the measured signal is light intensity, not calibrated ne.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Trial BES spectrograms showed edge fluctuation changes around L-H transitions and a 10–20 kHz peak whose frequency the authors relate to edge Te trends.",
+      "original_pdf_locator": "p.3 Fig. 3; p.4 Sec. IV, Fig. 4",
+      "qualification": "The data are limited and the peak's nature is unidentified (GAM is only proposed). Fluctuation content below 10 kHz includes background contamination. Figures were not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The source reports 2 MHz raw BES sampling with data transfer after shot. CES appears only as an offline position cross-check, and no CES report timing is given.",
+  "validation_if_relevant": "Feasibility comparison against simulation on a few shots only; no predictive validation.",
+  "forbidden_inferences": [
+    "Do not infer that BES predicts or nowcasts CES temperature.",
+    "Do not equate the 2011 trial hardware with the KSTAR2022 system.",
+    "Do not cite this paper as establishing a physical mechanism (GAM, rotation) relating fluctuations to Ti.",
+    "Do not claim real-time BES processing was demonstrated.",
+    "Do not equate the BES-related Te trend with the impurity CES Ti signal."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Useful as a diagnostic-background citation for the KSTAR BES input and its edge-fluctuation sensitivity. It is not evidence for the nowcasting results.",
+  "bibtex_if_worth_citing": "@article{Nam2012AnalysisEdge,title={Analysis of edge density fluctuation measured by trial {KSTAR} beam emission spectroscopy system},author={Nam, Y. U. and Zoletnik, S. and Lampert, M. and Kov{\\'a}csik, {\\'A}.},journal={Rev. Sci. Instrum.},volume={83},pages={10D531},year={2012},doi={10.1063/1.4739078}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "2e1742ec2f5805397b7be34e43c9e57dc0dbb0c4d5d16447a373c6d22a5daf4e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

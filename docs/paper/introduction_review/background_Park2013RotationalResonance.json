@@ -1,0 +1,38 @@
+{
+  "key": "Park2013RotationalResonance",
+  "citation": {
+    "title": "Rotational Resonance of Nonaxisymmetric Magnetic Braking in the KSTAR Tokamak",
+    "authors": "J.-K. Park, Y. M. Jeon, J. E. Menard, W. H. Ko, S. G. Lee, et al.",
+    "year": 2013,
+    "venue": "Physical Review Letters",
+    "volume": "111",
+    "pages": "095002",
+    "doi_or_arxiv": "10.1103/PhysRevLett.111.095002"
+  },
+  "relevance": "peripheral",
+  "topic": "Bounce-harmonic resonance in NTV magnetic braking with nonresonant n=1 IVCC fields in KSTAR. Toroidal rotation is measured by charge exchange spectroscopy and compared with IPEC-plus-NTV torque calculations.",
+  "own_question": "Does NTV braking torque peak at a particular toroidal rotation, consistent with an l=1 bounce-harmonic resonance?",
+  "actual_method_and_evidence": "Five discharges used varied NBI, NBI modulation and ECH, with two-step IVCC pulses. Experimental torque was inferred from rotational damping rates, assuming the torque scales quadratically with the field perturbation. The authors report agreement with theory on peak position and peak magnitude near VT ~200 km/s. NBI blips were needed for CES rotation measurements. The analysis uses CES rotation, not ion temperature. There is no nowcasting, BES, ECEI or real-time element.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR, CES rotation measurements depended on NBI blips, so CES coverage can be tied to beam timing.",
+      "original_pdf_locator": "p.2, Fig. 2 discussion",
+      "qualification": "Applies to 2013 rotation measurements in these discharges. It does not establish KSTAR2022 temperature-report timing or latency.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "CES toroidal rotation measured at the core (R=1.85 m). No report arrival times are given, and no temperature data are reported.",
+  "validation_if_relevant": "Comparison of theory and experiment on a single campaign. There is no estimator validation.",
+  "forbidden_inferences": [
+    "CES Ti is available at a given latency",
+    "The paper motivates real-time temperature nowcasting",
+    "Rotation control results imply anything about BES/ECEI temperature information"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper concerns rotation physics, not temperature nowcasting. At most it could support a single optional remark that CES measurements depend on beam-blip timing.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "d6de42ec50aed097e426cef03a1b124bc09680041089c69debc9e7514911ec4b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

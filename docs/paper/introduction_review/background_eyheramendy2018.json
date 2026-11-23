@@ -1,0 +1,32 @@
+{
+  "key": "eyheramendy2018",
+  "citation": {
+    "title": "An irregular discrete time series model to identify residuals with autocorrelation in astronomical light curves",
+    "authors": "Eyheramendy, S.; Elorrieta, F.; Palma, W.",
+    "year": 2018,
+    "venue": "Monthly Notices of the Royal Astronomical Society",
+    "volume": "481",
+    "pages": "4311-4322",
+    "doi_or_arxiv": "10.1093/mnras/sty2487"
+  },
+  "relevance": "peripheral",
+  "topic": "Irregularly sampled autoregressive (IAR) model for residual autocorrelation in astronomical light curves",
+  "own_question": "How can autocorrelation be modelled and tested in irregularly sampled residuals? The source answers this with a discrete-time representation of CAR(1), in which phi is raised to the power of the time gap.",
+  "actual_method_and_evidence": "The authors define the IAR model, give a stationarity and ergodicity theorem, and estimate parameters by maximum likelihood. Monte Carlo simulations cover Gaussian, Gamma and Student-t versions. Applications are offline analyses of residuals: OGLE/Hipparcos variable stars, where misspecified periods give larger phi, and a WASP-6b transit tested with a shuffle test. The source does not involve plasma, CES or nowcasting.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. The source uses no online inputs and does no current-report nowcasting.",
+  "validation_if_relevant": "Simulations and offline real-data residual tests only. There is no held-out forecasting evaluation.",
+  "forbidden_inferences": [
+    "That IAR is suitable for, or validated on, CES Ti nowcasting",
+    "That the source supports causal real-time estimation",
+    "That the source provides any fusion diagnostic evidence",
+    "That IAR is a baseline we implemented"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper is useful at most as optional background on time-gap-aware AR/CAR(1) correlation for irregular report spacing. It is outside the domain and was not implemented in our study, so excluding it is preferable unless the theory section discusses residual autocorrelation under irregular sampling.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "af38387b7f6c9d1244f9b71cb065181d9fd165d206149bd41ae217340ffefaeb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

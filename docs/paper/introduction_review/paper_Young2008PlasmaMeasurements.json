@@ -1,0 +1,80 @@
+{
+  "key": "Young2008PlasmaMeasurements",
+  "citation": {
+    "title": "Chapter 1: Plasma Measurements: An Overview of Requirements and Status",
+    "authors": "Kenneth M. Young",
+    "year": 2008,
+    "venue": "Fusion Science and Technology",
+    "volume": "53(2)",
+    "pages": "281-303",
+    "doi_or_arxiv": "10.13182/FST08-A1673 (this paper's own DOI, from the cover page; DOIs in the reference list belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-24 (journal pp. 281-303)",
+    "full_pdf_supplied": true,
+    "limitations": "Only the journal version was supplied. PPPL-4276 report pagination cannot be checked and remains unknown. Table text comes from extraction, and some cells are garbled (for example, the Table III n_e temporal cell)."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The edge ion-temperature requirement is 10 ms with 10% accuracy, attributed to FIRE, on p. 288, Table III.",
+      "verdict": "qualify",
+      "source_finding": "Table III lists edge T_i profile requirements: range 0.05-15 keV, 5 mm spatial, 10 ms temporal and 10% typical precision. The listed techniques are CXRS, NPA and optical Doppler spectroscopy. The text says the Table III specifications are those developed for the proposed burning-plasma device FIRE (Ref. 23). It also gives r/a >= 0.8 as the loose geometric edge definition used by ITER and FIRE diagnostic designers.",
+      "locator": "Table III is on PDF p.10 (journal p.289). The FIRE attribution and edge definition are on PDF p.9 (journal p.288), Sec. II.C.",
+      "kind": "requirement",
+      "allowed_intro_sentence": "For the edge and pedestal region, measurement-requirement specifications developed for the proposed FIRE burning-plasma device call for ion-temperature profiles at about 5 mm spatial and 10 ms temporal resolution with roughly 10% precision [Young 2008, Sec. II.C and Table III].",
+      "qualification": "Cite p.288 for the FIRE attribution and p.289 for the table. These are design requirements, not demonstrated performance. The 10 ms figure is a time-resolution requirement, not a computation-latency target. It is not KSTAR-specific and does not address carbon-impurity CES reports."
+    },
+    {
+      "proposed_claim": "Core T_i and rotation requirements are also about 10 ms.",
+      "verdict": "supported",
+      "source_finding": "Table I lists core T_i (0.5-15 keV) at a/30 spatial and 10 ms temporal resolution with 10% precision. Toroidal and poloidal rotation profiles carry the same a/30, 10 ms and 10% requirements. Sec. II states that the requirements were mostly derived from the most recent ITER set (Ref. 13).",
+      "locator": "PDF p.7 (journal p.286), Table I; PDF p.5 (journal p.284), Sec. II",
+      "kind": "requirement",
+      "allowed_intro_sentence": "ITER-derived requirement tables likewise specify ion-temperature and rotation profiles on a 10 ms time scale [Young 2008, Table I].",
+      "qualification": "Core region is r < 0.8a. Do not merge this with the FIRE edge attribution."
+    },
+    {
+      "proposed_claim": "T_i profiles feed plasma control, which motivates timely estimates.",
+      "verdict": "qualify",
+      "source_finding": "Table VII lists the ion-temperature profile among the measurements for controlling transport-barrier formation and for maintaining the beta profile. Sec. VI says that the need for control often sets the time-resolution requirements in Tables I-VI.",
+      "locator": "PDF p.18 (journal p.297), Table VII; PDF p.21 (journal p.300), Sec. VI",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Ion-temperature profiles are among the inputs expected for burning-plasma control, and control needs largely set the quoted time-resolution targets [Young 2008, Table VII; Sec. VI].",
+      "qualification": "This is the author's expectation for burning-plasma tokamaks. It does not show that nowcasting is useful, and it does not say that CES report latency is a bottleneck."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (review and requirements paper, not an estimator paper)",
+    "outputs": "not_applicable",
+    "causal_or_offline": "not_applicable",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "The paper discusses Thomson scattering and ECE disagreeing because of non-Maxwellian electrons (PDF p.3, journal p.282, Sec. I). This can support citing it for the point that measured values depend on the technique used. It does not discuss CES labels."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "PPPL-4276 pagination"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing. Timing figures are required resolutions.",
+    "what_not_established": "Achieved latency, report arrival times, real-time T_i estimation, or KSTAR applicability",
+    "locator": "Tables I and III; Sec. VI"
+  },
+  "forbidden_inferences": [
+    "Treating 10 ms as a demonstrated CES capability or as a computation budget",
+    "Attributing Table III to ITER or KSTAR",
+    "Claiming the source endorses nowcasting or BES/ECEI-to-T_i estimation",
+    "Citing p.288 for the Table III entries",
+    "Treating the requirements as validated physics needs"
+  ],
+  "competing_or_complementary": "Complementary. The paper supplies requirement context for edge and core T_i time resolution and for diagnostic complementarity. Table II lists BES and ECE for fluctuations, not for T_i.",
+  "bibtex": "@article{Young2008PlasmaMeasurements,author={Young, Kenneth M.},title={Chapter 1: Plasma Measurements: An Overview of Requirements and Status},journal={Fusion Science and Technology},volume={53},number={2},pages={281--303},year={2008},doi={10.13182/FST08-A1673}}",
+  "followup_sources_if_material": [
+    "Meade 2002, Fusion Eng. Des. 63-64, 531 (Ref. 23): the FIRE source, if the FIRE specification itself is cited",
+    "Donné et al. 2007, Nucl. Fusion 47, S337 (Ref. 13): current ITER requirements",
+    "Boivin, Casper & Young 2004, PPCF 46, A347 (Ref. 15): advanced-tokamak control measurement requirements",
+    "PPPL-4276 report, only if report pagination must be cited"
+  ]
+}

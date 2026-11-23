@@ -1,0 +1,32 @@
+{
+  "key": "Kwak2019MeasurementFast",
+  "citation": {
+    "title": "Measurement of fast ion life time using neutron diagnostics and its application to the fast ion instability at ELM suppressed KSTAR plasma by RMP",
+    "authors": "J.-G. Kwak, M.H. Woo, T. Rhee",
+    "year": 2019,
+    "venue": "Nuclear Engineering and Technology",
+    "volume": "51",
+    "pages": "1860-1865",
+    "doi_or_arxiv": "10.1016/j.net.2019.05.016"
+  },
+  "relevance": "peripheral",
+  "topic": "Estimating KSTAR fast-ion slowing-down time from He3/fission-counter neutron decay during NBI beam blanks, applied to RMP ELM-suppressed discharges with fishbone-like activity.",
+  "own_question": "Can neutron-signal decay during beam blanks estimate fast-ion slowing-down time, and how does this estimate change with MHD activity and RMP amplitude?",
+  "actual_method_and_evidence": "The authors compare measured neutron decay times with a textbook slowing-down formula in a few shots (#18483, #19134, #18594). They report reduced measured-to-calculated ratios in H-mode and interpret fishbones as ion-diamagnetic using orbit and frequency arguments. The study uses no CES nowcasting, no BES/ECEI estimators and no predictive validation. Beam blanks are mentioned as used for CES background subtraction.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Beam blanks are stated to be about 10 ms and are used for CES/MSE background subtraction. The paper provides no CES report cadence or arrival timing.",
+  "validation_if_relevant": "None. The work is offline and case-based, with no held-out data.",
+  "forbidden_inferences": [
+    "That this paper establishes CES report latency or CES label accuracy",
+    "That this paper's RMP fast-ion results inform carbon-impurity Ti nowcasting",
+    "That the beam-blank analysis is real-time or online",
+    "That the fishbone mechanism is proven, since the authors acknowledge no explicit evidence"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper is KSTAR-specific but addresses fast-ion neutron diagnostics. It could at most support a passing note that NBI beam blanks are used for CES background subtraction, and that note is unnecessary for our framing.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "24f5e1365b86acd3814609e308b1975ea8fcb4cb8ce807b62831e452d2c95006",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

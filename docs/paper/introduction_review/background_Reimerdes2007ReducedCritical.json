@@ -1,0 +1,39 @@
+{
+  "key": "Reimerdes2007ReducedCritical",
+  "citation": {
+    "title": "Reduced Critical Rotation for Resistive-Wall Mode Stabilization in a Near-Axisymmetric Configuration",
+    "authors": "H. Reimerdes, A. M. Garofalo, G. L. Jackson, M. Okabayashi, E. J. Strait, et al.",
+    "year": 2007,
+    "venue": "Physical Review Letters",
+    "volume": "98",
+    "pages": "055001",
+    "doi_or_arxiv": "10.1103/PhysRevLett.98.055001"
+  },
+  "relevance": "peripheral",
+  "topic": "DIII-D resistive-wall mode stabilization threshold vs. toroidal rotation measured by CER using C VI",
+  "own_question": "How low can the q=2 toroidal rotation fall before the RWM destabilizes when torque is reduced with balanced NBI and no magnetic braking?",
+  "actual_method_and_evidence": "DIII-D discharges with NBI torque ramp-downs and an error-field-corrected configuration were compared with a magnetic-braking discharge. Carbon-impurity CER rotation was analyzed offline. MARS-F kinetic and sound-wave damping calculations were also performed. There was no temperature estimation, nowcasting, BES/ECEI use, or KSTAR data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Carbon-impurity charge-exchange measurements are conventionally used as proxies for main-ion quantities. The authors note that the impurity–deuterium difference is predicted by neoclassical theory but is not fully understood.",
+      "original_pdf_locator": "p.2, paragraph on CER diagnostic using C VI",
+      "qualification": "This concerns rotation, not temperature, on DIII-D. It supports only a general caveat about impurity versus main-ion quantities.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. No report timing, latency, or real-time use is described.",
+  "validation_if_relevant": "Not applicable. The study uses physics experiments and code comparisons, not predictive validation.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence for Ti nowcasting or CES temperature labels.",
+    "Do not infer KSTAR applicability.",
+    "Do not claim this paper shows a need for real-time CES estimation.",
+    "Do not treat the MARS-F agreement as proven physics; the authors call it suggestive."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper is about MHD and rotation thresholds and is off-topic for causal CES temperature nowcasting. At most, it could serve as an optional citation for the impurity-versus-main-ion caveat; better dedicated sources exist, such as the Solomon 2006 paper it cites.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "b9b282ca42064ce666946b0afbee6a81b27d8f10eba0bc4506650670a7b5a315",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

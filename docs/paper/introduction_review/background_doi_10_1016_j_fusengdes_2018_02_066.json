@@ -1,0 +1,39 @@
+{
+  "key": "doi_10_1016_j_fusengdes_2018_02_066",
+  "citation": {
+    "title": "Achievements and lessons learned from the operation of KSTAR plasma control system upgrade",
+    "authors": "S.-h. Hahn, B.G. Penaflor, P.G. Milne, et al.",
+    "year": 2018,
+    "venue": "Fusion Engineering and Design",
+    "volume": "130",
+    "pages": "16-20",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2018.02.066"
+  },
+  "relevance": "peripheral",
+  "topic": "Hardware, operating-system and data-acquisition upgrade of the KSTAR plasma control system in 2016. The paper reports latency tests and operational use.",
+  "own_question": "Whether the upgraded PCS can acquire and control reliably for long pulses, and what latency it adds.",
+  "actual_method_and_evidence": "Loopback and full-path echo tests report about 300 μs round-trip latency and about 200±50 μs one-way processing. A longer real-time EFIT iteration count is compared with CCD boundary estimates in 2016 operation. The paper contains no CES, BES, ECEI or temperature nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "The KSTAR PCS runs real-time magnetics-based control, including rtEFIT, with sub-millisecond I/O latency in its 2016 configuration.",
+      "original_pdf_locator": "p.3-4 Sec.2.4; p.5 Sec.3.1",
+      "qualification": "Describes the 2016 PCS configuration only. It does not report the 2022 configuration or the CES/BES/ECEI pathway. No 10 ms nowcast deployment is shown.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Reported latencies are for magnetics and coil I/O. Report arrival times for profile diagnostics are not given.",
+  "validation_if_relevant": "Hardware-in-the-loop tests and the 2016 campaign. There is no ML validation.",
+  "forbidden_inferences": [
+    "Do not use this source to claim that our estimator is deployable in real time.",
+    "Do not use it to claim that CES reports are available within PCS latency.",
+    "Do not use it to claim that it covers the KSTAR2022 hardware.",
+    "Do not use it to claim that it demonstrates any temperature estimation."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, cite this source briefly as context on the KSTAR real-time control infrastructure. It is not evidence for our problem or targets.",
+  "bibtex_if_worth_citing": "@article{Hahn2018PCS,title={Achievements and lessons learned from the operation of KSTAR plasma control system upgrade},author={Hahn, S.-h. and Penaflor, B.G. and Milne, P.G. and others},journal={Fusion Eng. Des.},volume={130},pages={16--20},year={2018},doi={10.1016/j.fusengdes.2018.02.066}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "5f61033758eda71c7201af6cb4c73d488b8d8a03257a667275d8c079d6f62590",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

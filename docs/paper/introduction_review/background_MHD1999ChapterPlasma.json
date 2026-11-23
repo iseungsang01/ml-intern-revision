@@ -1,0 +1,38 @@
+{
+  "key": "MHD1999ChapterPlasma",
+  "citation": {
+    "title": "Chapter 8: Plasma operation and control",
+    "authors": "ITER Physics Expert Group on Disruptions, Plasma Control, and MHD; ITER Physics Expert Group on Energetic Particles, Heating and Current Drive; ITER Physics Expert Group on Diagnostics; ITER Physics Basis Editors",
+    "year": 1999,
+    "venue": "Nuclear Fusion",
+    "volume": "39",
+    "pages": "2577-2625",
+    "doi_or_arxiv": "unknown (not stated in supplied text)"
+  },
+  "relevance": "peripheral",
+  "topic": "ITER physics-basis review of wall conditioning, magnetic and kinetic control, scenario design, and advanced-tokamak profile control.",
+  "own_question": "How present tokamak control experience extrapolates to ITER control requirements.",
+  "actual_method_and_evidence": "Review that compiles control experience from multiple devices, including a kinetic-control experience table (Table 3), and reports ITER control simulations (TSC, PRETOR). It contains no CES, BES, or ECEI nowcasting, no ion-temperature estimation, and no data-driven estimators.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "ITER-era control planning anticipated that accurate real-time measurement of q/j and electron and ion pressure profiles would be critical for advanced-scenario control.",
+      "original_pdf_locator": "p.2622, Sec. 2.4.4",
+      "qualification": "This is the authors' stated requirement, not a demonstrated capability. It concerns pressure profiles generally and does not address impurity CES Ti.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source has no CES report timing, latency, or 10 ms computation data.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "Do not claim the source shows that Ti nowcasting is needed or feasible.",
+    "Do not claim it addresses CES latency, BES, or ECEI.",
+    "Do not treat the listed ITER requirements as achieved performance.",
+    "Do not generalize this source to all prior work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this could serve as a general motivation citation for real-time profile measurement in control. It provides no evidence on our specific problem, so including it is optional.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 50,
+  "supplied_pdf_sha256": "94311eec7444b8b046e8a227080a6df913cbeac747ec3cfe00a9c1cefecdaa29",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

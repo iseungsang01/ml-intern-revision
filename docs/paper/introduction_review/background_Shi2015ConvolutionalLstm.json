@@ -1,0 +1,39 @@
+{
+  "key": "Shi2015ConvolutionalLstm",
+  "citation": {
+    "title": "Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting",
+    "authors": "Shi, X.; Chen, Z.; Wang, H.; Yeung, D.-Y.; Wong, W.-k.; Woo, W.-c.",
+    "year": 2015,
+    "venue": "arXiv preprint (cs.CV); text indicates NIPS-style submission, venue not confirmed in supplied text",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "arXiv:1506.04214v2"
+  },
+  "relevance": "peripheral",
+  "topic": "ConvLSTM encoder-forecaster for spatiotemporal sequence forecasting (Moving-MNIST, Hong Kong radar echo nowcasting)",
+  "own_question": "Can convolutional input-to-state and state-to-state LSTM transitions forecast future radar map sequences better than FC-LSTM and optical-flow ROVER?",
+  "actual_method_and_evidence": "Uses 5 past radar frames to predict 15 future frames on 97 rainy days (2011-2013). Days are split into blocks assigned randomly. Authors acknowledge same-day train/test dependence. Reports CSI, FAR, POD, MSE and correlation versus ROVER variants and FC-LSTM (Table 2). This is meteorological future-frame prediction, not plasma diagnostics.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Convolutional recurrent architectures have been proposed to model spatially local, temporally evolving fields such as image sequences.",
+      "original_pdf_locator": "Sec. 3.1, Eq. (3), p.4",
+      "qualification": "This is an architectural concept from weather radar and video. It has not been shown for BES/ECEI or CES.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Radar frames every 6 min. The target is future radar frames, i.e. future prediction rather than current-report nowcasting. Arrival latency is not studied.",
+  "validation_if_relevant": "Random block split within days, with acknowledged dependence. There is no untouched campaign.",
+  "forbidden_inferences": [
+    "ConvLSTM suits BES/ECEI or CES nowcasting",
+    "Its 'nowcasting' means estimating a current unavailable report",
+    "Its results transfer to fusion plasmas or 10 ms timing",
+    "Its validation reflects held-out generalization"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, cite this as background on spatiotemporal recurrent models if our estimators use them. The term 'nowcasting' differs from ours, so we should not borrow its framing.",
+  "bibtex_if_worth_citing": "@article{Shi2015ConvolutionalLstm,title={Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting},author={Shi, Xingjian and Chen, Zhourong and Wang, Hao and Yeung, Dit-Yan and Wong, Wai-kin and Woo, Wang-chun},journal={arXiv preprint arXiv:1506.04214},year={2015}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "6b83643820fa049a9cdf30621385bd5d33c67408d348a93edb6c59ed247986ef",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

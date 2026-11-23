@@ -1,0 +1,39 @@
+{
+  "key": "Gupta2026BenchmarkingSensor",
+  "citation": {
+    "title": "Benchmarking Sensor Robustness in Plasma Diagnostic Models: A Systematic Evaluation on TokaMark",
+    "authors": "N. Gupta",
+    "year": 2026,
+    "venue": "arXiv preprint (physics.plasm-ph)",
+    "volume": "",
+    "pages": "",
+    "doi_or_arxiv": "arXiv:2607.11915"
+  },
+  "relevance": "peripheral",
+  "topic": "Robustness of ML forecasts of MAST plasma current (TokaMark Task 4-4) under synthetic sensor corruption and imputation.",
+  "own_question": "How do XGBoost, LSTM, Transformer and CNN degrade under masked or zeroed diagnostics, and does imputation help?",
+  "actual_method_and_evidence": "The study trains each model once on windows from 200 MAST shots and tests on 50 shots. All 50 test shots disrupted. It reports window-level NRMSE and a self-defined robustness score. The alarm threshold was tuned on the test set. It does not use KSTAR, CES, Ti, BES or ECEI data, and it does not perform current-report nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Robustness to missing or degraded diagnostic inputs has been examined for MAST data-driven forecasting models, so input availability can matter.",
+      "original_pdf_locator": "Sec. 4.5–5.4, pp. 5–7",
+      "qualification": "This rests on a single training run, 200 training shots, synthetic zero-fill masking and a different task and machine. It should not be generalized to all prior work.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The input is a 150 ms history used to predict plasma current 100 ms ahead. This is future prediction, not current-report nowcasting. Real arrival times were not measured.",
+  "validation_if_relevant": "Validation uses a shot-level split from TokaMark, but on a 200/50-shot subset. Alarm metrics were tuned on the test set, and no false-alarm rate is available.",
+  "forbidden_inferences": [
+    "Do not cite it as evidence about CES, ion temperature, KSTAR, BES or ECEI.",
+    "Do not cite it as evidence that any imputation strategy works for our task.",
+    "Do not treat its robustness score or alarm results as validated deployment performance.",
+    "Do not claim that prior work generally ignores missing data based on this source."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, this could support an optional single sentence on diagnostic availability in ML models. Its machine, target and methodology are weakly matched to our study, and its evidence is preliminary, so it is better omitted.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "f22483b278a45c939b083e83674c4435a9ea64a1de8b66af48432b3136da67ac",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

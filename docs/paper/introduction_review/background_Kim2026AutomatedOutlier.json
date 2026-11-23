@@ -1,0 +1,46 @@
+{
+  "key": "Kim2026AutomatedOutlier",
+  "citation": {
+    "title": "Automated outlier-robust Bayesian profile fitting for magnetically confined plasmas with modified tanh profiles and good-and-bad Gaussian mixture likelihoods",
+    "authors": "Kim J., Lee J., Jung L., Hahn S.-h., Kwak S.",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "096038",
+    "doi_or_arxiv": "10.1088/1741-4326/ae93dd"
+  },
+  "relevance": "supporting",
+  "topic": "Offline batch Bayesian mtanh kinetic-profile fitting on KSTAR, including CES Ti and vT, with good-and-bad mixture likelihood and emcee sampling.",
+  "own_question": "How can kinetic profiles be fitted automatically while limiting outlier leverage and local-minimum sensitivity?",
+  "actual_method_and_evidence": "The method uses MAP warm-start L-BFGS-B followed by emcee sampling with 28 walkers and 5000 steps. It fits processed TS, TCI and CES (conventional or CESNN) products per time slice. Evidence comes from illustrative slices of shot 32364, a channel outlier map over 248 slices, and parallel timing of about 78 s on 24 workers for 248 Te slices. There is no temporal forecasting and no aggregate validation against independent diagnostics.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Processed KSTAR CES channel values (Ti, vT) can contain anomalous channels. Robust mixture likelihoods are one documented way to limit their leverage in profile fits.",
+      "original_pdf_locator": "Sec. 1 (p.3), Sec. 3.4–3.5 (pp.6–8)",
+      "qualification": "The paper fits spatial profiles offline per slice. It does not address temporal nowcasting. Its robustness evidence is illustrative, from one shot, and mainly concerns TS-Te.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "An existing KSTAR workflow consumes processed CES products, from conventional or neural-network CES analysis, as downstream inputs. This supports framing NN-CES as an upstream reader.",
+      "original_pdf_locator": "Sec. 2.2 (p.5)",
+      "qualification": "The paper reports no measurements of CES report latency or arrival time.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are processed diagnostic values at the same time slice. Targets are fitted spatial profiles. The reported timing is batch fitting time, with between-shot processing presented as practical. Nothing is real-time or causal.",
+  "validation_if_relevant": "Validation consists of illustrative single-slice comparisons and multistart optimiser clusters. There are no held-out data or independent truth, and validation is explicitly deferred to future work.",
+  "forbidden_inferences": [
+    "Do not say it provides causal or real-time CES estimates.",
+    "Do not equate its posterior outlier probabilities with true diagnostic faults.",
+    "Do not cite it as evidence of CES report latency.",
+    "Do not treat Ti here as main-ion Ti; it is a CES-derived product.",
+    "Do not generalize it to all prior profile-fitting work."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "It is a contemporaneous KSTAR CES-consuming analysis that offers contrast: spatial, offline and robust, versus our temporal nowcast. It also gives context on CES outliers and the role of CESNN as an upstream source.",
+  "bibtex_if_worth_citing": "@article{Kim2026AutomatedOutlier,title={Automated outlier-robust Bayesian profile fitting for magnetically confined plasmas with modified tanh profiles and good-and-bad Gaussian mixture likelihoods},author={Kim, Jaewook and Lee, Jekil and Jung, Laurent and Hahn, Sang-hee and Kwak, Sehyun},journal={Nuclear Fusion},volume={66},pages={096038},year={2026},doi={10.1088/1741-4326/ae93dd}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 17,
+  "supplied_pdf_sha256": "70def2d956ba702a32489219605334fc08027d5a16f3322df369722d81f016c0",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

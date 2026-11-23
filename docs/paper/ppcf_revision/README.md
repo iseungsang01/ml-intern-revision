@@ -1,5 +1,9 @@
 # PPCF revision with independent novelty feedback
 
+The latest source-grounded update is documented in `../introduction_review/README.md`. It adds the author's introduction subsections and theoretical background, groups the existing data/method sections under Materials and methods, and preserves the Results text exactly. The current main PDF has 22 pages; its seven-section Korean companion is `../research_reader/index.html`. Source coverage, limitations, host corrections and costs are recorded separately. This latest prose/structure version has not received a fresh whole-manuscript grade. The earlier focused NN-CES edit below is historical provenance, not the latest PDF hash.
+
+The NN-CES framing update is in `NN_CES_EDIT.md`, with source-bound Fable drafting and a fresh Opus paragraph review using the actual published NN-CES PDF. The host corrected the reviewer's F/L5 conflation. `nnces_edit_status.json` and `nnces_edit_usage.json` preserve the exact scope, hashes and bounded costs. The current main PDF includes these paragraphs; `grade3.md` and `novelty2.md` describe the earlier frozen manuscript, not a full regrade of this prose update. The frozen `*_reviewed.pdf` files remain unchanged.
+
 The current deliverables are `main_ppcf.tex` / `main_ppcf.pdf`, `supp_ppcf.tex` / `supp_ppcf.pdf`, `generated_tables.tex`, `NEXT_EXPERIMENTS.md`, and the independent review records. This is an isolated revision of `../ppcf`, not a replacement of the established manuscript. Original copied assets are identified in `initial_copy.json`; the original source remains authoritative for inherited tables.
 
 New TCN tables are generated directly from the independently audited `../b94_methods.json` by `ces_prediction/research/icml_revision.py:generate_tables`, called from the PPCF workflow. `evidence_binding.json` binds the original audit. One-seed full-suite and three-seed fixed-subset evidence are separate. No scientific fit or GPU work is performed.

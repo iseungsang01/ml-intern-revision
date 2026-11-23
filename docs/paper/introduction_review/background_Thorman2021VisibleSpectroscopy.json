@@ -1,0 +1,45 @@
+{
+  "key": "Thorman2021VisibleSpectroscopy",
+  "citation": {
+    "title": "Visible spectroscopy of highly charged tungsten ions with the JET charge exchange diagnostic",
+    "authors": "Thorman A, Litherland-Smith E, Menmuir S, Hawkes N, O'Mullane M, Delabie E, Lomanowski B, Fontdecaba J M, Scully S and JET Contributors",
+    "year": 2021,
+    "venue": "Physica Scripta",
+    "volume": "96",
+    "pages": "125631",
+    "doi_or_arxiv": "10.1088/1402-4896/ac387b"
+  },
+  "relevance": "supporting",
+  "topic": "Tungsten charge-exchange and suspected M1 lines contaminating impurity CXS spectra (C VI 529 nm, Ne X 525 nm, He II) on JET with the ITER-like wall.",
+  "own_question": "Which visible tungsten lines appear in JET CXS spectra, and how do they affect impurity Ti and rotation fits?",
+  "actual_method_and_evidence": "JET opposed-view and vertical CXS spectra (text only, no figures inspected) were used to tabulate W CX lines against a relativistic Rydberg formula, plus 21 suspected passive M1 lines compared with LHD, EBIT and theory. Includes a force-balance argument for W rotation offsets and a simulated Zeeman linewidth correction. It does not quantify the error in fitted carbon or neon Ti.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In tungsten-wall devices, reported carbon-impurity CXS temperatures depend on spectral fitting choices. Overlapping W39+/W46+ CX lines near 529 nm can bias fitted C VI width or position unless they are included in the fit model.",
+      "original_pdf_locator": "p.3 bullets; p.5 sect.2.1; p.6 figs 2-3 captions",
+      "qualification": "Shown for JET ILW, not KSTAR. The bias is described qualitatively, not quantified. It concerns impurity Ti, not main-ion Ti.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "CES-reported impurity temperature is a fit-derived quantity, conditional on modelling assumptions such as Zeeman broadening and nuisance lines, rather than an independent truth.",
+      "original_pdf_locator": "p.7 eqs 5-7, sect.2.2; fig.4 caption p.7",
+      "qualification": "The Zeeman correction is a simulation-based approximation, said to be small for light impurities at modest temperature.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable; this is offline spectral analysis with no timing or latency information.",
+  "validation_if_relevant": "Line identification uses Rydberg predictions, active versus passive views, and literature cross-checks. There is no fit-error validation.",
+  "forbidden_inferences": [
+    "That KSTAR CES carbon spectra contain these W lines",
+    "That any quantified Ti bias was demonstrated",
+    "That this source addresses nowcasting, real-time use, BES or ECEI",
+    "That CES labels are physical truth"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Supports the framing of reported carbon CES Ti as a fit-dependent label in metal-wall plasmas. The citation should be limited to that point.",
+  "bibtex_if_worth_citing": "@article{Thorman2021VisibleSpectroscopy,title={Visible spectroscopy of highly charged tungsten ions with the {JET} charge exchange diagnostic},author={Thorman, Alex and Litherland-Smith, Edward and Menmuir, Sheena and Hawkes, Nick and O'Mullane, Martin and Delabie, Ephrem and Lomanowski, Bart and Fontdecaba, Josep Maria and Scully, Shane and {JET Contributors}},journal={Physica Scripta},volume={96},pages={125631},year={2021},doi={10.1088/1402-4896/ac387b}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "ca2c45df39b7388ee824e35f4415a5ee558ae052b72a22018ce812a515bd6a25",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

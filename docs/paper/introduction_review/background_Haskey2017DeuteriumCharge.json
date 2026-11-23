@@ -1,0 +1,48 @@
+{
+  "key": "Haskey2017DeuteriumCharge",
+  "citation": {
+    "title": "Deuterium charge exchange recombination spectroscopy from the top of the pedestal to the scrape off layer in H-mode plasmas",
+    "authors": "S. R. Haskey, B. A. Grierson, L. Stagner, K. Burrell, C. Chrystal, R. J. Groebner, A. Ashourvand, N. A. Pablant",
+    "year": 2017,
+    "venue": "Journal of Instrumentation (JINST)",
+    "volume": "12",
+    "pages": "C10013",
+    "doi_or_arxiv": "10.1088/1748-0221/12/10/C10013 (from the supplied record's identifier hint; this DOI is not printed in the extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "Edge main-ion (Dα) CER on DIII-D, interpreted with iterative FIDAsim forward modeling, compared with C6+ impurity CER in the H-mode pedestal.",
+  "own_question": "Can the deuterium temperature and rotation in the pedestal be recovered from Dα CER, and how do they differ from carbon-impurity values?",
+  "actual_method_and_evidence": "The 16 edge chords have about 8 mm spacing and are typically run at 2.5 ms; the fastest stated acquisition is 0.2 ms. The thermal Dα feature is isolated with a multi-component spectral fit. Apparent values are corrected by iterating FIDAsim with additive residual updates, typically in fewer than 5 iterations. The authors state this offline correction takes about 4 hours per timeslice. The evidence is one low-power DIII-D discharge (#164436 at 4400 ms). In it, the D+ temperature is lower than C6+ at the separatrix, deuterium edge rotation is about twice the carbon rotation, and the carbon notch near rho 0.97 is absent in D+. No statistical validation is reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reported CES temperature is a diagnostic-specific, model-processed quantity; impurity Ti can differ from main-ion Ti in the pedestal.",
+      "original_pdf_locator": "Abstract; Sec. 4, Fig. 3",
+      "qualification": "Shown for one DIII-D discharge, carbon versus deuterium. This is not KSTAR data and does not establish a general magnitude.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Some CES analyses involve spectral fitting plus forward modeling that is far from real time, which motivates distinguishing report availability from the plasma state.",
+      "original_pdf_locator": "Sec. 3, Eqs. 3.1–3.3; Sec. 4",
+      "qualification": "The roughly 4 h per timeslice applies to the authors' main-ion edge pipeline, not to conventional C6+ CES. It is not a report-arrival measurement.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Acquisition is 2.5 ms (0.2 ms at fastest). Analysis is offline. No latency or arrival times are reported.",
+  "validation_if_relevant": "Iteration convergence is checked against varied starting profiles in one shot. There is no independent ground truth and no held-out data.",
+  "forbidden_inferences": [
+    "Do not treat KSTAR carbon CES reports as main-ion Ti.",
+    "Do not claim the KSTAR CES latency is about 4 h.",
+    "Do not generalize the one-shot discharge differences to all pedestals.",
+    "Do not describe this paper as prior nowcasting or real-time work.",
+    "Do not say our labels are physical truth because forward modeling exists."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "The paper supports the caveat that conventional C6+ CES labels are impurity-specific, model-dependent reports and not bulk-ion truth. It is useful for the theory and labels discussion, not as a methods comparator.",
+  "bibtex_if_worth_citing": "@article{Haskey2017DeuteriumCharge,title={Deuterium charge exchange recombination spectroscopy from the top of the pedestal to the scrape off layer in H-mode plasmas},author={Haskey, S. R. and Grierson, B. A. and Stagner, L. and Burrell, K. H. and Chrystal, C. and Groebner, R. J. and Ashourvan, A. and Pablant, N. A.},journal={Journal of Instrumentation},volume={12},pages={C10013},year={2017},doi={10.1088/1748-0221/12/10/C10013}}",
+  "visible_trailing_response_note": "Note: the DOI comes from the supplied record hint and should be verified before submission. One author name differs between fields. The extracted header reads \"Ashourvana\", which I took as Ashourvan with an affiliation superscript \"a\" attached, and used in the BibTeX. The citation field shows \"Ashourvand\", which is a typo. Please check both against the published author list.",
+  "parsing_note": "Complete JSON object plus visible trailing note retained; original response unchanged.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 8,
+  "supplied_pdf_sha256": "4d51a737244c631dc49f1b53de590c2ffcdde6574ae95fdc0ad06935ad0b7eaa",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

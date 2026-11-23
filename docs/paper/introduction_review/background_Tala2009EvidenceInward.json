@@ -1,0 +1,32 @@
+{
+  "key": "Tala2009EvidenceInward",
+  "citation": {
+    "title": "Evidence of Inward Toroidal Momentum Convection in the JET Tokamak",
+    "authors": "T. Tala, K.-D. Zastrow, J. Ferreira, P. Mantica, V. Naulin, A. G. Peeters, G. Tardini, M. Brix, G. Corrigan, C. Giroud, D. Strintzi",
+    "year": 2009,
+    "venue": "Physical Review Letters",
+    "volume": "102",
+    "pages": "075001",
+    "doi_or_arxiv": "10.1103/PhysRevLett.102.075001"
+  },
+  "relevance": "peripheral",
+  "topic": "Momentum diffusivity and pinch inferred from modulated NBI torque on JET, using CXRS rotation and Ti data.",
+  "own_question": "Can modulated NBI torque separate diffusive and convective toroidal momentum transport? Is an inward pinch present?",
+  "actual_method_and_evidence": "One H-mode pulse had 6.25 Hz NBI modulation. CXRS provided rotation and Ti at 12 radii with 10 ms resolution. Torque came from TRANSP/NUBEAM. JETTO time-dependent modelling fitted Pr and the pinch to the modulation amplitude and phase. An ITB pulse showed Ti leading rotation, with predictive simulations as support. All analysis was offline modelling. There was no forecasting and no BES/ECEI.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not a nowcasting study. The CXRS 10 ms resolution and 12 radial points apply to JET, not to KSTAR CES report timing.",
+  "validation_if_relevant": "Model-fit sensitivity only (20–30% variability in Pr and the pinch). No held-out data.",
+  "forbidden_inferences": [
+    "Rotation-Ti lead/lag does not support predictability of CES Ti from BES/ECEI.",
+    "JET timing does not establish KSTAR CES report latency.",
+    "The paper does not establish the pinch as a mechanism in our data.",
+    "The paper does not show that impurity CXRS Ti equals main-ion Ti."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude, or cite only peripherally as an example of transient-transport analysis of CXRS profiles. Its question, inputs and offline modelling do not address causal current-report nowcasting.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "a00a5d83179e57a9ff56827fda22f94a42bd41ffc36b67a408e6f5abd300a02a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

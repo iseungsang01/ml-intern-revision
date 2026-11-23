@@ -1,0 +1,45 @@
+{
+  "key": "Fenstermacher2025ProgressPedestal",
+  "citation": {
+    "title": "Progress in pedestal and edge physics: Chapter 3 of the special issue: on the path to tokamak burning plasma operation",
+    "authors": "Fenstermacher M.E. et al",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "053001 (124pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/adb1f3"
+  },
+  "relevance": "supporting",
+  "topic": "ITPA review of pedestal structure, ELM physics, ELM control and no/small-ELM regimes",
+  "own_question": "What progress has been made since the 2007 ITER Physics Basis in understanding and predicting the pedestal, ELMs and ELM control?",
+  "actual_method_and_evidence": "Literature review across many devices, with no new data. Section 2.2 lists pedestal diagnostics. These include CER for Ti and rotation, using impurities and in some cases main ions. They also include BES for long-wavelength density fluctuations and ECE imaging for Te fluctuations, the latter on AUG and DIII-D. The review does not treat KSTAR CES nowcasting or estimator design.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Edge Ti and rotation profiles are commonly measured by charge exchange recombination spectroscopy on impurities, and in some devices on main ions. Pedestal fluctuations are probed by BES and ECE imaging.",
+      "original_pdf_locator": "Section 2.2, pp. 9-10",
+      "qualification": "Measurement capabilities only. The review gives no timing or latency for CES report availability and does not claim cross-diagnostic predictability.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Pedestal ion temperature matters for stability: higher Ti/Te strengthens diamagnetic stabilization in peeling-ballooning models, while reduced Ti/Te can be destabilizing.",
+      "original_pdf_locator": "Sections 2.3.3 and 2.6.1, pp. 12, 16-17",
+      "qualification": "This is the review authors' physics interpretation. It does not justify that our nowcasts have control value.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not addressed. The review states no CES cadence and does not discuss real-time use.",
+  "validation_if_relevant": "Not applicable. The review reports EPED pedestal-pressure agreement of about ±20%, but that concerns an unrelated quantity.",
+  "forbidden_inferences": [
+    "That impurity CES Ti equals main-ion Ti; the review itself notes main-ion heat fluxes are about 2-3x neoclassical, versus carbon-based inferences.",
+    "That BES or ECEI signals determine Ti.",
+    "That the review endorses or demonstrates real-time Ti nowcasting.",
+    "That KSTAR CES pedestal-top chords are characterized here."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Authoritative background citation for the role of pedestal Ti, for impurity versus main-ion CER, and for BES/ECEI as pedestal fluctuation diagnostics. It should be cited sparingly.",
+  "bibtex_if_worth_citing": "@article{Fenstermacher2025ProgressPedestal,title={Progress in pedestal and edge physics: Chapter 3 of the special issue: on the path to tokamak burning plasma operation},author={Fenstermacher, M. E. and others},journal={Nuclear Fusion},volume={65},pages={053001},year={2025},doi={10.1088/1741-4326/adb1f3}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 125,
+  "supplied_pdf_sha256": "b8cb12200e952de24d93ff39b8871358ec5ac56724603e28010616415eb3db1e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

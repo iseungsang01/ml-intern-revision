@@ -1,0 +1,32 @@
+{
+  "key": "Allen1992NeuralNetwork",
+  "citation": {
+    "title": "Neural network approach to energy confinement scaling in Tokamaks",
+    "authors": "L. Allen; C. M. Bishop",
+    "year": 1992,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "34",
+    "pages": "1291-1302",
+    "doi_or_arxiv": "unknown (not stated in extracted text)"
+  },
+  "relevance": "peripheral",
+  "topic": "MLP nonlinear regression for global energy confinement time scaling on JET",
+  "own_question": "Whether an MLP predicts tau_E/tau_E0 from dimensionless parameters better than log-linear power-law regression",
+  "actual_method_and_evidence": "Inputs were ln q, ln nu*, ln beta_p and ln(rho_e/a); the output was ln(tau_E/tau_E0). The dataset contained 1,147 auxiliary-heated, limiter or inner-wall deuterium JET observations. The data were randomly split into 574 training and 573 test points. The number of hidden units was selected using the test set, giving L=22. Test RMS was 0.006319 for the network versus 0.007957 for linear regression, about 20% lower. The authors attribute the remaining error partly to noise.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "None; this is a static per-discharge global quantity. There are no time series, CES, ion temperature, BES/ECEI or causal setup.",
+  "validation_if_relevant": "Single random train/test split. The same test set was used for model selection, so there is no untouched evaluation set.",
+  "forbidden_inferences": [
+    "Implies causal nowcasting, CES or Ti relevance",
+    "Shows neural networks generally improve tokamak profile prediction",
+    "The 20% figure transfers to our task",
+    "Is the first ML application in fusion"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This is only historical context for using nonlinear regression instead of fitted power laws in tokamak data. It could be cited in passing, but it does not address our inputs, targets, timing or validation designs.",
+  "bibtex_if_worth_citing": "@article{Allen1992NeuralNetwork,author={Allen, L. and Bishop, C. M.},title={Neural network approach to energy confinement scaling in Tokamaks},journal={Plasma Physics and Controlled Fusion},volume={34},pages={1291--1302},year={1992}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "0530c34763d7d8699bdd4989f0ee9469c5f16a9a89e41f5a1be9cda2af0c25c7",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

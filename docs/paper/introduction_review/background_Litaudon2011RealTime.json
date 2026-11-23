@@ -1,0 +1,39 @@
+{
+  "key": "Litaudon2011RealTime",
+  "citation": {
+    "title": "Real-Time Control of Advanced Scenarios for Steady-State Tokamak Operation",
+    "authors": "X. Litaudon",
+    "year": 2011,
+    "venue": "Fusion Science and Technology",
+    "volume": "59(3)",
+    "pages": "469-485",
+    "doi_or_arxiv": "10.13182/FST11-A11690"
+  },
+  "relevance": "peripheral",
+  "topic": "Lecture review of real-time kinetic/magnetic profile control (SISO and MIMO), burn-control mimicking, and core-edge dual control in DIII-D, JET, JT-60U, Tore Supra and ASDEX Upgrade.",
+  "own_question": "How can steady-state advanced tokamak scenarios be controlled in real time, and which control issues remain open?",
+  "actual_method_and_evidence": "Narrative review of prior experiments and modeling, reproducing figures from other papers. It contains no new data and no estimator benchmarking. It mentions JT-60U real-time ion temperature gradient control using fast charge-exchange recombination spectroscopy, attributed to cited work. It does not cover KSTAR, BES/ECEI-based estimation of CES reports, or nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reviews describe real-time profile control as depending on real-time measurements of local kinetic parameters, including CXRS-based ion temperature gradient on JT-60U.",
+      "original_pdf_locator": "p.474 (PDF p.7), Sec. III",
+      "qualification": "This is a review statement citing Yoshida 2009. It shows that real-time sensing is a control input. It does not show that CES latency limits control or that nowcasting would help.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "No CES report timing, latency or arrival-time information is given.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "That CES latency is a demonstrated bottleneck",
+    "That our nowcast enables control or deployment",
+    "Generalizing to all prior control work",
+    "Attributing the JT-60U results to this lecture rather than the cited primary paper"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most optional generic motivation for real-time profile sensing in control. The primary sources, such as Yoshida 2009, would be better citations; exclusion is preferred.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "34136bc92ecf1f2d3077e00f454bc34b13ee0d6aeeefd2b5d4b3646d4ce9156f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

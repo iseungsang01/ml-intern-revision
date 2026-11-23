@@ -1,0 +1,33 @@
+{
+  "key": "Kim2026RealTimeFeedback",
+  "citation": {
+    "title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR",
+    "authors": "Minseok Kim, Young-Ho Lee, SangKyeun Kim, et al., Egemen Kolemen",
+    "year": 2026,
+    "venue": "arXiv preprint (physics.plasm-ph)",
+    "volume": "unknown",
+    "pages": "13",
+    "doi_or_arxiv": "arXiv:2608.19259v2"
+  },
+  "relevance": "peripheral",
+  "topic": "Real-time PI control of ELM frequency on KSTAR, using a divertor D2 gas puff as actuator under tungsten lower-divertor conditions.",
+  "own_question": "Can ELM frequency be regulated in real time with divertor gas, and how does this regulation affect core and edge radiation, Ti, and betaN?",
+  "actual_method_and_evidence": "ELM frequency is detected in the PCS from 20 kHz D-alpha data at a 500 us cycle. Detection uses a low-pass filter and amplitude and gradient thresholds. A first-order-plus-dead-time (FOPDT) plant model was fitted to a single gas-termination shot. The PI controller was tuned with MATLAB pidtune. The controller was applied in one controlled shot and compared with one reference shot. Tracking error was reported as about 13% mean absolute percentage error. CES Ti appears only as an offline outcome, fitted with Gaussian process regression, at psiN 0.2 and 0.8. There is no Ti nowcasting, no BES/ECEI input, and no estimator validation.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "CES Ti is used only as an offline diagnostic outcome. It is not a real-time input or target. Report latency is not discussed.",
+  "validation_if_relevant": "The comparison involves one controlled shot against one reference shot. There is no held-out data split.",
+  "forbidden_inferences": [
+    "Do not cite this paper as CES Ti nowcasting or real-time Ti availability.",
+    "Do not infer CES report timing or latency from this paper.",
+    "Do not treat its Ti trends as validation of our labels.",
+    "Do not generalize its single-shot results.",
+    "Do not cite it as evidence that BES/ECEI carry information about Ti."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper is at most an optional example of KSTAR real-time PCS control using fast spectroscopic signals. Its topic, target, and inputs differ from our CES nowcasting framing, so it can be omitted.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "cf1a5738c9a100bb85dc3f549868c038f31123131bbc76af1822a8083269e31a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,45 @@
+{
+  "key": "Viezzer2020Dynamics",
+  "citation": {
+    "title": "Dynamics of the pedestal transport during edge localized mode cycles at ASDEX Upgrade",
+    "authors": "Viezzer E, Cavedon M, Cano-Megias P, Fable E, Wolfrum E, Cruz-Zabala D J, David P, Dux R, Fischer R, Harrer G F, Laggner F M, McDermott R M, Plank U, Pütterich T, Willensdorfer M and the ASDEX Upgrade Team",
+    "year": 2020,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "62",
+    "pages": "024009",
+    "doi_or_arxiv": "10.1088/1361-6587/ab5b1d"
+  },
+  "relevance": "supporting",
+  "topic": "ELM-resolved pedestal ion/electron energy and momentum transport at ASDEX Upgrade using fast edge CXRS impurity measurements plus ASTRA power-balance and momentum modeling",
+  "own_question": "Why does the electron temperature gradient recover more slowly than the ion temperature gradient after type-I ELMs, and can edge toroidal rotation dynamics be modeled across the ELM cycle?",
+  "actual_method_and_evidence": "ELM-synchronized, binned impurity CXRS (fast system 50-100 μs, binned to 300 μs; a second discharge uses a 2.3 ms system) and electron profiles were used. Offline ASTRA time-dependent power balance was compared with NEOART neoclassical transport. Momentum modeling used TRANSP inputs, an ad hoc Coriolis pinch and an artificial ELM diffusivity increase. The authors report that ion gradients recover in about 3-4 ms and the electron temperature gradient in about 7-8 ms. These results come from AUG discharges, not KSTAR.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "At AUG, ELM-synchronized fast CXRS showed the impurity-measured ion temperature gradient recovering on a different (faster) timescale than the electron temperature gradient after type-I ELMs.",
+      "original_pdf_locator": "Section 2, p.2-3; Figure 1",
+      "qualification": "The source infers ion temperature from impurity temperature via thermal equilibration. The measurements are ELM-binned ensembles from AUG, not real-time.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors interpret near-neoclassical ion heat diffusivity in the steep-gradient region and anomalous electron transport. They attribute the delayed electron gradient recovery to ELM depletion and to core heat flux propagating inward.",
+      "original_pdf_locator": "Section 3, p.3-6; Figures 2-7",
+      "qualification": "This is the authors' interpretation based on offline modeling with assumed constant radiation and a scanned neutral source.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Diagnostic time resolutions are 50 μs to 5 ms. The study involves no nowcasting, no CES report-arrival analysis and no BES/ECEI predictors.",
+  "validation_if_relevant": "The study compares models with measured profiles within stated uncertainties. It has no held-out prediction validation.",
+  "forbidden_inferences": [
+    "That pedestal-top carbon CES temperature in KSTAR follows AUG recovery times.",
+    "That the paper supports causal estimation or BES/ECEI predictive value.",
+    "That impurity temperature equals main-ion temperature in our data.",
+    "That mechanisms identified in the paper explain our estimator results."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "The paper is useful background showing that impurity-temperature dynamics within ELM cycles are fast and differ from electron channels. This motivates current-report nowcasting at sub-report timescales. It is a single-device, offline analysis.",
+  "bibtex_if_worth_citing": "@article{Viezzer2020Dynamics,title={Dynamics of the pedestal transport during edge localized mode cycles at ASDEX Upgrade},author={Viezzer, E. and Cavedon, M. and Cano-Megias, P. and others},journal={Plasma Phys. Control. Fusion},volume={62},pages={024009},year={2020},doi={10.1088/1361-6587/ab5b1d}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "ce2fd592689a15a0f34a8dfcb95e362afc9891f7e1487de8c755614c9facd410",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

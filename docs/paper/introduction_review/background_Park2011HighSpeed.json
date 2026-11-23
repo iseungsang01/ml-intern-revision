@@ -1,0 +1,39 @@
+{
+  "key": "Park2011HighSpeed",
+  "citation": {
+    "title": "High-speed data handling using reflective memory thread for tokamak plasma control",
+    "authors": "S. Y. Park, S. H. Hahn, W. C. Kim, B. G. Penaflor, R. D. Johnson, D. A. Piglowski, M. L. Walker",
+    "year": 2011,
+    "venue": "Proceedings of ICALEPCS2011, Grenoble, France (MOPKS021)",
+    "volume": "unknown",
+    "pages": "203-206",
+    "doi_or_arxiv": "unknown (no DOI in source text)"
+  },
+  "relevance": "peripheral",
+  "topic": "KSTAR PCS real-time reflective-memory (RFM) thread for exchanging PF coil commands and measurements with magnet power supplies",
+  "own_question": "How can a dedicated RFM thread move roughly 1 kB of per-cycle I/O within a 50 us control cycle for PF coil feedback?",
+  "actual_method_and_evidence": "This is an engineering description of the system. The thread copies RFM data into a shared heap by DMA, syncs to the digitizer time counter, and uses a 5 ms timeout and a watchdog. The conclusion states that all RFM data transferred within 50 us, but the supplied text gives no timing distributions. No CES, BES, ECEI, ion temperature or nowcasting content appears.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR control, a real-time cycle uses the preceding cycle's measured coil current, which illustrates one-cycle-lagged inputs in feedback.",
+      "original_pdf_locator": "p.2, Operation of the RFM Thread; Fig. 2 description",
+      "qualification": "This concerns PF coil current in 2011. It is not about diagnostics or CES report latency.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The 50 us cycle and 5 ms timeout are PF/MPS control facts. They are not CES or BES/ECEI timing and must not be used for our 10 ms grid.",
+  "validation_if_relevant": "None.",
+  "forbidden_inferences": [
+    "Do not treat this as evidence on CES report arrival times or latency.",
+    "Do not claim the KSTAR PCS uses impurity temperature or BES/ECEI data.",
+    "Do not cite it as evidence of real-time deployability of our estimator.",
+    "Do not transfer the 2011 hardware timings to KSTAR 2022."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "It is generally off-topic. Cite it only if the intro needs a pointer to how KSTAR real-time control infrastructure handles data. Otherwise exclude it.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "528152daa64f542b091c6411f3cf6a80477a9a1b41e541ef10340313d4879f70",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

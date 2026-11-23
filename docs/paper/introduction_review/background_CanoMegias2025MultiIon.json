@@ -1,0 +1,46 @@
+{
+  "key": "CanoMegias2025MultiIon",
+  "citation": {
+    "title": "Investigation of multi-ion heat and neoclassical transport using new edge main ion measurements at ASDEX Upgrade",
+    "authors": "P. Cano-Megias, E. Viezzer, R.M. McDermott, C. Angioni, E. Fable, et al.",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "096027 (22pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/adf3cb"
+  },
+  "relevance": "supporting",
+  "topic": "Edge main-ion (D) versus impurity (B5+) CXRS temperature and rotation at AUG; offline multi-ion power balance, TGLF/GKW and NEOART comparison.",
+  "own_question": "Do main-ion and impurity edge temperatures and flows differ under varied ECRH/NBI heating, and what do the differences imply for multi-ion heat transport and neoclassical theory?",
+  "actual_method_and_evidence": "Four AUG H-mode discharges were analysed. Main-ion CXRS spectra were ELM-synchronised and interpreted with a FIDASIM forward model, then evaluated by offline ASTRA power balance. At low ECRH power, D and B5+ temperatures agree within uncertainties. At high ECRH power, the deuterium temperature exceeds the impurity temperature at the pedestal top by about 100 eV. After extended corrections this falls to about 50-60 eV, which the authors say could lie within accumulated uncertainty. In the steep-gradient region the two ion temperatures agree. All processing is offline; nothing concerns KSTAR, BES/ECEI or nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Impurity CXRS temperature is a conventional ion-temperature proxy, but at AUG a main-ion/impurity temperature separation was reported at the pedestal top under strong electron heating.",
+      "original_pdf_locator": "Sections 3.2-3.3, Appendix; Fig. 6, Fig. A1",
+      "qualification": "Applies to one AUG campaign with a B5+ impurity. After extended corrections the reported difference is 50-60 eV, which the authors say may be within accumulated uncertainty. It supports calling CES labels conventional rather than physical truth; it says nothing about KSTAR carbon.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge impurity CXRS analysis requires ELM-synchronised background subtraction and forward-model corrections, so reported temperatures are processed products.",
+      "original_pdf_locator": "Section 2.2.2; Fig. 2, Fig. 4",
+      "qualification": "Applies to the AUG main-ion system; it describes offline spectral processing, not report latency or arrival timing.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline analysis of a pre-ELM window (-4 to -2 ms) at 1.5 ms resolution. No report arrival times are given, and nothing addresses real-time use.",
+  "validation_if_relevant": "A consistency check under low-ECRH conditions plus comparison with NEOART. There is no held-out data split.",
+  "forbidden_inferences": [
+    "Carbon CES at KSTAR is biased relative to main-ion temperature",
+    "This paper motivates or validates nowcasting",
+    "BES/ECEI carry ion-temperature information",
+    "The TD>Tz difference is established physics",
+    "Impurity CXRS measurements are generally unreliable"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a brief, qualified background citation. It is a source-grounded caveat that impurity CES temperature is a convention-dependent label and not equivalent to the main-ion temperature in every regime.",
+  "bibtex_if_worth_citing": "@article{CanoMegias2025MultiIon,author={Cano-Megias, P. and others},title={Investigation of multi-ion heat and neoclassical transport using new edge main ion measurements at ASDEX Upgrade},journal={Nucl. Fusion},volume={65},pages={096027},year={2025},doi={10.1088/1741-4326/adf3cb}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 23,
+  "supplied_pdf_sha256": "7dcbc1f2124cbfff75fa68d151aa051ea130f60a5b49d0578a609157318da1c6",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

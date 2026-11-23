@@ -1,0 +1,38 @@
+{
+  "key": "Scoville2007SimultaneousFeedback",
+  "citation": {
+    "title": "Simultaneous feedback control of plasma rotation and stored energy on the DIII-D tokamak",
+    "authors": "J.T. Scoville, D.A. Humphreys, J.R. Ferron, P. Gohil",
+    "year": 2007,
+    "venue": "Fusion Engineering and Design",
+    "volume": "82",
+    "pages": "1045-1050",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2007.04.031"
+  },
+  "relevance": "peripheral",
+  "topic": "DIII-D real-time PCS control of stored energy and impurity-ion rotation using co/counter neutral beam mix",
+  "own_question": "Can a simple linear energy/momentum balance model support PID control of stored energy and rotation via co/counter beams?",
+  "actual_method_and_evidence": "Second-order source-sink model with empirical loss factors fE and fm. The authors report these factors are near 1 in steady phases of one discharge (124720). The model is driven with measured beam powers and compared to measurements in text-only figures. A delayed state-space simulation with orthogonalized PID control is followed by an experimental demonstration in discharge 126056. CER impurity rotation is used, but not temperature. There is no nowcasting, no BES/ECEI, and no held-out validation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "CER-derived impurity rotation has been used as a feedback-controlled quantity in tokamak plasma control, with computation/filter delays modeled.",
+      "original_pdf_locator": "p.2-3 Sec.3; p.4-5 Sec.4-5",
+      "qualification": "The quantity is rotation, not Ti. The 10 ms delay is the authors' assumed simulation delay, not measured report arrival times. DIII-D, not KSTAR.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Rotation delay of about 10 ms is assumed in simulation for filter plus CER analysis. Actual CES/CER report latency is not measured.",
+  "validation_if_relevant": "Single-discharge consistency check plus simulation. No train/test split.",
+  "forbidden_inferences": [
+    "Do not cite as evidence of CES temperature nowcasting or Ti latency",
+    "Do not cite 10 ms as KSTAR timing",
+    "Do not claim the model was validated across campaigns"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional context showing that CER-based quantities can enter real-time control. It is off-target for estimating current impurity-temperature reports; exclude unless an applications sentence is retained.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "4fdc5c03a6c2f573921149addb42d352f919e0e95bf44ab02753eecc88f16bee",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

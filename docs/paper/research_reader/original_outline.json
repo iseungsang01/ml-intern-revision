@@ -1,0 +1,33 @@
+{
+  "source_filename": "original_thesis_v1.hwp",
+  "source_name_redacted": true,
+  "source_sha256": "0dd6edec02469de03c093f0942635d5b8922ca3f775e60aae61018cee3b220d7",
+  "source_format": "HWP5 locally parsed paragraph records",
+  "private_body_committed": false,
+  "headings": [
+    "Ⅰ. 서  론",
+    "a. 구체적인 연구 계획과 목표",
+    "b. 왜 이 연구를 해야 하는가",
+    "1. 기존 진단의 한계",
+    "2. 하드웨어적 제약: CES 시간 해상도의 한계",
+    "c. 연구의 결과물을 통해 기대되는 효과",
+    "d. 다른 연구와의 차별점",
+    "1. 단일 진단기가 아닌 고차원 Multimodal 데이터의 융합",
+    "2. UFCES를 활용한 Ground-Truth 기반의 검증 체계",
+    "Ⅱ. 재료 및 방법",
+    "1. Data set",
+    "가.",
+    "나. Data set의 수집 기준",
+    "a. 시나리오 혹은 플라즈마 상태에 따른 분류 (L/H mode 혹은 I-mode FIRE mode 등과 같은 대체 시나리오)",
+    "b. discharge 데이터는 시계열 데이터로 어떤 구간을 사용할지 결정 필요",
+    "c. 실험 년도 및 KSTAR 장치 상태에 따른 discharge 분류",
+    "2. 장치 설계",
+    "가. Neural Network",
+    "a. 어떤 NN 구조를 채용할 것인가?",
+    "b. 기존 구조의 이점 혹은 개조 이유?",
+    "Ⅲ. 결과 및 고찰",
+    "1. 결과",
+    "Ⅳ. 결론",
+    "Ⅴ. REFERENCES"
+  ]
+}

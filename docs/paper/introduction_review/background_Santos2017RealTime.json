@@ -1,0 +1,39 @@
+{
+  "key": "Santos2017RealTime",
+  "citation": {
+    "title": "Real-time reflectometry – An ASDEX Upgrade DCS plugin App for plasma position and shape feedback control",
+    "authors": "J.M. Santos, L. Guimarães, C. Rapson, G. Santos, A. Silva, W. Treutterer, M. Zilker, ASDEX Upgrade Team, EUROfusion MST1 Team",
+    "year": 2017,
+    "venue": "Fusion Engineering and Design",
+    "volume": "123",
+    "pages": "593-596",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2017.03.016"
+  },
+  "relevance": "peripheral",
+  "topic": "Real-time O-mode reflectometry density profiles and gaps integrated into the AUG discharge control system for position control.",
+  "own_question": "Can a pipelined real-time reflectometry system deliver HFS/LFS gap estimates to the DCS fast enough to control the plasma geometric radius?",
+  "actual_method_and_evidence": "The system uses a three-stage pipeline for acquisition, density-profile calculation and gap estimation with DCS delivery. The authors report a total latency of about 450 µs or less in benchmarking, and under 350 µs in four 2016 control discharges at a 1 ms delivery cycle. Reflectometry-based Rgeo stayed within about ±0.5 cm of the target trajectory, with cm-level offsets relative to the magnetic reconstruction. This is an electron-density diagnostic on AUG. It involves no CES, no ion temperature and no KSTAR data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Diagnostic-derived quantities have been delivered to a tokamak control system in real time on a millisecond cycle; one example is reflectometry-based position control at AUG.",
+      "original_pdf_locator": "p.3 Sec.3; p.4 Sec.4",
+      "qualification": "This example uses electron density, measured on a different machine. It does not cover ion temperature or nowcasting. The latency figures are the authors' own measurements and should not be transferred to our 10 ms computation.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Gap estimates from the current burst are delivered at 1 ms. This is direct measurement processing, not estimation of a delayed report.",
+  "validation_if_relevant": "Accuracy was assessed by comparison with the magnetic reconstruction in four discharges. No held-out validation was performed.",
+  "forbidden_inferences": [
+    "CES or ion-temperature real-time capability",
+    "KSTAR applicability",
+    "Our system's latency",
+    "Superiority of any estimator",
+    "All prior real-time work is electron-only"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional single citation to illustrate real-time integration of a diagnostic with plant control. It is not needed for the core CES nowcasting framing.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "fc94ab9eb0a91d42426d8151e30a11f59528ea7b5c6aba897a1a2cc11c0e749b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

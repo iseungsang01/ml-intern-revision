@@ -1,0 +1,79 @@
+{
+  "key": "Lampert2015CombinedHydrogen",
+  "citation": {
+    "title": "Combined hydrogen and lithium beam emission spectroscopy observation system for Korea Superconducting Tokamak Advanced Research",
+    "authors": "M. Lampert; G. Anda; A. Czopf; G. Erdei; D. Guszejnov; Á. Kovácsik; G. I. Pokol; D. Réfy; Y. U. Nam; S. Zoletnik",
+    "year": 2015,
+    "venue": "Review of Scientific Instruments",
+    "volume": "86",
+    "pages": "073501",
+    "doi_or_arxiv": "10.1063/1.4923251 (this paper's own DOI, shown on PDF p1 and in the p2 abstract; the DOIs in the reference list belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-11 (p1 is the publisher cover; article pages are 073501-1 to -10)",
+    "full_pdf_supplied": true,
+    "limitations": "Describes the 2014-era system and data from shots 9212, 11404 and 11443. The 2022 channel layout, calibration and filter settings for our chord are not documented here. Figures were assessed from their captions and text."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "KSTAR BES provides a fast multichannel 2D view with adjustable geometry",
+      "verdict": "qualify",
+      "source_finding": "The fast detector is a 4x16 APD camera viewing a 4 cm x 16 cm region. Preamplifier bandwidth is DC-500 kHz and sampling is 2 MHz. A motorized mirror moves the view over r/a 0.15-1, and a rotation stage aligns the long axis radially or poloidally. Modeled HBES radial resolution is 1-3 cm.",
+      "locator": "p2 abstract; p4 Sec III B and Table I; p5 Sec III C; p3 Sec II (RENATE modeling)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "The KSTAR BES system images beam emission onto a 4x16 avalanche-photodiode array with sub-MHz bandwidth, and its view can be repositioned radially and poloidally [Lampert2015].",
+      "qualification": "This is a hardware description. Our inputs are 10 ms voltage snapshots, so full-rate turbulence is not used. The 2022 geometry must come from campaign records."
+    },
+    {
+      "proposed_claim": "BES signal reflects plasma density",
+      "verdict": "qualify",
+      "source_finding": "The authors state that beam light depends primarily on density and to a lesser extent on electron temperature and impurities. Relatively calibrated signals approximately reflect density changes only when beam attenuation across the view is small. Calibration uses NBI injection into gas after a disruption. Fig 9 shows edge fluctuation levels above the noise level for one shot.",
+      "locator": "p2 Sec I; p6-7 Sec III G; p8 Sec IV C and Fig 9",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "BES measures light from a neutral beam, and that light is related mainly to local electron density [Lampert2015].",
+      "qualification": "Our raw voltages are not calibrated n_e. The paper makes no claim about carbon ion temperature."
+    },
+    {
+      "proposed_claim": "HBES depends on the heating beam",
+      "verdict": "supported",
+      "source_finding": "HBES uses Doppler-shifted D-alpha light from the NBI. Background is measured during short NBI-off intervals, with SBR about 20 and SNR up to 80 in shot 11443. HBES does not work in Ohmic plasmas. NBI voltage ripple produces a 5 kHz peak. The beam cross-section and spatial resolution change with the number of sources. Calibration must be repeated for each beam energy and optics setting.",
+      "locator": "p2 Sec I; p3 Sec II; p7 Sec IV A and Fig 6; p8 Sec IV B-C and Fig 8; p7 Sec III G; p10 Sec IV D",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Hydrogen BES requires neutral-beam injection, and its signal level, background and resolution vary with the beam configuration [Lampert2015].",
+      "qualification": "SNR and SBR values are single-shot 2014 results and should not be presented as general for 2022."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (instrument paper)",
+    "outputs": "APD voltages sampled at 2 MHz; CMOS frames at 50-200 Hz",
+    "causal_or_offline": "not_applicable; all analyses shown are offline",
+    "source_diagnostic_as_input": "BES is one of our input diagnostics; CES is not discussed",
+    "reported_vs_physical_truth": "Measured beam-emission light, not a temperature label"
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "2022 calibration, chord mapping, NBI source configuration"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Acquisition can run through a discharge of up to 100 s, timed by a 1 MHz reference clock and a KSTAR trigger",
+    "what_not_established": "Real-time processing, latency, or any 10 ms computation",
+    "locator": "p4 Sec III B"
+  },
+  "forbidden_inferences": [
+    "BES voltage equals calibrated n_e",
+    "2015 geometry or SNR applies to our 2022 chord",
+    "BES physically determines carbon T_i",
+    "Real-time BES pipeline exists",
+    "Our 10 ms inputs retain 500 kHz information",
+    "The paper establishes NN-CES or nowcasting relevance"
+  ],
+  "competing_or_complementary": "Complementary instrument reference only. It does not estimate CES temperature and is not a baseline.",
+  "bibtex": "@article{Lampert2015CombinedHydrogen,author={Lampert, M. and Anda, G. and Czopf, A. and Erdei, G. and Guszejnov, D. and Kov{\\'a}csik, {\\'A}. and Pokol, G. I. and R{\\'e}fy, D. and Nam, Y. U. and Zoletnik, S.},title={Combined hydrogen and lithium beam emission spectroscopy observation system for {Korea} {Superconducting} {Tokamak} {Advanced} {Research}},journal={Rev. Sci. Instrum.},volume={86},pages={073501},year={2015},doi={10.1063/1.4923251}}",
+  "followup_sources_if_material": [
+    "KSTAR 2022 BES configuration and calibration documentation (unknown; verify with provider)",
+    "Pusztai et al. 2009, Rev. Sci. Instrum. 80, 083502 (RENATE; cited as ref 14)"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "key": "Pastore2026ApplicationsNovel",
+  "citation": {
+    "title": "Applications of a novel model-based real-time observer for electron density profile control experiments in TCV",
+    "authors": "F. Pastore, O. Sauter, F. Felici, D. Kropackova, et al.",
+    "year": 2026,
+    "venue": "Nuclear Fusion (accepted manuscript, in press)",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "10.1088/1741-4326/aeab66 (this paper's own DOI, from the cover page; reference-list DOIs belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-38 (cover plus manuscript pp.1-37, with Appendices A-C and figures)",
+    "full_pdf_supplied": true,
+    "limitations": "Accepted manuscript, not the Version of Record. The arXiv preprint was not supplied."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "A multi-rate observer was run in real time in closed-loop control on TCV.",
+      "verdict": "supported",
+      "source_finding": "An EKF fusing FIR every 1 ms with RT-TS at nominally 60 Hz runs in the TCV PCS (SCD). It feeds PI gas controllers via SAMONE. Experiments controlled line-averaged density inside the LCFS, central density, and edge-density fraction together with beta.",
+      "locator": "PDF p.8 Sec.3 Fig.4; p.11-13 Sec.4 Figs.6-8; p.14-16 Sec.5.1-5.2 Figs.9,12; p.24-26 Sec.6 Figs.20,22",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Model-based multi-rate observers that fuse fast line-integrated interferometry with slower, spatially resolved Thomson scattering have supplied electron-density estimates to feedback controllers inside the TCV control system [Pastore2026].",
+      "qualification": "Electron density only, on TCV. Agreement is judged against offline TS, and TS is also an observer input. Evidence is per-shot examples, not aggregate statistics."
+    },
+    {
+      "proposed_claim": "The observer detects and corrects diagnostic faults.",
+      "verdict": "qualify",
+      "source_finding": "Innovation residuals drive an additive FIR offset correction, using the TS-updated state; this addresses SOL pickup and fringe jumps. Edge FIR chords are down-weighted. Fringe-jumped FIR chords #8 and #9, which were not used in the EKF, are reconstructed synthetically. A model-convergence failure produced a transient underestimate that recovered at the next TS sample.",
+      "locator": "PDF p.6 Sec.2.1 Eqs.(5)-(6); p.8 Sec.3 footnote 3; p.25 Fig.21; p.24-25 Sec.6.2 Fig.22d; p.28 App.A Fig.A.23",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In such observers, innovation residuals and a forward diagnostic model have been used to correct interferometer offsets and to reconstruct channels corrupted by fringe jumps in example discharges [Pastore2026].",
+      "qualification": "Demonstrated in illustrative shots only. Fault-handling accuracy is not quantified, and the estimator itself can fail (non-convergence)."
+    },
+    {
+      "proposed_claim": "Differences between the journal and preprint versions.",
+      "verdict": "unsupported",
+      "source_finding": "Only the journal accepted manuscript was read.",
+      "locator": "n/a",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "none",
+      "qualification": "No version comparison is possible from the supplied material."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "FIR line integrals (digitized at 200 kHz, filtered to 10 kHz, used every 1 ms); RT-TS ne profiles (60 Hz nominal, 40 Hz in shot #82876); RT-LIUQE equilibrium at 1 kHz; gas-valve readback; ML-derived L/H boolean",
+    "outputs": "ne(rho) spline state; derived NEL_LCFS, ne(0), ne(0.7) and synthetic FIR signals; TS-derived nu/D and FIR offsets held by zero-order hold between TS samples",
+    "causal_or_offline": "Causal online filtering. Profile comparisons, the fixed-vs-adaptive nu/D study (Fig.15) and the boundary-condition study (App.B) are offline reruns on stored RT data.",
+    "source_diagnostic_as_input": "Yes. RT-TS both constrains the estimate and serves, as offline TS, as the comparison reference.",
+    "reported_vs_physical_truth": "Offline TS fits are treated as the reference. They are not independent truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable (no train/test split). D profile and covariances are heuristically tuned and fixed across shots. Gains were tuned using stored RT signals from earlier shots.",
+    "temporal_order": "Online causal filter; offline reanalysis afterwards",
+    "independent_truth": "None",
+    "unknowns": "Aggregate error metrics, total shot count, TS arrival latency, uncertainty intervals"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Authors state the profile output is computed in under 1 ms, with a 1 ms update cycle. Closed-loop operation is shown in several discharges.",
+    "what_not_established": "Latency distributions, measured TS report arrival times, fault-detection statistics, generalization beyond TCV",
+    "locator": "PDF p.8 Sec.3; p.22-23 Sec.6"
+  },
+  "forbidden_inferences": [
+    "Says nothing about CES or carbon ion temperature, KSTAR, or BES/ECEI inputs",
+    "Does not nowcast a pending diagnostic report",
+    "The authors' 'first' and 'novel' wording is their own claim and must not be repeated as fact",
+    "Do not attribute its timing figures to our study",
+    "GENE pumpout analysis concerns TCV density transport and does not transfer as a mechanism to our setting",
+    "Do not imply that prior observers are noncausal or electrons-only"
+  ],
+  "competing_or_complementary": "Complementary. It fills the gaps between slow local reports using a physics model plus a fast integral diagnostic, holding the TS-derived quantities between samples; this conceptually parallels our hold and nowcast comparisons. Its targets and inputs differ from ours.",
+  "bibtex": "@article{Pastore2026ApplicationsNovel,title={Applications of a novel model-based real-time observer for electron density profile control experiments in {TCV}},author={Pastore, F. and Sauter, O. and Felici, F. and Kropackova, D. and others},journal={Nuclear Fusion},year={2026},note={Accepted manuscript, in press},doi={10.1088/1741-4326/aeab66}}",
+  "followup_sources_if_material": [
+    "Pastore et al. 2023, Fusion Eng. Des. 192, 113615, doi:10.1016/j.fusengdes.2023.113615 (original multi-rate EKF)",
+    "Kropackova et al. 2025, Fusion Eng. Des. 219, 115196 (edge boundary condition)",
+    "Van Mulders et al. 2025, Nucl. Fusion 65, 066006 (EKF parameter and disturbance estimation)"
+  ]
+}

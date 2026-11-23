@@ -1,0 +1,31 @@
+{
+  "key": "Kwak2025EstimationNeutral",
+  "citation": {
+    "title": "Estimation of neutral beam injector power transferred to KSTAR plasmas",
+    "authors": "Jong-Gu Kwak; J.H. Jeong; S.C. Hong",
+    "year": 2025,
+    "venue": "Nuclear Engineering and Technology",
+    "volume": "57",
+    "pages": "103188",
+    "doi_or_arxiv": "10.1016/j.net.2024.08.057"
+  },
+  "relevance": "peripheral",
+  "topic": "Post-shot calorimetric rechecking of KSTAR NBI neutral power, including duct scraper loss, stray PF field effects and shared-beamline pressure effects",
+  "own_question": "How accurately does the NBI power recorded from beam current reflect the neutral power delivered to KSTAR plasma in long-pulse and modulation operation?",
+  "actual_method_and_evidence": "Water-flow calorimetry on beamline components after long pulses. The calorimetric recheck is described as acceptable when coolant reaches steady state in pulses longer than 20 s. Shot examples: #28679 and #11664 show neutral power down about 8.8% by the end of the pulse, while ion beam power stays roughly constant. The authors attribute this to stray PF fields. Duct scraper loss is reported as under about 5% of neutral power. Beam-box pressure rises after beam switching and persists for about 1 s. Neutron emission and Te are used to categorize performance-degradation cases. The evidence is offline only, from a few shots, with no uncertainty quantification. There is no CES, BES/ECEI, or nowcasting content.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant; offline post-shot calorimetry, not online inputs.",
+  "validation_if_relevant": "Not applicable; illustrative shots only.",
+  "forbidden_inferences": [
+    "Do not cite as evidence about CES impurity Ti, BES/ECEI, or nowcasting.",
+    "Do not claim NBI power errors cause CES label errors in our dataset.",
+    "Do not treat the PF-field attribution as demonstrated physics; it is the authors' interpretation.",
+    "Do not generalize to KSTAR 2022 data or our chord."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude by default. It is at most an optional context citation that registered NBI heating power can deviate during long pulses, and only if our paper discusses heating-power covariates, which it does not use.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "321d3ab8733b6eb9706609400eeed31e07c828c86dc3fbce1b404daea0c7335b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

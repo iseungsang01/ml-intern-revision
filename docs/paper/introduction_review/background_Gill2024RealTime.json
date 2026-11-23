@@ -1,0 +1,46 @@
+{
+  "key": "Gill2024RealTime",
+  "citation": {
+    "title": "Real-time confinement regime detection in fusion plasmas with convolutional neural networks and high-bandwidth edge fluctuation measurements",
+    "authors": "K Gill, D Smith, S Joung, B Geiger, G McKee, J Zimmerman, R Coffee, A Jalalvand, E Kolemen",
+    "year": 2024,
+    "venue": "Machine Learning: Science and Technology",
+    "volume": "5",
+    "pages": "035012",
+    "doi_or_arxiv": "10.1088/2632-2153/ad605e"
+  },
+  "relevance": "supporting",
+  "topic": "CNN classification of DIII-D confinement regimes (L, H, QH, wide-pedestal QH) from 2D BES edge density-fluctuation windows",
+  "own_question": "Can short (~1 ms) 1 MHz BES snippets alone identify the global confinement regime, with real-time implementation intended?",
+  "actual_method_and_evidence": "The study used 330 DIII-D discharges from 2012–2023 with a 6x8 BES layout. Each input window was 1024 µs, bandpass filtered at 2.5–150 kHz, and converted to log-FFT features. A shallow 3D CNN with an MLP head produced a softmax over four classes. Labels came from D-alpha, H98y2, Mirnov EHO, Thomson pedestal widths and the logbook. The discharge-level split was stratified 72.5/15/12.5. On 44 test discharges the reported average F1 was 0.94. Ablations varied BES rows, columns and window length, and the edge columns mattered most. Inference was offline only. FPGA deployment is described as future work, and the stated ~100 µs latency is a goal, not a measurement.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "BES fluctuation data have been used with a CNN to classify DIII-D confinement regimes offline, motivated by eventual real-time control.",
+      "original_pdf_locator": "Abstract; Sections 3–4; Table 2; Conclusion",
+      "qualification": "The target is a regime class, not an ion temperature. The paper uses full-rate DIII-D BES rather than a 10 ms KSTAR grid, and no deployment or latency was measured.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge-localized BES channels carried more classification information than inboard channels in that study.",
+      "original_pdf_locator": "Section 4.1; Table 3; Fig. 11",
+      "qualification": "This is an ablation in a single study. The authors' physics explanation is their interpretation, not a demonstrated mechanism.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Input is a past 1024 µs BES window at 1 MHz. The target is the regime label at the current time (classification, not nowcasting of a delayed report). There are no CES or ECEI inputs or targets.",
+  "validation_if_relevant": "A single stratified split by discharge; validation F1 was used for checkpoint selection. No untouched campaign or cross-device test is reported.",
+  "forbidden_inferences": [
+    "BES predicts impurity or main-ion Ti",
+    "the model was deployed in real time or achieved 100 µs latency",
+    "results transfer to KSTAR or to 10 ms-snapshot inputs",
+    "all prior work uses only low-bandwidth or electron signals",
+    "the labels are independent physical truth"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite as related work showing ML on BES fluctuations for plasma-state estimation with real-time ambitions. It does not cover temperature nowcasting or CES.",
+  "bibtex_if_worth_citing": "@article{Gill2024RealTime,title={Real-time confinement regime detection in fusion plasmas with convolutional neural networks and high-bandwidth edge fluctuation measurements},author={Gill, K. and Smith, D. and Joung, S. and Geiger, B. and McKee, G. and Zimmerman, J. and Coffee, R. and Jalalvand, A. and Kolemen, E.},journal={Machine Learning: Science and Technology},volume={5},pages={035012},year={2024},doi={10.1088/2632-2153/ad605e}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 21,
+  "supplied_pdf_sha256": "429df5486d5d387d5551ac0d5efac88346fb9fbc4225920aefd27b09adb0b58f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

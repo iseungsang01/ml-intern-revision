@@ -1,0 +1,46 @@
+{
+  "key": "Che2018RecurrentNeural",
+  "citation": {
+    "title": "Recurrent Neural Networks for Multivariate Time Series with Missing Values",
+    "authors": "Z. Che, S. Purushotham, K. Cho, D. Sontag, Y. Liu",
+    "year": 2018,
+    "venue": "Scientific Reports",
+    "volume": "8",
+    "pages": "6085",
+    "doi_or_arxiv": "10.1038/s41598-018-24271-9"
+  },
+  "relevance": "supporting",
+  "topic": "GRU-D: recurrent model using masking and per-variable time-since-last-observation decays for irregularly observed multivariate series",
+  "own_question": "Can missingness patterns (masks, time intervals) be built into a GRU to improve time series classification with informative missingness?",
+  "actual_method_and_evidence": "Introduces trainable input decay toward the empirical mean and hidden-state decay as functions of per-variable time intervals, with masks fed to the gates. Evaluation used AUC from 5-fold CV on synthetic Gesture, PhysioNet 2012 and MIMIC-III clinical classification tasks, against mean, forward-fill and concatenation GRU baselines, two-step imputation and non-RNN models. GRU-D had the highest reported mean AUC in these tables. The tasks are classification, not regression nowcasting. There is no fusion-plasma data, and no real-time or latency evaluation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior ML work on irregularly sampled series represents observation availability with masks and per-variable time-since-last-observation, and can decay stale values toward a default, motivating our use of strictly past CES report age as an input feature.",
+      "original_pdf_locator": "Methods, Eqs. (1),(2),(10)-(12), pp.2-4",
+      "qualification": "This is a concept from clinical classification. It is not validated for plasma CES nowcasting, and the authors give homeostasis as their rationale.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "In that clinical study, missingness indicators sometimes helped classification. The authors caution that when missingness is not informative, gains may be limited.",
+      "original_pdf_locator": "Results Fig.4 discussion p.7; Limitations p.10",
+      "qualification": "This is a dataset-specific author interpretation. Fig.4 was not visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are clinical measurements with masks and intervals, with targets being labels at end of a 48 h window. Early prediction used only past data. There is no CES or report-latency analogue.",
+  "validation_if_relevant": "5-fold CV on reused public datasets. Imputation baselines were tuned per the original codes. There is no untouched external test set.",
+  "forbidden_inferences": [
+    "GRU-D works for KSTAR CES/BES/ECEI",
+    "decay mechanism reflects plasma physics",
+    "demonstrated 10 ms real-time feasibility",
+    "our estimator is novel relative to this or superior to it",
+    "all prior work ignores missingness"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "This is a canonical citation for representing stale or irregular observations via masks and time-since-last-report, which is relevant to anchoring on strictly past CES reports. Any temporal or causal framing of irregular inputs must come from our own paper. Cite only as methodological background; do not use it as plasma evidence or as a baseline we must implement.",
+  "bibtex_if_worth_citing": "@article{Che2018RecurrentNeural,title={Recurrent Neural Networks for Multivariate Time Series with Missing Values},author={Che, Zhengping and Purushotham, Sanjay and Cho, Kyunghyun and Sontag, David and Liu, Yan},journal={Scientific Reports},volume={8},pages={6085},year={2018},doi={10.1038/s41598-018-24271-9}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "c56c612a56770caaa97a7b20056009d6a84c227df641652d1ae0fad40fdefc7d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

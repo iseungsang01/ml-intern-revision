@@ -1,0 +1,38 @@
+{
+  "key": "Gebetsberger2018Estimation",
+  "citation": {
+    "title": "Estimation Methods for Nonhomogeneous Regression Models: Minimum Continuous Ranked Probability Score versus Maximum Likelihood",
+    "authors": "Gebetsberger, M.; Messner, J. W.; Mayr, G. J.; Zeileis, A.",
+    "year": 2018,
+    "venue": "Monthly Weather Review",
+    "volume": "146",
+    "pages": "4323-4338",
+    "doi_or_arxiv": "10.1175/MWR-D-17-0364.1"
+  },
+  "relevance": "peripheral",
+  "topic": "Probabilistic regression in weather postprocessing: CRPS versus log-score (maximum likelihood) estimation and distribution tail misspecification",
+  "own_question": "When and why do CRPS-minimizing and LS-minimizing estimates differ for symmetric forecast distributions?",
+  "actual_method_and_evidence": "Nonhomogeneous Gaussian, logistic and Student-t regression for ECMWF ensemble 2-m temperature at 11 central European stations. The models use tenfold random cross validation. A simulation with logistic truth and 1000 repeats is also reported. The authors report estimator discrepancies and W-shaped PIT histograms under Gaussian assumptions, with smaller differences for heavier-tailed models. In the correctly specified simulation, LS was slightly more efficient. No plasma, CES or timing content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "If the CRPS and log-score fits differ, or the PIT shape departs from uniform, this can indicate that the assumed predictive-distribution tails are misspecified. This holds in the authors' temperature-postprocessing setting.",
+      "original_pdf_locator": "Sec. 1; Sec. 4b; Figs. 1, 11, 12",
+      "qualification": "Weather temperature case with a simulation. Interpretation specific to symmetric distributions. Not shown for CES.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The inputs are ensemble mean and SD for fixed lead-time weather forecasts. This is future prediction, not current-report nowcasting.",
+  "validation_if_relevant": "Random tenfold cross validation, assuming temporal independence. The simulations have a known truth.",
+  "forbidden_inferences": [
+    "Do not imply that CRPS or LS training performs better for CES nowcasting.",
+    "Do not imply that Student-t or logistic tails suit CES temperature.",
+    "Do not cite this paper as plasma or real-time evidence.",
+    "Do not cite this paper as justifying random-split validation for our time series."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include only if our theory section discusses probabilistic scoring or estimation choices for uncertainty outputs. Otherwise exclude, because it is outside the scope of the intro.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "c743a5134facd776cf2b9a866a7cb1802305c00b61394fb2adcfa96ca9cb670d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

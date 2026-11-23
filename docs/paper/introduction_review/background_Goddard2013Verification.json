@@ -1,0 +1,38 @@
+{
+  "key": "Goddard2013Verification",
+  "citation": {
+    "title": "A verification framework for interannual-to-decadal predictions experiments",
+    "authors": "Goddard L, Kumar A, Solomon A, Smith D, Boer G, Gonzalez P, Kharin V, Merryfield W, Deser C, Mason SJ, Kirtman BP, Msadek R, Sutton R, Hawkins E, Fricker T, Hegerl G, Ferro CAT, Stephenson DB, Meehl GA, Stockdale T, Burgman R, Greene AM, Kushnir Y, Newman M, Carton J, Fukumori I, Delworth T",
+    "year": 2013,
+    "venue": "Climate Dynamics",
+    "volume": "40",
+    "pages": "245-272",
+    "doi_or_arxiv": "10.1007/s00382-012-1481-2"
+  },
+  "relevance": "peripheral",
+  "topic": "Climate decadal hindcast verification: MSSS relative to a reference, its decomposition into correlation and conditional bias, CRPSS for spread calibration, and block bootstrap significance.",
+  "own_question": "The source asks whether initialization improves accuracy over uninitialized projections. It also asks whether ensemble spread represents uncertainty.",
+  "actual_method_and_evidence": "Two climate hindcast systems are scored with MSSS and CRPSS. The study uses about 10 start dates and paired-start bootstrap tests. Bias and spread adjustments were not cross-validated. The results are illustrative only.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "A skill score relative to a named reference prediction, such as hold or interpolation, can be decomposed into correlation and conditional-bias terms.",
+      "original_pdf_locator": "Sec 2.2.1, Eqs 2-6 (pp 8-9)",
+      "qualification": "Use as a conceptual analogy from climate verification. It does not show plasma results.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source covers climate hindcasts on annual and multi-year scales and has no relation to CES or 10 ms timing.",
+  "validation_if_relevant": "Sampling is small. Adjustments were not cross-validated. Reference-period overlap means validation is not out-of-sample, which the authors acknowledge.",
+  "forbidden_inferences": [
+    "Any plasma, CES, or nowcasting performance",
+    "That its metrics are standard in fusion diagnostics",
+    "That its non-cross-validated results justify our design"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The source is an optional methodological citation for reference-relative skill scores (MSSS, CRPSS) and conditional bias. It is outside the domain and not needed in the introduction.",
+  "bibtex_if_worth_citing": "@article{Goddard2013Verification,title={A verification framework for interannual-to-decadal predictions experiments},author={Goddard, L. and others},journal={Climate Dynamics},volume={40},pages={245--272},year={2013},doi={10.1007/s00382-012-1481-2}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 28,
+  "supplied_pdf_sha256": "3fbd1669342881fe1f9f1daab658a8e0cd91a9dfa203857a44ad516217f51fd3",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

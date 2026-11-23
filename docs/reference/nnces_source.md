@@ -31,10 +31,14 @@
 
 ## 앞으로 적용할 기억 규칙
 
+정정 후 `ces_prediction/research/ppcf_nnces_edit.py`의 별도 Fable 편집 요청과 Opus 문단 검토에는 실제 사용자 지정 PDF 전문을 제공했다. `docs/paper/ppcf_revision/NN_CES_EDIT.md`와 대응 status/usage가 이 새 작업을 기록한다. 이는 서론·고찰의 상류 판독기/하류 nowcasting 관계에 대한 검토이며, 이전 전체 실험 순위나 원고 전체를 재채점한 것으로 소급하지 않는다.
+
 1. 문헌 접근 상태를 판단하기 전에 `data/literature/INDEX*.md`, 로컬 PDF, 이 원천 기록, 기존 본문 검토를 순서대로 확인한다.
 2. **로컬 보유**, **작업자가 본문을 읽음**, **특정 API 요청에 실제 전문을 제공함**은 서로 다른 상태다. 이전 Fable 요청에 NN-CES PDF가 들어가지 않은 사실은 그대로 보존한다. 이번에는 원천·기억을 정정했으며 해당 요청을 전문 기반 검토로 소급 변경하지 않는다.
 3. 이전 API 출력과 사용량·response hash는 보존한다. 미확보 주장이 있는 공개 사본에는 이 정정의 안내를 붙이고, 최신 작업자 요약·manifest·status에서 현재 상태를 바로잡는다.
 4. 기존 연구 순위를 NN-CES 전문을 포함해 다시 자문받았다고 주장하지 않는다. 그 차별점 재심사가 필요하면 실제 전문을 제공한 별도 요청과 근거를 기록한다. 기억 정정을 이유로 모델 성능·채점·기존 실험 결과를 바꾸지 않는다.
 5. 프레이밍은 pedestal-top nowcasting으로 유지한다. 'NN-CES는 측정이 있는 시각, 우리는 없는 시각만'이라는 축약 대신 **입력과 추정 표적·시점·가용 규칙**으로 구분한다. 우리 연구는 현재 보고값이 채점에 존재하는 시점도 다룬다. 같은 자료의 직접 비교 없이 우열을 주장하지 않는다.
+
+이후 전수 문헌 조사에서는 `docs/paper/introduction_review/paper_Lee2026NeuralNetworkbased.json`에 NN-CES 전체 PDF의 개별 Opus 감사를 기록했다. 최종 서론·이론 통합 요청에도 원문 전체 페이지를 다시 제공했다. `manuscript_writing_provenance.json`과 `final_manuscript_sections_review.json`을 참조한다. 이는 최신 글쓰기 근거이며 과거 요청의 입력이나 실험 순위를 소급 변경하지 않는다.
 
 프로젝트의 `AGENTS.md`, `CLAUDE.md`, `HANDOVER.md`, `PROJECT_KNOWLEDGE.md`, `PAPER_DESIGN.md`, 최근 두 조사 폴더와 프로젝트별 Claude 메모리를 이 기록에 연결한다. 이는 이 저장소의 지속 기록을 갱신하는 것이며, 앱 전체의 비공개 대화 메모리를 수정했다고 주장하지 않는다.

@@ -1,0 +1,31 @@
+{
+  "key": "Ilse2018AttentionbasedDeep",
+  "citation": {
+    "title": "Attention-based Deep Multiple Instance Learning",
+    "authors": "Maximilian Ilse; Jakub M. Tomczak; Max Welling",
+    "year": 2018,
+    "venue": "Proceedings of the 35th International Conference on Machine Learning (PMLR)",
+    "volume": "80",
+    "pages": "unknown",
+    "doi_or_arxiv": "arXiv:1802.04712"
+  },
+  "relevance": "peripheral",
+  "topic": "Permutation-invariant attention pooling for bag-level classification in multiple instance learning",
+  "own_question": "Can a trainable, attention-weighted MIL pooling match or improve bag classification and indicate key instances?",
+  "actual_method_and_evidence": "The paper models the bag label as Bernoulli. Its neural pipeline embeds instances, pools them with softmax attention (with a gated variant), and classifies the pooled representation. It reports results on classical MIL benchmarks, MNIST-bags, and two histopathology image datasets using cross-validation. It also shows attention heatmaps as a proxy for key instances. The task is static binary classification, with no time series, causal constraint, or plasma data.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant; instances within a bag are unordered and treated as independent, and there is no temporal target.",
+  "validation_if_relevant": "Not transferable to our designs.",
+  "forbidden_inferences": [
+    "Do not cite it as evidence that attention aids causal nowcasting or CES/BES/ECEI fusion.",
+    "Do not treat attention weights as physical mechanism identification; the authors present them only as a proxy for key instances.",
+    "Do not imply our study uses MIL or attention pooling unless that was actually implemented."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper's bag classification of unordered instances does not match our causal temporal regression of the current CES report. Cite it only if the paper discusses attention-based interpretability or set pooling as background, without any performance claims transferred from it.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 16,
+  "supplied_pdf_sha256": "9da16d3f18f46d29d3f947201b3aae195543e6b2354f878fbc06cf6c3765b199",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

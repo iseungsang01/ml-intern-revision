@@ -1,0 +1,80 @@
+{
+  "key": "Chrystal2026RealTime",
+  "citation": {
+    "title": "Real-time Charge Exchange Recombination Spectroscopy at DIII-D",
+    "authors": "C. Chrystal, R. J. Groebner, E. H. W. Linsenmayer, S. R. Haskey, B. G. Penaflor",
+    "year": "unknown (supplied key says 2026; not printed in PDF)",
+    "venue": "unknown",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "unknown; DOIs in the reference list belong to cited works"
+  },
+  "scope_read": {
+    "pdf_pages": "1-6, including Figs 1-6",
+    "full_pdf_supplied": true,
+    "limitations": "Venue, year and DOI are not printed. Core/edge chord lists differ between Sec II (p2) and Sec III (p4), and T8 appears in neither Sec III list."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Edge views are reported as less accurate than core views",
+      "verdict": "qualify",
+      "source_finding": "Within 20% of CERAUTO: Ti 88% core vs 79% edge; Vphi 82% core vs 58% edge. Edge and rotation distributions have larger tails.",
+      "locator": "p4 Sec III; p5 Figs 4-5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In a DIII-D real-time CER implementation, agreement with offline automatic fits was lower for edge chords than for core chords, especially for rotation.",
+      "qualification": "The reference is CERAUTO, not independent truth. Edge data include chords outside the confined plasma with no down-selection. About 3% of rotation points were excluded for calibration problems. Authors attribute edge error mainly to unmodelled passive emission (author interpretation)."
+    },
+    {
+      "proposed_claim": "Latency and cadence as stated",
+      "verdict": "qualify",
+      "source_finding": "Default cadence is 5 ms exposures (200 Hz); rates above 200 Hz were not evaluated. Network latency is about 1 ms and a typical fit takes under 1 ms. The earliest readout is 2.5 ms after the mean photon arrival. T17-T24 can lag up to 17.5 ms in normal mode, reduced to 2.5 ms by full binning used for control. The overall delay is about 5 ms in optimal mode. A timeout abandons slow fits.",
+      "locator": "p1 Abstract and Sec I; p2-3 Sec II",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Simplified real-time spectral fitting at DIII-D is reported to deliver profiles every 5 ms with a few-millisecond delay, which is dominated by detector readout.",
+      "qualification": "Stated as typical values, with no reported latency distribution. Hardware and read-mode dependent. DIII-D, not KSTAR."
+    },
+    {
+      "proposed_claim": "Meaning of 'within 20% of the most accurate automatic analysis'",
+      "verdict": "supported",
+      "source_finding": "Percent absolute difference of CERREAL from CERAUTO over about 6e6 measurements from the 2025 campaign. Manual CERFIT is rarely available.",
+      "locator": "p1 Abstract; p4 Sec III; p5 Fig 5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Its accuracy was characterised as the fraction of real-time values within 20% of the facility's offline automatic analysis.",
+      "qualification": "This is agreement between two fits, not physical accuracy. Core and edge are reported separately; Fig 5 views show 91-99% of each data set."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Current-frame raw spectra from 24 tangential CER chords, neutral beam states in the PCS, and the previous discharge's wavelength calibration",
+    "outputs": "Per-frame impurity Ti, toroidal rotation, and line counts (density proxy); counts only for Ne/Ar and other impurities",
+    "causal_or_offline": "Causal fit of each acquired frame (spectrum reader); no temporal forecasting",
+    "source_diagnostic_as_input": "Yes: the CER spectra themselves",
+    "reported_vs_physical_truth": "Compared with CERAUTO and CERQUICK reports; no independent truth"
+  },
+  "validation": {
+    "split_unit": "not_applicable (no trained estimator)",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none; CERAUTO is the reference",
+    "unknowns": "Per-discharge variability; latency distribution; accuracy above 200 Hz"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Typical fit time (<1 ms) and the delay budget are stated. Use in PCS control is cited to prior works, not shown here.",
+    "what_not_established": "Benchmark of computational cost versus accuracy (authors state this is not done); applicability to KSTAR or to pedestal-top CES nowcasting",
+    "locator": "p1 Sec I; p3 Sec II"
+  },
+  "forbidden_inferences": [
+    "Do not cite the 20% figure as error against physical temperature",
+    "Do not imply KSTAR or BES/ECEI relevance",
+    "Do not call CERREAL a temporal nowcaster or a competing estimator",
+    "Do not state that ~5 ms is a measured latency distribution",
+    "Do not generalise the Ne/Ar results (single discharges, Fig 6, p6) to campaign accuracy",
+    "Do not claim our method improves on CERREAL"
+  ],
+  "competing_or_complementary": "Complementary. CERREAL is an upstream reader that shortens the time to the current report. Our downstream nowcast estimates the report before it is available. Faster reading could refresh our anchors or reduce the marginal need for nowcasting; any net benefit requires validation.",
+  "bibtex": "@article{Chrystal2026RealTime,\n title={Real-time Charge Exchange Recombination Spectroscopy at {DIII-D}},\n author={Chrystal, C. and Groebner, R. J. and Linsenmayer, E. H. W. and Haskey, S. R. and Penaflor, B. G.},\n journal={unknown},\n year={unknown},\n note={venue, volume, pages, DOI to verify}\n}",
+  "followup_sources_if_material": [
+    "Piglowski et al., Fusion Eng. Des. 82, 1058 (2007): original real-time CER",
+    "Chrystal et al., Rev. Sci. Instrum. 87, 11E512 (2016): CER system",
+    "Meyer et al., Rev. Sci. Instrum. 82, 023114 (2011): detector readout delay"
+  ]
+}

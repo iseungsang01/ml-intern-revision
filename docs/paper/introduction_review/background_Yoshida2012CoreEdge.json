@@ -1,0 +1,39 @@
+{
+  "key": "Yoshida2012CoreEdge",
+  "citation": {
+    "title": "Core and edge toroidal rotation study in JT-60U",
+    "authors": "M. Yoshida, Y. Sakamoto, M. Honda, Y. Kamada, H. Takenaga, N. Oyama, H. Urano and the JT-60 Team",
+    "year": 2012,
+    "venue": "Nuclear Fusion",
+    "volume": "52",
+    "pages": "023024 (9pp)",
+    "doi_or_arxiv": "10.1088/0029-5515/52/2/023024"
+  },
+  "relevance": "peripheral",
+  "topic": "JT-60U toroidal rotation physics. The study relates core and edge rotation, fits a residual-stress term and examines edge rotation versus the pedestal ion temperature gradient. Rotation and Ti are measured with carbon CXRS.",
+  "own_question": "How are core and edge Vt related through momentum transport? Can intrinsic rotation be reproduced with a residual-stress term proportional to the momentum diffusivity times the ion pressure gradient?",
+  "actual_method_and_evidence": "The authors use offline momentum-balance modelling. Diffusivity and convection velocity come from modulated perpendicular-NB transient analysis. They study L–H and H–L transition timescales of about 20 ms and parameter scans. Residual-stress coefficients are fitted per discharge. They report a sawtooth/NTM mode-frequency check of carbon versus bulk rotation. It covers a different device, and a different target (rotation, not temperature nowcasting). There is no BES/ECEI and no estimator.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Carbon CXRS Ti and Vt are impurity-ion measurements. Carbon-versus-main-ion rotation agreement was checked only indirectly, through MHD mode frequencies, in JT-60U.",
+      "original_pdf_locator": "Sec. 2; Sec. 6, Fig. 13",
+      "qualification": "This was a JT-60U rotation check. A residual frequency gap of about 0.5–1 kHz remained. It says nothing about the KSTAR CES temperature.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source has no nowcasting, no report-arrival timing and no online inputs.",
+  "validation_if_relevant": "Fits are made per discharge. There is no held-out validation.",
+  "forbidden_inferences": [
+    "That the source validates KSTAR CES labels",
+    "That it supports BES/ECEI information content",
+    "That the ~20 ms rotation timescale applies to our 10 ms Ti nowcast",
+    "That the fitted residual-stress model is established physics"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This is at most an optional background citation on impurity-versus-main-ion CXRS caveats. It is not about causal temperature estimation, so it can likely be omitted.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "bc08911348ee3204e9ffb8cf46210a0c1176b2c0c2313a651d1e2e8f8510e922",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

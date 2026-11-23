@@ -1,0 +1,45 @@
+{
+  "key": "Hong2024ImpactStray",
+  "citation": {
+    "title": "The Impact of Stray Magnetic Fields on the KSTAR NBI Performance",
+    "authors": "Hong, SeulChan; Baek, Geonwoo; Jang, Jae Young; Na, Byungkeun; Jeong, J.H.; Lee, C.Y.; Park, Min; Kim, Jaewook; Kwak, Jong-Gu; Na, Yong-Su",
+    "year": 2024,
+    "venue": "SSRN preprint (not peer reviewed)",
+    "volume": null,
+    "pages": "1-19",
+    "doi_or_arxiv": "unknown; SSRN abstract 4817089"
+  },
+  "relevance": "peripheral",
+  "topic": "Stray PF-coil fields and beamline pressure reducing KSTAR NBI-1 delivered power; offline Monte Carlo beam tracing, with BES used as a qualitative cross-check.",
+  "own_question": "How much do stray fields degrade NBI-1 power and injection angle, and does this affect long-pulse plasma performance?",
+  "actual_method_and_evidence": "Monte Carlo particle tracing (Lorentz force, leap-frog, uniform assumed pressure, charge-exchange cross-sections). The source reports an 11.5% simulated power drop versus a 19.7% BES signal drop in discharge #27327, and states that the angle distortion is negligible for CES. All of this is offline; there is no CES temperature nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR, the source attributes a slow NBI power decline during some long or high-Ip discharges to stray fields combined with beam-chamber pressure. Beam-based signals such as BES or CES could therefore have time-varying beam contributions.",
+      "original_pdf_locator": "Sec. 4.1-4.2, pp. 9-13; Fig. 9 (text only)",
+      "qualification": "This is a modeled estimate from an unpeer-reviewed preprint. The simulation underestimates the BES drop, and the source authors attribute the gap to the uniform-pressure assumption. The source makes no statement about CES temperature accuracy.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "The source authors estimate the beam injection-angle distortion at under about 0.06 degrees and judge it not to affect CES measurement position.",
+      "original_pdf_locator": "Sec. 4.1, pp. 10-11",
+      "qualification": "This is an author interpretation from simulation, not a measured CES validation.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source has no CES report timing and no 10 ms nowcast.",
+  "validation_if_relevant": "There is no holdout or validation design. The only comparison is to a single BES trace, and predictive TRIASSIC runs are reported for #32732.",
+  "forbidden_inferences": [
+    "Do not cite this source as evidence on CES Ti nowcasting or BES/ECEI predictive information.",
+    "Do not claim the source shows that CES labels are biased.",
+    "Do not treat simulated power loss as measured.",
+    "Do not generalize to KSTAR2022 pedestal-top chord data."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional context only: if we discuss time-varying NBI conditions affecting beam-based diagnostics in long pulses. Otherwise exclude.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "47ef2dc84534158b0a2cedfed1e68dcfbfacd245439c3c1a2d5a6b0665d4dd3e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

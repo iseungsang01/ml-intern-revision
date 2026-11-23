@@ -1,0 +1,38 @@
+{
+  "key": "Baltruaitis2018MultimodalMachine",
+  "citation": {
+    "title": "Multimodal Machine Learning: A Survey and Taxonomy",
+    "authors": "Tadas Baltrusaitis; Chaitanya Ahuja; Louis-Philippe Morency",
+    "year": 2019,
+    "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+    "volume": "41(2)",
+    "pages": "423-443",
+    "doi_or_arxiv": "10.1109/TPAMI.2018.2798607"
+  },
+  "relevance": "peripheral",
+  "topic": "Generic survey and taxonomy of multimodal machine learning: representation, translation, alignment, fusion and co-learning.",
+  "own_question": "How can recent multimodal machine learning work be organized into common technical challenges beyond the early-versus-late fusion split?",
+  "actual_method_and_evidence": "Literature survey. It presents no new experiments and no fusion-plasma content. Its taxonomy is the authors' organizing interpretation, not a demonstrated result.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Multimodal fusion approaches are commonly grouped as early (feature-level), late (decision-level) and hybrid, alongside model-based approaches.",
+      "original_pdf_locator": "Section 6.1, p.434 (PDF p.12); Table 5",
+      "qualification": "This is a general ML categorization. It does not establish that BES/ECEI information adds value for predicting CES reports.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. There is no plasma diagnostic, causal timing or nowcasting content.",
+  "validation_if_relevant": "None; this is a survey.",
+  "forbidden_inferences": [
+    "Do not claim the source supports causal nowcasting of CES reports.",
+    "Do not infer that fusing BES/ECEI improves CES temperature estimates.",
+    "Do not treat the taxonomy as proof that any physics mechanism exists.",
+    "Do not use it to characterize plasma prior work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most it could serve as an optional background citation for early/late fusion terminology when describing how BES/ECEI inputs are combined with past CES reports. It is not needed for the paper's framing.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 21,
+  "supplied_pdf_sha256": "b47dcd9ce7d6c3971adc39e56e4574668ede4eb9fb051b03726e0c5b1ad3e19b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

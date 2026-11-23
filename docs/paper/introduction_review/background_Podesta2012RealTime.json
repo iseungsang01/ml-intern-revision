@@ -1,0 +1,46 @@
+{
+  "key": "Podesta2012RealTime",
+  "citation": {
+    "title": "A real-time velocity diagnostic for NSTX",
+    "authors": "M. Podestà and R. E. Bell",
+    "year": 2012,
+    "venue": "Review of Scientific Instruments",
+    "volume": "83",
+    "pages": "033503",
+    "doi_or_arxiv": "10.1063/1.3692752"
+  },
+  "relevance": "supporting",
+  "topic": "Real-time carbon CHERS toroidal-velocity diagnostic interfaced to the NSTX plasma control system",
+  "own_question": "How can C VI charge-exchange spectroscopy be redesigned to supply toroidal velocity to the plasma control system at kHz rates?",
+  "actual_method_and_evidence": "The paper describes the hardware and software design: added fibers per channel, no slit or chopper, Cascade CCDs up to 5 kHz, and a C++ Levenberg-Marquardt two-gaussian fit reported at 120 μs or less for up to 8 channels. Output goes to the plasma control system through an analog card. Evidence is limited to neon-glow wavelength scatter and a reanalysis of existing CHERS plasma data. There was no NB-plasma operation of RTV, and the ion-temperature range is limited (about 300 eV or more is inferable), with velocity as the primary output.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Fast spectroscopic impurity-velocity measurement has been engineered for real-time control on NSTX, trading spectral resolution and temperature capability for photon throughput and speed.",
+      "original_pdf_locator": "p.2 Sec. II; p.3 Sec. II.C; Table I",
+      "qualification": "Carbon impurity velocity on NSTX, not KSTAR temperature. Design stage only; first plasma operation was still planned.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "A simplified real-time spectral fit has been reported to track offline CHERS velocity evolution, with sub-millisecond computation.",
+      "original_pdf_locator": "p.5 Sec. III.B, Fig. 5",
+      "qualification": "Agreement is stated in the text and not quantified; the figure was not viewed. The 120 μs figure is the authors' computing time, not a control loop demonstrated in a plasma.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The inputs are current-frame spectra, and the output is the current-frame velocity (an upstream spectrum reader, not a temporal nowcast). The 100 μs value is the stated minimum latency from exposure to readout end. Report arrival in the plasma control system is not measured beyond a polling interval of 200 μs.",
+  "validation_if_relevant": "Wavelength standard deviation over 100 frames in neon glow. Offline reanalysis of a single discharge. No held-out set and no feedback demonstration.",
+  "forbidden_inferences": [
+    "RTV measured temperature in real time",
+    "rotation feedback was demonstrated",
+    "applies to KSTAR or main-ion Ti",
+    "faster upstream reading removes or guarantees need for nowcasting",
+    "all prior CES work is noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Use as a concrete precedent for the upstream route of faster CES acquisition and fitting. It contrasts with our downstream estimation of the current report before it is available. Cite cautiously as a design and early-test paper.",
+  "bibtex_if_worth_citing": "@article{Podesta2012RealTime,author={Podest{\\`a}, M. and Bell, R. E.},title={A real-time velocity diagnostic for {NSTX}},journal={Rev. Sci. Instrum.},volume={83},pages={033503},year={2012},doi={10.1063/1.3692752}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "69b3608f3b13e51faa5938c7e38c89be1143bc3c0c34652d0b22789b504ef09b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,80 @@
+{
+  "key": "Jang2021DevelopmentUltrafast",
+  "citation": {
+    "title": "Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak",
+    "authors": "J. Y. Jang, W.-H. Ko, Y. Li, M. von Hellermann, Y. Shi, Y. S. Hwang",
+    "year": 2021,
+    "venue": "Review of Scientific Instruments",
+    "volume": "92",
+    "pages": "053525",
+    "doi_or_arxiv": "10.1063/5.0043824 (this paper's own DOI, PDF p1-2 header; DOIs in the reference list belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-6 (p1 publisher cover; p2-6 = article pp. 053525-1 to -5), including Figs 1-7, Table I, Eq. 2",
+    "full_pdf_supplied": true,
+    "limitations": "Proceedings-length design paper. Fig. 4b legend shows Ti=Te=1 and 5 keV, while Table I lists 2 and 5 keV; this is an internal inconsistency, and the source does not resolve it. SNR is computed via Eq. 2 inside the SOS code. No measurement uncertainties are reported."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "UFCES is a design plus simulation and bench test, not measured plasma data",
+      "verdict": "supported",
+      "source_finding": "Spectra and SNR come from SOS forward modeling. The only measurement is a Ne-lamp/CMOS bench test, which confirmed a linear dispersion of 0.36 nm/mm and a slit curvature radius of 41.24 mm. First plasma results were anticipated for the 2021 campaign.",
+      "locator": "PDF p2 Abstract; p4-5 Sec III A, Table I, Fig 4; p6 Sec III B, Fig 7; p6 Sec IV",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "An ultrafast CES system has been designed for KSTAR, and its expected performance has been assessed through spectral forward modeling and a spectral-lamp bench test [Jang2021].",
+      "qualification": "Do not describe it as having measured plasma Ti or rotation fluctuations."
+    },
+    {
+      "proposed_claim": "Number of radial positions",
+      "verdict": "supported",
+      "source_finding": "Two added fiber arrays view ρ≈0.6 and 0.7. Each position maps to 16 PMT channels on a 32-channel linear PMT. The simulation used ρ=0.6 only.",
+      "locator": "PDF p3 Sec II; p3 Fig 1b; p4 Fig 2a, Fig 3; p4 Table I",
+      "kind": "requirement",
+      "allowed_intro_sentence": "The design targets two radial positions simultaneously, using high-throughput optics, a transmission grism and a fast multi-anode PMT [Jang2021].",
+      "qualification": "These are design positions. Nothing in the source links them to a pedestal-top chord or to the KSTAR 2022 configuration."
+    },
+    {
+      "proposed_claim": "Stated time resolution is simulated",
+      "verdict": "qualify",
+      "source_finding": "The 10 μs integration time (100 kHz) is a design and simulation input. With it, SOS predicts SNR well above an acceptability threshold of 10 (e.g., ~61-90 across the Fig 4 cases). Fig 1b lists the PMT/digitizer design as 100 kHz, up to 1 MHz.",
+      "locator": "PDF p2 Abstract; p3 Fig 1b; p4 Sec II end; p4 Table I; p5 Sec III A, Eq 2, Fig 4",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Simulations indicate that a 10 μs integration time could yield adequate signal-to-noise for this design [Jang2021].",
+      "qualification": "The 10 μs figure is simulated, not demonstrated on plasma. It is integration time, not end-to-end report latency or availability."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "C VI 529.05 nm charge-exchange spectrum from NBI (hardware); the simulation used assumed profiles",
+    "outputs": "Planned Ti and toroidal rotation at two radii",
+    "causal_or_offline": "not_applicable (instrument design, not an estimator)",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Simulated synthetic spectra; no comparison with independent truth"
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable; the bench test checks dispersion and curvature only",
+    "unknowns": "Plasma performance; realized SNR; calibration; data-processing latency"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Ne-lamp bench test of the spectrometer's dispersion and slit curvature only",
+    "what_not_established": "Operation on plasma; real-time inversion; latency of Ti/v reports; availability in campaigns",
+    "locator": "PDF p6 Sec III B, Sec IV"
+  },
+  "forbidden_inferences": [
+    "Do not state that UFCES has delivered KSTAR plasma measurements, or that 10 μs resolution was demonstrated.",
+    "Do not state that UFCES covers our provider-selected 2022 pedestal-top chord.",
+    "Do not state that UFCES makes downstream nowcasting unnecessary or redundant.",
+    "Do not use integration time as a stand-in for report arrival latency.",
+    "Do not present Fig 4 SNRs as measured values."
+  ],
+  "competing_or_complementary": "Complementary upstream route: faster spectral acquisition could refresh CES anchors more often. Our method instead estimates the current conventional CES report before it is available, using BES/ECEI snapshots. Any actual interaction between the two remains unvalidated.",
+  "bibtex": "@article{Jang2021DevelopmentUltrafast,\n title={Development of an ultrafast charge exchange spectroscopy system on the {KSTAR} tokamak},\n author={Jang, Jae Young and Ko, Won-Ha and Li, Yingying and von Hellermann, Manfred and Shi, Yuejiang and Hwang, Y. S.},\n journal={Review of Scientific Instruments},\n volume={92},\n pages={053525},\n year={2021},\n doi={10.1063/5.0043824}\n}",
+  "followup_sources_if_material": [
+    "Any later KSTAR UFCES plasma-results paper. Its existence was not checked here; verify before citing.",
+    "Cavedon et al., RSI 88, 043103 (2017) (source ref 18)",
+    "Li et al., Fusion Eng. Des. 146, 522 (2019) (source ref 19)",
+    "Uzun-Kaymak et al., RSI 83, 10D526 (2012) (source ref 17)"
+  ]
+}

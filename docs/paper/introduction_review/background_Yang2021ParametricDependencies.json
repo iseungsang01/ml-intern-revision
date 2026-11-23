@@ -1,0 +1,32 @@
+{
+  "key": "Yang2021ParametricDependencies",
+  "citation": {
+    "title": "Parametric dependencies of locked mode thresholds in KSTAR L-mode plasmas",
+    "authors": "Yang, S.M.; Park, J.-K.; Na, Y.S.; In, Y.; Hahn, H.; et al.",
+    "year": 2021,
+    "venue": "Nuclear Fusion",
+    "volume": "61",
+    "pages": "086009 (11pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ac0165"
+  },
+  "relevance": "peripheral",
+  "topic": "Empirical n=1 and n=2 error-field locked-mode thresholds in KSTAR L-mode/ohmic plasmas. The paper covers dependence on density, rotation and toroidal field. It interprets the density dependence through the LOC-to-SOC transition and uses IPEC resonant and overlap fields.",
+  "own_question": "How do KSTAR locked-mode error-field thresholds depend on density, toroidal field and toroidal harmonic?",
+  "actual_method_and_evidence": "The authors ramped IVCC 3D fields until a locked mode penetrated. Penetration was identified with magnetic probes, ECE/ECEI and CES rotation. CES profiles needed NBI or NBI blips. Thresholds were converted with IPEC. Power-law fits were made on a multi-year database. The study gives no CES nowcasting, no temperature estimation and no BES-based prediction.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. CES rotation was used offline for profile interpretation. The paper reports no report-arrival timing.",
+  "validation_if_relevant": "Not applicable. The paper uses regression fits on a pooled database and has no held-out validation.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence for CES temperature nowcasting or for its latency.",
+    "Do not use it to infer that ECEI predicts Ti.",
+    "Do not cite it for KSTAR2022 pedestal-top chord behavior.",
+    "Do not treat its LOC/SOC interpretation or proposed scaling modification as demonstrated physics."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The topic is MHD locked-mode thresholds, which does not match our causal CES-report nowcasting framing. Its one marginal point is that ohmic KSTAR rotation-profile measurement required NBI. That point is better sourced elsewhere and should not be generalized.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "203f47d6d2b0a5f24d515d40958f12497d1388f5093e1b12211a9e5d860ef0bf",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

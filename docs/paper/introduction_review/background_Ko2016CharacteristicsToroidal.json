@@ -1,0 +1,46 @@
+{
+  "key": "Ko2016CharacteristicsToroidal",
+  "citation": {
+    "title": "Characteristics of toroidal rotation and ion temperature pedestals between ELM bursts in KSTAR H-mode plasmas",
+    "authors": "S. H. Ko, J. M. Kwon, W. H. Ko, S. S. Kim, H. Jhang, L. Terzolo",
+    "year": 2016,
+    "venue": "Physics of Plasmas",
+    "volume": "23",
+    "pages": "062502",
+    "doi_or_arxiv": "10.1063/1.4953425"
+  },
+  "relevance": "supporting",
+  "topic": "Offline analysis of KSTAR CES ion-temperature and toroidal-rotation pedestals between ELMs, including pedestal fitting, parameter correlations and 1D transport analysis.",
+  "own_question": "How are Ti and rotation pedestals related, and do they indicate residual turbulence and intrinsic torque?",
+  "actual_method_and_evidence": "The study uses 2014 KSTAR NBI-heated ELMy H-mode shots (six entries in Table I). CES data are sampled every 10 ms with 5 ms averaging. Time slices overlapping ELM crashes were excluded. Pedestals were fit with modified tanh functions. Correlations reported: rotation pedestal versus Ti_ped, Ti_ped/Ip and gradient, and DTi<DV across the cases. A 1D transport analysis of two time slices used NUBEAM sources and Thomson density. The paper presents no prediction, nowcasting, BES or ECEI work.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR CES routinely provides pedestal Ti and rotation profiles. Ko et al. report about 10 ms sampling with 5 ms averaging and about 0.5 cm edge resolution, from 2014 campaign data.",
+      "original_pdf_locator": "Sec. II, p.2 (062502-2)",
+      "qualification": "These are the source's 2014 specifications, not the 2022 campaign. The source does not report report-arrival latency. It does not specify whether its Ti is impurity Ti or main-ion Ti; do not infer carbon.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge Ti and rotation pedestals in KSTAR evolve between ELMs, and ELM-overlapping CES windows were excluded from the analysis.",
+      "original_pdf_locator": "Sec. II, Fig. 1 caption, p.2",
+      "qualification": "This is offline profile analysis of selected long-ELM-period shots. It does not show that Ti is predictable from fluctuation diagnostics.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "CES 10 ms frames with 5 ms averaging; Thomson 10 ms. Arrival times are unknown.",
+  "validation_if_relevant": "None. The study is offline correlation plus a transport inference on two slices.",
+  "forbidden_inferences": [
+    "Do not cite it as evidence of intrinsic torque proven or of a physical mechanism; the authors call their residual-stress fit suggestive.",
+    "Do not cite it as support that BES/ECEI can predict CES temperature.",
+    "Do not imply real-time or causal estimation.",
+    "Do not apply its 2014 resolution figures to the 2022 chord.",
+    "Do not cite it as independent ground truth for CES labels."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include it as a KSTAR-specific background citation for CES pedestal Ti measurement cadence and inter-ELM pedestal evolution. Its residual-turbulence interpretation can support the theory section as the authors' interpretation, not as an established result.",
+  "bibtex_if_worth_citing": "@article{Ko2016CharacteristicsToroidal,title={Characteristics of toroidal rotation and ion temperature pedestals between ELM bursts in KSTAR H-mode plasmas},author={Ko, S. H. and Kwon, J. M. and Ko, W. H. and Kim, S. S. and Jhang, H. and Terzolo, L.},journal={Physics of Plasmas},volume={23},pages={062502},year={2016},doi={10.1063/1.4953425}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 9,
+  "supplied_pdf_sha256": "7a5f074f3cf63d2cce1f984b75ea6d76e2ddf2eb680148bcbb8c149dabaab9e6",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

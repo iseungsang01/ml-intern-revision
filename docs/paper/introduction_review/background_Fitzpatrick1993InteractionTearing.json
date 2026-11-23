@@ -1,0 +1,31 @@
+{
+  "key": "Fitzpatrick1993InteractionTearing",
+  "citation": {
+    "title": "Interaction of tearing modes with external structures in cylindrical geometry (plasma)",
+    "authors": "R. Fitzpatrick",
+    "year": 1993,
+    "venue": "Nuclear Fusion",
+    "volume": "33",
+    "pages": "1049-1084",
+    "doi_or_arxiv": "unknown (not stated in the supplied text)"
+  },
+  "relevance": "unsuitable",
+  "topic": "Analytic cylindrical theory of tearing-mode interaction with resistive walls and static error fields, covering mode locking, mode penetration and rotation braking, with tokamak scaling estimates.",
+  "own_question": "How do electromagnetic and viscous torques set island width, island rotation and locking or penetration thresholds when a tearing mode interacts with external structures?",
+  "actual_method_and_evidence": "The paper is analytic. It combines a Rutherford island equation with a phenomenological single-fluid viscous torque model and solves for steady-state and quasi-steady solutions. Section 8 applies an Ohmic scaling model to (2,1) modes. The author reports that the penetration threshold is about a factor of two above experiment. There is no CES, BES, ECEI, machine-learning or nowcasting content.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. The paper contains no diagnostic inputs, report targets or latency analysis.",
+  "validation_if_relevant": "Not applicable. The comparison with experiment is qualitative and drawn from cited literature.",
+  "forbidden_inferences": [
+    "Do not use this paper to justify pedestal-top impurity Ti nowcasting or BES/ECEI informativeness.",
+    "Do not cite the Section 8 scaling model as a validated KSTAR prediction.",
+    "Do not imply that any rotation physics here underlies our estimators."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The paper concerns MHD tearing-mode and error-field rotation physics, not CES temperature estimation. Its link to impurity rotation and temperature is indirect, and citing it would suggest a physical mechanism that our study does not identify.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 37,
+  "supplied_pdf_sha256": "866bfd581495edc2e0f12c8d0506d68bce0507ae0e68384faad2db2e6f12ec01",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

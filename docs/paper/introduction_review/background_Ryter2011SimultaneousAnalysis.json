@@ -1,0 +1,39 @@
+{
+  "key": "Ryter2011SimultaneousAnalysis",
+  "citation": {
+    "title": "Simultaneous analysis of ion and electron heat transport by power modulation in JET",
+    "authors": "F. Ryter, C. Angioni, C. Giroud, A.G. Peeters, T. Biewer, R. Bilato, E. Joffrin, T. Johnson, H. Leggate, E. Lerche, G. Madison, P. Mantica, D. Van Eester, I. Voitsekhovitch and JET Contributors",
+    "year": 2011,
+    "venue": "Nuclear Fusion",
+    "volume": "51",
+    "pages": "113016 (34pp)",
+    "doi_or_arxiv": "10.1088/0029-5515/51/11/113016"
+  },
+  "relevance": "peripheral",
+  "topic": "Perturbative ion and electron heat transport in JET L-mode, studied with 3He-minority ICRH power modulation, CXRS Ti and ECE Te Fourier analysis, critical-gradient ASTRA modelling and GYRO simulations.",
+  "own_question": "Can Ti modulation yield ion stiffness and threshold, and does ITG-driven off-diagonal transport shape the electron modulation?",
+  "actual_method_and_evidence": "Offline Fourier amplitude and phase analysis of modulated core Ti from CXRS (10 ms frames in 2006, 4-20 Hz scan) and Te from ECE. The measured profiles are compared with critical-gradient-model simulations in ASTRA and with local GYRO runs. This is not pedestal work, not KSTAR, and involves no nowcasting, BES/ECEI inputs or online use.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "JET CXRS ion temperature has been acquired at 10 ms exposure, enough for offline Fourier analysis of 4-20 Hz modulation.",
+      "original_pdf_locator": "Sec. 2.1 and Sec. 3, pp. 2-4",
+      "qualification": "Applies to core CXRS in a JET L-mode with offline frame grouping. It says nothing about report latency, pedestal chords or KSTAR.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline FFT over intervals of about 1.5 s. No causal or real-time element and no measured report arrival times.",
+  "validation_if_relevant": "Model-experiment profile matching only. No held-out data.",
+  "forbidden_inferences": [
+    "Do not imply CES/CXRS nowcasting or report-latency evidence.",
+    "Do not transfer the core-transport results to pedestal-top behaviour or to KSTAR.",
+    "Do not present the ITG off-diagonal electron transport result as a physical mechanism for our model.",
+    "Do not treat the main-ion versus impurity Ti distinction as resolved by this source; the paper does not address it."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude or cite only marginally. It could anchor one background sentence on time-resolved CXRS Ti use in transport studies, but it does not inform causal nowcasting, BES/ECEI incremental information or the validation designs.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 35,
+  "supplied_pdf_sha256": "f772eb6f144d841c5506613d3ffb0839c098413b22f09137e308e5a396f70c89",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

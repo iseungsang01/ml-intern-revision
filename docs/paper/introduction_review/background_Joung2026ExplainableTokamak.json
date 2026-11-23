@@ -1,0 +1,46 @@
+{
+  "key": "Joung2026ExplainableTokamak",
+  "citation": {
+    "title": "Explainable tokamak-agnostic forecasting of fusion plasma instability via megahertz turbulent fluctuations",
+    "authors": "Joung, S.; Kim, J.; Smith, D. R.; Gill, K.; McKee, G.; Yan, Z.; Geiger, B.; Coffee, R.; Jalalvand, A.; Kolemen, E.",
+    "year": 2026,
+    "venue": "Communications Physics",
+    "volume": "9",
+    "pages": "301",
+    "doi_or_arxiv": "10.1038/s42005-026-02689-2"
+  },
+  "relevance": "supporting",
+  "topic": "A CNN trained on DIII-D BES data at MHz rates forecasts Type-I ELM onset. The DIII-D weights are applied zero-shot to KSTAR BES and interpreted with Grad-CAM.",
+  "own_question": "The paper asks whether a CNN trained only on DIII-D BES fluctuations can forecast ELM onset on KSTAR without retraining. It also asks whether the network's saliency features correlate with physics diagnostics, namely Volterra growth rates, ELITE stability results and pedestal changes.",
+  "actual_method_and_evidence": "Input is a 128 µs window of band-pass-filtered BES data from an 8x8 channel array. Training uses proximity-based labels over the first and last 10% of each ELM cycle, roughly 1400 DIII-D shots and an 80/5/15 train/validation/test split. The split unit is not stated in the extracted text. For KSTAR, the authors select channels, interpolate to an 8x8 grid, use a different filter band and downsample to 500 kHz; about 200 shots from the 2021–2022 campaigns are analysed. The reported evidence consists of a single-shot example, qualitative and statistical saliency trends, and a true-positive rate above 80% on DIII-D, which is reported in the supplement. No real-time deployment is reported.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior work has applied BES-trained neural networks to KSTAR BES for ELM-onset forecasting without retraining, after device-specific preprocessing.",
+      "original_pdf_locator": "p.8 'Validation of tokamak-agnostic zero-shot prediction'; Methods p.9",
+      "qualification": "The preprocessing is not neutral: the filter band is changed, channels are remapped and the signal is downsampled. The target is an ELM event, not a CES temperature, and no quantitative KSTAR accuracy figure appears in the main text.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "KSTAR BES is a 4x16 Dα-emission density-fluctuation diagnostic sampled at 2 MHz and sometimes downsampled to 500 kHz for noise reasons.",
+      "original_pdf_locator": "Methods p.9 'Overview of KSTAR and KSTAR BES'",
+      "qualification": "This describes the full-rate turbulence signal. Our inputs are 10 ms voltage snapshots, so the description does not carry over to our data.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Input: 128 µs windows of BES fluctuations. Target: an ELM-proximity label, i.e. event forecasting. The paper uses no CES, ion temperature, ECEI inputs or report-arrival latency.",
+  "validation_if_relevant": "DIII-D uses a held-out test fraction, but the extracted text does not say whether it is split by shot. The KSTAR test is a cross-device application with a modified filter band. Untouched-data status and any leakage controls are unknown.",
+  "forbidden_inferences": [
+    "Do not claim it predicts or nowcasts temperature, either Ti or Te.",
+    "Do not infer that its zero-shot transfer implies our 10 ms snapshot inputs carry information.",
+    "Do not treat Grad-CAM correlations as an identified physical mechanism.",
+    "Do not cite it as evidence of real-time capability.",
+    "Do not claim that all prior ML work is noncausal or single-device."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite briefly as related KSTAR BES machine-learning work and as background on the diagnostic. The paper differs from ours in target, timescale and data rate.",
+  "bibtex_if_worth_citing": "@article{Joung2026ExplainableTokamak,title={Explainable tokamak-agnostic forecasting of fusion plasma instability via megahertz turbulent fluctuations},author={Joung, Semin and Kim, Jaewook and Smith, David R. and Gill, K. and McKee, G. and Yan, Z. and Geiger, B. and Coffee, R. and Jalalvand, A. and Kolemen, E.},journal={Communications Physics},volume={9},pages={301},year={2026},doi={10.1038/s42005-026-02689-2}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 13,
+  "supplied_pdf_sha256": "9cc6f536c099951a9b4f5924af09a5a6530f9c7ac0b9284257e24f9a89b4bd5e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

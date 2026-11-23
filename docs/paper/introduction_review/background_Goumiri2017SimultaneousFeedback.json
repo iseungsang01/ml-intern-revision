@@ -1,0 +1,39 @@
+{
+  "key": "Goumiri2017SimultaneousFeedback",
+  "citation": {
+    "title": "Simultaneous feedback control of plasma rotation and stored energy on NSTX-U using Neoclassical Toroidal Viscosity and Neutral Beam Injection",
+    "authors": "I. R. Goumiri, C. W. Rowley, S. A. Sabbagh, D. A. Gates, M. D. Boyer, S. P. Gerhardt, E. Kolemen, J. E. Menard",
+    "year": "unknown (the extracted text shows no publication year)",
+    "venue": "unknown (the extracted manuscript text shows no venue)",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "unknown"
+  },
+  "relevance": "peripheral",
+  "topic": "Model-based LQG/integral feedback control of toroidal rotation profile and stored energy on NSTX-U. Actuators are NBI and NTV. Tests are closed-loop simulations with predictive TRANSP.",
+  "own_question": "Can a reduced momentum and energy model support simultaneous tracking of rotation and beta_N/stored energy under actuator constraints?",
+  "actual_method_and_evidence": "The authors build a Bessel-projected 1D momentum diffusion model and a first-order stored-energy ODE. Parameters come from an extrapolated TRANSP scenario, 142301X, which is not real NSTX-U data. They add a Kalman observer using five sensor channels, a robustness analysis with perturbed chi_phi and tau_E, and PWM beam constraints. The controller is tested only in simulation, with no experimental validation. No CES, BES or ECEI nowcasting is involved.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Rotation-profile control work has used observers that reconstruct the state from a few rotation measurement channels in simulation.",
+      "original_pdf_locator": "Sec. III.C.3, eq. (27); pp. 21",
+      "qualification": "The observer is used for control. It is not a measurement nowcast. Sensors are simulated TRANSP outputs, and the diagnostic type is not specified as CES.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The controller is discrete with a 6 ms duty cycle, used to accommodate beam switching constraints. This is not a diagnostic report latency.",
+  "validation_if_relevant": "Validation consists of model-to-TRANSP comparisons with roughly 25% relative error and perturbed-plant robustness checks. There is no held-out experimental data.",
+  "forbidden_inferences": [
+    "Do not cite this paper as CES temperature nowcasting or as evidence on CES latency.",
+    "Do not claim the controller was validated experimentally on NSTX-U.",
+    "Do not transfer its 6 ms duty cycle to our 10 ms computation budget.",
+    "Do not use it to characterize all prior rotation control as observer-based."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, it could appear in one optional sentence on downstream applications in rotation and profile control. It does not address our estimation target, our diagnostics or our validation question.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 44,
+  "supplied_pdf_sha256": "9916c84aa9f1b4c798510d0832c7cc9f74d71e697f6e93ef4d231cb86a46e2f5",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,32 @@
+{
+  "key": "Owen2007Pigeonhole",
+  "citation": {
+    "title": "The Pigeonhole Bootstrap",
+    "authors": "Art B. Owen",
+    "year": 2007,
+    "venue": "The Annals of Applied Statistics",
+    "volume": "1(2)",
+    "pages": "386-411",
+    "doi_or_arxiv": "10.1214/07-AOAS122"
+  },
+  "relevance": "peripheral",
+  "topic": "Bootstrap variance estimation for crossed, unbalanced random-effects (row-by-column) data, such as ratings matrices.",
+  "own_question": "Can resampling rows and columns independently give an approximately unbiased variance for a mean under heteroscedastic crossed random effects, without fitting the model?",
+  "actual_method_and_evidence": "The paper derives analytic expectations of the bootstrap variance under an additive random-effects model, conditioning on the observation pattern. It reports that the naive bootstrap underestimates the row and column components by roughly factors nu_A and nu_B. The pigeonhole bootstrap is mildly conservative, overcounting the error term by a factor of about 3. A Netflix day-of-week illustration uses 10 resamples. There are no time series and no fusion of physics signals.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not applicable. The source has no temporal, causal, or nowcasting component.",
+  "validation_if_relevant": "Validation is analytic and conditional on a fixed missingness pattern. The source itself notes that conditional and unconditional variances can differ.",
+  "forbidden_inferences": [
+    "Do not claim that the source addresses time-series or causal uncertainty.",
+    "Do not imply that we used pigeonhole resampling unless we actually implemented it.",
+    "Do not transfer its random-effects variance results to correlated CES/BES/ECEI time series.",
+    "Do not treat the Netflix example as evidence about plasma data."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "It is outside the nowcasting framing. It would matter only if we ran crossed resampling over grouping units such as shots and chords. Even then, temporal dependence within each shot would remain unaddressed. Exclude it unless such an analysis is actually performed.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 26,
+  "supplied_pdf_sha256": "ab56598c9e114153f7ed93e5e7c39703d39f397e003c8176990abb9e49906623",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

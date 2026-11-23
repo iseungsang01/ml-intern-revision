@@ -1,0 +1,7 @@
+{
+  "state": "all_eligible_sources_individually_reviewed_and_prose_integrated",
+  "complete": true,
+  "scientific_runs": 0,
+  "coverage_record": "all_corpus_status.json",
+  "historical_selection": "progress.json"
+}

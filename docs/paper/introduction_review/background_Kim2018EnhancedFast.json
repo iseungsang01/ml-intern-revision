@@ -1,0 +1,32 @@
+{
+  "key": "Kim2018EnhancedFast",
+  "citation": {
+    "title": "Enhanced fast ion prompt loss due to resonant magnetic perturbations in KSTAR",
+    "authors": "Kim, Kimin; Jhang, Hogun; Kim, Junghee; Rhee, T.",
+    "year": 2018,
+    "venue": "Physics of Plasmas",
+    "volume": "25",
+    "pages": "122511",
+    "doi_or_arxiv": "10.1063/1.5054178"
+  },
+  "relevance": "unsuitable",
+  "topic": "Full-orbit simulation of RMP-induced fast-ion prompt loss in KSTAR, compared qualitatively with FILD observations",
+  "own_question": "How do RMP amplitude and plasma-response modeling (vacuum vs ideal IPEC) affect fast-ion loss, and what explains an observed threshold?",
+  "actual_method_and_evidence": "POCA full-orbit tracking of 20,000 NuBDeC-deposited beam ions without collisions, run in vacuum and ideal-response perturbed equilibria. FILD measurements from two KSTAR H-mode discharges were used. The authors report a loss threshold near dB/dB0 about 4 with the ideal response, versus small losses with the vacuum field. The experimental saturation was not reproduced. CES ion temperature appears only as a time trace; there is no CES, BES/ECEI or nowcasting analysis.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant; no causal estimation, report timing or 10 ms computation.",
+  "validation_if_relevant": "Qualitative simulation-experiment comparison only; no held-out validation.",
+  "forbidden_inferences": [
+    "Do not cite as evidence on CES Ti nowcasting, BES/ECEI information or pedestal-top chord behavior.",
+    "Do not imply KSTAR2022 relevance; this paper uses earlier discharges.",
+    "Do not treat the ideal-response threshold as established physics.",
+    "Do not cite as evidence of real-time capability."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper concerns fast-ion orbit loss under RMPs. Its only overlap with our paper is the KSTAR device and a routine Ti time trace, so it gives no support to our framing.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 12,
+  "supplied_pdf_sha256": "a7a0b0c5d063d970b8b8fed2b89579877d8d7ea7a233ed30b26dcfe1e55d11d3",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

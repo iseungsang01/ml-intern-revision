@@ -1,0 +1,39 @@
+{
+  "key": "Lee2021SystematicEvaluation",
+  "citation": {
+    "title": "Systematic evaluation of the effect of multi-ion-source neutral beam injection on motional Stark effect diagnostic in KSTAR",
+    "authors": "Lee, Youngho; Ko, Jinseok; Na, Yong-Su",
+    "year": 2021,
+    "venue": "Fusion Engineering and Design",
+    "volume": "173",
+    "pages": "112870",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2021.112870"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline correction of MSE pitch-angle systematic offsets from spectral overlap of multiple KSTAR NBI sources",
+  "own_question": "Can measured Stokes parameters plus model equations separate NB1-A from NB1-B MSE contributions and estimate the time-varying polarization-angle offset?",
+  "actual_method_and_evidence": "Intensity ratio kappa is estimated from Q/U changes at a manually chosen beam turn-on. Gradient-descent least squares fits a tanh+linear pitch-angle profile per time slice. The method is applied to #26068 and thirteen 2020-campaign discharges. Measured and modeled U/Q are compared. True pitch angles are not independently verified, and the authors list this verification as future work. No CES, Ti, BES/ECEI or nowcasting content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In KSTAR, beam-emission spectral overlap from multiple NBI sources can bias spectroscopic beam-based measurements (MSE), depending on beam energy combinations.",
+      "original_pdf_locator": "Sec. 1 p.1; Sec. 3 p.4, Fig. 6",
+      "qualification": "MSE polarimetry only. The finding does not transfer to CES Ti. The offset estimates are model-based and unverified, and the source uses the 2020 campaign, not 2022.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline post-processing with 20 ms averaging. No online timing reported.",
+  "validation_if_relevant": "Self-consistency of U/Q fit only. There is no independent truth or held-out data.",
+  "forbidden_inferences": [
+    "CES carbon Ti suffers the same quantified offset",
+    "Method is real-time or causal",
+    "Modeled angles are validated physical truth",
+    "Supports BES/ECEI incremental information"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Different diagnostic and question. Cite only if the paper discusses NBI-dependent beam-spectroscopy systematics in KSTAR; otherwise exclude.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "aafa894b90fd8725a923a37f8abc9c03ba26a0c342b802063ed9945d2bcc402f",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

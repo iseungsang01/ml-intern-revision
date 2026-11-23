@@ -1,0 +1,39 @@
+{
+  "key": "DeBock2012RealTime",
+  "citation": {
+    "title": "Real-time MSE measurements for current profile control on KSTAR",
+    "authors": "M. F. M. De Bock; D. Aussems; R. Huijgen; M. Scheffer; J. Chung",
+    "year": 2012,
+    "venue": "Review of Scientific Instruments",
+    "volume": "83",
+    "pages": "10D524",
+    "doi_or_arxiv": "10.1063/1.4732854"
+  },
+  "relevance": "peripheral",
+  "topic": "Design considerations for a real-time motional Stark effect (MSE) polarimetry diagnostic on KSTAR. The diagnostic measures magnetic field pitch and q profile, not CES ion temperature.",
+  "own_question": "How should real-time MSE be built on KSTAR? The paper considers three elements: PEM retardance retrieved from the signal itself, interference-filter selection under beam-spectrum overlap, and a custom multi-channel, multi-harmonic phase-locking algorithm.",
+  "actual_method_and_evidence": "The evidence is a lab laser scan of the PEM retardance profile, spectral simulations comparing filter designs, and a phase-locking demonstration on MAST MSE data. The authors report locking within 0.5 degrees about 10 ms after beam switch-on, for a 1 MHz signal analysed at 1 kHz. No KSTAR real-time deployment is reported. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "On KSTAR, real-time core diagnostics such as MSE have been motivated by q-profile control for long-pulse advanced scenarios.",
+      "original_pdf_locator": "p.2, Abstract and Sec. I",
+      "qualification": "This is the authors' stated motivation and a design study. It is not achieved control. It concerns MSE, not CES.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "This concerns MSE polarization processed at 1 kHz on MAST data. It has no CES, BES or ECEI inputs, no report-arrival timing, and no nowcasting target.",
+  "validation_if_relevant": "Validation is an offline comparison against post-shot analysis on a MAST dataset, plus simulations. There is no KSTAR held-out validation.",
+  "forbidden_inferences": [
+    "Do not cite it as evidence about CES ion temperature, its latency, or its availability.",
+    "Do not claim real-time MSE was operational on KSTAR.",
+    "Do not transfer the 10 ms locking result to our 10 ms computation budget.",
+    "Do not cite it as prior nowcasting or machine-learning work."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most this is optional background showing that KSTAR real-time diagnostic needs have been discussed for profile control. It does not address impurity-ion CES temperature, BES/ECEI inputs, or temporal estimation. Omitting it loses nothing essential.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "d8ecb76dd0525dfe1c0e7886ec9744307e697b0dd8dc84b82682da8e9f75f629",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

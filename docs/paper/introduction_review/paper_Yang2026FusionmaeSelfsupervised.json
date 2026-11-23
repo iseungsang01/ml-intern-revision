@@ -1,0 +1,78 @@
+{
+  "key": "Yang2026FusionmaeSelfsupervised",
+  "citation": {
+    "title": "FusionMAE, a self-supervised pretrained model to optimize and simplify diagnostic and control of fusion plasma",
+    "authors": "Yang, Zongyu; Yang, Zhenghao; Tian, Wenjing; Li, Jiyuan; Sun, Xiang; Zheng, Guohui; Liu, Songfen; Wu, Niannian; Li, Rongpeng; Xu, Zhaohe; Li, Bo; Shi, Zhongbing; Gao, Zhe; Chen, Wei; Ji, Xiaoquan; Xu, Min; Zhong, Wulyu",
+    "year": 2026,
+    "venue": "Communications Physics",
+    "volume": "9",
+    "pages": "232 (article number; 13 pp.)",
+    "doi_or_arxiv": "10.1038/s42005-026-02626-3 (this paper's own DOI, p1 header; not taken from the reference list)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-13",
+    "full_pdf_supplied": true,
+    "limitations": "Supplementary Notes 1-6 and Tables 2 and 4 were not supplied, including the SUNIST-2 results and the downstream-task details. Figure values were read visually."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Which signals are reconstructed",
+      "verdict": "supported",
+      "source_finding": "The model uses 88 channels from 12 systems. These are Ip, the EFIT shape and position parameters, Bt, 41 Bp coils, Vloop, ne (2, interferometer), Te (2, ECE), We, Prad, SX (4), D-alpha (2), A_MHD (2), C III line intensity, betaN, q95, li, 16 PF coil currents, ICS, and NBI/EC/LH power. Any of these channels can be masked and reconstructed. All secondary channels, such as EFIT outputs, can also be masked together and reconstructed.",
+      "locator": "p2 Results first subsection; p9 Table 1; p6 Fig. 5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On HL-3, a masked autoencoder was trained to impute masked channels among 88 magnetic, kinetic, radiation and actuator signals from the remaining channels in the same 10 ms window.",
+      "qualification": "The task reconstructs channels at the same time from other channels. It is not a temporal forecast of a delayed report."
+    },
+    {
+      "proposed_claim": "An ion temperature or charge-exchange channel is included",
+      "verdict": "unsupported",
+      "source_finding": "The channel list contains no Ti, CES or CXRS channel. The only impurity channel is C III line intensity, which is a spectral line brightness, not a temperature. Electron Te comes from ECE.",
+      "locator": "p9 Table 1 (rows Aimp and Te)",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "The reconstructed set in that study comprised electron-kinetic, magnetic, radiation and actuator channels and did not include charge-exchange ion temperature.",
+      "qualification": "This statement applies to this source only. It implies nothing about other prior work."
+    },
+    {
+      "proposed_claim": "How the stated 97.2% accuracy is defined",
+      "verdict": "qualify",
+      "source_finding": "The 97.2% figure is the mean Pearson correlation between reconstructed and original signals when one channel is masked at a time, averaged over all 88 channels on test shots. The study also reports 95.3% when a whole subsystem is masked and 98.7% with no masking. Normalized RMSE is reported separately. Most shots exceed 0.95 per-shot PCC; lower values come mainly from early-terminating shots.",
+      "locator": "p1 Abstract; p3-4 'Unified plasma state embedding'; p4 Fig. 3a-c",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Single-channel imputation reached a mean Pearson correlation of about 0.97 against the conventionally processed signals.",
+      "qualification": "Describe the result as a correlation, not as 'accuracy'. PCC is insensitive to offset and scale errors. The reference values are reported or processed signals, such as EFIT outputs, not independent physical truth."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "88x10 array: a 10 ms window sampled at 1 kHz, with missing channels replaced by mask tokens",
+    "outputs": "Reconstructed 88x10 array for the same window, plus a 256-dimensional embedding",
+    "causal_or_offline": "Imputation within the same window. The model makes no prediction beyond the input window. Offline evaluation.",
+    "source_diagnostic_as_input": "Yes. The remaining channels of the same window are inputs.",
+    "reported_vs_physical_truth": "Targets are recorded or code-derived signals. No independent truth is used."
+  },
+  "validation": {
+    "split_unit": "Random shot-level split: 1950 development and 495 test shots from 2,445 discharges in four campaigns, 2022-2025 (p8 Methods)",
+    "temporal_order": "Not enforced by the split, which is random. Supplementary Note 1 reports a test on the latest campaign; it was not read here.",
+    "independent_truth": "None",
+    "unknowns": "Whether the latest-campaign data were held out from training. Variability of the per-channel metrics."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Inference time of 4.8 ms per time slice; training took about 10 h on one A100. The authors call this quasi-real-time.",
+    "what_not_established": "Inference hardware, deployment in the plasma control system, closed-loop use, and latency including data acquisition",
+    "locator": "p11 Methods 'Training of FusionMAE'"
+  },
+  "forbidden_inferences": [
+    "FusionMAE reconstructs or nowcasts ion temperature or CES reports",
+    "97.2% is a classification or error-based accuracy",
+    "The imputation is causal temporal forecasting",
+    "Real-time deployment was demonstrated",
+    "Reconstructions match physical truth",
+    "The results transfer to KSTAR or to BES/ECEI voltage inputs"
+  ],
+  "competing_or_complementary": "Complementary. That work imputes missing diagnostics from other channels at the same time. Our task is a causal temporal nowcast of a not-yet-available CES report from BES/ECEI voltage snapshots and past CES reports. Cite the source as the missing-sensor or virtual-diagnostic context, not as a baseline.",
+  "bibtex": "@article{Yang2026FusionmaeSelfsupervised,title={FusionMAE, a self-supervised pretrained model to optimize and simplify diagnostic and control of fusion plasma},author={Yang, Zongyu and Yang, Zhenghao and Tian, Wenjing and Li, Jiyuan and Sun, Xiang and Zheng, Guohui and Liu, Songfen and Wu, Niannian and Li, Rongpeng and Xu, Zhaohe and Li, Bo and Shi, Zhongbing and Gao, Zhe and Chen, Wei and Ji, Xiaoquan and Xu, Min and Zhong, Wulyu},journal={Communications Physics},volume={9},pages={232},year={2026},doi={10.1038/s42005-026-02626-3}}",
+  "followup_sources_if_material": [
+    "FusionMAE Supplementary Note 1 (latest-campaign test) and Supplementary Table 2 (per-channel statistics), only if per-channel numbers are cited"
+  ]
+}

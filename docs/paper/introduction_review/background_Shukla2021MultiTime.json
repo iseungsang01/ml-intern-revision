@@ -1,0 +1,38 @@
+{
+  "key": "Shukla2021MultiTime",
+  "citation": {
+    "title": "Multi-Time Attention Networks for Irregularly Sampled Time Series",
+    "authors": "Satya Narayan Shukla; Benjamin M. Marlin",
+    "year": 2021,
+    "venue": "International Conference on Learning Representations (ICLR)",
+    "volume": "",
+    "pages": "",
+    "doi_or_arxiv": "arXiv:2101.10318"
+  },
+  "relevance": "peripheral",
+  "topic": "Attention-based interpolation and classification for sparse, irregularly sampled multivariate time series (ICU records, human activity data)",
+  "own_question": "Can learned continuous-time embeddings with time attention re-represent irregular series at reference points for interpolation and classification?",
+  "actual_method_and_evidence": "A VAE encoder-decoder built on the mTAND module, evaluated on PhysioNet 2012, MIMIC-III and human-activity data with random 80/20 splits and five seeds. Encoders condition on observations from the whole window, so the evaluation is two-sided rather than causal. No plasma data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Learned time-attention kernels have been proposed as an alternative to fixed-form similarity kernels for interpolating irregularly sampled series.",
+      "original_pdf_locator": "Sec. 3, Eqs. 1-4; Sec. 2, p. 3",
+      "qualification": "This is a general machine-learning method. It was not applied to CES, BES or ECEI and was not tested in a strictly causal setting.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The models use time points observed across the full window, so they are not current-report nowcasts from strictly past inputs. Report arrival times were not modeled.",
+  "validation_if_relevant": "Random splits with seed repeats. The source defines no temporal or campaign-level held-out data.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence of fusion or CES performance.",
+    "Do not treat its speed results as evidence about our 10 ms computation budget.",
+    "Do not claim we implemented mTAN.",
+    "Do not infer that its results transfer to causal settings."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional background citation for learned irregular-time interpolation. It is not needed for the CES nowcasting framing.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

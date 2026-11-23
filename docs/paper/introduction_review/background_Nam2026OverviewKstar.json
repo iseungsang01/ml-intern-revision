@@ -1,0 +1,39 @@
+{
+  "key": "Nam2026OverviewKstar",
+  "citation": {
+    "title": "Overview of the KSTAR experiments and future plan",
+    "authors": "Nam, Y.U. et al. (KSTAR Team)",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "116015 (per record hint; accepted manuscript extracted, article number not verified)",
+    "doi_or_arxiv": "10.1088/1741-4326/ae8283"
+  },
+  "relevance": "peripheral",
+  "topic": "Program overview of the 2023-2024 KSTAR tungsten-divertor campaigns: scenarios, RMP, DECAF disruption forecasting, detachment control and turbulence studies.",
+  "own_question": "Summarize KSTAR progress after W divertor installation and outline future plans.",
+  "actual_method_and_evidence": "Narrative overview of results reported mainly in cited dedicated papers. It mentions Ti and rotation profiles from unspecified diagnostics. ECEI, BES and CSS appear only as turbulence diagnostics. It contains no CES nowcasting, no 10 ms causal estimation, and no 2022 pedestal-top chord analysis. The campaigns covered are 2023-2024 W-divertor campaigns, not the carbon-wall 2022 campaign used in our study. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR has used real-time, ML- and surrogate-model-based control, including detachment control inferring 2D radiation from AXUV, as context for real-time estimation interest.",
+      "original_pdf_locator": "Section 4, pp. 13-14; Fig. 11 caption",
+      "qualification": "These are radiation and heat-flux control results, not ion-temperature or CES estimation. Performance numbers come from cited papers [53,54].",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The only timing figures are AXUV at 1 kHz and Langmuir probes at 2 kHz, both for radiation control.",
+  "validation_if_relevant": "Not reported for anything comparable to our study.",
+  "forbidden_inferences": [
+    "Do not claim this paper addresses CES Ti nowcasting or a CES latency gap.",
+    "Do not treat 2023-2024 W-divertor conditions as describing KSTAR2022 data.",
+    "Do not infer main-ion versus impurity Ti methodology from this paper.",
+    "Do not cite overview results as the source's own demonstrated performance where it defers to other papers."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most an optional general KSTAR context citation for real-time control ambitions. It does not support any specific claim about our problem or methods.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 39,
+  "supplied_pdf_sha256": "6723082a8c1982c18ffac0812ce0e67e567f5658ac6c8373007ada046b11a3c5",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

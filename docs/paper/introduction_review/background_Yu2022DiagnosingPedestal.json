@@ -1,0 +1,46 @@
+{
+  "key": "Yu2022DiagnosingPedestal",
+  "citation": {
+    "title": "Diagnosing the pedestal magnetic field and magnetohydrodynamics radial structure with pedestal–scrape of layer electron cyclotron emission radiation inversion in H-mode plasma (invited)",
+    "authors": "G. Yu, Y. Zhu, M. Austin, Y. Chen, J. Cao, A. Diallo, G. Kramer, Z. Li, X. Li, X. Liu, R. Nazikian, Y. Zheng, N. C. Luhmann Jr.",
+    "year": 2022,
+    "venue": "Review of Scientific Instruments",
+    "volume": "93",
+    "pages": "103528",
+    "doi_or_arxiv": "10.1063/5.0099348"
+  },
+  "relevance": "supporting",
+  "topic": "Interpreting edge ECE/ECEI radiation temperature on DIII-D. Covers shine-through, forward modelling and the effect of receiver bandwidth.",
+  "own_question": "Can pedestal–SOL ECE radiation inversions be interpreted through synthetic-ECE modelling? Specifically, can they indicate separatrix |B|, MHD radial structure and inter-ELM pedestal |B| change?",
+  "actual_method_and_evidence": "Synthetic ECE forward modelling (Princeton code, no wall reflection) on assumed tanh profiles with parameter scans. It is set against selected DIII-D ECEI and ECE observations, for example shot 184801 (EHO vs tearing mode) and one inter-ELM example with Thomson profiles. The authors state that quantitative experimental evidence is lacking.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "At the H-mode edge, ECE radiation temperature can depart from local Te. This is because of shine-through: it depends on both density and temperature, including away from the cold resonance.",
+      "original_pdf_locator": "Sec. II, pp. 2–3; Fig. 2",
+      "qualification": "The support is synthetic modelling on DIII-D low-field-side edge profiles. It is electron-cyclotron emission, not an ion or impurity diagnostic. It only motivates treating ECEI voltages as non-local, uncalibrated proxies.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Edge ECE signals may change through magnetic-field shifts without matching Te/ne changes. In one modelled case, about 60 G pedestal |B| change reproduced an observed trend reversal.",
+      "original_pdf_locator": "Sec. V, pp. 5–7; Figs. 8–9",
+      "qualification": "This rests on one discharge example and the authors' modelling interpretation. It is not proof of the mechanism, and it is not KSTAR data.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline interpretation only. There is no nowcasting, no CES, no timing or latency analysis, and no real-time use.",
+  "validation_if_relevant": "Model–data qualitative comparison only. There is no held-out validation or statistical evaluation. The bandwidth S/N table is model-derived.",
+  "forbidden_inferences": [
+    "Do not claim ECEI measures Te or ion/impurity temperature at the pedestal.",
+    "Do not claim the |B| or MHD diagnostics are validated quantitatively.",
+    "Do not transfer DIII-D numbers (e.g. 0.3 cm, 60 G, 0.1 GHz) to KSTAR2022.",
+    "Do not imply this paper addresses CES, nowcasting or prediction.",
+    "Do not cite the bandwidth summary inconsistency (0.5 vs 0.3 GHz current) as fact."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as supporting background. It explains why our raw ECEI voltages are non-local, field-sensitive proxies and not calibrated Te. It is not evidence for our estimator or for any physical mechanism.",
+  "bibtex_if_worth_citing": "@article{Yu2022DiagnosingPedestal,title={Diagnosing the pedestal magnetic field and magnetohydrodynamics radial structure with pedestal--scrape of layer electron cyclotron emission radiation inversion in {H}-mode plasma (invited)},author={Yu, G. and Zhu, Y. and Austin, M. and Chen, Y. and Cao, J. and Diallo, A. and Kramer, G. and Li, Z. and Li, X. and Liu, X. and Nazikian, R. and Zheng, Y. and Luhmann, Jr., N. C.},journal={Review of Scientific Instruments},volume={93},pages={103528},year={2022},doi={10.1063/5.0099348}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "4edf9340c046a1b6542ed1e3529291e632773d204b8171b8489083e81059884d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

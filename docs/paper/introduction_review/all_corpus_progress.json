@@ -1,0 +1,20 @@
+{
+  "state": "all_eligible_sources_individually_reviewed_and_prose_integrated",
+  "source_file_unit_not_distinct_works": true,
+  "total_pdf_files": 254,
+  "eligible_public_unique_source_files": 251,
+  "reading_modes": {
+    "full_pdf": 41,
+    "full_text": 210,
+    "held": 1,
+    "duplicate": 2
+  },
+  "figure_limit": "Full extracted text does not constitute visual checking of figures/equations. Even PDF-supplied audits retain source-specific visual/legibility caveats.",
+  "duplicate_versions_may_still_represent_same_work": true,
+  "new_fits": 0,
+  "gpu_runs": 0,
+  "whole_manuscript_regraded": false,
+  "prior_incomplete_responses": "Preserved; recovered complete fields only; not counted as completed synthesis or grades",
+  "final_writing_provenance": "manuscript_writing_provenance.json",
+  "reader": "../research_reader/index.html"
+}

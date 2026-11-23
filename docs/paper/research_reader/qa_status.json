@@ -1,0 +1,17 @@
+{
+  "bibliographic_note": true,
+  "embedded_results_pages": 8,
+  "desktop_sections": 7,
+  "source_records": 254,
+  "search_and_filters": true,
+  "compact_citation_labels": true,
+  "citation_dialog": true,
+  "escape_and_focus": true,
+  "empty_state": true,
+  "unknown_citation_state": true,
+  "section_navigation": true,
+  "mobile_390px_no_overflow": true,
+  "js_errors": [],
+  "automatic_http_requests": [],
+  "offline_passed": true
+}

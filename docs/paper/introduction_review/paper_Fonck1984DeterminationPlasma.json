@@ -1,0 +1,79 @@
+{
+  "key": "Fonck1984DeterminationPlasma",
+  "citation": {
+    "title": "Determination of plasma-ion velocity distribution via charge-exchange recombination spectroscopy",
+    "authors": "R. J. Fonck; D. S. Darrow; K. P. Jaehnig",
+    "year": 1984,
+    "venue": "Physical Review A",
+    "volume": "29(6)",
+    "pages": "3288-3309",
+    "doi_or_arxiv": "No DOI is printed in the supplied PDF. The APS pattern 10.1103/PhysRevA.29.3288 is unverified. DOIs in the reference list belong to cited works."
+  },
+  "scope_read": {
+    "pdf_pages": "1-22",
+    "full_pdf_supplied": true,
+    "limitations": "The OCR is degraded on pp.3,5,9-10,12, and some equations and figure labels are partly illegible. The figures were read from captions and the legible text."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Principle: beam-driven charge exchange excites impurity lines; Doppler width gives ion temperature and line shift gives bulk motion.",
+      "verdict": "supported",
+      "source_finding": "Charge exchange with beam neutrals excites hydrogenic low-Z impurity lines. Viewing across the beam localizes the emission. The Doppler width gives Ti if non-thermal broadening is negligible, and the shift gives rotation.",
+      "locator": "p.1 Sec.I; p.2 Eq.(1) and Sec.I; p.11 Sec.III Eq.(22)",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Charge-exchange recombination spectroscopy infers impurity-ion temperature and rotation from the Doppler width and shift of lines that beam neutrals excite at the beam-sightline intersection [Fonck1984].",
+      "qualification": "This holds when Doppler broadening dominates. The quantity measured is the emitting impurity's velocity distribution."
+    },
+    {
+      "proposed_claim": "Atomic fine structure and l-mixing can distort line profiles and intensities.",
+      "verdict": "qualify",
+      "source_finding": "Unresolved fine structure widens the composite profile. The paper computes Ti correction factors that grow at low Ti and for low-n transitions (calculated for He+, C5+, O7+ at 25 keV/amu, field-free, Zeeman neglected). A simple model estimates ion-collision and motional-Stark l-mixing. This mixing mainly changes intensities, and the authors say it can shift the Ti correction by up to about 10%.",
+      "locator": "p.11-12 Sec.III, Figs.12-15; p.6-9 Sec.II, Eqs.(5)-(21), Figs.7-11",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Reported CES temperatures depend on line-profile modelling, because unresolved fine structure and collisional l-mixing can alter apparent widths and intensities [Fonck1984].",
+      "qualification": "These are model estimates, not measurements. The paper does not treat the KSTAR carbon line or its analysis chain."
+    },
+    {
+      "proposed_claim": "Ions created along the beam can drift into the sightline (plume) and delocalize the signal.",
+      "verdict": "qualify",
+      "source_finding": "Recombined ions that are electron-excited away from the intersection add beam-synchronous emission, so beam modulation cannot remove it. A 1-D model gives plume-to-prompt ratios that are largest for He+ and low beam energy and smaller for O VIII. Non-Gaussian He II wings were observed on PDX.",
+      "locator": "p.12-16 Sec.IV, Eqs.(24)-(31), Figs.16-20; p.19 Sec.V, Fig.25; p.20-21 Sec.VI",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Plume emission from beam-produced ions drifting along field lines can reduce the radial localization of CXRS signals, most strongly for very light impurities and low beam energies [Fonck1984].",
+      "qualification": "The observation is for He II on PDX, and C5+ ratios are not plotted. Do not quantify a plume effect for KSTAR carbon CES."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable: these are spectrometer line profiles of a diagnostic, not estimator inputs",
+    "outputs": "Ti and toroidal rotation from fitted Gaussians",
+    "causal_or_offline": "Offline least-squares fitting of spectral scans (p.18 Sec.V)",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Compared with passive-CX central Ti within error bars (p.18 Fig.23) and with TRANSP within 20% (p.20). This is consistency checking, not independent truth."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none; cross-diagnostic comparison only",
+    "unknowns": "not_applicable"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Spectral-scan cadence: one scan every 50 ms with a scanning mirror (p.17 Sec.V), later every 20 ms with an optical multichannel analyzer (p.20 Sec.V)",
+    "what_not_established": "Analysis latency, real-time processing, report arrival times",
+    "locator": "p.17, p.20 Sec.V"
+  },
+  "forbidden_inferences": [
+    "CES reports equal physical Ti",
+    "These results apply to KSTAR carbon CES or provider chords",
+    "Plume or fine-structure magnitudes for our chord",
+    "Any statement about latency, nowcasting or causal estimation",
+    "Prior CXRS work was noncausal or electron-only",
+    "The 20/50 ms cadence is our report timing"
+  ],
+  "competing_or_complementary": "Complementary background physics only. It explains why the CES label is a model-dependent reported quantity, which supports treating labels as conventional rather than as truth. It neither competes with nor benchmarks temporal estimators.",
+  "bibtex": "@article{Fonck1984DeterminationPlasma,author={Fonck, R. J. and Darrow, D. S. and Jaehnig, K. P.},title={Determination of plasma-ion velocity distribution via charge-exchange recombination spectroscopy},journal={Phys. Rev. A},volume={29},number={6},pages={3288--3309},year={1984}}",
+  "followup_sources_if_material": [
+    "The KSTAR CES instrument or analysis paper used by the provider (identify; needed for carbon line, cadence and fitting chain)",
+    "A later carbon CXRS spectral-modelling review covering Zeeman, cross-section and plume corrections (identify and verify before citing)"
+  ]
+}

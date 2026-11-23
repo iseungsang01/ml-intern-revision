@@ -1,0 +1,38 @@
+{
+  "key": "Karlgaard2007HuberBased",
+  "citation": {
+    "title": "Huber-Based Divided Difference Filtering",
+    "authors": "Karlgaard, C. D.; Schaub, H.",
+    "year": 2007,
+    "venue": "Journal of Guidance, Control, and Dynamics",
+    "volume": "30(3)",
+    "pages": "885-891",
+    "doi_or_arxiv": "10.2514/1.27968"
+  },
+  "relevance": "peripheral",
+  "topic": "Robust (Huber M-estimation) measurement update for derivative-free divided-difference Kalman filters (DD1/DD2), with a simulated radar tracking benchmark.",
+  "own_question": "Whether a Huber-based measurement update, recast as a linear regression at each step, can make DD1/DD2 filters robust to non-Gaussian (Gaussian-mixture) measurement noise at modest added computation.",
+  "actual_method_and_evidence": "Derivation of one-step iteratively reweighted Huber updates for DD1/DD2. Evaluated on a simulated falling-body range-tracking problem using 2000 Monte Carlo runs of 60 s each, with contamination levels of 0 and 0.5. The authors report median errors and computation ratios relative to the EKF. Under Gaussian noise the Huber filters showed larger errors than their standard counterparts. Under contaminated noise, Huber-DD2 had the smallest errors. The work uses simulation only, with no fusion or plasma data.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Huber's combined l1/l2 loss can be embedded in recursive nonlinear filter updates to reduce sensitivity to heavy-tailed measurement errors, though it costs some accuracy when errors are truly Gaussian.",
+      "original_pdf_locator": "Sec. II.C, Eqs. 27-46; Sec. III.B",
+      "qualification": "This was demonstrated only on a simulated tracking benchmark with mixture noise. It is a background concept here, not an estimator implemented in our study.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source addresses state filtering of a simulated target and involves no nowcasting of delayed reports.",
+  "validation_if_relevant": "Synthetic Monte Carlo study only. There is no held-out real data.",
+  "forbidden_inferences": [
+    "Do not state that Huber filtering improves CES or plasma nowcasting.",
+    "Do not treat the reported computation ratios as relevant to our 10 ms budget.",
+    "Do not cite this work as prior plasma or diagnostic work.",
+    "Do not imply our study implemented a Huber or divided-difference filter."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "The paper is outside the plasma domain. It could be cited only if the theory section discusses robust losses for outlier-prone labels; otherwise it should be excluded.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "4f0571290c1de2056e080a08fdbae2cd70d7a174571d54173dd8a2c1d0f2d6c3",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

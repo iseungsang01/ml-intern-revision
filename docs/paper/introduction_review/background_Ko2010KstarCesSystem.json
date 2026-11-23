@@ -1,0 +1,46 @@
+{
+  "key": "Ko2010KstarCesSystem",
+  "citation": {
+    "title": "KSTAR Charge Exchange Spectroscopy System",
+    "authors": "Won-Ha Ko; Seungtae Oh; Myeun Kwon",
+    "year": 2010,
+    "venue": "IEEE Transactions on Plasma Science",
+    "volume": "38",
+    "pages": "996-1000",
+    "doi_or_arxiv": "10.1109/TPS.2010.2042182"
+  },
+  "relevance": "supporting",
+  "topic": "Design status of the early KSTAR CES diagnostic: cassette optics, modulated NBI with background subtraction, 1.33-m Czerny-Turner spectrometer, EMCCD detector, and simulated S/N.",
+  "own_question": "How should a KSTAR CES system be designed to give local impurity Ti and rotation profiles with adequate S/N?",
+  "actual_method_and_evidence": "This is a hardware and design description. The spectrometer and CCD were bench-tested on a helium discharge. S/N and detection efficiency come from a von Hellermann simulation code under assumed conditions (for example, 1 MW NBI, r/a=0.3, CVI line). The paper reports no plasma CES measurements and no validated profiles. The stated 10 ms resolution and 4 cm spatial resolution are planned specifications for 2010.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR CES was designed to infer impurity (e.g., CVI 529 nm) ion temperature from active charge-exchange emission. Its design relies on beam modulation and background subtraction, which makes the analysis nontrivial.",
+      "original_pdf_locator": "p.996 Abstract and Introduction; p.997 Sec. III-B; p.998 Sec. III-C",
+      "qualification": "These describe the design plan in 2010, not the configuration of the 2022 campaign. The measured quantity is impurity Ti, not main-ion Ti.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The design targeted CES profiles at roughly 10 ms resolution, and the authors' simulations indicated that S/N worsens at low NBI power and high Ti.",
+      "original_pdf_locator": "p.998 Sec. III-C/D, Sec. IV-A; p.999 Fig. 5 text",
+      "qualification": "These are simulated or planned values, not achieved performance. The 10 ms figure is not the report arrival latency in our data. No figures were visually checked.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The source gives a planned 10 ms time resolution for CES. It does not report actual report arrival times or analysis latency; these remain unknown.",
+  "validation_if_relevant": "None for plasma Ti. The source contains only simulated S/N and bench tests of the hardware.",
+  "forbidden_inferences": [
+    "That CES reports in KSTAR2022 arrive every 10 ms or with a known delay.",
+    "That CES labels are independent physical truth.",
+    "That the 2010 hardware matches the 2022 system or the provider-selected chord.",
+    "That simulated S/N equals achieved precision.",
+    "That the paper motivates nowcasting or covers BES/ECEI."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as a citation for the background of the KSTAR CES diagnostic: what it measures (impurity Ti), its modulation and background-subtraction design, and its design-stage resolution. It should be cited only as a design-stage reference.",
+  "bibtex_if_worth_citing": "@article{Ko2010KstarCesSystem,title={{KSTAR} Charge Exchange Spectroscopy System},author={Ko, Won-Ha and Oh, Seungtae and Kwon, Myeun},journal={IEEE Transactions on Plasma Science},volume={38},number={4},pages={996--1000},year={2010},doi={10.1109/TPS.2010.2042182}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "682d20797cce5853166915c817e8a0a91bf2b7d503e53d80aff96b546e654ffd",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

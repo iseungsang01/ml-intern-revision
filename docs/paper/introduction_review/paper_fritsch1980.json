@@ -1,0 +1,79 @@
+{
+  "key": "fritsch1980",
+  "citation": {
+    "title": "Monotone Piecewise Cubic Interpolation",
+    "authors": "F. N. Fritsch; R. E. Carlson",
+    "year": 1980,
+    "venue": "SIAM Journal on Numerical Analysis",
+    "volume": "17(2)",
+    "pages": "238-246",
+    "doi_or_arxiv": "Not printed in the supplied PDF. Verify externally. Do not take any DOI from its reference list."
+  },
+  "scope_read": {
+    "pdf_pages": "1-9 (journal pp. 238-246), including Figs. 1-5, the data tables on pp. 6 and 8, and the references",
+    "full_pdf_supplied": true,
+    "limitations": "OCR garbles some equations and symbols. Figures were judged from captions and plotted shapes only."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The method is a C1 piecewise cubic (Hermite) interpolant.",
+      "verdict": "supported",
+      "source_finding": "The goal is a C1 piecewise cubic p that matches the data at the knots. Each interval uses cubic Hermite form, so the method reduces to choosing the knot derivatives.",
+      "locator": "PDF p.1, Sec.2, Eqs.(1)-(2)",
+      "kind": "derivation",
+      "allowed_intro_sentence": "The two-sided baseline uses monotone piecewise cubic Hermite interpolation [Fritsch & Carlson 1980], a C1 interpolant determined by data values and adjusted knot derivatives.",
+      "qualification": "The end derivatives use a noncentered formula, set to zero if the sign is wrong (p.5, Sec.4)."
+    },
+    {
+      "proposed_claim": "The method yields a monotone interpolant.",
+      "verdict": "qualify",
+      "source_finding": "The paper derives necessary and sufficient conditions on derivative-to-secant ratios for a single cubic to be monotone. It then chooses a subregion of acceptable ratios (the radius-3 circle, S2) and rescales out-of-region derivatives into it.",
+      "locator": "PDF p.3, Sec.3, Lemmas 1-2, Eqs.(7)-(9); p.4, Fig.1, Sec.4 Steps 1/2A; p.5, Fig.2 and Step 2A scaling",
+      "kind": "derivation",
+      "allowed_intro_sentence": "For monotone data, derivative limits derived from conditions for monotonicity on each interval keep the interpolant monotone.",
+      "qualification": "The method assumes globally monotone data (p.1, Sec.2). Extension to piecewise-monotone data is stated only as future work (p.9, Sec.6). Our CES series need not be monotone, so the variant actually implemented must be cited separately. The two worked examples are visual only (pp.6-8, Figs.3-5)."
+    },
+    {
+      "proposed_claim": "The method is local.",
+      "verdict": "supported",
+      "source_finding": "The authors state that a single data change affects the interpolant only in neighbouring intervals. This is consistent with three-point initial derivatives and per-interval adjustment.",
+      "locator": "PDF p.2, Sec.2; p.9, Sec.6",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Changing one data value affects the interpolant only in neighbouring intervals.",
+      "qualification": "Locality is in data index, not in time. Each interval needs both endpoint values, so it cannot run before the next report exists."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Knot abscissae and monotone values (x_i, f_i)",
+    "outputs": "Piecewise cubic p(x) and derivatives d_i",
+    "causal_or_offline": "not_applicable to the source. In our use it is two-sided and offline, because interpolating at a time requires the subsequent CES report.",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "not_applicable. The method interpolates reported values and gives no physical validation."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "There is no quantitative error metric. Two illustrative datasets are compared visually: Akima example 3, and LLL radiochemical data."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing. Efficiency in compute, storage and evaluation is asserted qualitatively.",
+    "what_not_established": "No timing and no real-time use.",
+    "locator": "PDF p.2, Sec.2"
+  },
+  "forbidden_inferences": [
+    "Do not call it causal or suitable for nowcasting.",
+    "Do not claim accuracy or physical fidelity for CES or plasma data.",
+    "Do not claim monotonicity for nonmonotone data from this paper alone.",
+    "Do not claim the S2 choice is optimal. It was selected by a user poll on visual appeal (p.5).",
+    "Do not attach timing numbers.",
+    "Do not treat a DOI from its references as this paper's DOI."
+  ],
+  "competing_or_complementary": "Complementary. It defines the noncausal two-sided interpolation baseline and is not a competing estimator.",
+  "bibtex": "@article{fritsch1980,author={Fritsch, F. N. and Carlson, R. E.},title={Monotone Piecewise Cubic Interpolation},journal={SIAM Journal on Numerical Analysis},volume={17},number={2},pages={238--246},year={1980}}",
+  "followup_sources_if_material": [
+    "Documentation or source of the actual interpolation routine used (e.g., the library PCHIP implementation), including its handling of nonmonotone data and endpoints.",
+    "Any later Fritsch-coauthored PCHIP derivative-formula paper, if the implementation follows it; verify before citing."
+  ]
+}

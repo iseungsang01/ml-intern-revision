@@ -1,0 +1,40 @@
+{
+  "key": "Abbate2025Combining",
+  "citation": {
+    "title": "Combining physics-based and data-driven models for quantitatively accurate plasma profile prediction that extrapolates well; with application to DIII-D, AUG, and ITER tokamaks",
+    "authors": "J. Abbate, E. Fable, G. Tardini, R. Fischer, E. Kolemen, ASDEX Upgrade Team",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "056014 (17pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/adc283"
+  },
+  "relevance": "peripheral",
+  "topic": "Forecasting multi-profile evolution 300 ms ahead from profiles and actuators on DIII-D and AUG, with ML/physics stacking and extrapolation from low to high Ip.",
+  "own_question": "Can data-driven, physics-based, transfer-learned, multi-machine and meta-learned predictors extrapolate profile evolution to higher Ip?",
+  "actual_method_and_evidence": "LSTM rollout trained with curriculum learning on 20 ms steps. Inputs are fitted profiles, including CER-derived Ti and rotation, plus actuators. Comparators are ASTRA with TGLF-nn and gyroBohm, and a hold-constant baseline. Evaluation uses the sigma metric on discharge-number-held-out sets split by Ip. Per the authors, only a weighted ML-physics stack improved on near-extrapolated ML, by about 5–10%. Near-extrapolated ML was not significantly different from holding profiles constant. Adding AUG data, transfer learning and concatenating simulation outputs showed no significant gain.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In one DIII-D profile-forecasting study, a hold-initial-profile baseline was statistically comparable to a near-extrapolated neural predictor.",
+      "original_pdf_locator": "Sec 5.5, p.14; Fig.15 caption",
+      "qualification": "Covers future 300 ms profile forecasting averaged over Te and Ti. It is not current-report nowcasting and not KSTAR.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Future profiles at 20 ms steps, smoothed causally over 50 ms, within a 300 ms window. Ti is from charge exchange recombination and assumed equal across ion species. Report arrival latency is not studied.",
+  "validation_if_relevant": "Discharges ending in 0 form the test set and those ending in 5 the validation set. Splits are by Ip regime. No untouched campaign is used.",
+  "forbidden_inferences": [
+    "Does not support nowcasting the current CES report",
+    "Does not show that BES/ECEI informs Ti",
+    "Should not be generalized to all prior work",
+    "Not evidence of real-time deployment",
+    "Not a KSTAR result"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional context showing that persistence baselines matter in profile forecasting. Its task, inputs and timing differ fundamentally from our study.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 18,
+  "supplied_pdf_sha256": "7ba164dddf5b5ea85b69d29fe019609b6211664c8259cfd54af976a8de70fa3e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

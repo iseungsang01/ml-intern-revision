@@ -1,0 +1,81 @@
+{
+  "key": "Bishop1993AutomaticAnalysis",
+  "citation": {
+    "title": "Automatic analysis of JET charge exchange spectra using neural networks",
+    "authors": "C M Bishop, C M Roach, M G von Hellermann",
+    "year": 1993,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "35",
+    "pages": "765-773",
+    "doi_or_arxiv": "unknown; no DOI is printed in the supplied PDF"
+  },
+  "scope_read": {
+    "pdf_pages": "1-10 (PDF p1 is the publisher cover; PDF p2-10 are journal pp 765-773)",
+    "full_pdf_supplied": true,
+    "limitations": "Scanned text with OCR errors. Figure axes are only partly legible. The paper does not tabulate per-parameter errors."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "A neural network gives an approximate, unsupervised reading of CX spectra.",
+      "verdict": "qualify",
+      "source_finding": "About 3000 JET BeIV/CIII spectra had been fitted by least squares. Several networks used subsets of the 600 spectral bins as inputs; the largest was 50-15-6. Ion temperature agreed with the conventional fits to about 30%. The results are labelled preliminary, and one spectrum is reconstructed with residuals of roughly ±0.15 of the conventional amplitude.",
+      "locator": "PDF p7-8, Sec 4; PDF p8, Figs 4-5; PDF p9, Sec 4 end",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Neural networks have long been used to read CX spectra directly. For example, networks trained on least-squares-fitted JET spectra produced approximate line parameters without an initial guess (Bishop et al 1993).",
+      "qualification": "The comparison is against conventional fit labels, not physical truth. It is a single-frame spectrum reading. The 30% figure is not comparable to our metrics."
+    },
+    {
+      "proposed_claim": "The network output can initialise least-squares fitting.",
+      "verdict": "qualify",
+      "source_finding": "The authors propose a hybrid in which the network supplies the initial guess for the iterative fit, with fewer iterations expected. The hybrid is not implemented or evaluated.",
+      "locator": "PDF p2, Abstract; PDF p9, Sec 5 para 2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "The authors proposed using such network estimates to initialise iterative fitting.",
+      "qualification": "Describe this as a proposal, not a demonstrated hybrid."
+    },
+    {
+      "proposed_claim": "Real-time implementation was claimed.",
+      "verdict": "unsupported",
+      "source_finding": "The paper measures 15 ms per spectrum for the unoptimised network versus a 500 ms average for the conventional fit, both on the JET IBM mainframe. That is about 33x, although the introduction states 'typically two orders'. Suitability for analogue or real-time hardware is asserted by analogy to COMPASS equilibrium-control hardware.",
+      "locator": "PDF p9, Sec 4; PDF p3, Sec 1; PDF p2, Abstract; PDF p9, Sec 5 para 3",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "They reported faster offline processing than least-squares fitting and suggested hardware implementation for real-time use.",
+      "qualification": "No CX real-time deployment is reported. Do not reuse the 'two orders' wording."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Selected wavelength bins of the same CX spectrum (subsets of 600 bins); four networks covered parameter subsets",
+    "outputs": "Line amplitudes, positions and widths for that spectrum; ion temperature is derived from these",
+    "causal_or_offline": "Offline, same-frame inverse fitting; no temporal forecasting",
+    "source_diagnostic_as_input": "Yes: the CX spectrum itself is the input",
+    "reported_vs_physical_truth": "Targets are conventional least-squares results (PDF p6, Sec 3 step 1); no independent truth"
+  },
+  "validation": {
+    "split_unit": "Train/test splitting is described generically (PDF p6, Sec 3 step 2); the split used for the reported results is not stated",
+    "temporal_order": "unknown",
+    "independent_truth": "none",
+    "unknowns": "Test-set size, shot grouping, error distributions and uncertainty are not reported. A forward chi-squared check is proposed but not shown (PDF p10, Sec 5)."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Mainframe processing time per spectrum: 15 ms (network) vs 500 ms average (conventional)",
+    "what_not_established": "Real-time or in-loop CX operation, the hybrid fit's speed or accuracy, and hardware implementation for CX",
+    "locator": "PDF p9, Sec 4 last para; PDF p9, Sec 5"
+  },
+  "forbidden_inferences": [
+    "The paper performed causal or temporal nowcasting.",
+    "The method was deployed in real time.",
+    "The hybrid initial-guess scheme was demonstrated.",
+    "The 30% figure is physical-truth accuracy.",
+    "The source was the first neural network for CX spectra, or it establishes any priority.",
+    "The source supports KSTAR, BES/ECEI or pedestal claims.",
+    "Faster spectrum reading by itself benefits our nowcast.",
+    "All prior work is noncausal."
+  ],
+  "competing_or_complementary": "Complementary. This is an upstream reader of an available spectrum. Our method estimates the current CES report before it is available, using past reports plus BES/ECEI. Faster reading could refresh anchors or reduce the need for nowcasting; any benefit is untested.",
+  "bibtex": "@article{Bishop1993AutomaticAnalysis,author={Bishop, C. M. and Roach, C. M. and von Hellermann, M. G.},title={Automatic analysis of {JET} charge exchange spectra using neural networks},journal={Plasma Physics and Controlled Fusion},volume={35},pages={765--773},year={1993}}",
+  "followup_sources_if_material": [
+    "Svensson, von Hellermann and König, 'Analysis of JET charge exchange spectra using neural networks' (listed on the cover page; details to verify)",
+    "von Hellermann and Summers 1992, Rev. Sci. Instrum. 63 5312 (the conventional CX analysis this paper cites)"
+  ]
+}

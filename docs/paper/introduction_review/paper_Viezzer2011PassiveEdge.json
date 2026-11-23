@@ -1,0 +1,79 @@
+{
+  "key": "Viezzer2011PassiveEdge",
+  "citation": {
+    "title": "Investigation of passive edge emission in charge exchange spectra at the ASDEX Upgrade tokamak",
+    "authors": "E Viezzer, T Pütterich, R Dux, A Kallenbach and the ASDEX Upgrade Team",
+    "year": 2011,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "53",
+    "pages": "035002 (18pp)",
+    "doi_or_arxiv": "10.1088/0741-3335/53/3/035002 (this paper's own DOI, journal header on PDF p2; not taken from the reference list)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-19 (p1 is the publisher cover; journal page n = PDF page n+1)",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values were read from rendered plots. Cited works such as [12] and [22] were not read."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Edge CX spectra carry passive background components that complicate analysis.",
+      "verdict": "supported",
+      "source_finding": "The paper states that CXRS spectra superpose active and passive emission and that separating them is required. It also says beam-modulation subtraction is routine but fails when the beam alters the ionization balance or the neutral density. Fig 2 shows a measured passive C5+ line.",
+      "locator": "PDF p2-3 Abstract and Sec 1; PDF p4-5 Sec 2.1 and Fig 2",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Measured charge-exchange spectra combine beam-induced active emission with passive edge emission, so spectral analysis must separate the two. Standard beam-modulation subtraction can fail under some conditions.",
+      "qualification": "The paper states that at the edge the passive signal is much weaker than the active one, so rough passive models suffice there. The separation is most critical for core views."
+    },
+    {
+      "proposed_claim": "The paper quantifies the impact of passive emission on derived Ti.",
+      "verdict": "qualify",
+      "source_finding": "The paper does not quantify bias in active-derived Ti. It reports apparent Ti from single-Gaussian fits to the passive line itself: 379 eV at rho_min≈0.94 and 190 eV at ≈0.99. Synthetic spectra from STRAHL emissivity give ≈440 and ≈310 eV. The forward-model emissivity gives ≈350 and ≈225 eV. The authors note that Ti and vtor inputs come from C6+ CXRS and that SOL values were extrapolated.",
+      "locator": "PDF p15-17 Sec 6, Figs 10-11",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "At ASDEX Upgrade, single-Gaussian fits to the passive C5+ edge line gave apparent temperatures that differed by roughly 100-150 eV from synthetic spectra built from modelled emissivity profiles.",
+      "qualification": "These numbers come from two example spectra of the passive line in one ELMy H-mode setup. They do not measure the error in reported active Ti."
+    },
+    {
+      "proposed_claim": "The passive-line modelling transfers to other devices and implies that reported CES values are analysis-dependent labels.",
+      "verdict": "qualify",
+      "source_finding": "Electron impact excitation alone fails to match the line. Thermal CX is needed, with a model-based split of ~15% from CX recombination, ~55% from local CX and ~30% from excitation. The KN1D neutral profiles overestimate the emission about 2.5-fold. The fit needed neutral densities scaled down by 3, or by 2 locally and 10 globally. The authors call for better neutral measurements.",
+      "locator": "PDF p8 Sec 4; PDF p11-13 Sec 5, Figs 6 and 8; PDF p18 Sec 7",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Interpreting passive CX emission depends on assumed neutral profiles and atomic data. This is one reason we treat reported CES temperatures as conventional labels rather than independent physical truth.",
+      "qualification": "The second clause is our interpretation, not the source's claim. The results cover only ASDEX Upgrade, the C5+ 529 nm line and the cited discharges. Nothing here is established for KSTAR."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Line-integrated passive spectra; ne and Te from ECE, Thomson scattering, Li-beam and interferometry; transport coefficients from active CXRS; neutral profiles modelled with KN1D; ADAS atomic data.",
+    "outputs": "Local emissivity profile, STRAHL emission contributions and synthetic spectra.",
+    "causal_or_offline": "offline, inter-ELM-filtered analysis",
+    "source_diagnostic_as_input": "Yes. CXRS-derived C6+ density, transport, Ti and vtor feed the model.",
+    "reported_vs_physical_truth": "Model is compared with measurement. No independent truth for Ti."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "Not an estimator paper. No uncertainty intervals are given for the contribution fractions."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "nothing",
+    "what_not_established": "Real-time use, computation time and online applicability.",
+    "locator": "entire paper"
+  },
+  "forbidden_inferences": [
+    "The paper quantifies bias in active CXRS Ti",
+    "The 15/55/30% split applies to KSTAR or to other lines",
+    "The passive component explains errors in our CES labels",
+    "The paper addresses nowcasting, BES/ECEI or NN-CES",
+    "Beam modulation generally fails",
+    "Synthetic-spectrum Ti is the physical truth"
+  ],
+  "competing_or_complementary": "Complementary background on why CES spectral analysis is model-dependent. It neither competes with nor evaluates temporal nowcasting or upstream spectrum readers.",
+  "bibtex": "@article{Viezzer2011PassiveEdge,author={Viezzer, E. and P{\\\"u}tterich, T. and Dux, R. and Kallenbach, A. and {ASDEX Upgrade Team}},title={Investigation of passive edge emission in charge exchange spectra at the {ASDEX} {U}pgrade tokamak},journal={Plasma Phys. Control. Fusion},volume={53},pages={035002},year={2011},doi={10.1088/0741-3335/53/3/035002}}",
+  "followup_sources_if_material": [
+    "von Hellermann et al 2006 Rev. Sci. Instrum. 77 10F516 [ref 12], if citing beam-modulation failure",
+    "Synakowski et al 1995 Rev. Sci. Instrum. 66 649 [ref 7], on edge-line effects on Ti measurement"
+  ]
+}

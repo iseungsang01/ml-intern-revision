@@ -1,0 +1,46 @@
+{
+  "key": "VanMulders2026ModelBased",
+  "citation": {
+    "title": "Model-based estimation of tokamak plasma profiles and physics parameters: integration with improved equilibrium reconstruction and experimental data",
+    "authors": "S. Van Mulders, S.C. McIntosh, F. Carpanese, C. Colandrea, C.E. Contré, R. Coosemans, F. Felici, B. Labit, M. Marin, A. Merle, F. Pastore, S.D. Pinches, O. Sauter, B. Vincent and the TCV Team",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "026026 (23pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ae2c0a"
+  },
+  "relevance": "supporting",
+  "topic": "EKF data assimilation of sparse TCV Thomson scattering into RAPTOR transport modeling with kinetic LIUQE coupling",
+  "own_question": "Can RAPTOR EKF estimate Te, ne, current profiles and parameters such as Zeff, Ti/Te and transport coefficients from experimental TCV data, consistent with equilibrium?",
+  "actual_method_and_evidence": "Post-discharge EKF on two TCV shots, 64965 L-mode and 64678 H-mode. It uses a 1 ms model step with Thomson scattering updates about every 17 ms. LIUQE psi_b is assimilated, and Ti/Te is PI-tuned to the LIUQE Wkin. Validation compares against soft x-ray sawtooth period and inversion radius, plus interpretative JINTRAC/ASTRA results. Ti from a Ti=cTe assumption is compared to CXRS, which is not used as an input. For the ohmic shot, Ti is underestimated relative to CXRS.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Model-based state observers can interpolate between temporally sparse profile measurements using transport dynamics as a prior, including estimates between Thomson samples.",
+      "original_pdf_locator": "Sec. 2.2, 3.3.3, 6.3 (pp. 4, 8, 18)",
+      "qualification": "Electron Te/ne only. The setup is offline post-discharge analysis on two TCV shots. Inter-sample sawtooth agreement is reported for one ohmic shot.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "In that workflow, ion temperature was not assimilated. Ti was inferred as a fixed fraction of Te tuned to the stored energy, and CXRS was used only for comparison.",
+      "original_pdf_locator": "Sec. 3.3.1 eq.(7); Sec. 6.2 (pp. 9, 18)",
+      "qualification": "The authors list CXRS assimilation as future work. This does not support any claim about prior work in general.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are Thomson scattering at 60 Hz, LIUQE magnetics, and the DML. There is no BES/ECEI input and no CES nowcast target. Measurement arrival latency is not addressed.",
+  "validation_if_relevant": "Two discharges. Validation is against independent SXR/XTe data and code benchmarks. There is no held-out split.",
+  "forbidden_inferences": [
+    "Do not claim it nowcasts impurity CES Ti.",
+    "Do not claim real-time deployment; the authors say a real-time version is under development.",
+    "Do not claim it shows that BES/ECEI improve estimates.",
+    "Do not treat the Ti/Te estimate as validated; it is described as ad hoc.",
+    "Do not generalize it to all prior work."
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Include as background on model-based observers that bridge sparse diagnostic sampling. It contrasts with our setting: electron-profile focus, offline analysis, and a different target.",
+  "bibtex_if_worth_citing": "@article{VanMulders2026ModelBased,title={Model-based estimation of tokamak plasma profiles and physics parameters: integration with improved equilibrium reconstruction and experimental data},author={Van Mulders, S. and McIntosh, S.C. and Carpanese, F. and others},journal={Nuclear Fusion},volume={66},pages={026026},year={2026},doi={10.1088/1741-4326/ae2c0a}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 24,
+  "supplied_pdf_sha256": "f3561003e148fe2d51dad6020eab60bca6035fef65e7783d0f082c2e4853c659",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

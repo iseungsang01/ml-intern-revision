@@ -1,0 +1,79 @@
+{
+  "key": "Joung2018ImputationFaulty",
+  "citation": {
+    "title": "Imputation of faulty magnetic sensors with coupled Bayesian and Gaussian processes to reconstruct the magnetic equilibrium in real time",
+    "authors": "S. Joung, J. Kim, S. Kwak, K.-r. Park, S. H. Hahn, H. S. Han, H. S. Kim, J. G. Bak, S. G. Lee, Y.-c. Ghim",
+    "year": 2018,
+    "venue": "Rev. Sci. Instrum.",
+    "volume": "89",
+    "pages": "10K106",
+    "doi_or_arxiv": "10.1063/1.5038938 (this paper's own DOI; PDF p1 cover, p2 abstract)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-6 (p1 publisher cover; p2-6 article, Figs 1-4, Eqs 1-12)",
+    "full_pdf_supplied": true,
+    "limitations": "Proceedings paper. Results are shown only as figures, with no error metrics or tables. Hardware and timing method are unspecified."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "'Real time' means a deployed real-time system.",
+      "verdict": "qualify",
+      "source_finding": "The authors state the method runs in under 1 ms on a typical personal computer. Integration into a plasma control system is not shown. Real-time fault detection is attributed to cited works (refs 6,7) and was not implemented here. Real-time hyperparameter search is listed as future work.",
+      "locator": "p2 abstract; p5 Sec II C after Eq 12; p6 Sec II C three-step list and Sec III",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "On KSTAR, a Maxwell-constrained Bayesian model coupled with a Gaussian process over probe positions was used to impute missing magnetic-probe signals, with computation reported below 1 ms on a personal computer [Joung2018].",
+      "qualification": "'Real time' here refers to computation latency. Deployment is not shown."
+    },
+    {
+      "proposed_claim": "Number of missing signals handled.",
+      "verdict": "qualify",
+      "source_finding": "The GP-only scheme is shown with nine non-consecutive Bt and Bn signals removed at 3.70 s of shot #9010. The coupled Bayes+GP scheme is shown with two removed signals (Bt #15/#16; Bn #17/#18) at 0.1 s, plus single-probe time traces for shot #9427. The abstract and conclusion state that nine signals are handled, but no figure shows the coupled method with nine.",
+      "locator": "p4 Fig 3(a,b); p5 Fig 4(a-d); p2 abstract; p6 Sec III",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "The authors examined up to nine simultaneously removed, non-consecutive probe signals [Joung2018].",
+      "qualification": "Attribute the nine-signal result to the examples shown (GP-only in Fig 3). Do not assign it to the coupled method as a demonstrated result."
+    },
+    {
+      "proposed_claim": "Physics constraint plus local GP prior resolves the shortcomings of each component alone.",
+      "verdict": "supported",
+      "source_finding": "Ampère's law and Gauss's law each give one equation, so two or more missing signals of one component leave the problem underdetermined (Fig 2). GP-only inference fails for spatially fast-varying probes and during current ramp-up and ramp-down. The coupled scheme tracks the measured signals in the cases shown.",
+      "locator": "p3 Eqs 1-5; p4 Fig 2, Fig 3(c,d); p5 Eqs 8-12, Fig 4",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In that work, combining a single physical constraint with a spatial GP prior made multi-signal imputation determinable [Joung2018].",
+      "qualification": "This is shown qualitatively, for a few shots and time slices."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "Same-time intact probe Bt/Bn; probe R,Z positions; Rogowski Ip; PF-coil contributions; up-down paired probe value (prior mean)",
+    "outputs": "Missing probe values at the same time slice",
+    "causal_or_offline": "Instantaneous spatial imputation with no temporal model, evaluated offline on archived shots",
+    "source_diagnostic_as_input": "Yes: the other probes of the same diagnostic",
+    "reported_vs_physical_truth": "Imputed values are compared with measured probe signals that were artificially withheld; this is not physical truth"
+  },
+  "validation": {
+    "split_unit": "not_reported",
+    "temporal_order": "not_applicable (single-time-slice imputation)",
+    "independent_truth": "No; withheld measurements serve as reference",
+    "unknowns": "Whether hyperparameters were fit on the evaluated shots; no quantitative metrics; number of shots evaluated; eddy-current effects excluded (flat-top assumption)"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Author-reported computation under 1 ms on a typical PC",
+    "what_not_established": "Hardware, timing distribution, PCS integration, end-to-end latency, closed-loop or EFIT use",
+    "locator": "p5-6 Sec II C; p6 Sec III"
+  },
+  "forbidden_inferences": [
+    "The method was deployed in KSTAR real-time control",
+    "The coupled method is demonstrated with nine missing signals",
+    "Imputed values are physical truth",
+    "The method performs temporal or causal nowcasting",
+    "The method is relevant to CES or ion temperature",
+    "Accuracy is quantified"
+  ],
+  "competing_or_complementary": "Complementary. It is spatial, same-time imputation of magnetic probes using Maxwell constraints. Our work is temporal nowcasting of a CES report from past reports and BES/ECEI voltages. Cite it as KSTAR precedent for missing-diagnostic imputation where 'real time' means computation latency, not as a baseline.",
+  "bibtex": "@article{Joung2018ImputationFaulty,author={Joung, Semin and Kim, Jaewook and Kwak, Sehyun and Park, Kyeo-reh and Hahn, S. H. and Han, H. S. and Kim, H. S. and Bak, J. G. and Lee, S. G. and Ghim, Y.-c.},title={Imputation of faulty magnetic sensors with coupled Bayesian and Gaussian processes to reconstruct the magnetic equilibrium in real time},journal={Rev. Sci. Instrum.},volume={89},pages={10K106},year={2018},doi={10.1063/1.5038938}}",
+  "followup_sources_if_material": [
+    "Nouailletas, Moreau, Bremond, Fusion Eng. Des. 87, 289 (2012): single-faulty-signal inference and detection (ref 7; DOI not given in this PDF)",
+    "Neto et al., IEEE Trans. Nucl. Sci. 61, 1228 (2014): real-time fault detection (ref 6)"
+  ]
+}

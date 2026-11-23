@@ -1,0 +1,39 @@
+{
+  "key": "Huber1964RobustEstimation",
+  "citation": {
+    "title": "Robust Estimation of a Location Parameter",
+    "authors": "Peter J. Huber",
+    "year": 1964,
+    "venue": "The Annals of Mathematical Statistics",
+    "volume": "not printed in the supplied pages (bibliographic records give 35)",
+    "pages": "73-101",
+    "doi_or_arxiv": "not printed in the supplied PDF; verify before use"
+  },
+  "relevance": "peripheral",
+  "topic": "Minimax asymptotic-variance M-estimation of location under epsilon-contaminated normal models; Huber rho/psi; scale estimation",
+  "own_question": "Which translation-invariant estimators minimize the worst-case asymptotic variance when a fraction epsilon of observations are gross errors?",
+  "actual_method_and_evidence": "The paper is asymptotic theory with saddlepoint proofs. It shows that, under symmetric contamination, a quadratic-then-linear rho is minimax (Sections 5-6). Table I tabulates analytic variance bounds. Monte Carlo is mentioned only as an exploratory check of iteration and convergence. There is no time series and no fusion content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "A loss that is quadratic near zero and linear in the tails bounds the influence of gross errors. Under symmetric epsilon-contamination, it minimizes worst-case asymptotic variance.",
+      "original_pdf_locator": "pp.75, 82 (Sec. 6 Corollary); Table I pp.84-85",
+      "qualification": "The result is asymptotic, for i.i.d. location estimation with known epsilon and symmetric contamination. Asymmetric contamination introduces bias (Sec. 7).",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable: the source treats i.i.d. samples with no timing.",
+  "validation_if_relevant": "Not applicable: the source is analytic, with no data split.",
+  "forbidden_inferences": [
+    "Huber's minimax result is evidence about CES/BES/ECEI data",
+    "Robust losses guarantee better nowcasts",
+    "CES reports follow an epsilon-contaminated normal model",
+    "Proposed robust M-estimation is our new method"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Cite only if our estimators or metrics actually use a Huber-type loss or robust location/scale. Otherwise exclude.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_original_pdf",
+  "supplied_pdf_pages": 29,
+  "supplied_pdf_sha256": "0bd9e67b4910ebd47cb0349f673ca6c25307a4035dbcf0e98eeac567dd150ad4",
+  "source_scope_note": "Original PDF supplied including all pages"
+}

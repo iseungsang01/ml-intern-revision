@@ -1,0 +1,45 @@
+{
+  "key": "doi_10_1088_0029_5515_54_8_083003",
+  "citation": {
+    "title": "Experimental evidence for the key role of the ion heat channel in the physics of the L–H transition",
+    "authors": "F. Ryter, L. Barrera Orte, B. Kurzan, R.M. McDermott, G. Tardini, E. Viezzer, M. Bernert, R. Fischer and The ASDEX Upgrade Team",
+    "year": 2014,
+    "venue": "Nuclear Fusion",
+    "volume": "54",
+    "pages": "083003",
+    "doi_or_arxiv": "10.1088/0029-5515/54/8/083003"
+  },
+  "relevance": "peripheral",
+  "topic": "Edge ion heat flux and the L–H transition in ASDEX Upgrade. The analysis uses CXRS Ti from short NBI blips and TRANSP power balance.",
+  "own_question": "Does the edge ion heat flux, rather than the electron heat flux, govern L–H transition access in the low-density branch? Can this explain the density at which the threshold power is minimum?",
+  "actual_method_and_evidence": "About 25 L–H and 13 H–L transitions were analysed offline with time-dependent TRANSP power balance. Heating was ECRH, NBI, or NBI+ECRH. Edge CXRS ran at 2 ms resolution and core CXRS at 4 ms; NBI blips were needed for Ti in ECRH plasmas. The fitted edge ion heat flux at the transition was about 0.18 times line-averaged density. A scaling for the minimum-threshold density was derived and compared across devices. The authors state that the link to Er and the turbulence mechanism is not quantitatively established.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Edge ion temperature and the ion heat channel are considered physically important to L–H transition access.",
+      "original_pdf_locator": "Abstract; Sec. 1; Sec. 6",
+      "qualification": "Based on ASDEX Upgrade, low-density branch, deuterium. The Er link is the authors' interpretation. CXRS Ti here is impurity-based, not directly main-ion Ti.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "In ECRH-heated plasmas, CXRS ion temperature can be sampled only intermittently, during short NBI blips.",
+      "original_pdf_locator": "Sec. 2; Sec. 3.2",
+      "qualification": "Applies to the AUG diagnostic setup; the blip spacing limited the time correction of the ion heat flux. Not KSTAR, and not report arrival latency.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Offline power-balance analysis. No nowcasting, no BES/ECEI input, and no real-time processing.",
+  "validation_if_relevant": "Not applicable; the scalings are empirical fits without held-out validation.",
+  "forbidden_inferences": [
+    "Do not infer KSTAR relevance or results.",
+    "Do not infer that nowcasting improves L–H control.",
+    "Do not treat CES Ti as main-ion truth.",
+    "Do not cite the paper's 2 ms and 4 ms CXRS resolution as our timing."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional single motivation citation for the physical importance of edge Ti. It offers nothing on the estimation method.",
+  "bibtex_if_worth_citing": "@article{Ryter2014,author={Ryter, F. and Barrera Orte, L. and Kurzan, B. and McDermott, R. M. and Tardini, G. and Viezzer, E. and Bernert, M. and Fischer, R. and {ASDEX Upgrade Team}},title={Experimental evidence for the key role of the ion heat channel in the physics of the {L--H} transition},journal={Nucl. Fusion},volume={54},pages={083003},year={2014},doi={10.1088/0029-5515/54/8/083003}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "d4d880d186db35bb65f2412c566f2f0ce75ce44dbb958904eb9dedca5eea3ebb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

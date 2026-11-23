@@ -1,0 +1,46 @@
+{
+  "key": "Kim2026RealTimePlasma",
+  "citation": {
+    "title": "Real-time plasma monitoring framework for advanced plasma control and ML-research in DIII-D",
+    "authors": "S. K. Kim et al.",
+    "year": 2026,
+    "venue": "Fusion Engineering and Design",
+    "volume": "228",
+    "pages": "115753",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2026.115753 (record identifier hint; not verified from the extracted text)"
+  },
+  "relevance": "supporting",
+  "topic": "DIII-D real-time diagnostic streaming infrastructure (SHIELD) for ECE, BES, CO2 interferometer and TangTV feeding the PCS and ML controllers",
+  "own_question": "Can high-bandwidth fluctuation and imaging diagnostics be streamed into the PCS with low, deterministic latency to support ML-based control?",
+  "actual_method_and_evidence": "Engineering description of the SHIELD shared-memory ring-buffer pipeline, 1 MHz AICC digitizers, FPGA/GPU nodes and Dolphin/InfiniBand links. Validation compares archived real-time data (333 Hz, plus 1 MHz BES) against offline data for selected shots; per-channel RMSE is reported in figures not visible here. Fig. 4 reports a 2048-sample acquisition-cycle timing breakdown. Two applications are cited from prior work: TangTV detachment control with linear regression plus PID, and an ECE reservoir-computing AE observer with proportional NBI control. No CES or ion temperature is involved.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "At DIII-D, BES and ECE fluctuation data have been made available to real-time control nodes at high rate, rather than only for post-shot analysis.",
+      "original_pdf_locator": "Sec. 2.2 and Sec. 4, pp. 3 and 7-8",
+      "qualification": "Applies to DIII-D only and is an infrastructure capability, not KSTAR. It does not involve CES nowcasting. Data agreement was shown for example shots only.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Real-time ECE has been used as input to an ML observer for feedback control, here AE amplitude regulation via NBI power.",
+      "original_pdf_locator": "Sec. 5.2, pp. 10-11",
+      "qualification": "Results are drawn from cited prior work (Rothstein 2024). The 1.1 ms cycle figure is that work's number. The input is electron diagnostics, and the target is AE amplitude, not ion temperature.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are raw 1 MHz BES/ECE/interferometer voltages and 60 Hz TangTV video. Archived real-time data are at 333 Hz (3 ms PCS cycle). No CES targets and no measurement of report arrival times.",
+  "validation_if_relevant": "Offline-versus-real-time signal agreement on single shots. There is no train/test split and no prediction-skill evaluation.",
+  "forbidden_inferences": [
+    "that the SHIELD/DIII-D pipeline exists or applies at KSTAR",
+    "that it demonstrates ion-temperature or CES nowcasting",
+    "that real-time BES/ECE are calibrated profiles",
+    "that our 10 ms snapshots are equivalent to full-rate streaming",
+    "that the control demonstrations prove physical mechanisms or validate our estimator"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "This is a useful, scoped citation for the motivation step. Fluctuation diagnostics are becoming available in real time, which makes a causal BES/ECEI-to-CES-report nowcast a testable proposed capability. It should be cited as infrastructure context only.",
+  "bibtex_if_worth_citing": "@article{Kim2026RealTimePlasma,title={Real-time plasma monitoring framework for advanced plasma control and ML-research in DIII-D},author={Kim, SangKyeun and others},journal={Fusion Engineering and Design},volume={228},pages={115753},year={2026},doi={10.1016/j.fusengdes.2026.115753}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "5c05bea40843a5655649799c47a519a2801d21d0f02c897f8415c9fc5838ee4d",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,79 @@
+{
+  "key": "Vanovac2018EffectsDensity",
+  "citation": {
+    "title": "Effects of density gradients and fluctuations at the plasma edge on ECEI measurements at ASDEX Upgrade",
+    "authors": "B Vanovac, E Wolfrum, S S Denk, F Mink, F M Laggner, G Birkenmeier, M Willensdorfer, E Viezzer, M Hoelzl, S J Freethy, M G Dunne, A Lessig, N C Luhmann Jr, ASDEX Upgrade Team, EUROfusion MST1 Team",
+    "year": 2018,
+    "venue": "Plasma Physics and Controlled Fusion",
+    "volume": "60",
+    "pages": "045002 (11pp)",
+    "doi_or_arxiv": "10.1088/1361-6587/aaa7ac (this paper's own DOI, PDF p2 header; distinct from DOIs of cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-12 (p1 publisher cover; journal pp1-11 = PDF pp2-12)",
+    "full_pdf_supplied": true,
+    "limitations": "Figure values are read from rendered images only. Forward-model internals are deferred to ref [11]."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "Edge ECEI channels can be dominated by shine-through rather than local emission.",
+      "verdict": "qualify",
+      "source_finding": "Forward modelling (ECFM) of AUG #33616 profiles shows that, in steady state, channels with cold resonances in the SOL receive relativistically down-shifted emission from inside the separatrix. In a JOREK-based ELM-filament case, about 300 eV of shine-through appears in the SOL.",
+      "locator": "PDF p5, Sec 3, Figs 3-4; PDF p6, Fig 5; summary PDF p10, Sec 8",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Radiation-transport modelling of oblique ECEI at ASDEX Upgrade indicates that, at the plasma edge, the observed emission may originate away from the cold resonance, including shine-through from the pedestal [Vanovac2018].",
+      "qualification": "This is a modelling result for one AUG geometry: single ray, O-mode neglected, IF bandwidth included. It is not a measurement. The authors also conclude that, for typical H-mode profiles, Trad ≈ Te inside the separatrix (PDF p6, Sec 4)."
+    },
+    {
+      "proposed_claim": "Density fluctuations contribute to the edge ECEI radiation temperature.",
+      "verdict": "qualify",
+      "source_finding": "An 8 kHz inter-ELM mode is seen on ECEI, 1D ECE and Li-BES. The Li-BES forward model gives δn/n of roughly 20-40%. In ECFM, a 20% density perturbation near ρpol≈0.983 produces about a 3% Trad change, and the responses cannot be distinguished across input δTe/Te of 0, 0.1 and 0.15. The authors state that modelled and measured amplitudes cannot be directly compared.",
+      "locator": "PDF p8, Sec 5, Fig 9; PDF p9, Sec 6, Fig 10",
+      "kind": "derivation",
+      "allowed_intro_sentence": "In the steep-gradient region, modelled density perturbations alter the ECE radiation temperature, so edge ECEI fluctuations need not reflect electron-temperature fluctuations alone [Vanovac2018].",
+      "qualification": "Evidence comes from one discharge plus forward modelling. The causal attribution is the authors' interpretation, and the ~3% value should not be transferred to another device."
+    },
+    {
+      "proposed_claim": "The authors state the conclusions generally rather than as device-specific.",
+      "verdict": "qualify",
+      "source_finding": "The closing statement is phrased generally: the ECEI signal can be dominated by density-profile changes and need not reflect Te fluctuation amplitude. The supporting evidence, however, is AUG-specific (oblique view angles, #33616/#33195).",
+      "locator": "PDF p2, abstract; PDF p11, Sec 8",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "Studies at ASDEX Upgrade caution that edge ECEI signals can carry density as well as temperature information [Vanovac2018]; accordingly, we treat BES/ECEI snapshots as uncalibrated features rather than Te/ne measurements.",
+      "qualification": "The paper analyses calibrated Trad, not raw voltages, and studies no KSTAR data. Our voltage-feature choice is our own design decision, not something this paper prescribes."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (not an estimator paper)",
+    "outputs": "not_applicable",
+    "causal_or_offline": "not_applicable; the analysis is offline diagnostic interpretation",
+    "source_diagnostic_as_input": "not_applicable",
+    "reported_vs_physical_truth": "Trad is modelled from assumed Te/ne profiles; no independent truth is claimed."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "not_applicable",
+    "unknowns": "Uncertainty on the Li-BES δn/n estimate and on ECFM outputs is not quantified."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "none",
+    "what_not_established": "any real-time use or computation time",
+    "locator": "not_applicable"
+  },
+  "forbidden_inferences": [
+    "That the paper addresses CES, ion or carbon temperature",
+    "Transfer of the 3% or 20-40% figures to KSTAR",
+    "That raw ECEI voltages were studied or shown uncalibratable",
+    "That edge ECEI never measures Te (the authors find Trad≈Te inside the separatrix for typical profiles)",
+    "Any identified physical mechanism of the 8 kHz mode (the authors offer three unresolved hypotheses, PDF pp10-11)",
+    "Real-time or deployment relevance"
+  ],
+  "competing_or_complementary": "Complementary. It motivates cautious, feature-level use of edge ECEI and the inclusion of density-sensitive BES. It does not compete as an estimator.",
+  "bibtex": "@article{Vanovac2018EffectsDensity,author={Vanovac, B. and Wolfrum, E. and Denk, S. S. and Mink, F. and Laggner, F. M. and Birkenmeier, G. and Willensdorfer, M. and Viezzer, E. and Hoelzl, M. and Freethy, S. J. and Dunne, M. G. and Lessig, A. and Luhmann Jr, N. C. and {ASDEX Upgrade Team} and {EUROfusion MST1 Team}},title={Effects of density gradients and fluctuations at the plasma edge on {ECEI} measurements at {ASDEX} {Upgrade}},journal={Plasma Physics and Controlled Fusion},volume={60},pages={045002},year={2018},doi={10.1088/1361-6587/aaa7ac}}",
+  "followup_sources_if_material": [
+    "Denk et al 2017 EPJ Web Conf 147 02002 (ECFM method, ref [11])",
+    "Yun et al 2014 Rev Sci Instrum 85 11D820 (KSTAR ECEI, ref [6]), if KSTAR geometry is discussed"
+  ]
+}

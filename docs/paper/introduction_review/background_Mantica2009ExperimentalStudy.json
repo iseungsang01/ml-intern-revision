@@ -1,0 +1,46 @@
+{
+  "key": "Mantica2009ExperimentalStudy",
+  "citation": {
+    "title": "Experimental Study of the Ion Critical-Gradient Length and Stiffness Level and the Impact of Rotation in the JET Tokamak",
+    "authors": "P. Mantica, D. Strintzi, T. Tala, C. Giroud, T. Johnson, H. Leggate, E. Lerche, T. Loarer, A. G. Peeters, A. Salmi, S. Sharapov, D. Van Eester, P. C. de Vries, L. Zabeo, K.-D. Zastrow",
+    "year": 2009,
+    "venue": "Physical Review Letters",
+    "volume": "102",
+    "pages": "175002",
+    "doi_or_arxiv": "10.1103/PhysRevLett.102.175002"
+  },
+  "relevance": "supporting",
+  "topic": "Ion temperature gradient (ITG) threshold and Ti-profile stiffness in JET core; effect of toroidal rotation",
+  "own_question": "What are the critical R/LTi and the stiffness level at rho_tor of about 0.33, and how does rotation change them?",
+  "actual_method_and_evidence": "Offline steady-state scans of ICRH and NBI power in L-mode at JET. Ti came from charge-exchange (CX) spectroscopy, fitted exponentially over 5 channels and time-averaged. qi was gyro-Bohm normalized. The authors also used ICRH Ti modulation analysed with ASTRA/CGM fits, co- versus counter-NBI comparisons, and GS2 linear and nonlinear runs. Reported results: low-rotation threshold of about 3.5±0.3 with high stiffness. Higher rotation gave higher R/LTi, which the authors attribute mainly to reduced stiffness. This attribution relies on assuming the Waltz-rule threshold shift. The study is core, not pedestal, and does not report which impurity species CX measured.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In JET low-rotation L-mode core plasmas, measured R/LTi stayed near a critical value of about 3.5 despite large changes in normalized ion heat flux. This indicates stiff Ti profiles in that regime.",
+      "original_pdf_locator": "p.2-3, Fig.1 and accompanying text",
+      "qualification": "Core (rho_tor 0.33), JET only, not the pedestal. Results are offline and steady-state. The source does not specify an impurity versus main-ion distinction for the CX Ti.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Toroidal rotation was associated with higher core R/LTi. The authors interpreted this as reduced stiffness, supported by modulation and co/counter-NBI comparisons.",
+      "original_pdf_locator": "p.3-4, Figs.2-4",
+      "qualification": "This is the authors' interpretation, not a demonstrated mechanism. The threshold at high rotation was not identified.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source uses time-averaged stationary CX profiles and does not address nowcasting or report latency.",
+  "validation_if_relevant": "Consistency checks across experiment types and comparison with gyrokinetic codes. There is no predictive held-out validation.",
+  "forbidden_inferences": [
+    "Pedestal-top CES temperature dynamics follow core stiffness.",
+    "Stiffness justifies a specific nowcasting estimator or implies predictability at 10 ms.",
+    "Physics findings transfer from JET to KSTAR.",
+    "CX Ti here is a carbon impurity measurement.",
+    "Rotation causally reduces stiffness as proven physics."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background for why Ti profiles can be tied to critical gradients, which may motivate partial temporal persistence. It is core-region and offline, so it should not support claims about pedestal nowcasting.",
+  "bibtex_if_worth_citing": "@article{Mantica2009ExperimentalStudy,author={Mantica, P. and Strintzi, D. and Tala, T. and others},title={Experimental Study of the Ion Critical-Gradient Length and Stiffness Level and the Impact of Rotation in the JET Tokamak},journal={Phys. Rev. Lett.},volume={102},pages={175002},year={2009},doi={10.1103/PhysRevLett.102.175002}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "557a6b97b4c8682d5ba8aae1a05ea15a0682dff66333dffdd0fc6637baaf11c9",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

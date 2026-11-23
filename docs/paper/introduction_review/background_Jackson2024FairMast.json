@@ -1,0 +1,31 @@
+{
+  "key": "Jackson2024FairMast",
+  "citation": {
+    "title": "FAIR-MAST: A fusion device data management system",
+    "authors": "Jackson S, Khan S, Cummings N, Hodson J, de Witt S, Pamela S, Akers R, Thiyagalingam J, The MAST Team",
+    "year": 2024,
+    "venue": "SoftwareX",
+    "volume": "27",
+    "pages": "101869",
+    "doi_or_arxiv": "10.1016/j.softx.2024.101869"
+  },
+  "relevance": "peripheral",
+  "topic": "FAIR data management for historical MAST diagnostic data. It combines a PostgreSQL metadata index, S3/Ceph Zarr object storage and REST/GraphQL APIs.",
+  "own_question": "How can archived MAST diagnostic data be made findable, remotely accessible and ready for AI/ML analysis?",
+  "actual_method_and_evidence": "This is a software description. Its only empirical test is a transfer benchmark of 100 camera images, about 17 GB, run on an internal UKAEA cluster. The paper reports about 83 MB/s and 2 s latency for the new system, compared with 7.4 MB/s and 23 s for UDA. It contains no CES, KSTAR, ion-temperature or nowcasting content.",
+  "claim_checks": [],
+  "input_target_timing_if_relevant": "Not relevant. The latency figures refer to offline archive retrieval, not to real-time diagnostic report arrival.",
+  "validation_if_relevant": "Not applicable. There is no model validation.",
+  "forbidden_inferences": [
+    "Do not cite this paper as evidence for real-time or online data availability.",
+    "Do not equate its archive retrieval latency with CES report latency or our 10 ms computation.",
+    "Do not imply it addresses KSTAR, CES or impurity ion temperature.",
+    "Do not cite it as evidence that ML on fusion data improves prediction."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Exclude. The source concerns offline data infrastructure for a different device, so it has no bearing on the causal CES nowcasting question. At most it could support an optional data-availability remark, but it is not needed.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 7,
+  "supplied_pdf_sha256": "7dd26efa117446a51c2a1e4c38e0c424a119782e01e907113c79ad684d283742",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,39 @@
+{
+  "key": "Burrell2009EdgePedestal",
+  "citation": {
+    "title": "Edge pedestal control in quiescent H-mode discharges in DIII-D using co-plus counter-neutral beam injection",
+    "authors": "K.H. Burrell, T.H. Osborne, P.B. Snyder, W.P. West, M.E. Fenstermacher, R.J. Groebner, P. Gohil, A.W. Leonard, W.M. Solomon",
+    "year": 2009,
+    "venue": "Nuclear Fusion",
+    "volume": "49",
+    "pages": "085024",
+    "doi_or_arxiv": "10.1088/0029-5515/49/8/085024"
+  },
+  "relevance": "peripheral",
+  "topic": "Pedestal density, pressure and ELM-free state in DIII-D QH-mode as NBI torque and edge rotation are varied; peeling-ballooning (ELITE) stability context.",
+  "own_question": "Can edge rotation, varied through co- and counter-NBI torque, control pedestal transport, and is QH-mode possible with edge co-rotation?",
+  "actual_method_and_evidence": "Experimental DIII-D shot time histories and profiles. Torque scans were run at near-constant power, single-null and double-null shapes were compared, and ELITE/EFIT stability diagrams used Sauter bootstrap current. The paper reports pedestal density rising as torque falls, ELMs returning at low rotation, and co-rotating QH-mode. Interpretation of EHO transport is presented as speculation or semi-quantitative theory. No nowcasting, no KSTAR, no CES-report timing analysis.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In DIII-D QH-mode, the authors report that changing NBI torque and edge rotation altered pedestal density and pressure while ELM-free operation was maintained, within limits.",
+      "original_pdf_locator": "Sec. 3, pp. 5-6, figs 6, 8-10",
+      "qualification": "Single-device experiments. The rotation-transport link is the authors' interpretation and was speculative regarding mechanism. It does not concern ion-temperature measurement or KSTAR.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The paper does not study CES report timing or real-time estimation.",
+  "validation_if_relevant": "Not applicable. There is no predictive model validation.",
+  "forbidden_inferences": [
+    "That this paper informs CES Ti nowcasting performance or BES/ECEI incremental value",
+    "That pedestal rotation-transport coupling is established for KSTAR2022",
+    "That EHO theory is quantitatively validated",
+    "That this source's ion-temperature measurements are equivalent to our carbon-impurity CES labels"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Include only as optional background on why the pedestal-top ion state matters for pedestal physics. Otherwise it is off-topic for a causal-nowcasting study.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "3d737790aa8b625baf80a64be4f5eba3f55ee2bd55c7cb221e57d9e997d744cb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

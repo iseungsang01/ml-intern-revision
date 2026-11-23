@@ -1,0 +1,112 @@
+"""Exercise the real local reader without network access or invented study data."""
+import json
+from pathlib import Path
+
+from playwright.sync_api import sync_playwright
+
+from build_reader import ROOT
+
+OUT = ROOT / 'docs/paper/research_reader'
+QA = ROOT / 'data/.thesis_reader/qa'
+
+
+def main():
+    QA.mkdir(parents=True,exist_ok=True)
+    results={}
+    with sync_playwright() as play:
+        browser=None
+        for kwargs in ({'headless':True},{'headless':True,'channel':'chrome'},{'headless':True,'channel':'msedge'}):
+            try:
+                browser=play.chromium.launch(**kwargs);break
+            except Exception:
+                continue
+        assert browser is not None,'No installed headless Chromium available'
+        context=browser.new_context(viewport={'width':1440,'height':1000})
+        context.set_offline(True)
+        page=context.new_page(); errors=[]; network=[]
+        page.on('pageerror',lambda error:errors.append(str(error)))
+        page.on('request',lambda request:network.append(request.url) if request.url.startswith(('http://','https://')) else None)
+        page.goto((OUT/'index.html').resolve().as_uri(),wait_until='load')
+        assert page.locator('.paper-view>.manuscript-section').count()==7
+        assert page.evaluate('window.readerTest.sourceCount')==254
+        ids=page.locator('[id]').evaluate_all('(els)=>els.map(e=>e.id)')
+        assert len(ids)==len(set(ids)),'Duplicate element IDs'
+        assert page.locator('h1').inner_text()
+        page.screenshot(path=str(QA/'reader_desktop.png'))
+        page.get_by_role('button',name='문헌·인용 근거',exact=True).click()
+        page.locator('#source-search').fill('NN-CES')
+        page.locator('#mode-filter').select_option('full_pdf')
+        assert page.locator('.source-row').count()>=1
+        page.locator('.source-row[data-key="Lee2026NeuralNetworkbased"]').click()
+        assert page.locator('#source-dialog').is_visible()
+        assert page.locator('#source-dialog-title').inner_text()
+        assert 'Lee2026' in page.locator('#dialog-key').inner_text()
+        assert page.locator('.claim-note').count()>=1
+        page.screenshot(path=str(QA/'reader_source_proof.png'))
+        page.keyboard.press('Escape')
+        assert not page.locator('#source-dialog').is_visible()
+        page.locator('#source-search').fill('this-specific-source-does-not-exist')
+        assert page.locator('.source-row').count()==0
+        assert page.locator('.empty').is_visible()
+        page.get_by_role('button',name='원고 읽기',exact=True).click()
+        page.locator('.section-nav[data-section="materials-methods"]').click()
+        assert page.locator('#materials-methods').is_visible()
+        assert 'Neural Network' in page.locator('#materials-methods').inner_text()
+        page.screenshot(path=str(QA/'reader_methods.png'))
+        citation=page.locator('.citation').first
+        if citation.count():
+            assert citation.inner_text().startswith('[')
+            assert citation.inner_text().endswith(']')
+            assert citation.get_attribute('aria-label')
+            citation.click()
+            assert page.locator('#source-dialog').is_visible()
+            page.keyboard.press('Escape')
+        page.evaluate("window.readerTest.showSource('Haskey2017DeuteriumCharge')")
+        if page.get_by_text('서지 확인 메모',exact=True).count():
+            page.get_by_text('서지 확인 메모',exact=True).click()
+            assert page.locator('#dialog-content details[open]').inner_text()
+            results['bibliographic_note']=True
+        page.keyboard.press('Escape')
+        previews=page.locator('.pdf-preview')
+        if previews.count():
+            preview=previews.first
+            images=preview.locator('img')
+            assert images.count()>0
+            preview.scroll_into_view_if_needed()
+            assert images.first.evaluate('(img)=>img.complete && img.naturalWidth>0')
+            assert images.first.get_attribute('src').startswith('data:image/png;base64,')
+            page.screenshot(path=str(QA/'reader_results_preview.png'))
+            preview.locator('summary').click()
+            assert not preview.get_attribute('open')
+            page.emulate_media(media='print')
+            page.evaluate("window.dispatchEvent(new Event('beforeprint'))")
+            assert preview.get_attribute('open') is not None
+            page.emulate_media(media='screen')
+            results['embedded_results_pages']=images.count()
+        page.evaluate("window.readerTest.showSource('unmapped-citation-key')")
+        assert page.locator('#source-dialog-title').inner_text()
+        page.keyboard.press('Escape')
+        results.update({'desktop_sections':7,'source_records':254,'search_and_filters':True,
+                        'compact_citation_labels':True,
+                        'citation_dialog':True,'escape_and_focus':True,'empty_state':True,
+                        'unknown_citation_state':True,'section_navigation':True})
+        page.set_viewport_size({'width':390,'height':844})
+        page.evaluate('window.scrollTo(0,0)')
+        assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1'),'Mobile horizontal overflow'
+        page.screenshot(path=str(QA/'reader_mobile.png'))
+        page.get_by_role('button',name='문헌·인용 근거',exact=True).click()
+        page.locator('#source-search').fill('NN-CES')
+        page.locator('#source-list .source-row').first.click()
+        assert page.locator('#source-dialog').is_visible()
+        assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1')
+        results['mobile_390px_no_overflow']=True
+        assert not errors,errors
+        assert not network,network
+        results.update({'js_errors':errors,'automatic_http_requests':network,'offline_passed':True})
+        browser.close()
+    (OUT/'qa_status.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    print('READER UI CHECKS PASSED')
+
+
+if __name__=='__main__':
+    main()

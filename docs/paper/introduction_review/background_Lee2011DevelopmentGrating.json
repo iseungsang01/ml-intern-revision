@@ -1,0 +1,46 @@
+{
+  "key": "Lee2011DevelopmentGrating",
+  "citation": {
+    "title": "Development of two-grating spectrometer for the charge exchange spectroscopy system on KSTAR",
+    "authors": "Hyungho Lee; Eun-ji Song; Young-dong Park; Soo-ghee Oh; Won-Ha Ko",
+    "year": 2011,
+    "venue": "Review of Scientific Instruments",
+    "volume": "82",
+    "pages": "063510",
+    "doi_or_arxiv": "10.1063/1.3606438"
+  },
+  "relevance": "supporting",
+  "topic": "KSTAR carbon (C VI 529.05 nm) CES hardware; exposure time and signal-to-noise as limits on CES time resolution",
+  "own_question": "Can a two-grating spectrometer raise CES signal-to-noise enough to shorten exposure and improve time resolution on KSTAR?",
+  "actual_method_and_evidence": "Instrument development paper from the 2010 KSTAR campaign. It compares a two-grating spectrometer with a 1.33 m Czerny-Turner spectrometer. The comparison uses spectra from different chords, exposures and cameras, plus Ti and Vt profiles for one shot (4364). Reported settings are 46 ms exposure at 50 ms cadence for the two-grating system, versus 80 ms, and 180 ms in routine use, for the conventional spectrometer. Without beam modulation, background subtraction relied on a 100 ms beam-off window. The authors interpret the gain as the result of the smaller f-number. The evidence is a single-shot qualitative comparison with no statistical validation.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In early KSTAR CES, impurity-ion (C VI) Ti and rotation time resolution was constrained by the CCD exposure needed for adequate S/N and by the lack of beam modulation for background subtraction.",
+      "original_pdf_locator": "Abstract; Sec. II.B; Sec. IV (pp. 2-3, 6)",
+      "qualification": "Applies to the 2010 campaign hardware only. It does not describe KSTAR2022 CES cadence or latency.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Hardware improvements to the spectrometer were pursued to shorten CES exposure, illustrating an upstream route to faster impurity-temperature reports.",
+      "original_pdf_locator": "Sec. III, Figs. 4-6 (pp. 4-5)",
+      "qualification": "The reported improvement factor of 2-4 is the authors' claim from limited comparisons. No figures were checked visually.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "The measured quantities are carbon impurity Ti and Vt, not main-ion values. Processing was offline. Report arrival times were not reported.",
+  "validation_if_relevant": "One shot. Chords and cameras differed between spectrometers. There was no held-out evaluation.",
+  "forbidden_inferences": [
+    "Not evidence of current KSTAR2022 CES timing or latency",
+    "Not main-ion Ti",
+    "Not real-time or online CES",
+    "Not support for BES/ECEI predictive value",
+    "Do not treat its CES values as independent truth"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Grounds the motivation that KSTAR CES temporal resolution is S/N and exposure limited. It also shows that hardware upgrades are a complementary, upstream alternative to nowcasting.",
+  "bibtex_if_worth_citing": "@article{Lee2011DevelopmentGrating,title={Development of two-grating spectrometer for the charge exchange spectroscopy system on KSTAR},author={Lee, Hyungho and Song, Eun-ji and Park, Young-dong and Oh, Soo-ghee and Ko, Won-Ha},journal={Review of Scientific Instruments},volume={82},pages={063510},year={2011},doi={10.1063/1.3606438}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 6,
+  "supplied_pdf_sha256": "13d46e32210068745a6bcee1355c636c2f2db86e8916178960630768b760c319",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

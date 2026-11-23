@@ -1,0 +1,81 @@
+{
+  "key": "Ko2015IonTemperature",
+  "citation": {
+    "title": "Ion temperature and toroidal velocity edge transport barriers in KSTAR",
+    "authors": "Won-Ha Ko; S.H. Ko; J.M. Kwon; P.H. Diamond; K. Ida; Y.M. Jeon; J.H. Lee; S.W. Yoon; J.G. Kwak",
+    "year": 2015,
+    "venue": "Nuclear Fusion",
+    "volume": "55",
+    "pages": "083013 (8pp)",
+    "doi_or_arxiv": "10.1088/0029-5515/55/8/083013 (this paper's own DOI, from its header)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-9 (p1 is the publisher cover; article pp1-8 are PDF pp2-9)",
+    "full_pdf_supplied": true,
+    "limitations": "Figures were read from extracted text and images, so point values are approximate. The shots are #5681, #9422, #8762, #7821 and #6304. Campaign years are not stated and none is shown to be KSTAR 2022."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "CES time resolution used",
+      "verdict": "qualify",
+      "source_finding": "The diagnostic uses the C VI 529.05 nm line on 32 channels covering R 1.8-2.3 m, with about 5 mm channel spacing at the edge. CCD integration is 5.5 ms. The NBI is modulated at 5 Hz (190 ms on, 10 ms off) to allow background subtraction. Edge resolution is given as 100 Hz and 5 mm, and the summary states 10 ms.",
+      "locator": "PDF p3, Sec 2 and Sec 3A; PDF p8, Sec 4",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "KSTAR CES has resolved edge Ti and toroidal-rotation profiles with roughly 5 mm edge spacing and about 10 ms sampling [Ko2015].",
+      "qualification": "These settings belong to the system as described in that paper. The paper gives no report latency or online availability. It does not establish that the same settings were used in KSTAR 2022."
+    },
+    {
+      "proposed_claim": "pedestal-top location",
+      "verdict": "qualify",
+      "source_finding": "Pedestal height and width come from modified-tanh fits. In #5681 H-mode, the Ti pedestal width is about 2 cm and the Vphi width about 5 cm. The LCFS sits near 2.3 m in L-mode and 2.25 m in H-mode. No single pedestal-top chord is defined.",
+      "locator": "PDF p3-4, Sec 3A, Fig 1; PDF p4, Sec 3A text on the fitting method",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "In KSTAR CES data the Ti pedestal spans only a few centimetres and is usually characterized by fitted height and width [Ko2015].",
+      "qualification": "The paper does not support the location or choice of the provider-selected chord. Pedestal-top radius shifts between shots and between confinement modes."
+    },
+    {
+      "proposed_claim": "behaviour across L-H/H-L and with RMP",
+      "verdict": "qualify",
+      "source_finding": "After the L-H transition the Ti pedestal builds up, and the Vphi pedestal forms ahead of it. The pedestal gradient correlation shows weak relative hysteresis, but rests on only a few points. An ELM-scale drop in Ti is hard to see. Under n=1 RMP ELM suppression, both the Ti and Vphi pedestal tops fall, with rotation falling more (by more than 30%). Rotation recovers when the RMP is switched off.",
+      "locator": "PDF p4, Sec 3A, Figs 2-3; PDF p5, Figs 4-5; PDF p8, Sec 3D, Figs 11-12",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On KSTAR, the CES pedestal Ti evolves over tens to hundreds of milliseconds across L-H transitions and is lowered during n=1 RMP ELM suppression, while ELM-scale Ti changes are difficult to resolve [Ko2015].",
+      "qualification": "Fig 12 shows only rotation recovery. The hysteresis reading is the authors' interpretation of sparse data. The single-transport-process explanation is an author claim."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "not_applicable (this is a measurement and physics paper, not an estimator paper)",
+    "outputs": "not_applicable",
+    "causal_or_offline": "Profiles are analysed offline. The beam-off background window is selected inside the analysis program.",
+    "source_diagnostic_as_input": "not_applicable. BES appears only as future work.",
+    "reported_vs_physical_truth": "The quantities are carbon-impurity Ti and Vphi. The authors note that carbon rotation may differ strongly from main-ion rotation at the edge (PDF p9, Sec 4)."
+  },
+  "validation": {
+    "split_unit": "not_applicable",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none. CES itself is the measurement.",
+    "unknowns": "Uncertainty on the fitted pedestal parameters and the number of shots analysed are not reported."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Diagnostic integration time and sampling (5.5 ms, 100 Hz) and the beam-modulation scheme.",
+    "what_not_established": "Real-time processing, report arrival time, latency and any feedback use.",
+    "locator": "PDF p3, Sec 2 and Sec 3A"
+  },
+  "forbidden_inferences": [
+    "A 10 ms sampling interval means a CES report is available online within 10 ms.",
+    "The KSTAR 2022 CES configuration matches the configuration in this paper.",
+    "Carbon Ti equals main-ion Ti, or CES gives physical truth.",
+    "Fig 4 establishes robust hysteresis or a physical mechanism.",
+    "The gyrokinetic (GYRO) PSFI results describe Ti nowcastability.",
+    "The paper motivates or validates BES/ECEI nowcasting.",
+    "The claim that 400 kW of ECH leaves the pedestal unchanged was demonstrated here; it is cited from [21]."
+  ],
+  "competing_or_complementary": "Complementary. The paper provides physical context for the target: the KSTAR CES pedestal Ti and its timescales. It contains no estimator, no NN-CES and no causal prediction.",
+  "bibtex": "@article{Ko2015IonTemperature,title={Ion temperature and toroidal velocity edge transport barriers in {KSTAR}},author={Ko, Won-Ha and Ko, S. H. and Kwon, J. M. and Diamond, P. H. and Ida, K. and Jeon, Y. M. and Lee, J. H. and Yoon, S. W. and Kwak, J. G.},journal={Nuclear Fusion},volume={55},number={8},pages={083013},year={2015},doi={10.1088/0029-5515/55/8/083013}}",
+  "followup_sources_if_material": [
+    "Ko W.H. et al 2010 Rev. Sci. Instrum. 81 10D740 (CES system; ref [11])",
+    "Lee H. et al 2011 Rev. Sci. Instrum. 82 063510 (ref [16])",
+    "Ko W.H. et al 2014 Rev. Sci. Instrum. 85 11E413 (CES under RMP; ref [33]). The DOIs of these cited papers are not given in this PDF and should be verified separately."
+  ]
+}

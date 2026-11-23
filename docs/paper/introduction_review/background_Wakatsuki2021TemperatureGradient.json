@@ -1,0 +1,39 @@
+{
+  "key": "Wakatsuki2021TemperatureGradient",
+  "citation": {
+    "title": "Ion temperature gradient control using reinforcement learning technique",
+    "authors": "T. Wakatsuki, T. Suzuki, N. Oyama, N. Hayashi",
+    "year": 2021,
+    "venue": "Nuclear Fusion",
+    "volume": "61",
+    "pages": "046036",
+    "doi_or_arxiv": "10.1088/1741-4326/abe68d"
+  },
+  "relevance": "peripheral",
+  "topic": "Reinforcement-learning neural-network NBI controller for the CXRS-derived ion temperature difference (ΔTi) in JT-60U-based TOPICS simulations",
+  "own_question": "Can a reinforcement-learning-trained neural-network controller regulate ΔTi robustly across ITB plasmas with nonlinear and varying responses to NBI?",
+  "actual_method_and_evidence": "The controller was trained with ACER over more than 2000 TOPICS transport simulations. The training models used ad hoc diffusivity profiles that depend on absorbed NBI power. Validation used two simulated models whose χi profiles came from JT-60U shots E48729 and E48730. Simulated alpha heating was also tested, and a fixed-gain PID scan served as the comparison. No real-time experiment was performed. The authors state that control in real experiments remains future work.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Prior JT-60U work cited by this paper used real-time CXRS-derived ion temperature differences for NBI feedback; the measured quantity is a control variable, not a nowcast target.",
+      "original_pdf_locator": "p.1-2, Introduction (citing Yoshida 2009, ref [1])",
+      "qualification": "This is the source's secondhand description of ref [1]. Timing and latency are not given. The paper reports CXRS impurity-based Ti and does not distinguish it from main-ion Ti.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are present and past ΔTi, past NBI power, and the next-step ΔTi target, on a 20 ms control step in simulation. The source gives no measured diagnostic arrival times.",
+  "validation_if_relevant": "Simulation only. The 'experimental' models are χi profiles reconstructed offline from two shots; no real plasma was controlled.",
+  "forbidden_inferences": [
+    "Do not claim real-time deployment or experimental validation.",
+    "Do not treat this paper as evidence for nowcasting reported CES temperature or for using BES/ECEI inputs.",
+    "Do not generalize this paper to all prior ion-temperature work.",
+    "Do not equate CXRS impurity Ti with main-ion Ti.",
+    "Do not cite this paper's controller performance as support for estimator accuracy in our study."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This paper addresses control, not estimation, and uses no turbulence-diagnostic inputs. At most it is an optional one-line context citation for applications that use ion temperature gradients from CXRS.",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 11,
+  "supplied_pdf_sha256": "edcc794960a6c4551afe546d12604323a934703bc3302cf38ae911b6be87aa20",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

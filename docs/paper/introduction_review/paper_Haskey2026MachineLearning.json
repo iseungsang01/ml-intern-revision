@@ -1,0 +1,78 @@
+{
+  "key": "Haskey2026MachineLearning",
+  "citation": {
+    "title": "Machine Learning Based Spectral Fitting and Atomic Physics Corrections for the Main Ion Charge Exchange Recombination Spectroscopy System on the DIII-D tokamak",
+    "authors": "S. R. Haskey, B. Grierson, S. K. Kim, C. Chrystal, A. Angulo, Q. Pratt, A. Jalalvand, E. Linsenmayer, L. Stagner, N. Pablant, A. Bortolon, S. Smith",
+    "year": 2026,
+    "venue": "Review of Scientific Instruments (accepted manuscript; 26th HTPD proceedings)",
+    "volume": "unknown",
+    "pages": "unknown",
+    "doi_or_arxiv": "10.1063/5.0350726 (the paper's own DOI, from its 'please cite' banner; not a reference DOI)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-13",
+    "full_pdf_supplied": true,
+    "limitations": "This is the pre-copyedit manuscript, and the volume and pages are unknown. Figure values were read from extracted text and labels."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The paper claims real-time use.",
+      "verdict": "qualify",
+      "source_finding": "Real-time fitting is given as a motivation and possibility. The demonstrated results are a batch throughput of about 200,000 spectra/s in a single call, with data assembly as the bottleneck, and a reduction in per-discharge analysis time from hours to seconds. No real-time deployment is reported.",
+      "locator": "p3 Sec IIB; p6 Sec IID; p1 Abstract",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "ML readers of charge-exchange spectra have greatly accelerated between-shot and bulk historical analysis on DIII-D, and their authors identify real-time fitting as a possible use [Haskey2026].",
+      "qualification": "Real-time use is a stated prospect only; do not call it deployed."
+    },
+    {
+      "proposed_claim": "The ML spectral fit agrees with least-squares fits.",
+      "verdict": "qualify",
+      "source_finding": "The ML fit agrees with MICEFIT least-squares outputs. Figure 3 shows a single chord (m17) over 31 discharges and about 24k points, with standard deviations of about 116 eV in temperature and about 7.9 km/s in rotation. The text gives typical agreement of 120 eV, 10 km/s and 2% in brightness, while the abstract says 150 eV. The authors attribute a systematic rotation offset on three channels to instrument-function differences. The model was trained on 300k synthetic spectra from the same forward model.",
+      "locator": "p4 Fig.3(e-g); p5-6 Sec IID; p4 Sec IIB-C; p1 Abstract",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "A neural spectrum reader trained on forward-model spectra reproduced conventional least-squares fit parameters for DIII-D main-ion spectra to within roughly 100-150 eV in temperature [Haskey2026].",
+      "qualification": "The reference is MICEFIT fit output, not physical truth. The abstract and body figures differ (150 vs 120 eV)."
+    },
+    {
+      "proposed_claim": "Pedestal-top correction sizes",
+      "verdict": "supported",
+      "source_finding": "The FIDASIM-based temperature corrections are typically about 150 eV at the pedestal top and up to about 300 eV. They change sign through the steep-gradient edge region. The surrogate differs from FIDASIM with a mean of about -0.8 eV and a standard deviation of about 46 eV, partly due to Monte Carlo noise. Rotation corrections are within about 2 krad/s. Brightness-to-density conversion shows about 20% error unless Thomson ne is added.",
+      "locator": "p1 Abstract; p7 Fig.7; p8 Sec IIIA, Fig.9(c); p9 Sec IIID; p10-11 Fig.11",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "Model-based atomic-physics and smearing corrections to raw main-ion temperatures can reach a few hundred eV near the pedestal top [Haskey2026].",
+      "qualification": "These are synthetic FIDASIM tests for main-ion D-alpha, not carbon CES."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "(1) One NBI-on minus NBI-off spectrum (648 pixels). (2) For corrections: 16-channel raw T*, Omega*, full-energy beam-emission brightness, thermal brightness and beam energy, plus validity masks; Thomson ne is optional for density.",
+    "outputs": "(1) About 20 fit parameters. (2) Per-channel temperature and rotation corrections and a brightness-to-density conversion.",
+    "causal_or_offline": "Per-time-slice inversion with no temporal forecasting. It is used offline and between shots.",
+    "source_diagnostic_as_input": "Yes. The model reads the same diagnostic's current spectrum.",
+    "reported_vs_physical_truth": "Fit labels come from MICEFIT. Correction 'truth' is the FIDASIM inputs, so it is consistent with the model rather than independent physical truth."
+  },
+  "validation": {
+    "split_unit": "For corrections: an 80/20 train/validation split. The sampling unit is unstated.",
+    "temporal_order": "not_applicable",
+    "independent_truth": "none",
+    "unknowns": "Whether the split is by discharge for real-data comparisons; whether a held-out test set exists; any uncertainty intervals."
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "About 200k spectra/s in batch. FIDASIM takes about 10 min per simulation on 8 CPUs. Least-squares fitting of the archive took about 100k CPU-hours.",
+    "what_not_established": "Real-time latency, any plant-control integration, and actual report-arrival timing.",
+    "locator": "p6 Sec IID, IIIA; p3 Sec IIA"
+  },
+  "forbidden_inferences": [
+    "Do not say the reader is deployed in real time.",
+    "Do not treat it as a temporal nowcaster or forecaster.",
+    "Do not claim validation against physical truth.",
+    "Do not transfer its accuracy to KSTAR or carbon CES.",
+    "Do not claim faster readers make nowcasting unnecessary, or that they quantify its benefit.",
+    "Do not draw priority or prior-art-absence conclusions."
+  ],
+  "competing_or_complementary": "Complementary. It is an upstream reader that could refresh our anchors. It does not estimate a report before that report exists.",
+  "bibtex": "@article{Haskey2026MachineLearning,title={Machine Learning Based Spectral Fitting and Atomic Physics Corrections for the Main Ion Charge Exchange Recombination Spectroscopy System on the {DIII-D} tokamak},author={Haskey, S. R. and Grierson, B. and Kim, S. K. and Chrystal, C. and Angulo, A. and Pratt, Q. and Jalalvand, A. and Linsenmayer, E. and Stagner, L. and Pablant, N. and Bortolon, A. and Smith, S.},journal={Review of Scientific Instruments},year={2026},doi={10.1063/5.0350726},note={Accepted manuscript}}",
+  "followup_sources_if_material": [
+    "Chrystal et al. 2016 RSI 87 11E512 (DIII-D carbon CER), only if the intro discusses CES fitting conventions"
+  ]
+}

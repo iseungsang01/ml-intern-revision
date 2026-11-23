@@ -1,0 +1,47 @@
+{
+  "key": "Kim2023LabviewProgramming",
+  "citation": {
+    "title": "LabVIEW programming for the KSTAR XICS towards real-time ion temperature measurement",
+    "authors": "Myungkyu Kim; Sang Gon Lee",
+    "year": 2023,
+    "venue": "Fusion Engineering and Design",
+    "volume": "190",
+    "pages": "113549",
+    "doi_or_arxiv": "10.1016/j.fusengdes.2023.113549"
+  },
+  "relevance": "supporting",
+  "topic": "Faster offline analysis of KSTAR XICS argon spectra for impurity ion temperature and toroidal rotation",
+  "own_question": "Can a simplified, core-only LabVIEW pipeline cut XICS processing time relative to a legacy Matlab least-squares program, toward quasi-real-time use?",
+  "actual_method_and_evidence": "PILATUS TIFF frames are read, reshaped and binned over core vertical channels 340-390. The He-like Ar w line is fitted with a Gaussian, using background subtraction and down-weighting of satellite channels. Curvature correction is omitted. Ti comes from Doppler width and rotation from Doppler shift. The authors report qualitatively similar Ti and Vtor to Matlab on the same discharge data. Reported timing is 1.6 s per 1000 stored images. Platforms differ and Matlab steps were timed manually, so the timing comparison is not controlled. Real-time detector streaming over NFS or DMA is stated only as future work.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "At KSTAR, spectroscopic ion-temperature analysis has been streamlined toward quasi-real-time use, e.g., a simplified core-only XICS impurity-line fitting pipeline.",
+      "original_pdf_locator": "Abstract; Sec. 3; Table 1",
+      "qualification": "XICS argon line, not CES carbon; core, not pedestal. Offline processing of stored files; no online control or arrival-time measurement. Matlab agreement is qualitative.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Faster upstream spectral reading is an active route to lower ion-temperature latency, complementary to downstream temporal nowcasting.",
+      "original_pdf_locator": "Sec. 1; Sec. 4",
+      "qualification": "This is the authors' goal and future plan, not demonstrated real-time deployment. It is our interpretation as complementary.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are stored detector images at a typical 100 frames/s. The reported 1.6 s per 1000 images is batch processing on a specific PC. File transfer latency and report availability are not measured.",
+  "validation_if_relevant": "Single comparison against the legacy Matlab output on the same experimental data. No independent truth, no error statistics, no split.",
+  "forbidden_inferences": [
+    "XICS real-time Ti achieved or deployed",
+    "Applies to CES or pedestal-top chords",
+    "LabVIEW Gaussian fit is more accurate than Matlab",
+    "Timing comparison is controlled",
+    "Measures report latency relevant to our nowcast",
+    "Prior KSTAR Ti work is all slow or noncausal"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Concrete KSTAR example of upstream acceleration of impurity-Ti spectroscopy. It frames the question of where downstream nowcasting adds value, with careful diagnostic and offline qualifiers. It provides Doppler width/shift background but is not a nowcasting comparator.",
+  "bibtex_if_worth_citing": "@article{Kim2023LabviewProgramming,title={LabVIEW programming for the KSTAR XICS towards real-time ion temperature measurement},author={Kim, Myungkyu and Lee, Sang Gon},journal={Fusion Engineering and Design},volume={190},pages={113549},year={2023},doi={10.1016/j.fusengdes.2023.113549}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 5,
+  "supplied_pdf_sha256": "7339ad7ea3b4442ebb22ebb7c6828765112afcd05d6e077dc272defd4ebbb421",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

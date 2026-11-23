@@ -1,0 +1,39 @@
+{
+  "key": "Ravuri2021SkilfulPrecipitation",
+  "citation": {
+    "title": "Skilful precipitation nowcasting using deep generative models of radar",
+    "authors": "Ravuri, S.; Lenc, K.; Willson, M.; Kangin, D.; Lam, R.; Mirowski, P.; Fitzsimons, M.; Athanassiadou, M.; Kashem, S.; Madge, S.; Prudden, R.; Mandhane, A.; Clark, A.; Brock, A.; Simonyan, K.; Hadsell, R.; Robinson, N.; Clancy, E.; Arribas, A.; Mohamed, S.",
+    "year": 2021,
+    "venue": "Nature",
+    "volume": "597",
+    "pages": "672-677",
+    "doi_or_arxiv": "10.1038/s41586-021-03854-z"
+  },
+  "relevance": "peripheral",
+  "topic": "Deep generative probabilistic nowcasting of precipitation from UK/US radar (meteorology, not plasma).",
+  "own_question": "Can a conditional GAN produce skilful, non-blurry probabilistic precipitation nowcasts 5-90 min ahead from 20 min of past radar?",
+  "actual_method_and_evidence": "Conditional GAN (DGMR) with spatial/temporal discriminators and a grid-cell regularizer. Baselines: PySTEPS, UNet and axial attention. Trained on UK 2016-2018 and tested on 2019; a weekly split and US MRMS data are also reported. Metrics: CSI, CRPS, PSD and economic value, plus a study with 56 meteorologists. Radar-derived labels are used as truth. The task is future-field prediction, not estimation of a current report.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "In an unrelated domain, per-cell skill scores and expert judgments of forecast usefulness need not agree. This motivates using several evaluation views.",
+      "original_pdf_locator": "p.3 case-study discussion; p.6 Conclusion",
+      "qualification": "This is the authors' interpretation for precipitation nowcasting. It does not transfer as evidence to CES or plasma diagnostics.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "The inputs are 4 past radar frames at 5-min intervals. The targets are 18 future frames. This setup is future prediction, unlike our current-report nowcast.",
+  "validation_if_relevant": "Yearly split (2019 test), a weekly split, and US data. Significance tests are paired permutation tests over alternating weeks.",
+  "forbidden_inferences": [
+    "Implying any relevance to KSTAR, CES, Ti, or BES/ECEI",
+    "Treating GAN results as support for the performance of our estimators",
+    "Equating precipitation future forecasting with our current-report nowcasting",
+    "Citing it as plasma prior work"
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "This is a cross-domain nowcasting example. At most, it could serve as an optional single citation on multi-metric evaluation. It is not needed for the core framing.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 19,
+  "supplied_pdf_sha256": "ca5f10f9deb516da9672272e277cee3b2a729ddf60513942afa574380c48a44b",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,40 @@
+{
+  "key": "Han2024CriterionLong",
+  "citation": {
+    "title": "Criterion for long sustained highly peaked ion temperature in diverted configuration of KSTAR tokamak",
+    "authors": "H. Han, J. Chung, Y. M. Jeon, J. Kang, Y. S. Na, W. H. Ko, J. W. Juhn, J. Jeong, H. S. Kim, J. Jang, S. H. Hahn, J. K. Lee, Y. H. Lee, S. J. Park, W. C. Kim, S. W. Yoon",
+    "year": 2024,
+    "venue": "Physics of Plasmas",
+    "volume": "31",
+    "pages": "032506",
+    "doi_or_arxiv": "10.1063/5.0184007"
+  },
+  "relevance": "peripheral",
+  "topic": "Empirical operating recipe for KSTAR FIRE mode. It sustains high, peaked ion temperature in a diverted configuration by avoiding the H-mode transition.",
+  "own_question": "Which operational parameters govern access to the FIRE mode while avoiding the H-mode transition? The parameters examined are density, NBI power and energy mix, USN versus LSN shape, and BT.",
+  "actual_method_and_evidence": "Experimental shot comparisons and a density-versus-NBI-power regime classification. Includes a table of access rates by beam-voltage combination with few trials per row, and a regression formula for absorbed beam power. CES appears only as a monitoring diagnostic. There is no estimator, no nowcasting and no pedestal-top analysis. Figures were not visually checked.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR diverted FIRE-mode operation relies on low density and the USN shape to avoid the H-mode transition. This yields long-sustained, highly peaked core ion temperature monitored with CES.",
+      "original_pdf_locator": "Sec. II–III, p. 3–5; Fig. 2",
+      "qualification": "This is an empirical recipe based on limited data; the threshold line is only indicative. It concerns core temperature, not the pedestal-top chord.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not relevant. The paper gives no CES cadence and no report timing.",
+  "validation_if_relevant": "None applicable.",
+  "forbidden_inferences": [
+    "Do not cite it as support for nowcasting, or for BES/ECEI information content.",
+    "Do not imply that FIRE-mode discharges are in our dataset.",
+    "Do not treat fast-ion mechanism statements as demonstrated physics.",
+    "Do not equate carbon CES with main-ion Ti.",
+    "Do not cite the reference-list DOIs as this paper's DOI."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "It provides only optional KSTAR context on ion-temperature operating regimes. It does not address our estimation question, so exclude it unless general context about the KSTAR campaign is needed.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 10,
+  "supplied_pdf_sha256": "fdc5024726213c4826babfad327ed6fbf3510854ce2aa41f2b3bb07f4b359703",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

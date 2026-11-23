@@ -1,0 +1,80 @@
+{
+  "key": "Wang2025TimeSeries",
+  "citation": {
+    "title": "Time series extrinsic regression for reconstructing missing electron temperature in tokamak",
+    "authors": "Wang M, Wan C, Lu J, Yu Z, Xiao B, Li Y, He X, Luo Z, Yuan Q, Hu Y, Li J",
+    "year": 2025,
+    "venue": "Nuclear Fusion",
+    "volume": "65",
+    "pages": "076008 (11pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/addb5f (this paper's own DOI, PDF p2 header; reference-list DOIs belong to cited works)"
+  },
+  "scope_read": {
+    "pdf_pages": "1-12 (p1 publisher cover; p2-12 = journal pp1-11)",
+    "full_pdf_supplied": true,
+    "limitations": "Figures are read from extracted images. No code or data were inspected. The text in Sec 2.2 lists 14 inputs and omits Li, while Table 1 lists 15. Line of sight is given as R=1.85 m but the target as R=1.9 m. The quoted loss is 0.014 (p8 Sec 2.3) versus test MSE 0.17 (p9 Table 4), with normalization unstated."
+  },
+  "relevance": "supporting",
+  "claim_checks": [
+    {
+      "proposed_claim": "The source estimator is offline or real-time.",
+      "verdict": "supported",
+      "source_finding": "The estimator is offline. Inputs include offline-EFIT quantities, and the authors state that this dependence limits real-time deployment. No timing was reported.",
+      "locator": "p5 Sec 2.2 and Fig 1b; p10 Sec 4",
+      "kind": "author_claim",
+      "allowed_intro_sentence": "On EAST, a transformer-plus-recurrent extrinsic regression model reconstructed single-radius ECE electron temperature over whole discharges from magnetic, interferometer and offline-EFIT signals, as an offline gap-filling tool.",
+      "qualification": "The sentence describes an offline reconstruction, not a demonstrated deployment."
+    },
+    {
+      "proposed_claim": "The source uses causal inputs.",
+      "verdict": "unsupported",
+      "source_finding": "The model uses a bidirectional RNN described as integrating past and future time steps. It works on fixed-length windows that span the discharge and was compared against two-sided whole-sequence reconstruction. Te/ECE is the target, not an input.",
+      "locator": "p4 Sec 2.1; p7 Sec 2.2; p9 Table 3 (Bidirectional=True) and Fig 3",
+      "kind": "derivation",
+      "allowed_intro_sentence": "Such whole-window, bidirectional reconstruction addresses a different task from causal nowcasting of a current report from strictly past information.",
+      "qualification": "Do not generalize this to other prior work."
+    },
+    {
+      "proposed_claim": "The validation design and the stated confidence level.",
+      "verdict": "qualify",
+      "source_finding": "The data are 1873 discharges (#82827-#100000). The split is described as chronological 80/20 by discharge (p5), but also as random 10% validation and test subsets (p8). The test set is 374 shots spanning #82877-#99092. The target is Savitzky-Golay-smoothed ECE Te. The '95.9% confidence level' is a mean per-shot coverage fraction, stated as within 2σ in the abstract but within 1σ in Sec 3 and the Fig 5 caption, with σ undefined. Mean ∞-norm similarity is 86.5% (Fig 4). Test loss appears in the hyperparameter comparison.",
+      "locator": "p2 Abstract; p5 Sec 2.2; p8 Sec 3; p9 Fig 3 and Table 4; p11 Figs 4-5",
+      "kind": "demonstrated_result",
+      "allowed_intro_sentence": "On a 374-shot test set, the authors report R² of 0.92 and mean per-shot coverage of about 96% within a standard-deviation band of the smoothed ECE target.",
+      "qualification": "This is coverage, not a statistical confidence interval. The band width is ambiguous, the labels are smoothed ECE rather than physical truth, and the split description is internally inconsistent."
+    }
+  ],
+  "input_target_timing": {
+    "inputs": "15 signals at about 1 kHz: Ip, Vloop, Bt0, line ne (HCN), Wmhd, βn, βp, βt, κ, Li, q0, q95, δt, δb (offline EFIT), and NBI/ECRH heating ratio",
+    "outputs": "Te at R≈1.9 m from 32-channel HRS ECE, downsampled to 1 kHz, smoothed (SG window 59, order 1), with cutoff periods masked",
+    "causal_or_offline": "Offline and non-causal (bidirectional RNN, window-based)",
+    "source_diagnostic_as_input": "No",
+    "reported_vs_physical_truth": "The target is a processed ECE-derived Te label, not independent truth. The claim to 'replace HRS' (p10 Sec 4) is an author claim."
+  },
+  "validation": {
+    "split_unit": "Discharge (stated)",
+    "temporal_order": "Ambiguous: described as chronological on p5 and random on p8",
+    "independent_truth": "None",
+    "unknowns": "Exact shot assignment; σ definition; ∞-norm similarity formula; normalization; whether test loss influenced model selection beyond Fig 3; per-regime errors"
+  },
+  "runtime_or_deployment": {
+    "what_was_measured": "Nothing. Only parameter count (~36M) and training hardware are reported.",
+    "what_not_established": "Latency, real-time operation, uptime or cost benefits (these are author claims only)",
+    "locator": "p9 Table 3; p10 Sec 4"
+  },
+  "forbidden_inferences": [
+    "The source performs real-time or causal Te estimation",
+    "The 95.9% figure is a confidence interval or 2σ coverage",
+    "Accuracy against physical Te",
+    "Validation on untouched or chronologically later data",
+    "Applicability to CES/ion or impurity temperature",
+    "Superiority claims transferable to our task",
+    "Mechanistic physics identified from Pearson/Granger analysis"
+  ],
+  "competing_or_complementary": "Complementary motivation: missing-diagnostic reconstruction framed as extrinsic regression from routine signals. It contrasts with our setting on causality (offline two-sided vs causal nowcast), quantity (ECE Te vs reported CES carbon temperature), and inputs (EFIT/global signals vs BES/ECEI voltages plus past CES reports). Its two-sided reconstruction resembles our interpolation reference, not our estimator.",
+  "bibtex": "@article{Wang2025TimeSeries,title={Time series extrinsic regression for reconstructing missing electron temperature in tokamak},author={Wang, Minglong and Wan, Chenguang and Lu, Jingjing and Yu, Zhi and Xiao, Bingjia and Li, Yanlong and He, Xiaoxue and Luo, Zhengping and Yuan, Qiping and Hu, Yemin and Li, Jiangang},journal={Nuclear Fusion},volume={65},pages={076008},year={2025},doi={10.1088/1741-4326/addb5f}}",
+  "followup_sources_if_material": [
+    "Shousha et al 2024 Nucl. Fusion 64 026006 (ref [2]; real-time kinetic profile reconstruction; DOI not in this PDF)",
+    "Tan et al 2021 Data Min. Knowl. Discov. 35 1032 (ref [33]; definition of TSER)"
+  ]
+}

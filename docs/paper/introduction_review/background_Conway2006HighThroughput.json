@@ -1,0 +1,46 @@
+{
+  "key": "Conway2006HighThroughput",
+  "citation": {
+    "title": "High-throughput charge exchange recombination spectroscopy system on MAST",
+    "authors": "N. J. Conway; P. G. Carolan; J. McCone; M. J. Walsh; M. Wisse",
+    "year": 2006,
+    "venue": "Review of Scientific Instruments",
+    "volume": "77",
+    "pages": "10F131",
+    "doi_or_arxiv": "10.1063/1.2354309"
+  },
+  "relevance": "supporting",
+  "topic": "Instrument design of a multichannel carbon (C5+, 529 nm) CXRS system on MAST, a spherical tokamak, not KSTAR",
+  "own_question": "How can an upgraded CXRS system deliver impurity Ti and vi profiles with high spatial and temporal resolution from a single spectrometer?",
+  "actual_method_and_evidence": "The paper describes the hardware: toroidal and poloidal views, collection lenses, 224 fibre channels, a transmission-grating spectrometer, an FLC shutter, a bandpass filter and a four-tap CCD. The authors report readout in under 3.5–4 ms, routine operation at a 5 ms frame period to match 200 Hz Thomson scattering, and about 1 cm radial resolution. Sample profiles are presented. The authors state that time-resolved analysis remains difficult in scenarios with high background emission. The paper includes no quantitative accuracy validation, no latency-to-report analysis and no nowcasting.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "CXRS on carbon impurity lines is an established route to impurity ion temperature and rotation profiles. Modern systems are built around multichannel spectrometers with frame-based CCD readout, for example at a 5 ms frame period on MAST.",
+      "original_pdf_locator": "p.2 Abstract/Introduction; p.4 CCD camera paragraph",
+      "qualification": "MAST instrument only. The frame period is detector cadence, not the arrival time of a processed temperature report. The measured quantity is the C5+ impurity temperature, not main-ion Ti.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "Background emission can complicate time-resolved CXRS analysis. On MAST this motivated reliance on heating-beam notches, which supports treating conventional CES reports as processed labels rather than independent truth.",
+      "original_pdf_locator": "p.3 Shutter paragraph; p.4 Results",
+      "qualification": "This is the authors' qualitative statement, not a measured error budget.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Detector readout is under 3.5 ms and the operating frame period is 5 ms. The paper does not report the end-to-end delay of fitted Ti reports.",
+  "validation_if_relevant": "None quantitative. Sample profiles are shown in a figure that was not visually checked; the Ti and Te overlay is illustrative only.",
+  "forbidden_inferences": [
+    "The source does not show that KSTAR CES reports arrive within 5 ms.",
+    "The source does not show that CXRS Ti equals main-ion or physical truth.",
+    "The source contains nothing about nowcasting, BES/ECEI or real-time control.",
+    "The paper cannot be generalized to all CES systems.",
+    "The source does not establish that 1 cm resolution applies to our chord."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional background citation for impurity CXRS instrumentation, detector cadence versus processed reports, and background-subtraction difficulty. It provides no evidence on report timing or estimators.",
+  "bibtex_if_worth_citing": "@article{Conway2006HighThroughput,title={High-throughput charge exchange recombination spectroscopy system on {MAST}},author={Conway, N. J. and Carolan, P. G. and McCone, J. and Walsh, M. J. and Wisse, M.},journal={Review of Scientific Instruments},volume={77},pages={10F131},year={2006},doi={10.1063/1.2354309}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 4,
+  "supplied_pdf_sha256": "3c2e6876872d367c90840a106a88127f44ca9366b982355c8c7022f05d756d7e",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

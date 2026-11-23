@@ -1,0 +1,46 @@
+{
+  "key": "Mohammed2026CommissioningOperation",
+  "citation": {
+    "title": "Commissioning and operation of a real-time multi-point Thomson scattering evaluation system at Wendelstein 7-X",
+    "authors": "A.I. Mohammed, J. Baldzuhn, T. Bluhm, K.J. Brunner, G. Fuchert, et al. (W7-X Team)",
+    "year": 2026,
+    "venue": "Plasma Physics and Controlled Fusion (accepted manuscript)",
+    "volume": null,
+    "pages": null,
+    "doi_or_arxiv": "10.1088/1361-6587/ae90e7"
+  },
+  "relevance": "supporting",
+  "topic": "Real-time evaluation of electron Te/ne from Thomson scattering at W7-X (stellarator), with a proof-of-principle reflectometer control link",
+  "own_question": "Can Thomson polychromator signals be evaluated within the 90 Hz laser period, visualized during discharges, and used to steer an auxiliary diagnostic?",
+  "actual_method_and_evidence": "Eight core-centric scattering volumes were evaluated on a standard (non-RT-optimized) Ubuntu server in C++. Signal strengths were extracted by peak finding, time-domain Gaussian fit, or frequency-domain fit, then forward-modeled to filter response curves via a chi-square criterion. Peak finding ran online. Both fit methods were tested offline on archived data from one discharge. Reported software evaluation times were about 1.2–1.4 ms. The ratio of measured inter-arrival time to laser interval averaged about 1, with outliers attributed tentatively to OS background load. During one density-ramp discharge, the PCR frequency was set from rtMPTS density, averaged over 20 pulses (~200 ms update). Laser-to-laser density offsets remain unexplained. No uncertainty quantification was performed.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Real-time electron Thomson evaluation with millisecond software evaluation times has been reported at W7-X, motivated by future profile control.",
+      "original_pdf_locator": "Sec. 6, Table 1, Fig. 9; Abstract",
+      "qualification": "Electron Te/ne at a stellarator, not impurity Ti at KSTAR. Concerns evaluation of the current measurement, not prediction. Timing data come from one discharge; the fit methods were tested offline.",
+      "figure_or_equation_visual_check_needed": true
+    },
+    {
+      "allowed_intro_or_theory_claim": "Real-time inferred density was used to set a reflectometer frequency as a proof of principle, not profile control.",
+      "original_pdf_locator": "Sec. 7, Eq. 6, Fig. 13",
+      "qualification": "Single discharge. Inputs were heavily averaged (~200 ms). The probed location is uncertain.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Inputs are digitized pulses from the current laser shot, evaluated after acquisition. There is no nowcasting of an unavailable report. Absolute latency is not measured, only a differential timing ratio.",
+  "validation_if_relevant": "No held-out or untouched validation. Methods were compared by qualitative agreement only.",
+  "forbidden_inferences": [
+    "Do not treat this as impurity CES or ion-temperature work.",
+    "Do not treat it as a demonstration of closed-loop profile control or deployment on KSTAR.",
+    "Do not claim the fitting methods were validated as accurate.",
+    "Do not use it to support claims of causal forecasting or nowcasting precedent.",
+    "Do not generalize it to all real-time diagnostics."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Useful as an example of real-time diagnostic evaluation and of a latency budget tied to the energy confinement time, which motivates timely profile information. It should be cited only as an electron-diagnostic, current-measurement comparator.",
+  "bibtex_if_worth_citing": "@article{Mohammed2026CommissioningOperation,title={Commissioning and operation of a real-time multi-point Thomson scattering evaluation system at Wendelstein 7-X},author={Mohammed, A. I. and Baldzuhn, J. and Bluhm, T. and Brunner, K. J. and Fuchert, G. and others},journal={Plasma Physics and Controlled Fusion},year={2026},note={Accepted manuscript},doi={10.1088/1361-6587/ae90e7}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 23,
+  "supplied_pdf_sha256": "c97f0f26cad02b0763647285e9a944dac3f7633e7c26a5c8fc1a8d39b24814a6",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

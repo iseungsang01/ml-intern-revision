@@ -1,0 +1,38 @@
+{
+  "key": "Lee2026SpatiotemporalStructure",
+  "citation": {
+    "title": "Spatiotemporal structure of edge harmonic oscillation and its role in ELM-free QH-mode at KSTAR",
+    "authors": "J. Lee, S. Kim, Y.-M. Jeon, M. Kim, D.-K. Kim, G.S. Yun",
+    "year": 2026,
+    "venue": "Nuclear Fusion",
+    "volume": "66",
+    "pages": "096006 (14pp)",
+    "doi_or_arxiv": "10.1088/1741-4326/ae8679"
+  },
+  "relevance": "peripheral",
+  "topic": "Offline ECEI/broadband-ECE characterization of EHO structure, a transport proxy, and transfer-entropy directionality in one KSTAR QH-mode discharge (#32092).",
+  "own_question": "How the EHO structure relates to E×B shear and edge energy transport. The paper does not address CES nowcasting.",
+  "actual_method_and_evidence": "The analysis is offline and limited to a single discharge. It uses ECEI optical flow to build a T̃e–ṽr correlation proxy. Transfer entropy and a directionality index are computed over 7.0–7.2 s with phase-randomized surrogates. CES rotation and carbon impurity Ti are window-averaged over about 50 ms and serve only as profile and equilibrium inputs. The paper includes no BES, no prediction, and no real-time component.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "KSTAR ECEI has been used offline to resolve pedestal electron-temperature fluctuation structure in QH-mode, sampled at about 2 µs.",
+      "original_pdf_locator": "Sec. 2, p.2; Sec. 4.1, pp.6–7",
+      "qualification": "These are electron diagnostics from one 2022-era discharge. The paper reports no Ti inference and no 10 ms snapshot use.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "CES is time-averaged over about 50 ms for profile fits. The paper gives no CES report timing or arrival information.",
+  "validation_if_relevant": "There is no predictive validation. Statistical support consists of surrogate tests for transfer entropy only.",
+  "forbidden_inferences": [
+    "Do not cite this paper as showing that ECEI predicts or nowcasts CES Ti.",
+    "Do not cite it as evidence of causal estimation in the online sense; its transfer entropy measures directionality, not real-time causality.",
+    "Do not generalize its EHO mechanism to our chord or campaign."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "At most, it could appear as a minor background citation for KSTAR ECEI pedestal capability. It does not bear on our targets, inputs, or validation designs.",
+  "bibtex_if_worth_citing": "",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 15,
+  "supplied_pdf_sha256": "6e31f7fe5c6eef307effaf7b88c578dd53b16e6c893b9c16b034b8d70b830064",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

@@ -1,0 +1,45 @@
+{
+  "key": "Shukla2020SurveyPrinciples",
+  "citation": {
+    "title": "A Survey on Principles, Models and Methods for Learning from Irregularly Sampled Time Series",
+    "authors": "Satya Narayan Shukla; Benjamin M. Marlin",
+    "year": 2020,
+    "venue": "arXiv preprint (the supplied text does not confirm the workshop venue)",
+    "volume": "",
+    "pages": "1-41",
+    "doi_or_arxiv": "arXiv:2012.00168"
+  },
+  "relevance": "supporting",
+  "topic": "ML survey of irregularly sampled time series: data representations, inference-task definitions, and modeling primitives",
+  "own_question": "How do methods for irregularly sampled series differ in data representation, modeling primitive (discretization, interpolation, recurrence, attention, structural invariance), and the tasks they support?",
+  "actual_method_and_evidence": "Literature survey with no new experiments. Defines detection, prediction, filtering, smoothing, interpolation and forecasting by which observation window is conditioned on. The performance section summarizes comparisons as claimed in the cited papers; the survey does not re-benchmark them. Applications discussed are health/clinical; nothing on fusion or plasma diagnostics.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Task definitions separate causal inference from two-sided inference. Filtering conditions only on data up to t*. Smoothing and interpolation may use the relative future. This supports framing our two-sided interpolation reference as a non-causal comparator distinct from causal nowcasting.",
+      "original_pdf_locator": "Sec. 3, Definitions 1-6, Fig. 6 (pp. 7-9)",
+      "qualification": "These are generic task definitions, not a CES method. Our F target is a supervised current-report nowcast, closer to detection with a CES label than to filtering of the input series itself.",
+      "figure_or_equation_visual_check_needed": false
+    },
+    {
+      "allowed_intro_or_theory_claim": "The authors argue that single-directional recurrent/filtering models give maximally uninformative imputations just before the next observation. They also argue that GP-based interpolation, unlike deterministic interpolators, can propagate sparsity into uncertainty.",
+      "original_pdf_locator": "Sec. 7.1 (p. 23); Sec. 11 (pp. 30, 32)",
+      "qualification": "This is the authors' interpretation, not a demonstrated result for plasma data. It does not establish that our causalGP or hold baselines are sufficient or insufficient.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Generic only. The survey has no notion of report arrival latency or of label-versus-truth distinctions.",
+  "validation_if_relevant": "None of its own. The datasets listed are clinical (MIMIC-III, PhysioNet), not fusion.",
+  "forbidden_inferences": [
+    "Do not claim this survey covers or anticipates CES, BES/ECEI, or fusion nowcasting",
+    "Do not treat the cited relative-performance summaries as verified benchmarks",
+    "Do not infer real-time feasibility or 10ms timing from it",
+    "Do not claim novelty because fusion is absent from the survey"
+  ],
+  "could_change_intro_or_theory": true,
+  "reason_to_include_or_exclude": "Useful as a theory-background citation for the causal (filtering) versus two-sided (smoothing/interpolation) task distinction. Also supports the representation choice for strictly past, irregular CES reports alongside a regular 10ms BES/ECEI grid.",
+  "bibtex_if_worth_citing": "@misc{Shukla2020SurveyPrinciples,title={A Survey on Principles, Models and Methods for Learning from Irregularly Sampled Time Series},author={Shukla, Satya Narayan and Marlin, Benjamin M.},year={2020},eprint={2012.00168},archivePrefix={arXiv},primaryClass={cs.LG}}",
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 41,
+  "supplied_pdf_sha256": "8e1c62f998435a2aa93d0feb39a69de2362ee378e5c50b8b4d6429d693fa2f9c",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

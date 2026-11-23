@@ -1,0 +1,39 @@
+{
+  "key": "Agamennoni2012ApproximateInference",
+  "citation": {
+    "title": "Approximate Inference in State-Space Models With Heavy-Tailed Noise",
+    "authors": "Gabriel Agamennoni; Juan I. Nieto; Eduardo M. Nebot",
+    "year": 2012,
+    "venue": "IEEE Transactions on Signal Processing",
+    "volume": "60",
+    "pages": "5024-5037",
+    "doi_or_arxiv": "10.1109/TSP.2012.2208106"
+  },
+  "relevance": "peripheral",
+  "topic": "Variational Bayesian robust Kalman filtering and RTS smoothing with inverse-Wishart (Student-t) measurement noise; IID and slowly-drifting noise models",
+  "own_question": "How can linear state-space estimation be made robust to outliers and heavy-tailed or drifting measurement noise while keeping Kalman-like cost?",
+  "actual_method_and_evidence": "Structured variational factorization over states and noise covariances, with filter and smoother algorithms. The approach is evaluated on a synthetic 50-state oscillator with burst noise and on one real GPS position dataset in which fused SPAN output serves as reference. No fusion-plasma content.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Treating measurement-noise covariance as uncertain, with inverse-Wishart priors, gives Student-t-like robustness. Variational filtering and smoothing then alternates Kalman/RTS-style state updates with noise updates.",
+      "original_pdf_locator": "Sec. II.B-C, III.A-D (pp. 5026-5030)",
+      "qualification": "Generic signal-processing theory. It is not implemented in our study unless we actually used it.",
+      "figure_or_equation_visual_check_needed": true
+    }
+  ],
+  "input_target_timing_if_relevant": "Not plasma-related. The paper's 'filter' uses current and past data, while its 'smoother' is a fixed-interval offline estimator. Neither concerns CES report latency.",
+  "validation_if_relevant": "Synthetic data were simulated from deliberately mismatched burst noise. The GPS reference is the fused SPAN estimate, not independent truth.",
+  "forbidden_inferences": [
+    "Do not imply that CES or BES/ECEI noise is Student-t or inverse-Wishart distributed.",
+    "Do not present this paper as evidence about plasma nowcasting performance.",
+    "Do not cite it as a baseline we implemented or compared against.",
+    "Do not equate its smoother with our causal estimators."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional theory-background citation, relevant only if the paper discusses robust or heavy-tailed Kalman-type estimation for outlier-prone reports. Otherwise omit; it is not needed for the introduction.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 14,
+  "supplied_pdf_sha256": "6a925c9f6c23c91bd1ed91facfc7ef80427e1c2ea948bfd91af3d5c9417bc3fb",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

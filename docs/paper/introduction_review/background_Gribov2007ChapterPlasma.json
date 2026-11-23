@@ -1,0 +1,38 @@
+{
+  "key": "Gribov2007ChapterPlasma",
+  "citation": {
+    "title": "Chapter 8: Plasma operation and control",
+    "authors": "Gribov Y., Humphreys D., Kajiwara K., Lazarus E.A., Lister J.B., Ozeki T., Portone A., Shimada M., Sips A.C.C., Wesley J.C.",
+    "year": 2007,
+    "venue": "Nuclear Fusion",
+    "volume": "47",
+    "pages": "S385-S403",
+    "doi_or_arxiv": "10.1088/0029-5515/47/6/S08"
+  },
+  "relevance": "peripheral",
+  "topic": "Review of the ITER plasma control system, plasma initiation, magnetic control, and kinetic/performance control, with discussion of integrated simulators.",
+  "own_question": "How do tokamak experiments since 1999 and ITER design studies bear on plasma initiation and basic magnetic and kinetic control for the 15 MA ITER?",
+  "actual_method_and_evidence": "The chapter reviews experiments, including DIII-D and JT-60U initiation, real-time equilibrium reconstruction, AUG regime identification, and JET q/rho*Te profile control. It also reports ITER simulations made with TRANSMAK, PET, DINA and CREATE-L. The source does not address CES or impurity Ti nowcasting, BES/ECEI estimators, or validation designs. The review lists real-time diagnostic networks and profile feedback but gives no CES latency analysis.",
+  "claim_checks": [
+    {
+      "allowed_intro_or_theory_claim": "Reviews of tokamak control describe profile feedback that relies on real-time diagnostic networks and estimated profiles. This motivates timely profile estimates in general.",
+      "original_pdf_locator": "Sec. 4.2.1 'Control of profiles'; Sec. 4.2.3; pp. S397-S400",
+      "qualification": "The cited examples are electron temperature, q profile and rho*Te control. None involves impurity CES Ti, and the review does not establish a need for CES nowcasting.",
+      "figure_or_equation_visual_check_needed": false
+    }
+  ],
+  "input_target_timing_if_relevant": "Not applicable. The source gives no CES report timing. The quoted cycle times concern equilibrium and q-profile reconstruction in other devices.",
+  "validation_if_relevant": "Not applicable.",
+  "forbidden_inferences": [
+    "Do not cite this source for CES or impurity Ti latency, for BES/ECEI usefulness, or for KSTAR.",
+    "Do not treat simulated ITER control performance as demonstrated performance.",
+    "Do not claim the review requires ion temperature nowcasting."
+  ],
+  "could_change_intro_or_theory": false,
+  "reason_to_include_or_exclude": "Optional, as a general background citation on the role of real-time profile control. It has no specific bearing on the CES nowcasting question, so a more targeted CES or real-time profile reference is preferable.",
+  "bibtex_if_worth_citing": null,
+  "supplied_source_mode": "full_extracted_text_no_page_images",
+  "supplied_pdf_pages": 20,
+  "supplied_pdf_sha256": "0579e038171b4bedf525b6eb5ec15a6b1155c73996152a911ad92931570ae590",
+  "source_scope_note": "All extracted page texts supplied; figure/equation visual validation remains separate"
+}

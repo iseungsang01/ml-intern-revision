@@ -1,0 +1,57 @@
+{
+  "workflow": "ces_prediction/research/introduction_manuscript_finalize.py",
+  "funding": "Existing PPCF manuscript-edit ceiling USD3, within unused original USD30 allowance",
+  "usage_record": "docs/paper/ppcf_revision/nnces_edit_usage.json",
+  "corpus_reader_funding_separate": true,
+  "original_source_snippets": {
+    "Lee2026NeuralNetworkbased": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "Young2008PlasmaMeasurements": [
+      9,
+      10
+    ],
+    "Donne2007ChapterDiagnostics": [
+      9,
+      17,
+      18
+    ],
+    "Shousha2023MachineLearningbased": [
+      3,
+      4,
+      5,
+      6,
+      13,
+      14,
+      15
+    ],
+    "Jalalvand2025MultimodalSuperresolution": [
+      3,
+      4,
+      5,
+      9,
+      10
+    ],
+    "Imrek2026TemporalSuperresolution": [
+      4,
+      5,
+      6,
+      8,
+      9
+    ]
+  },
+  "remaining_full_pdf_check": [
+    "Zimmermann2026DependenceMomentum"
+  ],
+  "host_integration_pending": false,
+  "scientific_runs": 0,
+  "whole_manuscript_grade": false,
+  "host_corrections": "host_integration.json",
+  "final_verification": "verification.json"
+}

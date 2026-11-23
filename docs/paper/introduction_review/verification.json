@@ -1,0 +1,20 @@
+{
+  "existing_results_identical_to_head": true,
+  "results_reference_commit": "dabe6b8c5280f93259759560064eba7b64e10b72",
+  "result_section_sha256": "83af1e57142e63cf3ff53183e4fae3019f910817597b2cad93fc067c7ab0fc7f",
+  "source_file_hashes_verified": 254,
+  "review_records_verified": 251,
+  "api_attempt_request_response_hashes_and_usage_verified": 258,
+  "bibliography_metadata_records": 251,
+  "test_result": "89 passed; 3 pre-existing dependency warnings",
+  "numerical_checker": "main and supplement pass; records checker passes",
+  "pdf_visual_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    22
+  ],
+  "pdf_build": "No undefined references, citations or overfull boxes"
+}
