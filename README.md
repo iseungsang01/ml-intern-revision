@@ -25,6 +25,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
 |---|---|---|
 | `experiments/b95_concurrency/profile95.py` | 등록 B.95 + 동결 B.93 실제 epoch worker → `data/.b95/` 동시2/3/4 및 조건부6 작업의 전체 처리량 | 메모리 여유와 실제 가속을 구별한 실행 정책 선택; 예측 성능 근거 아님 |
+| `experiments/b95_concurrency/audit95.py`, `common95.py` | 전체 cohort 원자료·SHA·전역/그룹 slot → 독립 처리량 및 실행 출처 검증 | B.95 선택과 새 fit의 추가 metadata 감사 |
+| `experiments/b95_concurrency/production95.py` → `bootstrap95.py` | B.94 동결 scheduler/학습 함수 + B.95 적격 수 → 전역 병렬 배정, `data/.b94/dispatch_policy95.json` | B.94 부록3; 기존 완료 fit 재사용, 수치 코드 수정 없음 |
 | `docs/paper/claim_robustness_20261123.md` | B.73–B.87 결과 JSON + 논문 설계 + 선행 연구 → 주장별 근거·반대 증거·추가 검증 조건 | 원고 검토 및 후속 실험의 주장 범위; 진행 중 NN 성능 근거 아님 |
 | `experiments/b93_gpu/profile93.py` → `worker93.py` | 등록 B.93 + B.92 실제 준비 자료/모델 → `data/.b93/` 전체 epoch 및 동시 실행 적격성 기록 | 별도 GPU 실행 개정의 사전 감사; 예측 성능 근거 아님 |
 | `experiments/b93_gpu/durable93.py`, `status93.py` | 정확한 PID·생성 시각 + 원래 마감 시각 → 생존 확인·heartbeat | `docs/paper/b93_supervisor.md`, 실행 상태 보고 |
