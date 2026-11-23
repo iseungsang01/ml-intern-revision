@@ -142,6 +142,8 @@ in `experiments/b64_two_stage/run_b64.py` and `experiments/b39_primary/run_b39.p
 
 ## Working agreements
 
+- **Literature source memory.** Before reporting unavailable full text, check local `data/literature/INDEX*.md`, PDFs and prior reading records. NN-CES full text is already present: `docs/reference/nnces_source.md` and `.json` are the current source-of-record; the existing PDF is `data/literature/Lee2026NeuralNetworkbased.pdf`. A failed web fetch or omission from a Claude request is not absence from the project. Preserve historical API provenance; do not silently upgrade its supplied-source status.
+
 - **Author preference (2026-11-23):** substantive design/interpretation/scouting/code-review/research-prioritization tasks should use the official Claude API by default, with Fable for economical work and Opus for adversarial synthesis. Redacted explicit evidence tasks only; no secrets, identity, raw observations or private reasoning. Anonymized aggregate evaluated results are authorized for post-evaluation planning. Preserve every paid attempt/usage, independently check facts, and bound tool rounds. Run the committed post-evaluation workflow only after the original final audit and normal completion; TEST-informed follow-ups are exploratory. A Claude proposal does not authorize bypassing preregistration or editing frozen running code.
 
 - **The records.** `README.md` is the wiring of the repository. `HANDOVER.md` is the handover.

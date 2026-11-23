@@ -8,9 +8,9 @@
 - RKN·CRU·KalmanNet은 앞선 감사의 일부 페이지가 아니라 확보한 전체 PDF와 공식 저장소의 핵심 소스를 제공한다. GitHub source commit 및 blob SHA를 보존한다. 코드의 원 논문 버전과 정리된 공개 버전 차이는 구분한다. 코드를 실행한 것은 아니다.
 - Faithful heteroscedastic regression, β-NLL, TS2Vec, generalized distillation의 원문 PDF를 확보해 해당 방법의 실제 가정과 원 알고리즘을 확인하도록 했다.
 
-## 확보하지 못한 내용
+## NN-CES 원문 상태 정정
 
-KSTAR NN-CES 출판사 PDF 접근은 거절됐고 공개 Elsevier API는 rate limit 응답이었다. 해당 전문을 확보했다고 쓰지 않는다. RTCAKENN/COMPASS를 확보했다는 사실이 NN-CES 전문 검토까지 뜻하는 것은 아니다. 원문 외 추가 자료·공식 코드가 없으면 그 부재를 특정 구현의 결함으로 해석하지 않는다.
+최근 원격 PDF/API 시도는 거절됐지만 NN-CES 전문은 기존 `data/literature/Lee2026NeuralNetworkbased.pdf`에 이미 있었다. 사용자가 다시 지정한 파일과 모든 페이지의 정규화 추출문이 일치한다. 이전 '전문 미확보' 판단은 로컬 목록과 과거 본문 검토를 확인하지 않은 오류로 철회한다. [현재 원천 기록](../../reference/nnces_source.md)과 `NN_CES_CORRECTION.md`를 따른다. 과거 API 요청에 이 전문을 제공하지 않았던 사실은 바꾸지 않는다. 원문 외 추가 자료·공식 코드의 부재를 특정 구현의 결함으로 해석하지 않는다.
 
 ## 기존 실험에 관한 핵심 정정
 

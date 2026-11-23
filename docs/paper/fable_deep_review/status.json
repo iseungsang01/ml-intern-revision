@@ -27,5 +27,12 @@
     "python_syntax_check_passed": true,
     "budget_and_usage_reconciled": true,
     "inventory_hashes_match": 7
+  },
+  "post_review_nnces_source_correction": {
+    "full_text_available": true,
+    "record": "docs/reference/nnces_source.json",
+    "note": "docs/reference/nnces_source.md",
+    "historical_api_full_pdf_supplied": false,
+    "correction_api_calls": 0
   }
 }

@@ -4,6 +4,7 @@
 
 ## 읽는 순서
 
+- `NN_CES_CORRECTION.md` 및 [현재 NN-CES 원천 기록](../../reference/nnces_source.md): 전문은 이미 로컬에 있었다. 아래 과거 API 보고서의 '미확보' 주장은 현재 보유 상태가 아니다.
 - `DECISION.md`: 작업자가 소스·수학 확인과 마지막 추가 문헌을 반영한 최종 요약.
 - `13_delayed_measurement_source_addendum.md`: 마지막으로 보완한 지연측정 1차 문헌과 P2 순위 재검토. `12_corrected_korean_plan.md`의 해당 부분보다 우선한다.
 - `12_corrected_korean_plan.md`: 최종 연구 방향과 우선 실험 제안. `11_final_korean_decision.md`의 권고에 작업자 수학·소스 확인과 후속 API 정정을 반영한다.
@@ -18,7 +19,7 @@
 
 ## 근거와 실제 실행 범위
 
-RTCAKENN과 COMPASS 출판사 PDF 전체, Diag2Diag 원문 body와 공식 Zenodo 코드, RKN/CRU/KalmanNet 전체 PDF와 commit이 고정된 공식 소스를 확보했다. Faithful regression, β-NLL, TS2Vec, generalized distillation 원문도 검토에 사용한다. 외부 코드와 원문은 읽기 자료이며 실행하지 않는다. KSTAR NN-CES 전문은 접근에 실패했으므로 전문 검토로 기록하지 않는다.
+RTCAKENN과 COMPASS 출판사 PDF 전체, Diag2Diag 원문 body와 공식 Zenodo 코드, RKN/CRU/KalmanNet 전체 PDF와 commit이 고정된 공식 소스를 확보했다. Faithful regression, β-NLL, TS2Vec, generalized distillation 원문도 검토에 사용한다. 외부 코드와 원문은 읽기 자료이며 실행하지 않는다. KSTAR NN-CES 전문도 기존 로컬 보관본과 사용자 지정본을 대조해 직접 확인했다. 다만 과거 Fable 요청에 해당 PDF가 제공됐던 것으로 소급 변경하지 않는다.
 
 이 조사에서 새로운 과학 적합·GPU 실행·TEST 재채점을 수행하지 않는다. 최신 집계는 기존 독립 final-audit gate를 통과한 익명 packet만 제공한다. 원 관측값·개인정보·credential·로컬 절대경로는 연구 요청에 넣지 않는다. 실제 평가가 없던 모델을 이미 반증된 후보로 취급하지 않는다. 제안은 TEST-informed 탐색이므로 별도 사전등록과 필요한 독립 확인 후 실행한다.
 

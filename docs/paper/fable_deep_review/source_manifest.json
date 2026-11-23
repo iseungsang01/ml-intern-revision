@@ -101,5 +101,38 @@
       "url": "https://www.osti.gov/api/v1/records/2282123",
       "error": "HTTPError: HTTP Error 404: "
     }
-  ]
+  ],
+  "post_review_local_source_corrections": {
+    "nnces": {
+      "key": "Lee2026NeuralNetworkbased",
+      "title": "Neural network-based analysis of charge exchange spectra in KSTAR",
+      "doi": "10.1016/j.fusengdes.2025.115518",
+      "full_text_available": true,
+      "host_full_text_checked": true,
+      "checked_date": "2026-11-24",
+      "pdf_pages": 7,
+      "existing_local_path": "data/literature/Lee2026NeuralNetworkbased.pdf",
+      "existing_pdf_sha256": "5eae92d2cfd805b493824587a965ec1a63cd135404d5af7e9881b8716428afa3",
+      "user_supplied_copy": "data/literature/Lee2026NeuralNetworkbased_user.pdf",
+      "user_supplied_filename": "1-s2.0-S0920379625007148-main.pdf",
+      "user_pdf_sha256": "c323ab23a6ade8ad5e4c6ac8cd4daa6e009d72f670d089dc23a8daa53b57ae4f",
+      "byte_identical": false,
+      "pagewise_whitespace_normalized_text_equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "prior_inventory": "data/literature/INDEX.md",
+      "prior_full_text_reading_record": "docs/paper/validation_methods.md",
+      "source_note": "docs/reference/nnces_source.md",
+      "historical_fable_requests_supplied_this_full_pdf": false,
+      "new_api_calls_for_this_correction": 0,
+      "interpretation": "Local availability and host reading corrected. Historical paid-request evidence remains unchanged."
+    }
+  },
+  "fetch_failure_scope": "Historical remote attempts only; do not infer local full-text absence."
 }

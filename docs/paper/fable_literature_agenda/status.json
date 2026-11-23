@@ -17,5 +17,12 @@
   "prior_plan": "10_final_research_agenda.md",
   "additional_correction_calls": 1,
   "host_decision": "DECISION.md",
-  "concurrent_work_note": "B104 registration observed read-only; no execution or results inferred"
+  "concurrent_work_note": "B104 registration observed read-only; no execution or results inferred",
+  "post_review_nnces_source_correction": {
+    "full_text_available": true,
+    "record": "docs/reference/nnces_source.json",
+    "note": "docs/reference/nnces_source.md",
+    "historical_api_full_pdf_supplied": false,
+    "correction_api_calls": 0
+  }
 }
