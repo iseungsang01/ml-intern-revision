@@ -1,0 +1,126 @@
+```json
+{
+  "overall": "원고의 결과 방향은 대체로 기존 영문 원고(sec:res:best, sec:res:fast, sec:res:use, sec:res:mast, sec:res:limits, sec:res:tcn)와 일치한다. 미래 정보는 F·L5 표적에만 쓰고, 지연은 이력의 나이로 정의한다. 네 검증 설계도 같은 비중으로 다루며, 본문에 수치를 새로 만들어 넣지 않았다. 이 정보 시점 규칙은 원고 전반에서 지켜지고 있다. 다만 다음 문제가 남아 있다. (1) 문헌 감사 범위를 넘는 진술이 있다. Isler에 충돌 평형 근거를 귀속한 것, EPED의 세부 제약을 서술한 것, 압력의 절반을 이온이 담당한다는 서술, CES와 BES가 같은 빔에 의존한다는 서술이 여기에 해당한다. (2) 결과의 조건이 일부 흐려져 있다. 빔 변조 일정 S와 고정 지연 D650이 섞여 있고, 드문 보고 조건의 시간순 단서가 빠졌으며, Mirnov 대조에서 rolling-origin을 '시간 순서 조건'으로 뭉뚱그렸다. (3) 결과 절과 고찰에 메타 문장이 남아 있다. 아래 교정은 이 문제만 국소적으로 바꾼다.",
+  "corrections": [
+    {
+      "section_id": "introduction",
+      "old_exact": "빔 변조 일정에서 예상되는 나이의 이력에서는 증분이 네 설계 모두에서 확립되었다.",
+      "new": "최신 보고값의 나이를 빔 변조 일정에서 계산한 나이의 중앙값으로 고정한 조건(D650)에서는, 증분이 네 설계 모두에서 확립되었다. 반면 notch 위치에 따라 이력을 실제로 가리는 일정 규칙 S에서는 무작위·묶음·rolling-origin 설계에서만 확립되었고, 시간순 설계에서는 확립되지 않았다. 같은 일정에서 출발한 두 규칙이 갈라지는 지점은 캠페인 마지막 shot 구간과 겹친다.",
+      "reasons": "D650과 S를 혼동하여, S의 시간순 음성 결과가 가려졌다.",
+      "evidence_keys_or_manuscript_labels": ["sec:res:use", "tab:increment", "sec:res:limits", "tab:blocks"]
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "이들은 peeling-ballooning 안정성과 운동론적 ballooning 제약을 결합한 EPED 모델로 준정상 상태의 pedestal 압력 높이와 폭을 예측했다 [@Snyder2011FirstPrinciples].",
+      "new": "이들은 토로이달 자기장, 플라즈마 전류, 장치 형상, pedestal 밀도, 전역 βN 같은 몇 개의 스칼라를 입력으로 받는 안정성 기반 모델 EPED를 제시했다. 이 모델은 준정상 상태의 pedestal 압력 높이와 폭을 예측하며, 시간 분해 추정기가 아니라 준정상 pedestal을 기술하는 모델이다 [@Snyder2011FirstPrinciples].",
+      "reasons": "감사 기록은 입력·출력과 '안정성 제약'까지만 확인했다. 운동론적 ballooning 결합의 세부는 감사 범위 밖이다.",
+      "evidence_keys_or_manuscript_labels": ["Snyder2011FirstPrinciples"]
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "그래도 압력의 절반가량은 이온이 담당한다. 이온 채널의 경계값을 시간에 따라 알고자 하는 요구는 여기에서 나온다.",
+      "new": "압력은 전자와 이온의 밀도·온도 곱의 합이다. 따라서 이온온도는 pedestal 압력을 이루는 두 성분 가운데 하나이며, 두 채널이 맡는 비율은 방전의 가열 방식과 불순물 희석에 따라 달라진다. 이온 채널의 경계값을 시간에 따라 알고자 하는 요구는 이 구성에서 나온다.",
+      "reasons": "'절반가량'이라는 비율은 제공된 문헌에 근거가 없다.",
+      "evidence_keys_or_manuscript_labels": ["Snyder2011FirstPrinciples"]
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "CES와 BES는 같은 중성빔에 의존한다.",
+      "new": "CES와 수소 BES는 모두 중성빔 입사가 있어야 신호가 생긴다. 빔 구성이 바뀌면 BES의 신호 수준과 공간 분해능도 함께 바뀐다 [@Lampert2015CombinedHydrogen]. 그래서 빔 상태 자체가 두 진단에 공통으로 새겨질 수 있다.",
+      "reasons": "두 진단이 동일한 빔 이온원을 본다는 사실은 근거가 없다. Lampert의 감사 범위는 'HBES는 NBI를 요구하고 빔 구성에 따라 변한다'까지다.",
+      "evidence_keys_or_manuscript_labels": ["Lampert2015CombinedHydrogen"]
+    },
+    {
+      "section_id": "background",
+      "old_exact": "그러나 이 관계를 모든 반경과 운전 상태에 동일하게 적용할 수 있는 것은 아니다 [@Isler1994OverviewCharge].",
+      "new": "그러나 이 관계가 모든 반경과 운전 상태에서 성립한다고 가정할 수는 없다. Isler의 총설이 강조하듯, CES가 직접 주는 것은 방출하는 불순물 이온, 예컨대 탄소의 온도와 회전이다. 주이온 온도는 별도의 근거로 연결해야 한다 [@Isler1994OverviewCharge].",
+      "reasons": "Isler 감사는 '불순물 이온을 측정한다'는 내용만 지지한다. 충돌 평형에 관한 논증은 지지하지 않는다.",
+      "evidence_keys_or_manuscript_labels": ["Isler1994OverviewCharge"]
+    },
+    {
+      "section_id": "background",
+      "old_exact": "Haskey 등의 DIII-D 연구는 L–H 전이 전후에 주이온과 불순물의 가장자리 프로파일을 함께 관측하여 두 온도가 달라질 수 있음을 보여 주었다 [@Haskey2018MainIon].",
+      "new": "Haskey 등은 DIII-D에서 L–H 전이 전후의 주이온(D⁺)과 탄소(C⁶⁺) 가장자리 프로파일을 함께 측정했다. 두 온도의 차이는 분리면 부근에서 가장 컸다. 고출력 H-mode에서는 그곳의 주이온 온도가 탄소 온도의 절반 아래로 내려갔다. pedestal top 안쪽에서도 수십 eV 수준의 차이가 관측되었는데, 저자들은 적용하지 않은 Zeeman 보정이 그 일부를 줄일 수 있다고 추정했다. 저출력 L-mode의 가장자리 안쪽에서는 두 온도가 오차 범위 안에서 일치했다. 원인으로 저자들은 원자 과정에 의한 냉각을 유력하게 보았지만, 기전을 분리하지는 않았다 [@Haskey2018MainIon].",
+      "reasons": "선행연구의 질문·결과·한정을 구체적으로 전개하고, 감사 기록의 단서(Zeeman 보정, L-mode 일치, 기전 미분리)를 반영했다.",
+      "evidence_keys_or_manuscript_labels": ["Haskey2018MainIon"]
+    },
+    {
+      "section_id": "background",
+      "old_exact": "검출되는 빛의 세기는 빔을 따라 분포하는 입자와 플라즈마 조건의 영향을 받으며, 여러 시선을 배열하면 서로 다른 위치에서 발생하는 변화의 공간적 구조를 관측할 수 있다.",
+      "new": "KSTAR BES는 가열 빔의 Doppler 이동된 D-alpha 광을 4×16 avalanche photodiode 배열로 받는다. 저자들에 따르면 이 빛은 주로 국소 전자밀도에 의존하고, 전자온도와 불순물에는 그보다 약하게 의존한다. 상대 보정된 신호가 밀도 변화를 근사적으로 따르는 것은 관측 범위 안에서 빔 감쇠가 작을 때에 한한다. 수소 BES는 빔 입사 없이는 작동하지 않으며, 신호 수준과 배경은 빔 구성에 따라 달라진다 [@Lampert2015CombinedHydrogen]. 거울과 회전대로 관측 위치를 옮길 수 있어, 배열이 놓인 반경 범위의 공간 구조를 볼 수 있다.",
+      "reasons": "모호한 서술을 감사로 확인된 물리(밀도 의존성, 빔 의존성)로 바꾸었다. 이는 빔 파형 대조의 근거가 된다.",
+      "evidence_keys_or_manuscript_labels": ["Lampert2015CombinedHydrogen"]
+    },
+    {
+      "section_id": "background",
+      "old_exact": "이러한 차이를 전제로 하면, 보고값의 시간적 보완을 평가하는 현재 단계와 더 높은 시간해상도의 온도 변화를 검증하는 후속 단계를 자연스럽게 연결할 수 있다.",
+      "new": "예를 들어 10 ms 격자의 보고값은 노출 구간 안에서 일어난 ELM 붕괴와 회복을 평균된 한 숫자로 담는다. 이런 시간열을 아무리 잘 채워도 수 ms 규모의 이온온도 변화가 드러나지는 않는다 [@Viezzer2018IonHeat]. 프레임보다 짧은 규모의 변화를 다루려면, 해당 규모로 적분한 독립적인 이온온도 측정과 고속 원시 신호가 함께 있어야 한다.",
+      "reasons": "연결을 선언하는 메타 문장을 물리적 내용으로 바꾸었다.",
+      "evidence_keys_or_manuscript_labels": ["Viezzer2018IonHeat"]
+    },
+    {
+      "section_id": "results",
+      "old_exact": "PCHIP와 비교한 중앙 절대오차의 차이 역시 별도로 확인된 결과와 구분하였다.",
+      "new": "PCHIP와 비교하면, 중앙 절대오차의 차이는 구간이 영을 포함하여 확립되지 않았다. PCHIP 대비 우위는 제곱오차에서만 확인되었다.",
+      "reasons": "모호한 메타 문장을 실제 결과로 바꾸었다(tab:vsref 하단 블록).",
+      "evidence_keys_or_manuscript_labels": ["sec:res:best", "tab:vsref"]
+    },
+    {
+      "section_id": "results",
+      "old_exact": "이러한 비교는 다른 진단이 부족해진 CES 정보를 어느 정도 보완하는가를 같은 표적에 대한 오차로 표현한 것이다.",
+      "new": "무작위 설계에서 CES가 열 프레임마다 한 번 보고하는 조건을 보자. 이때 빠른 입력을 쓰는 추정기의 오차는, 이력만 쓰는 추정기가 그보다 약 두 배 자주 보고되는 CES를 가질 때의 오차에 해당했다. 다만 두 시간순 적합 가운데 하나에서는 이 보고 간격의 증분이 확립되지 않았다. 이 비교는 다른 진단이 부족해진 CES 정보를 얼마나 보완하는지를 같은 표적의 오차로 나타낸 것이다.",
+      "reasons": "드문 보고 결과에 대한 시간순 설계의 단서(supp tab:sparsedesigns)가 빠져 있었다. 구조 상수 외의 새 수치는 추가하지 않았다.",
+      "evidence_keys_or_manuscript_labels": ["sec:res:use", "fig:sparse", "supp tab:sparse", "supp tab:sparsedesigns"]
+    },
+    {
+      "section_id": "discussion",
+      "old_exact": "Mirnov 비교에서는 일부 예측 정보가 남았으며 시간 순서 조건에서 BES·ECEI의 추가 우위가 확인되지 않았다.",
+      "new": "측정선 반경에 있지 않은 Mirnov 신호를 빠른 입력과 똑같이 처리하면, 무작위 설계에서 증분의 약 4분의 1을 실었다. rolling-origin 설계에서는 BES·ECEI 입력 추정기가 Mirnov 입력 추정기보다 낮은 오차를 보인다는 차이가 확립되지 않았다.",
+      "reasons": "원 결과는 rolling-origin에 한정된다. 이를 '시간 순서 조건' 전반으로 일반화한 것을 바로잡았다.",
+      "evidence_keys_or_manuscript_labels": ["sec:res:fast", "supp tab:specificity"]
+    },
+    {
+      "section_id": "discussion",
+      "old_exact": "NN을 적용해야만 다중 진단 결합이 가능하다는 가정 없이 가용한 정보의 기여를 비교할 수 있었다는 점이 이 평가의 출발점이다.",
+      "new": "T0와 TX는 같은 GP 예측 g_t에서 출발하고 회귀의 입력만 다르다. 그래서 둘의 오차 차이를 빠른 진단이 이력 위에 더한 몫으로 직접 읽을 수 있다. 이 분해 덕분에 구조의 복잡도와 정보의 기여가 섞이지 않는다.",
+      "reasons": "방어적 문장을 방법론의 실제 내용으로 바꾸었다.",
+      "evidence_keys_or_manuscript_labels": ["sec:methods:est", "eq:est"]
+    },
+    {
+      "section_id": "conclusion",
+      "old_exact": "본선에서 비교한 인과적 후보 가운데 낮은 오차를 보였다.",
+      "new": "직전 프레임까지의 이력이 보이는 조건에서, 본선 추정기 비교 표에 오른 인과적 후보 가운데 가장 낮은 오차를 보였다. 예산 제한 TCN은 이 표와 다른 행에서 채점되었으므로 이 순위에 포함되지 않는다.",
+      "reasons": "결과의 조건(D10, 같은 행)과 TCN을 순위에서 제외한 이유를 명시했다.",
+      "evidence_keys_or_manuscript_labels": ["tab:ladder", "sec:res:tcn"]
+    }
+  ],
+  "unsupported_or_unresolved": [
+    "Ⅱ.1의 'EPED는 peeling-ballooning과 운동론적 ballooning 한계의 교점' 서술은 Snyder2011 감사 범위 밖이다. 원문 locator를 확인하거나 일반적 표현으로 낮춰야 한다.",
+    "Ⅱ.1의 전자-이온 교환항 n²(Te−Ti)/Te^{3/2}는 표준 물리이지만 제공된 감사 문헌에는 없다. 교과서 인용이 필요하다(원 영문 원고는 Wesson2011을 인용했으나 감사 목록에 없음).",
+    "Ⅱ.3의 'Ko2010의 기기 선폭이 Å 단위'라는 서술은 2010 초기 시스템의 값이다. 2022 분석 사슬에도 그대로 적용되는지는 미확인이다.",
+    "서론 d의 Imrisek 인용 키 @Imrek2026TemporalSuperresolution은 legacy 키다. 참고문헌 목록의 저자 표기(Imrisek)와 일치하는지 확인해야 한다.",
+    "Chrystal2026, Haskey2018의 출판 정보(venue·DOI)가 미확인이다.",
+    "Ⅲ에서 쓰는 '빔 변조 일정의 중앙 나이'는 Lee2020의 절차 논증에 근거한 계산이다. 실제 보고 도착 시각이 아니다."
+  ],
+  "source_checks": [
+    {"claim": "KSTAR CES pedestal Ti는 L–H 뒤 수십~수백 ms에 걸쳐 형성되고, RMP ELM 억제 중 낮아진다", "verdict": "supported_with_qualification", "source_locator": "Ko2015 PDF p4-5, p8", "qualification": "히스테리시스는 저자의 해석이다. 2022 설정과의 일치는 미확인이다."},
+    {"claim": "변조 분석은 다음 빔-off 프레임을 기다려야 한다", "verdict": "qualify", "source_locator": "Lee2020 PDF p8-9 Sec IV", "qualification": "절차에서 도출한 논증이며, 측정된 지연이 아니다."},
+    {"claim": "NN-CES의 일치도는 R≈2.2 m 바깥에서 낮아진다", "verdict": "supported", "source_locator": "Lee2026 p4 Fig.4", "qualification": "본 측정선(R=2.198 m)이 그 경계 부근에 있다는 점은 별도로 서술해야 한다."},
+    {"claim": "ELM 뒤 가장자리 Ti는 3~4 ms 안에 회복된다", "verdict": "qualify", "source_locator": "Viezzer2018 PDF p6 Fig5", "qualification": "AUG의 불순물 주입 고속 구성에서 ELM 동기 평균으로 얻은 결과다."},
+    {"claim": "가장자리 ECEI는 밀도 변화에도 반응할 수 있다", "verdict": "qualify", "source_locator": "Vanovac2018 PDF p8-9", "qualification": "AUG의 forward modelling 결과다. 분리면 안쪽에서는 Trad≈Te다."},
+    {"claim": "JT-60U에서 CX Ti를 10 ms 주기의 되먹임에 사용했다", "verdict": "supported", "source_locator": "Yoshida2009 p3-7", "qualification": "코어의 두 측정선 차이를 제어했으며, 가장자리 채널은 제어 대상이 아니었다."},
+    {"claim": "FIRE 사양: 가장자리 Ti 10 ms·5 mm·10%", "verdict": "supported", "source_locator": "Young2008 p288-289 Table III", "qualification": "설계 요구이며 KSTAR 사양이 아니다."},
+    {"claim": "Isler: 불순물과 주이온의 충돌 평형", "verdict": "unsupported", "source_locator": "Isler1994 audit", "qualification": "Isler의 감사 범위는 불순물 측정과 선 모양 계통 오차까지다. 교정 5로 수정했다."}
+  ],
+  "conclusion_assessment": "결론 절의 방향은 결과와 일치한다. 확인된 범위로 표시된 것은 PCHIP 대비 네 설계 모두에서의 우위, 양측 GP 대비 무작위·묶음 설계에서의 우위, F와 L5의 구분, 오래된 이력에서 커지는 증분이다. 시간순 설계에서 확립되지 않은 결과, 마지막 블록, 반경 고유성 부재는 음성 결과로 남겨 두었다. 교정 1·10·13으로 S와 D650, 드문 보고 조건, 순위 범위를 명시하면 결과와 어긋나는 서술은 남지 않는다. TCN과 2단계 NN은 계획과 조건부 결과로 바르게 구분되어 있다.",
+  "remaining_author_metadata_needed": [
+    "shot별 토로이달 자기장과 ECEI 주파수·위치 설정",
+    "2022 CES 분석 절차(변조 방식 또는 두 Gaussian)와 측정선의 평형상 위치",
+    "실제 보고값 생성·도착 시각",
+    "프레임별 스펙트럼과 피팅 오차",
+    "BES 보정과 빔 이온원 대응",
+    "Chrystal2026·Haskey2018의 서지 정보",
+    "TCN 결과 표의 생성 파일 경로 확인"
+  ]
+}
+```

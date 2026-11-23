@@ -1,0 +1,22 @@
+{
+  "corrections": [
+    {
+      "section_id": "introduction",
+      "old_exact": "2단계에서는 1단계에서 실측한",
+      "new": "\n\n2단계에서는 1단계에서 실측한",
+      "reason": "Separate completed comparison stage and planned design stage into coherent paragraphs; keep numbers in their actual form."
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "새 구조와 그 판정 규칙은 적합 전에 등록한다.",
+      "new": "\n\n새 구조와 그 판정 규칙은 적합 전에 등록한다.",
+      "reason": "Separate design requirements from preregistered future evaluation and high-rate validation."
+    },
+    {
+      "section_id": "conclusion",
+      "old_exact": "계산 비용이 프레임 예산 안에 들어갔다는 결과에 실제 수집·전송과 보고 도착 시각을 더해 평가해야 진단 체계의 운용 가능성을 판단할 수 있다.",
+      "new": "본선 GP·boosting 추정기는 측정한 계산 시간이 프레임 예산 안에 들어갔다. 별도로 평가한 TCN의 순차 추론 비용은 해당 신경망의 계산 비용으로 구분한다. 진단 체계의 운용 가능성은 이러한 추정기별 측정에 실제 수집·전송과 보고 도착 시각을 함께 반영해 평가해야 한다.",
+      "reason": "Fable05 necessary fix, refined against actual GP timing result and separate TCN table11; retain verified positive result."
+    }
+  ]
+}

@@ -57,7 +57,24 @@ def tex_to_markdown(text):
     return text.strip()
 
 
+def quantitative_tokens(text):
+    text=re.sub(r'\[@[^\]]+\]','',text)
+    text=re.sub(r'\$\$.+?\$\$','',text,flags=re.S)
+    text=re.sub(r'\$(?!\$).+?\$','',text)
+    text=re.sub(r'\\\(.+?\\\)','',text)
+    return re.findall(r'(?<![A-Za-z0-9_])\d+(?:[.,]\d+)*(?:[eE][+-]?\d+)?',text)
+
+
 def render_content(text):
+    exhibit_links={'tab:dataset':('table1','표 1'),'fig:problem':('figure1','그림 1'),
+        'tab:inputs':('table2','표 2'),'fig:rules':('figure2','그림 2'),
+        'tab:ladder':('table3','표 3'),'tab:vsref':('table4','표 4'),
+        'fig:nowcast':('figure3','그림 3'),'tab:rules':('table5','표 5'),
+        'fig:ladder':('figure4','그림 4'),'tab:increment':('table6','표 6'),
+        'fig:designs':('figure5','그림 5'),'fig:sparse':('figure6','그림 6'),
+        'tab:robust':('table7','표 7'),'tab:blocks':('table8','표 8'),'fig:limits':('figure7','그림 7')}
+    for key,(target,label) in exhibit_links.items():
+        text=text.replace(key,'['+label+'](#exhibit-'+target+')')
     citations=[]
     maths=[]
     def math_fragment(match,display='inline'):
@@ -172,6 +189,29 @@ def load_sources():
     return sources,aliases
 
 
+def render_pdf_exhibits(section):
+    identifiers=section.get('pdf_exhibits',[])
+    if not identifiers:
+        return ''
+    manifest=read_json(OUT/'longform/exhibits.json')
+    path=PAPER/'main_ppcf.pdf'
+    import hashlib
+    if hashlib.sha256(path.read_bytes()).hexdigest()!=manifest['pdf_sha256']:
+        raise ValueError('PDF changed: recheck exhibit captions and crop boundaries')
+    by_id={item['id']:item for item in manifest['items']}
+    result=[]
+    with fitz.open(path) as pdf:
+        for identifier in identifiers:
+            item=by_id[identifier];page=pdf[item['page']-1];rect=fitz.Rect(item['clip'])
+            if not page.rect.contains(rect) or item['caption_prefix'] not in page.get_text(clip=rect):
+                raise ValueError('Missing caption or invalid exhibit boundary: '+identifier)
+            pixels=page.get_pixmap(clip=rect,dpi=160,alpha=False)
+            encoded=base64.b64encode(pixels.tobytes('png')).decode('ascii')
+            label=('표 ' if item['kind']=='table' else '그림 ')+str(item['number'])+'. '+item['title_ko']
+            result.append('<figure class="source-exhibit" id="exhibit-'+html.escape(identifier)+'"><figcaption><strong>'+html.escape(label)+'</strong><p>'+html.escape(item['note_ko'])+'</p></figcaption><a href="../ppcf_revision/main_ppcf.pdf#page='+str(item['page'])+'" target="_blank" rel="noopener" aria-label="'+html.escape(label,quote=True)+' 원본 확대"><img loading="lazy" width="'+str(pixels.width)+'" height="'+str(pixels.height)+'" src="data:image/png;base64,'+encoded+'" alt="'+html.escape(label,quote=True)+'"></a><p class="exhibit-source">기존 생성 표·그림 그대로 · PDF '+str(item['page'])+'쪽 · 그림을 눌러 원본 확대</p></figure>')
+    return ''.join(result)
+
+
 def render_pdf_preview(section):
     """Embed only this project's manuscript, locating section pages on every build."""
     wanted=section.get('pdf_preview_section')
@@ -199,7 +239,8 @@ def render_pdf_preview(section):
                 '" src="data:image/png;base64,'+encoded+'" alt="'+html.escape(label,quote=True)+
                 '" loading="lazy"><figcaption>'+html.escape(label)+'</figcaption></figure>')
         PDF_PREVIEWS.append({'section':heading,'pdf':'docs/paper/ppcf_revision/main_ppcf.pdf','pages':list(range(start,stop)),'dpi':130})
-    return '<details class="pdf-preview" open><summary>기존 결과 원고를 이 화면에서 읽기 ('+str(len(figures))+'쪽)</summary>'+\
+    opened='' if section.get('pdf_preview_collapsed') else ' open'
+    return '<details class="pdf-preview"'+opened+'><summary>영문 결과 원고 페이지 함께 보기 ('+str(len(figures))+'쪽 발췌)</summary>'+\
         '<p class="preview-note">기존 원고의 원본 페이지를 그대로 표시합니다. 시작 페이지에는 앞 절의 끝부분이 포함될 수 있습니다. 수치·표·그림은 재작성하지 않았습니다.</p>'+''.join(figures)+'</details>'
 
 
@@ -244,13 +285,23 @@ def render_section(section,level=2,fallback_id='section',seen=None):
     if status:
         result+='<span class="status">'+html.escape(status)+'</span>'
     result+='</header><div class="prose">'+render_content(body)+'</div>'
+    if level==2 and section.get('subsections'):
+        result+='<nav class="section-toc" aria-label="이 절의 구성">'
+        for i,child in enumerate(section['subsections']):
+            target=child.get('id') or sid+'-sub-'+str(i+1)
+            result+='<a href="#'+html.escape(target,quote=True)+'">'+html.escape(child.get('title',''))+'</a>'
+        result+='</nav>'
     if section.get('pdf_path'):
         path=section['pdf_path']; page=section.get('pdf_page')
         href=safe_link(path+('#page='+str(page) if page else ''))
         result+='<p><a class="document-link" href="'+html.escape(href,quote=True)+'" target="_blank" rel="noopener">'+html.escape(section.get('pdf_label','연결된 원문 PDF 열기'))+'</a></p>'
-    result+=render_pdf_preview(section)
+    if not section.get('pdf_preview_after_text'):
+        result+=render_pdf_preview(section)
     for i,sub in enumerate(section.get('subsections',[])):
         result+=render_section(sub,min(level+1,5),sid+'-sub-'+str(i+1),seen)
+    if section.get('pdf_preview_after_text'):
+        result+=render_pdf_preview(section)
+    result+=render_pdf_exhibits(section)
     return result+'</section>'
 
 
@@ -283,7 +334,8 @@ def main():
     summary={'input':str(args.input.relative_to(ROOT)) if args.input.is_relative_to(ROOT) else args.input.name,
         'parent_content_loaded':args.input.exists(),'sections':len(document['sections']),
         'source_records':len(sources),'reading_states':{m:sum(s['mode']==m for s in sources) for m in ['full_pdf','full_text','summary','held','duplicate']},
-        'self_contained_css_js':True,'automatic_network_requests':False,'pdf_previews':PDF_PREVIEWS}
+        'self_contained_css_js':True,'automatic_network_requests':False,'pdf_previews':PDF_PREVIEWS,
+        'source_exhibit_ids':re.findall(r'id="exhibit-([^"]+)"',result)}
     (OUT/'build_status.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     print('READER BUILT:',len(sources),'source records;',len(document['sections']),'sections')
 

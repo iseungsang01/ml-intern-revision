@@ -1,0 +1,9 @@
+{
+  "draft": "draft_longform.json",
+  "review": "03_opus_source_and_prose_check.json",
+  "host_review_required": false,
+  "new_fits": 0,
+  "original_source_review_not_repeated": true,
+  "state": "integrated_and_verified",
+  "final_record": "final_verification.json"
+}

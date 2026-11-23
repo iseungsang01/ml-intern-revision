@@ -7,6 +7,9 @@ from build_reader import REVIEWS, load_sources
 def main():
     path=REVIEWS/'manuscript_sections.json'
     document=json.loads(path.read_text(encoding='utf8'))
+    if document.get('active_longform'):
+        from integrate_longform import main as integrate_longform
+        return integrate_longform()
     review=json.loads((REVIEWS/'final_manuscript_sections_review.json').read_text(encoding='utf8'))
     sections={section['id']:section for section in document['sections']}
     intro=sections['introduction']

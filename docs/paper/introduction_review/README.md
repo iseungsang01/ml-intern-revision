@@ -1,5 +1,7 @@
 # 전수 문헌 검토와 절별 원고
 
+**후속 장문 재작성:** 저자가 짧은 개요·작성 지시문을 지적하여 한국어 HTML 전체를 실제 논문 본문으로 다시 썼다. 최신 입력에는 `active_longform`이 있으며 `thesis_reader/integrate_manuscript.py`는 이를 보존한다. 최종 장문과 교정·원문 대조 범위·별도 사용량은 `../research_reader/longform/README.md`, `integration_status.json`, `LONGFORM_QA.md`를 따른다. 아래 초기 통합 기록과 비용은 이 후속 편집 이전 시점의 기록이다.
+
 **최종 완료:** [HTML 원고](../research_reader/index.html)와 [PPCF PDF](../ppcf_revision/main_ppcf.pdf)를 작성했다. HTML은 서론 / 이론적 배경 / 자료·연구 방법 / 결과 / 고찰 / 결론 / 참고문헌으로 나뉘며 인용 근거를 열 수 있다. HWP의 Dataset·수집기준·연도/장치 상태 분류·장치 설계·NN 선택/개조 이유 계층을 보존했다.
 
 전체 254개 PDF 보관 파일 중 중복 2개와 공개 여부 미확인 가이드 1개를 제외한 **고유 공개 출처 파일 251개를 개별 검토**했다. 전체 PDF를 제공한 검토 41개, 전체 추출문을 제공한 검토 210개다. 독립 연구 251편을 의미하지 않으며 모든 그림·수식의 육안 검증을 뜻하지 않는다. PDF 제공 감사에도 개별 판독 한계가 있다. 초기 목록의 `inventory_only`는 스냅샷 상태다. 최종 범위·원문/감사 해시는 `all_corpus_status.json`을 따른다.

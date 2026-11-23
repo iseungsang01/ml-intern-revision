@@ -12,5 +12,9 @@
   "prior_deep_plus_manuscript_edit_usd": 21.418452,
   "original_deep_and_manuscript_allowance_usd": 30,
   "combined_total_usd": 71.288408,
-  "no_further_paid_calls_planned": true
+  "no_further_paid_calls_planned": true,
+  "followup_longform_usd": 6.165712,
+  "followup_ledger": "docs/paper/research_reader/longform/api_usage.json",
+  "combined_total_including_followup_usd": 77.45412,
+  "original_allowance_used_including_followup_usd": 27.584164
 }

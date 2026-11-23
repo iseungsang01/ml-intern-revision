@@ -1,0 +1,34 @@
+{
+  "method": "Arabic quantitative tokens excluding citation keys and display math; identifiers such as L5/V1 are not numbers. Reference entries are exempt.",
+  "paragraphs_over_four": [
+    {
+      "section_id": "introduction",
+      "subsection_title": "b. 왜 이 연구를 해야 하는가",
+      "text": "진단 요구 사양과 제어 사례를 보면, 이온온도가 일정한 시간 안에 주어져야 한다는 필요를 확인할 수 있다. Young은 연소 플라즈마 장치의 측정 요구를 정리하면서, FIRE 설계를 위해 마련된 사양으로 가장자리 이온온도 프로파일에 약 5 mm의 공간 분해능, 10 ms의 시간 분해능, 약 10%의 정밀도를 제시했다. 그는 이런 시간 분해능 요구가 대개 제어의 필요에서 정해진다고 적었다 [@Young2008PlasmaMeasurements]. ITER 진단 계획은 r/a>0.9의 가장자리 이온온도에 100 ms와 10%를 제시했고, 공간 분해능은 미정으로 남겼다 [@Donne2007ChapterDiagnostics]. 이 수치들은 다른 장치의 설계 목표다. 달성된 성능이 아니며 KSTAR의 요구 사항도 아니다. 실제 사용 사례로는 Yoshida 등의 연구가 있다. 이들은 JT-60U에서 탄소 전하교환 스펙트럼을 2.5 ms마다 획득하고, 네 측정선의 온도와 회전을 10 ms 제어 주기 안에 맞춘 뒤, 두 코어 측정선의 온도 차를 중성빔 유닛 수로 되먹임 제어했다 [@Yoshida2009RealTime]. 그 제어는 코어 영역에서 이루어졌고 가장자리 측정선은 제어 채널이 아니었다. 이 사례에서 알 수 있는 것은, 전하교환 온도를 제어에 쓰려면 값이 존재하게 되는 시각에 대한 요구가 뒤따른다는 점이다.",
+      "numeric_tokens": [
+        "5",
+        "10",
+        "10",
+        "0",
+        "100",
+        "10",
+        "2.5",
+        "10"
+      ]
+    },
+    {
+      "section_id": "background",
+      "subsection_title": "2. 전하교환 분광과 Doppler 측정의 원리",
+      "text": "크기를 가늠해 보자. 탄소의 정지 에너지는 약 11.2 GeV다. 1 keV의 탄소 온도는 σ_D/λ₀ ≈ 3×10⁻⁴에 해당하고, 529 nm에서 σ_D는 약 0.16 nm다. 온도는 폭의 제곱에 비례하므로, 작은 상대 오차의 일차 근사에서는 폭의 상대 오차가 온도에서 약 두 배로 나타난다. pedestal top보다 바깥으로 가면 온도가 낮아져 선이 좁아진다. 그러면 분광기 자체의 선폭과 선의 미세구조가 폭에서 차지하는 비중이 커진다. Fonck 등이 계산한 미세구조 보정 인자가 낮은 온도에서 커지는 것도 같은 이유다 [@Fonck1984DeterminationPlasma].",
+      "numeric_tokens": [
+        "11.2",
+        "1",
+        "3",
+        "10",
+        "529",
+        "0.16"
+      ]
+    }
+  ],
+  "scanner_revision_note": "Initial scan missed some values with Korean suffixes; robust rescanning found4dense paragraphs. Final scanner counts those values and final prose has zero paragraphs over4. Original request input retained unchanged."
+}

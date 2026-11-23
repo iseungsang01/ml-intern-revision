@@ -4,7 +4,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from build_reader import ROOT
+from build_reader import ROOT,quantitative_tokens
 
 OUT = ROOT / 'docs/paper/research_reader'
 QA = ROOT / 'data/.thesis_reader/qa'
@@ -13,6 +13,19 @@ QA = ROOT / 'data/.thesis_reader/qa'
 def main():
     QA.mkdir(parents=True,exist_ok=True)
     results={}
+    manuscript=json.loads((ROOT/'docs/paper/introduction_review/manuscript_sections.json').read_text(encoding='utf8'))
+    if manuscript.get('active_longform'):
+        counts=[]
+        def inspect(section):
+            for paragraph in section.get('content_markdown','').split('\n\n'):
+                if paragraph.strip() and not paragraph.lstrip().startswith('|'):
+                    counts.append(len(quantitative_tokens(paragraph)))
+            for child in section.get('subsections',[]):inspect(child)
+        for section in manuscript['sections']:
+            if section['id']!='references':inspect(section)
+        assert max(counts)<=4,'Body paragraph exceeds author numerical-density limit'
+        results['body_numeric_tokens_max']=max(counts)
+        results['body_paragraphs_checked']=len(counts)
     with sync_playwright() as play:
         browser=None
         for kwargs in ({'headless':True},{'headless':True,'channel':'chrome'},{'headless':True,'channel':'msedge'}):
@@ -68,11 +81,25 @@ def main():
             results['bibliographic_note']=True
         page.keyboard.press('Escape')
         previews=page.locator('.pdf-preview')
+        exhibits=page.locator('.source-exhibit')
+        if exhibits.count():
+            assert exhibits.count()==18
+            assert page.locator('#exhibit-table9').count()==1
+            assert page.locator('#exhibit-table10').count()==1
+            assert page.locator('#exhibit-table11').count()==1
+            assert page.locator('#results-sub-6 #exhibit-table11').count()==1
+            for target in page.locator('.section-toc a').evaluate_all('(links)=>links.map(a=>a.hash.slice(1))'):
+                assert page.locator('[id="'+target+'"]').count()==1
+            results['source_tables_and_figures']=exhibits.count()
         if previews.count():
             preview=previews.first
+            if preview.get_attribute('open') is None:
+                preview.locator('summary').click()
             images=preview.locator('img')
             assert images.count()>0
             preview.scroll_into_view_if_needed()
+            images.first.scroll_into_view_if_needed()
+            page.wait_for_function('(img)=>img.complete && img.naturalWidth>0',arg=images.first.element_handle(),timeout=10000)
             assert images.first.evaluate('(img)=>img.complete && img.naturalWidth>0')
             assert images.first.get_attribute('src').startswith('data:image/png;base64,')
             page.screenshot(path=str(QA/'reader_results_preview.png'))

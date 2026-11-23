@@ -1,0 +1,59 @@
+{
+  "official_api_attempts_verified": 5,
+  "stop_reasons": [
+    "max_tokens",
+    "max_tokens",
+    "end_turn",
+    "max_tokens",
+    "end_turn"
+  ],
+  "incomplete_attempts_not_counted_as_completed_reviews": true,
+  "fresh_opus_review_received_actual_full_assembled_draft": true,
+  "independent_full_draft_qa": "../LONGFORM_QA.md section8",
+  "original_pdfs_rechecked": "Ko2015, NN-CES, Shousha and Vanovac related pages; Shousha Figure12; Snyder2011 PDFp2 abstract. Not all251 sources reread.",
+  "snyder_original_pdf_sha256": "14bbd912b597a75bf0b9538f1144ae7e205596f63fdeb57015589633bee0c858",
+  "section_characters": {
+    "introduction": 13474,
+    "background": 12510,
+    "materials-methods": 13122,
+    "results": 6820,
+    "discussion": 7817,
+    "conclusion": 3458
+  },
+  "total_prose_characters_including_spaces_and_citation_markup": 57201,
+  "cited_bibliography_entries": 28,
+  "internal_navigation_targets_verified": 40,
+  "html_sha256": "1a480329ff6bb1269f45bd983e38fbecd8b1a5eecbf0990e8c1eb98368bb7039",
+  "manuscript_json_sha256": "b463c792e7fa45dcf00d36f2c9170fd3375a06776961b47b15be8039a619b398",
+  "english_manuscript_identical_to_a4375ed": true,
+  "new_scientific_fits": 0,
+  "gpu_runs": 0,
+  "acceptance_grade": false,
+  "numerical_checkers": "existing English manuscript/supplement and project records pass",
+  "pytest": "89 passed,3 existing warnings",
+  "reader_ui": "desktop/mobile, citations, section navigation, search/filter, offline pass; lazy image QA scrolls the actual first image before checking decode",
+  "visual_views_checked": [
+    "desktop",
+    "methods",
+    "mobile",
+    "theory_equations",
+    "conclusion"
+  ],
+  "native_exhibit_count": 18,
+  "native_exhibit_visual_check": "Every crop rendered and visually checked; live HTML table3/table11 views also checked",
+  "quantitative_tokens_per_prose_paragraph_max": 4,
+  "numeric_density_distribution": {
+    "0": 139,
+    "1": 16,
+    "2": 11,
+    "3": 10,
+    "4": 3
+  },
+  "fable_editorial_pass4": "Output-limited: closed assessment and9complete edits recovered only",
+  "fable_editorial_pass5": "Completed narrow closeout of edit operations, density, conclusion and exhibit inventory; not a whole-source reread or image review",
+  "list_price_followup_usd": 6.165712,
+  "invoice_verified": false,
+  "original_usd30_allowance_used": 27.584164,
+  "combined_all_work_usd": 77.45412,
+  "paid_work_closed": true
+}

@@ -91,6 +91,17 @@ def main():
         'original_deep_and_manuscript_allowance_usd':30,
         'combined_total_usd':round(sum(costs)+19.134768,6),
         'no_further_paid_calls_planned':True})
+    followup_path=ROOT/'docs/paper/research_reader/longform/api_usage.json'
+    if followup_path.exists():
+        followup=read(followup_path)
+        combined=read(OUT/'cost_summary.json')
+        followup_cost=followup['estimated_or_reserved_usd']
+        combined.update(followup_longform_usd=followup_cost,
+            followup_ledger=followup_path.relative_to(ROOT).as_posix(),
+            combined_total_including_followup_usd=round(combined['combined_total_usd']+followup_cost,6),
+            original_allowance_used_including_followup_usd=round(19.134768+costs[2]+followup_cost,6))
+        assert combined['original_allowance_used_including_followup_usd']<=30
+        save(OUT/'cost_summary.json',combined)
     baseline=subprocess.check_output(['git','show','HEAD:docs/paper/ppcf_revision/main_ppcf.tex'],cwd=ROOT).decode('utf8')
     current=(PAPER/'main_ppcf.tex').read_text(encoding='utf8')
     def result_part(t):

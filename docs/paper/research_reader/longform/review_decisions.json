@@ -1,0 +1,23 @@
+{
+  "excluded_indices": [
+    1,
+    5,
+    6
+  ],
+  "reasons": {
+    "1": "Original EPED statement independently verified from Snyder2011 original PDF p2 abstract: nonlocal peeling-ballooning and nearly local kinetic ballooning constraints. Source-audit omission is not evidence of factual error.",
+    "5": "Original qualitative Haskey statement is accurate; additional numerical examples are unnecessary here.",
+    "6": "Original BES paragraph is accurate; historical hardware details are not needed to explain the current delivered subset.",
+    "metadata": "Chrystal2026 and Haskey2018 DOI/title identities already independently confirmed in bibliography_checks.json; legacy Imrek key displays Imrisek authors correctly. These are not unresolved source absences.",
+    "refinement": "Some proposed replacements introduced unnecessary performance numbers, an unsupported ONLY-MSE assertion, an exposure/grid conflation, or overly strong isolation of input and architecture effects. Refined below against existing English Results and independent QA."
+  },
+  "replacement_new_by_index": {
+    "2": "전자와 이온의 압력은 각각의 밀도와 온도에 의해 정해지며 함께 전체 압력을 구성한다. 따라서 이온온도 변화는 pedestal 압력의 변화에 기여한다. 두 성분의 상대적 크기는 운전 조건에 따라 달라질 수 있으므로, 이온 채널의 경계값도 시간에 따라 관측할 필요가 있다.",
+    "3": "CES의 활성 전하교환 방출과 수소 BES의 빔 방출 신호에는 중성빔의 상태가 관여한다. 빔 구성이 BES 신호에 미치는 영향도 장치 연구에서 다루어졌다 [@Lampert2015CombinedHydrogen]. 따라서 빔 상태가 두 진단에 공통으로 반영될 가능성도 검토해야 한다.",
+    "7": "유한한 노출 구간 동안 누적된 스펙트럼을 분석해 얻은 보고값의 일치도만으로, 그보다 짧은 시간 규모의 온도 변화를 검증할 수는 없다. 특히 ELM의 수 ms 동역학을 다루려면 해당 시간 규모에 대응하는 이온온도 측정과 고속 원시 신호를 함께 비교해야 한다 [@Viezzer2018IonHeat]. 격자 간격, 노출 시간, 분석된 온도 보고값은 이 과정에서 각각 구분해야 하는 양이다.",
+    "8": "PCHIP와 비교한 중앙 절대오차의 차이는 구간이 영을 포함하여 확인되지 않았다. 따라서 MSE에서 확인된 차이와 중앙 절대오차에서 확인되지 않은 차이는 별도로 해석한다.",
+    "9": "드문 CES 보고 조건에서도 현재의 다른 진단은 이력만 사용하는 추정의 오차를 일부 줄였다. 다만 보고 간격에 따른 증분은 시간순 적합의 일부 조건에서는 확인되지 않았다. 이 비교는 다른 진단이 부족해진 CES 정보를 얼마나 보완하는지를 같은 표적에 대한 오차로 나타낸 것이다.",
+    "10": "측정선 반경에 있지 않은 Mirnov 신호도 일부 예측 정보를 담았다. rolling-origin 설계에서는 BES·ECEI 입력 추정기의 오차가 Mirnov 입력 추정기보다 낮다는 차이가 확인되지 않았다.",
+    "11": "T0와 TX는 같은 GP 예측에서 출발하고 후단 회귀에 제공하는 정보가 다르다. 같은 평가 행에서 둘을 비교하면 해당 학습 절차 아래에서 빠른 진단을 추가했을 때의 증분을 평가할 수 있다. 이는 특정 회귀 절차와 관측 조건에서 얻은 정보 기여의 비교이며, 모든 구조에서 동일한 증가가 보장된다는 뜻은 아니다."
+  }
+}

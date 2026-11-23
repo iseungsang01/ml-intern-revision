@@ -1,0 +1,11 @@
+{
+  "method": "Arabic quantities incl attached units/Korean suffixes, citations/model IDs/math/tables/references excluded",
+  "body_paragraphs_over_four": [],
+  "numbers_per_body_paragraph_distribution": {
+    "0": 139,
+    "1": 16,
+    "2": 11,
+    "3": 10,
+    "4": 3
+  }
+}

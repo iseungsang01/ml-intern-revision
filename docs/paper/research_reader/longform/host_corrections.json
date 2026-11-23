@@ -1,0 +1,208 @@
+{
+  "corrections": [
+    {
+      "section_id": "introduction",
+      "old_exact": "pedestal top의 온도와 밀도가 코어 전체의 가둠 수준을 정한다.",
+      "new": "pedestal-top 압력은 코어 수송 해석의 경계조건과 연결되며 전역 가둠에 강하게 영향을 준다 [@Snyder2011FirstPrinciples].",
+      "reasons": "Snyder2011 PDF p2; avoid sole deterministic cause",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "대조 실험으로 가린다.",
+      "new": "대조 분석으로 점검한다.",
+      "reasons": "Observational controls do not identify a unique physical cause",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "빠른 입력을 행끼리 뒤섞어 다시 적합하면 증분이 사라져야 한다.",
+      "new": "빠른 입력을 행끼리 뒤섞어 다시 적합하는 대조에서는, 시점에 맞는 입력 관계가 중요하다면 증분이 줄어들 것이라는 가설을 시험한다.",
+      "reasons": "Do not present control expectation as a universal completed result",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "프레임 평균으로 보고되는 값에는 이런 동역학이 흐려진 흔적으로만 남는다.",
+      "new": "노출 동안 누적된 스펙트럼에서 산출된 보고값에는 이러한 빠른 변화를 따로 분리하기 어려울 수 있다.",
+      "reasons": "A nonlinear spectral fit is not arithmetic time-average temperature",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "본 연구가 hold 기준선으로 형식화한 것이 이 처리 방식이다.",
+      "new": "이는 최신 유효 입력을 유지하는 처리이며, 그 값을 추정기의 출력으로 그대로 사용하는 본 연구의 hold와는 역할이 다르다. RTCAKENN은 유지된 입력과 다른 가용 진단을 함께 사용해 프로파일을 산출한다.",
+      "reasons": "Shousha original PDF pp12-15; input holding is not whole estimator",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "최신 값이 얼마나 오래되었는지, 그 사이에 다른 진단이 무엇을 보여 주었는지는 모델 안에서 다루어지지 않는다.",
+      "new": "해당 논문에서 memoryless로 기술한 신경망은 가용한 진단을 함께 읽지만, 과거 CES 보고 이력과 앵커 이후의 시간 경로를 명시적으로 모델링하는 구조와는 구분된다.",
+      "reasons": "Do not deny current other-diagnostic inputs",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "이 방법은 플라즈마 진단의 회귀 문제에서는 검증되지 않았다.",
+      "new": "이 논문의 실험은 임상 자료의 분류를 다루므로, 이 원리가 본 연구의 온도 회귀에 유용한지는 별도의 비교로 평가해야 한다.",
+      "reasons": "Che2018 scope is not proof of field-wide absence",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "본 연구는 구동기와 무관하게 이미 일어났거나 일어나고 있는 프레임에 대해 진단이 무엇을 보고할지를 묻는다.",
+      "new": "본 연구는 미래 구동기 계획에 따른 미래 프로파일을 예보하는 대신, 현재까지의 관측으로 현재 프레임의 진단 보고값을 추정한다.",
+      "reasons": "Inputs can depend on beam state",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "판독이 빨라지면 추정기가 기대는 이력이 젊어져 추정이 쉬워진다.",
+      "new": "동일한 품질의 보고값이 더 일찍 가용해진다면 추정기는 더 최신의 이력을 사용할 수 있다. 판독기를 바꿀 때에는 보고값의 오차와 분포도 함께 평가해야 한다.",
+      "reasons": "Coupling not implemented; source-quality changes can matter",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "pedestal top의 이온온도에는 간섭계에 해당하는 빠른 직접 측정이 없다.",
+      "new": "현재 제공 자료에는 pedestal-top 이온온도의 독립적인 고속 직접 측정이 없다.",
+      "reasons": "Bound absence claim to current data",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "꼭대기에서 이온온도가 시간에 따라 변하는 방식은 이온 에너지 수지로 이해할 수 있다. 자속면 평균을 취하면 이온 열에너지 밀도 (3/2)n_i T_i의 시간 변화율은 네 항의 합이다. 이온 열유속의 발산에 음의 부호를 붙인 항, 중성빔이 이온에 직접 주는 가열, 전자와의 충돌 교환, 그리고 전하교환과 이온화에 따른 손실이다. 전자-이온 교환항은 n²(T_e − T_i)/T_e^{3/2}에 비례한다. 그래서 밀도가 높고 전자온도가 낮은 가장자리에서 상대적으로 빠르다. 전자온도가 오르면 느려진다. 이 항이 있으므로 전자온도와 밀도의 변화는 지연을 두고 이온온도에 반영된다. 그러나 이온 채널에는 고유의 열유속과 빔 가열이 있다. 따라서 전자 채널의 신호가 이온온도를 결정하지는 않는다. 두 채널은 같은 장벽의 동역학을 공유하면서 부분적으로만 묶여 있다.",
+      "new": "Pedestal 부근의 이온온도 변화는 이온 열에너지에 들어오고 나가는 항들의 균형을 통해 이해할 수 있다. 중성빔으로부터 전달되는 에너지와 전자와의 충돌에 의한 에너지 교환은 이온 에너지 수지에 관여한다. 이온 열수송은 공간적으로 에너지를 재분배하며, 중성입자와의 상호작용도 가장자리 에너지 수지에 영향을 준다. 가열과 손실의 균형이 변하면 이온온도 프로파일도 시간에 따라 변한다. Viezzer 등의 ELM 주기 연구가 측정과 수송 해석을 함께 사용한 것도 프로파일의 시간 변화와 에너지 수송을 연결하기 위해서다 [@Viezzer2018IonHeat].\n\n전자 채널과 이온 채널은 충돌과 공통의 플라즈마 상태를 통해 연결되지만, 각 채널의 가열과 수송이 동일한 것은 아니다. 따라서 전자와 관련된 관측이 이온온도에 관한 단서를 줄 가능성과, 그 관측으로 이온온도를 직접 결정할 수 있다는 주장은 구별해야 한다. 다른 진단에 나타난 변화가 CES 보고값의 변화를 보완하는지 여부는 이력만 사용하는 기준과 비교하여 평가할 수 있다.",
+      "reasons": "Remove incomplete four-term balance and uncited universal delay scaling",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "10 ms로 적분하는 통상의 CES 프레임에서 ELM은 한 프레임 안에서 일어나는 사건이다. 보고값에는 붕괴와 회복이 섞인 평균으로 들어가거나, 스펙트럼의 배경을 바꾸어 피팅을 흔드는 요인으로 들어간다.",
+      "new": "이러한 변화는 본 연구의 시간 격자보다 빠르다. 유한한 노출 동안 얻는 스펙트럼에는 상태 변화가 누적되며, 배경 변화 역시 피팅 결과에 영향을 줄 수 있다. 다만 분석된 온도를 순간 온도의 단순 평균으로 해석할 수는 없다.",
+      "reasons": "Grid interval is not exposure; spectral fitting is nonlinear",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "고온 플라즈마에서 탄소 같은 가벼운 불순물은 완전히 전리되어 있어, 스스로는 선 스펙트럼을 내지 못한다.",
+      "new": "CES 활성선의 모이온인 완전 전리 탄소 C⁶⁺에는 결합 전자가 없으므로, 그 상태 자체에서는 결합 전자의 전이에 의한 선 스펙트럼이 나오지 않는다.",
+      "reasons": "Specify parent species rather than all carbon throughout plasma",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "방출이 그 교차 부피에 국한되므로, 선적분 관측인데도 국소 측정이 된다는 점을 보였다",
+      "new": "활성 방출이 빔과 시선의 교차 부피 부근에 주로 가중되므로, 선적분 관측에서 공간적으로 국소화된 정보를 얻을 수 있음을 설명했다",
+      "reasons": "Finite observation weighting rather than infinitesimal localization",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "방출하는 이온이 시선 방향 속도 v로 움직이면 관측 파장은 Δλ = λ₀·v/c만큼 이동한다. 이온들의 속도가 온도 T_i의 Maxwell 분포를 이루면 시선 방향 속도 성분은 분산이 k_B T_i/m인 정규분포다. 따라서 선 모양은 Gaussian이 되고, 그 표준편차는 σ_D = λ₀·(k_B T_i/(m c²))^{1/2}이다. 이 식을 뒤집으면 에너지 단위의 온도는 k_B T_i = m c²·(σ_D/λ₀)²가 된다. 선 중심의 이동에서는 시선 방향 유속 v = c·Δλ/λ₀를 얻는다. 여기서 m은 방출 이온, 곧 탄소의 질량이다. 반치폭으로 나타내면 FWHM = 2(2 ln 2)^{1/2}·σ_D다. Lee 등의 KSTAR 신경망이 출력하는 두 양이 바로 이 Δλ와 폭이다. 온도와 회전은 위 관계로 환산된다 [@Lee2026NeuralNetworkbased].",
+      "new": "방출 이온의 시선 방향 속도를 $v_{\\mathrm{los}}$라 하면, 비상대론적 Doppler 이동은 $\\Delta\\lambda=\\lambda_0v_{\\mathrm{los}}/c$로 쓸 수 있다. 이온의 열적 속도 분포가 Maxwell 분포이면, 순수 Doppler 선모양은 Gaussian으로 근사된다. 파장 표준편차를 $\\sigma_D$, 탄소 이온 질량을 $m_C$라 할 때 에너지 단위의 온도는 $\\Theta_C\\equiv k_BT_C=m_Cc^2(\\sigma_D/\\lambda_0)^2$이다. 여기서 $T_C$는 켈빈 단위 온도이며, $\\Theta_C$는 에너지다. eV로 나타낼 때에는 에너지를 기본 전하량으로 나누어 변환한다. 본 자료가 $T_i$로 표기하는 양은 이러한 에너지 단위의 탄소 온도다.\n\n이 관계의 선폭은 기기 응답과 비열적 선 구조의 영향을 구분한 Doppler 표준편차다. 반치폭과의 관계는 $\\mathrm{FWHM}=2\\sqrt{2\\ln2}\\,\\sigma_D$이며, 두 폭의 정의를 혼용하면 온도 환산이 달라진다. 선 중심의 이동은 먼저 시선 방향 유속을 주고, 토로이달 회전으로 환산하려면 관측 기하를 반영해야 한다. NN-CES는 스펙트럼에서 이동과 폭을 추정한 뒤 이러한 관계를 이용해 온도와 회전값으로 변환하는 접근이다 [@Lee2026NeuralNetworkbased].",
+      "reasons": "Keep Kelvin vs energy units and LOS vs toroidal projection explicit",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "폭에 생긴 상대 오차는 온도에서 두 배가 된다.",
+      "new": "작은 상대 오차의 일차 근사에서는 폭의 상대 오차가 온도에서 약 두 배로 나타난다.",
+      "reasons": "Differential approximation, not exact finite-error relation",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "플라즈마 에너지의 대부분을 보유한 주이온의 온도와 연결해 해석하려면",
+      "new": "주이온의 열적 상태와 연결해 해석하려면",
+      "reasons": "Do not assert ions carry most total plasma energy",
+      "if_still_present": true
+    },
+    {
+      "section_id": "background",
+      "old_exact": "EPED 모델은 이 높이와 폭을 두 가지 안정성 조건의 교점으로 예측한다.",
+      "new": "EPED 모델은 이 높이와 폭을 두 가지 안정성 제약을 함께 적용해 예측한다.",
+      "reasons": "Snyder2011 original PDF p2 directly checked",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "두 표적은 모두 미래 쪽 정보에서 만들어지는 평가 기준이다.",
+      "new": "F는 현재 프레임의 CES 보고값이며, L5는 이후 다섯 격자 행으로 정의한 오프라인 수준이다. 두 값은 평가 기준이지만 현재 입력으로 제공하지 않는다.",
+      "reasons": "F is current-frame target; only L5 uses future grid values",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "그래서 빠른 진단의 증분과 사용 조건별 평가는 L5에서 채점한다.",
+      "new": "사용 조건의 수준 평가는 L5를 중심으로 수행하며, 최신 이력 조건에서는 현재 보고값 F에 대한 빠른 진단의 증가분도 함께 평가한다.",
+      "reasons": "Fast increment is also scored on F",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "오차는 eV 단위다.",
+      "new": "RMSE·MAE·중앙 절대오차의 단위는 eV이며, MSE의 단위는 eV²이다. 오차의 비와 상대 감소율은 무차원이다.",
+      "reasons": "Correct dimensions of squared loss",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "차이는 묶음 구간이 영을 벗어날 때에만 확립되었다고 적는다. 구간이 영을 포함하면 확립되지 않았다고 적는다.",
+      "new": "오차 차이와 MSE 감소율은 묶음 구간이 영을 제외하는지로 차이를 판단한다. 오차 비처럼 두 값이 같을 때 일이 되는 통계량은 일을 기준으로 판단한다. 해당 기준을 포함하는 구간에서는 차이가 확인되지 않은 것으로 해석한다.",
+      "reasons": "Difference null is zero; ratio null is one",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "두 진단의 고유 대역폭은 10 ms보다 훨씬 넓지만",
+      "new": "두 진단은 본래 고속 변동을 관측할 수 있지만",
+      "reasons": "Bandwidth and time interval have different dimensions",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "CES와 BES는 모두 빔이 있어야 신호가 생기므로, 채점된 행은 모두 빔이 입사되는 구간에 있다.",
+      "new": "CES의 활성 전하교환 방출과 수소 BES 신호는 빔과 관련된 측정이다. 빔-off에 대응하여 보고값이 없는 프레임은 채점에서 제외한다.",
+      "reasons": "No new universal beam-power gate asserted for all scored rows",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "이 연구의 이전 판에서 주 추정기였고, 지금은 추정기 비교 표의 비교 행으로 남아 있다.",
+      "new": "이 연구에서는 해당 LSTM과 그 두 단계 구성을 비교 후보로 평가하였다.",
+      "reasons": "Replace manuscript version history with actual evaluated candidates",
+      "if_still_present": true
+    },
+    {
+      "section_id": "materials-methods",
+      "old_exact": "실행 대기열은 끝까지 돌았고, 실행 뒤의 감사를 통과했으며, 구조 선택과 판독이 같은 기록에 근거함을 확인했다. 표는 감사된 결과 파일에서 생성되며 손으로 고치지 않는다.",
+      "new": "구조 선택과 최종 평가가 등록된 절차와 같은 산출물에 근거하는지 점검하였다. 표와 지표는 동일한 평가 산출물에서 생성하였다.",
+      "reasons": "Remove execution-status and writing instructions",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "하나의 캠페인 안에서도 진단 상태의 변화가 추정기를 무력하게 만들 수 있다.",
+      "new": "하나의 캠페인 안에서도 특정 방전 구간에서 빠른 진단의 추가 기여가 유지되지 않았으며, 그 원인을 확인하려면 진단 및 운전 설정의 확인이 필요하다.",
+      "reasons": "Do not identify unmeasured diagnostic-state change as cause",
+      "if_still_present": true
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "과제는 표현력을 키우는 것이 아니다. 이력의 나이가 바뀌어도 다시 적합하지 않고 따라가는 구조를 만드는 것이다.",
+      "new": "후속 설계에서는 표현력과 함께 이력의 나이가 달라질 때 성능이 어떻게 유지되는지를 평가해야 한다. 여러 가용성 조건을 다루는 구조와 학습 방식의 유용성은 공통 조건의 비교로 확인할 필요가 있다.",
+      "reasons": "Availability handling is a hypothesis for the next study, not a proven sole architectural remedy.",
+      "if_still_present": true
+    },
+    {
+      "section_id": "conclusion",
+      "old_exact": "따라서 현재 정보만으로도 유용한 보고값 추정이 가능하다는 결과와, 모든 오프라인 보간을 모든 조건에서 능가한다는 주장은 구분된다.",
+      "new": "이 결과는 현재까지의 정보로 유용한 보고값 추정이 가능함을 보여 주며, 비교 기준과 검증 설계에 따라 확인되는 차이가 달라짐을 함께 나타낸다. 시간 순서를 지키는 일반화에서는 양측 GP와의 차이를 더 확인할 필요가 있다.",
+      "reasons": "State the actual conclusion and scope directly instead of rebutting an unmade universal claim.",
+      "if_still_present": true
+    }
+  ],
+  "basis": "LONGFORM_QA.md, existing English manuscript, original Snyder PDF p2 and independent unit/measurement checks"
+}

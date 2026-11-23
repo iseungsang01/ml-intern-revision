@@ -28,5 +28,25 @@
       ],
       "dpi": 130
     }
+  ],
+  "source_exhibit_ids": [
+    "table1",
+    "figure1",
+    "table2",
+    "figure2",
+    "table3",
+    "table4",
+    "figure3",
+    "table5",
+    "figure4",
+    "table6",
+    "figure5",
+    "figure6",
+    "table7",
+    "table8",
+    "figure7",
+    "table9",
+    "table10",
+    "table11"
   ]
 }
