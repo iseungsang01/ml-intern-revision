@@ -21,7 +21,11 @@
 현재 분석 결과가 없으므로 이를 이용한 의미적 판독이나 연구 후보 검증은 아직 수행하지 않았다. host의 pointer 검증이 새로운 가설의 타당성을 증명하지는 않는다. 원래 평가가 끝나면 정상 종료·최종 감사 gate를 먼저 만족해야 한다. 완료 후 문서는 연구 초안이며, 원고의 수치·물리 주장으로 자동 승격하지 않는다.
 
 현재 live 상태: `data/.claude_posteval_20261123/status.json`. 작업의 stdout/stderr와 모든 API attempt는 같은 ignored 폴더에 있다. 완료 예정 산출물: `docs/paper/posteval_claude_20261123.md`와 `.json`. 새 실험을 실행하거나 현재 평가 마감을 연장하지 않는다.
-# 2026-11-23 21:05 KST: stopped on upstream audit failure
+# 2026-11-23 21:19 KST: waiting on B.101 corrected readout
+
+After registered B.101 preparation and live new supervisor/queue checks, the same source-bound Claude task was explicitly restarted. Fresh status21:19 is waiting_for_audited_completion/readout. No prior substantive research-review request exists; no uncertain paid call was replayed. Original final audit, matching copies and normal exit remain mandatory. Below21:05 describes the previous stopped attempt.
+
+## Earlier21:05 stop
 
 The original post audit rejected B.100 at21:04. The watcher correctly stopped with `Upstream evaluation stopped; no partial-result research review`. No substantive request was made. B.101 separates a neural/tree metric namespace collision and must pass the original audit and normal-completion gates before this worker can analyze any result. Restart is explicit after a live recovery queue is established; committed worker code and paid-round limits remain unchanged.
 
