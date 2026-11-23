@@ -1,0 +1,26 @@
+{
+  "bishop": {
+    "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-cxrs-ppcf-93.pdf",
+    "pdf_sha256": "927f58b08078ead4475977f188e1a6af7997cf6d2882db178f39cb42b5610e2a",
+    "total_pages": 9
+  },
+  "rkn": {
+    "url": "https://proceedings.mlr.press/v97/becker19a/becker19a.pdf",
+    "pdf_sha256": "2659f54c5f810d2033aa3086b415616a72be2715a08acbf032f399d9647ea895",
+    "total_pages": 9
+  },
+  "cru": {
+    "url": "https://proceedings.mlr.press/v162/schirmer22a/schirmer22a.pdf",
+    "pdf_sha256": "bb068b3e46bced14abb015730ad57cb18ba21ab0f3f6af992e2e25756ab88466",
+    "total_pages": 18
+  },
+  "kalmannet": {
+    "url": "https://www.weizmann.ac.il/math/yonina/sites/math.yonina/files/KalmanNet_Neural_Network_Aided_Kalman_Filtering_for_Partially_Known_Dynamics_0.pdf",
+    "pdf_sha256": "d26c2ce0bcaa08bb6cb27b74822d5dee3e0a45b21e6ee553addca0bd07f9167f",
+    "total_pages": 16
+  },
+  "diag2diag": {
+    "url": "https://doi.org/10.1038/s41467-025-63492-1",
+    "access": "original full-text XML via EuropePMC; selected methods/discussion sections supplied"
+  }
+}

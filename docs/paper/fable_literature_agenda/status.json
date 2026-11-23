@@ -1,0 +1,21 @@
+{
+  "complete": true,
+  "model": "claude-fable-5-2",
+  "max_paid_calls": 11,
+  "literature_search_stages": 6,
+  "preliminary_synthesis_stages": 2,
+  "primary_text_audit_stages": 1,
+  "final_revision_stages": 1,
+  "test_informed_exploratory": true,
+  "new_fits": 0,
+  "gpu_runs": 0,
+  "primary_text_scope": "Bishop9/RKN7/CRU8/KalmanNet10 pages; selected original Diag2Diag methods/discussion. Other papers retain stated abstract/excerpt limits.",
+  "timestamp_utc": "2026-11-23T14:59:37.685721+00:00",
+  "primary_text_audit_complete": false,
+  "primary_text_notes_corrected_in_final": true,
+  "final_plan": "11_corrected_decision_memo.md",
+  "prior_plan": "10_final_research_agenda.md",
+  "additional_correction_calls": 1,
+  "host_decision": "DECISION.md",
+  "concurrent_work_note": "B104 registration observed read-only; no execution or results inferred"
+}

@@ -1,0 +1,1483 @@
+{
+  "calls": [
+    {
+      "stage": "01_ces_measurement.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 49927,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 9218,
+        "output_tokens_details": {
+          "thinking_tokens": 2269
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "KSTAR charge exchange spectroscopy neural network ion temperature Fusion Engineering and Design 115518"
+        },
+        {
+          "query": "Svensson JET charge exchange spectra neural network analysis Plasma Phys. Control. Fusion 1999"
+        },
+        {
+          "query": "ultra-fast charge exchange spectroscopy KSTAR Jang 2021 Review of Scientific Instruments"
+        },
+        {
+          "query": "EAST CXRS neural network real-time ion temperature rotation spectra"
+        },
+        {
+          "query": "Diag2Diag Jalalvand multimodal super-resolution Thomson scattering arXiv"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2301.11555",
+          "title": "Bayesian neural network for plasma equilibria in the Korea Superconducting Tokamak Advanced Research"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/47632671_Charge_exchange_spectroscopy_system_calibration_for_ion_temperature_measurement_in_KSTAR",
+          "title": "Charge exchange spectroscopy system calibration for ion temperature measurement in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/379615468_Overview_of_the_KSTAR_experiments_toward_fusion_reactor",
+          "title": "(PDF) Overview of the KSTAR experiments toward fusion reactor"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/224122226_KSTAR_charge_exchange_spectroscopy_system",
+          "title": "KSTAR charge exchange spectroscopy system"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/351512537_Development_of_an_ultrafast_charge_exchange_spectroscopy_system_on_the_KSTAR_tokamak",
+          "title": "(PDF) Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34243333/",
+          "title": "Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak - PubMed"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2504.11648",
+          "title": "TorbeamNN: Machine learning based steering of ECH mirrors on KSTAR"
+        },
+        {
+          "url": "https://iopscience.iop.org/issue/0741-3335/41/2",
+          "title": "Plasma Physics and Controlled Fusion, Volume 41, Number 2, February 1999, February 1999 - IOPscience"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/230912050_Analysis_of_JET_charge_exchange_spectra_using_neural_networks",
+          "title": "(PDF) Analysis of JET charge exchange spectra using neural networks"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/1547041",
+          "title": "Plasma Physics and Controlled Fusion PAPER • OPEN ACCESS"
+        },
+        {
+          "url": "https://www.osti.gov/etdeweb/biblio/20059540",
+          "title": "Analysis of JET charge exchange spectra using neural networks (Journal Article)"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/215466649_Applications_of_Neural_Networks_to_Data_Analysis_and_Control_of_Fusion_Plasma",
+          "title": "Applications of Neural Networks to Data Analysis and Control of Fusion Plasma"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/Automatic-analysis-of-JET-charge-exchange-spectra-Bishop-Roach/2316b88dbcfa394cb9fb58602979603c43192516",
+          "title": "[PDF] Automatic analysis of JET charge exchange spectra using neural networks"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1361-6587/acc60f/pdf",
+          "title": "Plasma Physics and Controlled Fusion TOPICAL REVIEW • OPEN ACCESS"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/bishop-cxrs-ppcf-93.pdf",
+          "title": "Automatic analysis of JET charge exchange spectra using neural ..."
+        },
+        {
+          "url": "https://www.osti.gov/etdeweb/biblio/6128565",
+          "title": "Automatic analysis of JET charge exchange spectra using neural networks (Journal Article)"
+        },
+        {
+          "url": "https://arxiv.org/pdf/1609.03787",
+          "title": "Bayesian electron density inference from JET lithium beam emission spectra using Gaussian processes"
+        },
+        {
+          "url": "https://pubs.aip.org/aip/rsi/article-abstract/92/5/053525/1020290/Development-of-an-ultrafast-charge-exchange?redirectedFrom=fulltext",
+          "title": "Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/A-fast-edge-charge-exchange-recombination-system-at-Cavedon-P%C3%BCtterich/499f60875841c912cdcdf401ecae715454e40a0d",
+          "title": "A fast edge charge exchange recombination spectroscopy system at the ASDEX Upgrade tokamak."
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0920379619300201",
+          "title": "Concept design of ultrafast charge exchange recombination spectroscopy on EAST tokamak - ScienceDirect"
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/1781877-ion-temperature-rotation-fluctuation-measurements-ultra-fast-charge-exchange-recombination-spectroscopy-uf-chers-diii-tokamak",
+          "title": "Ion temperature and rotation fluctuation measurements with ultra-fast charge exchange recombination spectroscopy (UF-CHERS) in the DIII-D tokamak (Journal Article)"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2608.19259",
+          "title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/377164565_Initial_measurement_of_ultrafast_charge_exchange_recombination_spectroscopy_on_the_EAST_tokamak",
+          "title": "Initial measurement of ultrafast charge exchange recombination spectroscopy on the EAST tokamak"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/316027511_A_fast_edge_charge_exchange_recombination_spectroscopy_system_at_the_ASDEX_Upgrade_tokamak",
+          "title": "A fast edge charge exchange recombination spectroscopy system at the ASDEX Upgrade tokamak"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/aeb037",
+          "title": "Real-time CXRS analysis on HL-3 tokamak with reliable neural networks and cross-device transfer learning - IOPscience"
+        },
+        {
+          "url": "http://pst.hfcas.ac.cn/cn/article/pdf/preview/10.1088/2058-6272/ab2674.pdf",
+          "title": "Fast estimation of ion temperature from EAST charge ..."
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad73e8",
+          "title": "Prediction of plasma rotation velocity and ion temperature profiles in EAST Tokamak using artificial neural network models - IOPscience"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/242728048_Development_of_Real-Time_Measurement_System_of_Charge_Exchange_Recombination_Spectroscopy_and_Its_Application_to_Feedback_Control_of_Ion_Temperature_Gradient_in_JT-60U",
+          "title": "Development of Real-Time Measurement System of Charge Exchange Recombination Spectroscopy and Its Application to Feedback Control of Ion Temperature Gradient in JT-60U"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2610.00243",
+          "title": "Fusing Global Diagnostic Signals and Spectral Data for Electron and Ion Temperature Profile Prediction on EAST via Attention-based Neural Networks"
+        },
+        {
+          "url": "http://pst.hfcas.ac.cn/en/article/doi/10.1088/2058-6272/ab2674",
+          "title": "Fast estimation of ion temperature from EAST charge exchange recombination spectroscopy using neural network"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/308578431_Upgrades_of_poloidal_and_tangential_x-ray_imaging_crystal_spectrometers_for_temperature_and_rotation_measurements_on_EAST",
+          "title": "(PDF) Upgrades of poloidal and tangential x-ray imaging crystal spectrometers for temperature and rotation measurements on EAST"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.00243",
+          "title": "Fusing Global Diagnostic Signals and Spectral Data for Electron and Ion Temperature Profile Prediction on EAST via Attention-based Neural Networks"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v2",
+          "title": "Diag2Diag: Multimodal super-resolution"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag-NatComm-2025.pdf",
+          "title": "Multimodal super-resolution: discovering hidden physics ..."
+        },
+        {
+          "url": "https://conferences.iaea.org/event/392/contributions/36260/attachments/20233/34289/Jalalvand-EX-S.pdf",
+          "title": "EX - S MACHINE LEARNING-BASED MULTIMODAL SUPER-RESOLUTION:"
+        },
+        {
+          "url": "https://arxiv.org/html/2405.05908v4",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to fusion plasmas"
+        },
+        {
+          "url": "https://science.osti.gov/fes/Highlights/2026/6a",
+          "title": "Filling in the Gaps: AI for Super-Resolution and Diagnostic Recovery"
+        },
+        {
+          "url": "https://higherlogicdownload.s3.amazonaws.com/APS/b702bb59-ce08-4ebc-b70c-ab50811fa080/UploadedImages/2025_APS_Jalalvand_edits1.pdf",
+          "title": "EMBARGOED FOR RELEASE Until 8 a.m. EDT, Monday, November 17, 2025"
+        },
+        {
+          "url": "https://www.energy.gov/science/fes/articles/filling-gaps-ai-super-resolution-and-diagnostic-recovery",
+          "title": "Filling in the Gaps: AI for Super-Resolution and Diagnostic Recovery"
+        },
+        {
+          "url": "https://arxiv.org/abs/2405.05908v2",
+          "title": "arxiv.org"
+        },
+        {
+          "url": "https://arxiv.org/html/2405.05908v1",
+          "title": "[1]\\fnmAzarakhsh \\surJalalvand [1,2]\\fnmEgemen \\surKolemen"
+        }
+      ],
+      "response_sha256": "16aff683590cfdf27520ca14ed169618f025c0c417ae60d09fac827918f3e75e"
+    },
+    {
+      "stage": "02_virtual_diagnostics.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 51228,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 9070,
+        "output_tokens_details": {
+          "thinking_tokens": 2977
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "KSTAR charge exchange spectroscopy neural network real-time ion temperature Fusion Engineering and Design 115518"
+        },
+        {
+          "query": "RTCAKENN real-time kinetic profile reconstruction DIII-D neural network Shousha"
+        },
+        {
+          "query": "Diag2Diag multimodal super-resolution Jalalvand Thomson scattering fusion plasma"
+        },
+        {
+          "query": "Imrek temporal super-resolution CER ion temperature DIII-D neural network"
+        },
+        {
+          "query": "Jang ultrafast charge exchange spectroscopy KSTAR pedestal Review of Scientific Instruments 2021"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/pdf/2301.11555",
+          "title": "Bayesian neural network for plasma equilibria in the Korea Superconducting Tokamak Advanced Research"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/379615468_Overview_of_the_KSTAR_experiments_toward_fusion_reactor",
+          "title": "(PDF) Overview of the KSTAR experiments toward fusion reactor"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://arxiv.org/html/2607.14142",
+          "title": "Automated Outlier-Robust Bayesian Profile Fitting for Magnetically Confined Plasmas with Modified Tanh Profiles and Good-and-Bad Gaussian Mixture Likelihoods"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2504.11648",
+          "title": "TorbeamNN: Machine learning based steering of ECH mirrors on KSTAR"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/2999845",
+          "title": "IFAC PapersOnLine 59-11 (2025) 198–203 ScienceDirect"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ae332f",
+          "title": "On FIRE mode in KSTAR - IOPscience - Institute of Physics"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/47632671_Charge_exchange_spectroscopy_system_calibration_for_ion_temperature_measurement_in_KSTAR",
+          "title": "Charge exchange spectroscopy system calibration for ion temperature measurement in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/224122226_KSTAR_charge_exchange_spectroscopy_system",
+          "title": "KSTAR charge exchange spectroscopy system"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/351512537_Development_of_an_ultrafast_charge_exchange_spectroscopy_system_on_the_KSTAR_tokamak",
+          "title": "(PDF) Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/376436119_Machine_learning-based_real-time_kinetic_profile_reconstruction_in_DIII-D",
+          "title": "(PDF) Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/[303]%20Ricardo%20Shousha%20et%20al.%20%E2%80%9CMachine%20learning-based%20real-time%20kinetic%20profile%20reconstruction%20in%20DIII-D%E2%80%9D.pdf",
+          "title": "Machine learning-based real-time kinetic profile ..."
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/2251556-machine-learning-based-real-time-kinetic-profile-reconstruction-diii",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D (Journal Article)"
+        },
+        {
+          "url": "https://dataspace.princeton.edu/handle/88435/dsp016h440w77q",
+          "title": "DataSpace: Real-time kinetic profile reconstruction and Adaptive ELM Control on the DIII-D and KSTAR Tokamaks"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S2405896325013114",
+          "title": "Bridging the gap: Deploying AI-based Models in Real-Time Fusion Plasma Control Systems - ScienceDirect"
+        },
+        {
+          "url": "https://ouci.dntb.gov.ua/en/works/4wNB3qm7/",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/389398825_Interpreting_AI_for_Fusion_an_application_to_Plasma_Profile_Analysis_for_Tearing_Mode_Stability",
+          "title": "(PDF) Interpreting AI for Fusion: an application to Plasma Profile Analysis for Tearing Mode Stability"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2602.15084",
+          "title": "TokaMind: A Multi-Modal Transformer Foundation Model for Tokamak Plasma Dynamics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.11964",
+          "title": "Parallelized Real-time Physics Codes for Plasma Control on DIII-D"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v2",
+          "title": "Diag2Diag: Multimodal super-resolution"
+        },
+        {
+          "url": "https://conferences.iaea.org/event/392/contributions/36260/attachments/20233/34289/Jalalvand-EX-S.pdf",
+          "title": "EX - S MACHINE LEARNING-BASED MULTIMODAL SUPER-RESOLUTION:"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag-NatComm-2025.pdf",
+          "title": "Multimodal super-resolution: discovering hidden physics ..."
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to"
+        },
+        {
+          "url": "https://www.bohrium.com/en/blog/research-notes/aaai-2026-multimodal-super-resolution-discovering-hidden-physics-fusion-plasmas/",
+          "title": "Diag2Diag Explained: 5000x Faster Fusion Diagnostics"
+        },
+        {
+          "url": "https://higherlogicdownload.s3.amazonaws.com/APS/b702bb59-ce08-4ebc-b70c-ab50811fa080/UploadedImages/2025_APS_Jalalvand_edits1.pdf",
+          "title": "EMBARGOED FOR RELEASE Until 8 a.m. EDT, Monday, November 17, 2025"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.06330",
+          "title": "Conceptual design of Thomson scattering system with high wavelength resolution in magnetically confined plasmas for electron phase-space measurements"
+        },
+        {
+          "url": "https://arxiv.org/html/2405.05908v2",
+          "title": "[1]\\fnmAzarakhsh \\surJalalvand [1,2]\\fnmEgemen \\surKolemen"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v3",
+          "title": "arxiv.org"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1361-6587/ae72c6/meta",
+          "title": "Temporal super-resolution of kinetic plasma profiles at COMPASS using neural networks - IOPscience"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/231032105_Investigation_into_ion_edge_temperature_behaviour_using_CER_spectroscopy_at_DIII-D",
+          "title": "Investigation into ion edge temperature behaviour using CER spectroscopy at DIII-D"
+        },
+        {
+          "url": "https://www.mdpi.com/2225-1154/14/11/233",
+          "title": "AI-Based Super-Resolution Approaches to Reconstruct Temperature Fields of Climatic Data Using Deep Neural Networks"
+        },
+        {
+          "url": "https://www.biorxiv.org/content/10.1101/2024.05.04.592503.full.pdf",
+          "title": "Time-lapse Image Super-resolution Neural Network with Reliable Confidence Quantification for Optical Microscopy"
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/1970193-real-time-estimation-electron-temperature-profile-nbsp-diii-leveraging-neural-network-surrogate-models",
+          "title": "Real-time estimation of the electron temperature profile in DIII-D by leveraging neural-network surrogate models (Journal Article)"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad142f",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D - IOPscience"
+        },
+        {
+          "url": "https://pubs.aip.org/aip/rsi/article-abstract/92/5/053525/1020290/Development-of-an-ultrafast-charge-exchange?redirectedFrom=fulltext",
+          "title": "Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/A-fast-edge-charge-exchange-recombination-system-at-Cavedon-P%C3%BCtterich/499f60875841c912cdcdf401ecae715454e40a0d",
+          "title": "A fast edge charge exchange recombination spectroscopy system at the ASDEX Upgrade tokamak."
+        },
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34243333/",
+          "title": "Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak - PubMed"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0920379619300201",
+          "title": "Concept design of ultrafast charge exchange recombination spectroscopy on EAST tokamak - ScienceDirect"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/377164565_Initial_measurement_of_ultrafast_charge_exchange_recombination_spectroscopy_on_the_EAST_tokamak",
+          "title": "Initial measurement of ultrafast charge exchange recombination spectroscopy on the EAST tokamak"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2608.19259",
+          "title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/316027511_A_fast_edge_charge_exchange_recombination_spectroscopy_system_at_the_ASDEX_Upgrade_tokamak",
+          "title": "A fast edge charge exchange recombination spectroscopy system at the ASDEX Upgrade tokamak"
+        }
+      ],
+      "response_sha256": "958207618a22447484d6249656ec70dabaa07bf466a77d67a7575b4a688237d0"
+    },
+    {
+      "stage": "03_multirate_observers.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 53396,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 9676,
+        "output_tokens_details": {
+          "thinking_tokens": 3073
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "Bar-Shalom \"Update with out-of-sequence measurements in tracking: exact solution\""
+        },
+        {
+          "query": "Gopalakrishnan \"Incorporating delayed and infrequent measurements in extended Kalman filter based nonlinear state estimation\""
+        },
+        {
+          "query": "Larsen \"Incorporation of time delayed measurements in a discrete-time Kalman filter\""
+        },
+        {
+          "query": "RTCAKENN real-time kinetic profile reconstruction DIII-D neural network charge exchange"
+        },
+        {
+          "query": "Schirmer \"Modeling Irregular Time Series with Continuous Recurrent Units\" PMLR 162"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.semanticscholar.org/paper/Update-with-out-of-sequence-measurements-in-exact-Bar-Shalom/032cf4b4f196ceca4b14a63064133c209b91933c",
+          "title": "Update with out-of-sequence measurements in tracking: exact solution"
+        },
+        {
+          "url": "https://www.spiedigitallibrary.org/conference-proceedings-of-spie/4048/1/Update-with-out-of-sequence-measurements-in-tracking--exact/10.1117/12.392006.short?SSO=1",
+          "title": "Update with out-of-sequence measurements in tracking: exact solution"
+        },
+        {
+          "url": "https://www.spiedigitallibrary.org/proceedings/Download?fullDOI=10.1117/12.886339",
+          "title": "Optimal Update with Multiple Out-of-Sequence Measurements 1"
+        },
+        {
+          "url": "https://arxiv.org/pdf/1009.4409",
+          "title": "Efficient delay-tolerant particle filtering"
+        },
+        {
+          "url": "https://apps.dtic.mil/sti/tr/pdf/ADA640061.pdf",
+          "title": "Out-of-sequence measurements filtering using forward prediction F. Rhéaume"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2106.04898",
+          "title": "Continuous-discrete multiple target tracking with out-of-sequence measurements"
+        },
+        {
+          "url": "https://www.academia.edu/18528595/One_step_solution_for_the_multistep_out_of_sequence_measurement_problem_in_tracking",
+          "title": "(PDF) One-step solution for the multistep out-of-sequence-measurement problem in tracking"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0921889007000802",
+          "title": "Sensor fusion-based visual target tracking for autonomous vehicles with the out-of-sequence measurements solution - ScienceDirect"
+        },
+        {
+          "url": "https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/iet-rsn.2015.0269",
+          "title": "Information filters with reduced data storage for out‐of‐sequence measurements update - Kim - 2016 - IET Radar, Sonar & Navigation - Wiley Online Library"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2009.02659",
+          "title": "Weighted Information Filtering, Smoothing, and Out-of-Sequence Measurement Processing"
+        },
+        {
+          "url": "https://arxiv.org/html/2512.20354",
+          "title": "Highlights"
+        },
+        {
+          "url": "https://www.researchgate.net/profile/Ajit-Gopalakrishnan",
+          "title": "Ajit GOPALAKRISHNAN"
+        },
+        {
+          "url": "https://arxiv.org/html/2508.21260v1",
+          "title": "Remarks on stochastic cloning and delayed-state filtering"
+        },
+        {
+          "url": "https://link.springer.com/article/10.1007/s11633-017-1106-7",
+          "title": "State Estimation Using Non-uniform and Delayed Information: A Review"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0263876218306002",
+          "title": "Nonlinear state estimation with delayed measurements using data fusion technique and cubature Kalman filter for chemical processes - ScienceDirect"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/341320085_Sampled-Output_Augmentation_Method_for_handling_Measurement_Delays_in_Multirate_Kalman_Filter",
+          "title": "Sampled-Output Augmentation Method for handling Measurement Delays in Multirate Kalman Filter"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/261193519_Delayed_fusion_of_relative_state_measurements_by_extending_stochastic_cloning_via_direct_Kalman_filtering",
+          "title": "(PDF) Delayed fusion of relative state measurements by extending stochastic cloning via direct Kalman filtering"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/320603611_State_and_parameter_estimation_using_measurements_with_unknown_time_delay",
+          "title": "(PDF) State and parameter estimation using measurements with unknown time delay"
+        },
+        {
+          "url": "https://aiche.onlinelibrary.wiley.com/doi/10.1002/aic.18013",
+          "title": "Distributed state estimation from infrequent and delayed measurements in large‐scale processes - Samandari Masooleh - 2023 - AIChE Journal - Wiley Online Library"
+        },
+        {
+          "url": "https://www.aimsciences.org//article/doi/10.3934/mfc.2022058",
+          "title": "Bayesian transfer filter for industrial processes with additional delayed slow-rate measurements"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/Incorporation-of-time-delayed-measurements-in-a-Larsen-Andersen/f75f9cf0e332f60bbd08f279c4d1dffc498eb247",
+          "title": "[PDF] Incorporation of time delayed measurements in a discrete-time Kalman filter"
+        },
+        {
+          "url": "https://orbit.dtu.dk/en/publications/incorporation-of-time-delayed-measurements-in-a-discretetime-kalman-filter(d1cfa16f-34ef-44d8-a319-6aa5b1541c7b)/export.html",
+          "title": "Incorporation of Time Delayed Measurements in a Discrete-time Kalman Filter - Welcome to DTU Research Database"
+        },
+        {
+          "url": "https://backend.orbit.dtu.dk/ws/files/4363506/Larsen.pdf",
+          "title": "Incorporation of Time Delayed Measurements in a Discrete ..."
+        },
+        {
+          "url": "https://www.researchgate.net/scientific-contributions/Thomas-Dall-Larsen-35514933",
+          "title": "Thomas Dall Larsen's research works"
+        },
+        {
+          "url": "https://backend.orbit.dtu.dk/ws/files/4361170/Bak.pdf",
+          "title": "Location Estimation using Delayed Measurements"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/3783879_Location_estimation_using_delayed_measurements",
+          "title": "(PDF) Location estimation using delayed measurements"
+        },
+        {
+          "url": "https://arxiv.org/html/2106.00391",
+          "title": "A Question of Time: Revisiting the Use of RecursiveFiltering for Temporal Calibration of Multisensor Systems"
+        },
+        {
+          "url": "https://digital-library.theiet.org/doi/abs/10.1049/iet-cta.2010.0278",
+          "title": "State estimation with delayed measurements incorporating time-delay uncertainty"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/224338002_Analysis_of_Kalman_filter_based_approaches_for_fusing_Out-of-Sequence_measurements_corrupted_by_systematic_errors",
+          "title": "(PDF) Analysis of Kalman filter based approaches for fusing Out-of-Sequence measurements corrupted by systematic errors"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2605.13266",
+          "title": "Galilean State Estimation for Inertial Navigation Systems with Unknown Time Delay"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad142f",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D - IOPscience"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/[303]%20Ricardo%20Shousha%20et%20al.%20%E2%80%9CMachine%20learning-based%20real-time%20kinetic%20profile%20reconstruction%20in%20DIII-D%E2%80%9D.pdf",
+          "title": "Machine learning-based real-time kinetic profile ..."
+        },
+        {
+          "url": "https://www.researchgate.net/publication/376436119_Machine_learning-based_real-time_kinetic_profile_reconstruction_in_DIII-D",
+          "title": "(PDF) Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/2251556-machine-learning-based-real-time-kinetic-profile-reconstruction-diii",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D (Journal Article)"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/2999845",
+          "title": "IFAC PapersOnLine 59-11 (2025) 198–203 ScienceDirect"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2309.08687",
+          "title": "Speeding up charge exchange recombination spectroscopy analysis in support of NERSC/DIII-D realtime workflow"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/372483978_Avoiding_tokamak_tearing_instability_with_artificial_intelligence",
+          "title": "(PDF) Avoiding tokamak tearing instability with artificial intelligence"
+        },
+        {
+          "url": "https://dataspace.princeton.edu/handle/88435/dsp016h440w77q",
+          "title": "DataSpace: Real-time kinetic profile reconstruction and Adaptive ELM Control on the DIII-D and KSTAR Tokamaks"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.11964",
+          "title": "Parallelized Real-time Physics Codes for Plasma Control on DIII-D"
+        },
+        {
+          "url": "https://proceedings.mlr.press/v162/schirmer22a.html",
+          "title": "Modeling Irregular Time Series with Continuous Recurrent Units"
+        },
+        {
+          "url": "https://proceedings.mlr.press/v162/schirmer22a/schirmer22a.pdf",
+          "title": "Modeling Irregular Time Series with Continuous Recurrent Units"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2411.01134",
+          "title": "An Event-centric Framework for Predicting Crime Hotspots with Flexible Time Intervals"
+        },
+        {
+          "url": "https://pdf.core.ac.uk/corefilesystem/pdf/15629/580112806.pdf?se=2026-10-23T18%3A17%3A23Z&sp=r&sv=2026-06-06&sr=b&rscd=inline%3B+filename%3D%22580112806.pdf%22&rsct=application%2Fpdf&sig=av1rIKhtq9U22OweAh3lIXrfCNn3dzm9XdMl5vBX%2BZs%3D",
+          "title": "Core"
+        },
+        {
+          "url": "https://github.com/boschresearch/Continuous-Recurrent-Units",
+          "title": "GitHub - boschresearch/Continuous-Recurrent-Units · GitHub"
+        },
+        {
+          "url": "https://icml.cc/virtual/2022/spotlight/16344",
+          "title": "ICML Spotlight Modeling Irregular Time Series with Continuous Recurrent Units"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/Modeling-Irregular-Time-Series-with-Continuous-Schirmer-Eltayeb/59a546126a456911c04efeebc311aeb8128f4be0/figure/0",
+          "title": "Figure 1 from Modeling Irregular Time Series with Continuous Recurrent Units"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2408.08328",
+          "title": "Unleashing The Power of Pre-Trained Language Models for Irregularly Sampled Time Series"
+        },
+        {
+          "url": "https://www.catalyzex.com/paper/modeling-irregular-time-series-with",
+          "title": "Modeling Irregular Time Series with Continuous Recurrent Units"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2510.16161",
+          "title": "Still Competitive: Revisiting Recurrent Models for Irregular Time Series Prediction"
+        }
+      ],
+      "response_sha256": "1bf6c366d8aebb498fe8608430e30acf32a5a2264330a134e4a8e818200d67de"
+    },
+    {
+      "stage": "04_label_and_selection.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 49875,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 8805,
+        "output_tokens_details": {
+          "thinking_tokens": 2645
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "Diag2Diag multimodal super-resolution tokamak diagnostics Jalalvand Thomson scattering"
+        },
+        {
+          "query": "neural network charge exchange spectroscopy KSTAR ion temperature spectra Fusion Engineering and Design 115518"
+        },
+        {
+          "query": "RTCAKENN real-time capable kinetic profile reconstruction neural network DIII-D Shousha"
+        },
+        {
+          "query": "Seitzer pitfalls of heteroscedastic uncertainty estimation probabilistic neural networks beta-NLL"
+        },
+        {
+          "query": "conformal prediction robust to label noise Einbinder regression noisy labels coverage"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v2",
+          "title": "Diag2Diag: Multimodal super-resolution"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag_Nature_2024.pdf",
+          "title": "Diag2Diag: Multi modal super resolution for physics ..."
+        },
+        {
+          "url": "https://conferences.iaea.org/event/392/contributions/36260/attachments/20233/34289/Jalalvand-EX-S.pdf",
+          "title": "EX - S MACHINE LEARNING-BASED MULTIMODAL SUPER-RESOLUTION:"
+        },
+        {
+          "url": "https://science.osti.gov/fes/Highlights/2026/6a",
+          "title": "Filling in the Gaps: AI for Super-Resolution and Diagnostic Recovery"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to"
+        },
+        {
+          "url": "https://www.energy.gov/science/fes/articles/filling-gaps-ai-super-resolution-and-diagnostic-recovery",
+          "title": "Filling in the Gaps: AI for Super-Resolution and Diagnostic Recovery"
+        },
+        {
+          "url": "https://higherlogicdownload.s3.amazonaws.com/APS/b702bb59-ce08-4ebc-b70c-ab50811fa080/UploadedImages/2025_APS_Jalalvand_edits1.pdf",
+          "title": "EMBARGOED FOR RELEASE Until 8 a.m. EDT, Monday, November 17, 2025"
+        },
+        {
+          "url": "https://www.bohrium.com/en/blog/research-notes/aaai-2026-multimodal-super-resolution-discovering-hidden-physics-fusion-plasmas/",
+          "title": "Diag2Diag Explained: 5000x Faster Fusion Diagnostics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2311.18723",
+          "title": "Thomson scattering diagnostics at the Globus M2 tokamak"
+        },
+        {
+          "url": "https://arxiv.org/html/2607.14142",
+          "title": "Automated Outlier-Robust Bayesian Profile Fitting for Magnetically Confined Plasmas with Modified Tanh Profiles and Good-and-Bad Gaussian Mixture Likelihoods"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.08180",
+          "title": "Fast-ion effects on 𝐸×𝐵 staircase organization and the heat-flux response to the ion-temperature gradient"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/47632671_Charge_exchange_spectroscopy_system_calibration_for_ion_temperature_measurement_in_KSTAR",
+          "title": "Charge exchange spectroscopy system calibration for ion temperature measurement in KSTAR"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2301.11555",
+          "title": "Bayesian neural network for plasma equilibria in the Korea Superconducting Tokamak Advanced Research"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/230912050_Analysis_of_JET_charge_exchange_spectra_using_neural_networks",
+          "title": "(PDF) Analysis of JET charge exchange spectra using neural networks"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/224122226_KSTAR_charge_exchange_spectroscopy_system",
+          "title": "KSTAR charge exchange spectroscopy system"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/351512537_Development_of_an_ultrafast_charge_exchange_spectroscopy_system_on_the_KSTAR_tokamak",
+          "title": "(PDF) Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/376436119_Machine_learning-based_real-time_kinetic_profile_reconstruction_in_DIII-D",
+          "title": "(PDF) Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad142f",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D - IOPscience"
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/2251556-machine-learning-based-real-time-kinetic-profile-reconstruction-diii",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D (Journal Article)"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/2999845",
+          "title": "IFAC PapersOnLine 59-11 (2025) 198–203 ScienceDirect"
+        },
+        {
+          "url": "https://dataspace.princeton.edu/handle/88435/dsp016h440w77q",
+          "title": "DataSpace: Real-time kinetic profile reconstruction and Adaptive ELM Control on the DIII-D and KSTAR Tokamaks"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/[303]%20Ricardo%20Shousha%20et%20al.%20%E2%80%9CMachine%20learning-based%20real-time%20kinetic%20profile%20reconstruction%20in%20DIII-D%E2%80%9D.pdf",
+          "title": "Machine learning-based real-time kinetic profile ..."
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S2405896325013114",
+          "title": "Bridging the gap: Deploying AI-based Models in Real-Time Fusion Plasma Control Systems - ScienceDirect"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2602.15084",
+          "title": "TokaMind: A Multi-Modal Transformer Foundation Model for Tokamak Plasma Dynamics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.11964",
+          "title": "Parallelized Real-time Physics Codes for Plasma Control on DIII-D"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/359309577_On_the_Pitfalls_of_Heteroscedastic_Uncertainty_Estimation_with_Probabilistic_Neural_Networks",
+          "title": "(PDF) On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks"
+        },
+        {
+          "url": "https://github.com/martius-lab/beta-nll",
+          "title": "GitHub - martius-lab/beta-nll: beta-NLL introduced in our paper \"On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks\" ICLR 2022 · GitHub"
+        },
+        {
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2023/file/a901d5540789a086ee0881a82211b63d-Paper-Conference.pdf",
+          "title": "Effective Bayesian Heteroscedastic Regression with Deep Neural Networks"
+        },
+        {
+          "url": "https://arxiv.org/abs/2203.09168",
+          "title": "[2203.09168] On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks"
+        },
+        {
+          "url": "https://www.alphaxiv.org/de/abs/2203.09168",
+          "title": "Zu den Fallstricken der heteroskedastischen Unsicherheitsschätzung mit probabilistischen neuronalen Netzen"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2203.09168",
+          "title": "Published as a conference paper at ICLR 2022 ON THE PITFALLS OF HETEROSCEDASTIC"
+        },
+        {
+          "url": "https://mlanthology.org/iclr/2022/seitzer2022iclr-pitfalls/",
+          "title": "On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks"
+        },
+        {
+          "url": "https://paperswithcode.co/paper/2203.09168",
+          "title": "On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks (arXiv:2203.09168)"
+        },
+        {
+          "url": "https://lacuna.tiptreesystems.com/work/on-the-pitfalls-of-heteroscedastic-uncertainty-estimation-with-probabilistic/wrk_34ea0ce082650ca8559ce5436e29b2d9",
+          "title": "On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks — Lacuna"
+        },
+        {
+          "url": "https://proceedings.mlr.press/v204/feldman23a/feldman23a.pdf",
+          "title": "Conformal Prediction is Robust to Dispersive Label Noise"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2209.14295",
+          "title": "Label Noise Robustness of Conformal Prediction Bat-Sheva Einbinder∗ |"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2501.12749",
+          "title": "Conformal Prediction of Classifiers with Many Classes based on Noisy Labels"
+        },
+        {
+          "url": "https://arxiv.org/html/2509.15120v2",
+          "title": "Efficient Conformal Prediction for Regression Models Under Label Noise"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2509.15120",
+          "title": "Efficient Conformal Prediction for Regression Models under Label Noise"
+        },
+        {
+          "url": "https://dl.acm.org/doi/abs/10.5555/3722577.3722905",
+          "title": "Label noise robustness of conformal prediction"
+        },
+        {
+          "url": "https://arxiv.org/html/2505.04733",
+          "title": "Conformal Prediction with Corrupted Labels: Uncertain Imputation and Robust Re-weighting"
+        },
+        {
+          "url": "https://www.jmlr.org/papers/volume25/23-1549/23-1549.pdf",
+          "title": "Label Noise Robustness of Conformal Prediction"
+        },
+        {
+          "url": "https://mlanthology.org/jmlr/2024/einbinder2024jmlr-label/",
+          "title": "Label Noise Robustness of Conformal Prediction"
+        },
+        {
+          "url": "https://lacuna.tiptreesystems.com/work/label-noise-robustness-of-conformal-prediction/wrk_2b6fc77818563edb4b06ffafd5912dc5",
+          "title": "Label Noise Robustness of Conformal Prediction — Lacuna"
+        }
+      ],
+      "response_sha256": "efa3dce4e49865ee141c6a37b088258c8196c4742e60f6cd478c4f235dffccf7"
+    },
+    {
+      "stage": "05_shift_and_representation.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 50038,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 8988,
+        "output_tokens_details": {
+          "thinking_tokens": 2815
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "Diag2Diag multimodal super-resolution plasma diagnostics Jalalvand arXiv"
+        },
+        {
+          "query": "KSTAR neural network charge exchange spectroscopy ion temperature real-time Fusion Engineering and Design 115518"
+        },
+        {
+          "query": "Wild-Time benchmark in-the-wild distribution shift over time NeurIPS"
+        },
+        {
+          "query": "Label Delay in Online Continual Learning NeurIPS 2023"
+        },
+        {
+          "query": "Unifying distillation and privileged information Lopez-Paz generalized distillation ICLR"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v2",
+          "title": "Diag2Diag: Multimodal super-resolution"
+        },
+        {
+          "url": "https://arxiv.org/html/2405.05908v4",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to fusion plasmas"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to"
+        },
+        {
+          "url": "https://conferences.iaea.org/event/392/contributions/36260/attachments/20233/34289/Jalalvand-EX-S.pdf",
+          "title": "EX - S MACHINE LEARNING-BASED MULTIMODAL SUPER-RESOLUTION:"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag-NatComm-2025.pdf",
+          "title": "Multimodal super-resolution: discovering hidden physics ..."
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag_Nature_2024.pdf",
+          "title": "Diag2Diag: Multi modal super resolution for physics ..."
+        },
+        {
+          "url": "https://www.osti.gov/dataexplorer/biblio/dataset/2589031",
+          "title": "Data for reproducing the figures of the paper Multimodal Super-Resolution: Discovering hidden physics and its application to fusion plasmas (Dataset)"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v3",
+          "title": "arxiv.org"
+        },
+        {
+          "url": "https://arxiv.org/abs/2405.05908v2",
+          "title": "arxiv.org"
+        },
+        {
+          "url": "https://arxiv.org/html/2607.14142",
+          "title": "Automated Outlier-Robust Bayesian Profile Fitting for Magnetically Confined Plasmas with Modified Tanh Profiles and Good-and-Bad Gaussian Mixture Likelihoods"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2301.11555",
+          "title": "Bayesian neural network for plasma equilibria in the Korea Superconducting Tokamak Advanced Research"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/379615468_Overview_of_the_KSTAR_experiments_toward_fusion_reactor",
+          "title": "(PDF) Overview of the KSTAR experiments toward fusion reactor"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2504.11648",
+          "title": "TorbeamNN: Machine learning based steering of ECH mirrors on KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/47632671_Charge_exchange_spectroscopy_system_calibration_for_ion_temperature_measurement_in_KSTAR",
+          "title": "Charge exchange spectroscopy system calibration for ion temperature measurement in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/224122226_KSTAR_charge_exchange_spectroscopy_system",
+          "title": "KSTAR charge exchange spectroscopy system"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ae332f",
+          "title": "On FIRE mode in KSTAR - IOPscience - Institute of Physics"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/351512537_Development_of_an_ultrafast_charge_exchange_spectroscopy_system_on_the_KSTAR_tokamak",
+          "title": "(PDF) Development of an ultrafast charge exchange spectroscopy system on the KSTAR tokamak"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2608.19259",
+          "title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR"
+        },
+        {
+          "url": "https://neurips.cc/virtual/2022/57555",
+          "title": "NeurIPS Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2022/file/43119db5d59f07cc08fca7ba6820179a-Paper-Datasets_and_Benchmarks.pdf",
+          "title": "Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://neurips.cc/virtual/2022/poster/55759",
+          "title": "NeurIPS Poster Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://openreview.net/forum?id=F9ENmZABB0",
+          "title": "Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://openreview.net/forum?id=F9ENmZABB0&noteId=sIIzLC3dQD8",
+          "title": "Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://openreview.net/forum?id=BUQD1tJ2UwK",
+          "title": "Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://github.com/huaxiuyao/Wild-Time",
+          "title": "GitHub - huaxiuyao/Wild-Time: Benchmark for Natural Temporal Distribution Shift (NeurIPS 2022) · GitHub"
+        },
+        {
+          "url": "https://www.semanticscholar.org/paper/629677e4ff2aceb951ccfdf3763956c75974c8e5",
+          "title": "[PDF] Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2211.14238",
+          "title": "Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/365783853_Wild-Time_A_Benchmark_of_in-the-Wild_Distribution_Shift_over_Time",
+          "title": "(PDF) Wild-Time: A Benchmark of in-the-Wild Distribution Shift over Time"
+        },
+        {
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/d8f5f134febb4bd74d8f79e338de382c-Paper-Conference.pdf",
+          "title": "Label Delay in Online Continual Learning Botos Csaba1,3∗, Wenxuan Zhang2∗,"
+        },
+        {
+          "url": "https://neurips.cc/virtual/2024/poster/93776",
+          "title": "NeurIPS Poster Label Delay in Online Continual Learning"
+        },
+        {
+          "url": "https://arxiv.org/abs/2312.00923",
+          "title": "[2312.00923] Label Delay in Online Continual Learning"
+        },
+        {
+          "url": "https://liner.com/hub/conference/neurips/year/2023/topic/ml-theory-&-methods/keyword/online-learning",
+          "title": "NeurIPS 2023 ML Theory & Methods in Online learning: Quick guides"
+        },
+        {
+          "url": "https://liner.com/review/label-delay-in-online-continual-learning",
+          "title": "[Quick Review] Label Delay in Online Continual Learning - Liner"
+        },
+        {
+          "url": "https://liner.com/review/online-continual-learning-on-hierarchical-label-expansion",
+          "title": "[Quick Review] Online Continual Learning on Hierarchical Label Expansion"
+        },
+        {
+          "url": "https://github.com/botcs/label-delay-exp",
+          "title": "GitHub - botcs/label-delay-exp · GitHub"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2611.17059",
+          "title": "Capacity-Constrained Delayed Feedback for Online Conformal Risk Control"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2609.32593",
+          "title": "Age of Learning: Temporal Persistence of Prediction Errors as a Learning Signal"
+        },
+        {
+          "url": "https://arxiv.org/html/2312.00923",
+          "title": "Label Delay in Online Continual Learning"
+        },
+        {
+          "url": "https://arxiv.org/pdf/1511.03643",
+          "title": "Published as a conference paper at ICLR 2016 UNIFYING DISTILLATION AND"
+        },
+        {
+          "url": "https://arxiv.org/pdf/1511.03643v2",
+          "title": "Under review as a conference paper at ICLR 2016 UNIFYING DISTILLATION AND"
+        },
+        {
+          "url": "https://leon.bottou.org/publications/pdf/iclr-2016.pdf",
+          "title": "UNIFYING DISTILLATION AND PRIVILEGED INFORMATION"
+        },
+        {
+          "url": "https://leon.bottou.org/papers/lopez-paz-2016",
+          "title": "papers:lopez-paz-2016 [leon.bottou.org]"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/283761610_Unifying_distillation_and_privileged_information",
+          "title": "Unifying distillation and privileged information"
+        },
+        {
+          "url": "https://institute-tue.ellis.eu/publications/lopschbotvap16",
+          "title": "Unifying distillation and privileged information"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2011.14554",
+          "title": "A Selective Survey on Versatile Knowledge Distillation Paradigm for Neural Network Models"
+        },
+        {
+          "url": "https://arxiv.org/pdf/1811.06885",
+          "title": "A Generalized Meta-loss function for regression and classification using privileged information"
+        },
+        {
+          "url": "https://arxiv.org/html/1511.03643v2.pdf",
+          "title": "Unifying Distillationand Privileged Information"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2110.14993",
+          "title": "Using Time-Series Privileged Information for Provably Efficient Learning of Prediction Models"
+        }
+      ],
+      "response_sha256": "df4a3b6041a5fb95a58ab34f3e0d4b3ddcde3003a84da4026bb8880f27241cad"
+    },
+    {
+      "stage": "06_use_and_validation.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 52488,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 8810,
+        "output_tokens_details": {
+          "thinking_tokens": 2537
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "queries": [
+        {
+          "query": "Diag2Diag Jalalvand multimodal super-resolution tokamak diagnostics"
+        },
+        {
+          "query": "Lee KSTAR neural network charge exchange spectroscopy real-time ion temperature Fusion Engineering and Design 115518"
+        },
+        {
+          "query": "RTCAKENN real-time kinetic profile neural network DIII-D Nuclear Fusion ad142f"
+        },
+        {
+          "query": "wild cluster bootstrap few clusters inference Cameron Gelbach Miller"
+        },
+        {
+          "query": "Imrek temporal super-resolution tokamak diagnostics neural network"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag-NatComm-2025.pdf",
+          "title": "Multimodal super-resolution: discovering hidden physics ..."
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908v2",
+          "title": "Diag2Diag: Multimodal super-resolution"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/Diag2Diag_Nature_2024.pdf",
+          "title": "Diag2Diag: Multi modal super resolution for physics ..."
+        },
+        {
+          "url": "https://arxiv.org/html/2405.05908",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to fusion plasmas"
+        },
+        {
+          "url": "https://conferences.iaea.org/event/392/contributions/36260/attachments/20233/34289/Jalalvand-EX-S.pdf",
+          "title": "EX - S MACHINE LEARNING-BASED MULTIMODAL SUPER-RESOLUTION:"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05908",
+          "title": "Multimodal Super-Resolution: Discovering hidden physics and its application to"
+        },
+        {
+          "url": "https://www.osti.gov/dataexplorer/biblio/dataset/2589031",
+          "title": "Data for reproducing the figures of the paper Multimodal Super-Resolution: Discovering hidden physics and its application to fusion plasmas (Dataset)"
+        },
+        {
+          "url": "https://higherlogicdownload.s3.amazonaws.com/APS/b702bb59-ce08-4ebc-b70c-ab50811fa080/UploadedImages/2025_APS_Jalalvand_edits1.pdf",
+          "title": "EMBARGOED FOR RELEASE Until 8 a.m. EDT, Monday, November 17, 2025"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2602.15084",
+          "title": "TokaMind: A Multi-Modal Transformer Foundation Model for Tokamak Plasma Dynamics"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.08180",
+          "title": "Fast-ion effects on 𝐸×𝐵 staircase organization and the heat-flux response to the ion-temperature gradient"
+        },
+        {
+          "url": "https://arxiv.org/html/2607.14142v1",
+          "title": "Automated Outlier-Robust Bayesian Profile Fitting for Magnetically Confined Plasmas with Modified Tanh Profiles and Good-and-Bad Gaussian Mixture Likelihoods"
+        },
+        {
+          "url": "https://arxiv.org/html/2610.38593",
+          "title": "SpectralTF-MAE: A Pre-trained Spectral Foundation Model for Tokamak Fusion Plasma Diagnostics"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2301.11555",
+          "title": "Bayesian neural network for plasma equilibria in the Korea Superconducting Tokamak Advanced Research"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/379615468_Overview_of_the_KSTAR_experiments_toward_fusion_reactor",
+          "title": "(PDF) Overview of the KSTAR experiments toward fusion reactor"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2504.11648",
+          "title": "TorbeamNN: Machine learning based steering of ECH mirrors on KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/230912050_Analysis_of_JET_charge_exchange_spectra_using_neural_networks",
+          "title": "(PDF) Analysis of JET charge exchange spectra using neural networks"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2405.05452",
+          "title": "Highest Fusion Performance without Harmful Edge Energy Bursts in Tokamak"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2608.19259",
+          "title": "Real-time feedback control of ELM frequency using divertor gas puffing and its effects on tungsten-induced radiation and plasma performance in KSTAR"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/376436119_Machine_learning-based_real-time_kinetic_profile_reconstruction_in_DIII-D",
+          "title": "(PDF) Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/ad142f",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D - IOPscience"
+        },
+        {
+          "url": "https://www.osti.gov/pages/biblio/2251556",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D (Journal Article)"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.11964",
+          "title": "Parallelized Real-time Physics Codes for Plasma Control on DIII-D"
+        },
+        {
+          "url": "https://ouci.dntb.gov.ua/en/works/4wNB3qm7/",
+          "title": "Machine learning-based real-time kinetic profile reconstruction in DIII-D"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/2999845",
+          "title": "IFAC PapersOnLine 59-11 (2025) 198–203 ScienceDirect"
+        },
+        {
+          "url": "https://control.princeton.edu/assets/data/publications/pdfs/[303]%20Ricardo%20Shousha%20et%20al.%20%E2%80%9CMachine%20learning-based%20real-time%20kinetic%20profile%20reconstruction%20in%20DIII-D%E2%80%9D.pdf",
+          "title": "Machine learning-based real-time kinetic profile ..."
+        },
+        {
+          "url": "https://arxiv.org/pdf/2511.21924",
+          "title": "FPGA-Accelerated Real-Time Beam Emission Spectroscopy Diagnostics at DIII-D Using the SLAC Neural Network Library for ML Inference"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2202.13915",
+          "title": "Neural net modeling of equilibria in NSTX-U"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2505.10709",
+          "title": "Reconstructing the Plasma Boundary with a Reduced Set of Diagnostics"
+        },
+        {
+          "url": "https://communities.sas.com/kntur85557/attachments/kntur85557/forecasting_econometrics/2662/1/Cameron%20et%20al.,%202008%20(Wild%20Cluster%20Bootstrap).pdf",
+          "title": "Bootstrap-Based Improvements for Inference with Clustered Errors"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2301.04527",
+          "title": "Fast and Reliable Jackknife and Bootstrap Methods for Cluster-Robust Inference"
+        },
+        {
+          "url": "https://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015_February.pdf",
+          "title": "1 A Practitioner’s Guide to Cluster-Robust Inference A. Colin Cameron and"
+        },
+        {
+          "url": "https://www.researchgate.net/publication/24096179_Bootstrap-Based_Improvments_for_Inference_With_Clustered_Errors",
+          "title": "Bootstrap-Based Improvments for Inference With Clustered Errors"
+        },
+        {
+          "url": "http://qed.econ.queensu.ca/working_papers/papers/qed_wp_1315.pdf",
+          "title": "Reworking Wild Bootstrap Based Inference for Clustered Errors"
+        },
+        {
+          "url": "https://www.stata.com/features/overview/wild-cluster-bootstrap-inference/",
+          "title": "Wild cluster bootstrap for linear regression"
+        },
+        {
+          "url": "https://cameron.econ.ucdavis.edu/research/Cameron_Miller_Cluster_Robust_October152013.pdf",
+          "title": "A Practitioner's Guide to Cluster-Robust Inference"
+        },
+        {
+          "url": "https://home.uchicago.edu/amshaikh/webfiles/wild.pdf",
+          "title": "THE WILD BOOTSTRAP WITH A “SMALL” NUMBER OF “LARGE” CLUSTERS Ivan A. Canay,"
+        },
+        {
+          "url": "https://faculty.wcas.northwestern.edu/iac879/wp/wildfewclusters.pdf",
+          "title": "THE WILD BOOTSTRAP WITH A “SMALL” NUMBER OF “LARGE” CLUSTERS"
+        },
+        {
+          "url": "https://s3alfisc.github.io/fwildclusterboot/articles/Literature.html",
+          "title": "Literature on the Wild Bootstrap and Clustered Inference in Regression Models • fwildclusterboot"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1361-6587/ae72c6/meta",
+          "title": "Temporal super-resolution of kinetic plasma profiles at COMPASS using neural networks - IOPscience"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12475251/",
+          "title": "Multimodal super-resolution: discovering hidden physics and its application to fusion plasmas - PMC"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/1741-4326/adb3bc",
+          "title": "Time-resolved, physics-informed neural networks for tokamak total emission reconstruction and modelling - IOPscience"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2412.13498",
+          "title": "Attention-aware convolutional neural networks for identification of magnetic islands in the tearing mode on EAST tokamak"
+        },
+        {
+          "url": "https://www.osti.gov/pages/servlets/purl/1642913",
+          "title": "Osti"
+        }
+      ],
+      "response_sha256": "ebe3779d8432faced1450612b4cecbd8b5690bd64a06cf98c2566d609de8535c"
+    },
+    {
+      "stage": "07_overlap_audit.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 70340,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 10841,
+        "output_tokens_details": {
+          "thinking_tokens": 5486
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "queries": [],
+      "sources": [],
+      "response_sha256": "b113f94a42ad848ecf59c88969b4a249f1ff61aba3af1413eb448ba91b369954"
+    },
+    {
+      "stage": "08_prioritized_agenda.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 67165,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 12266,
+        "output_tokens_details": {
+          "thinking_tokens": 5389
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "queries": [],
+      "sources": [],
+      "response_sha256": "5e3a79dbbf89156c46563fc74fb652c8d45eba4eaad43e45849d025de9862a0e"
+    },
+    {
+      "stage": "09_primary_text_audit.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "max_tokens",
+      "usage": {
+        "input_tokens": 72630,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 11000,
+        "output_tokens_details": {
+          "thinking_tokens": 5479
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "queries": [],
+      "sources": [],
+      "response_sha256": "9d11c3e4c8ffbe8fae520690625d16fc96df3a3edd79ca8ea05804dabc19f789"
+    },
+    {
+      "stage": "10_final_research_agenda.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 23306,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 8961,
+        "output_tokens_details": {
+          "thinking_tokens": 1940
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "queries": [],
+      "sources": [],
+      "response_sha256": "fd1a84b5c5d74afeaadc50e69ebe26e7931829dea0a727c5cfb0f7a4453e9347"
+    },
+    {
+      "stage": "11_corrected_decision_memo.response.json",
+      "model": "claude-fable-5-2",
+      "stop_reason": "end_turn",
+      "usage": {
+        "input_tokens": 9622,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 6355,
+        "output_tokens_details": {
+          "thinking_tokens": 1482
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "queries": [],
+      "sources": [],
+      "response_sha256": "e5d9e32cc8e5e60b4f3d092cc58db4ae35d3f17f6e222bcc4174bc9301a440ee"
+    }
+  ],
+  "max_paid_calls": 11,
+  "max_searches_per_literature_stage": 5,
+  "raw_observations_transmitted": false,
+  "automatic_experiments": false,
+  "extra_call_reason": "Host identified invalid CI-overlap/equivalence reasoning and existing normalization overlap; one bounded correction, no blind replay."
+}
