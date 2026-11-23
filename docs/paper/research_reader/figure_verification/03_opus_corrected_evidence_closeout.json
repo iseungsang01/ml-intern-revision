@@ -1,0 +1,26 @@
+{
+  "scope": "Narrow final check of four applied body corrections (EPED width/height constraint and the random-design qualifier on the median comparison) and of the seven final captions against the supplied fig_sparse and eqrate code and metadata. Missing V4 and shot labels in earlier external images are treated as intentional redactions. No changes to scientific plots, statistics, or physics results are requested.",
+  "body_corrections_check": {
+    "background_EPED": "Correct and needed. The old sentence (a wider barrier reaches a higher top at the same gradient) contradicts EPED. In EPED, width and height are set jointly by the KBM width constraint and the peeling-ballooning height bound. The PB height scales roughly as width^(3/4), so the maximum stable gradient (about height/width) falls as the barrier widens. The new text says width and height are a combination satisfying both stability constraints at once, not free variables, and that the PB maximum gradient changes with width. This is faithful and adds no number. Acceptable as applied.",
+    "median_qualifier": "Correct and applied consistently in the introduction, results and conclusion. Dropping '같은 표에서' and adding '무작위 설계에서' removes the overgeneralisation. The conclusion's '작게 나타났다' stays within the evaluated design. One residual caution: the cited English locator reads 'its median absolute error is the higher one'. That supports the Korean only if 'its' refers to the current estimator rather than the two-sided GP. The supplied data does not resolve this referent, so it should be confirmed once against §res:best. No text change is indicated if that confirmation holds.",
+    "status": "pass"
+  },
+  "figure6_interval_check": {
+    "what_code_plots": "The horizontal errorbar is centred at the K10 TX RMSE height. Its x position is 10·k′ ms, where k′ = m['K10']['equivalent rate']['point']['k_prime']. That point is computed in eqrate from the SSEs averaged over splits for the 'discharge' form. The bar ends are 10·k′ at m['K10']['equivalent rate']['cluster']['k_prime'] = [lo, hi]. For the 'cluster' form, eqrate builds, for each bootstrap draw, the T0 error curve across the K rules and the TX|K10 error. It then solves for the equivalent spacing via eq_ln and takes the 2.5% and 97.5% quantiles of those per-draw values (via kfmt; draws can fall below 1 or above 50).",
+    "meaning": "A 95% cluster-bootstrap percentile interval of the K10 TX equivalent CES spacing, in ms on the x axis. It is not a vertical RMSE interval and not an interval on O.",
+    "caption_status": "Mostly correct. The sentences 'cluster bootstrap interval of the equivalent spacing' and 'not a vertical RMSE errorbar' are right. However, '끝점은 기존 판독에서 등가 간격을 재표집해 얻은 분위수다' misdescribes the method. The code does not resample a single existing reading. It recomputes k′ in every cluster-resampled draw from that draw's T0 curve and TX error. It also omits the 95% (2.5/97.5) level. Corrected below."
+  },
+  "caption_findings": [
+    {
+      "figure_id": "figure6",
+      "old_exact": "끝점은 기존 판독에서 등가 간격을 재표집해 얻은 분위수다.",
+      "new": "중심은 분할 평균 오차로 구한 등가 간격이고, 끝점은 각 묶음 재표집 표본에서 T0 오차 곡선과 K10의 TX 오차로 등가 간격을 다시 계산해 얻은 2.5%와 97.5% 분위수다.",
+      "reason": "In eqrate, the point uses split-averaged SSE (discharge form). The interval is the draw-by-draw recomputation of k′ via eq_ln with np.quantile(x, 0.025/0.975) (cluster form, as read by fig_sparse). The old wording implies resampling a fixed reading and omits the 95% level."
+    }
+  ],
+  "remaining_material_errors": [
+    "Figure 6 caption endpoint sentence, fixed by the single correction above.",
+    "Not an error yet, verification only: confirm the referent of 'its' in the English Discussion locator so that the random-design median direction (two-sided GP lower than the current estimator) matches the source table."
+  ],
+  "overall": "Body corrections are correct and consistently applied; the EPED wording now matches joint KBM/PB constraints without new numbers. Captions for figures 1–5 and 7 are consistent with the supplied metadata and need no change. One indispensable caption correction remains, in figure 6: the horizontal bar is a 95% cluster-bootstrap percentile interval of the K10 TX equivalent spacing, obtained by recomputing k′ in each draw, centred on the split-averaged point estimate. With that fix, no material caption errors remain."
+}

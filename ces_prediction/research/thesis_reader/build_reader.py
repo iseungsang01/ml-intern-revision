@@ -205,10 +205,32 @@ def render_pdf_exhibits(section):
             item=by_id[identifier];page=pdf[item['page']-1];rect=fitz.Rect(item['clip'])
             if not page.rect.contains(rect) or item['caption_prefix'] not in page.get_text(clip=rect):
                 raise ValueError('Missing caption or invalid exhibit boundary: '+identifier)
-            pixels=page.get_pixmap(clip=rect,dpi=160,alpha=False)
-            encoded=base64.b64encode(pixels.tobytes('png')).decode('ascii')
+            asset=item.get('asset_pdf') if item['kind']=='figure' else None
+            if asset:
+                asset_path=(ROOT/asset).resolve()
+                if asset_path.parent!=PAPER.resolve() or not asset_path.name.startswith('figv2_'):
+                    raise ValueError('Only original manuscript plot assets are allowed')
+                if hashlib.sha256(asset_path.read_bytes()).hexdigest()!=item['asset_sha256']:
+                    raise ValueError('Original figure changed: '+identifier)
+                with fitz.open(asset_path) as original:
+                    vector=original[0].get_svg_image(text_as_path=True)
+                    if '<script' in vector.lower() or '<foreignobject' in vector.lower():
+                        raise ValueError('Active SVG content is not allowed')
+                    width=round(original[0].rect.width*2);height=round(original[0].rect.height*2)
+                encoded=base64.b64encode(vector.encode('utf8')).decode('ascii')
+                image_url='data:image/svg+xml;base64,'+encoded
+                source_link='../ppcf_revision/'+asset_path.name
+                footer='원본 그래프 PDF에서 벡터로 표시 · 그림을 눌러 원본 확대'
+            else:
+                pixels=page.get_pixmap(clip=rect,dpi=160,alpha=False)
+                width,height=pixels.width,pixels.height
+                encoded=base64.b64encode(pixels.tobytes('png')).decode('ascii')
+                image_url='data:image/png;base64,'+encoded
+                source_link='../ppcf_revision/main_ppcf.pdf#page='+str(item['page'])
+                footer='기존 생성 표 그대로 · PDF '+str(item['page'])+'쪽 · 표를 눌러 원본 확대'
             label=('표 ' if item['kind']=='table' else '그림 ')+str(item['number'])+'. '+item['title_ko']
-            result.append('<figure class="source-exhibit" id="exhibit-'+html.escape(identifier)+'"><figcaption><strong>'+html.escape(label)+'</strong><p>'+html.escape(item['note_ko'])+'</p></figcaption><a href="../ppcf_revision/main_ppcf.pdf#page='+str(item['page'])+'" target="_blank" rel="noopener" aria-label="'+html.escape(label,quote=True)+' 원본 확대"><img loading="lazy" width="'+str(pixels.width)+'" height="'+str(pixels.height)+'" src="data:image/png;base64,'+encoded+'" alt="'+html.escape(label,quote=True)+'"></a><p class="exhibit-source">기존 생성 표·그림 그대로 · PDF '+str(item['page'])+'쪽 · 그림을 눌러 원본 확대</p></figure>')
+            caption=item.get('caption_ko',item['note_ko'])
+            result.append('<figure class="source-exhibit" id="exhibit-'+html.escape(identifier)+'"><figcaption><strong>'+html.escape(label)+'</strong><p>'+html.escape(caption)+'</p></figcaption><a href="'+source_link+'" target="_blank" rel="noopener" aria-label="'+html.escape(label,quote=True)+' 원본 확대"><img loading="lazy" width="'+str(width)+'" height="'+str(height)+'" src="'+image_url+'" alt="'+html.escape(label,quote=True)+'"></a><p class="exhibit-source">'+footer+'</p></figure>')
     return ''.join(result)
 
 

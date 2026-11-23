@@ -1,0 +1,13 @@
+{
+  "applied": [
+    {
+      "figure_id": "figure6",
+      "old_exact": "끝점은 기존 판독에서 등가 간격을 재표집해 얻은 분위수다.",
+      "new": "중심은 분할 평균 오차로 구한 등가 간격이고, 끝점은 각 묶음 재표집 표본에서 T0 오차 곡선과 K10의 TX 오차로 등가 간격을 다시 계산해 얻은 2.5%와 97.5% 분위수다.",
+      "reason": "In eqrate, the point uses split-averaged SSE (discharge form). The interval is the draw-by-draw recomputation of k′ via eq_ln with np.quantile(x, 0.025/0.975) (cluster form, as read by fig_sparse). The old wording implies resampling a fixed reading and omits the 95% level."
+    }
+  ],
+  "earlier_fable_layout_flags": "V4 and block labels missing only in privacy-redacted API copies; present in unchanged original plots and final local SVGs. No scientific plot changed.",
+  "figure6_definition_checked": "fig_v2.py fig_sparse reads cluster k_prime endpoints; readout78.py eqrate recomputes equivalent spacing per draw and takes percentiles. Earlier not-CI claim superseded.",
+  "median_direction_confirmed": "English Results sec:res:best explicitly says median absolute error of offline GP is slightly lower than nowcast; original generated Table3 matches. Not dependent on ambiguous Discussion pronoun."
+}

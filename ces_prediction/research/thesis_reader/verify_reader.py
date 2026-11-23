@@ -84,6 +84,10 @@ def main():
         exhibits=page.locator('.source-exhibit')
         if exhibits.count():
             assert exhibits.count()==18
+            if page.locator('#exhibit-figure1 img').get_attribute('src').startswith('data:image/svg+xml;base64,'):
+                for number in range(1,8):
+                    assert page.locator('#exhibit-figure'+str(number)+' img').get_attribute('src').startswith('data:image/svg+xml;base64,')
+                results['original_vector_figures']=7
             assert page.locator('#exhibit-table9').count()==1
             assert page.locator('#exhibit-table10').count()==1
             assert page.locator('#exhibit-table11').count()==1

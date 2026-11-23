@@ -55,5 +55,6 @@
   "invoice_verified": false,
   "original_usd30_allowance_used": 27.584164,
   "combined_all_work_usd": 77.45412,
-  "paid_work_closed": true
+  "paid_work_closed": true,
+  "current_html_hash_superseded_by": "../figure_verification/verification.json"
 }

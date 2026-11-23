@@ -1,13 +1,13 @@
 {
   "section_characters": {
-    "introduction": 13474,
-    "background": 12510,
+    "introduction": 13476,
+    "background": 12588,
     "materials-methods": 13122,
-    "results": 6820,
+    "results": 6829,
     "discussion": 7817,
-    "conclusion": 3458
+    "conclusion": 3462
   },
-  "total_prose_characters_excluding_references": 57201,
+  "total_prose_characters_excluding_references": 57294,
   "citation_keys": [
     "Abbate2021DatadrivenProfile",
     "Bishop1993AutomaticAnalysis",
@@ -429,6 +429,32 @@
       "old_exact": "계산 비용이 프레임 예산 안에 들어갔다는 결과에 실제 수집·전송과 보고 도착 시각을 더해 평가해야 진단 체계의 운용 가능성을 판단할 수 있다.",
       "new": "본선 GP·boosting 추정기는 측정한 계산 시간이 프레임 예산 안에 들어갔다. 별도로 평가한 TCN의 순차 추론 비용은 해당 신경망의 계산 비용으로 구분한다. 진단 체계의 운용 가능성은 이러한 추정기별 측정에 실제 수집·전송과 보고 도착 시각을 함께 반영해 평가해야 한다.",
       "reason": "Fable05 necessary fix, refined against actual GP timing result and separate TCN table11; retain verified positive result."
+    },
+    {
+      "section_id": "background",
+      "old_exact": "장벽이 넓어질수록 같은 기울기로 더 높은 꼭대기에 닿는다.",
+      "new": "Pedestal의 폭과 높이는 독립적인 자유변수가 아니라 두 안정성 제약을 동시에 만족하는 조합으로 정해진다. Peeling-ballooning 한계에서 허용되는 최대 기울기도 폭과 함께 달라진다.",
+      "why": "EPED states that the PB height bound scales roughly as width^(3/4). The maximum stable gradient therefore decreases as the barrier widens. 'Reaching a higher top at the same gradient' contradicts the source.",
+      "evidence_locator": "EPED PDF p3, §1.1 last paragraph; PDF p4, Fig.3 caption"
+    },
+    {
+      "section_id": "introduction",
+      "old_exact": "같은 표에서 양측 GP의 중앙값 절대오차는 추정기보다 약간 낮다.",
+      "new": "무작위 설계에서 양측 GP의 중앙값 절대오차는 추정기보다 약간 낮다.",
+      "why": "The original states the median-absolute-error comparison only for the random design. Without the qualifier, the sentence overgeneralises a design-specific result across all designs.",
+      "evidence_locator": "English Discussion 'Reading' ('under the random design its median absolute error is the higher one'); Results §res:best"
+    },
+    {
+      "section_id": "results",
+      "old_exact": "양측 GP의 중앙 절대오차는 현재 추정보다 다소 작았지만",
+      "new": "무작위 설계에서 양측 GP의 중앙 절대오차는 현재 추정보다 다소 작았지만",
+      "why": "Apply design qualifier consistently to results as well as introduction."
+    },
+    {
+      "section_id": "conclusion",
+      "old_exact": "동시에 양측 GP의 중앙 절대오차는 현재 추정보다 작을 수 있었다.",
+      "new": "무작위 설계에서 양측 GP의 중앙 절대오차는 현재 추정보다 작게 나타났다.",
+      "why": "Keep conclusion limited to the evaluated design for the median statistic."
     }
   ],
   "generated_cited_reference_entries": 28,

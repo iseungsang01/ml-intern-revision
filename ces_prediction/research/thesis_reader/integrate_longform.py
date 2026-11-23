@@ -50,6 +50,9 @@ def main():
     readability_host=OUT/'readability_host_corrections.json'
     if readability_host.exists():
         corrections+=read(readability_host)['corrections']
+    figure_verification=ROOT/'docs/paper/research_reader/figure_verification/applied_corrections.json'
+    if figure_verification.exists():
+        corrections+=read(figure_verification)['corrections']
     skipped=[]
     for correction in corrections:
         candidates=[n for n in nodes(by_id[correction['section_id']])

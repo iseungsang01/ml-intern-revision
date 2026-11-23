@@ -1,0 +1,42 @@
+{
+  "state": "completed",
+  "api_calls": 3,
+  "all_api_responses_complete": true,
+  "api_request_response_usage_verified": true,
+  "list_price_actual_usd": 2.04744,
+  "cap_usd": 5,
+  "invoice_verified": false,
+  "paid_work_closed": true,
+  "new_fits": 0,
+  "gpu_runs": 0,
+  "acceptance_grade": false,
+  "api_scope": "Whole Korean prose + anonymous original English methods/results + prior source audits. NN-CES/RTCAKENN/EPED original PDFs. Selected aggregate/schematic images and2isolated safe actual HTML cards. Narrow final code/caption check.",
+  "source_pdfs": {
+    "Lee2026NeuralNetworkbased.pdf": "5eae92d2cfd805b493824587a965ec1a63cd135404d5af7e9881b8716428afa3",
+    "Shousha2023MachineLearningbased.pdf": "67c46ec9b899cbfcff3d9dbc4a5ec4bd6726a03618e74ca42b356f0adfe13533",
+    "Snyder2011FirstPrinciples.pdf": "14bbd912b597a75bf0b9538f1144ae7e205596f63fdeb57015589633bee0c858"
+  },
+  "private_individual_observation_traces_sent": false,
+  "api_images_count": 8,
+  "api_visual_exclusions": [
+    "figure1a",
+    "figure3",
+    "figure7b"
+  ],
+  "all7figures_visually_checked_locally": true,
+  "native_vector_figures": 7,
+  "source_tables_retained": 11,
+  "original_plot_asset_hashes_verified": true,
+  "compiled_plot_stream_match": "7/7 independently checked locally; see LOCAL_FIGURE_QA.md",
+  "plot_data_or_axes_changed": false,
+  "caption_changes": "Panel/marker/target/conditions; equivalent-spacing cluster-bootstrap interval semantics; no new performance values typed",
+  "body_changes": "EPED joint constraints; random-design median qualifier in introduction/results/conclusion",
+  "english_manuscript_unchanged": true,
+  "numerical_checker": "main/supplement pass",
+  "pytest": "89passed,3existing warnings",
+  "ui": "Desktop/mobile,7SVGfigures,11tables,18uniqueexhibits,links,citations,offline pass",
+  "prose_numeric_tokens_max": 4,
+  "html_sha256": "36bf20edde5f27dbaa022533fe90aee673d1246c8005e70c43e8f3d2092f959c",
+  "manuscript_json_sha256": "774d89ecef936b6613152e2455bd6b83ed7304eba222179691f905b7350526ee",
+  "exhibit_manifest_sha256": "634c4ea48342f09b2437175ecbd176d5c50c57103c2bd84f439c2a7968b36fac"
+}

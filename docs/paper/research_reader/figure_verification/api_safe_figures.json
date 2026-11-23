@@ -1,0 +1,65 @@
+{
+  "images": [
+    {
+      "figure_id": "figure1",
+      "label": "Figure 1",
+      "scope": "ONLY aggregate panel(b) CES history-age distribution. Individual-shot panel(a) excluded.",
+      "path": "data/.thesis_figure_verification/api_figure1.png",
+      "sha256": "7a0bd9166df57641980abc388e9d01d476e836638dd1e96a155f034ea9a6329e"
+    },
+    {
+      "figure_id": "figure2",
+      "label": "Figure 2",
+      "scope": "Complete aggregate plot/schematic; any shot-boundary text redacted in this API copy only.",
+      "path": "data/.thesis_figure_verification/api_figure2.png",
+      "sha256": "ade31d9efb4d4d3ed9c9ebc297657c5048f2797fbaea128617c474618ad5e1fa"
+    },
+    {
+      "figure_id": "figure4",
+      "label": "Figure 4",
+      "scope": "Complete aggregate plot/schematic; any shot-boundary text redacted in this API copy only.",
+      "path": "data/.thesis_figure_verification/api_figure4.png",
+      "sha256": "c228451478ddae6dd1f038a219839449d82c1c3f296ed93ca8236c5c77a3fa2c"
+    },
+    {
+      "figure_id": "figure5",
+      "label": "Figure 5",
+      "scope": "Complete aggregate plot/schematic; any shot-boundary text redacted in this API copy only.",
+      "path": "data/.thesis_figure_verification/api_figure5.png",
+      "sha256": "95633f8411b0f6636ef26fdcfa463a721e61ab12c5cedcb25d08ddbd944079a7"
+    },
+    {
+      "figure_id": "figure6",
+      "label": "Figure 6",
+      "scope": "Complete aggregate plot/schematic; any shot-boundary text redacted in this API copy only.",
+      "path": "data/.thesis_figure_verification/api_figure6.png",
+      "sha256": "e4bb2a47493cc3639cc51a4b9c474c4378f7adeb4f4755ddebd7b5ebb5343fc4"
+    },
+    {
+      "figure_id": "figure7",
+      "label": "Figure 7",
+      "scope": "ONLY aggregate panel(a) blockwise paired intervals. Panel(b) excluded from API as conservative scope.",
+      "path": "data/.thesis_figure_verification/api_figure7.png",
+      "sha256": "ede5d483bb7d899fff2192b5831dd44ecac3ce297bd758e9e24db7a6bda62e2e"
+    },
+    {
+      "figure_id": "html_figure2",
+      "label": "Actual HTML display figure2",
+      "scope": "Isolated actual HTML exhibit card; schematic/aggregate only, no individual trace or surrounding content.",
+      "path": "data/.thesis_figure_verification/html_figure2.png",
+      "sha256": "8bb2fb622c090fd10e2f187e9c6c8da2c85316336ed129a4e1f56f8dcf7cce78"
+    },
+    {
+      "figure_id": "html_figure4",
+      "label": "Actual HTML display figure4",
+      "scope": "Isolated actual HTML exhibit card; schematic/aggregate only, no individual trace or surrounding content.",
+      "path": "data/.thesis_figure_verification/html_figure4.png",
+      "sha256": "dc37b92f271124d48d01bc87bdc666d73da0cffc66ac21b85af55a6212ac4bd4"
+    }
+  ],
+  "individual_observation_traces_supplied": false,
+  "entire_figures_excluded": [
+    "figure3"
+  ],
+  "manuscript_raw_observations_supplied": false
+}
