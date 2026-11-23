@@ -1,0 +1,905 @@
+{
+  "cells": {
+    "D10/F": {
+      "clusters": 14,
+      "discharges": 109,
+      "rows": 25123,
+      "statistics": {
+        "delta": {
+          "cluster": {
+            "fixed": [
+              -0.00701693687288305,
+              0.002595270144219078
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.014122001408618273,
+              0.004911915517750916
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.0071257367555632055,
+              0.004856331061102609
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.016086768422038978,
+              0.009699720928946711
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.003362713977654863,
+            0.0,
+            0.0
+          ],
+          "point": -0.0011209046592182876
+        },
+        "fast_budget": {
+          "cluster": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "point": 0.0
+        },
+        "history_budget": {
+          "cluster": {
+            "fixed": [
+              -0.0017503589490695767,
+              0.005075576487059641
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.0033835512529631186,
+              0.010567465012348775
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.0035531362251633837,
+              0.004953964771749948
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.007177120165507261,
+              0.011452893435051972
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.002446043659557029,
+            0.0,
+            0.0
+          ],
+          "point": 0.0008153478865190097
+        },
+        "long_fast": {
+          "cluster": {
+            "fixed": [
+              -0.4346967479945142,
+              -0.1662810308489928
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.5329441375360865,
+              -0.14181057545700107
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.4371438127939581,
+              -0.18646188703588476
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.5094682794335496,
+              -0.1559976935049211
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.37475631905276674,
+            -0.2457301361719586,
+            -0.2593123766791803
+          ],
+          "point": -0.2932662773013019
+        },
+        "short_fast": {
+          "cluster": {
+            "fixed": [
+              -0.432161825457384,
+              -0.16305177246284072
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.5312024198537864,
+              -0.14131371176772317
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.4365371582044751,
+              -0.18565882708522632
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.5062281547396044,
+              -0.15599152729624957
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.3713936050751119,
+            -0.2457301361719586,
+            -0.2593123766791803
+          ],
+          "point": -0.29214537264208357
+        }
+      }
+    },
+    "D10/L5": {
+      "clusters": 14,
+      "discharges": 108,
+      "rows": 23933,
+      "statistics": {
+        "delta": {
+          "cluster": {
+            "fixed": [
+              -0.027326045086665706,
+              0.011928275414794987
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.06615933341593036,
+              0.017991290509332757
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.028754587778175272,
+              0.007394084283165733
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.07097955566262154,
+              0.008276650885612314
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.03021985086436918,
+            0.0,
+            0.0
+          ],
+          "point": -0.010073283621456394
+        },
+        "fast_budget": {
+          "cluster": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "point": 0.0
+        },
+        "history_budget": {
+          "cluster": {
+            "fixed": [
+              -0.005958126468969683,
+              0.01233791681402438
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.009038032082799744,
+              0.033278924158887044
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.0040480449922987135,
+              0.01373205308400581
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.004467351557691777,
+              0.034917142303490904
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.01580426863639528,
+            0.0,
+            0.0
+          ],
+          "point": 0.005268089545465093
+        },
+        "long_fast": {
+          "cluster": {
+            "fixed": [
+              -1.114357331153592,
+              -0.43614524914746944
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -1.444731954255633,
+              -0.3670548167838402
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -1.0060837398594276,
+              -0.4563428507084387
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -1.2455628601605497,
+              -0.3911960100903313
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.9121321941324503,
+            -0.5790419422647872,
+            -0.5837839921536163
+          ],
+          "point": -0.6916527095169513
+        },
+        "short_fast": {
+          "cluster": {
+            "fixed": [
+              -1.0990413176646483,
+              -0.4237449823055046
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -1.4098138282123778,
+              -0.36179186363880467
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.9928976710016522,
+              -0.4503903971199539
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -1.1991351726065196,
+              -0.39123545594623776
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.8819123432680811,
+            -0.5790419422647872,
+            -0.5837839921536163
+          ],
+          "point": -0.6815794258954949
+        }
+      }
+    },
+    "D50/F": {
+      "clusters": 14,
+      "discharges": 109,
+      "rows": 25123,
+      "statistics": {
+        "delta": {
+          "cluster": {
+            "fixed": [
+              -0.01460581792015517,
+              -0.00443817003408765
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.03822459811120688,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.013323799508680994,
+              -0.004314606169602634
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.035696983197705756,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.025354370097573797,
+            0.0,
+            0.0
+          ],
+          "point": -0.008451456699191265
+        },
+        "fast_budget": {
+          "cluster": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "point": 0.0
+        },
+        "history_budget": {
+          "cluster": {
+            "fixed": [
+              0.003877228425932319,
+              0.01054824739179621
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.028296324877017467
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.003583782472670888,
+              0.010284425932327076
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.028069503680515473
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.02049021509539417,
+            0.0,
+            0.0
+          ],
+          "point": 0.006830071698464724
+        },
+        "long_fast": {
+          "cluster": {
+            "fixed": [
+              -0.2731169605464274,
+              -0.024885639077925393
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.38271595931236635,
+              -0.0026633220930680577
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.26675760455041836,
+              -0.05772142267259796
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.3523374344593628,
+              -0.024471583228732354
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.23738916256048093,
+            -0.09525703409786601,
+            -0.11474811155506237
+          ],
+          "point": -0.14913143607113644
+        },
+        "short_fast": {
+          "cluster": {
+            "fixed": [
+              -0.2615008354662089,
+              -0.019597929235468818
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.34890240132034317,
+              -0.002147326796584385
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.25737193629046845,
+              -0.05000473002540781
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.323140705951724,
+              -0.02432565063831858
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.21203479246290713,
+            -0.09525703409786601,
+            -0.11474811155506237
+          ],
+          "point": -0.14067997937194518
+        }
+      }
+    },
+    "D50/L5": {
+      "clusters": 14,
+      "discharges": 108,
+      "rows": 23933,
+      "statistics": {
+        "delta": {
+          "cluster": {
+            "fixed": [
+              -0.0673399007887004,
+              -0.004635011657280247
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.1569064681461998,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.04825521768126855,
+              -0.00776689325915454
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.12561389134916795,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.07865383759527234,
+            0.0,
+            0.0
+          ],
+          "point": -0.02621794586509078
+        },
+        "fast_budget": {
+          "cluster": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.0,
+              0.0
+            ],
+            "fixed_excludes_zero": false,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.0
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "point": 0.0
+        },
+        "history_budget": {
+          "cluster": {
+            "fixed": [
+              0.00281287130886211,
+              0.03211732458551602
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.08187134838441262
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              0.0051682303540465345,
+              0.027885710901086533
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              0.0,
+              0.07399380431668331
+            ],
+            "mixture_excludes_zero": false,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            0.04911345547097856,
+            0.0,
+            0.0
+          ],
+          "point": 0.01637115182365952
+        },
+        "long_fast": {
+          "cluster": {
+            "fixed": [
+              -0.7160362943496115,
+              -0.2072392123061791
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -1.0252285499109848,
+              -0.15355642513502146
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.641384429350033,
+              -0.21866498954218208
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.8658931515667824,
+              -0.1496698170284403
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.6014722816998592,
+            -0.2801010072122201,
+            -0.32404851164811066
+          ],
+          "point": -0.40187393352006334
+        },
+        "short_fast": {
+          "cluster": {
+            "fixed": [
+              -0.6657020974083186,
+              -0.19243029593424585
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.8866973126233063,
+              -0.14990704155487597
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "discharge": {
+            "fixed": [
+              -0.6101132508134007,
+              -0.19760356522129632
+            ],
+            "fixed_excludes_zero": true,
+            "fixed_undefined": 0,
+            "mixture": [
+              -0.770889919996969,
+              -0.14910686594689762
+            ],
+            "mixture_excludes_zero": true,
+            "mixture_undefined": 0
+          },
+          "per_init": [
+            -0.5228184441045869,
+            -0.2801010072122201,
+            -0.32404851164811066
+          ],
+          "point": -0.37565598765497255
+        }
+      }
+    }
+  },
+  "chunk": 500,
+  "conditional_fixed_inits": true,
+  "draws": 20000,
+  "exploratory": true,
+  "fits": {
+    "1701__TH": {
+      "best_val_loss": 0.3947512479007802,
+      "boundary_flag_count": 0,
+      "config_hash": "ed3cfb5937f2c1a24b5ef2dc5e3669ba814fc23a09c639141fa967ffdbd35722",
+      "epochs": 33,
+      "long_validated_updates": 2046,
+      "observer_overhead_seconds": 0.10844129998986318,
+      "prep_seconds": 8.275762600000235,
+      "short_eligible_epochs": 16,
+      "short_epoch": 14,
+      "short_selected_updates": 930,
+      "short_val_loss": 0.4064394124257968,
+      "short_validated_updates_at_budget": 992,
+      "stop": "converged",
+      "wall_seconds": 2123.786229000001
+    },
+    "1701__TX": {
+      "best_val_loss": 0.3950929404250871,
+      "boundary_flag_count": 0,
+      "config_hash": "6565f59393d0983c5c6e208bc38eb675a9f34b341b76d5fc327c0e106b1c3bfe",
+      "epochs": 13,
+      "long_validated_updates": 806,
+      "observer_overhead_seconds": 0.05067910000070697,
+      "prep_seconds": 7.984349399999701,
+      "short_eligible_epochs": 13,
+      "short_epoch": 6,
+      "short_selected_updates": 434,
+      "short_val_loss": 0.3950929404250871,
+      "short_validated_updates_at_budget": 806,
+      "stop": "converged",
+      "wall_seconds": 929.7734168999996
+    },
+    "1702__TH": {
+      "best_val_loss": 0.39691449662984396,
+      "boundary_flag_count": 0,
+      "config_hash": "e9ae512bf1da25295cbce8219ffc326d83dc7bc9342eb50612c96403471300e5",
+      "epochs": 20,
+      "long_validated_updates": 1240,
+      "observer_overhead_seconds": 0.08463729993127345,
+      "prep_seconds": 8.217548700000407,
+      "short_eligible_epochs": 16,
+      "short_epoch": 13,
+      "short_selected_updates": 868,
+      "short_val_loss": 0.39691449662984396,
+      "short_validated_updates_at_budget": 992,
+      "stop": "converged",
+      "wall_seconds": 1415.6418009999998
+    },
+    "1702__TX": {
+      "best_val_loss": 0.4344883648247252,
+      "boundary_flag_count": 0,
+      "config_hash": "3554c924e67e3b6caf143b0dfb9699520edd9caf8fad718faa578f7aef2181b2",
+      "epochs": 19,
+      "long_validated_updates": 1178,
+      "observer_overhead_seconds": 0.07428929997695377,
+      "prep_seconds": 9.252791499999148,
+      "short_eligible_epochs": 19,
+      "short_epoch": 12,
+      "short_selected_updates": 806,
+      "short_val_loss": 0.4344883648247252,
+      "short_validated_updates_at_budget": 1178,
+      "stop": "converged",
+      "wall_seconds": 1149.963319399998
+    },
+    "1703__TH": {
+      "best_val_loss": 0.39412599533649606,
+      "boundary_flag_count": 0,
+      "config_hash": "c832f59e11cf0877ac49f17d5acd473607bd8c1793b9acf13ecede0cf99f3fbb",
+      "epochs": 21,
+      "long_validated_updates": 1302,
+      "observer_overhead_seconds": 0.09454069995626924,
+      "prep_seconds": 7.923062599998957,
+      "short_eligible_epochs": 16,
+      "short_epoch": 14,
+      "short_selected_updates": 930,
+      "short_val_loss": 0.39412599533649606,
+      "short_validated_updates_at_budget": 992,
+      "stop": "converged",
+      "wall_seconds": 1475.4170219000007
+    },
+    "1703__TX": {
+      "best_val_loss": 0.43461424493737716,
+      "boundary_flag_count": 0,
+      "config_hash": "4112f8cf9c472737c323eaafeeb0e3f613f11ef8b4511d463371da0af3cbdd71",
+      "epochs": 13,
+      "long_validated_updates": 806,
+      "observer_overhead_seconds": 0.04012440005681128,
+      "prep_seconds": 8.93915090000155,
+      "short_eligible_epochs": 13,
+      "short_epoch": 6,
+      "short_selected_updates": 434,
+      "short_val_loss": 0.43461424493737716,
+      "short_validated_updates_at_budget": 806,
+      "stop": "converged",
+      "wall_seconds": 699.9953553000014
+    }
+  },
+  "limits": [
+    "One TEST-informed temporal unit only; all four previous validation designs remain in B94, not new evidence here.",
+    "Three inits fixed for primary cluster intervals; init-mixture intervals are supplementary.",
+    "F/L5 report labels, not independent physical truth.",
+    "SHORT depends on this actual concurrency/load; no convergence or architecture-superiority claim."
+  ],
+  "prediction_hashes": {
+    "1701__FAST__LONG__D10.npz": "d7460f2f8a47022d299bf094482005eb586196c874e0825c2ebafb99553f2f88",
+    "1701__FAST__LONG__D50.npz": "f402870fac194c318a5fbc95c22666f99243e7fa9094824788962688ef912442",
+    "1701__FAST__SHORT__D10.npz": "d738459b04bc6e549522071b91560e51783f5a66da95c581639324fe5b74fd8f",
+    "1701__FAST__SHORT__D50.npz": "69d9d98b698119abcdfc04544c77d3edf1fb0d0ea57ad34d669c23c18c039907",
+    "1701__HISTORY__LONG__D10.npz": "48021eecc94895fa9b48b0f19bf4eabbfc8850c9feab74f1aa1399cc003ccce4",
+    "1701__HISTORY__LONG__D50.npz": "3ef5d2c2e15d36e72dd88b57e13a4a87b646ba56fb30a79885a0e228183a72e0",
+    "1701__HISTORY__SHORT__D10.npz": "3d6108e37d4d41e09d0d052b87e37f481f2061f3b6235f158bf85e867fedf522",
+    "1701__HISTORY__SHORT__D50.npz": "1e18b774eb65ca0c477c6b3d68b19ddbcfcb36ec27cdafcfd3dd021466ed63dd",
+    "1702__FAST__LONG__D10.npz": "212d22c0deac8119750f353c3eddae145fd680242a6180c3843308f5165f8568",
+    "1702__FAST__LONG__D50.npz": "e1cd7437f94ae479c3b9f83e8b449411dea76443bc41b885abb0375ba9d033ba",
+    "1702__FAST__SHORT__D10.npz": "415fa78c4f345ecdb12c9126db3dda1d79b95b14a55a851604402d5c44f93bf8",
+    "1702__FAST__SHORT__D50.npz": "1ee6138858f70ba69d4d95060964dd90f63fc79e414bad25fca20f1cb2336530",
+    "1702__HISTORY__LONG__D10.npz": "270af9621ff80d3ffd94b6114e4cac12499f04eef0e54da31076be715006f2bd",
+    "1702__HISTORY__LONG__D50.npz": "67da43c35c5078f9131324f427994e6e78e11ea43d6c5b02d09cad640b520aea",
+    "1702__HISTORY__SHORT__D10.npz": "dc53521ac5889f7fca908756cdbe6bf03a535f1fc108e50e8f13da1ae3d44a15",
+    "1702__HISTORY__SHORT__D50.npz": "5485c1b98d14ef8a4dd5d4f9689257723664a1b99146d1ecad549e53c06fa689",
+    "1703__FAST__LONG__D10.npz": "84428db2adb4d72bbf9123bf77138b11a80b80de41dd87001be4191993c42408",
+    "1703__FAST__LONG__D50.npz": "1f2211ed1c05e44e6dd150f8b062affed8af4dd70b276ee0a6a21a40adb1b552",
+    "1703__FAST__SHORT__D10.npz": "9aea6aa6b41f37ac2e5b5ff298d4807a37db2f8872ab4deacb88afa55946f77b",
+    "1703__FAST__SHORT__D50.npz": "690f92e2bca6fae3f3b9f99ba99f851ff5d85b36687a90f31406ca100845af01",
+    "1703__HISTORY__LONG__D10.npz": "b73df5a1af0b9076ac743e31846db973a6298f34ed1330df1e23af16b305d1b3",
+    "1703__HISTORY__LONG__D50.npz": "193c2af563787de2f5ab3887a672572c958755ebb9ea229d088c3b5fa3c20198",
+    "1703__HISTORY__SHORT__D10.npz": "ac096e5d008e906430ebfb54886c781707df7859caa377f18e829199450e295c",
+    "1703__HISTORY__SHORT__D50.npz": "08cdd875603ce514518ea7b79e5fe8dcb2aede3fe549ced6c87c400b6991d0e7"
+  },
+  "provenance_sha256": "5e005934611f1daa33b7f4a4ef698cda9fd071b39a644b948bf81daeed5c9734",
+  "registration": "PREREGISTRATION_B104.md",
+  "seed": 20261104,
+  "seeds": [
+    1701,
+    1702,
+    1703
+  ],
+  "sources": {
+    "ces_prediction/experiments/PREREGISTRATION_B104.md": "58b2b7f84d57d1422529a323a4d276475a2fb57fac48bd1dbbcbdc083d6a5f7b",
+    "ces_prediction/experiments/b104_budget/audit104.py": "172ffac8ceda6871e082930cc776b56ad9b8467454a2ff8da0949ce8a4ae01f0",
+    "ces_prediction/experiments/b104_budget/common104.py": "a08e5b25334ce19fee6188482da34885b38aabb2dda78e9498dae410e19c2d64",
+    "ces_prediction/experiments/b104_budget/pipeline104.py": "c666908aaaeb03647497573dc9f3c90045e8763e7038873ed645120ad8c18456",
+    "ces_prediction/experiments/b104_budget/scout104.py": "66c7b000772f0770736156c02d1d0fceacc24f1da2408d6dab43f62d1abfd5bd",
+    "ces_prediction/experiments/b104_budget/stats104.py": "6b9eea9deb53a3b37553db83b43814a4d48fd88457076b57a8dce66019543c68",
+    "ces_prediction/experiments/b104_budget/train104.py": "54f7bf5fe4b66d41c913213d233fc75ecc73e1e81c8c354987ec0b9e9fc522ea",
+    "ces_prediction/experiments/b104_budget/watch104.py": "7356f8d492a51f391206ef5659cc0b1966ac6f744559fbbba4831acbdb5635c5"
+  },
+  "unit": "V3_q3"
+}

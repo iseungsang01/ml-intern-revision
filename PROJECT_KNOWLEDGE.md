@@ -816,6 +816,12 @@ B.82를 넣은 원고(본문 20쪽, 보충 25쪽)의 PDF만 받은 새 채점자
 
 `posteval_claude_20261123.md/json`은 원래 Claude 초안이다. skill 부호를 미확인으로 남긴 한계는 `posteval_lead_review_20261123.md/json`에서 동결 소스 정의와 원본 구간 기반 분류로 보완했다. 후속 후보는 TEST-informed 탐색이며 아직 실행하지 않았다. 원고 estimator와 논지의 자동 교체는 없다.
 
+### 4.76 같은 학습 경로에서 예산을 늘린 TCN (B.104; `docs/paper/b104_budget.md`)
+
+등록한 고정 시간분할 unit에서 같은 새 학습 경로의 SHORT와 LONG 체크포인트를 비교했다. 원본 학습 루프와 조기종료 규칙을 유지했으며 독립 audit와 최종 체크포인트 검증을 통과했다. 진단 포함 FAST는 모든 초기화에서 두 체크포인트의 가중치가 동일했다. 이력 대조 HISTORY에서는 한 초기화만 LONG 체크포인트가 달라졌다. 따라서 이번 연장으로 fast 증분이 회복되지는 않았다. 점추정·구간·영 제외 여부는 원본 결과 `docs/paper/b104_budget.json/md`를 따른다.
+
+고정 초기화 조건부 구간과 별도 초기화 혼합 구간은 다른 질문이며 합치지 않는다. 변화는 HISTORY의 해당 초기화에 의존한다. 시간분할 일부의 TEST-informed 탐색으로, 다른 검증 설계나 TCN 구조 일반의 결론이 아니다. 이 해석을 뒤집을 측정은 미사용 unit에서 사전 고정한 예산과 같은 정보 집합의 paired 비교다. Claude 원문과 독립 최종 보완은 `docs/paper/b104_claude.md`에 보존했다.
+
 ## 5. 코드와 산출물
 
 배선과 디렉터리의 역할은 `README.md`, 캐시를 다시 만드는 순서와 원고 빌드는 `HANDOVER.md` 4절과 7절, 배치 목록은 `ces_prediction/experiments/README.md`에 있다. 자주 쓰는 것만 적는다.

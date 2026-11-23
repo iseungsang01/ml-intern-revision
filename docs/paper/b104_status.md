@@ -1,6 +1,28 @@
 # B.104: matched-trajectory budget follow-up
 
-## Running: 2026-11-24 00:36 KST
+## Complete: 2026-11-24 01:11 KST
+
+All six production fits exited normally (13-33 epochs, approximately12-35min
+per fit);24 prediction files were published. The separate audit reproduced
+all four endpoint cells and five quantities with20,000 cluster draws.
+Fable and Opus post-evaluation reviews completed. The supervisor exited0;
+the monitor delivered the completion notification without a restart.
+
+The independent final checkpoint check is recorded in ignored
+`data/.b104/lead_completion.json`. All three FAST SHORT/LONG tensor pairs are
+identical. Only HISTORY1701 selects a different LONG checkpoint; the other
+two HISTORY pairs are identical. Longer training therefore did not recover
+fast-channel skill in this fixed temporal unit. The fixed-initialization
+delta intervals exclude zero negatively for D50, while the separate
+initialization-mixture intervals include zero in every endpoint. This is
+TEST-informed exploratory evidence, not an all-design architecture verdict.
+
+Published evidence: `b104_budget.json`, `b104_budget.md`, and
+`b104_claude.md` (original API prose plus independent final clarification).
+No next GPU batch has been launched. Stage0/P1 remains a draft preparation
+direction, not an executed fit. Prior running observations follow as history.
+
+## Historical running observation: 2026-11-24 00:36 KST
 
 Registration and all execution sources were committed/pushed as8dd55a6 before
 preparation or GPU work.89 tests and record checks passed. Prepared artifact,

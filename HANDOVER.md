@@ -1,5 +1,7 @@
 # 인수인계 문서 (2026-11-22)
 
+**B.104 완료(2026-11-24 01:11 KST, 최종 확인 02:36):** 여섯 학습 정상 종료, 예측24개와 네 조건의 독립 통계 검산, Fable/Opus 사후 검토까지 완료했다. supervisor exit0·자동 완료 알림을 확인했다. 진단 포함 FAST의 SHORT/LONG 가중치는 세 초기화 모두 동일하며, HISTORY1701만 LONG 체크포인트가 바뀌었다. 학습 연장으로 fast 증분이 회복되지는 않았다. 고정 초기화 구간과 초기화 혼합 구간의 해석을 구분해야 하며, 한 시간분할 unit의 탐색 결과다. 근거 `docs/paper/b104_budget.json/md`, `b104_claude.md`; 독립 최종 체크포인트 검증 `data/.b104/lead_completion.json` all_pass. 현재 GPU 유휴, 추가 학습 없음. 다음 준비 방향은 P1/Stage0 초안이며 새 등록·적합은 아직 하지 않았다. 아래 학습 중/준비 문단은 과거 경과다.
+
 **심화 보고의 최신 문헌 정정도 적용:** DECISION 말미 NN-CES 전문 미확보 문장은 `fable_deep_review/NN_CES_CORRECTION.md`·`docs/reference/nnces_source.md`로 정정한다. 보관 전문은 이미 있었으며 특정 Fable 요청에 미제공된 사실과 구분한다. P1 우선순위는 유망한 준비 방향이지만 NN-CES 전문을 포함해 Fable이 다시 평가한 순위로 소급하지 않는다. Stage0 초안에 문헌 대비표 gate를 추가했고, 기존 조사 원문/과금 기록은 건드리지 않았다.
 
 **후속 우선순위 보완(2026-11-24, 저자의 DECISION 확인 요청):** `docs/paper/fable_deep_review/DECISION.md`와12/13번 정정·METHOD_CHECKS·EXISTING_WORK를 직접 확인했다. B.104는 예산 혼동을 정리하는 현재 보조 실험으로 유지하며 중복/중단하지 않는다. 다음 본 방법론 우선순위는 source-time 일관 작은 강제응답 추정기에서 H/H+fast/H+NBI/H+NBI+fast를 같은 행에 두어 NBI를 조건으로 한 fast 증분을 구분하는 P1이다. 사건 갱신/재전파는 표준 구성요소이므로 독립 신규성 방향에서 내려 P1 내부 대조로 병합한다. B90 observer/robust-loss는 보류·미평가이지 실패한 결과가 아니다. 이후 후보는 고정 평균의 보고값 분산, 동결 인과 표현 탐침이다. `docs/paper/stage0_anchor_program_DRAFT.md`에 메타데이터-only Stage0 등록 전 초안을 작성했으며 새 적합·TEST 재채점은 실행하지 않았다. 이 초안은 margin/다중성/범위를 확정한 등록문이 아니다. B104 동결 실행 소스에는 손대지 않았다.

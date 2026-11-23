@@ -11,7 +11,7 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
-B.104 (`PREREGISTRATION_B104.md`): `b104_budget/` runs a matched SHORT/LONG budget study at the already-proposed fixed temporal unit, six fresh TCN fits and four global workers. Registration/source8dd55a6 preceded all GPU work; four real-prefix observer controls passed, production started00:29:59KST Nov24. Prediction/readout/independent audit/Claude post review are queued. Source frozen during run. Status `docs/paper/b104_status.md`, local evidence `data/.b104/`.
+B.104 (`PREREGISTRATION_B104.md`): COMPLETE2026-11-24 01:11KST. `b104_budget/` ran six matched SHORT/LONG TCN trajectories with four global workers; source8dd55a6 preceded GPU work. All six fits exited normally,24 predictions and four endpoint cells passed independent audit; Fable/Opus post reviews completed. All FAST checkpoint pairs are identical; only HISTORY1701 changed. Published `docs/paper/b104_budget.json/md`, `b104_claude.md`; status `b104_status.md`, local final proof `data/.b104/lead_completion.json`. No next fit launched.
 
 B.103 (`PREREGISTRATION_B103.md`, B.94 addendum8): `b103_publish/publish103.py` checks the already-passed original final audit and preservation bindings, publishes only audited methods JSON/md, leaving auxiliary readiness documentation untouched. `watch103.py` binds the unchanged notifier to this task/cache. No scientific recomputation. Evidence `data/.b103/`.
 

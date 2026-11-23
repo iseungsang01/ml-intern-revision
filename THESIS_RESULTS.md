@@ -530,6 +530,19 @@ The author requested Claude API integration for substantive reasoning and agenti
 The worker requires original normal completion, post audit and bound hashes before exposing anonymous aggregate evidence. Four bounded tool stages produce evidence review, adversarial critique, ranked follow-up plan and final revision, with no training/shell/secret access and at most16 substantive paid rounds. The deterministic original result ledger stays distinct from Claude-attributed TEST-informed exploratory proposals. Current state, failure handling and intended outputs are documented in docs/paper/posteval_claude_20261123_status.md. No experiment, manuscript claim or acceptance estimate was produced by this setup; prior evaluation remains untouched.
 # B.104 matched training-budget sensitivity (2026-11-24)
 
+Completed01:11KST: all six fits exited normally,24 predictions published,
+four endpoint cells/five quantities audited independently with20,000 cluster
+draws, then Fable/Opus post reviews completed. Final checkpoint binding and
+all prediction hashes passed `data/.b104/lead_completion.json`.
+All three FAST SHORT/LONG weight pairs are exactly equal; HISTORY1701 alone
+selects a changed LONG checkpoint. Fast-channel skill was not recovered by
+this extension. Fixed-initialization delta intervals are negative excluding
+zero in D50; separate initialization-mixture intervals include zero in every
+endpoint. Full point estimates/intervals/flags: `docs/paper/b104_budget.json/md`;
+API prose plus independent final clarification: `docs/paper/b104_claude.md`.
+This is one exploratory temporal unit, not an all-design TCN conclusion.
+The following launch observations are historical. No new fit is running.
+
 Author requested continuation after the audited B94 and corrected Claude plan. Registered8dd55a6 and all new sources before any fit; original data/model/numerical loop/source closures remain unchanged. Fable TRAIN/VAL and Opus adversarial design/scaffold reviews were completed; Opus generated the statistical module. One earlier large Fable code request exhausted its thinking budget with no accepted file; every attempt/usage preserved.
 
 Four real-data prefix smoke children exited0. Observer off/on per-epoch validation and all best/final tensors were bitwise equal for both models, with checkpoint reload checks passed. Production started00:29:59KST: three HISTORY seeds and FAST1701 concurrently, two FAST seeds pending. At00:36 all active runs logged4epochs, GPU72-74% and3138MiB, no error. Six same-trajectory SHORT/LONG comparisons, not twelve independent budget fits. New3h study clock and original B94 clock are distinct. Registered scope is one previously selected temporal unit, exploratory after TEST; no across-design or physical-truth claim.
