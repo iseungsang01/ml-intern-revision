@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.102 (`PREREGISTRATION_B102.md`, B.94 addendum7): `b102_postcheck/finish102.py` normalizes archived manifest keys in memory and completes preservation checks/original post audit without regenerating predictions or statistics. `watch102.py` emits local phase/error/5min notifications and permits one diagnostic-free external-interruption recovery, no scientific/API retries. Local evidence `data/.b102/`; see HANDOVER/status docs.
+
 B.101 (`PREREGISTRATION_B101.md`, B.94 addendum6): `b101_readout_repair/repair101.py` preserves failed B.100 reports and368 predictions, separates supplementary TREE_ names from neural TX, recomputes only overwritten marginal metrics, checks all unaffected content unchanged, then invokes original independent post audit. No training/inference. Local evidence `data/.b101/`; current state `docs/paper/b94_status.md`.
 
 B.100 (`PREREGISTRATION_B100.md`, B.94 addendum5): `b100_eval_resume/resume100.py` revalidates completed fits and logged prediction groups after the author pause/OS reboot; recomputes interrupted groups only, then original readout/post audit. No training. Local evidence: `data/.b100/`; state: `docs/paper/b94_status.md`.

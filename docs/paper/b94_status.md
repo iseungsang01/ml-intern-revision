@@ -31,7 +31,11 @@ py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b94
 `data/.b94/queue_status.json` reports active worker slots/PIDs and completed counts; `supervisor_status.json` reports durable process liveness. Consult both rather than interpreting an old stage string as ongoing computation. Logs are `durable.stdout.log`, `durable.stderr.log`, readiness/audit logs, and per-fit `process.log`. A production fit counts as complete only after its checkpoint/configuration hashes and ordinary child exit0 are validated. No automatic retry is enabled.
 
 The current claims and their limits are reviewed in [the robustness and related-work report](claim_robustness_20261123.md). No B.94 TEST performance or physical discovery has been established by starting this queue.
-# 2026-11-23 21:19 KST: B.101 targeted readout recovery running
+# 2026-11-23 22:34 observation: B.101 stopped after all136 cells
+
+B.101 completed all136 cells and wrote corrected JSON/markdown, but stopped at21:34 on a Windows/POSIX key mismatch in the final markdown hash lookup. Earlier preservation and control assertions passed before that exception; no original post audit ran for this corrected report yet. Claude stopped safely on upstream failure. No final scientific conclusion is available. B.102/addendum7 restores only postchecks/audit without recomputation. B102 addendum1 adds complete markdown-row checks/publication binding and a separate live local notifier, at the author's explicit request. Read `data/.b102/watch_status.json` for delivered notifications, `watch_error.json` on watcher failure, and live original status for actual execution state. Do not print the ignored local notification config.
+
+## Earlier21:19 running observation
 
 The one-shot Fable code review completed normally (6544 input/5304 output tokens; complete request/response/resolution local). Addendum1 binds unaffected-metric controls, direct main-point checks, report JSON and markdown checks, exact prediction set, baselines, fits and selection hashes. Tests89 and check_records passed. Preparation preserved368 predictions and failed outputs. New hidden task `B93_GPU_B94_readout101` observed Running with live supervisor26620/queue23272, fresh heartbeat and readout phase. Claude task freshly waiting for audited completion. No training/inference restarted; original deadline unchanged. Readout logs now emit Repaired/Carried per cell after the original readiness gates. No final result is yet certified.
 
