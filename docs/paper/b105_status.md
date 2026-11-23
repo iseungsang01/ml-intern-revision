@@ -1,6 +1,20 @@
 # B.105: TCN merit screening
 
-State: implementation and preregistration preparation, before any scientific fit.
+State: FOUR GPU PRODUCTION FITS RUNNING,2026-11-24 03:19KST observation.
+All four were dispatched03:18:54KST. GPU74%,2133MiB at03:19:21; no failure.
+Registration and all execution sources were committed/pushed as1aee77b before
+preparation/dispatch. Source-bound real inputs/model/causality checks passed;
+all64 fair CPU reference fits and one CUDA smoke exited normally. Longest16
+real-TRAIN-batch forward/backward probes admitted four reserved memory slots.
+Supervisor and queue process identities are live, heartbeat fresh, independent
+monitor notification accepted. Scientific sources are frozen during this run.
+This is progress evidence, not predictive merit or TEST performance.
+
+After four clean exits: separate fit/VAL-arithmetic audit -> common-row VAL
+predictions -> all-unit allocation gate -> conditional TEST -> paired report
+and independent raw-prediction/interval/gate audit -> bounded Fable post review.
+Suite started03:16KST,150min cap; individual production soft3600s/hard4020s.
+Original B94/B104 clocks and artifacts remain unchanged.
 
 Author authorized GPU training and merit evaluation on2026-11-24.
 One anchor-enabled35-channel TCN, four previously fixed units, seed1701.
