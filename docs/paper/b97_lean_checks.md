@@ -1,5 +1,7 @@
 # B.97 assurance checks
 
+Final outcome: six theorems compiled; all80 registered real queries agreed. The original independent verifier first failed on Windows/POSIX input-hash key separators. Addendum1 and `verify97_paths.py` preserve the producer/original verifier and normalize keys only. Adapter-assisted independent reconstruction, original Python comparison and native replay passed. Coverage:44 selected values and36 absent; training D300/D650/D1000/S each has only absent cases. No adaptive expansion followed.
+
 The immutable [registration](../../ces_prediction/experiments/PREREGISTRATION_B97.md) precedes the real-trace run. This is a deterministic assurance exercise, without model training, TEST scoring or a predictive interval. All existing numerical training sources remain unchanged.
 
 ## Source review and corrections before real-data execution

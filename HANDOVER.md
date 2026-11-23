@@ -1,5 +1,7 @@
 # 인수인계 문서 (2026-11-22)
 
+**Lean 후속 구현 완료(B.97):** 선택기 여섯 정리의 Lean 컴파일·공리 감사를 통과했고 등록 TRAIN/VAL 질의80개가 Python·Lean·별도 직접 탐색과 일치했다. 독립 검사의 경로 key 표기 오류는 부록1의 새 adapter로만 정규화했고 원래 결과·소스·실패를 보존했다. `docs/paper/b97_lean.md`, `b97_lean.json`, `b97_lean_checks.md` 참조. 전체 신경망/Python/CUDA 검증이 아니다. 아래 조사 당시 ‘Lean 증명 없음’은 이 후속 구현 이전 상태다. GPU 재개는 하지 않았다.
+
 **현재 운영 상태(2026-11-23 14:27 KST 확인):** B.96 감독·큐가 `PermissionError`로 종료했고 네 trainer도 생존하지 않는다. confirmation은 stale 큐 기록상23/46 완료이며 중단된 네 partial에는 정상 종료 증거가 없다. 재시도하지 않고 보존했다. 원인과 복구 전 조건은 `docs/paper/b94_status.md` 최상단을 읽는다. 아래의 과거 ‘실행 중’ 문장을 현재 상태로 읽지 않는다.
 
 **Lean 조사 완료:** 저자 요청으로 Claude 공식 API 여섯 검토(Fable/Opus 각 세 건)와 원천 문헌 교차 확인·기호 항등식 검산을 수행했다. 판단·정정은 `docs/paper/lean_feasibility_20261123.md`, 호출 감사는 `claude_lean_reviews_20261123.md`. 최우선 후보는 가용정보 비간섭의 좁은 명세이며 새로운 물리나 수학 정리를 확립하지 않았다. Lean 컴파일·증명은 아직 없고 현재 학습 방법·TEST 선택을 바꾸지 않았다. 새 age 실험은 기존 B.75/B.94와 중복을 먼저 확인하며 별도 사전등록 전 TEST 탐색을 하지 않는다.
@@ -121,6 +123,7 @@ B.76 (MAST 행 표와 추정)  data/.b76  └ B.86 (반경 대역별)
 
 | 배치 | 물음 | 코드 | 결과 |
 |---|---|---|---|
+| B.97 | 가시 source 선택 명세와 실제 trace 연결 | `formal/visibility/`, `experiments/b97_lean/` | `docs/paper/b97_lean.md`, 경로 key 정규화 후 독립 검사 완료 |
 | B.70 | 자료 정의 D1에서 신경망·2단계 estimator와 기준들 | `experiments/b70_d1/` | `docs/paper/b70_d1.md` |
 | B.71 | CES 갱신이 멈출 때(신경망과 filter의 재생) | `b71_scenarios/` | `b71_scenarios.md` |
 | B.73 | 표적 둘(그 프레임의 값, 이후 수준)과 설계 넷; 신경망 없는 estimator | `b73_targets/` | `b73_targets.md` |

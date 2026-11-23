@@ -1,0 +1,125 @@
+{
+  "experiment": "B97",
+  "status": "checks_passed",
+  "queries": 80,
+  "rules": [
+    "D10",
+    "D50",
+    "D100",
+    "D300",
+    "D650",
+    "D1000",
+    "S",
+    "K10"
+  ],
+  "partitions": [
+    "train",
+    "val"
+  ],
+  "source_hashes": {
+    "formal/visibility/Main.lean": "9c70501c2cc906def0019d46cd22fd0d970b8bb9b60ef23f06e833ed343ba2a3",
+    "formal/visibility/Visibility.lean": "e079d0e822284bfffd244e60d0ce6fa21c4647775c791b1a2d2dcd4f35f95326",
+    "formal/visibility/lakefile.toml": "ccc6adf0aca4c4b7c21fcebbe7368c3bc6d0f4ed3507b369278fffb2adbb501e",
+    "formal/visibility/lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a",
+    "ces_prediction/experiments/b97_lean/run97.py": "c4a13133f5a5b39344c5fd126afd2ff48eb6d90c0830ac8f3bf6ff5acf62e61d",
+    "ces_prediction/experiments/b97_lean/toolchain97.py": "8ab04c88e38456582da019ffd83312a72090d083b718950ad546b89a0369464c",
+    "ces_prediction/experiments/b97_lean/lead_checks/verify97.py": "32b8a06d00f004c07206ed220d1eabf74cb67483d805609bb78b0dae065690e1",
+    "ces_prediction/experiments/PREREGISTRATION_B97.md": "cfa97bd148580bf9aec0b272874866d3bad808dbbe50a0c80852e71173cd5439",
+    "ces_prediction/experiments/b85_unified/data85.py": "eb9af716bf7860a05eeb1015ee141e3eaff353d5ade493c6ccb91762f3141755"
+  },
+  "input_hashes": {
+    "data\\.b94\\confirm\\V1_r2_k0__1701__TX\\config.json": "a1b32ef294f39daf0b7973c04ff9d99fa143d9883e75768b5622ffe77f95ee8d",
+    "data\\.b94\\prepared\\V1_r2_k0__9f533945bd3e75d248e9a77c56d9c72e666e5bf7e7ef39267037918ecd10678a.pt": "960b5421ed79727caff452d644dee3ec990e69a283a50a2dc14d2abda2a1a0cd",
+    "data\\.b73\\grid.npz": "9dfad20f927a191840bfe3c39ed48f96ad496e49fe2fc703c0ffe003738ee83b",
+    "data\\.b78\\frames.npz": "ddc5b2e2eecc8572e9e728e1bde074932dca6a456242d079f7ff2c292af292c5"
+  },
+  "query_sha256": "b15b8aaa39934af02d2b6409e1f08cb783434b92d19541b2421ae301e58ac279",
+  "bridge_output_sha256": "174724e58e0b4cfb03dc5fbc9629c6d89f582d7169b07e91b1572e0e1f70d157",
+  "axioms_log": "'Visibility.latest_sound' depends on axioms: [propext]\n'Visibility.latest_none_iff' depends on axioms: [propext, Quot.sound]\n'Visibility.latest_greatest' depends on axioms: [propext, Quot.sound]\n'Visibility.latest_prefix' depends on axioms: [propext, Quot.sound]\n'Visibility.eligibility_noninterference' depends on axioms: [propext, Quot.sound]\n'Visibility.readout_noninterference' depends on axioms: [propext, Quot.sound]\n",
+  "lean_version": "Lean (version 4.36.0, x86_64-w64-windows-gnu, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9, Release)",
+  "compiler_sha256": "f567cc855e5f8006f65076bc813711d581edbae54f1d1d138462e7114351b532",
+  "executable_sha256": "880f1fe2c703af655b4c53c7cfa4d02776bbe6ef32e359dfc6e94ce222a518c2",
+  "toolchain_archive_sha256": "5af5f955df6cfe37082d71c56c7d47fe620faa9f59e14b917b43976c08dc676b",
+  "new_training": false,
+  "test_segments_constructed": false,
+  "full_pipeline_verified": false,
+  "independent": {
+    "status": "independent_checks_passed",
+    "queries": 80,
+    "coverage_cells": 16,
+    "result_sha256": "924c53649278588bee8270e7cc7ef6cdb9f94e02214844d3ee88fbb3701f4395",
+    "outcomes": {
+      "train/D10": {
+        "some": 4,
+        "none": 1
+      },
+      "val/D10": {
+        "some": 4,
+        "none": 1
+      },
+      "train/D50": {
+        "some": 4,
+        "none": 1
+      },
+      "val/D50": {
+        "some": 4,
+        "none": 1
+      },
+      "train/D100": {
+        "some": 3,
+        "none": 2
+      },
+      "val/D100": {
+        "some": 4,
+        "none": 1
+      },
+      "train/D300": {
+        "some": 0,
+        "none": 5
+      },
+      "val/D300": {
+        "some": 4,
+        "none": 1
+      },
+      "train/D650": {
+        "some": 0,
+        "none": 5
+      },
+      "val/D650": {
+        "some": 4,
+        "none": 1
+      },
+      "train/D1000": {
+        "some": 0,
+        "none": 5
+      },
+      "val/D1000": {
+        "some": 3,
+        "none": 2
+      },
+      "train/S": {
+        "some": 0,
+        "none": 5
+      },
+      "val/S": {
+        "some": 3,
+        "none": 2
+      },
+      "train/K10": {
+        "some": 3,
+        "none": 2
+      },
+      "val/K10": {
+        "some": 4,
+        "none": 1
+      }
+    },
+    "scope": "Finite TRAIN/VAL bridge; not Python refinement or CUDA verification",
+    "path_adapter": {
+      "registration": "PREREGISTRATION_B97_ADDENDUM1.md",
+      "source_sha256": "6af1bdc788ce8196bc452508d6aa12871f333ffb9fe4c25d32b3fbfeb0996791",
+      "preserved_failure_sha256": "71ec4b9ba8e1fd0183942dcccbc3111dcff4f1b645263dbcb6eb87b935e94cd1",
+      "effect": "Relative hash-dictionary key separators only; original verifier and producer unchanged"
+    }
+  }
+}

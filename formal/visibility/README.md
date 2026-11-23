@@ -10,12 +10,14 @@ Run from the repository root on this Windows machine:
 ```powershell
 py ces_prediction/experiments/b97_lean/toolchain97.py
 py ces_prediction/experiments/b97_lean/run97.py
-py ces_prediction/experiments/b97_lean/lead_checks/verify97.py
+py ces_prediction/experiments/b97_lean/lead_checks/verify97_paths.py
 ```
 
 `run97.py` refuses to replace a completed result. The registration precedes the
 real-data run; do not change its selection to resolve a failed comparison.
 Compiler troubleshooting before the first real-data run is permitted.
+Addendum1 preserves the original verifier and fixes native/POSIX hash-dictionary
+key separators in a separate adapter; the initial gate failure remains recorded.
 
 Proofs cover any Boolean eligibility predicate on natural indices: bounds,
 eligibility, greatest eligible index, absence, prefix stability, and selected
