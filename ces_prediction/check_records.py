@@ -26,6 +26,8 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 RECORDS = ("PROJECT_KNOWLEDGE.md", "PAPER_DESIGN.md")
 SOURCES = (
+    "docs/paper/b105_merit.md",
+    "docs/paper/b105_status.md",
     "docs/paper/ppcf/main_ppcf.tex",
     "docs/paper/ppcf/supp_ppcf.tex",
     "docs/paper/ppcf/refs.bib",
