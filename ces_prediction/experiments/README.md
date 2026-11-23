@@ -117,6 +117,8 @@ Re-running one of them may need inputs that the cleanup removed.
 
 ## Rules for a new batch
 
+B.95 (`b95_concurrency/`, `PREREGISTRATION_B95.md`): real full-epoch concurrency qualification for2/3/4 workers and conditionally6, reusing the frozen B.93 worker. No production source modification or TEST access; higher concurrency needs repeated normal-exit throughput evidence before a separately registered dispatch change.
+
 B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.
 
 B.94 (`b94_parallel/`, `PREREGISTRATION_B94.md`): isolated fresh GPU execution of the unchanged reduced candidate protocol, with one/two independent fit processes selected from B.93 throughput evidence. Reuses the frozen B.92 loop through per-process adapters, independent mandatory stage audits, separate artifacts, and the original suite deadline. Existing CPU fits are not pooled; no TEST readout before the validation gate and confirmation requirements.
