@@ -8,7 +8,7 @@ from audit95 import qualification,dispatch_config
 
 def sources():
     paths=[HERE/n for n in ('profile95.py','tie95.py','audit95.py','common95.py','bootstrap95.py','production95.py')]
-    paths += [HERE.parent/'PREREGISTRATION_B95.md',HERE.parent/'PREREGISTRATION_B95_ADDENDUM1.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM2.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM3.md']
+    paths += [HERE.parent/'PREREGISTRATION_B95.md',HERE.parent/'PREREGISTRATION_B95_ADDENDUM1.md',HERE.parent/'PREREGISTRATION_B95_ADDENDUM2.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM2.md',HERE.parent/'PREREGISTRATION_B94_ADDENDUM3.md']
     for p in paths:G.committed(p)
     return {p.relative_to(ROOT).as_posix():G.sha(p) for p in paths}
 

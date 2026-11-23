@@ -37,6 +37,13 @@ def compute_qualification():
             if len(values)==2 and min(values)>=max(refs)*1.10:eligible[n]=min(values)
     highest=max(eligible.values());selected=min(n for n,v in eligible.items() if v>=highest/1.05)
     assert selected==d['selected_workers']
+    if not(CACHE/'tie95.json').exists():
+        cert=read(CACHE/'tie_cancelled95.json');four=[c['throughput'] for c in d['cohorts'] if c['clean'] and c['workers']==4]
+        assert len(refs)==2 and len(four)==1 and four[0]<1.10*max(refs)
+        assert cert['base_decision_sha256']==sha(CACHE/'decision95.json') and cert['not_launched'] is True
+        assert cert['four_worker_upper_bound']==four[0] and cert['required_throughput']==1.10*max(refs)
+        assert not list((CACHE/'tie').glob('worker*.json'))
+        return {'all_pass':True,'selected_workers':selected,'base_decision_sha256':sha(CACHE/'decision95.json'),'tie_sha256':sha(CACHE/'tie_cancelled95.json'),'tie_evidence_kind':'Cancelled before launch by deterministic ineligibility bound','elapsed_seconds':d['elapsed_seconds'],'tie_wall_seconds':0,'eligible_throughput':{str(k):v for k,v in eligible.items()},'test_accessed':False}
     tie=read(CACHE/'tie95.json');assert tie['base_decision_sha256']==sha(CACHE/'decision95.json') and tie['test_accessed'] is False
     for rel,h in tie['driver_sources'].items():assert sha(ROOT/rel)==h
     assert tie['workers']==4 and 0<tie['wall_seconds']<=245 and math.isclose(tie['throughput'],4/tie['wall_seconds'],rel_tol=1e-12)
