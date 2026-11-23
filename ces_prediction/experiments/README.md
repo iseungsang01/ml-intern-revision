@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.104 (`PREREGISTRATION_B104.md`): `b104_budget/` prepares a matched SHORT/LONG budget study at the already-proposed fixed temporal unit, six fresh TCN fits and four global workers. Existing TRAIN/VAL-only scouting and redacted Fable/Opus reviews precede GPU. No fit yet until committed implementation and real-data smoke gates pass. Status `docs/paper/b104_status.md`, local evidence `data/.b104/`.
+
 B.103 (`PREREGISTRATION_B103.md`, B.94 addendum8): `b103_publish/publish103.py` checks the already-passed original final audit and preservation bindings, publishes only audited methods JSON/md, leaving auxiliary readiness documentation untouched. `watch103.py` binds the unchanged notifier to this task/cache. No scientific recomputation. Evidence `data/.b103/`.
 
 B.102 (`PREREGISTRATION_B102.md`, B.94 addendum7): `b102_postcheck/finish102.py` normalizes archived manifest keys in memory and completes preservation checks/original post audit without regenerating predictions or statistics. `watch102.py` emits local phase/error/5min notifications and permits one diagnostic-free external-interruption recovery, no scientific/API retries. Local evidence `data/.b102/`; see HANDOVER/status docs.
