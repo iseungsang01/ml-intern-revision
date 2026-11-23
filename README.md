@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B.101 집계 복구: `experiments/PREREGISTRATION_B101.md`·`PREREGISTRATION_B94_ADDENDUM6.md` → `experiments/b101_readout_repair/repair101.py`가 실패 원본·368예측 hash 보존 후 TX 신경망/회귀기 key 충돌만 복구 → 원래 renderer/post audit → 기존 Claude gate. 기록은 `data/.b101/`, 상태는 `docs/paper/b94_status.md`·`HANDOVER.md`. 새 학습/예측은 없다.
+
 운영 복구 배선: `ces_prediction/experiments/PREREGISTRATION_B100.md`와 `PREREGISTRATION_B94_ADDENDUM5.md` → `b100_eval_resume/resume100.py`가 재부팅 후 완료 fit·예측 hash를 재검증하고 중단 묶음만 원래 predictor로 계산 → 원래 readout/post audit → 기존 `research/posteval_claude/worker.py`. 기록은 `data/.b100/`, 현재 상태는 `docs/paper/b94_status.md`와 `HANDOVER.md`에서 읽는다. 새 학습은 하지 않는다.
 
 저자의 틀: pedestal top에서의 nowcasting 문제를 푼다. 보간법 등에 견주어 가장 좋은 모델을 찾는다. 지금 가진 자원으로 10 ms 실시간이 되어야 하고, 적용했을 때 더 잘 작동함을 보이면 더 좋다.

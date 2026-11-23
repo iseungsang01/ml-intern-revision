@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.101 (`PREREGISTRATION_B101.md`, B.94 addendum6): `b101_readout_repair/repair101.py` preserves failed B.100 reports and368 predictions, separates supplementary TREE_ names from neural TX, recomputes only overwritten marginal metrics, checks all unaffected content unchanged, then invokes original independent post audit. No training/inference. Local evidence `data/.b101/`; current state `docs/paper/b94_status.md`.
+
 B.100 (`PREREGISTRATION_B100.md`, B.94 addendum5): `b100_eval_resume/resume100.py` revalidates completed fits and logged prediction groups after the author pause/OS reboot; recomputes interrupted groups only, then original readout/post audit. No training. Local evidence: `data/.b100/`; state: `docs/paper/b94_status.md`.
 
 - `runner_common.py`: frozen split directories, the pinned training environment, `run_step`, `prepare_split_copy`.

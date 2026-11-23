@@ -31,7 +31,13 @@ py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b94
 `data/.b94/queue_status.json` reports active worker slots/PIDs and completed counts; `supervisor_status.json` reports durable process liveness. Consult both rather than interpreting an old stage string as ongoing computation. Logs are `durable.stdout.log`, `durable.stderr.log`, readiness/audit logs, and per-fit `process.log`. A production fit counts as complete only after its checkpoint/configuration hashes and ordinary child exit0 are validated. No automatic retry is enabled.
 
 The current claims and their limits are reviewed in [the robustness and related-work report](claim_robustness_20261123.md). No B.94 TEST performance or physical discovery has been established by starting this queue.
-# 2026-11-23 20:18 KST: evaluation-only recovery running
+# 2026-11-23 21:04 audit failure; B.101 repair preparation
+
+B.100 prediction and all368 output checks completed at20:28:22. Readout ended at21:04:11, but the original independent post audit rejected a main-pair metric mismatch and the queue/supervisor exited1. Claude stopped at21:05 on the upstream-failure gate; no partial result review started. This is a failed audit, not a running aggregate or a scientific conclusion.
+
+Source inspection establishes a key collision: neural TX is written into metrics before supplementary tree TX overwrites it.128 of136 cells contain that supplementary comparison. B.101/addendum6 preserves failed artifacts and all predictions, prefixes tree keys TREE_, recomputes only overwritten neural marginal metrics with original functions/RNG names, checks every unaffected report field unchanged, then runs the unchanged original post audit. No fit/inference or paired-bootstrap algorithm changes. Original deadline unchanged. Setup tests89 passed; records zero unsourced. Read local `data/.b101/` and live status for actual recovery state.
+
+## Earlier20:18 running observation
 
 Preparation completed normally: independent pilot/selection and46 confirmation checks passed. Reuse344 predictions across43 logged complete groups; preserve the interrupted six files, then recompute all24 outputs of the remaining three groups using the unchanged predictor. `data/.b100/prepared.json` binds fit evidence, reused hashes, archive hashes, source pins and unchanged deadline. Hidden task `B93_GPU_B94_eval100` was observed Running with live supervisor23360/queue4312, fresh heartbeat and prediction phase. The predictor performs its original readiness gate before GPU inference, then its original all46-job validator. No final metric is available yet. Claude watcher was observed Running and freshly waiting for audited completion. Both source/test checks passed:89 tests, three existing warnings; check_records zero unsourced, existing log-only entry unchanged.
 
