@@ -7,6 +7,13 @@
 제안보다 마지막 병합 결정을 우선한다. 원고의 pedestal-top nowcasting
 목적과 기존 질문을 바꾸지 않고 그 안에서 후속 비교를 준비한다.
 
+문헌 접근 상태에는 최신 `fable_deep_review/NN_CES_CORRECTION.md`와
+`docs/reference/nnces_source.md`를 적용한다. DECISION 말미의 NN-CES 전문
+미확보 문장은 최신 사실이 아니다. 해당 전문이 과거 Fable 요청에 들어간
+것으로 소급하지 않으며, P1 순위를 모든 최근접 원문까지 포함해 최종
+재검증한 것으로 주장하지 않는다. 실행 등록 전 입력·표적·시점·가용 규칙의
+문헌 대비표를 이 원문까지 포함해 완성해야 한다.
+
 ## 다음 프로그램의 고정 질문
 
 CES 과거 이력과 NBI를 조건으로 했을 때 BES/ECEI가 추가하는 예측 정보를
