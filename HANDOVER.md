@@ -4,6 +4,8 @@
 
 ## 0. 한눈에
 
+**현재 재개 지시(2026-11-23 오전).** 저자 요청으로 일시정지했던 프로세스는 이후 OS 재부팅으로 모두 소실되었다. B.94 부록2에 따라 정상 종료한 GPU pilot 두 fit·세 smoke·준비 캐시를 검증해 재사용하고, 중단된 두 partial만 `.b94/interrupted_20261123_resume/`에 보존한 뒤 동일 seed로 재시작한다. RNG 상태가 없어 exact checkpoint continuation이라고 쓰지 않는다. CPU B.92 중복 confirmation은 재개하지 않는다. 원래 suite 마감은 유지한다. 저자의 RAM 여유·동시 실행 확대 지시로 B.95에서 실제 전체 epoch의 2/3/4 및 조건부6 worker 처리량을 측정하고, 독립 감사된 수를 B.94 부록3의 전역 dispatcher에 적용한다. 새 실행 코드는 `b95_concurrency/production95.py` → `bootstrap95.py`이며 동결 B.94 수치 코드는 수정하지 않는다. 실제 전역 worker 수는 새 config의 `global_gpu_worker_limit`과 `global_worker_slot`, `dispatch_policy95.json`을 읽는다. 기존 `scheduled_concurrency`는 명시된 두 slot 이하 그룹의 수다. 아래 과거 PID·CPU 재개 설명은 현 상태로 사용하지 않는다.
+
 **병렬 실행 개정(2026-11-23).** CPU_r2는 이전 프로세스 소실을 확인한 뒤 같은 검증된 큐로 재개했다. 단계 JSON만으로 실행 중이라고 판단하지 말고 `py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b92/cpu_r2`로 PID·생성 시각·독립 watcher heartbeat를 확인한다. 관측기는 중단을 감지하지만 기존 큐를 자동 재시작하지 않는다. `docs/paper/b93_supervisor.md` 참조.
 
 저자의 병렬/GPU 지시에 따라 B.93을 등록·커밋하고 기존 CPU 학습과 동시에 native CUDA의 실제 전체 epoch 및 두 작업 동시 실행을 검증 중이다. `data/.b93/progress93.json`, 최종 `runtime_decision93.json`이 실행 근거다. 첫 정상 종료만으로 전체 경로나 두 작업의 가속을 확정하지 않는다. B.94는 해당 결정의 독립 감사와 실제 dropout smoke를 통과한 경우에만 별도 캐시에서 후보 축소 실험을 실행하도록 사전 등록했다. B.92 소스·fit·CPU override를 바꾸거나 GPU fit과 합치지 않고 원래 suite 마감을 유지한다. `PREREGISTRATION_B93.md`, `PREREGISTRATION_B94.md` 참조.
