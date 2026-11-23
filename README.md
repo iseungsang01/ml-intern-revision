@@ -38,6 +38,7 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `research/report_b98_20261123.py` | 독립 판독된 `docs/paper/b98_physics.json` → 네 대표 unit·모든 규칙의 수치 표 | `b98_physics.md`, `b98_lead_checks.md`; 내부 VAL·군집 중복·물리 식별 한계 명시 |
 | `research/posteval_claude/PLAN.md` | 저자의 Claude 기본 연동·평가 후 agentic 연구 정리 지시 → 최종 감사 gate와 제한된 API 도구 계약 | 같은 폴더의 worker/agent, `docs/paper/posteval_claude_20261123.*`; 기존 평가·새 학습 실행과 분리 |
 | `research/posteval_claude/{evidence,agent,worker,check_setup}.py` | 최종 정상 종료+감사 hash gate → 익명 집계만 읽는 Claude4단계 도구 loop → 근거표·연구 초안 | `data/.claude_posteval_20261123/`, 위 보고서·후속 연구 draft; 현재 평가와 수치 코드 불변 |
+| `docs/paper/posteval_claude_20261123_status.md` | 실제 API tool-use 시험·숨김 작업 등록 → 대기/완료 조건과 산출물 안내 | `HANDOVER.md`, 다음 agent가 live 상태와 후속 연구 초안을 확인하는 진입점 |
 | `experiments/PREREGISTRATION_B99.md`, `PREREGISTRATION_B94_ADDENDUM4.md` | 저자의 GPU 재개 지시 → 실패 보존·metadata 감독기 보완·원래4-slot 큐 재개 계약 | `experiments/b99_recovery/`, `docs/paper/b99_recovery.*`; 동결 수치 코드/마감 불변 |
 | `experiments/b99_recovery/{monitor99,probe99,recover99}.py`, `lead_checks/verify99.py` | 실제 Windows metadata lock 점검 + 완료 fit/동결 소스 검사 → 네 partial 보존·한정 재시작 | `data/.b99/`, `data/.b94/interrupted_permission99/`, 같은 결과 문서 |
 | `docs/paper/lean_feasibility_20261123.md` | Claude 검토 여섯 건 + 원천 문헌 + 현재 모델 코드 + 기호 검산 → 적용 우선순위와 반례 | `HANDOVER.md`, 현재 논문의 방법/검증 검토; 등록된 학습과 TEST 선택은 변경하지 않음 |
