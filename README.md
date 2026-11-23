@@ -269,3 +269,7 @@ py docs/paper/ppcf/check_numbers_v2.py       # 원고의 수치를 출처와 대
 ## 6. 2026-11-21에 지운 것
 
 지금 줄기에 물리지 않는 이전 연구를 지웠다: 실험 디렉터리 47개와 그 등록·결과·시험, W = 4 윈도 모델 시절의 문서, 물리 필터 계열과 원시 Mirnov 특징과 양자 회로 실험, 유도와 증명 묶음, 8쪽판 논문, 2026-11-12까지의 덱 보관함, 이전 원고의 표·검사 스크립트, 기록의 이전 줄기 부분. 모두 git 이력에 있다(지우기 전 마지막 커밋 `e86adaf`). 다음 단계의 근거로 쓰지 않고, 되살리지 않는다.
+
+### PPCF Claude revision workflow
+
+`ces_prediction/research/ppcf_revision.py` reads the original final-audit gate and whitelisted anonymous aggregate packet, generates source-bound tables, and builds isolated copies under `docs/paper/ppcf_revision/`. It requests bounded Claude editing, fixed-prompt PDF grading and an independent novelty review with primary-source search. Requests, responses and uncertain spend stay in ignored `data/.ppcf_revision/`; review outputs, PDF rounds, usage and proposed experiments are read from the isolated paper folder. No scientific fits or GPU work are started. Proposals informed by TEST require separate preregistration. `icml_revision.py` supplies shared API logging/table helpers; its obsolete ICML entry point is not used for PPCF.

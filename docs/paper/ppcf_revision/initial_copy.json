@@ -1,0 +1,12 @@
+{
+  "source": "docs/paper/ppcf",
+  "source_hashes": {
+    "b39_generated.tex": "8cc32c2080cdf9384d4e7d19ec8cb16e6d514445c175e511edc8a0016b13c3ed",
+    "gen_v2.tex": "47f774bd99edf896aab601a3ab1db763fc53778435dc3ef631ab4ce8cedddf09",
+    "gen_v2_alltables.tex": "c6f85bfc816ecc2530382c508e9f82bfa427e53ac9f3a4a446266ed3fa0101d7",
+    "main_ppcf.tex": "3c9c4b0aa9365c1d49c2f6aefa1a1c694e6f499fecf70fd7fdee4b410df7f07b",
+    "supp_data_fragment.tex": "32ca83f37eff0441c9911bc8ad70a54059d4210fd58bed2cc30b2723a91f9d08",
+    "supp_ppcf.tex": "7615abf1b3e992fae6db9a4813cca673ac862515bd3680bf4b84c348b1735e50",
+    "test_v2.tex": "85fd59bf106b358be88697c0af00c4abe2828ca26c6468bc2288da6bd6e94fbd"
+  }
+}

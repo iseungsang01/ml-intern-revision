@@ -1,0 +1,21 @@
+{
+  "target": "PPCF",
+  "novelty_rounds": 2,
+  "latest_novelty": "weak reject",
+  "requested_threshold_met_by_novelty_referee": true,
+  "accept_claimed": false,
+  "fixed_grader_round1": "completed; see grade1.md",
+  "fixed_grader_round2": "incomplete token limit; not a grade",
+  "gpu_runs": 0,
+  "new_scientific_analyses": 0,
+  "main_pages": 20,
+  "supplement_pages": 26,
+  "pdf_hashes": {
+    "main_ppcf.pdf": "725c963865835d7b0e84a3a89d7c34d8af5be29abf1dc216189a554d6ab705fa",
+    "supp_ppcf.pdf": "2c1c1bd8e9d4e00f05f4dfce3469b8d922829a59cf9831926f66767022dbcd26"
+  },
+  "api_input_tokens": 1369575,
+  "api_output_tokens": 65343,
+  "fixed_grader_latest": "grade3.md: major revision, bordering reject-and-resubmit",
+  "post_review_minor_edits": "Corrected overbroad random-only TCN abstract statement; named latency rows explicitly. Reviewed PDFs preserved separately."
+}

@@ -1,0 +1,52 @@
+% Generated from independently audited result JSON; never edit by hand.
+\begin{table*}[t]
+\centering\scriptsize
+\begin{tabular}{llrrr}\toprule
+Design & Availability / target & Fast TCN RMSE & History TCN RMSE & Paired skill [95\% interval]\\\midrule
+V1 & D10/F & 206.46 & 202.59 & -0.041 [-0.253, +0.095]\\
+V1 & D650/L5 & 208.71 & 251.26 & +0.309 [+0.130, +0.446]\\
+V1 & S/L5 & 213.44 & 235.41 & +0.178 [+0.036, +0.262]\\
+V1 & K10/F & 211.26 & 227.34 & +0.136 [-0.044, +0.269]\\
+V2 & D10/F & 206.48 & 200.52 & -0.061 [-0.248, +0.062]\\
+V2 & D650/L5 & 215.78 & 230.63 & +0.125 [-0.082, +0.306]\\
+V2 & S/L5 & 226.99 & 253.11 & +0.194 [+0.007, +0.339]\\
+V2 & K10/F & 215.59 & 225.53 & +0.086 [-0.146, +0.224]\\
+V3 & D10/F & 304.42 & 267.87 & -0.292 [-0.533, -0.141]\\
+V3 & D650/L5 & 292.84 & 310.70 & +0.110 [-0.048, +0.236]\\
+V3 & S/L5 & 282.97 & 308.91 & +0.160 [-0.022, +0.263]\\
+V3 & K10/F & 302.35 & 297.58 & -0.033 [-0.272, +0.111]\\
+V4a & D10/F & 263.90 & 247.04 & -0.141 [-0.314, -0.042]\\
+V4a & D650/L5 & 208.40 & 209.89 & +0.014 [-0.336, +0.340]\\
+V4a & S/L5 & 197.52 & 198.60 & +0.008 [-0.374, +0.223]\\
+V4a & K10/F & 283.41 & 274.24 & -0.069 [-0.287, +0.054]\\
+\bottomrule\end{tabular}
+\caption{Fixed unit subset, three initializations. RMSE in eV. Paired skill is fast relative to history; intervals condition on fixed fits. Designs are not ranked. Selected rows summarize availability conditions; scopes remain separate.}
+\end{table*}
+\begin{table*}[t]
+\centering\scriptsize
+\begin{tabular}{llrrr}\toprule
+Design & Availability / target & Fast TCN RMSE & History TCN RMSE & Paired skill [95\% interval]\\\midrule
+V1 & D10/F & 197.92 & 193.31 & -0.048 [-0.099, +0.000]\\
+V1 & D650/L5 & 203.58 & 244.41 & +0.306 [+0.237, +0.364]\\
+V1 & S/L5 & 209.03 & 238.05 & +0.229 [+0.164, +0.285]\\
+V1 & K10/F & 205.19 & 221.58 & +0.143 [+0.066, +0.223]\\
+V2 & D10/F & 226.38 & 193.47 & -0.369 [-0.603, -0.181]\\
+V2 & D650/L5 & 243.94 & 246.64 & +0.022 [-0.288, +0.238]\\
+V2 & S/L5 & 248.86 & 236.44 & -0.108 [-0.401, +0.118]\\
+V2 & K10/F & 234.98 & 224.39 & -0.097 [-0.295, +0.061]\\
+V3 & D10/F & 275.49 & 223.56 & -0.518 [-0.717, -0.348]\\
+V3 & D650/L5 & 275.14 & 285.58 & +0.072 [-0.112, +0.203]\\
+V3 & S/L5 & 265.62 & 264.02 & -0.012 [-0.159, +0.106]\\
+V3 & K10/F & 280.26 & 253.70 & -0.220 [-0.364, -0.102]\\
+V4a & D10/F & 270.88 & 248.00 & -0.193 [-0.358, -0.079]\\
+V4a & D650/L5 & 204.55 & 210.24 & +0.053 [-0.358, +0.383]\\
+V4a & S/L5 & 197.06 & 202.55 & +0.054 [-0.219, +0.258]\\
+V4a & K10/F & 289.94 & 272.84 & -0.129 [-0.344, +0.009]\\
+\bottomrule\end{tabular}
+\caption{Full validation suite, one initialization. RMSE in eV. Paired skill is fast relative to history; intervals condition on fixed fits. Designs are not ranked. Selected rows summarize availability conditions; scopes remain separate.}
+\end{table*}
+\begin{table}[t]\centering\small
+\begin{tabular}{lrr}\toprule Model & Median ms & p99 ms\\\midrule
+History TCN & 2.465 & 3.608\\
+Fast TCN & 2.571 & 4.560\\
+\bottomrule\end{tabular}\caption{Single-thread streaming inference on a held-out trace. Acquisition and transfer excluded; preprocessing measured separately.}\end{table}

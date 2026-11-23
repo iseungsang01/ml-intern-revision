@@ -1,0 +1,585 @@
+% =========================================================================
+% PPCF draft (single column). Author framing: nowcasting of the CES ion temperature at the
+% pedestal top; which causal estimator has the lowest error against hold, the causal GP and
+% the interpolation that waits for the next value; what the fast diagnostics add; other
+% divisions of the discharges, time order and real time; the estimator in use where the
+% CES value is late or sparse and on a second device; where it does not hold.
+% Targets: the value of the frame (F) and the level of the following frames (L5).
+% The estimator of the paper is network-free (TX = GP + boosted regression). The recurrent
+% network and the budgeted TCN are comparison rows. In the TCN result files the labels
+% TX/TH mean fast TCN / history TCN and are NOT the estimator of the paper.
+% Numbers: gen_v2.tex (existing macros and tables) and generated_tables.tex (budgeted TCN,
+% generated from the independently audited result file; never edited by hand; input once).
+% Build: supplement first, then main (the two files cross-reference through xr).
+% =========================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{amsmath,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[skip=6pt]{caption}
+\usepackage{microtype}
+\usepackage{flafter}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
+\usepackage[numbers,sort&compress]{natbib}
+\setlength{\bibsep}{0.5pt}
+\renewcommand{\bibfont}{\footnotesize}
+\usepackage{xr-hyper}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\externaldocument[S-]{supp_ppcf}
+
+\newcommand{\Ti}{\ensuremath{T_i}}
+\newcommand{\Te}{\ensuremath{T_e}}
+\newcommand{\Supp}[1]{Supplementary \S\ref{S-#1}}
+\newcommand{\SuppTab}[1]{Supplementary Table~\ref{S-#1}}
+\newcommand{\SuppFig}[1]{Supplementary Figure~\ref{S-#1}}
+\input{gen_v2}
+
+\hypersetup{
+  pdftitle={Causal nowcasting of the charge-exchange ion temperature on an edge chord of KSTAR with fast diagnostics at the pedestal top},
+  pdfauthor={Anonymous},
+}
+
+\title{Causal nowcasting of the charge-exchange ion temperature on an edge chord of KSTAR
+with fast diagnostics at the pedestal top}
+\author{Anonymous}
+\date{}
+
+\begin{document}
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+\noindent
+Charge-exchange spectroscopy (CES) measures the ion temperature at the pedestal top of KSTAR, where the measurement is weakest: values are missing, scatter from frame to frame and include failed fits. Monitoring and control need a value for every 10\,ms frame that is formed without waiting for the next one, a nowcast. We look for the causal estimator of the CES ion temperature on the pedestal-top chord with the lowest error against holding the last value, a causal Gaussian process and interpolation that waits for the next value, and ask what fast diagnostics at the same location, beam-emission spectroscopy and electron-cyclotron-emission imaging, add. With every value up to the previous frame at hand, the estimator with the lowest error that we found needs no neural network: a Gaussian process on the past CES values followed by a boosted regression on scalars of that history and of the fast channels, about two milliseconds per frame on one processor thread. Both components are standard; the contribution is the measured comparison for this chord. On 627 discharges of the 2022 campaign and under four validation designs, its mean squared error (MSE) on the value of the frame is lower than that of monotone cubic interpolation, which waits for the next value, by \TXoverPchipVfoura{} per cent in the least favourable design (chronological; 95\,\% interval, clusters of shots resampled), and lower than that of a two-sided Gaussian process by \TXoverOfflineVtwo{} per cent when clusters of shots are held out; in time order no difference from the latter is established. An estimate from the CES history alone does not reach the two-sided process: the fast diagnostics carry the difference in the random and cluster-held-out comparisons. In use, where the CES value is late or sparse, the fast diagnostics matter more: with the newest CES value \AgeMedianS\,s old they reduce the MSE of the estimate of the temperature level by \IncDsixfiftyVthree{} per cent (rolling origin), and on a second device, MAST, with Thomson scattering, by \IncMastDhundredMthree{} per cent at 100\,ms. The advantage over interpolation lies in the larger errors; the median error of the two-sided process is slightly lower. A separately audited temporal convolutional network, fitted under a fixed budget with and without the fast channels, is reported as a comparison and is not adopted: with the previous frame visible its fast-enabled form is not established better than its history-only form under any design and is worse in time order, and its stale-history increment depends on the validation design, availability condition and evidence scope. The second stage has to be refitted for the condition of use, the gain is not shown to be specific to the radius, and under the beam-modulation schedule of the present analysis it is not established for the last block of shots of the campaign. No independent campaign and no temperature reference other than the reported CES value were available.
+\end{abstract}
+
+\noindent\textbf{Keywords:} charge-exchange spectroscopy, ion temperature, pedestal, nowcasting, real-time estimation, beam emission spectroscopy, electron cyclotron emission imaging, KSTAR, MAST
+
+% =========================================================================
+\section{Introduction}
+\label{sec:intro}
+
+The ion temperature \Ti{} at the top of the pedestal sets the boundary condition of the core and is one of the quantities that monitoring and control of the edge ask for. Requirement documents put it at 10 to 100\,ms and about 10\,\%: the 10\,ms figure for the edge is from the specifications developed in the FIRE design study (p.~288 and table~III of~\citep{Young2008PlasmaMeasurements}), and the ITER requirement is 100\,ms and 10\,\% for the edge ion temperature~\citep{Donne2007ChapterDiagnostics}. \Ti{} is measured by charge-exchange spectroscopy (CES)~\citep{Ko2010ChargeExchange}, from the Doppler width of a line that an impurity ion emits after charge exchange with the atoms of a neutral beam. At the edge the signal is weakest, and there the measurement is least accurate: the real-time analysis of DIII-D is less accurate on its edge views~\citep{Chrystal2026RealTime}, and a neural-network analysis of KSTAR spectra reports a decline of its accuracy at $R \gtrsim 2.2$\,m~\citep{Lee2026NeuralNetworkbased}.
+
+The KSTAR chord studied here was selected by the data provider as the pedestal top ($R = 2.198$\,m). On it the CES value is weak in three ways: one frame in twelve carries no usable value, the values that exist scatter from frame to frame, and some are failed fits (\S\ref{sec:data}). The value is also late: as described for KSTAR, the beam-modulation analysis subtracts a background measured in frames without beam and delivers a value about a second later~\citep{Lee2020TwoGaussian,Lee2026NeuralNetworkbased}. An estimate for monitoring or control has to be formed when the frame is taken, without the next value. We call such an estimate a \emph{nowcast}; the simplest one holds the last value.
+
+Earlier work meets the problem from four sides. \emph{Readers of the spectrum} remove the delay at its source: a two-Gaussian fit gives \Ti{} without beam modulation~\citep{Lee2020TwoGaussian}, and neural networks read \Ti{} from the spectrum of the frame, first at JET~\citep{Bishop1993AutomaticAnalysis,Svensson1999AnalysisJet} and now on KSTAR~\citep{Lee2026NeuralNetworkbased}, HL-3~\citep{Tian2026RealTimeCxrs} and EAST~\citep{Hu2026RealTimeIon}; DIII-D runs a simplified fit in real time~\citep{Chrystal2026RealTime}, and JT-60U used real-time charge-exchange data for feedback on the ion-temperature gradient~\citep{Yoshida2009RealTime}. These read a spectrum that exists and inherit its weakness at the edge. \emph{Profile estimators without the charge-exchange value}: the real-time kinetic reconstruction of DIII-D~\citep{Shousha2023MachineLearningbased} drops its Thomson or charge-exchange inputs at random in training so that it runs when one is absent; it has no memory, gives no accuracy for the ion temperature without charge exchange, and its edge ion temperature is that of an offline reconstruction which extrapolates it from the electron temperature. An attention network on EAST predicts \Ti{} and \Te{} profiles from global signals when its x-ray spectra are missing~\citep{Wang2026FusingGlobal}; profile evolution is predicted from actuators and earlier profiles~\citep{Abbate2021DatadrivenProfile}; other channels are filled or sharpened from neighbouring diagnostics~\citep{Jalalvand2025MultimodalSuperresolution,Imrek2026TemporalSuperresolution,Wang2025TimeSeriesExtrinsic,Jia2026TimeSeries}. \emph{Interpolation and smoothing} of the measured series, by monotone cubic interpolation~\citep{fritsch1980} or Gaussian-process (GP) regression~\citep{rasmussen2006,chilenski2015,michoski2024,Kim2024KineticProfile}, fill a frame from the values on both sides of it and therefore wait for the next value. \emph{Model-based observers} fuse diagnostics of different rates in real time: on TCV a 1\,kHz observer merges 60\,Hz Thomson scattering with interferometry through a physics forward model~\citep{Pastore2023ModelBased,Pastore2026ApplicationsNovel}, and an extended Kalman observer of the electron temperature at DIII-D takes \Ti{} as a multiple of \Te{}~\citep{Morosohk2023RealTime}.
+
+\emph{What is established, what is contributed, and what is not verified.} The components used here are established methods: GP regression, gradient boosting, recurrent and temporal convolutional networks (TCN), blocked validation and cluster-resampled intervals. None of them is offered as a method contribution. The general problem is not new either. Estimating a slow, missing or delayed measurement from faster ones is the subject of the virtual-diagnostic work cited above~\citep{Shousha2023MachineLearningbased,Jalalvand2025MultimodalSuperresolution,Imrek2026TemporalSuperresolution} and of a wide literature on missing and delayed sensors outside fusion. The contribution of this paper is application-specific and empirical: for one pedestal-top CES chord, a causal estimate is scored against hold, a causal GP and the interpolations that wait; the increment of available fast diagnostics is measured under four validation designs and several availability conditions; and the outcomes that go against the estimator are kept. Two neighbouring lines differ in their input. The neural-network analysis of raw KSTAR CES spectra~\citep{Lee2026NeuralNetworkbased} addresses analysis from the spectrum, whereas this work has no spectrum and reads only the reported values and the fast channels. Hardware for ultra-fast CES (UFCES; Jang \emph{et al} 2021, \href{https://doi.org/10.1063/5.0043824}{doi:10.1063/5.0043824}) raises the rate of the measurement itself, whereas this work adds no hardware. Both are complementary to an estimator in the time domain; neither was run on the same data, and nothing here ranks them. This evaluation measures task-specific predictive value without claiming algorithmic priority.
+
+This paper continues the earlier work for one measured chord in the time domain: a causal estimator that keeps the time history of the chord, reads fast diagnostics at its location, and is scored against hold, a causal GP and the interpolation that waits, with intervals. Five questions organize it:
+\begin{enumerate}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\item At the pedestal top, which estimate formed without the next CES value has the lowest error, and how does it stand against interpolation that waits for that value (\S\ref{sec:res:best})?
+\item What do the fast diagnostics at the location add to the CES history (\S\ref{sec:res:fast})?
+\item Does it hold when the discharges are divided differently and in time order, and is it fast enough for a 10\,ms frame (\S\ref{sec:res:designs})?
+\item In use: what happens where the CES value is late or sparse, and on a second device (\S\ref{sec:res:use}, \S\ref{sec:res:mast})?
+\item Where does it not hold (\S\ref{sec:res:limits})?
+\end{enumerate}
+A budgeted TCN comparison, audited independently after the main analysis, is added as a comparison row (\S\ref{sec:res:tcn}). It does not replace the estimator and opens no sixth question.
+
+The KSTAR results are for one chord, one campaign and one device. MAST, with public data, is a second device that carries one statement only: the direction is not peculiar to one device and one pair of diagnostics. On both devices the tests are registered tests on data that had been read before; no untouched data and no independent campaign exist.
+
+% =========================================================================
+\section{Data and the reported value}
+\label{sec:data}
+
+\subsection{Files, chord and rows}
+\label{sec:data:files}
+
+We use the \NFiles{} discharge files of the KSTAR 2022 campaign (shots 30801--32751) on a 10\,ms grid; 639 discharges have more than one grid row (Table~\ref{tab:dataset}). The plasma current, the field and the density are not in the files. Each row holds nine BES channels~\citep{Lampert2015CombinedHydrogen,KFE2026DiagnosticsDataUserGuide}, four ECEI channels~\citep{Yun2010DevelopmentKstar}, two Mirnov-coil signals (not used by the estimator of this paper), the time stamp and the CES values of one outboard chord at $R = 2.198$\,m, selected by the data provider as the pedestal top within the BES coverage. No equilibrium is in the files, so the normalized radius of the chord is not fixed for these discharges; the published positions, given in different coordinates and for different discharges, are collected in \Supp{sec:sdata}. We call it the pedestal-top chord and do not claim that it sits at the pedestal top in every discharge. A second set of files gives, for the same rows, the power and voltage of the six neutral-beam sources (\SuppTab{tab:nbisources}).
+
+\begin{table}[tbp]
+  \centering
+  \caption{The data set: KSTAR, 2022 campaign, shots 30801--32751, the 635 discharges with scored rows (all 641 files hold 245{,}925 grid rows and 1{,}414 absent steps). Percentiles are over discharges or over rows as stated; the beam line leaves out the 13 files whose power columns of the second beam box are invalid.}
+  \label{tab:dataset}
+  \TabDataset
+\end{table}
+
+Raw streams of twelve discharges, set against the files, show that every fast-channel value of a row is a single raw sample at the time stamp, not an average over the CES frame, and that the stamp lies within about 2\,ms of the start of the 10\,ms exposure (\Supp{sec:sdata}). An estimate formed at the stamp of row $t$ therefore uses fast samples taken up to the start of the frame it estimates. The first and the last row of a file carry no CES value and are not grid rows; the grid of all files has \NGridRows{} rows. In \StuckShare{} of them, in \NStuckDischarges{} discharges, the four ECEI channels are constant for at least ten rows while the BES channels are not; these rows are kept (\SuppTab{tab:stuck}).
+
+\subsection{Absent frames and the age of a value}
+\label{sec:data:late}
+
+Inside a discharge the step between rows is 10\,ms, except for steps of 20 to 40\,ms: one to three frames are absent. In the beam files these steps are notches of the two sources of the first beam box that run: in the first row after such a step both are low together, while the sources of the second box are not (\SuppTab{tab:nbinotch}). The absent frames are the frames exposed without the beam that CES views, from which the analysis takes its background. The CES values in the files are the product of the analysis after the discharge. When each of them could have existed during the discharge depends on how the analysis is scheduled; if, following the description of the KSTAR analysis~\citep{Lee2020TwoGaussian}, the frames between two notches become analysable once the second notch has been taken, and the analysis itself takes no time, the newest value that could have been delivered is \AgeMedianS\,s old at the median, with quartiles \AgeQuartLoS{} and \AgeQuartHiS\,s (Fig.~\ref{fig:problem}b). We call this reading the \emph{beam-modulation schedule} and use it in \S\ref{sec:res:use} as one condition of use, not as a fact about an existing system.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_problem}
+  \caption{The data. (a) One discharge (chosen by rule, \S\ref{sec:methods:designs}): the reported \Ti{} of the pedestal-top chord, the power of the first beam box and the array means of BES and ECEI relative to their medians. Vertical lines: absent frames, which are notches of that beam box. In this discharge the ECEI channels are constant until about 2\,s (\S\ref{sec:data:files}). (b) Over all scored rows, the age of the newest CES value that the beam-modulation schedule could have delivered, with an analysis time of zero.}
+  \label{fig:problem}
+\end{figure}
+
+\subsection{The reported value}
+\label{sec:data:value}
+
+The quantity is the temperature that the KSTAR CES analysis reports for the chord: the temperature of C$^{6+}$ ions from the Doppler width of the C\,VI charge-exchange line~\citep{Ko2010KstarCesSystem,Ko2010ChargeExchange,Ko2015IonTemperature}. Whether it equals the main-ion temperature is a property of the measurement that this paper does not test; in the pedestal the two can differ~\citep{CanoMegias2025MultiIon,Haskey2018MainIon}. The files carry no per-frame fit error and no spectrum. Values above 3\,keV, most frequent at low beam emission and taken as failed fits~\citep{Kim2024KineticProfile}, and values that repeat the previous one to the last digit, which are held values and not measurements, are treated as missing everywhere: as targets, as history inputs and as scored rows.
+
+The reported value scatters from frame to frame. In eleven discharges with raw 500\,kHz BES, readings that rise for one frame are several times more frequent in frames whose exposure contains a burst of BES light, consistent with edge-localized modes, than their share of the frames; in those frames the level of the following frames and the rotation from the same fit do not move (a registered test, \SuppTab{tab:bursts}). Without spectra or fit errors it cannot be decided whether the ions are hotter in such a frame or the fit is disturbed. This is why a second target, the level around which the readings scatter, is carried beside the value of the frame.
+
+% =========================================================================
+\section{Method}
+\label{sec:methods}
+
+\subsection{Targets}
+\label{sec:methods:target}
+
+With $y_t$ the reported \Ti{} of row $t$, the nowcast target is $y_t$ itself, the \emph{value of the frame} (F in the tables): no estimator reads it. It is the only target on which interpolation can be compared, since interpolation fills row $t$ from the values on both sides of it. Because a single reading scatters (\S\ref{sec:data:value}), the \emph{level of the following frames} is carried beside it,
+\begin{equation}
+  L_t = \operatorname{median}\bigl\{\,y_{t+j} : 1 \le j \le 5,\ y_{t+j}\ \text{measured}\,\bigr\},
+  \label{eq:target}
+\end{equation}
+defined when at least three of the five are measured (L5 in the tables). The interpolation references read rows inside this window and are not scored on it. What the fast diagnostics add (\S\ref{sec:res:fast}) and the estimator in use (\S\ref{sec:res:use}) are scored on the level, which is less sensitive to one-frame excursions of the reading. Both targets are built from reported values: they are not an independent measurement of the bulk-ion temperature, a bias of the analysis that lasts longer than 50\,ms is in them as well, and L5 is a median over following frames, not an instantaneous temperature.
+
+\subsection{Estimators and references}
+\label{sec:methods:est}
+
+Table~\ref{tab:inputs} lists the estimators. \emph{Hold} keeps the newest visible value. The \emph{causal GP} is a Mat\'ern-3/2 process~\citep{rasmussen2006} on the last 16 visible values, with hyperparameters chosen by marginal likelihood at every row. The \emph{history-only estimator} T0 and \emph{the estimator of this paper}, TX, add to the GP estimate $g_t$ a boosted regression~\citep{Friedman2001GreedyFunction,Pedregosa2011ScikitLearn} $f$ that is fitted on the fit discharges to the target minus $g_t$:
+\begin{equation}
+  \hat y_t^{\mathrm{T0}} = g_t + f_0(\mathbf h_t), \qquad
+  \hat y_t^{\mathrm{TX}} = g_t + f_X\bigl(\mathbf h_t,\, \mathbf q_t(b),\, \mathbf q_t(e),\,
+  \mathbf a_t(b),\, \mathbf a_t(e)\bigr).
+  \label{eq:est}
+\end{equation}
+Here $\mathbf h_t$ holds ten scalars of the visible history (Table~\ref{tab:inputs}), $b$ is the mean over the nine BES channels and $e$ the mean over the four ECEI channels, each channel standardized with its mean and standard deviation over the fit discharges. For either array mean $x$ the four scalars of the present are
+\begin{equation}
+  \mathbf q_t(x) = \bigl(x_t,\; x_t - \bar x_t,\; s_t,\; x_t - x_{t-1}\bigr),
+  \label{eq:fast}
+\end{equation}
+with $\bar x_t$ and $s_t$ the mean and the standard deviation of $x$ over the ten rows before $t$, and the three scalars that tie the present to the \emph{anchor row} $a(t)$, the row of the newest visible CES value, are
+\begin{equation}
+  \mathbf a_t(x) = \bigl(\tilde x_{a(t)},\; \tilde x_t - \tilde x_{a(t)},\;
+  \ln(\tilde r_t / \tilde r_{a(t)})\bigr),
+  \label{eq:anchor}
+\end{equation}
+where a tilde is the mean over the ten rows that end at the index and $r$ is the array mean of the raw, unstandardized channels. The regression is used with its default settings, without tuning, one fit per target and condition, and is the same on KSTAR and MAST. TE and TB are TX with the ECEI half or the BES half of the fast scalars only; TN and TXN are T0 and TX with 19 scalars of the beam waveforms added. The GP and the boosted regression are standard methods; what is specific to this work is their arrangement for this chord and the scalars of equations~(\ref{eq:fast}) and~(\ref{eq:anchor}).
+
+Two \emph{references wait for the next value} and are not available in real time: monotone cubic interpolation (PCHIP)~\citep{fritsch1980} through the measured values of the block with row $t$ left out, and an \emph{offline GP}, the same Mat\'ern-3/2 process as the causal GP with the 16 nearest values on each side of row $t$ instead of the 16 before it. For both processes the values are standardized within the neighbour set, and the length scale (5 to 80\,ms) and the noise are chosen at every row by marginal likelihood on a fixed grid. A recurrent network (a two-branch LSTM) and a two-stage form of it, the estimators of an earlier version of this work, are comparison rows.
+
+A temporal convolutional network (TCN), an established architecture, was evaluated afterwards as a further comparison row in two forms: a \emph{history TCN} that reads the visible CES history only, and a \emph{fast TCN} that reads the fast channels as well. The architecture was selected on validation data among the candidates of a pilot, and every fit ran under a fixed wall-clock budget. In the audited result files and in the latency table of \S\ref{sec:res:tcn} these two networks carry the labels TH and TX. That TX is the fast TCN and is not the estimator of this paper, and TH is not T0. Everywhere else in this paper TX and T0 denote the GP-and-boosting estimators of equation~(\ref{eq:est}), and the networks are called fast TCN and history TCN.
+
+We call an estimator \emph{causal} when it uses no sample stamped later than the row and no statistic computed over the discharge that is scored; statistics of the fit come from fit discharges only. Causality is by time stamp: when a sample would arrive at a control system is not established by the files. ``Fast'' refers to availability: BES and ECEI deliver a sample without an analysis delay. The files hold one sample per 10\,ms row, and nothing here uses the bandwidth of these diagnostics.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Estimators and what they read (KSTAR). CES values are read as the availability rule allows; fast samples and beam waveforms up to row $t$.}
+  \label{tab:inputs}
+  \TabInputs
+\end{table}
+
+\subsection{What the estimator may see}
+\label{sec:methods:rules}
+
+The \emph{nowcast condition} is that every CES value up to the previous frame is visible (D10 in the tables); the fast samples and the beam waveforms are visible up to $t$. For the estimator in use (\S\ref{sec:res:use}) three further \emph{availability rules} restrict the CES values (Fig.~\ref{fig:rules}): D$d$, values stamped at $t - d$ or earlier, for $d$ of 50 to 1000\,ms, with D650 the median age under the beam-modulation schedule; S, values up to the last frame before the most recent notch, that schedule with an analysis time of zero; and K$k$, values of every $k$-th frame only, a CES that reports more rarely. A delay $d$ is the age of the visible CES history, not a forecast horizon: under every rule the target stays at row $t$ (F) or in the frames just after it (L5).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_rules}
+  \caption{What the estimator may see. For an estimate at row $t$ (dashed line) the fast samples are visible up to $t$; the CES values that are visible are those up to the previous frame (D10, the nowcast condition) or, for the estimator in use, those older than a delay $d$ (D$d$), up to the last frame before the most recent notch (S), or of every $k$-th frame (K$k$). The frame of row $t$ is never visible.}
+  \label{fig:rules}
+\end{figure}
+
+\subsection{Two controls}
+\label{sec:methods:controls}
+
+Statements about the fast inputs are accompanied by two controls. In the first, the fast scalars are permuted over rows and the estimator is refitted: the reduction against the history-only estimator should then be zero. In the second, the fast scalars are taken at the anchor row instead of row $t$: it asks whether the samples of the present are needed, or whether fast samples as old as the CES value serve as well.
+
+\subsection{Validation designs, scores and intervals}
+\label{sec:methods:designs}
+
+All KSTAR numbers of the tables generated with the main analysis come from one definition of the data: 639 discharges, the 10\,ms grid without the first and last rows of the files, values above 3\,keV and held values missing everywhere, segments cut at gaps of 0.5\,s or more that no estimator crosses, and all estimators of a table scored on the same rows (\SuppTab{tab:sets}).
+
+Four validation designs are used, and the tables show all four; no row is called primary.
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\item \textbf{V1, random}: five folds of whole discharges, three re-partitions.
+\item \textbf{V2, clusters held out}: five folds of whole \emph{shot clusters} (runs of shot numbers with steps of at most three), three assignments.
+\item \textbf{V3, rolling origin}: the shot list in fifths; fifths two to five are scored with an estimator fitted on the fifths before.
+\item \textbf{V4, chronological}: fitted on the shots up to 31991 and scored on the shots from 32312 on; the fit up to 32310 is shown beside it. The second fit shares one shot cluster with the scored block (shots 32310 and 32312); the first shares none.
+\end{itemize}
+
+Errors are in eV. The tables give the root-mean-square error (RMSE), the mean absolute error (MAE), the median absolute error and the share of rows whose estimate lies within 10 per cent of the target, and, for an estimator A against a reference R on the same rows, the \emph{reduction of the MSE} in per cent,
+\begin{equation}
+  \Delta(A, R) = 100\,\bigl(1 - \mathrm{MSE}(A)/\mathrm{MSE}(R)\bigr).
+  \label{eq:delta}
+\end{equation}
+The \emph{fast-channel increment} is $\Delta(\mathrm{TX}, \mathrm{T0})$ under one condition. For a rule $\rho$ of \S\ref{sec:methods:rules}, the \emph{cost of staleness} and the \emph{recovered share}, the part of the loss that TX gives back, are
+\begin{equation}
+  C_\rho = \frac{\mathrm{MSE}_\rho(\mathrm{T0})}{\mathrm{MSE}_{\mathrm{D10}}(\mathrm{T0})},
+  \qquad
+  \phi_\rho = \frac{\mathrm{MSE}_\rho(\mathrm{T0}) - \mathrm{MSE}_\rho(\mathrm{TX})}
+  {\mathrm{MSE}_\rho(\mathrm{T0}) - \mathrm{MSE}_{\mathrm{D10}}(\mathrm{T0})},
+  \label{eq:cost}
+\end{equation}
+all on the same rows. Intervals are 95\,\% bootstrap intervals from 20{,}000 draws in which shot clusters are resampled (under V1 and V2 the re-partition or assignment is drawn first); intervals with discharges resampled are narrower and are in the result files. A difference is called established only when the cluster interval excludes zero. All intervals condition on the fitted estimators: they carry no uncertainty from refitting, from selection or from the number of statements. Strata are defined on inputs or on the time structure only, never on the scored value. The example discharge of the figures was chosen by a rule and not by eye: among the test discharges of one re-partition with at least 500 scored rows under rule S and at least three notches, the one with the median fast-channel increment.
+
+\subsection{Second device}
+\label{sec:methods:mast}
+
+On MAST we use the public FAIR-MAST data~\citep{Jackson2024FairMast}: the charge-exchange \Ti{} of chords in a pedestal-top band, 1.5 to 5\,cm inside the edge of the Thomson density profile, in 5\,ms frames, with the Thomson-scattering \Te{} and density at the same radius as inputs of the present (nine scalars: present and anchor-frame values, their difference and log ratio, and the distance to the density edge). Thomson scattering on MAST is not faster than the charge-exchange frames: what is tested there is a present measurement of another diagnostic against a stale charge-exchange history. The target is the level of the next five frames. No frame is hidden by a beam modulation on MAST, so delays D5 (previous frame) to D150 are imposed; the designs are M1 random, M2 sessions held out (a session is an experiment date), M3 rolling origin and M4 chronological, with sessions resampled for the intervals. T0 and TX are built as on KSTAR.
+
+\subsection{Registration and independent recomputation}
+\label{sec:methods:reg}
+
+Each batch of analyses of the main line of this paper (labelled B.73 to B.86 in the supplementary material and the repository) was registered before it was run: its statements, the rule by which each is judged, the expected outcome and the sentences that the paper would carry for either outcome were committed first. Choices that a registration left open were written down before the readout. A treatment changed after a readout had been seen is shown as a sensitivity beside the registered readout, not in its place. For every batch the inputs and one fit, or the statement values, were recomputed with code written independently of the implementation. The statements that do not hold, with the expectations that were not met, are in \Supp{sec:sstatements}. Diagnostics that were not registered are marked as read after the fact, and where they carry no interval this is said.
+
+The TCN comparison of \S\ref{sec:res:tcn} is a later batch. Its queue ran to completion, an audit after the run passed, and the selection and the readout were checked to rest on identical records. It reuses the campaign and the fit and validation data on which earlier choices were made. Its tables are generated from the audited result file and are not edited by hand. Any proposal that follows from its test readout is exploratory.
+
+% =========================================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Which estimator has the lowest error}
+\label{sec:res:best}
+
+\emph{Question: at the pedestal top, which estimate formed without the next CES value has the lowest error, and how does it stand against interpolation that waits for that value?} Table~\ref{tab:ladder} gives the estimators under the random design and Table~\ref{tab:vsref} the estimator of the paper against each reference under the four designs; Fig.~\ref{fig:nowcast} shows them on the example discharge. A reference that waits is defined on 222{,}005 of the 222{,}672 rows, in 627 of the 635 discharges; the comparisons with the references are made on these rows.
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapLadder}
+  \label{tab:ladder}
+  \TabLadder
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{\CapVsReferences}
+  \label{tab:vsref}
+  \TabVsReferences
+\end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_nowcast}
+  \caption{The nowcast on the example discharge, in three windows: reported \Ti{} (dots), hold, the causal GP, the estimator of the paper (TX) and, dashed, the interpolation that waits for the next value (PCHIP). Vertical lines: absent frames. The estimates were made with the discharge in the test fold.}
+  \label{fig:nowcast}
+\end{figure}
+
+On the value of the frame the RMSE falls along the ladder: hold, PCHIP, the causal GP, then the history-only estimator and the offline GP close together, and the estimator of the paper lowest (Table~\ref{tab:ladder}). The nowcast, which does not wait, has a lower MSE than PCHIP, which does, under all four designs; the least favourable is the chronological design (Table~\ref{tab:vsref}). Against the offline GP, the stronger of the two references that wait, the MSE is lower under the random and the cluster design, and in the two designs that respect time order the interval contains zero: a difference from an interpolation that has seen the next value is not established there, in either direction. The history-only estimator has a higher MSE than the offline GP under all four designs; where the nowcast passes the offline GP, it is the fast diagnostics that carry it there.
+
+The advantage lies in the larger errors. The median absolute error of the offline GP is slightly lower than that of the nowcast (against PCHIP the difference of the medians is not established), while the 90th percentile and the mean squared error of the nowcast are lower (lower block of Table~\ref{tab:vsref}): an interpolation with the next value in hand is hard to improve on in a quiet frame, and the nowcast gains where the value moves.
+
+On the level of the following frames the estimator of the paper has the lowest error of the causal estimators of Table~\ref{tab:ladder}, and it is closer to the level than the reading of the frame itself: with the previous frame visible, two thirds of the estimates lie within 10 per cent of the level, against three fifths of the readings (Table~\ref{tab:robust}). The two-stage form of the recurrent network has the same error as the estimator of the paper on the value of the frame, the network alone a higher one, and both have a higher error on the level (Table~\ref{tab:ladder}): for the nowcast condition this network is not needed. One recurrent architecture was compared, and the regression is untuned. The budgeted TCN of \S\ref{sec:res:tcn} was not scored on the rows of Table~\ref{tab:ladder} and is not ranked in it.
+
+\subsection{What the fast diagnostics add}
+\label{sec:res:fast}
+
+\emph{Question: what do BES and ECEI at the location add to the CES history?} With the previous frame visible the interval of the fast-channel increment on the value of the frame excludes zero under all four designs (under the chronological design only just; the spread over the seeds of the regression, measured for an older history in \SuppTab{tab:seeds}, was not measured for this condition), and on the level under three; under rolling origin its interval on the level contains zero (rows ``TX over T0'' of Table~\ref{tab:vsref}; the two halves and further estimators in \SuppTab{tab:dten}). It is small: the CES value of the previous frame already says most of what can be said about this one. It grows when the CES value is older (\S\ref{sec:res:use}), and the following properties were measured there, with the newest CES value \AgeMedianS\,s old.
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\item \emph{Controls.} With the fast scalars permuted over rows the reduction is zero within its interval in eight of ten cells, and the estimator with the present fast samples has a lower MSE than the one given the fast samples of the anchor row under every design (\SuppTab{tab:controls}): the increment rests on the samples of the present and their change since the newest CES value, not on a memory of the state of the discharge.
+\item \emph{Which diagnostic.} Neither half carries the increment under all four designs by itself: the ECEI half alone fails under rolling origin, the BES half alone under the chronological design; the two together hold under all four (\SuppTab{tab:which}).
+\item \emph{Beam waveforms.} The beam power, known without any diagnostic, does not explain it: with 19 beam scalars given to both estimators the fast diagnostics still reduce the MSE under all four designs (\SuppTab{tab:which}).
+\item \emph{Beam notches.} Under the random design the increment is not confined to the rows after a notch, where the reported \Ti{} and the BES light dip together: it is established on rows more than 300\,ms after one and on rows with no notch before them. With the history \AgeMedianS\,s old it is not established far from a notch under the two designs in time order; under the schedule and rolling origin it is (\SuppTab{tab:tau}).
+\item \emph{Specificity.} Fast inputs of another discharge at the same time in the discharge give no reduction. The two Mirnov signals, which are not at the radius, treated exactly like the fast inputs, carry about a quarter of the increment under the random design, and under rolling origin the estimator with the fast inputs is not established above the one with the Mirnov inputs (\SuppTab{tab:specificity}). By the rule registered beforehand we therefore do not claim that the increment is specific to the radius of the chord. No channel-specific pedestal mechanism is established.
+\end{itemize}
+
+\subsection{Other divisions of the discharges, time order and real time}
+\label{sec:res:designs}
+
+\emph{Question: does it depend on how the discharges are divided into fit and test, and is it fast enough?} Neighbouring shots resemble each other, and a campaign drifts; a random division answers neither. In Table~\ref{tab:vsref} the point estimates fall from the random design to the designs that hold out clusters or respect time order, and the intervals widen: part of what a random division shows is the resemblance of neighbouring shots. What holds under all four designs with the previous frame visible is the lower MSE against hold, the causal GP and PCHIP, and the fast-channel increment on the value of the frame. The intervals do not include the variability of the fit; over ten seeds of the regression a chronological increment moves by a few hundredths (\SuppTab{tab:seeds}).
+
+Formed one row at a time on one processor thread, the GP and the regression together take about two milliseconds at the median and less than five at the 99th percentile (\SuppTab{tab:timing}): the estimate fits into a 10\,ms frame with the resources at hand. This is the time of the estimator only; fast samples delivered in real time are published for BES at DIII-D~\citep{Kim2026RealTimePlasma} and not for KSTAR.
+
+\subsection{In use: a late or sparse CES value}
+\label{sec:res:use}
+
+\emph{Question: what does the estimator do where the CES value is late or sparse?} The nowcast condition supposes a reader that delivers every frame at once. With the present analysis the newest value is older (\S\ref{sec:data:late}). Table~\ref{tab:rules} and Fig.~\ref{fig:ladder}a give the error of the level estimate as the CES history ages, and Table~\ref{tab:increment} the fast-channel increment under the four designs. The delay is the age of the history; the target does not move forward.
+
+\begin{table}[tbp]
+  \centering
+  \caption{The estimator in use: error of the level estimate by availability rule, KSTAR, random design V1, target L5. Upper block: fixed delays on the rows complete under all of them (\NCommonRows{} rows, \NCommonDischarges{} discharges, \NCommonClusters{} clusters). Lower block: the beam-modulation schedule S, with an analysis time of zero, and the previous frame on the same rows (\NSRows{} rows, \NSDischarges{} discharges, \NSClusters{} clusters). O is the reading of the frame itself, which does not exist before the frame has been analysed. One estimator is fitted per rule. Intervals: 95\,\%, shot clusters resampled; bold: the interval excludes zero.}
+  \label{tab:rules}
+  \TabRulesVone
+\end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_ladder}
+  \caption{RMSE of the level estimate (target L5) against the delay of the charge-exchange history, random design. (a) KSTAR: hold, the causal GP, the history-only estimator T0 and the estimator TX; dashed: the reading of the frame itself; diamonds: the beam-modulation schedule S, drawn at its median age (scored on its own rows). (b) MAST, with Thomson scattering at the same radius as the input of the present.}
+  \label{fig:ladder}
+\end{figure}
+
+\begin{table}[tbp]
+  \centering
+  \caption{Fast-channel increment: reduction of the MSE of the level estimate (target L5)
+  in per cent, TX against T0 on the same rows, by validation design and availability
+  rule. KSTAR: BES and ECEI as fast inputs; D10 and D650 on the common rows, S on its own
+  rows. MAST: Thomson scattering at the same radius as the input of the present; D5 is the previous
+  frame. Intervals: 95\,\%, KSTAR shot clusters and MAST sessions resampled; bold: the
+  interval excludes zero.}
+  \label{tab:increment}
+  \TabIncrement
+\end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_designs}
+  \caption{The increments of Table~\ref{tab:increment}. Filled: the 95\,\% interval
+  excludes zero.}
+  \label{fig:designs}
+\end{figure}
+
+With the newest value \AgeMedianS\,s old (rule D650) the MSE of the history-only estimate
+is about three times that with the previous frame visible, and the fast diagnostics give
+back about half of the loss (Table~\ref{tab:rules}). The fast-channel increment, small
+under the nowcast condition, is then established under all four designs
+(Table~\ref{tab:increment}, Fig.~\ref{fig:designs}); the least favourable is the
+rolling-origin design: in one of its four scored fifths the interval contains zero and
+the increment lies below that of a control fitted on a random set of the same size
+(\SuppTab{tab:fifths}). Under the beam-modulation schedule it is established under the
+random, the cluster and the rolling-origin design and not under the chronological design
+(\S\ref{sec:res:limits}). When CES reports only every tenth frame, the estimator with
+fast inputs has, under the random design, the error that the history-only estimator would
+have with a value about every 47\,ms: there the fast diagnostics are worth a CES that
+reports twice as often (Fig.~\ref{fig:sparse}, \SuppTab{tab:sparse}). Under one of the two
+chronological fits the increment at that rate is not established
+(\SuppTab{tab:sparsedesigns}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=10cm]{figv2_sparse}
+  \caption{RMSE of the level estimate (target L5, random design) against the spacing of
+  the CES values, without (T0) and with fast inputs (TX). Dashed: the reading of the
+  frame itself. The marker with the bar gives the spacing at which T0 has the error that
+  TX has with a value every 100\,ms.}
+  \label{fig:sparse}
+\end{figure}
+
+Two properties bound this use. First, the estimate does not replace the reading. In RMSE
+the estimate under the schedule equals a single reading of the frame, which has not been
+analysed at that time (row S of Table~\ref{tab:rules}), but that equality comes from the
+large excursions of the reading: in the median error and in the share within 10 per cent
+the reading is closer to the level than the estimate under both rules with a stale
+history, in every design (Table~\ref{tab:robust}). With a history that old fewer than
+half of the estimates lie within 10 per cent of the level. The estimate bridges the time
+until the reading exists.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Error measures that do not square the error: KSTAR, random design V1, target
+  L5, for the previous frame visible (D10), the history \AgeMedianS\,s old (D650) and the
+  beam-modulation schedule (S). MAE: mean absolute error; the shares are of rows whose
+  estimate lies within 10 and 20 per cent of the level. The rows ``TX over T0'' give
+  ratios (shares: differences). Intervals: 95\,\%, shot clusters resampled; bold: the
+  interval excludes one (differences: zero).}
+  \label{tab:robust}
+  \TabRobust
+\end{table}
+
+Second, the estimator is bound to the condition it was fitted for. An estimator fitted
+under the nowcast condition and then given a history \AgeMedianS\,s old keeps less than a
+quarter of the fast-channel increment of one fitted under that rule
+(\SuppTab{tab:asfitted}). A single fit across all ages of the history serves the delays
+it was fitted on, at the price of a higher error under the nowcast condition, and it does
+not carry to a condition it was not fitted on, a CES value every tenth frame; a
+regression on the raw windows instead of the hand-made scalars is far worse
+(\SuppTab{tab:onefit}). The second stage of this estimator is a rule fitted for a
+condition, not a model that follows the plasma through changing conditions.
+
+\subsection{In use: a second device}
+\label{sec:res:mast}
+
+\emph{Question: is the direction peculiar to KSTAR and to ECEI and BES?} On MAST the
+electron channel is Thomson scattering, an instrument with another light source and
+another detector. With the charge-exchange history 100\,ms old the Thomson scalars reduce
+the MSE of the level estimate under all four designs; the least favourable is the
+rolling-origin design (MAST rows of Table~\ref{tab:increment}, Fig.~\ref{fig:ladder}b,
+\SuppTab{tab:mast}). Read after the fact on the chronological fit, without an interval,
+the \Te{} scalars alone give nearly the whole increment and the distance to the density
+edge gives none (\Supp{sec:schecks}). A closed form that multiplies the held \Ti{} by the
+ratio of the two \Te{} values is not usable: the ratio of two Thomson values scatters too
+much; a regression is needed. The pedestal-top band is defined with the Thomson density
+profile that also supplies the inputs, the scored part of the chronological design is
+small (39 sessions), and both halves of the MAST data had been read in earlier batches.
+
+\emph{From the core to the edge.} The KSTAR files hold one chord and the channels around
+it. On MAST the charge-exchange chords and Thomson scattering cover the whole radius, and
+the same estimator was refitted in five bands from the pedestal top to the magnetic axis
+(\SuppTab{tab:mastradius}). With the history 100\,ms old the Thomson scalars reduce the MSE
+of the level estimate in every band under the random and the rolling-origin design; with
+the previous frame visible they do so in every band under the random design, and under
+rolling origin in every band except the pedestal-top one. Against what was registered as
+expected, a stale history costs more, and the Thomson scalars add more, inside than at the
+pedestal top. The share of estimates within 10 per cent of the level is higher inside and
+stays below seven tenths in every band. On the value of the frame the interpolations that
+wait have the lower MSE in every band inside the pedestal-top band; in the pedestal-top
+band the interval contains zero. These are statements about MAST: the KSTAR files hold no
+channel inside the pedestal top.
+
+\subsection{Where it does not hold}
+\label{sec:res:limits}
+
+\emph{In time order against the interpolation that waits, and for the increment on the
+level.} Under the rolling-origin and the chronological design no difference between the
+nowcast and the offline GP is established, and with the previous frame visible the
+fast-channel
+increment on the level is not established under rolling origin (Table~\ref{tab:vsref}).
+
+\emph{The last block of shots under the beam-modulation schedule.} Under rule S the
+increment is not established on the last block of shots (from 32312 on;
+\NLastBlockDischarges{} of its discharges have scored rows under this rule), neither in
+the chronological design nor, which is the stronger finding, when those discharges are
+test discharges of the random design (Table~\ref{tab:blocks}, Fig.~\ref{fig:limits}a).
+Giving the beam scalars does not change this, and over the seeds of the regression the
+chronological value changes sign (\SuppTab{tab:seeds}). Read after the fact, the ECEI of
+the last block is another signal (Fig.~\ref{fig:limits}b, \SuppTab{tab:blockdescr}): its
+change since the newest visible value does not go with the change of the \Ti{} level, and
+it does not fall at a notch while \Ti{} and BES do in every block. A registered test of
+the correlation between the ECEI channels as a condition on the inputs did not carry that
+weight (\SuppTab{tab:gate}), and removing the absolute fast levels from the inputs
+improves the rolling-origin result but does not recover this block
+(\SuppTab{tab:onefit}). We report it as a limit without an explanation. The measurement
+that would decide it is the toroidal field and the ECEI settings of each shot, which are
+not in the files.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Under the beam-modulation schedule S (target L5), by block of shots. Upper
+  block: the random design, with the scored rows grouped by the block of their discharge.
+  Lower block: the chronological design, which scores the shots from 32312 on. TE: the
+  ECEI half only; TXN against TN: the fast diagnostics after the beam scalars. The
+  cluster of shots 32310 and 32312 is counted in two blocks. Intervals: 95\,\%, shot
+  clusters resampled; bold: the interval excludes zero.}
+  \label{tab:blocks}
+  \TabBlocks
+\end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figv2_limits}
+  \caption{(a) The fast-channel increment under the beam-modulation schedule by block of
+  shots (random design, target L5), without and with the beam scalars given; filled: the
+  95\,\% cluster interval excludes zero. (b) The value in the first row after a notch
+  over the level before, for \Ti{}, BES and ECEI, by block (read after the fact, no
+  interval).}
+  \label{fig:limits}
+\end{figure}
+
+\emph{After the frame has been read.} An estimator that reads the value of frame $t$
+itself and corrects it with the fast samples lowers the MSE of the reading by more than
+half through the history, but the fast inputs add to it under the random design only
+(\SuppTab{tab:correct}).
+
+% =========================================================================
+
+\subsection{A budgeted temporal convolutional comparison}
+\label{sec:res:tcn}
+The selected temporal convolutional architecture was evaluated as a fast-input model and a matched history-only model under mixed CES availability. This is a budgeted comparison, rather than a replacement decision for the GP-and-regression estimator. The full validation suite has one initialization; the fixed subset has three. These evidence scopes are kept separate in the following generated tables. They must not be pooled as evidence of initialization stability over the entire suite.
+
+\input{generated_tables}
+
+The paired skill measures the reduction in squared error from adding the fast inputs to the matched history model. Its sign and interval depend on both validation design and CES availability. The random design provides evidence of a positive increment under several stale-history conditions. The clustered and chronological designs do not establish that increment generally, and some fresh-history comparisons give negative intervals. An interval containing zero does not establish equivalence. These results therefore do not support adopting the selected neural estimator across all designs and conditions. Availability delay is the permitted age of CES history, not a prediction horizon.
+
+Both models were trained under fixed computational limits, with checkpoint selection using validation data. Consequently, the results compare the reached fits under those limits; they do not establish an architectural ordering at convergence. Intervals condition on fitted models and omit training, checkpoint-selection and multiplicity uncertainty. Supplementary tree comparisons have their own support and budgets. We do not compare their marginal intervals to establish a paired difference. The inference timings in the generated table exclude diagnostic acquisition and transfer, and cannot certify end-to-end operation. The TCN findings sharpen the conditions of the second and third questions of this paper rather than supplying a new general learning algorithm.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\emph{Reading.} At the pedestal top a nowcast built from the CES history and two fast
+diagnostics has a lower MSE than monotone interpolation that waits for the next CES
+value, and under two of the four designs a lower MSE than a two-sided GP; in time order
+no difference from the two-sided GP is established, and under the random design its
+median absolute error is the higher one (Table~\ref{tab:vsref}). Without the fast
+diagnostics the MSE of the nowcast is higher than that of the two-sided GP under all four
+designs. The gain is in the frames in which the value moves. On both devices an
+electron channel carries part of it: on KSTAR the ECEI half alone has an increment under
+three of the four designs with the history \AgeMedianS\,s old, and on MAST the increment
+comes with the Thomson \Te{}. A reason to look at an electron channel is that electrons
+and ions exchange energy within ten to a few tens of milliseconds in deuterium at a
+density of a few $10^{19}$\,m$^{-3}$ and an electron temperature of several hundred
+eV~\citep{Wesson2011Tokamaks}. What this paper tests is the estimate, not that reasoning:
+on KSTAR no input is an electron temperature (the ECEI level at the edge depends on the
+density as well and is not calibrated in the files), no equilibrium places the chord, and
+the increment is not shown to be specific to its radius.
+
+\emph{Value for monitoring and control.} The pedestal-top ion temperature is a quantity
+that control asks for: a published real-time controller of edge-localized modes on KSTAR
+runs a preprogrammed waveform for lack of a direct pedestal
+diagnostic~\citep{Shin2022PreemptiveDriven}. What is shown here is an estimate that
+fits into a 10\,ms frame and that, with the previous frame visible, lies within 10 per
+cent of the level in two frames out of three. That is short of the 10 per cent of the
+requirement documents, and nothing was run on a plant control system: use in control is a
+prospect. The channels of the files sit at the edge, so nothing is said about the core;
+the method itself needs, for any chord, its CES history and a fast diagnostic at its
+radius. On MAST, where both exist at every radius, it was run from the core to the edge
+(\S\ref{sec:res:mast}).
+
+\emph{Relation to readers of the spectrum.} A reader that delivers \Ti{} from the
+spectrum of each frame and the estimator here are successive stages, not alternatives:
+the reader creates the nowcast condition, under which the estimator supplies the value of
+the frames the reader cannot read and a level that scatters less than the readings. The
+two were never run on the same data, and nothing here ranks them.
+
+\emph{What use would still need.} Fast samples delivered in real time; the time of the
+CES analysis itself; a model that follows changing conditions without a refit, for which
+a recurrent network trained across delayed and thinned CES histories is the candidate;
+and a reference that does not come from the same analysis as the history.
+
+\emph{Limits.}
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\item \emph{Target.} Both targets are built from the reported C\,VI temperature: there is
+no per-frame fit error, a bias of the analysis lasting longer than 50\,ms is in the
+target, and equality with the main-ion temperature is not tested.
+\item \emph{Rows.} Rows without a visible CES value are not scored, and the references
+that wait cannot be formed on the last measured row of a block (\SuppTab{tab:sets}).
+\item \emph{Intervals.} They resample clusters of the scored rows and do not include the
+variability of the fit; the chronological design scores 14 to 19 clusters, so lower ends
+close to zero are to be read with caution. The registered statements are many and no
+correction for multiplicity is applied; each is judged by its own interval.
+\item \emph{Selection.} All data had been read before the tests were registered; the
+estimator's inputs were fixed in an earlier batch on the same discharges; no untouched
+hold-out exists.
+\item \emph{Scope.} One chord, one campaign and one device for the sizes; MAST carries
+the direction only.
+\end{itemize}
+
+% =========================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+For the charge-exchange ion temperature on the pedestal-top chord of KSTAR, where the
+measurement is weak, the causal estimator with the lowest error found here, with every
+value up to the previous frame at hand, is a Gaussian
+process on the CES history followed by a boosted regression on two dozen scalars of that
+history and of BES and ECEI at the location. Without waiting for the next value it has a
+lower mean squared error than monotone cubic interpolation, which waits, under random,
+cluster-blocked, rolling-origin and chronological validation, and than a two-sided
+Gaussian process under the first two; in time order no difference from that process is
+established. The
+fast diagnostics carry the difference to the two-sided process, their gain is in the
+larger errors, and the estimate takes about two milliseconds. In use, where the CES value
+is late or sparse, the fast diagnostics matter more, on KSTAR and, with Thomson
+scattering, on MAST; but the estimator has to be refitted for the condition of use, it
+does not replace a reading of the frame once that exists, its gain is not shown to be
+specific to the radius, and under the beam-modulation schedule it is not established for
+the last block of shots. The measurements that would extend or bound these statements are
+the field and ECEI settings of each shot, per-frame fit uncertainties and spectra, an
+equilibrium for the chord, the output of a real-time reader on the same discharges, a
+model with state trained across the conditions of use, and discharges that have not been
+read.
+
+\section*{Data and code availability}
+The MAST data are public (FAIR-MAST, CC BY-SA 4.0); the shot lists, the registration
+documents, the analysis code (among it every estimator and reference of this paper) and
+all evaluation artifacts are at \textit{anonymized repository}.
+The KSTAR data were made available to the author through the author's laboratory for this
+study and cannot be redistributed by the author; requests for them should be addressed to
+the Korea Institute of Fusion Energy.
+
+\section*{Acknowledgments}
+The KSTAR data used in this work were provided by the KSTAR team. This work received no
+specific funding.
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\end{document}
