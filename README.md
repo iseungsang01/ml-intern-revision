@@ -24,6 +24,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 | 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
 |---|---|---|
+| `experiments/b96_four/common96.py`, `transition96.py` | 저자 선택4개 + 기존 정상4-worker 증거 + 생존 프로세스 생성 시각 → 손실 없는 배정 전환 | 기존 trainer 정상 종료·종료 증거를 보존한 뒤 새 durable task 실행 |
+| `experiments/b96_four/production96.py` → `bootstrap96.py` | 동결 B.94 scheduler/학습 + 과거95 provenance → 전역4개 배정·새96 provenance | 완료 fit 재사용, `.b94/dispatch_policy96.json` |
 | `experiments/b95_concurrency/profile95.py` | 등록 B.95 + 동결 B.93 실제 epoch worker → `data/.b95/` 동시2/3/4 및 조건부6 작업의 전체 처리량 | 메모리 여유와 실제 가속을 구별한 실행 정책 선택; 예측 성능 근거 아님 |
 | `experiments/b95_concurrency/audit95.py`, `common95.py` | 전체 cohort 원자료·SHA·전역/그룹 slot → 독립 처리량 및 실행 출처 검증 | B.95 선택과 새 fit의 추가 metadata 감사 |
 | `experiments/b95_concurrency/tie95.py` | B.95 부록1 + 원 결정 → 4-worker의 추가 실제 전체 cohort | 5% 이내 동률에서 더 적은 worker를 선택하기 위한 제한된 반복 확인 |
