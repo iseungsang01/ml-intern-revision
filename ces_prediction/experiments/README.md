@@ -121,6 +121,8 @@ B.96 (`b96_four/`, `PREREGISTRATION_B96.md`): author-selected four-worker produc
 
 B.97 (`b97_lean/`, `PREREGISTRATION_B97.md`): complete. Six Lean proofs and80 registered TRAIN/VAL queries passed. Addendum1 preserves the producer/original verifier and normalizes Windows/POSIX hash-dictionary keys through a new adapter; independent reconstruction and native replay passed. `docs/paper/b97_lean.md/json`, `b97_lean_checks.md`. No training, TEST scoring, GPU resume or full-pipeline certification.
 
+B.98 (`b98_physics/`, `PREREGISTRATION_B98.md`): registered numerical implementation pilot of forced first-order response and history/static controls. Fixed representative units, TRAIN/VAL only, F only, no outer TEST or GPU resume. Independent recurrence/causality and cluster readout required before publishing.
+
 B.95 (`b95_concurrency/`, `PREREGISTRATION_B95.md`): real full-epoch concurrency qualification for2/3/4 workers and conditionally6, reusing the frozen B.93 worker. No production source modification or TEST access; higher concurrency needs repeated normal-exit throughput evidence before a separately registered dispatch change.
 
 B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.

@@ -31,6 +31,7 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `research/claude_physics_scout_20261123.py` | 비식별 계측·자료 계약 → CES/BES/ECEI forward model, 에너지 응답, pedestal 변위의 세 Claude 검토와 반대 선택 | `data/.claude_physics_20261123/`, `docs/paper/physics_formulations_20261123.md`; 새 학습/TEST 분석 아님 |
 | `research/claude_physics_math_audit_20261123.py` | 저차 강제 응답·노출 평균·L5 중앙값 해석의 구체 식 → Opus 재검산 | 같은 local cache, 물리 접근 판단 문서의 정정과 최종 식 |
 | `research/check_physics_formulations_20261123.py` | 명시한 ODE·OU 노출 평균·스펙트럼 혼합의 기호 변수 → 정확한 항등식 검산 | 같은 local cache의 `algebra_checks.json`, 물리 접근 판단 문서; 관측 생성·모형 적합 없음 |
+| `experiments/PREREGISTRATION_B98.md` | 저자의 수식 모형 구현 지시 → 다섯 계수 완화식·이력/정적 대조의 고정 TRAIN/VAL pilot | `experiments/b98_physics/`, `docs/paper/b98_physics.*`; 기존 GPU/TEST와 분리 |
 | `docs/paper/lean_feasibility_20261123.md` | Claude 검토 여섯 건 + 원천 문헌 + 현재 모델 코드 + 기호 검산 → 적용 우선순위와 반례 | `HANDOVER.md`, 현재 논문의 방법/검증 검토; 등록된 학습과 TEST 선택은 변경하지 않음 |
 | `experiments/PREREGISTRATION_B97.md` | 저자의 Lean 실행 지시 → 선택기 증명·고정 TRAIN/VAL trace 비교의 사전 계약 | `formal/visibility/`, `experiments/b97_lean/`, `docs/paper/b97_lean.*`; 학습·TEST 점수와 분리 |
 | `formal/visibility/{Visibility,Main}.lean`, `lakefile.toml`, `lean-toolchain` | 이산 latest-visible 명세 → Lean 증명 및 같은 선택기의 local stdin 실행 | `experiments/b97_lean/run97.py`, 공리 감사와 실제 trace 연결 검사 |
