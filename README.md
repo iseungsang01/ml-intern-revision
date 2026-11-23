@@ -30,6 +30,9 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `research/check_lean_candidate_algebra_20261123.py` | 명시된 확률모형의 공분산·미분 항등식 → 정확한 SymPy 기호 검산, 관측 생성 없음 | `.claude_lean_20261123/algebra_checks.json`, 아래 Lean 판단 문서가 해석; Lean 증명이 아님 |
 | `docs/paper/lean_feasibility_20261123.md` | Claude 검토 여섯 건 + 원천 문헌 + 현재 모델 코드 + 기호 검산 → 적용 우선순위와 반례 | `HANDOVER.md`, 현재 논문의 방법/검증 검토; 등록된 학습과 TEST 선택은 변경하지 않음 |
 | `experiments/PREREGISTRATION_B97.md` | 저자의 Lean 실행 지시 → 선택기 증명·고정 TRAIN/VAL trace 비교의 사전 계약 | `formal/visibility/`, `experiments/b97_lean/`, `docs/paper/b97_lean.*`; 학습·TEST 점수와 분리 |
+| `formal/visibility/{Visibility,Main}.lean`, `lakefile.toml`, `lean-toolchain` | 이산 latest-visible 명세 → Lean 증명 및 같은 선택기의 local stdin 실행 | `experiments/b97_lean/run97.py`, 공리 감사와 실제 trace 연결 검사 |
+| `experiments/b97_lean/toolchain97.py`, `run97.py`, `lead_checks/verify97.py` | 고정 SHA 공식 Lean 배포본 + 등록 TRAIN/VAL trace → 컴파일·선택기 비교·독립 재계산 | `data/.b97/`, `docs/paper/b97_lean.json`, `formal/visibility/README.md` 실행 설명 |
+| `experiments/b97_lean/review97.py` | 비식별 Lean/bridge 소스만 Claude Fable에 전송 → 구현 반대 검토 | `data/.b97/claude_review.json`, `docs/paper/b97_lean_checks.md`에서 판정; 실제 자료 전송 없음 |
 | `experiments/b96_four/common96.py`, `transition96.py` | 저자 선택4개 + 기존 정상4-worker 증거 + 생존 프로세스 생성 시각 → 손실 없는 배정 전환 | 기존 trainer 정상 종료·종료 증거를 보존한 뒤 새 durable task 실행 |
 | `experiments/b96_four/production96.py` → `bootstrap96.py` | 동결 B.94 scheduler/학습 + 과거95 provenance → 전역4개 배정·새96 provenance | 완료 fit 재사용, `.b94/dispatch_policy96.json` |
 | `docs/paper/b96_four.{md,json}` | B.95 실측 + B.96 정책·정상 종료 전환 증거 → 저자 선택4개와 학습 보존 기록 | 최신 운영 선택과 전역/로컬 worker 수 구별 |

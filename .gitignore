@@ -38,3 +38,4 @@ docs/presentation/.preview_*.pptx
 
 # packaging / build artifacts
 *.egg-info/
+formal/**/.lake/
