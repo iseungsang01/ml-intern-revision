@@ -142,6 +142,8 @@ in `experiments/b64_two_stage/run_b64.py` and `experiments/b39_primary/run_b39.p
 
 ## Working agreements
 
+- **Author preference (2026-11-23):** substantive design/interpretation/scouting/code-review/research-prioritization tasks should use the official Claude API by default, with Fable for economical work and Opus for adversarial synthesis. Redacted explicit evidence tasks only; no secrets, identity, raw observations or private reasoning. Anonymized aggregate evaluated results are authorized for post-evaluation planning. Preserve every paid attempt/usage, independently check facts, and bound tool rounds. Run the committed post-evaluation workflow only after the original final audit and normal completion; TEST-informed follow-ups are exploratory. A Claude proposal does not authorize bypassing preregistration or editing frozen running code.
+
 - **The records.** `README.md` is the wiring of the repository. `HANDOVER.md` is the handover.
   `PAPER_DESIGN.md` fixes the purpose, terms, data definition, targets, estimators, validation
   designs, wording rules and the paper map. `PROJECT_KNOWLEDGE.md` holds the data facts and the
