@@ -28,6 +28,9 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `research/claude_lean_bridge_20261123.py` | 공개 TorchLean/형식 검증 자료 + 같은 비식별 방법 계약 → 실제 연산자·실행 의미 연결 검토 | `.claude_lean_20261123/torchlean_bridge.json`, 최종 Lean 적용 판단 |
 | `research/claude_lean_math_audit_20261123.py` | 검토 중 발견한 OU/hold 식·정보집합·마스킹 식별의 반례 → Opus 독립 수학 검산 | `.claude_lean_20261123/mathematical_audit.json`, 검증 전 제안과 수정된 정리 구별 |
 | `research/check_lean_candidate_algebra_20261123.py` | 명시된 확률모형의 공분산·미분 항등식 → 정확한 SymPy 기호 검산, 관측 생성 없음 | `.claude_lean_20261123/algebra_checks.json`, 아래 Lean 판단 문서가 해석; Lean 증명이 아님 |
+| `research/claude_physics_scout_20261123.py` | 비식별 계측·자료 계약 → CES/BES/ECEI forward model, 에너지 응답, pedestal 변위의 세 Claude 검토와 반대 선택 | `data/.claude_physics_20261123/`, `docs/paper/physics_formulations_20261123.md`; 새 학습/TEST 분석 아님 |
+| `research/claude_physics_math_audit_20261123.py` | 저차 강제 응답·노출 평균·L5 중앙값 해석의 구체 식 → Opus 재검산 | 같은 local cache, 물리 접근 판단 문서의 정정과 최종 식 |
+| `research/check_physics_formulations_20261123.py` | 명시한 ODE·OU 노출 평균·스펙트럼 혼합의 기호 변수 → 정확한 항등식 검산 | 같은 local cache의 `algebra_checks.json`, 물리 접근 판단 문서; 관측 생성·모형 적합 없음 |
 | `docs/paper/lean_feasibility_20261123.md` | Claude 검토 여섯 건 + 원천 문헌 + 현재 모델 코드 + 기호 검산 → 적용 우선순위와 반례 | `HANDOVER.md`, 현재 논문의 방법/검증 검토; 등록된 학습과 TEST 선택은 변경하지 않음 |
 | `experiments/PREREGISTRATION_B97.md` | 저자의 Lean 실행 지시 → 선택기 증명·고정 TRAIN/VAL trace 비교의 사전 계약 | `formal/visibility/`, `experiments/b97_lean/`, `docs/paper/b97_lean.*`; 학습·TEST 점수와 분리 |
 | `formal/visibility/{Visibility,Main}.lean`, `lakefile.toml`, `lean-toolchain` | 이산 latest-visible 명세 → Lean 증명 및 같은 선택기의 local stdin 실행 | `experiments/b97_lean/run97.py`, 공리 감사와 실제 trace 연결 검사 |
