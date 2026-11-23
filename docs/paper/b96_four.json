@@ -1,0 +1,1377 @@
+{
+  "registration": "PREREGISTRATION_B96.md",
+  "global_worker_limit": 4,
+  "basis": "Author-selected balance; the previous 10percent proof threshold is not an optimum criterion",
+  "four_worker_feasibility_wall_seconds": 127.02197250000006,
+  "four_worker_jobs_per_minute": 1.8894368846303335,
+  "four_ratio_to_fast_two_reference": 1.0382098577472503,
+  "four_ratio_to_slower_six_reference": 0.9620573926032094,
+  "four_peak_gpu_mib": 3373,
+  "policy": {
+    "base_policy95_sha256": "34b7a8836c108f4b0c7b0f92f461fecfc026849d95ac6725fac3d335c1b5d68e",
+    "basis": "Author-selected balanced capacity; overrides proof-of-10percent-improvement threshold, not an asserted optimum",
+    "dispatch_sources96": {
+      "ces_prediction/experiments/PREREGISTRATION_B94_ADDENDUM2.md": "4bd266bb1f27c4326f6c8056c1aa22793100ee9bb4795142982a961be31db09f",
+      "ces_prediction/experiments/PREREGISTRATION_B94_ADDENDUM3.md": "f7cfe6035b0d0eb3e7b156a02b1baac69ae57405d6790d78a0ad58b035741db2",
+      "ces_prediction/experiments/PREREGISTRATION_B95.md": "be7cd29d89c95c1f0b66efe6a65420523e578aa4aedf858283b37d81a19f1542",
+      "ces_prediction/experiments/PREREGISTRATION_B95_ADDENDUM1.md": "49d633fc00ba3597c1e636899d7603b9b72f062cb117cbb84b1f78be8daedb89",
+      "ces_prediction/experiments/PREREGISTRATION_B95_ADDENDUM2.md": "cb4ce47d6707d780b14d852a9e74e1d15625b86878170ca5159875a96f63bd65",
+      "ces_prediction/experiments/PREREGISTRATION_B96.md": "f2f8e5c74d7a7f3221b7625c41b6b76aa1082d055e74df1ee217c9a6bafbc661",
+      "ces_prediction/experiments/b95_concurrency/audit95.py": "d05b6e1963f6c00008a811b00d0204c55f593a2f663f8507bfb5472e57db4738",
+      "ces_prediction/experiments/b95_concurrency/bootstrap95.py": "47f47297a54b90cc2953c6d1a79d358dc7441ce72a4ebfac45f4bf6b0b8f618e",
+      "ces_prediction/experiments/b95_concurrency/common95.py": "c59bace90771c8c989c14038d00c408dbe8afae8737f5ab21c1752c8b20888a4",
+      "ces_prediction/experiments/b95_concurrency/production95.py": "b0f16ce34acc93cd21b92256f37d09c66ffa1c8aa31a053fe148d83bfc7756e8",
+      "ces_prediction/experiments/b95_concurrency/profile95.py": "f69c3737b1389273fd6c5e4137efcd644f569eb04d50bd8d6a79b7620e29b301",
+      "ces_prediction/experiments/b95_concurrency/tie95.py": "7447babc8b92e04c839726ecc0b905d08bcd903d64b62d2241a1fa7f8f7a612d",
+      "ces_prediction/experiments/b96_four/bootstrap96.py": "fcda63bf4fbbf7ec1329ecb3ee4e2e3b0a87d96aff23acf95c7adbd766b42810",
+      "ces_prediction/experiments/b96_four/common96.py": "02080b2483c580e0905c2267cefa33aa2a25654d5e3188f3a730a5445a64f339",
+      "ces_prediction/experiments/b96_four/production96.py": "faaa88b79b3486a42f48813463d7ae04cec6c208b0254df2af41f4cc25aed84d",
+      "ces_prediction/experiments/b96_four/transition96.py": "d37e67acf0cca37f24dc30fb5c4188037f11a3ceffe1f8f06258cd3ef2bf8b40"
+    },
+    "feasibility_cohort": {
+      "clean": true,
+      "gpu_total_mib": 8151,
+      "peak_gpu_mib": 3373,
+      "records": [
+        {
+          "clean": true,
+          "exit": "data/.b95/cohort2/worker0.exit.json",
+          "exit_sha256": "9818aef503ac2a93f9dec00c5d0b1de36abe734f3fd5f3c57cde44f747d9286a",
+          "result": "data/.b95/cohort2/worker0.json",
+          "result_sha256": "50d05469efa55452646523d0fc7b6f5d7a3ca78f3c2736b34a111c9b61d58834"
+        },
+        {
+          "clean": true,
+          "exit": "data/.b95/cohort2/worker1.exit.json",
+          "exit_sha256": "ad504566c5b6b3fc3c3eef11bdf1ff7d00c58b0c7c623eebc528e1795fd66803",
+          "result": "data/.b95/cohort2/worker1.json",
+          "result_sha256": "5387a32985fa22539ec6d1b5bb8285819ba2778ec0b7073914bd1bb8a0cdf3d3"
+        },
+        {
+          "clean": true,
+          "exit": "data/.b95/cohort2/worker2.exit.json",
+          "exit_sha256": "d0c034906e01aee0181fee570cd1b7ad01c951db192956917b52ed4e8b9eb91d",
+          "result": "data/.b95/cohort2/worker2.json",
+          "result_sha256": "d39889f761a2ee0e96bc61b49ed5b6ac13b171d805af1da85da68de8d46bf04d"
+        },
+        {
+          "clean": true,
+          "exit": "data/.b95/cohort2/worker3.exit.json",
+          "exit_sha256": "fc485183aaf8f2c394ab8f3e9f305a39680616f2f509872c5dddccdb1b680b76",
+          "result": "data/.b95/cohort2/worker3.json",
+          "result_sha256": "5d5a70df69e473a5fb46a5d3bb0c9f632af184d0d787939f755be164523aef1b"
+        }
+      ],
+      "samples": [
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7481,
+          "total_mib": 8151,
+          "used_mib": 419,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 6831,
+          "total_mib": 8151,
+          "used_mib": 1069,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 6831,
+          "total_mib": 8151,
+          "used_mib": 1069,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 6831,
+          "total_mib": 8151,
+          "used_mib": 1069,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 6703,
+          "total_mib": 8151,
+          "used_mib": 1197,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 5711,
+          "total_mib": 8151,
+          "used_mib": 2189,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 5591,
+          "total_mib": 8151,
+          "used_mib": 2309,
+          "util_percent": 4
+        },
+        {
+          "free_mib": 5591,
+          "total_mib": 8151,
+          "used_mib": 2309,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 5591,
+          "total_mib": 8151,
+          "used_mib": 2309,
+          "util_percent": 8
+        },
+        {
+          "free_mib": 5583,
+          "total_mib": 8151,
+          "used_mib": 2317,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 5583,
+          "total_mib": 8151,
+          "used_mib": 2317,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 73
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 77
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 5391,
+          "total_mib": 8151,
+          "used_mib": 2509,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 76
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 77
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 74
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 82
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 77
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 77
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 76
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 80
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 83
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 88
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 78
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 88
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 79
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 88
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 85
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 84
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 81
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 87
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 88
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 86
+        },
+        {
+          "free_mib": 4527,
+          "total_mib": 8151,
+          "used_mib": 3373,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 5370,
+          "total_mib": 8151,
+          "used_mib": 2530,
+          "util_percent": 0
+        },
+        {
+          "free_mib": 7899,
+          "total_mib": 8151,
+          "used_mib": 0,
+          "util_percent": 0
+        }
+      ],
+      "throughput": 0.03149061474383889,
+      "wall_seconds": 127.02197250000006,
+      "workers": 4
+    },
+    "original_deadline": 1795452897.4697888,
+    "registration": "PREREGISTRATION_B96.md",
+    "selected_workers": 4,
+    "test_accessed": false
+  },
+  "transition": {
+    "normal_exit_children": [
+      27608,
+      1156
+    ],
+    "old_controllers_retired": true,
+    "recorded_at": 1795403520.516184,
+    "sources": {
+      "ces_prediction/experiments/PREREGISTRATION_B94_ADDENDUM2.md": "4bd266bb1f27c4326f6c8056c1aa22793100ee9bb4795142982a961be31db09f",
+      "ces_prediction/experiments/PREREGISTRATION_B94_ADDENDUM3.md": "f7cfe6035b0d0eb3e7b156a02b1baac69ae57405d6790d78a0ad58b035741db2",
+      "ces_prediction/experiments/PREREGISTRATION_B95.md": "be7cd29d89c95c1f0b66efe6a65420523e578aa4aedf858283b37d81a19f1542",
+      "ces_prediction/experiments/PREREGISTRATION_B95_ADDENDUM1.md": "49d633fc00ba3597c1e636899d7603b9b72f062cb117cbb84b1f78be8daedb89",
+      "ces_prediction/experiments/PREREGISTRATION_B95_ADDENDUM2.md": "cb4ce47d6707d780b14d852a9e74e1d15625b86878170ca5159875a96f63bd65",
+      "ces_prediction/experiments/PREREGISTRATION_B96.md": "f2f8e5c74d7a7f3221b7625c41b6b76aa1082d055e74df1ee217c9a6bafbc661",
+      "ces_prediction/experiments/b95_concurrency/audit95.py": "d05b6e1963f6c00008a811b00d0204c55f593a2f663f8507bfb5472e57db4738",
+      "ces_prediction/experiments/b95_concurrency/bootstrap95.py": "47f47297a54b90cc2953c6d1a79d358dc7441ce72a4ebfac45f4bf6b0b8f618e",
+      "ces_prediction/experiments/b95_concurrency/common95.py": "c59bace90771c8c989c14038d00c408dbe8afae8737f5ab21c1752c8b20888a4",
+      "ces_prediction/experiments/b95_concurrency/production95.py": "b0f16ce34acc93cd21b92256f37d09c66ffa1c8aa31a053fe148d83bfc7756e8",
+      "ces_prediction/experiments/b95_concurrency/profile95.py": "f69c3737b1389273fd6c5e4137efcd644f569eb04d50bd8d6a79b7620e29b301",
+      "ces_prediction/experiments/b95_concurrency/tie95.py": "7447babc8b92e04c839726ecc0b905d08bcd903d64b62d2241a1fa7f8f7a612d",
+      "ces_prediction/experiments/b96_four/bootstrap96.py": "fcda63bf4fbbf7ec1329ecb3ee4e2e3b0a87d96aff23acf95c7adbd766b42810",
+      "ces_prediction/experiments/b96_four/common96.py": "02080b2483c580e0905c2267cefa33aa2a25654d5e3188f3a730a5445a64f339",
+      "ces_prediction/experiments/b96_four/production96.py": "faaa88b79b3486a42f48813463d7ae04cec6c208b0254df2af41f4cc25aed84d",
+      "ces_prediction/experiments/b96_four/transition96.py": "d37e67acf0cca37f24dc30fb5c4188037f11a3ceffe1f8f06258cd3ef2bf8b40"
+    }
+  },
+  "confidence_interval_computed": false,
+  "global_optimum_established": false,
+  "numeric_training_changed": false
+}
