@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Claude 초안 lead 검토: `research/posteval_lead/PLAN.md` → 같은 폴더 `review.py`가 독립 검산 gate·동결 코드의 skill/가용 규칙 정의를 짧게 제공하고 기존 초안을 보완 → `docs/paper/posteval_lead_review_20261123.md/json`. 원래 초안과 수치는 보존하며 기존16 substantive call 한도 안에서 최대4회 추가, 새 통계·학습은 없다. 기록 `data/.claude_posteval_lead_20261123/`.
+
 B.103 게시 마무리: `experiments/PREREGISTRATION_B103.md`·B.94 addendum8 → `experiments/b103_publish/publish103.py`가 이미 통과한 최종 감사 hash를 재확인하고 methods JSON/md 두 파일만 게시 → 원래 Claude gate. `watch103.py`는 기존 감시기를 새 task에만 process-local 연결한다. 원래 보조 readiness 문서는 그대로 두며 재학습/예측/통계 계산은 없다. 기록 `data/.b103/`, 현황 `HANDOVER.md`.
 
 B.102 마지막 검사 복구·알림: `experiments/PREREGISTRATION_B102.md`·B.94 addendum7 → `experiments/b102_postcheck/finish102.py`가 기존 계산을 재생성하지 않고 Windows manifest key를 메모리에서 정규화·산출물 보존 검사 → 원래 post audit → Claude gate. 같은 폴더 `watch102.py`는15초마다 생존/단계를 확인해 즉시·5분 간격 로컬 cvmux 알림과 한정된 평가 중단 복구를 담당한다. 상태·알림 기록은 `data/.b102/`, 인수인계는 `HANDOVER.md`.
