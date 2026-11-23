@@ -4,7 +4,7 @@ from pathlib import Path
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2];CACHE=ROOT/'data/.b95'
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def read(p):return json.loads(Path(p).read_text())
-def qualification():
+def compute_qualification():
     d=read(CACHE/'decision95.json');assert d['test_accessed'] is False
     for rel,h in d['driver_sources'].items():assert sha(ROOT/rel)==h
     sys.path.insert(0,str(HERE.parent/'b93_gpu'));import profile93 as P
@@ -37,7 +37,34 @@ def qualification():
             if len(values)==2 and min(values)>=max(refs)*1.10:eligible[n]=min(values)
     highest=max(eligible.values());selected=min(n for n,v in eligible.items() if v>=highest/1.05)
     assert selected==d['selected_workers']
-    return {'all_pass':True,'selected_workers':selected,'decision_sha256':sha(CACHE/'decision95.json'),'elapsed_seconds':d['elapsed_seconds'],'eligible_throughput':eligible,'test_accessed':False}
+    tie=read(CACHE/'tie95.json');assert tie['base_decision_sha256']==sha(CACHE/'decision95.json') and tie['test_accessed'] is False
+    for rel,h in tie['driver_sources'].items():assert sha(ROOT/rel)==h
+    assert tie['workers']==4 and 0<tie['wall_seconds']<=245 and math.isclose(tie['throughput'],4/tie['wall_seconds'],rel_tol=1e-12)
+    good=[]
+    for r in tie['records']:
+        out=(ROOT/r['result']).resolve();ex=(ROOT/r['exit']).resolve();assert out.is_relative_to(CACHE) and ex.is_relative_to(CACHE)
+        assert sha(ex)==r['exit_sha256'];att=read(ex);assert att['driver_sources']==tie['driver_sources']
+        ok=att['returncode']==0 and out.exists()
+        if out.exists():assert sha(out)==r['result_sha256']==att['result_sha256']
+        if ok:
+            z=read(out);assert z['all_pass'] and z['sources']==d['sources'] and z['input_binding']==d['input_binding'] and z['actual_batch_binding']==old['actual_batch_binding']
+            assert z['config']==dict(device='cuda',dense=True,cudnn=False,threads=2,mkldnn=False) and z['software']==software
+            assert tie['wall_seconds']>=z['timing']['total_prepare_epoch_seconds']
+        assert r['clean']==ok;good.append(ok)
+    assert tie['clean']==(len(good)==4 and all(good))
+    four=[c['throughput'] for c in d['cohorts'] if c['workers']==4 and c['clean']]
+    if tie['clean']:four.append(tie['throughput'])
+    if len(refs)==2 and len(four)==2 and min(four)>=1.10*max(refs):eligible[4]=min(four)
+    highest=max(eligible.values());selected=min(n for n,v in eligible.items() if v>=highest/1.05)
+    return {'all_pass':True,'selected_workers':selected,'base_decision_sha256':sha(CACHE/'decision95.json'),'tie_sha256':sha(CACHE/'tie95.json'),'elapsed_seconds':d['elapsed_seconds'],'tie_wall_seconds':tie['wall_seconds'],'eligible_throughput':{str(k):v for k,v in eligible.items()},'test_accessed':False}
+
+def qualification(publish=False):
+    result=compute_qualification();path=CACHE/'production_policy95.json'
+    if publish and not path.exists():
+        sys.path.insert(0,str(HERE.parent/'b93_gpu'));from atomic93 import save_json
+        save_json(path,result)
+    assert read(path)==result,'Published policy differs from independently reconstructed evidence'
+    return {**result,'decision_sha256':sha(path)}
 
 def dispatch_config(path,sources,decision):
     c=read(path)
@@ -53,5 +80,5 @@ def dispatch_config(path,sources,decision):
         e=read(ex);assert e['global_worker_slot']==i and e['worker_slot']==i%2 and e['global_gpu_worker_limit']==n
 
 if __name__=='__main__':
-    d=qualification();sys.path.insert(0,str(HERE.parent/'b93_gpu'));from atomic93 import save_json
+    d=qualification(publish=True);sys.path.insert(0,str(HERE.parent/'b93_gpu'));from atomic93 import save_json
     save_json(CACHE/'audit95.json',d);print(json.dumps(d))
