@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B.105 실행: `experiments/PREREGISTRATION_B105.md` → `experiments/b105_merit/pipeline105.py`가 새35채널 TCN·동일 내부 TRAIN 회귀기·공통 VAL 게이트·조건부 TEST·독립 audit를 실행한다. 모델/학습 adapter·CPU 회귀기·실자료 검사·예측·통계·독립 검산·로컬 감시가 같은 폴더에 있고, `research/review_b105.py`가 제한된 공식 Fable 검토를 연결한다. 상태 `docs/paper/b105_status.md`, 최종 `b105_merit.json/md`, `b105_claude.md`, ignored 근거 `data/.b105/`. 기존 동결 코드/결과는 보존한다.
+
 최신 학습 방향: `docs/paper/tcn_merit_plan_20261124.md`는 저자의 지시에 따라 TCN의 현행 estimator 대비 merit를 먼저 판정한다. 아래 P1/Stage0는 후순위다. `ces_prediction/research/tcn_merit_plan_20261124.py` → 제한된 공식 Fable 검토·사용량 기록 `docs/paper/tcn_merit_fable_20261124.md`; `ces_prediction/research/render_tcn_merit_20261124.py` → 기존 B94 JSON의 paired 비교 전체 표와 idx/mask만 읽은 재사용 목록 `docs/paper/tcn_merit_existing_20261124.md`. 새 적합/TEST 채점은 없으며 조건부 GPU 계획은 실행 등록 전이다.
 
 심화 조사 반영: `docs/paper/fable_deep_review/DECISION.md`·마지막 지연측정 부록 → `docs/paper/stage0_anchor_program_DRAFT.md`의 metadata-only 사전등록 준비 계약. B.104는 그대로 완료하고, 후속 P1은 CES 이력/NBI를 조건으로 한 fast 증분을 작은 source-time 추정기로 분리한다. 초안은 새 적합/TEST 재채점 허가가 아니며 실제 실행 전 별도 등록이 필요하다. 현재 우선순위는 `HANDOVER.md`에서 읽는다.
