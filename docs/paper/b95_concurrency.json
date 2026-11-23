@@ -1,0 +1,81 @@
+{
+  "registration": "PREREGISTRATION_B95.md; addenda1/2",
+  "selected_workers": 2,
+  "full_epoch_cohorts": [
+    {
+      "workers": 2,
+      "cohorts": 2,
+      "all_clean": true,
+      "wall_seconds": [
+        110.91566479999994,
+        65.9377320000001
+      ],
+      "jobs_per_minute": [
+        1.0819030857037253,
+        1.8198988099863644
+      ],
+      "peak_gpu_mib": 1687
+    },
+    {
+      "workers": 3,
+      "cohorts": 1,
+      "all_clean": true,
+      "wall_seconds": [
+        107.03337090000002
+      ],
+      "jobs_per_minute": [
+        1.681718500374727
+      ],
+      "peak_gpu_mib": 2530
+    },
+    {
+      "workers": 4,
+      "cohorts": 1,
+      "all_clean": true,
+      "wall_seconds": [
+        127.02197250000006
+      ],
+      "jobs_per_minute": [
+        1.8894368846303335
+      ],
+      "peak_gpu_mib": 3373
+    },
+    {
+      "workers": 6,
+      "cohorts": 2,
+      "all_clean": true,
+      "wall_seconds": [
+        175.5398421,
+        183.3036414999999
+      ],
+      "jobs_per_minute": [
+        2.050816473874452,
+        1.963954436769878
+      ],
+      "peak_gpu_mib": 5059
+    }
+  ],
+  "six_worker_robust_ratio_to_fast_reference": 1.0791558442661946,
+  "normal_exit_children": 23,
+  "scope": "Full first epoch plus seven validation conditions; fresh process wall throughput, no predictive scores.",
+  "test_accessed": false,
+  "audit": {
+    "all_pass": true,
+    "base_decision_sha256": "c7f97c65a480b4293608e5f0a3e11f5831b8b00e6e16111e81ac7984ba985a63",
+    "decision_sha256": "34b7a8836c108f4b0c7b0f92f461fecfc026849d95ac6725fac3d335c1b5d68e",
+    "elapsed_seconds": 774.7726829000001,
+    "eligible_throughput": {
+      "2": 0.030331646833106074
+    },
+    "selected_workers": 2,
+    "test_accessed": false,
+    "tie_evidence_kind": "Cancelled before launch by deterministic ineligibility bound",
+    "tie_sha256": "8effe89c5708afb383d14ca2ebd9e33441252bfb574716cbeb75bd3e62703bc5",
+    "tie_wall_seconds": 0
+  },
+  "limits": [
+    "Observed cohort timings, not predictive confidence intervals or a whole-suite acceleration estimate.",
+    "Reference timing varied substantially; the registered decision compares the slower candidate cohort with the faster reference.",
+    "Memory feasibility alone does not establish useful throughput. Numeric fit code and fixed budgets remain unchanged."
+  ]
+}

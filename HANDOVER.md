@@ -4,6 +4,8 @@
 
 ## 0. 한눈에
 
+**동시 실행 최종 실측(B.95).** 2/3/4/6개로 실제 전체 epoch를 실행했고 모든 worker가 정상 종료했다. RAM·VRAM상 6개 실행도 가능했으나 반복 기준으로 정한 처리량 개선 문턱을 넘지 못해 전역 두 slot을 유지한다. `docs/paper/b95_concurrency.md`, `.b95/production_policy95.json`이 선택 근거다. 수학적으로 적격이 될 수 없는 추가4개 cohort는 부록2에 따라 실행 전에 취소했다. 새 one-shot task는 `B93_GPU_B94_resume_1117`, 실행 진입점은 `b95_concurrency/production95.py`; CPU 중복 confirmation은 재개하지 않는다. 동결 B.94 완료 fit·smoke·준비 자료를 재사용한다.
+
 **현재 재개 지시(2026-11-23 오전).** 저자 요청으로 일시정지했던 프로세스는 이후 OS 재부팅으로 모두 소실되었다. B.94 부록2에 따라 정상 종료한 GPU pilot 두 fit·세 smoke·준비 캐시를 검증해 재사용하고, 중단된 두 partial만 `.b94/interrupted_20261123_resume/`에 보존한 뒤 동일 seed로 재시작한다. RNG 상태가 없어 exact checkpoint continuation이라고 쓰지 않는다. CPU B.92 중복 confirmation은 재개하지 않는다. 원래 suite 마감은 유지한다. 저자의 RAM 여유·동시 실행 확대 지시로 B.95에서 실제 전체 epoch의 2/3/4 및 조건부6 worker 처리량을 측정하고, 독립 감사된 수를 B.94 부록3의 전역 dispatcher에 적용한다. 새 실행 코드는 `b95_concurrency/production95.py` → `bootstrap95.py`이며 동결 B.94 수치 코드는 수정하지 않는다. 실제 전역 worker 수는 새 config의 `global_gpu_worker_limit`과 `global_worker_slot`, `dispatch_policy95.json`을 읽는다. 기존 `scheduled_concurrency`는 명시된 두 slot 이하 그룹의 수다. 아래 과거 PID·CPU 재개 설명은 현 상태로 사용하지 않는다.
 
 **병렬 실행 개정(2026-11-23).** CPU_r2는 이전 프로세스 소실을 확인한 뒤 같은 검증된 큐로 재개했다. 단계 JSON만으로 실행 중이라고 판단하지 말고 `py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b92/cpu_r2`로 PID·생성 시각·독립 watcher heartbeat를 확인한다. 관측기는 중단을 감지하지만 기존 큐를 자동 재시작하지 않는다. `docs/paper/b93_supervisor.md` 참조.
