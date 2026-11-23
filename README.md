@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+심화 조사 반영: `docs/paper/fable_deep_review/DECISION.md`·마지막 지연측정 부록 → `docs/paper/stage0_anchor_program_DRAFT.md`의 metadata-only 사전등록 준비 계약. B.104는 그대로 완료하고, 후속 P1은 CES 이력/NBI를 조건으로 한 fast 증분을 작은 source-time 추정기로 분리한다. 초안은 새 적합/TEST 재채점 허가가 아니며 실제 실행 전 별도 등록이 필요하다. 현재 우선순위는 `HANDOVER.md`에서 읽는다.
+
 B.104 후속 예산 실험 준비: `experiments/PREREGISTRATION_B104.md` → `experiments/b104_budget/`가 기존 TRAIN/VAL 곡선·Claude 검토를 바탕으로 동일 새 trajectory의 SHORT/LONG을 비교한다. 원래 B.94 결과와 코드는 보존한다. 현재 준비/실행 상태는 `docs/paper/b104_status.md`, 검토·실행 기록은 `data/.b104/`이며 GPU 전 사전등록 커밋·실제 smoke·독립 코드 검토가 필수다.
 
 Claude 초안 lead 검토: `research/posteval_lead/PLAN.md` → 같은 폴더 `review.py`가 독립 검산 gate·동결 코드의 skill/가용 규칙 정의를 짧게 제공하고 기존 초안을 보완 → `docs/paper/posteval_lead_review_20261123.md/json`. 원래 초안과 수치는 보존하며 기존16 substantive call 한도 안에서 최대4회 추가, 새 통계·학습은 없다. 기록 `data/.claude_posteval_lead_20261123/`.
@@ -277,6 +279,8 @@ py docs/paper/ppcf/check_numbers_v2.py       # 원고의 수치를 출처와 대
 `ces_prediction/research/ppcf_revision.py` reads the original final-audit gate and whitelisted anonymous aggregate packet, generates source-bound tables, and builds isolated copies under `docs/paper/ppcf_revision/`. It requests bounded Claude editing, fixed-prompt PDF grading and an independent novelty review with primary-source search. Requests, responses and uncertain spend stay in ignored `data/.ppcf_revision/`; review outputs, PDF rounds, usage and proposed experiments are read from the isolated paper folder. No scientific fits or GPU work are started. Proposals informed by TEST require separate preregistration. `icml_revision.py` supplies shared API logging/table helpers; its obsolete ICML entry point is not used for PPCF.
 
 ### Fable literature and experiment agenda
+
+**NN-CES source correction:** `docs/reference/nnces_source.md` and `nnces_source.json` bind the already-present local PDF and the user-supplied copy to checked hashes and page-level text equivalence. AGENTS, CLAUDE, HANDOVER and the two project records read this source memory before research scouting. `docs/paper/fable_deep_review/NN_CES_CORRECTION.md` supersedes recent unavailable-full-text claims while preserving what was actually supplied to historical API requests. Source PDFs remain ignored under `data/literature/`.
 
 `ces_prediction/research/fable_literature_agenda.py` runs six bounded primary-literature discovery tasks and two preliminary synthesis tasks. `ces_prediction/research/fable_primary_reading.py` audits retrieved original texts and revises the agenda; `fable_agenda_correction.py` corrects specific statistical and existing-work-overlap errors in one additional request. All calls use Fable; the bounded workflow comprises eleven paid calls and at most thirty server searches. `docs/paper/fable_literature_agenda/` contains the literature matrices, overlap audit, corrected decision memo, source access limits, host source checks and usage audit. Exact API attempts and downloaded original texts remain in ignored `data/.fable_literature_agenda_20261124/`. Existing final-audit gates bind anonymized aggregate results used in synthesis. This is research planning only; proposed TEST-informed analyses require separate preregistration and no scientific fit or GPU run is launched.
 
