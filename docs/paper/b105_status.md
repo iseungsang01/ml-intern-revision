@@ -2,6 +2,8 @@
 
 State: FOUR GPU PRODUCTION FITS RUNNING,2026-11-24 03:19KST observation.
 All four were dispatched03:18:54KST. GPU74%,2133MiB at03:19:21; no failure.
+At03:21:07 all four completed their first fully validated epoch; no traceback,
+GPU73%,3067MiB. Supervisor/queue remain live. No predictive comparison readout yet.
 Registration and all execution sources were committed/pushed as1aee77b before
 preparation/dispatch. Source-bound real inputs/model/causality checks passed;
 all64 fair CPU reference fits and one CUDA smoke exited normally. Longest16
