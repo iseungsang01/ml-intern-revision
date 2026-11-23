@@ -31,7 +31,13 @@ py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b94
 `data/.b94/queue_status.json` reports active worker slots/PIDs and completed counts; `supervisor_status.json` reports durable process liveness. Consult both rather than interpreting an old stage string as ongoing computation. Logs are `durable.stdout.log`, `durable.stderr.log`, readiness/audit logs, and per-fit `process.log`. A production fit counts as complete only after its checkpoint/configuration hashes and ordinary child exit0 are validated. No automatic retry is enabled.
 
 The current claims and their limits are reviewed in [the robustness and related-work report](claim_robustness_20261123.md). No B.94 TEST performance or physical discovery has been established by starting this queue.
-# 2026-11-23 20:13 KST: reboot recovery preparation
+# 2026-11-23 20:18 KST: evaluation-only recovery running
+
+Preparation completed normally: independent pilot/selection and46 confirmation checks passed. Reuse344 predictions across43 logged complete groups; preserve the interrupted six files, then recompute all24 outputs of the remaining three groups using the unchanged predictor. `data/.b100/prepared.json` binds fit evidence, reused hashes, archive hashes, source pins and unchanged deadline. Hidden task `B93_GPU_B94_eval100` was observed Running with live supervisor23360/queue4312, fresh heartbeat and prediction phase. The predictor performs its original readiness gate before GPU inference, then its original all46-job validator. No final metric is available yet. Claude watcher was observed Running and freshly waiting for audited completion. Both source/test checks passed:89 tests, three existing warnings; check_records zero unsourced, existing log-only entry unchanged.
+
+The implementation review used one successful official Fable call (end_turn;2751 input and5984 output tokens), after a preserved HTTP400 disabled-thinking attempt with unavailable usage. Requests/responses/error and resolution notes are in `data/.b100/`. Explicit fresh-process import path, pre-move archive intent, lock-holder liveness and final-validator call-order assertions address its code concerns. Dispatch provenance validation was independently inspected as read-only. Recovery is intentionally one-shot; a new failure requires inspection, never an automatic retry.
+
+## 20:13 preparation observation
 
 The author resumed work after the18:24 pause. OS boot time20:06:53 and absent old PIDs establish loss of the paused process memory. Pilot12 and confirmation46 fits are complete;350/368 prediction files survived. B.100/addendum5 registers independent fit revalidation and reuse of complete logged eight-rule groups; interrupted groups are preserved and recomputed. No training, selection or suite deadline change. New recovery metadata is in `data/.b100/`; original final readout/audit remains pending. Consult live supervisor/queue identities rather than old running timestamps.
 

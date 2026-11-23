@@ -21,7 +21,11 @@
 현재 분석 결과가 없으므로 이를 이용한 의미적 판독이나 연구 후보 검증은 아직 수행하지 않았다. host의 pointer 검증이 새로운 가설의 타당성을 증명하지는 않는다. 원래 평가가 끝나면 정상 종료·최종 감사 gate를 먼저 만족해야 한다. 완료 후 문서는 연구 초안이며, 원고의 수치·물리 주장으로 자동 승격하지 않는다.
 
 현재 live 상태: `data/.claude_posteval_20261123/status.json`. 작업의 stdout/stderr와 모든 API attempt는 같은 ignored 폴더에 있다. 완료 예정 산출물: `docs/paper/posteval_claude_20261123.md`와 `.json`. 새 실험을 실행하거나 현재 평가 마감을 연장하지 않는다.
-# 2026-11-23 20:13 KST: author resumed after reboot
+# 2026-11-23 20:18 KST: watcher restarted and waiting
+
+After B.100 fit/cache verification and a live new evaluation supervisor/queue were established, the existing Claude task was explicitly enabled/started. Observed Running with fresh20:18 status `waiting_for_audited_completion`, upstream `prediction`. Its committed sources match the original config. No prior substantive agent request exists, so this does not replay a paid research-review stage. Original final audit/normal-exit/hash gates and maximum16 substantive rounds remain in force. This is a running wait, not a completed research report.
+
+## 20:13 recovery preparation
 
 The18:24 author pause suspended this watcher as well as evaluation and disabled both tasks. The20:06 OS reboot destroyed the paused processes. Evaluation-only recovery B.100 will establish a live supervisor/queue before the existing one-shot watcher is explicitly restarted. Its code, source binding, original wait deadline and maximum16 substantive paid rounds remain unchanged. No partial B.94 metrics or automatic new training are authorized. Current local status may still contain the pre-reboot waiting timestamp until restart.
 
