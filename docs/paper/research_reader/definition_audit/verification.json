@@ -1,0 +1,16 @@
+{
+  "state": "feedback_complete_advisory_not_applied",
+  "api_calls": 2,
+  "both_complete": true,
+  "request_response_hashes_verified": true,
+  "new_fits": 0,
+  "new_evaluation": 0,
+  "gpu_runs": 0,
+  "paper_and_protocol_unchanged": true,
+  "additional_estimated_usd": 0.98384,
+  "shared_cap_usd": 5,
+  "cumulative_estimated_usd": 3.03128,
+  "invoice_verified": false,
+  "html_sha256": "236c2375c0272920850a623c20b4c47e1ca33200a2a5f7edcf0282d36706d2bf",
+  "acceptance_grade": false
+}

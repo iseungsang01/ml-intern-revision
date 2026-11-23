@@ -121,6 +121,12 @@ def main():
                         'compact_citation_labels':True,
                         'citation_dialog':True,'escape_and_focus':True,'empty_state':True,
                         'unknown_citation_state':True,'section_navigation':True})
+        if manuscript.get('appendices'):
+            page.locator('a[href="#appendix-l5"]').first.click()
+            assert page.locator('#appendix-l5').get_attribute('open') is not None
+            assert page.locator('#appendix-l5 math').count()==1
+            page.locator('#appendix-l5').screenshot(path=str(QA/'reader_appendix.png'))
+            results['appendix_link_opens_definition']=True
         page.set_viewport_size({'width':390,'height':844})
         page.evaluate('window.scrollTo(0,0)')
         assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1'),'Mobile horizontal overflow'

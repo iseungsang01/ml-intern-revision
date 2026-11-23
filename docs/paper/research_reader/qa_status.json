@@ -1,6 +1,6 @@
 {
   "body_numeric_tokens_max": 4,
-  "body_paragraphs_checked": 179,
+  "body_paragraphs_checked": 177,
   "bibliographic_note": true,
   "original_vector_figures": 7,
   "source_tables_and_figures": 18,
@@ -14,6 +14,7 @@
   "empty_state": true,
   "unknown_citation_state": true,
   "section_navigation": true,
+  "appendix_link_opens_definition": true,
   "mobile_390px_no_overflow": true,
   "js_errors": [],
   "automatic_http_requests": [],

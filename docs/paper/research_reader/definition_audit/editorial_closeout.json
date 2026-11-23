@@ -1,0 +1,48 @@
+{
+  "scope": "Author requested concise main definition and appendix; then checked established terminology with public primary sources and Fable.",
+  "completed_review_stages": [
+    "04_opus_definition_validity",
+    "05_fable_definition_challenge",
+    "06_fable_concise_L5_appendix",
+    "07_fable_L5_terminology"
+  ],
+  "unchanged_scientific_sources": [
+    "docs/paper/ppcf/main_ppcf.tex",
+    "docs/paper/ppcf/supp_ppcf.tex",
+    "docs/paper/ppcf_revision/main_ppcf.pdf",
+    "docs/paper/b105_merit.json",
+    "ces_prediction/experiments/b73_targets/common.py",
+    "ces_prediction/experiments/PREREGISTRATION_B73.md",
+    "ces_prediction/experiments/PREREGISTRATION_B105.md"
+  ],
+  "reader_sha256": "64552b4080bf47d171817b8ef8d20d285a0333af8d0199ce5b07ef2137dd3ffb",
+  "ui_checks": {
+    "body_numeric_tokens_max": 4,
+    "body_paragraphs_checked": 177,
+    "bibliographic_note": true,
+    "original_vector_figures": 7,
+    "source_tables_and_figures": 18,
+    "embedded_results_pages": 8,
+    "desktop_sections": 7,
+    "source_records": 254,
+    "search_and_filters": true,
+    "compact_citation_labels": true,
+    "citation_dialog": true,
+    "escape_and_focus": true,
+    "empty_state": true,
+    "unknown_citation_state": true,
+    "section_navigation": true,
+    "appendix_link_opens_definition": true,
+    "mobile_390px_no_overflow": true,
+    "js_errors": [],
+    "automatic_http_requests": [],
+    "offline_passed": true
+  },
+  "cost_shared_cap_usd": 5.0,
+  "cost_shared_estimate_usd": 3.294288,
+  "new_scientific_fits": 0,
+  "new_evaluations": 0,
+  "gpu_runs": 0,
+  "terminology_scope": "254 cached PDF text records, not necessarily254 unique studies; extracted-text symbol search plus targeted source passages, not a fresh full reread or exhaustive proof of absence.",
+  "not_claimed": "No universal absence of precedent, physical truth validation, or standard proper name established."
+}

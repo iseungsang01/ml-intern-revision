@@ -16,6 +16,8 @@
 .section-toc{display:flex;flex-wrap:wrap;gap:8px 18px;padding:14px 0 20px;margin-bottom:16px;border-bottom:1px solid #e5e7eb;font-size:13px}.section-toc a{color:#52677a;text-decoration:none}.section-toc a:hover{text-decoration:underline}@media print{.section-toc{display:none}}
 .source-exhibit{margin:30px 0 40px;padding:18px 15px;border:1px solid #dce4e2;background:#fcfdfc}.source-exhibit figcaption strong{font:600 15px/1.6 sans-serif;color:#204d4a}.source-exhibit figcaption p,.exhibit-source{font:12px/1.7 sans-serif;color:#637572}.source-exhibit img{display:block;width:100%;height:auto;margin:16px 0 8px}.exhibit-source{margin:8px 0 0}@media(max-width:600px){.source-exhibit{padding:12px 7px;margin:22px -8px}.source-exhibit figcaption strong{font-size:13px}}@media print{.source-exhibit{break-inside:avoid;border:0;padding:0}.exhibit-source{display:none}}
 #exhibit-figure6 img{max-width:640px;margin-left:auto;margin-right:auto}.source-exhibit:has(img[src^="data:image/svg"]) figcaption p{font-size:13px;line-height:1.8}
+.appendix-nav{display:block;padding:10px 12px;margin-top:16px;font-size:12px;color:#456861;text-decoration:none}.method-appendix{margin-top:36px;padding:22px;border:1px solid #dce4e2}.method-appendix summary{cursor:pointer;font-weight:600;line-height:1.7}.method-appendix .prose{margin-top:24px}@media print{.method-appendix::details-content{display:block!important;content-visibility:visible!important}.appendix-nav{display:none}.method-appendix{break-before:page;border:0;padding:0}}
+.method-appendix .prose{overflow-x:auto;max-width:100%}.method-appendix math{max-width:100%;overflow-x:auto}@media(max-width:730px){.appendix-nav{margin-top:0;white-space:nowrap}.method-appendix{padding:14px}}
 </style>
 </head>
 <body>
@@ -49,7 +51,8 @@ function setView(view){const isPaper=view==='paper';paperView.hidden=!isPaper;li
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
 document.querySelectorAll('.section-nav').forEach(b=>b.addEventListener('click',()=>{setView('paper');document.getElementById(b.dataset.section)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});document.querySelectorAll('.section-nav').forEach(n=>n.classList.toggle('active',n===b))}));
 document.querySelector('.section-nav')?.classList.add('active');
-document.getElementById('print-button').addEventListener('click',()=>{setView('paper');document.querySelectorAll('.pdf-preview').forEach(d=>d.open=true);window.print()});
+document.getElementById('print-button').addEventListener('click',()=>{setView('paper');document.querySelectorAll('.pdf-preview,.method-appendix').forEach(d=>d.open=true);window.print()});
+document.addEventListener('click',event=>{const link=event.target.closest('a[href^="#appendix-"]');if(!link)return;const target=document.getElementById(link.hash.slice(1));if(!target)return;event.preventDefault();setView('paper');target.open=true;target.scrollIntoView({block:'start',behavior:'auto'});});
 function renderStats(){const counts={};for(const s of DATA.sources)counts[s.mode]=(counts[s.mode]||0)+1;const stats=[['보관 PDF',DATA.sources.length],['전체 PDF',counts.full_pdf||0],['전체 추출문',counts.full_text||0],['목록·요약',counts.summary||0]];for(const [label,value]of stats){const item=E('span');item.append(E('strong',value),document.createTextNode(label));document.getElementById('stats').append(item)}}
 function renderSources(){const query=search.value.toLowerCase().trim();const list=DATA.sources.filter(s=>(modeFilter.value==='all'||s.mode===modeFilter.value)&&(relevanceFilter.value==='all'||s.relevance.toLowerCase().includes(relevanceFilter.value))&&(!query||[s.title,s.authors,s.year,s.key,s.doi,JSON.stringify(s.review||{})].join(' ').toLowerCase().includes(query))).sort((a,b)=>a.title.localeCompare(b.title));sourceList.replaceChildren();document.getElementById('visible-count').textContent=list.length+' / '+DATA.sources.length+'개';list.forEach((s,i)=>{const row=E('button',null,'source-row');row.type='button';row.dataset.key=s.key;row.setAttribute('aria-label',s.title+' 인용 근거 보기');row.append(E('span','['+s.number+']','source-number'));const info=E('span');info.append(E('span',s.title,'source-title'),E('span',[s.authors,s.year,s.pages?s.pages+'쪽':''].filter(Boolean).join(' · '),'source-byline'));row.append(info,E('span',s.mode_label,'reading-badge '+s.mode));row.addEventListener('click',()=>showSource(s.key));sourceList.append(row)});if(!list.length)sourceList.append(E('p','검색 조건에 맞는 문헌이 없습니다.','empty'))}
 [search,modeFilter,relevanceFilter].forEach(el=>el.addEventListener(el===search?'input':'change',renderSources));
@@ -59,7 +62,7 @@ document.addEventListener('click',event=>{const button=event.target.closest('[da
 document.getElementById('close-dialog').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()}});
 dialog.addEventListener('close',()=>lastFocus?.focus());
-window.addEventListener('beforeprint',()=>document.querySelectorAll('.pdf-preview').forEach(d=>d.open=true));
+window.addEventListener('beforeprint',()=>document.querySelectorAll('.pdf-preview,.method-appendix').forEach(d=>d.open=true));
 renderStats();renderSources();
 window.readerTest={sourceCount:DATA.sources.length,sectionCount:DATA.section_ids.length,showSource,setView};
 </script>

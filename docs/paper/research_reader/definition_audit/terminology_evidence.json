@@ -1,0 +1,1349 @@
+{
+  "scope": "254 cached PDF text records, not necessarily254 unique studies; extracted-text symbol search plus targeted source passages, not a fresh full reread or exhaustive proof of absence.",
+  "documents": [
+    {
+      "key": "Abbate2021DatadrivenProfile",
+      "sha256": "3b0154e4b1ebc55305846481eb3679e1161c71c85fdc34dcf2ab5e133eed7af2",
+      "pages": 13
+    },
+    {
+      "key": "Abbate2025Combining",
+      "sha256": "7ba164dddf5b5ea85b69d29fe019609b6211664c8259cfd54af976a8de70fa3e",
+      "pages": 18
+    },
+    {
+      "key": "Agamennoni2012ApproximateInference",
+      "sha256": "6a925c9f6c23c91bd1ed91facfc7ef80427e1c2ea948bfd91af3d5c9417bc3fb",
+      "pages": 14
+    },
+    {
+      "key": "Allen1992NeuralNetwork",
+      "sha256": "0530c34763d7d8699bdd4989f0ee9469c5f16a9a89e41f5a1be9cda2af0c25c7",
+      "pages": 13
+    },
+    {
+      "key": "Baltruaitis2018MultimodalMachine",
+      "sha256": "b47dcd9ce7d6c3971adc39e56e4574668ede4eb9fb051b03726e0c5b1ad3e19b",
+      "pages": 21
+    },
+    {
+      "key": "Bandyopadhyay2025DisruptionsControl",
+      "sha256": "48bd0a975bf621c74486cedc1ef3d70191696a02c41a69b10880e3a5bdfbb464",
+      "pages": 122
+    },
+    {
+      "key": "Bates2024CrossValidation",
+      "sha256": "e607fd7125ac1c9394685137e09ad1d9e579db5957f178690e98d4043d8e99c9",
+      "pages": 13
+    },
+    {
+      "key": "Baytas2017PatientSubtyping",
+      "sha256": "edd7ff72101be9cce99db8c994d5e53a81c5ad9345123839c0c1b7f3c35cebdc",
+      "pages": 10
+    },
+    {
+      "key": "Bell2006CarbonPlume",
+      "sha256": "d2335ac2184f5ba938cce5d768f5af798f98243f90f17e58d44b103c502b96ce",
+      "pages": 5
+    },
+    {
+      "key": "Biel2019DiagnosticsPlasma",
+      "sha256": "c34639e810d6a270f246d291ecea0706d2972fd30564dd55976f131ab1b971d2",
+      "pages": 8
+    },
+    {
+      "key": "Bishop1993AutomaticAnalysis",
+      "sha256": "3c3f5762028854029776e72c09e213192116a9c4e2e9f1447c39b2c46d0892a1",
+      "pages": 10
+    },
+    {
+      "key": "Blanken2019ModelBased",
+      "sha256": "0d51f7774623146df806478442e22a338f096534faed14e41b341de56b46572a",
+      "pages": 16
+    },
+    {
+      "key": "Blom2002ParametrizationZeeman",
+      "sha256": "57d5c3fd2a9322dfcba94c045294e448e41f4fa5135b3785982af901377c52fb",
+      "pages": 14
+    },
+    {
+      "key": "Boileau1989DeductionTemperature",
+      "sha256": "338685a9cdbc88bd2e2f9175aede3043bc6982bfcbaa92b1dece7c449f406a07",
+      "pages": 27
+    },
+    {
+      "key": "Bosman2021ModelBased",
+      "sha256": "b0616c5a0b1b5c973bbe315a5a9bfe6967b126dc8196f1ab99d57617c8107305",
+      "pages": 20
+    },
+    {
+      "key": "Boyer2019FeedbackControl",
+      "sha256": "4b45b25ee9eb0610b16bd54b07f4aca545cf0fd48c6eb4351655e6211e863773",
+      "pages": 14
+    },
+    {
+      "key": "Boyer2021PredictionElectron",
+      "sha256": "440916a12e0dbe1356fe3c578137594e59c73fe2879d54c7c18f7545759098eb",
+      "pages": 18
+    },
+    {
+      "key": "Burrell2009EdgePedestal",
+      "sha256": "3d737790aa8b625baf80a64be4f5eba3f55ee2bd55c7cb221e57d9e997d744cb",
+      "pages": 10
+    },
+    {
+      "key": "CanoMegias2025MultiIon",
+      "sha256": "7dcbc1f2124cbfff75fa68d151aa051ea130f60a5b49d0578a609157318da1c6",
+      "pages": 23
+    },
+    {
+      "key": "Cao2018BritsBidirectional",
+      "sha256": "6a3f516b2f8d8a418f7c907c9617e45dff673c04f0e73cd2b56307c4a67a09a0",
+      "pages": 12
+    },
+    {
+      "key": "Caruana1997MultitaskLearning",
+      "sha256": "611e8dccecf73e1c86773909ae6cbf305f0b36a54035884e3e17cd2af4d5f012",
+      "pages": 35
+    },
+    {
+      "key": "Cavedon2017PedestalEr",
+      "sha256": "1859154171e539db7df659dbdcd495374f35e114d0a997270340e6d68cf2b02d",
+      "pages": 15
+    },
+    {
+      "key": "Cha2024AnalysisNeoclassical",
+      "sha256": "564162fc17521c4997627d427b6b791e104e8cd7f5d26e1b606dc2fb18af3214",
+      "pages": 6
+    },
+    {
+      "key": "Chai2019FastEstimation",
+      "sha256": "bf7099dc064c27d6565f74678d993875c5ff31eb674be90b483899a531873e7d",
+      "pages": 6
+    },
+    {
+      "key": "Che2018RecurrentNeural",
+      "sha256": "c56c612a56770caaa97a7b20056009d6a84c227df641652d1ae0fad40fdefc7d",
+      "pages": 12
+    },
+    {
+      "key": "Chen2016RotationalShear",
+      "sha256": "a13cb53a7fe50a14ed993e3ad0c6b94c76c146da477bff07e7cfab0c781ab0c3",
+      "pages": 17
+    },
+    {
+      "key": "Chen2019EffectEnergy",
+      "sha256": "4db411c10464a119ebf44f5f8bf48a9b16873e8c922ff07d4b6ee5efc9384071",
+      "pages": 7
+    },
+    {
+      "key": "Chen2026FusionclipMultimodal",
+      "sha256": "46ee9e720b849ab33fc976cf9c81b2f5e44188525fb4e74192f99bcb5dd8ef8b",
+      "pages": 9
+    },
+    {
+      "key": "chilenski2015",
+      "sha256": "4f3531f64fd77e1645e6fbe809e39180866e3b19b35cee3fff63ac1bf499fcbd",
+      "pages": 21
+    },
+    {
+      "key": "Chrystal2026RealTime",
+      "sha256": "30854212b44b4a10fa1d233096e6d0ae5f2b6afb94394b85dbde35e69a8c76d9",
+      "pages": 6
+    },
+    {
+      "key": "Cole2011ObservationPeak",
+      "sha256": "665ddb4be805fa6ea07f8903559cdd9759dd501c6e7f14d069b99ae5840fec5c",
+      "pages": 4
+    },
+    {
+      "key": "Conway2006HighThroughput",
+      "sha256": "3c2e6876872d367c90840a106a88127f44ca9366b982355c8c7022f05d756d7e",
+      "pages": 4
+    },
+    {
+      "key": "DeBock2012RealTime",
+      "sha256": "d8ecb76dd0525dfe1c0e7886ec9744307e697b0dd8dc84b82682da8e9f75f629",
+      "pages": 4
+    },
+    {
+      "key": "DeBrouwer2019GruOde",
+      "sha256": "e031724444ea9911ff7cac7a1e4914fb71e074f3d1c5ff650344881a198ec800",
+      "pages": 22
+    },
+    {
+      "key": "Denk2018AnalysisElectron",
+      "sha256": "09a9f773866fec9cf2cc12fb9d668f935c1a3155f638ef289c91a5ee01cf3177",
+      "pages": 16
+    },
+    {
+      "key": "Diagnostics1999ChapterMeasurement",
+      "sha256": "0190be7435bd287ac08eaa80b9b901cc28e576d31fcc59c35ba6ee5716f3e588",
+      "pages": 36
+    },
+    {
+      "key": "doi_10_1016_j_fusengdes_2018_02_066",
+      "sha256": "5f61033758eda71c7201af6cb4c73d488b8d8a03257a667275d8c079d6f62590",
+      "pages": 5
+    },
+    {
+      "key": "doi_10_1063_1_4755810",
+      "sha256": "9a804d413c7802100537de272f7121c1e830b46e5eaa642ea1b614e35b941b1c",
+      "pages": 12
+    },
+    {
+      "key": "doi_10_1088_0029_5515_54_8_083003",
+      "sha256": "d4d880d186db35bb65f2412c566f2f0ce75ce44dbb958904eb9dedca5eea3ebb",
+      "pages": 10
+    },
+    {
+      "key": "doi_10_1088_1741_4326_ac4868",
+      "sha256": "b0c61a0c51c948bce76fe3c7b2dac33eeefcd2a6213e21d3f2b9e74dd65ba078",
+      "pages": 23
+    },
+    {
+      "key": "Donne2007ChapterDiagnostics",
+      "sha256": "bc2c846f5756c3cbc1fe3322d30106f3535a308e3ef8edc3c84c18dedf77cf45",
+      "pages": 49
+    },
+    {
+      "key": "DuranMartin2024OutlierRobust",
+      "sha256": "8ebd166581f0a7329848733fe3f67ecb79fac15297dd3bdf9ca4f62e2a7502b1",
+      "pages": 34
+    },
+    {
+      "key": "elorrieta2019",
+      "sha256": "37ae50526e474ffb461bd77dc91892504b19e219825a1a64c8fc934fe87fd585",
+      "pages": 11
+    },
+    {
+      "key": "eyheramendy2018",
+      "sha256": "af38387b7f6c9d1244f9b71cb065181d9fd165d206149bd41ae217340ffefaeb",
+      "pages": 12
+    },
+    {
+      "key": "Felici2011RealTime",
+      "sha256": "f0a9a9f40c4724f9e33671956234f538fc3d475716ea5aae5ef5b509cfad843a",
+      "pages": 34
+    },
+    {
+      "key": "Felici2014DynamicState",
+      "sha256": "05c36cf45623c1f928ed71af4ba975a5cbc4c6b5b435a16b7b0a7f98b0ed29d9",
+      "pages": 8
+    },
+    {
+      "key": "Fenstermacher2025ProgressPedestal",
+      "sha256": "b8cb12200e952de24d93ff39b8871358ec5ac56724603e28010616415eb3db1e",
+      "pages": 125
+    },
+    {
+      "key": "Fitzpatrick1993InteractionTearing",
+      "sha256": "866bfd581495edc2e0f12c8d0506d68bce0507ae0e68384faad2db2e6f12ec01",
+      "pages": 37
+    },
+    {
+      "key": "Fonck1983PlasmaTemperature",
+      "sha256": "9fdb11568ece392c58ce13dea639131c65ffad2e6cf27d8350f751024511fe13",
+      "pages": 4
+    },
+    {
+      "key": "Fonck1984DeterminationPlasma",
+      "sha256": "e261ed55d34086ee847011456a5ed4f0033854e2a0b4eb1bf4ad550436d4b5a2",
+      "pages": 22
+    },
+    {
+      "key": "fritsch1980",
+      "sha256": "8b4a262e91876016860870e7562ca24cb480f32a4831b289aa49e34e42f0fa5c",
+      "pages": 9
+    },
+    {
+      "key": "Gallas2009Framework",
+      "sha256": "39f6891129276ff34d57ace873a55508a084cd900be63970cf89776bcbdab426",
+      "pages": 19
+    },
+    {
+      "key": "Gebetsberger2018Estimation",
+      "sha256": "c743a5134facd776cf2b9a866a7cb1802305c00b61394fb2adcfa96ca9cb670d",
+      "pages": 16
+    },
+    {
+      "key": "Gill2024RealTime",
+      "sha256": "429df5486d5d387d5551ac0d5efac88346fb9fbc4225920aefd27b09adb0b58f",
+      "pages": 21
+    },
+    {
+      "key": "Gneiting2007StrictlyProper",
+      "sha256": "1472f855dce38b59a79e34d0db7ec30af0f25639efc82376951494fa380aebfb",
+      "pages": 21
+    },
+    {
+      "key": "Goddard2013Verification",
+      "sha256": "3fbd1669342881fe1f9f1daab658a8e0cd91a9dfa203857a44ad516217f51fd3",
+      "pages": 28
+    },
+    {
+      "key": "Goumiri2016ModelingControl",
+      "sha256": "12d512cbc72516596d958eafbe2e5011b8c0247c7219b2bc9eb5f97d40ce9df1",
+      "pages": 15
+    },
+    {
+      "key": "Goumiri2017SimultaneousFeedback",
+      "sha256": "9916c84aa9f1b4c798510d0832c7cc9f74d71e697f6e93ef4d231cb86a46e2f5",
+      "pages": 44
+    },
+    {
+      "key": "Gribov2007ChapterPlasma",
+      "sha256": "0579e038171b4bedf525b6eb5ec15a6b1155c73996152a911ad92931570ae590",
+      "pages": 20
+    },
+    {
+      "key": "Grierson2016HighResolution",
+      "sha256": "62d31a1d1a714b354c8b98a1aa9011d3a95be390efa646539f1014317d90abd9",
+      "pages": 3
+    },
+    {
+      "key": "Gupta2026BenchmarkingSensor",
+      "sha256": "f22483b278a45c939b083e83674c4435a9ea64a1de8b66af48432b3136da67ac",
+      "pages": 15
+    },
+    {
+      "key": "Hahn2016ProgressPlan",
+      "sha256": "9b5cdfb28c958b1e6d547e51101cf070f7e24ab2c352d7b2fbeaae21d8198cf1",
+      "pages": 5
+    },
+    {
+      "key": "Hahn2020AdvancesChallenges",
+      "sha256": "b0d3d9dc365fede77a39b327a19c12777e8fc80d178acaa0aa6da5df5f32ff8e",
+      "pages": 7
+    },
+    {
+      "key": "Han2024CriterionLong",
+      "sha256": "fdc5024726213c4826babfad327ed6fbf3510854ce2aa41f2b3bb07f4b359703",
+      "pages": 10
+    },
+    {
+      "key": "Haskey2017DeuteriumCharge",
+      "sha256": "4d51a737244c631dc49f1b53de590c2ffcdde6574ae95fdc0ad06935ad0b7eaa",
+      "pages": 8
+    },
+    {
+      "key": "Haskey2018ActiveSpectroscopy",
+      "sha256": "9cce26bc470074e9844f686adaee47ec77414fa742120f2aa19240bbabdd0192",
+      "pages": 9
+    },
+    {
+      "key": "Haskey2018MainIon",
+      "sha256": "73cdacac6dfa44089a172a3bac5edb511859ad24a31d200baeab691fb6b18c25",
+      "pages": 9
+    },
+    {
+      "key": "Haskey2022ThermalTransport",
+      "sha256": "c26f5955a4d3b585dcf9e6591203f7e65c26473f7a2e418e0abec9f8af01c73d",
+      "pages": 25
+    },
+    {
+      "key": "Haskey2026MachineLearning",
+      "sha256": "4cfdc905787656563f0cf2f9ac2958ab7401dbebc58be97a8b61f106891775ad",
+      "pages": 13
+    },
+    {
+      "key": "Heidbrink1988ComparisonExperimental",
+      "sha256": "05295879c73b47e694c39dee876e0fbbfa64a1bcc24fe4c654391269c2d0dac0",
+      "pages": 6
+    },
+    {
+      "key": "Heidbrink1994BehaviourFast",
+      "sha256": "78b34e96c3db90ddc567d2805dfaca612343c32249e6a60ad026b5c05e78aa2d",
+      "pages": 82
+    },
+    {
+      "key": "Heo2025ExperimentalIdentification",
+      "sha256": "d1a8eb8281aa0b3e392d8587cec06757ce16cba5fcfad2b97102125a69ca8d03",
+      "pages": 12
+    },
+    {
+      "key": "Herrmann1992RealTime",
+      "sha256": "59fec4158dc17bc64801ee3f809cf0253a89cd5b2d27fcd02a62be71d5e8e919",
+      "pages": 6
+    },
+    {
+      "key": "Hey2002OxygenImpurity",
+      "sha256": "718a455d964a8371e00d68802d023704946b09c02ad4cd0ec0e0cf52cc8f6a93",
+      "pages": 30
+    },
+    {
+      "key": "Hong2024ImpactStray",
+      "sha256": "47ef2dc84534158b0a2cedfed1e68dcfbfacd245439c3c1a2d5a6b0665d4dd3e",
+      "pages": 19
+    },
+    {
+      "key": "Huber1964RobustEstimation",
+      "sha256": "0bd9e67b4910ebd47cb0349f673ca6c25307a4035dbcf0e98eeac567dd150ad4",
+      "pages": 29
+    },
+    {
+      "key": "Humphreys2015NovelAspects",
+      "sha256": "936e624813e93b105ed16c5d6ac7384204f0a53595fa584bd449f682947ef8ac",
+      "pages": 88
+    },
+    {
+      "key": "ICHIKAWA2025ApplicationData",
+      "sha256": "17a7f29fa96d911f30cc5a321a5c705c7c787104e84c1f5e63b807392108627d",
+      "pages": 10
+    },
+    {
+      "key": "Ilse2018AttentionbasedDeep",
+      "sha256": "9da16d3f18f46d29d3f947201b3aae195543e6b2354f878fbc06cf6c3765b199",
+      "pages": 16
+    },
+    {
+      "key": "Imrek2026TemporalSuperresolution",
+      "sha256": "6f41d333bf9478c08e080f7ac6cbdd469d34c671902fec207d700af498819891",
+      "pages": 18
+    },
+    {
+      "key": "Isler1994OverviewCharge",
+      "sha256": "4c9886a5f9981768b026eeac4760feb980aafe4eddf4c4af6245cea9a7d614b0",
+      "pages": 39
+    },
+    {
+      "key": "ITER1999Chapter2",
+      "sha256": "91991337be060e67293e3c45a6187cab43eccd0c9f78f14e46867a0ad8ea0289",
+      "pages": 76
+    },
+    {
+      "key": "Jackson2024FairMast",
+      "sha256": "7dd26efa117446a51c2a1e4c38e0c424a119782e01e907113c79ad684d283742",
+      "pages": 7
+    },
+    {
+      "key": "Jalalvand2025MultimodalSuperresolution",
+      "sha256": "2c278fa1afee0d3645b4084c2995534abfc8735774915f99f9aaadd57d7394ee",
+      "pages": 14
+    },
+    {
+      "key": "Jang2021DevelopmentUltrafast",
+      "sha256": "e3af8954331f5b06b7cdb516e17a88f012e031129a25c72551a91d2faee4cc41",
+      "pages": 6
+    },
+    {
+      "key": "Jeong2010ElectronCyclotron",
+      "sha256": "54c2e4a7348780d9d9987851a017c0b3e6b50259fb21b5b1b07223d7c7f988fa",
+      "pages": 4
+    },
+    {
+      "key": "Jeong2026OperationalStability",
+      "sha256": "21fa77c0f10c9c3b5314da1ff987dfe3e59941b55e0171f251bbc2d2aaa32af2",
+      "pages": 9
+    },
+    {
+      "key": "Jia2026TimeSeries",
+      "sha256": "b985e8126f3376dd9deeb178fd698eae21a2f3fcb04c1e2a47775ba4fa032703",
+      "pages": 17
+    },
+    {
+      "key": "Joffrin2003IntegratedScenario",
+      "sha256": "2b4cf0a92edb5d18a5e1aa88c1dd491965226132a58805e466875c9d72c4ab15",
+      "pages": 18
+    },
+    {
+      "key": "Joung2018ImputationFaulty",
+      "sha256": "6b903bfc3a14ef649396d51203f1fa9fa31e407d145b85890031b9018091be88",
+      "pages": 6
+    },
+    {
+      "key": "Joung2023GsdeepnetMastering",
+      "sha256": "7aeb290c905435e286622fe05ee08d3cec8d84b84db1b8daa1ff0573297917bb",
+      "pages": 15
+    },
+    {
+      "key": "Joung2026ExplainableTokamak",
+      "sha256": "9cc6f536c099951a9b4f5924af09a5a6530f9c7ac0b9284257e24f9a89b4bd5e",
+      "pages": 13
+    },
+    {
+      "key": "Juhn2026FpgaBased",
+      "sha256": "127f35f0245da6a00751cb8f9686f8d52492e0f91aa13cc2dc99301b5f367250",
+      "pages": 5
+    },
+    {
+      "key": "Jung2026MachineLearningbased",
+      "sha256": "58f9231e1685d7bcb43b1720a8ca414af6352d20e39b7d951fded58bfcdebad6",
+      "pages": 9
+    },
+    {
+      "key": "Kaldas2026DevelopingAutoencoder",
+      "sha256": "1d9650265b57e7738c45792c5bedeedf5a910776fe7a4df24bf3d4e8fbdf604b",
+      "pages": 17
+    },
+    {
+      "key": "Karlgaard2007HuberBased",
+      "sha256": "4f0571290c1de2056e080a08fdbae2cd70d7a174571d54173dd8a2c1d0f2d6c3",
+      "pages": 7
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "sha256": "7bef03756cc1d7170af60910217a040403685c72413e89b0cf4618c67471a15e",
+      "pages": 18
+    },
+    {
+      "key": "Keith2024RiskAware",
+      "sha256": "dcc36f1f2ca158b97e2233f8ddf4b284e0d24f43cc016f14b0ebc419ee3b12b3",
+      "pages": 19
+    },
+    {
+      "key": "KFE2026DiagnosticsDataUserGuide",
+      "sha256": "f6068f4ecbb81ff26f523412d50e7aa7215b2f1ff7f227caed4da599dbfe5a94",
+      "pages": 141
+    },
+    {
+      "key": "Kidger2020NeuralControlled",
+      "sha256": "9f2f75ceb2ae823445deaa527d3a30a76dbe839a1c3bed325317190093d643ae",
+      "pages": 25
+    },
+    {
+      "key": "Kim2017ObservationResonant",
+      "sha256": "67ccc4fa27502d4b43638ddb4f4041ee710b4b731bcf25354a13c9aa1dc7ddb9",
+      "pages": 11
+    },
+    {
+      "key": "Kim2017PhysicsBased",
+      "sha256": "bbbdabfff50a950cd77f63f766d62b911f9fc5c8cd34a25b4a420c32a1f9a3e7",
+      "pages": 18
+    },
+    {
+      "key": "Kim2018EnhancedFast",
+      "sha256": "a7a0b0c5d063d970b8b8fed2b89579877d8d7ea7a233ed30b26dcfe1e55d11d3",
+      "pages": 12
+    },
+    {
+      "key": "Kim2020PedestalElectron",
+      "sha256": "c35af29a84c4250f70f21e847439adbdb33a4202752699a98d619031397366d8",
+      "pages": 12
+    },
+    {
+      "key": "Kim2022OptimizationControlled",
+      "sha256": "cb715e29696e6678fd931579f2dce9382039107502e1d93b7101da2b4b2b7ed5",
+      "pages": 13
+    },
+    {
+      "key": "Kim2023LabviewProgramming",
+      "sha256": "7339ad7ea3b4442ebb22ebb7c6828765112afcd05d6e077dc272defd4ebbb421",
+      "pages": 5
+    },
+    {
+      "key": "Kim2024HighestFusion",
+      "sha256": "b0f0b9dafc14e4f35e2284bb8b32a4041f97064968a4c2908bcf8346c9e4a59e",
+      "pages": 11
+    },
+    {
+      "key": "Kim2024KineticProfile",
+      "sha256": "1738dfef9635fcf4dcd18a1c1c2ea658f5aa215164a6a8007cf6f8a7d187beef",
+      "pages": 14
+    },
+    {
+      "key": "Kim2026AutomatedOutlier",
+      "sha256": "70def2d956ba702a32489219605334fc08027d5a16f3322df369722d81f016c0",
+      "pages": 17
+    },
+    {
+      "key": "Kim2026RealTimeFeedback",
+      "sha256": "cf1a5738c9a100bb85dc3f549868c038f31123131bbc76af1822a8083269e31a",
+      "pages": 13
+    },
+    {
+      "key": "Kim2026RealTimePlasma",
+      "sha256": "5c05bea40843a5655649799c47a519a2801d21d0f02c897f8415c9fc5838ee4d",
+      "pages": 15
+    },
+    {
+      "key": "Kinsey2011IterPredictions",
+      "sha256": "42ea43afa552e2ed19bce68c02ce49a2f391125c01fea645ca23e975a680cb8c",
+      "pages": 11
+    },
+    {
+      "key": "Ko2009KstarCharge",
+      "sha256": "56960e19db271296b16b9cdf6826c3f78b63951deb67977d9fa2ec3ac8063c12",
+      "pages": 4
+    },
+    {
+      "key": "Ko2010ChargeExchange",
+      "sha256": "5716fc7b1e0db801a6a8331629c9f8f8bab255ea633199fcac6828bdb5aaf516",
+      "pages": 4
+    },
+    {
+      "key": "Ko2010KstarCesSystem",
+      "sha256": "682d20797cce5853166915c817e8a0a91bf2b7d503e53d80aff96b546e654ffd",
+      "pages": 5
+    },
+    {
+      "key": "Ko2014RotationCharacteristics",
+      "sha256": "02b4a1541e673fdabfb132b9d91ee884e98e2ebebbf104418947ec4f251d85e8",
+      "pages": 4
+    },
+    {
+      "key": "Ko2015IonTemperature",
+      "sha256": "560a58f6d62c0aecde6416d446c13c47a7267db57b15bd927fb87c46b22e957d",
+      "pages": 9
+    },
+    {
+      "key": "Ko2016CharacteristicsToroidal",
+      "sha256": "7a5f074f3cf63d2cce1f984b75ea6d76e2ddf2eb680148bcbb8c149dabaab9e6",
+      "pages": 9
+    },
+    {
+      "key": "Ko2024OverviewKstar",
+      "sha256": "314b6ae79b8aff9fee0f90c7200715747585f42d7bb147909d6a6bcd0b29af6a",
+      "pages": 18
+    },
+    {
+      "key": "Ko2026RolesKstar",
+      "sha256": "13890a6f367fa4f4cf8aa8d473ec1e67d3121221c02ba15ce909c9ab6d315a5c",
+      "pages": 20
+    },
+    {
+      "key": "KOBAYASHI2003DevelopmentFast",
+      "sha256": "cd3f3950a4ea4175d4c8c48432949b83c06c8d3782acbc52a3efa78fda05edf8",
+      "pages": 8
+    },
+    {
+      "key": "Kobayashi2007DevelopmentRealTime",
+      "sha256": "22f0e92d0def1998d855df55fe607464ca7011f3bf7559f5f22b9ff555a3cf49",
+      "pages": 4
+    },
+    {
+      "key": "Kwak2019MeasurementFast",
+      "sha256": "24f5e1365b86acd3814609e308b1975ea8fcb4cb8ce807b62831e452d2c95006",
+      "pages": 6
+    },
+    {
+      "key": "Kwak2020KstarStatus",
+      "sha256": "8e737ee26ab19c31438994a95297c495362ab946d8ebf534a97ee95e9fac6f63",
+      "pages": 8
+    },
+    {
+      "key": "Kwak2025EstimationNeutral",
+      "sha256": "321d3ab8733b6eb9706609400eeed31e07c828c86dc3fbce1b404daea0c7335b",
+      "pages": 6
+    },
+    {
+      "key": "Kwon2018DevelopmentReal",
+      "sha256": "178ccb77dfb61e417f97547f473edd5c8babf7c703aa4cb4aa2bb5da46195f42",
+      "pages": 5
+    },
+    {
+      "key": "Laborde2005ModelBased",
+      "sha256": "1ad4d00902f582b333cfe0d6ad18e5da323b23caaeb1abc9f0cedca19d37508f",
+      "pages": 30
+    },
+    {
+      "key": "LaHaye2006NeoclassicalTearing",
+      "sha256": "1162396ee79814c3f3e6d6860cd612e8528bc9b2469a69f45e729ac26379d180",
+      "pages": 19
+    },
+    {
+      "key": "Lampert2015CombinedHydrogen",
+      "sha256": "323680131360b911dadcd91c4e341de7820fabbd2904d95b74c3492493913042",
+      "pages": 11
+    },
+    {
+      "key": "Lampert2018ScrapeLayer",
+      "sha256": "d896ad65512ad603175004c45fa9fe976ec6752cf92d5fdb40fd50ae0b7cec9a",
+      "pages": 12
+    },
+    {
+      "key": "Lanctot2016ErrorField",
+      "sha256": "eea96927167d1602e0323afa8a0ac349695778850bedf5a72ec862e3175dcebc",
+      "pages": 19
+    },
+    {
+      "key": "Lee2011DevelopmentGrating",
+      "sha256": "13d46e32210068745a6bcee1355c636c2f2db86e8916178960630768b760c319",
+      "pages": 6
+    },
+    {
+      "key": "Lee2016ValidationToroidal",
+      "sha256": "bc618354afd98daffa9c87b73c2d04bc34cb256b1111bcee3a10cc5f0927dd48",
+      "pages": 6
+    },
+    {
+      "key": "Lee2020CrossComparisons",
+      "sha256": "815adc880ab2df8a01460748037b87795c8fe4ff0bd4dbc10b07f0d8f078a4ae",
+      "pages": 6
+    },
+    {
+      "key": "Lee2020TwoGaussian",
+      "sha256": "c3088ee34d7dba659262b31c07b0d7a482c3ffdc6ff131bb0462dd733fd6ac24",
+      "pages": 9
+    },
+    {
+      "key": "Lee2021SystematicEvaluation",
+      "sha256": "aafa894b90fd8725a923a37f8abc9c03ba26a0c342b802063ed9945d2bcc402f",
+      "pages": 7
+    },
+    {
+      "key": "Lee2022MeasurementCarbon",
+      "sha256": "d5843f13e04f77f29a095765ad9c5801857f6fa70ffdf8910a4590f6c35aa7a7",
+      "pages": 9
+    },
+    {
+      "key": "Lee2022OverviewRecent",
+      "sha256": "0d81e6780a377fcd4ebf4390c99e8c52c2168ef9ef47a5c27595efb4ab9df064",
+      "pages": 12
+    },
+    {
+      "key": "Lee2023EffectCoherent",
+      "sha256": "903230a0a30afb0bba8d9d6cc1b705bd5adaa894fc76d639df68eb61480ce587",
+      "pages": 22
+    },
+    {
+      "key": "Lee2026NeuralNetworkbased",
+      "sha256": "5eae92d2cfd805b493824587a965ec1a63cd135404d5af7e9881b8716428afa3",
+      "pages": 7
+    },
+    {
+      "key": "Lee2026NeuralNetworkbased_user",
+      "sha256": "c323ab23a6ade8ad5e4c6ac8cd4daa6e009d72f670d089dc23a8daa53b57ae4f",
+      "pages": 7
+    },
+    {
+      "key": "Lee2026SpatiotemporalStructure",
+      "sha256": "6e31f7fe5c6eef307effaf7b88c578dd53b16e6c893b9c16b034b8d70b830064",
+      "pages": 15
+    },
+    {
+      "key": "Lin2024PredictionPlasma",
+      "sha256": "b892f8cf92fa1db375d8eb5ec0f41cf327926e026daa277e72b216ed84d0d0ad",
+      "pages": 16
+    },
+    {
+      "key": "Lipton2016ModelingMissing",
+      "sha256": "31e13c3806751f86272a7830cfb6ac871dbccf19691c9328545b24f0091cb39d",
+      "pages": 17
+    },
+    {
+      "key": "Litaudon2011RealTime",
+      "sha256": "34136bc92ecf1f2d3077e00f454bc34b13ee0d6aeeefd2b5d4b3646d4ce9156f",
+      "pages": 18
+    },
+    {
+      "key": "Mantica2009ExperimentalStudy",
+      "sha256": "557a6b97b4c8682d5ba8aae1a05ea15a0682dff66333dffdd0fc6637baaf11c9",
+      "pages": 5
+    },
+    {
+      "key": "Masreliez1977RobustBayesian",
+      "sha256": "32d6ecff44205c88b530dffbacc7e1abebaba5bd800ac7a464a0e245c92a99d0",
+      "pages": 11
+    },
+    {
+      "key": "Matos2016DeepLearning",
+      "sha256": "3805c4a83d8a9c086e47ba88c6fbfffea39aefbaa60dd14abbebb25a2ca1d1bc",
+      "pages": 8
+    },
+    {
+      "key": "Mazon2002RealTime",
+      "sha256": "de9674e772ab44f5bfaa9f021bc49915d47ccc4e1739af62e07e4ce65bfc8d20",
+      "pages": 19
+    },
+    {
+      "key": "Mazon2025Diagnostics",
+      "sha256": "f16038245426adaab3182b96fd72e54c6fdea8d00c543d704d38a5ad68fcc04d",
+      "pages": 196
+    },
+    {
+      "key": "McDermott2017ExtensionsCharge",
+      "sha256": "af0b0c09641b920a8216cf74172f91ebdb9bfff40cdba2ec473f55bf352cb343",
+      "pages": 12
+    },
+    {
+      "key": "Meister2001MeasurementPoloidal",
+      "sha256": "a782ec2dbdaa09c4e2124e12e318c182eac3c4b87571d8de969810b7284e5ea3",
+      "pages": 13
+    },
+    {
+      "key": "Messmer2019OptimalPolarisation",
+      "sha256": "8af74e56e74439789bf05df6c7fa7738f522617692ebfe5e6bb6684ad2e81120",
+      "pages": 12
+    },
+    {
+      "key": "MHD1999ChapterPlasma",
+      "sha256": "94311eec7444b8b046e8a227080a6df913cbeac747ec3cfe00a9c1cefecdaa29",
+      "pages": 50
+    },
+    {
+      "key": "michoski2024",
+      "sha256": "c61ce72392eb21d1a1d675c0f5415709c2c8191a6281793ff844e7c86aea01fd",
+      "pages": 23
+    },
+    {
+      "key": "Mohammed2026CommissioningOperation",
+      "sha256": "c97f0f26cad02b0763647285e9a944dac3f7633e7c26a5c8fc1a8d39b24814a6",
+      "pages": 23
+    },
+    {
+      "key": "Mohapatra2019RealtimeSensor",
+      "sha256": "f5e6923233f1eb3891dff33d1357476dae821d27eb935270b9eb165ea5607c8f",
+      "pages": 8
+    },
+    {
+      "key": "Moreau2008TimeScale",
+      "sha256": "a269a37ec357e4ebab061d138ae8b939630163a20fb03e9d5c0714493369d351",
+      "pages": 39
+    },
+    {
+      "key": "Morishita2020DataAssimilation",
+      "sha256": "58221975fbedc62458c4e175f3c55d19c0a57f1075bdad31368ab0dffa462a05",
+      "pages": 9
+    },
+    {
+      "key": "Morishita2024FirstApplication",
+      "sha256": "c68a46b4e40c1913b8b7cb74e3020b30b172ccca0a96f223101cf488a594701d",
+      "pages": 11
+    },
+    {
+      "key": "Morosohk2023RealTime",
+      "sha256": "2a7c12a2379fdd720addaf254accc0202f6749c520f794585cd179f48a751e3e",
+      "pages": 16
+    },
+    {
+      "key": "murphy1988",
+      "sha256": "128b8895590d01005e3f3061e02f9bdb043e306737bedb27019e5c14963df6f3",
+      "pages": 8
+    },
+    {
+      "key": "Na2025IntegratedOperation",
+      "sha256": "f238623bcd2e1854fa3234d3478c3c4a72b3caeb2a10ac1df337ab469607ebe9",
+      "pages": 141
+    },
+    {
+      "key": "Na2026FireMode",
+      "sha256": "d81a202009b9664ffa52039e189ecc263acf29cab3f047e285967f0a4973849e",
+      "pages": 23
+    },
+    {
+      "key": "Nadeau2003Inference",
+      "sha256": "39ce55ef06063e4b8fedbb2d352d5e6ee11338fb7bc770edf18d3436a5210574",
+      "pages": 43
+    },
+    {
+      "key": "Nam2012AnalysisEdge",
+      "sha256": "2e1742ec2f5805397b7be34e43c9e57dc0dbb0c4d5d16447a373c6d22a5daf4e",
+      "pages": 4
+    },
+    {
+      "key": "Nam2014EdgeElectron",
+      "sha256": "afe2d4f4a1b0c92d28aa93aa9220c4f834f63945ca4b18aab16320873cbad013",
+      "pages": 4
+    },
+    {
+      "key": "Nam2026OverviewKstar",
+      "sha256": "6723082a8c1982c18ffac0812ce0e67e567f5658ac6c8373007ada046b11a3c5",
+      "pages": 39
+    },
+    {
+      "key": "Neil2016PhasedLstm",
+      "sha256": "ca7cd2e3ff86c9db47e1ba7d5c22c40bb71a6182de441ac70b1003c2cd5dbda7",
+      "pages": 9
+    },
+    {
+      "key": "Ogawa1988DeterminationTemperature",
+      "sha256": "5a0b414f9625042ad98f570eee387b8aebb8c6ef139eeb2c721ee26e0b21a307",
+      "pages": 9
+    },
+    {
+      "key": "Owen2007Pigeonhole",
+      "sha256": "ab56598c9e114153f7ed93e5e7c39703d39f397e003c8176990abb9e49906623",
+      "pages": 26
+    },
+    {
+      "key": "Park2011HighSpeed",
+      "sha256": "528152daa64f542b091c6411f3cf6a80477a9a1b41e541ef10340313d4879f70",
+      "pages": 4
+    },
+    {
+      "key": "Park2013RotationalResonance",
+      "sha256": "d6de42ec50aed097e426cef03a1b124bc09680041089c69debc9e7514911ec4b",
+      "pages": 4
+    },
+    {
+      "key": "Park2018FieldPhase",
+      "sha256": "e93c30e409f9f1dc8a3861803fa134a594ac78c27e85c331d98811c3e19770af",
+      "pages": 7
+    },
+    {
+      "key": "Pastore2023ModelBased",
+      "sha256": "2b208a01be785f4ad3e10e71fcb241c670e5db19276417e960714b4469f33389",
+      "pages": 9
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel",
+      "sha256": "d2172a2f53d13a9b7c009e75927461c3d07a6b65189d0a6e0e4f8b2d2d7e60b9",
+      "pages": 38
+    },
+    {
+      "key": "Pastore2026ApplicationsNovel_arXiv",
+      "sha256": "9bdf6f6dca5d79ebc9bd2302420370786c6701dfa0403642e7ea95e90f22936d",
+      "pages": 38
+    },
+    {
+      "key": "Pavlova2021StudiesHalo",
+      "sha256": "764ffb9f8f2f65d2404bc6847282f82890ce3e2dfc607d0cb0ab9eacd3306b8f",
+      "pages": 6
+    },
+    {
+      "key": "Pavone2019NeuralNetwork",
+      "sha256": "f1d73b98447f3a39d654f1301a093bcb850bb4079ebbb4cdbb1bf6c1cf420652",
+      "pages": 15
+    },
+    {
+      "key": "PazSoldan2019EffectPlasma",
+      "sha256": "602287d04f79cb6b8a5e80c26d31abb9169f35c908049990cde31188fa51dfaa",
+      "pages": 31
+    },
+    {
+      "key": "PazSoldan2024PlasmaPerformance",
+      "sha256": "a361ab920165aac07f48b5faa69b408e0745086012dd77f6b205352fb50cb303",
+      "pages": 14
+    },
+    {
+      "key": "Podesta2012RealTime",
+      "sha256": "69b3608f3b13e51faa5938c7e38c89be1143bc3c0c34652d0b22789b504ef09b",
+      "pages": 7
+    },
+    {
+      "key": "Podesta2016InitialOperation",
+      "sha256": "913ae26abbcce8e80710f8ffd4cf0d5a2880f11e5f2f21930dce7cad29a15082",
+      "pages": 11
+    },
+    {
+      "key": "Rasp2018NeuralNetworks",
+      "sha256": "3e985b930aea2f98a5302376722594b58f6dd6de20ef1c8de489f1984a3a81c5",
+      "pages": 16
+    },
+    {
+      "key": "Rath2022DataAugmentation",
+      "sha256": "97937820ab427c48f4d98da9b42a6704c41b37b376a0f41d5d2e44bc4f1ba4a8",
+      "pages": 23
+    },
+    {
+      "key": "Rathgeber2013EstimationEdge",
+      "sha256": "73d9e7fba57b6e61afc26e0380a0f1c3b6b2fd3f17fc3c5a7de73e81db35c6aa",
+      "pages": 16
+    },
+    {
+      "key": "Ravuri2021SkilfulPrecipitation",
+      "sha256": "ca5f10f9deb516da9672272e277cee3b2a729ddf60513942afa574380c48a44b",
+      "pages": 19
+    },
+    {
+      "key": "Reimerdes2007ReducedCritical",
+      "sha256": "b9b282ca42064ce666946b0afbee6a81b27d8f10eba0bc4506650670a7b5a315",
+      "pages": 4
+    },
+    {
+      "key": "reinsch1967",
+      "sha256": "bc4224b6bdfb7184d61d2fec45681cd63324fd4e87772de4c5a5f99ae708443c",
+      "pages": 7
+    },
+    {
+      "key": "Ren2010Nonparametric",
+      "sha256": "70864c3ddc4d560eaae4fb858b40fdd671aa48a88425538ac6527c38d3c9433e",
+      "pages": 13
+    },
+    {
+      "key": "Rice2007IntermachineComparison",
+      "sha256": "a68e5410d9f2e734dd44ac9346a2c9bf0e78578561c741bafd0003c2777bab07",
+      "pages": 8
+    },
+    {
+      "key": "Roth2013StudentsT",
+      "sha256": "3dfb14ea9581a7d0512ef153bc35f8ec25eff52f33c946113bafb9ceafa042ab",
+      "pages": 6
+    },
+    {
+      "key": "Rothstein2026EnablingIntegrated",
+      "sha256": "90ee2a9a0b26458c63e96469d27c3a3e3e6ace4e2f73a73e89536dea22117217",
+      "pages": 15
+    },
+    {
+      "key": "Rubanova2019LatentOrdinary",
+      "sha256": "b8405e684da02cade38248aa3d0351c5d7aa5817d7dde453be1448c1abfc79aa",
+      "pages": 21
+    },
+    {
+      "key": "Ryter2011SimultaneousAnalysis",
+      "sha256": "f772eb6f144d841c5506613d3ffb0839c098413b22f09137e308e5a396f70c89",
+      "pages": 35
+    },
+    {
+      "key": "Sabbagh2023DisruptionEvent",
+      "sha256": "9162c0d0ea17471a53fc08830bcb07a66a6f6bda35e3105117f470fca615eee9",
+      "pages": 40
+    },
+    {
+      "key": "Santos2010RealTime",
+      "sha256": "8500f65b5e5f28cfdb60eac0e8a3e511ba3f9aae863765bdcfaacb82376c5b38",
+      "pages": 4
+    },
+    {
+      "key": "Santos2017RealTime",
+      "sha256": "fc94ab9eb0a91d42426d8151e30a11f59528ea7b5c6aba897a1a2cc11c0e749b",
+      "pages": 4
+    },
+    {
+      "key": "Saravanan2020Hierarchical",
+      "sha256": "9cf572a48bb07570dd8dcd9aae6bc26ed5b8dcb0d6909b7d05534b315ac0841a",
+      "pages": 20
+    },
+    {
+      "key": "Scoville2007SimultaneousFeedback",
+      "sha256": "4fdc5c03a6c2f573921149addb42d352f919e0e95bf44ab02753eecc88f16bee",
+      "pages": 6
+    },
+    {
+      "key": "Seo2026RevisedError",
+      "sha256": "1a327d9d7559baa48da3463f942d4f7fc9ed6518dccb0d496df9c7bef5209429",
+      "pages": 10
+    },
+    {
+      "key": "Shi2015ConvolutionalLstm",
+      "sha256": "6b83643820fa049a9cdf30621385bd5d33c67408d348a93edb6c59ed247986ef",
+      "pages": 12
+    },
+    {
+      "key": "Shin2022PreemptiveDriven",
+      "sha256": "965ccb3b74e9a66648d0234ecb618207ed58c947c21e0251a77fc9344adb604e",
+      "pages": 11
+    },
+    {
+      "key": "Shousha2023MachineLearningbased",
+      "sha256": "67c46ec9b899cbfcff3d9dbc4a5ec4bd6726a03618e74ca42b356f0adfe13533",
+      "pages": 19
+    },
+    {
+      "key": "Shukla2019InterpolationPrediction",
+      "sha256": "dda110c2c8983d6b27452cf3e73ec686bfb2980da4a14312e25dfb2ccc608d64",
+      "pages": 14
+    },
+    {
+      "key": "Shukla2020SurveyPrinciples",
+      "sha256": "8e1c62f998435a2aa93d0feb39a69de2362ee378e5c50b8b4d6429d693fa2f9c",
+      "pages": 41
+    },
+    {
+      "key": "Shukla2021MultiTime",
+      "sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+      "pages": 15
+    },
+    {
+      "key": "Shukla2021MultitimeAttention",
+      "sha256": "b0a4ca9b9724df3a7857e956c52d7b972cfd34099d1e420b9cf12ee631a6a49a",
+      "pages": 15
+    },
+    {
+      "key": "Snyder2009DevelopmentValidation",
+      "sha256": "2538ff5e3ff627a7a7411ad0147e23460f61193f65002310d7d053498e596b6e",
+      "pages": 10
+    },
+    {
+      "key": "Snyder2011FirstPrinciples",
+      "sha256": "14bbd912b597a75bf0b9538f1144ae7e205596f63fdeb57015589633bee0c858",
+      "pages": 9
+    },
+    {
+      "key": "Solomon2008CharacterizationCross",
+      "sha256": "d08e943f2f936b040031b4899ed64835c80c24183d0cc94c01b3a979a60099df",
+      "pages": 5
+    },
+    {
+      "key": "Stix1972HeatingToroidal",
+      "sha256": "1283378d65b18db62b8fff1fb3a691f2c7d5911c328cfa8654bc1ea440e51091",
+      "pages": 19
+    },
+    {
+      "key": "Sussillo2013OpeningBlackBox",
+      "sha256": "29e37a06e035dc7a0e2dac5255917a462d9db99418be5751cd2f2ccdd309e449",
+      "pages": 24
+    },
+    {
+      "key": "Svensson1999AnalysisJet",
+      "sha256": "5468ab6d88802c6fd1735bb546561671cad4897d8443c496cc48c52a222fa364",
+      "pages": 25
+    },
+    {
+      "key": "Tala2009EvidenceInward",
+      "sha256": "a00a5d83179e57a9ff56827fda22f94a42bd41ffc36b67a408e6f5abd300a02a",
+      "pages": 4
+    },
+    {
+      "key": "Thorman2021VisibleSpectroscopy",
+      "sha256": "ca2c45df39b7388ee824e35f4415a5ee558ae052b72a22018ce812a515bd6a25",
+      "pages": 13
+    },
+    {
+      "key": "Tian2026RealTimeCxrs",
+      "sha256": "5c750cbd8157963dd02d6fc2c0098fa058860a4a92b15ee6afe8bbf0787b81ac",
+      "pages": 18
+    },
+    {
+      "key": "Tobin2026AvoidanceDisruptions",
+      "sha256": "9662fd722bcfbdf26366fedfb91cbe38dcec7677681005d28abd183c5386e5c0",
+      "pages": 11
+    },
+    {
+      "key": "Tresset2002DimensionlessCriterion",
+      "sha256": "2eba446beb087da6df797f99cd5985b5b32cefc8c02e9a9a0ff6d753b134b508",
+      "pages": 8
+    },
+    {
+      "key": "vandenBrand2016ModelBased",
+      "sha256": "f45f4e937b889969a9635359652dd7b724d173e3888fae37994ff705fd4e0e81",
+      "pages": 17
+    },
+    {
+      "key": "VanMulders2025ModelBased",
+      "sha256": "0a15bcf4cc6679d3381fbabf19a159d9e3dfb583c33721e30fee5595504c3205",
+      "pages": 34
+    },
+    {
+      "key": "VanMulders2026ModelBased",
+      "sha256": "f3561003e148fe2d51dad6020eab60bca6035fef65e7783d0f082c2e4853c659",
+      "pages": 24
+    },
+    {
+      "key": "Vanovac2018EffectsDensity",
+      "sha256": "bfa80d97f8c331162f6cebd31bd6c76de5a21763dc9e27819ad3e1d22c3bf406",
+      "pages": 12
+    },
+    {
+      "key": "Viezzer2011PassiveEdge",
+      "sha256": "cff15938ca02d13013a01a841878dbafc4e2dcf82c25c44afe8c247095534124",
+      "pages": 19
+    },
+    {
+      "key": "Viezzer2013HighAccuracy",
+      "sha256": "c707655f43ad087c9a508089d35a37e818707e85ab2132cbe76d301b53885bfe",
+      "pages": 14
+    },
+    {
+      "key": "Viezzer2014EvidenceNeoclassical",
+      "sha256": "7682e261b391fc413163c7d89a8bc4ddaf77a7fdb9eaa9e2d40c4e3613158bf9",
+      "pages": 6
+    },
+    {
+      "key": "Viezzer2018IonHeat",
+      "sha256": "2b905233e2e82f79ef780b2fd9031b4e4ddf5c0877ee1b1e6473f761583def77",
+      "pages": 10
+    },
+    {
+      "key": "Viezzer2020Dynamics",
+      "sha256": "ce2fd592689a15a0f34a8dfcb95e362afc9891f7e1487de8c755614c9facd410",
+      "pages": 11
+    },
+    {
+      "key": "Volpe2012ObliqueElectron",
+      "sha256": "840e514cbb8271ee7409047795e5ba7cd45ba1555db14e5f96c791c975a09a37",
+      "pages": 7
+    },
+    {
+      "key": "vonHellermann1995CrossSection",
+      "sha256": "a04b0f24b609089183830cdeb87c94881ab516d2aa0d1e991428c7a0de1222f6",
+      "pages": 25
+    },
+    {
+      "key": "Wakatsuki2021TemperatureGradient",
+      "sha256": "edcc794960a6c4551afe546d12604323a934703bc3302cf38ae911b6be87aa20",
+      "pages": 11
+    },
+    {
+      "key": "Wang2025PhysicsinformedDeep",
+      "sha256": "06b8b6a8f6d395189871153a6b63fc93f765b346703ade2727506465ef78504f",
+      "pages": 33
+    },
+    {
+      "key": "Wang2025TimeSeries",
+      "sha256": "10f2ee7452988f6ec817c7e8008093739d25935498a45aba0122639470e45cf3",
+      "pages": 12
+    },
+    {
+      "key": "Weerakody2021ReviewIrregular",
+      "sha256": "95bcff0bf246d9a5f8bb26c6f7e1f382dbe98f7bec47a32b4e18c642e85ab20a",
+      "pages": 18
+    },
+    {
+      "key": "Wei2023ReconstructionTokamak",
+      "sha256": "87c831f8f4b06c9583323d774633ba5d650921ad083e00212bff3b5dfe5835ca",
+      "pages": 10
+    },
+    {
+      "key": "Weissgerber2015Beyond",
+      "sha256": "7207d698b755ec973540b869e750e57e3f3f8caea3b2f64a0f8714a229d1ae76",
+      "pages": 10
+    },
+    {
+      "key": "Yang2021ParametricDependencies",
+      "sha256": "203f47d6d2b0a5f24d515d40958f12497d1388f5093e1b12211a9e5d860ef0bf",
+      "pages": 12
+    },
+    {
+      "key": "Yang2024TailoringTokamak",
+      "sha256": "80579a17cb2dc364cf69791ff13448ade3534634978c6e4294eb0272d48c4a48",
+      "pages": 9
+    },
+    {
+      "key": "Yang2026FusionmaeSelfsupervised",
+      "sha256": "269b42220bc788f4c16e986622c26cc95b032f104af8c5dd014b9b5a1cbf9886",
+      "pages": 13
+    },
+    {
+      "key": "Yoshida2007FastMeasurement",
+      "sha256": "592d0e1c2bd9879fad4f66f9086555a977604356d022600a808fef17aba8b46a",
+      "pages": 4
+    },
+    {
+      "key": "Yoshida2009RealTime",
+      "sha256": "e60dd4a5a36f15d5fdce8159b03146f9ce669de70b3a9d667250e5ddd247bf6d",
+      "pages": 8
+    },
+    {
+      "key": "Yoshida2012CoreEdge",
+      "sha256": "bc08911348ee3204e9ffb8cf46210a0c1176b2c0c2313a651d1e2e8f8510e922",
+      "pages": 10
+    },
+    {
+      "key": "Yoshida2025TransportConfinement",
+      "sha256": "0c56ad50596e28172949883f390d25d31538f63e25148cf153b56e5a03982370",
+      "pages": 133
+    },
+    {
+      "key": "Young2008PlasmaMeasurements",
+      "sha256": "b14426d24a8aa6a0ae5630d6a4d4391e2fdb7eac7d470dfb6b3af1cbe21b0adf",
+      "pages": 24
+    },
+    {
+      "key": "Young2008PlasmaMeasurements_PPPL-4276",
+      "sha256": "e4472c2de1f554e353a5f8807c3868297144fafa1836e6fa1d4783dfbd0b8519",
+      "pages": 60
+    },
+    {
+      "key": "Yu2022DiagnosingPedestal",
+      "sha256": "4edf9340c046a1b6542ed1e3529291e632773d204b8171b8489083e81059884d",
+      "pages": 10
+    },
+    {
+      "key": "Yun2010DevelopmentKstar",
+      "sha256": "d91ad31315dcaaab65b537523a6315562ca9d483cba6bb804ed14fa120e4e988",
+      "pages": 4
+    },
+    {
+      "key": "Yun2011TwoDimensionalVisualization",
+      "sha256": "9cae1fab2a1c6892634fef2c309000d93fb9f5f33993d9334ddd2048a88ba937",
+      "pages": 12
+    },
+    {
+      "key": "Yun2014Quasi3d",
+      "sha256": "0a4c4a83535861a93691bfe5ad239977b407bf4b19bacfca76ebd0e475fa89f7",
+      "pages": 4
+    },
+    {
+      "key": "Zhang2012MeasurementsFast",
+      "sha256": "c8f63d3222066db536c9fcdcf25001ac35c6dce7aeeb3842d4e5de95fd6f9539",
+      "pages": 8
+    },
+    {
+      "key": "Zhao2023RefinedInterpretation",
+      "sha256": "d3e6b92acad9e444b1c23269373c66aca284abfb05688e3e79e2eda51aa727da",
+      "pages": 41
+    },
+    {
+      "key": "Zheng2024RealtimeEquilibrium",
+      "sha256": "4e2756e7ae03f6d1d3b7674d5f5d95d1af56097d7fdce8a5cb5bf2bb38b61510",
+      "pages": 18
+    },
+    {
+      "key": "Zhu2019NewTrends",
+      "sha256": "8a49fd63c979e433285ecd29e9825984d589d70df37a94e467b5db783d3db7f3",
+      "pages": 20
+    },
+    {
+      "key": "Zimmermann2026DependenceMomentum",
+      "sha256": "c1092f976249f2dfb3502c774cdb81f49f606e104d8ad902bce0368c13bf687f",
+      "pages": 19
+    }
+  ],
+  "unique_pdf_hashes": 253,
+  "symbol_hits": [
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 1,
+      "context": ", WA, USA.  \n*e-mail: jkatesharbeck@g.harvard.edu\n5 2 6  |  N A T U R E  |  V O L  5 6 8  |  2 5  A P R I L  2 0 1 9\n"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 2,
+      "context": "ture profile; ne (ρ), electron-density profile.\n2 5  A P R I L  2 0 1 9  |  V O L  5 6 8  |  N A T U R E  |  5 2 7\n"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 3,
+      "context": "at is \ntrained solely on scalar signals (yellow).\n5 2 8  |  N A T U R E  |  V O L  5 6 8  |  2 5  A P R I L  2 0 1 9\n"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 4,
+      "context": "an acceleration (speed-up) of nearly 100 times.\n2 5  A P R I L  2 0 1 9  |  V O L  5 6 8  |  N A T U R E  |  5 2 9\n"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 5,
+      "context": "and Fusion Energy (Cambridge Univ. Press, \n2008).\n5 3 0  |  N A T U R E  |  V O L  5 6 8  |  2 5  A P R I L  2 0 1 9\n"
+    },
+    {
+      "key": "KatesHarbeck2019PredictingDisruptive",
+      "page": 6,
+      "context": "clusive licence to Springer Nature Limited 2019\n2 5  A P R I L  2 0 1 9  |  V O L  5 6 8  |  N A T U R E  |  5 3 1\n"
+    },
+    {
+      "key": "Yoshida2025TransportConfinement",
+      "page": 122,
+      "context": "erhof E.,\nWolf R.C. and Zimmermann O. (The TEXTOR Team)\n2006 Nucl. Fusion 46 L1–L5\n[394] de Vries P.C., Johnson M.F., Alper B., Buratti P.,\nHender T.C., Koslowski H.R. and Riccardo V"
+    }
+  ],
+  "host_hit_classification": "All returned hits were Nature volume/page typography or reference page range L1-L5, not the study target.",
+  "our_exact_definition": "Within same file/contiguous block, median of usable observed Ti in next five nominal10ms grid slots, current frame excluded, >=3valid; missing slots do not extend window. Label only, not online input. L5 is following-level label used in this project, unrelated to Lean.",
+  "primary_source_findings": [
+    {
+      "source": "Lee et al., NN-CES",
+      "url": "https://doi.org/10.1016/j.fusengdes.2025.115518",
+      "locator": "p3, losses Eq6; p4 model outputs",
+      "finding": "Targets include conventional-analysis Doppler shift and broadening; no exact future-five-grid median target identified in the examined target description."
+    },
+    {
+      "source": "Jalalvand et al., Diag2Diag",
+      "url": "https://doi.org/10.1038/s41467-025-63492-1",
+      "locator": "pp9-11, time-series development and evaluation",
+      "finding": "Targets are TS diagnostic channels, with heteroscedastic output. No exact future-five-grid median target identified in the examined target description."
+    },
+    {
+      "source": "Ross et al., 2026 preprint",
+      "url": "https://arxiv.org/html/2603.08242v1#S4.SS2",
+      "locator": "Section4.2, paragraph beginning We divide",
+      "finding": "Future12-hour window divided into four3-hour bins. Observed medians within bins determine a binary switch-readiness label. Missing bins excluded for that variable. This IS an analogous use of future-window observed medians in label construction, but not the same scalar regression target, five-slot rule, missingness threshold, or plasma claim. No L5 name is given there. Forecast model itself is trained on target observations, not directly on a scalar bin median."
+    },
+    {
+      "source": "Rostami-Tabar et al., 2013",
+      "url": "https://doi.org/10.1002/nav.21546",
+      "locator": "Publisher abstract",
+      "finding": "Uses established category temporal aggregation for lower-frequency demand buckets. Abstract does not establish median aggregation, a specific L5 operation or its physical interpretation."
+    }
+  ],
+  "candidate_descriptive_name": "후속 시간창 중앙값 표적 / future-window median target. Descriptive phrase, not asserted conventional unique proper name.",
+  "avoid_confusions": [
+    "median of predictive distribution",
+    "median ensemble of forecasts",
+    "classification label smoothing",
+    "ordinary centered or trailing median filter",
+    "physical denoised current truth"
+  ]
+}

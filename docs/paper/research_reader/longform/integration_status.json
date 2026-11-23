@@ -2,12 +2,12 @@
   "section_characters": {
     "introduction": 13476,
     "background": 12588,
-    "materials-methods": 13122,
+    "materials-methods": 12468,
     "results": 6829,
     "discussion": 7817,
     "conclusion": 3462
   },
-  "total_prose_characters_excluding_references": 57294,
+  "total_prose_characters_excluding_references": 56640,
   "citation_keys": [
     "Abbate2021DatadrivenProfile",
     "Bishop1993AutomaticAnalysis",

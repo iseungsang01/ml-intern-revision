@@ -344,6 +344,13 @@ def main():
     nav=''.join('<button type="button" class="section-nav" data-section="'+html.escape(s['id'],quote=True)+'">'+html.escape(s['title'])+'</button>' for s in document['sections'])
     seen=set()
     manuscript=''.join(render_section(s,fallback_id='part-'+str(i+1),seen=seen) for i,s in enumerate(document['sections']))
+    for appendix in document.get('appendices',[]):
+        identifier=appendix['id']
+        if identifier in seen:
+            raise ValueError('Duplicate appendix anchor')
+        seen.add(identifier)
+        nav+='<a class="appendix-nav" href="#'+html.escape(identifier,quote=True)+'">'+html.escape(appendix['title'])+'</a>'
+        manuscript+='<details class="method-appendix" id="'+html.escape(identifier,quote=True)+'"><summary>'+html.escape(appendix['title'])+'</summary><div class="prose">'+render_content(appendix['content_markdown'])+'</div></details>'
     manifest={'title':document.get('title','KSTAR CES 연구 원고'),
         'subtitle':document.get('subtitle',''),'status_note':document.get('status_note',''),
         'sources':sources,'aliases':aliases,'section_ids':[s['id'] for s in document['sections']]}

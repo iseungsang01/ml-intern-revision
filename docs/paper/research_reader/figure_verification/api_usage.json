@@ -1,7 +1,7 @@
 {
   "cap_usd": 5.0,
   "authorization": "Author requested an additional approximately USD5 Claude verification and proper figure placement",
-  "estimated_or_reserved_usd": 2.04744,
+  "estimated_or_reserved_usd": 3.294288,
   "invoice_verified": false,
   "prices_per_million": {
     "claude-fable-5-2": [
@@ -92,6 +92,111 @@
       "stop_reason": "end_turn",
       "estimated_usd": 0.088912,
       "response_sha256": "75c888ba44c7b8b31100535f6e469ac5701a6ef8d2829c9d43a5f17cb0234c3f"
+    },
+    {
+      "stage": "04_opus_definition_validity",
+      "model": "claude-opus-5-5",
+      "request_sha256": "39619441e442db6f02115822fa0239bc66d77f7448368b6af1df3fc62be1a4b9",
+      "counted_input_tokens": 90230,
+      "reserved_usd": 0.737012,
+      "usage": {
+        "input_tokens": 90230,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 9706,
+        "output_tokens_details": {
+          "thinking_tokens": 2024
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.55504,
+      "response_sha256": "196ecbad9287cc8faa064a605dbff746d70049210b021122682660f950d54f5f"
+    },
+    {
+      "stage": "05_fable_definition_challenge",
+      "model": "claude-fable-5-2",
+      "request_sha256": "57b20bb8d7c1078407f79f11dff4e56e5600a767684231b7bcfbe9783243a00c",
+      "counted_input_tokens": 11890,
+      "reserved_usd": 0.7646320000000001,
+      "usage": {
+        "input_tokens": 11890,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 8342,
+        "output_tokens_details": {
+          "thinking_tokens": 4072
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.4288,
+      "response_sha256": "1288a9763dc9f42c07f3f563574c3080cfe3100f8f6804050e6575b89348bb44"
+    },
+    {
+      "stage": "06_fable_concise_L5_appendix",
+      "model": "claude-fable-5-2",
+      "request_sha256": "c17f49065511ea74aadfd4360e4da4b7db50695b16011ab57671f305b48861c5",
+      "counted_input_tokens": 2134,
+      "reserved_usd": 0.43877920000000004,
+      "usage": {
+        "input_tokens": 2134,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 3397,
+        "output_tokens_details": {
+          "thinking_tokens": 1733
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.152952,
+      "response_sha256": "1521265d1db04fc275ec04fd33277b94110574f11663593eab7d115920226192"
+    },
+    {
+      "stage": "07_fable_L5_terminology",
+      "model": "claude-fable-5-2",
+      "request_sha256": "32dfafb0dd89d8d2c51daa4753fe07fe15582ecd3f53abfebdff53844546ba18",
+      "counted_input_tokens": 1217,
+      "reserved_usd": 0.4307096,
+      "usage": {
+        "input_tokens": 1217,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 2508,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stop_reason": "end_turn",
+      "estimated_usd": 0.110056,
+      "response_sha256": "9a5a574f1ffa483175c221d418aae23d9e26e3e3c8cf486bb8107b52fe17a45f"
     }
-  ]
+  ],
+  "followup_authorization": "Author then explicitly challenged custom definitions/L5 and supplied completed B105 results; skeptical definition audit uses unused part of same USD5 cap."
 }

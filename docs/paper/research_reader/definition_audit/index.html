@@ -1,0 +1,317 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>연구 정의 검토</title><style>body{max-width:920px;margin:45px auto;padding:0 22px;font:17px/1.9 sans-serif;color:#203638;background:#fbfcfa}h1{font-size:28px}h2{margin-top:45px;font-size:22px}p{margin:20px 0}.status{padding:15px;background:#eaf0ec;font-size:14px}table{border-collapse:collapse;width:100%;font-size:15px}th,td{border-bottom:1px solid #ccd6d1;text-align:left;padding:12px}th{background:#edf2ef}pre{white-space:pre-wrap;word-break:break-word;font:14px/1.8 sans-serif}details{border:1px solid #d5dfda;padding:15px;margin:16px 0}a{color:#126564}@media(max-width:600px){body{font-size:15px;margin-top:20px}h1{font-size:23px}table{font-size:12px}}</style><h1>연구 정의와 TCN 결과에 대한 Claude 피드백</h1>
+<p class="status">검토 의견과 작업자 확인을 정리한 문서다. 후속 저자 지시로 본문의 표적 정의만 짧게 줄여 부록으로 이동했다. 기존 등록·평가 규칙과 결과는 그대로다.</p>
+<h2>핵심 의견</h2>
+<p><strong>연구자가 운용 정의를 정하는 것은 가능하다. 그러나 그 정의가 현재 물리량의 참값이거나 잡음 제거라는 해석까지 보장하지는 않는다.</strong> 두 검토는 현재 보고값을 추정한다는 목적에 비해 L5가 원고의 중심에 너무 자주 등장한다고 지적했다.</p>
+<p>L5는 현재 프레임을 포함하지 않는 전방 창의 보고값 중앙값이다. 현재까지의 입력만 쓴다는 규칙과, 무엇을 정답으로 삼는지는 서로 다른 문제다. 입력 누출의 증거가 있다는 뜻이 아니라, F와 L5가 서로 다른 추정 대상이라는 뜻이다. 현재 온도를 대리한다는 해석에는 별도 근거가 필요하다.</p>
+<p>권고는 <strong>현재 프레임 보고값 F를 본문 중심에 두고, L5는 전방 창 보고 수준을 평가하는 보조 결과로 정리</strong>하는 것이다. 후속 저자 지시에 따라 본문 정의를 짧게 줄이고 상세 정의를 부록 A로 옮겼다. 결과 전체를 재편하는 권고는 아직 적용하지 않았으며 기존 그림과 비교는 유지했다.</p>
+<h2>너무 많은 정의는 어떻게 줄일 것인가</h2>
+<table><thead><tr><th>묶음</th><th>남길 내용과 주의할 해석</th></tr></thead><tbody>
+<tr><td>추정 대상</td><td>현재 보고값 F를 분명히 정의한다. L5는 미래 창의 별도 표적으로 설명한다.</td></tr>
+<tr><td>자료 제외 규칙</td><td>온도 상한·정확 반복 제거·구간 절단은 분석 규칙으로 제시한다. 값의 크기나 동일성만으로 물리적 무효를 입증했다고 쓰지 않는다.</td></tr>
+<tr><td>가용성 시나리오</td><td>고정 지연·notch 기반 일정·성긴 보고는 명시한 가정 아래의 평가로 기술한다. 실제 보고 도착 시각의 측정과 구분한다.</td></tr>
+</tbody></table>
+<p>커널·이력 길이·특징 창·묶음 간격 같은 설정이 연구 고유라는 이유만으로 잘못된 것은 아니다. 선택 근거, 적용 범위와 필요한 민감도를 밝혀야 한다. 등록과 구현의 일치는 재현성을 보여 주지만 물리 해석을 검증한 것과는 다르다.</p>
+<h2>TCN에 대해서는 무엇을 말할 수 있는가</h2>
+<p>아래는 원본 B105 결과 파일에서 읽은 D10/F TEST 비교다. 음수는 현재 TCN 후보의 MSE가 기존 GP·boosting보다 컸음을 뜻한다. 설계마다 고정 unit과 초기화가 하나인 탐색 결과이며, TCN 계열 전체의 결론은 아니다.</p>
+<table><thead><tr><th>검증 설계</th><th>MSE 감소율 [조건부 군집 구간]</th></tr></thead><tbody><tr><td>무작위 파일</td><td>-16.9% [-24.3, -10.5]</td></tr><tr><td>군집 차단</td><td>-15.9% [-21.0, -11.7]</td></tr><tr><td>Rolling origin</td><td>-31.6% [-42.0, -25.1]</td></tr><tr><td>마지막 시간 블록</td><td>-18.4% [-38.3, -6.3]</td></tr></tbody></table>
+<p>집계 VAL 문턱은 조건별 성능 보장이 아니다. 여러 규칙과 두 표적의 평균 손실 비율이 통과하면, 기본 현재값 조건에서의 악화와 함께 통과할 수 있다. 이 통과는 계산 배분 결정을 뜻하며 통계적 비열등 판정이 아니다. VAL의 공정 대조와 TEST의 incumbent는 적합 범위도 다르므로 같은 비교로 묶어 쓰지 않는다.</p>
+<p>원본 incumbent 대비 TEST 비교는 모든 셀의 점추정이 음수다. 다만 모든 구간이 영을 제외한다는 뜻은 아니다. 이 기록을 남기고, 현재 TCN을 주 추정기로 채택할 근거가 부족하다는 범위에서 해석한다. 정확한 원인은 이번 비교에서 분리되지 않았다.</p>
+<h2>기존 근거와 빠뜨리지 말아야 할 점</h2>
+<p>B73에는 이미 여러 표적을 비교한 결과가 있다. 이를 없는 실험처럼 다시 요구해서는 안 된다. 다만 무작위 설계·tree 비교이며 창 길이뿐 아니라 평균/중앙값, 결측 기준과 평가 행이 함께 달라져 순수한 창 길이 비교나 독립적인 물리 검증은 아니다.</p>
+<p>L5는 새 TCN 실험보다 먼저 정의됐다. 따라서 이번 TCN을 구제하려고 새로 만들었다는 비판은 맞지 않는다. 반대로 TCN 결과를 본 뒤 유리한 표적이나 판정 규칙을 골라 주장을 바꾸는 것은 피해야 한다. 이미 있는 현재 F 결과와 기준선 비교를 먼저 정리하는 것이 두 검토의 공통 권고다.</p>
+<h2>작업자 확인 및 아직 권고인 부분</h2>
+<p>Opus의 일부 표현은 그대로 채택하지 않았다. VAL과 TEST의 비교 대상이 다르고, 조건부 구간은 재적합·모형 선택·초기화 변동을 모두 포함하지 않는다. 어느 표적이 gate 통과에 얼마를 기여했는지는 제공된 집계만으로 원인을 단정하지 않는다.</p>
+<p>새 민감도 분석이 반드시 GPU 없이 된다는 조언도 확정할 수 없다. 단순 집계 재확인과, 제외 기준을 바꾸어 이력·정규화·학습 표적부터 다시 만드는 비교는 다르다. 후자는 재적합이 필요할 수 있다. 먼저 기존 결과의 범위를 확인해야 하며 새로운 분석은 별도 등록 대상이다. 이번 작업에서는 추가 학습·평가·검산·프로토콜 변경을 실행하지 않았다.</p>
+<p><a href="../index.html">현재 논문 HTML</a> · <a href="04_opus_definition_validity.json">Opus 원문</a> · <a href="05_fable_definition_challenge.json">Fable 원문</a> · <a href="verification.json">출처·사용량 기록</a></p>
+<section><h2>L5는 다른 연구의 표준 명칭인가</h2><p>제공된 근거 범위 안에서는 L5와 정확히 같은 정의(다음 5개 10ms 격자, 현재 프레임 제외, 유효 3개 이상, 관측 Ti 중앙값)를 쓰는 다른 연구를 확인하지 못했고, &#x27;L5&#x27;라는 이름이나 확립된 대체 명칭도 확인하지 못했습니다. 다만 이는 캐시된 PDF 텍스트 254건(고유 해시 253개)에 대한 기호 검색과 일부 원문 구절 확인에 근거한 것이며, 전체 재독이나 문헌 전수 조사가 아니므로 &#x27;선행 사례가 없다&#x27;고 단정할 수는 없습니다. 유사한 사례로는 미래 구간의 관측 중앙값을 레이블 구성에 쓰는 Ross 등(2026, 프리프린트)이 있으나 정의와 용도가 다릅니다. 따라서 L5는 본 프로젝트 내부 표기로 명시하고, 표준 용어가 아닌 서술적 표현으로 설명할 것을 권합니다.</p><p>권장 설명: <strong>후속 시간창 중앙값 표적(future-window median target)</strong>. 표준 고유 명칭이 아니라 연산을 풀어 쓴 표현이다.</p><p>Ross 등은 미래 구간의 관측 중앙값으로 이진 판정 레이블을 구성했다. 직접적인 중앙값 회귀 학습, 다섯 격자·최소 세 관측 규칙과는 다르다. 이 사례가 현재 CES 참값의 근거는 아니다. <a href="https://arxiv.org/html/2603.08242v1#S4.SS2">원문 4.2절</a></p><p>시간적 집계라는 넓은 범주는 기존 문헌에 있으나, 이것을 L5의 정확한 표준 이름으로 대체하지 않는다. <a href="https://doi.org/10.1002/nav.21546">Rostami-Tabar 등 원문 초록</a></p><p><a href="07_fable_L5_terminology.json">Fable 용어 검토</a> · <a href="terminology_evidence.json">검색 범위·원문 위치</a></p></section><h2>원문 피드백 펼치기</h2><details><summary>Opus의 정의 타당성 검토</summary><pre>{
+  &quot;overall_verdict_ko&quot;: &quot;현재 원고는 저자의 목적인 &#x27;현재 프레임 CES 보고값(F)을 기다리지 않고 추정&#x27;에서 벗어나 있습니다. 실제로는 정의가 다른 두 번째 표적인 L5(t+1..t+5 격자 행 가운데 측정값이 3개 이상일 때의 중앙값)를 사용 조건 평가의 중심에 두고 있습니다. L5는 조작적 정의로서는 성립합니다. 그러나 그 실체는 현재 프레임이 아니라 10–50 ms 뒤 창의 미래 수준이고, &#x27;잡음 제거된 현재 수준&#x27;이라는 해석을 받쳐 줄 자료(스펙트럼, 피팅 오차, 독립 측정)가 없습니다. 여러 운용 정의(3 keV cut, 정확 반복 제거, 군집 gap≤3, D650 등)는 등록과 구현은 되어 있으나 민감도가 비어 있습니다. TCN B105는 D10/F에서 네 단위 모두 VAL과 TEST에서 기존 추정기보다 MSE가 유의하게 높았습니다. 14셀 집계 gate는 이 악화를 가렸습니다. 결론: 주 추정기는 GP+boosting으로 유지하고, 주장은 F 중심으로 재정렬하며, L5는 보조 표적으로 낮추고, TCN은 범위를 한정한 음성 비교로 제시해야 합니다. 이 실패를 근거로 표적이나 gate를 바꾸는 것은 정당화되지 않습니다.&quot;,
+  &quot;most_important_answer_ko&quot;: &quot;L5는 현재 프레임의 추정 대상이 아닙니다. 입력이 인과적이라는 사실은 &#x27;추정기가 미래를 보지 않는다&#x27;는 것만 보장합니다. 라벨이 미래 보고값으로 만들어졌으므로 L5 과제는 단기 미래 창 수준의 예측입니다. 현재 보고값 nowcast라는 주장은 F로만 직접 뒷받침됩니다. L5에서 보간 기준을 빼는 것은 불공정한 비교를 고친 것이 아니라 다른 질문을 정의한 것입니다.&quot;,
+  &quot;L5_assessment&quot;: {
+    &quot;formal_validity&quot;: &quot;명시적이고 재현 가능한 조작적 정의로서는 정당합니다(창의 크기, 최소 개수, 중앙값, 격자 행 기준 계산이 코드와 일치). 다만 5, ≥3, 중앙값, 격자 행 기준은 모두 연구자의 선택이며 물리적 근거로 도출된 값이 아닙니다.&quot;,
+    &quot;actual_estimand&quot;: &quot;행 t 이후 10–50 ms 창의 보고값 중앙값으로, 비대칭(전방 전용) 지지를 갖는 미래 창 수준입니다. 현재 프레임 F는 창에 포함되지 않습니다. 창 안 결측(notch, 3 keV cut, 반복 제거)에 따라 실제 지지(3–5개 값, 시간 위치)가 행마다 달라집니다. 따라서 추정 대상 자체가 결측 구조에 조건부로 이동합니다.&quot;,
+    &quot;current_report_fit&quot;: &quot;저자 목적(현재 보고값)과 직접 맞는 표적은 F뿐입니다. L5는 F가 &#x27;느린 수준 + 독립적인 프레임 잡음&#x27;이고 50 ms 안에서 정상성이 성립한다는 가정이 있을 때에만 현재 수준의 대리 지표가 됩니다. 이 가정은 검증되지 않았습니다. 전이나 섭동 구간에서는 L5가 체계적으로 현재보다 앞선 값을 나타내며, 서론이 유용성을 기대하는 곳이 바로 그 구간입니다.&quot;,
+    &quot;physical_interpretations_supported_or_not&quot;: &quot;지지되지 않는 해석: &#x27;잡음 제거&#x27;, &#x27;현재 이온온도 수준&#x27;, &#x27;한 프레임 이탈은 비물리적&#x27;. burst 프레임에 몰린 한 프레임 상승이 피팅 교란인지 실제 가열인지는 원고 스스로 가릴 수 없다고 적었습니다. L5는 그런 이탈을 정의상 걸러 낼 뿐입니다. 비정상성(L–H 전이, RMP 진입), ELM 과도 현상, 결측 및 최소 개수에 따른 지지 이동, 3 keV 상한 검열(상향 값 제거로 인한 하향 편향 가능성)은 모두 L5와 현재 상태의 관계를 바꿀 수 있습니다. 미래 중앙값을 검증의 참값으로 쓰면, 미래로의 표류를 잘 따라가는 추정기가 현재를 잘 맞히는 추정기보다 유리하게 채점될 수 있습니다.&quot;,
+    &quot;existing_sensitivity_scope&quot;: &quot;B73은 V1과 tree 추정기에서 F, N1, L3, L5, L10을 비교했습니다. 빠른 채널 증분은 각각 0.087, 0.042, 0.081, 0.075, 0.074였고, 군집 구간이 모두 0을 제외했습니다. 증분의 방향이 표적 정의에 크게 좌우되지 않는다는 것은 보였습니다. 그러나 이 비교는 V1만 다뤘고, 평균과 중앙값, 최소 개수, 행 수(222,672 대 215,369 등)가 서로 달라 순수한 창 길이 ablation이 아닙니다. 네 설계 전체의 민감도도 아니고, 독립적인 물리 검증은 더욱 아닙니다.&quot;,
+    &quot;recommendation&quot;: &quot;본문의 주 표적은 F로 둡니다. L5는 &#x27;미래 창 보고 수준&#x27;이라는 이름으로 보조 표적으로 낮춥니다. &#x27;현재 수준&#x27;, &#x27;잡음 제거&#x27;라는 표현은 철회합니다. 사용 조건(stale) 결과를 L5로만 제시하는 부분에는 같은 행의 F 결과를 함께 실어야 합니다. 이 결과가 이미 있는지는 제공 자료로 확인할 수 없으며, 없다면 아래 실험 1에 해당합니다.&quot;
+  },
+  &quot;definition_register&quot;: [
+    {
+      &quot;definition&quot;: &quot;F = 현재 프레임 보고값&quot;,
+      &quot;category&quot;: &quot;목적에 부합하는 연구 고유 운용 정의&quot;,
+      &quot;scientific_status&quot;: &quot;정당함. 저자 목적과 직접 일치&quot;,
+      &quot;actual_evidence&quot;: &quot;모든 주 비교에서 사용&quot;,
+      &quot;what_is_missing&quot;: &quot;보고값 자체의 오차(피팅 불확도)&quot;,
+      &quot;recommendation&quot;: &quot;keep&quot;,
+      &quot;why&quot;: &quot;현재 보고값 nowcast의 유일한 직접 표적&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;L5 (t+1..t+5, ≥3개, 중앙값)&quot;,
+      &quot;category&quot;: &quot;근거가 필요한 선택&quot;,
+      &quot;scientific_status&quot;: &quot;형식적으로는 타당하나 추정 대상이 미래 창임&quot;,
+      &quot;actual_evidence&quot;: &quot;B73 V1 표적 비교&quot;,
+      &quot;what_is_missing&quot;: &quot;잡음 모델의 근거, 네 설계, 결측 지지별 거동&quot;,
+      &quot;recommendation&quot;: &quot;demote&quot;,
+      &quot;why&quot;: &quot;현재 보고값 목적과 불일치&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;T_i &gt; 3 keV 제거&quot;,
+      &quot;category&quot;: &quot;근거·민감도가 필요한 선택&quot;,
+      &quot;scientific_status&quot;: &quot;크기만으로 무효를 추론할 수 없음. 빔 방출이 약한 행에 몰린다는 상관은 정황 증거일 뿐&quot;,
+      &quot;actual_evidence&quot;: &quot;약한 빔 행에 집중; Kim 2024의 일반적 관찰&quot;,
+      &quot;what_is_missing&quot;: &quot;피팅 오차·스펙트럼 대조, 제거 비율, cut 변경 시 결과&quot;,
+      &quot;recommendation&quot;: &quot;sensitivity_needed&quot;,
+      &quot;why&quot;: &quot;상단 검열은 표적 분포를 바꾸고, 결과적으로 매끄러운 추정기에 유리할 수 있음&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;직전 관측과 비트 단위로 같은 값 제거&quot;,
+      &quot;category&quot;: &quot;근거·민감도가 필요한 선택&quot;,
+      &quot;scientific_status&quot;: &quot;같다는 사실만으로 &#x27;유지값&#x27;이라 단정할 수 없음(양자화나 실제 일치 가능)&quot;,
+      &quot;actual_evidence&quot;: &quot;hold 편향 방지라는 논리&quot;,
+      &quot;what_is_missing&quot;: &quot;생성 로그 확인, 반복값을 유지했을 때 결과, 제거 비율&quot;,
+      &quot;recommendation&quot;: &quot;sensitivity_needed&quot;,
+      &quot;why&quot;: &quot;이력, 표적, L5 지지를 동시에 바꿈&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;0.5 s 이상 간격에서 구간 절단&quot;,
+      &quot;category&quot;: &quot;정당한 운용 정의&quot;,
+      &quot;scientific_status&quot;: &quot;임의 상수이나 영향은 제한적일 가능성&quot;,
+      &quot;actual_evidence&quot;: &quot;없음&quot;,
+      &quot;what_is_missing&quot;: &quot;절단 개수&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;보충 자료에 개수만 보고하면 충분&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;shot 번호 차 ≤3인 군집 = 통계적 의존 단위&quot;,
+      &quot;category&quot;: &quot;민감도가 필요한 선택&quot;,
+      &quot;scientific_status&quot;: &quot;세션의 대리 변수일 뿐 검증되지 않음&quot;,
+      &quot;actual_evidence&quot;: &quot;군집 86개&quot;,
+      &quot;what_is_missing&quot;: &quot;gap 값 변경 시 구간 폭&quot;,
+      &quot;recommendation&quot;: &quot;sensitivity_needed&quot;,
+      &quot;why&quot;: &quot;모든 &#x27;확립&#x27; 판정이 이 정의에 의존&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;인과 GP(최근 16개, Matérn-3/2, 행별 주변우도)&quot;,
+      &quot;category&quot;: &quot;확립된 방법에 연구 고유 설정&quot;,
+      &quot;scientific_status&quot;: &quot;정당함&quot;,
+      &quot;actual_evidence&quot;: &quot;기준선으로서의 성능&quot;,
+      &quot;what_is_missing&quot;: &quot;16개, 커널 선택의 민감도(부차적)&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;설정값을 보충 자료에 명시하면 충분&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;이력·빠른 입력 스칼라(10행 창, 배열 평균, 적합 방전만으로 표준화), anchor 스칼라, 원시 전압 로그 비&quot;,
+      &quot;category&quot;: &quot;연구 고유 특징 공학&quot;,
+      &quot;scientific_status&quot;: &quot;조작적으로 정당하나 결과 정보를 반영한 선택임&quot;,
+      &quot;actual_evidence&quot;: &quot;원시 창보다 나음(단일 적합); anchor 대조 결과&quot;,
+      &quot;what_is_missing&quot;: &quot;선택 과정이 이미 읽은 자료에 의존&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;&#x27;실측에 따른 선택&#x27;이 아니라 &#x27;탐색적으로 선택한 특징&#x27;으로 기술&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;공통 행(matched rows), 표마다 다른 행 집합&quot;,
+      &quot;category&quot;: &quot;정당한 비교 원칙&quot;,
+      &quot;scientific_status&quot;: &quot;짝 비교로는 정당함. 다만 공통 지지 선택이 모집단을 바꿈&quot;,
+      &quot;actual_evidence&quot;: &quot;행 집합 표&quot;,
+      &quot;what_is_missing&quot;: &quot;제외된 행의 특성(구간 끝, notch 근처)&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;표 사이 일반화 범위를 제한&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;가용성 규칙 D/S/K, D650, 분석 시간 0 가정&quot;,
+      &quot;category&quot;: &quot;가정에 기반한 시나리오&quot;,
+      &quot;scientific_status&quot;: &quot;실제 도착 시각 기록이 없는 가정&quot;,
+      &quot;actual_evidence&quot;: &quot;notch 위치로부터의 계산&quot;,
+      &quot;what_is_missing&quot;: &quot;실제 보고 지연&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;응용 시나리오로만 제시하고 주 주장 근거로 쓰지 않음&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;낡음의 비용, 회복 몫 비율&quot;,
+      &quot;category&quot;: &quot;파생 요약 지표&quot;,
+      &quot;scientific_status&quot;: &quot;분모가 작으면 불안정&quot;,
+      &quot;actual_evidence&quot;: &quot;점추정&quot;,
+      &quot;what_is_missing&quot;: &quot;구간과 분모 크기&quot;,
+      &quot;recommendation&quot;: &quot;demote&quot;,
+      &quot;why&quot;: &quot;보충 자료로 이동&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;군집 bootstrap 95% 구간&quot;,
+      &quot;category&quot;: &quot;확립된 방법&quot;,
+      &quot;scientific_status&quot;: &quot;적합과 선택을 고정한 조건부 구간&quot;,
+      &quot;actual_evidence&quot;: &quot;명시됨&quot;,
+      &quot;what_is_missing&quot;: &quot;재적합, 선택, 다중성 불확도&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;&#x27;확립&#x27;이라는 표현을 약화&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;재사용 TEST, 같은 캠페인 등록&quot;,
+      &quot;category&quot;: &quot;한계&quot;,
+      &quot;scientific_status&quot;: &quot;확증적 시험이 아님&quot;,
+      &quot;actual_evidence&quot;: &quot;원고가 스스로 인정&quot;,
+      &quot;what_is_missing&quot;: &quot;미사용 캠페인&quot;,
+      &quot;recommendation&quot;: &quot;qualify&quot;,
+      &quot;why&quot;: &quot;모든 결과를 탐색적으로 표기&quot;
+    },
+    {
+      &quot;definition&quot;: &quot;B105 14셀 집계 gate ≤1.05&quot;,
+      &quot;category&quot;: &quot;계산 배분 규칙&quot;,
+      &quot;scientific_status&quot;: &quot;성능 적합성 기준이 아님&quot;,
+      &quot;actual_evidence&quot;: &quot;네 단위 모두 통과&quot;,
+      &quot;what_is_missing&quot;: &quot;조건별 기준&quot;,
+      &quot;recommendation&quot;: &quot;remove&quot;,
+      &quot;why&quot;: &quot;과학적 주장을 뒷받침하는 데 쓸 수 없음&quot;
+    }
+  ],
+  &quot;TCN_and_gate_assessment&quot;: {
+    &quot;actual_result&quot;: &quot;부호 규약: skill = 1 − MSE(TCN)/MSE(기준)이므로 음수는 TCN의 MSE가 더 높다는 뜻입니다. D10/F에서 기존 추정기 대비 TEST skill은 V1 −0.169, V2 −0.159, V3 −0.316, V4 −0.184였고, 군집 구간이 모두 음의 쪽에 있었습니다. 공정한 특화 tree 대비 VAL에서도 −0.159, −0.159, −0.178, −0.232였습니다. 범위는 설계마다 고정 단위 하나, 초기화 하나이며, 입력 채널 수와 시간 예산이 달라 구조만의 효과로 볼 수 없습니다.&quot;,
+    &quot;gate_meaning&quot;: &quot;gate는 14셀(7개 규칙 × 2개 head)의 정규화 MSE 평균을 비교하는 비율(평균의 비)입니다. 단위별 비율은 0.972, 1.035, 0.988, 0.988로 모두 통과했지만, 같은 VAL에서 D10/F는 16–23% 악화되어 있었습니다. 따라서 이 gate는 조건별 적합성을 보장하지 않습니다. MSE가 큰 stale 셀이 평균을 지배합니다. 또 VAL에서 checkpoint를 고른 만큼 TCN에 낙관적 이점이 있습니다.&quot;,
+    &quot;goal_alignment&quot;: &quot;맞지 않습니다. 현재 보고값 목적의 핵심은 D10/F입니다. 그런데 집계 방식에서는 stale 규칙과 L5 head의 개선이 F의 악화를 상쇄할 수 있고, 실제로 그렇게 되었습니다.&quot;,
+    &quot;what_not_concluded&quot;: &quot;TCN 계열이나 신경망 일반이 열등하다는 결론, 원인(입력, 예산, 최적화)의 식별, 다른 초기화나 단위로의 일반화는 모두 결론이 아닙니다.&quot;,
+    &quot;next_decision&quot;: &quot;권고: GP+boosting을 주 추정기로 유지하고, TCN은 음성 비교로 범위를 명시해 제시합니다. 이 실패를 이유로 L5, 표적, gate를 바꾸거나 seed를 추가하는 구조 구출은 하지 않습니다. 향후 gate는 D10/F를 포함한 조건별 기준으로 별도 사전 등록해야 하며, 그 경우에도 TEST 정보를 이미 본 탐색적 시험임을 밝혀야 합니다.&quot;
+  },
+  &quot;minimum_maintext_design&quot;: [
+    &quot;표적: F를 주 표적으로, L5는 미래 창 보조 표적으로&quot;,
+    &quot;F에서 hold, 인과 GP, T0, TX, PCHIP, 양측 GP 비교를 네 설계 모두 같은 행에서&quot;,
+    &quot;F에서 빠른 채널 증분과 대조 두 가지(행 뒤섞기, anchor 표본 대체)&quot;,
+    &quot;stale 규칙은 가정에 기반한 응용 절로, F와 L5를 병기&quot;,
+    &quot;cut와 반복 제거, 군집 정의의 민감도 요약 한 줄&quot;,
+    &quot;계산 시간&quot;,
+    &quot;TCN은 범위를 한정한 음성 비교 단락 하나&quot;
+  ],
+  &quot;statements_to_retract_or_rephrase&quot;: [
+    {
+      &quot;old_claim&quot;: &quot;사용 조건의 수준 평가는 L5를 중심으로&quot;,
+      &quot;new_claim&quot;: &quot;사용 조건 평가는 F를 기준으로 하고, 미래 창 수준(L5)은 보조로 병기한다&quot;,
+      &quot;reason&quot;: &quot;목적은 현재 보고값&quot;
+    },
+    {
+      &quot;old_claim&quot;: &quot;보간과 비교할 수 있는 표적은 F뿐이다&quot;,
+      &quot;new_claim&quot;: &quot;L5 창 안의 값을 읽는 보간은 라벨과 자료를 공유하므로 L5 비교에서 제외했다. L5에서의 오프라인 기준은 별도로 정의해야 한다&quot;,
+      &quot;reason&quot;: &quot;과학적 사실이 아니라 설계상의 선택&quot;
+    },
+    {
+      &quot;old_claim&quot;: &quot;F에는 추정기가 맞출 수 없는 산포가 섞인다&quot;,
+      &quot;new_claim&quot;: &quot;F의 한 프레임 이탈 일부는 현재 입력으로 예측하기 어려울 수 있으나, 그 비율은 측정되지 않았다&quot;,
+      &quot;reason&quot;: &quot;F 증분이 확립되어 있어 &#x27;맞출 수 없다&#x27;는 과장&quot;
+    },
+    {
+      &quot;old_claim&quot;: &quot;L5는 한 프레임 이탈에 덜 민감한 수준&quot;,
+      &quot;new_claim&quot;: &quot;L5는 정의상 그런 이탈을 걸러 내며, 이것이 잡음 제거라는 근거는 없다&quot;,
+      &quot;reason&quot;: &quot;burst가 물리적인지 미판별&quot;
+    },
+    {
+      &quot;old_claim&quot;: &quot;3 keV 초과 값은 피팅 실패&quot;,
+      &quot;new_claim&quot;: &quot;3 keV 초과 값은 제외 규칙에 따라 결측으로 처리했다. 제외 비율과 민감도를 보고한다&quot;,
+      &quot;reason&quot;: &quot;크기만으로 무효를 추론할 수 없음&quot;
+    },
+    {
+      &quot;old_claim&quot;: &quot;TCN이 gate를 통과했다&quot;,
+      &quot;new_claim&quot;: &quot;집계 gate는 통과했으나 D10/F에서는 VAL과 TEST 모두 기존 추정기보다 MSE가 높았다&quot;,
+      &quot;reason&quot;: &quot;gate는 조건별 적합성을 뜻하지 않음&quot;
+    }
+  ],
+  &quot;necessary_experiments_only&quot;: [
+    {
+      &quot;question&quot;: &quot;stale 규칙에서의 증분이 F에서도 성립하는가&quot;,
+      &quot;already_done_related_work&quot;: &quot;D10에서 F는 네 설계 모두 수행; stale 규칙은 주로 L5&quot;,
+      &quot;what_new_comparison_would_answer&quot;: &quot;같은 행에서 D650과 S 규칙의 F 증분&quot;,
+      &quot;priority&quot;: &quot;high&quot;,
+      &quot;needs_new_data_or_GPU&quot;: &quot;아니오(CPU)&quot;,
+      &quot;preregistration_note&quot;: &quot;TEST 정보를 본 탐색적 시험; 판정 규칙을 사전 고정&quot;
+    },
+    {
+      &quot;question&quot;: &quot;cut와 반복 제거, 군집 정의가 주 결론을 바꾸는가&quot;,
+      &quot;already_done_related_work&quot;: &quot;없음&quot;,
+      &quot;what_new_comparison_would_answer&quot;: &quot;cut 없음 또는 대체 기준, 반복값 유지, 군집 gap 변경에서 F의 주 비교&quot;,
+      &quot;priority&quot;: &quot;high&quot;,
+      &quot;needs_new_data_or_GPU&quot;: &quot;아니오&quot;,
+      &quot;preregistration_note&quot;: &quot;민감도 분석으로 표기하고 주 판독을 대체하지 않음&quot;
+    },
+    {
+      &quot;question&quot;: &quot;L5 결과가 결측 지지에 의존하는가&quot;,
+      &quot;already_done_related_work&quot;: &quot;B73(V1, 표적 변형)&quot;,
+      &quot;what_new_comparison_would_answer&quot;: &quot;L5 지지 개수(3/4/5)별 기술 통계, V2–V4에서의 L5 변형&quot;,
+      &quot;priority&quot;: &quot;medium&quot;,
+      &quot;needs_new_data_or_GPU&quot;: &quot;아니오&quot;,
+      &quot;preregistration_note&quot;: &quot;미래 가용성으로 정의한 층이므로 추정기 우열 판정에 쓰지 않음&quot;
+    },
+    {
+      &quot;question&quot;: &quot;L5가 잡음 제거된 현재 수준인가&quot;,
+      &quot;already_done_related_work&quot;: &quot;없음&quot;,
+      &quot;what_new_comparison_would_answer&quot;: &quot;피팅 오차나 스펙트럼, 또는 독립 측정과의 대조&quot;,
+      &quot;priority&quot;: &quot;medium&quot;,
+      &quot;needs_new_data_or_GPU&quot;: &quot;새 자료 필요&quot;,
+      &quot;preregistration_note&quot;: &quot;자료 확보 전에는 해당 주장을 하지 않음&quot;
+    }
+  ],
+  &quot;author_facing_feedback_ko&quot;: &quot;1) L5가 자주 등장하는 것은 정당화되지 않습니다. L5는 미래 10–50 ms 창의 보고 수준입니다. 입력이 인과적이어도 라벨은 미래 값이므로 nowcast의 표적이 아닙니다. &#x27;L5는 현재 수준, 잡음 제거&#x27;라는 해석에는 근거가 없습니다. B73은 V1에서 증분의 방향이 표적 정의에 크게 좌우되지 않음을 보였지만, 물리 검증이나 네 설계 민감도는 아닙니다. 2) 3 keV cut, 정확 반복 제거, 군집 gap≤3은 결과에 직결되는데 민감도가 없습니다. 크기나 동일성만으로 무효라고 말할 수 없습니다. D650과 S 규칙은 분석 시간 0이라는 가정에 기반한 시나리오입니다. 3) TCN은 D10/F에서 네 단위 모두 VAL과 TEST에서 기존 추정기보다 MSE가 높았습니다(skill 약 −0.16~−0.32). 14셀 집계 gate는 stale 셀과 L5가 그 악화를 상쇄해 통과했을 뿐, 현재 보고값 목적과 맞지 않습니다. 이를 근거로 표적이나 gate를 바꾸지 말고, GP+boosting을 주 추정기로 유지하며, TCN은 단일 단위·단일 초기화라는 범위를 명시해 음성 비교로 싣는 것을 권합니다. 이것은 권고이며, TCN이 원리적으로 열등하다는 사실이 입증된 것은 아닙니다. 4) 본문은 F 중심으로 재구성하고, 비율 지표와 세부 규칙은 보충 자료로 옮기십시오. 모든 결과는 재사용 캠페인에서의 탐색적 결과로 표기해야 합니다.&quot;
+}</pre></details><details><summary>Fable의 반박·교차 점검</summary><pre>{
+  &quot;agreements&quot;: [
+    &quot;L5는 현재 프레임이 아니다. 코드상 later[:, :5]는 t+1..t+5(10–50 ms 뒤)만 쓰고 F를 포함하지 않으며, 유한값이 3개 이상일 때의 nanmedian이다. 형식적으로 유효한 조작 정의지만, 실제 지지가 행마다 3–5개로 달라진다.&quot;,
+    &quot;네 가지를 구분해야 한다. (a) 물리적 참값 부재: F와 L5 모두 센서 유도 보고값이다. (b) 입력 누출: 제공 자료에 증거가 없다. (c) 기준선-라벨 중첩: L5 창 안을 읽는 오프라인 보간에만 해당한다. (d) 추정 대상 차이: F와 L5는 다른 대상이다. 저자 목적에 직접 대응하는 것은 F이다.&quot;,
+    &quot;&#x27;잡음 제거된 현재 수준&#x27;이라는 해석은 제공 근거가 없으므로 철회해야 한다.&quot;,
+    &quot;B73은 V1·tree에 한정되며, 평균/중앙값, 최소 개수, 행 수가 섞여 있어 순수한 창 길이 ablation이나 물리 검증이 아니다.&quot;,
+    &quot;B105 gate는 계산 배분 규칙이다. 집계 비율은 0.972–1.035로 통과했지만 같은 VAL의 D10/F skill은 −0.159~−0.232였다. 구출용 seed·튜닝을 하지 않고, 이 실패를 이유로 표적이나 gate를 바꾸지 않으며, TCN 일반의 열등을 주장하지 않는다는 권고는 타당하다.&quot;,
+    &quot;캠페인을 이미 본 뒤의 등록이므로 모든 결과는 탐색적으로 표기해야 한다.&quot;
+  ],
+  &quot;corrections_to_opus&quot;: [
+    {
+      &quot;claim&quot;: &quot;TCN은 VAL과 TEST 모두에서 &#x27;기존 추정기&#x27;보다 MSE가 &#x27;유의하게&#x27; 높았다&quot;,
+      &quot;correction&quot;: &quot;비교 대상이 다르다. VAL은 공정 특화 tree(내부 TRAIN만 사용), TEST는 incumbent outer-fit 대비이다. &#x27;유의&#x27;는 과하며, &#x27;고정 적합 조건부 군집 구간이 0을 제외&#x27;라고 써야 한다.&quot;,
+      &quot;evidence&quot;: &quot;B105 비교 키 이름. scope에 재적합·선택·초기화·다중성 불확도가 없다고 명시됨. V3 VAL 구간은 [−0.743, −0.069]로 넓다.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;stale 셀과 L5 head의 개선이 F 악화를 상쇄했고, MSE가 큰 stale 셀이 평균을 지배한다&quot;,
+      &quot;correction&quot;: &quot;나머지 13셀의 합이 D10/F 악화를 상쇄한 것은 산술적으로 맞다. 그러나 어느 셀인지는 셀별 VAL 값이 제공되지 않아 추정일 뿐이다. 게다가 incumbent 대비 TEST에서는 64셀 모두 점추정이 음수여서, &#x27;TCN이 다른 조건에서는 낫다&#x27;는 서사는 지지되지 않는다. 통과는 더 약한 비교 대상과 VAL checkpoint 낙관의 영향일 수 있으나, 원인은 식별되지 않는다.&quot;,
+      &quot;evidence&quot;: &quot;existing_B105_incumbent_TEST_summary(64셀 중 음수 64, 비음수 0). gate 정의의 &#x27;ratio of means&#x27;와 optimism 문구.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;gate가 악화를 &#x27;가렸다&#x27;, 권고는 remove&quot;,
+      &quot;correction&quot;: &quot;gate는 등록 당시부터 &#x27;추론적 비열등이 아닌 배분 결정&#x27;이라 했고 F/L5 분리 표시를 요구했다. 문제는 은폐가 아니라 목적과의 불일치이다. 삭제하면 계산된 기록을 지우게 되므로, 통과 사실과 D10/F 악화를 나란히 싣고 과학적 근거로 쓰지 않는 것이 맞다.&quot;,
+      &quot;evidence&quot;: &quot;B105_gate_definition.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;stale 규칙의 F 결과가 있는지 확인할 수 없어 high 우선 신규 실험이 필요하다&quot;,
+      &quot;correction&quot;: &quot;gate가 7규칙×2head(F, L5)를 채점했으므로, B105 모델군에는 stale 규칙의 F head 점수가 이미 있다. 새로 필요한 것은 빠른 채널 증분 등 특정 대조의 stale-F에 한정될 수 있다. 기존 산출물을 먼저 확인해야 한다.&quot;,
+      &quot;evidence&quot;: &quot;gate 정의의 &#x27;7rule x2head&#x27;, &#x27;F/L5 separated values&#x27;.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;군집 정의의 근거는 &#x27;군집 86개&#x27;뿐이고 민감도가 없다&quot;,
+      &quot;correction&quot;: &quot;B73에는 방전 단위와 군집 단위 구간이 모두 있다. 두 단위에서 모두 0을 제외하고 군집 구간이 더 넓다. V1에 한정된 부분적 근거로 인용할 수 있다. gap 값을 바꾸는 분석만 미실시이다.&quot;,
+      &quot;evidence&quot;: &quot;B73의 discharge/cluster 구간. 예: F [0.073, 0.102] 대 [0.059, 0.122].&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;B73은 &#x27;방향&#x27;의 견고성만 보였다&quot;,
+      &quot;correction&quot;: &quot;방향은 맞지만 더 구체적으로 읽을 수 있다. F 증분(0.087)이 다섯 표적 중 최대이므로, F를 주 표적으로 해도 V1의 빠른 채널 주장은 유지된다. 반면 N1은 0.042로 절반 수준이어서 크기는 표적에 의존한다. 표적 간 구간이 겹치고 행 집합이 달라 차이의 우열은 주장할 수 없다.&quot;,
+      &quot;evidence&quot;: &quot;existing_target_variant_study.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;3 keV cut·반복 제거·군집의 민감도를 &#x27;지금&#x27; 최소 본문에 한 줄로, cut는 Kim 2024 근거&quot;,
+      &quot;correction&quot;: &quot;이 민감도는 새 분석이므로 지금의 최소 설계에 넣을 수 없고, 향후 등록 항목이다. 지금은 &#x27;제외 규칙&#x27;으로만 기술하고 물리적 무효 주장을 뺀다. Kim 2024, 서론 내용, 결측 원인(notch 등), &#x27;민감도 없음&#x27;은 제공 자료로 확인할 수 없다. 하향 편향과 매끄러운 추정기 유리는 검증되지 않은 가설이다.&quot;,
+      &quot;evidence&quot;: &quot;제공 evidence에 해당 자료 없음.&quot;
+    },
+    {
+      &quot;claim&quot;: &quot;정의 14개 register와 L5 비판의 네 차례 반복&quot;,
+      &quot;correction&quot;: &quot;L5 지적은 &#x27;추정 대상이 다르다&#x27;와 &#x27;물리 해석 근거가 없다&#x27; 두 가지이고, 나머지는 반복이다. &#x27;전이 구간에서 체계적으로 앞선다&#x27;는 전방 창의 논리적 가능성일 뿐 크기는 측정되지 않았다. 또 L5는 B105보다 먼저 등록되어 TCN 구출용은 아니다. register는 저자의 &#x27;정의 과다&#x27; 불만을 오히려 키운다. 세 묶음(추정 대상, 제외 규칙, 가정 시나리오)이면 충분하다.&quot;,
+      &quot;evidence&quot;: &quot;registration_timing(L5 11-20, B105 11-24).&quot;
+    }
+  ],
+  &quot;recommended_decision_ko&quot;: &quot;Opus의 핵심 방향은 채택합니다. F를 주 표적으로 하고, L5는 보충 자료의 &#x27;전방 창 보고 수준&#x27;으로 내리며, incumbent를 유지하고, TCN은 범위를 한정한 음성 결과로 싣습니다. 다만 gate 삭제, &#x27;유의&#x27;, 상쇄 서사, 즉시 민감도 요구는 수정해야 합니다. 이미 계산된 결과는 모두 남깁니다.&quot;,
+  &quot;minimum_changes_now&quot;: [
+    &quot;본문 주 결과는 D10/F로 한다. 네 설계를 동등하게 다루고, hold·인과 GP·incumbent를 비교하며, 오프라인 보간은 비인과 참조로 둔다. 10 ms 계산 시간과 B73 V1의 F 증분 0.087(군집 구간 [0.059, 0.122])도 본문에 남긴다. 기존 산출물만 재배치한다.&quot;,
+    &quot;L5는 보충 자료로 옮기고 &#x27;10–50 ms 전방 창 보고 중앙값(5개 중 3개 이상)&#x27;으로 명명한다. B73의 다섯 표적 표는 전부 싣는다.&quot;,
+    &quot;주장을 바꾼다. &#x27;현재 수준&#x27;과 &#x27;잡음 제거&#x27;는 삭제한다. L5 기반 사용 조건 결론은 &#x27;단기 전방 수준 예측&#x27;으로 다시 쓴다. 대응하는 F 결과가 없는 곳은 L5로 대체하지 말고 공백으로 명시한다.&quot;,
+    &quot;TCN은 네 단위의 D10/F VAL·TEST 수치와 64셀 모두 음수라는 사실을 싣는다. gate 통과도 병기하되 &#x27;배분 규칙이며 조건별 적합성은 아님&#x27;이라고 적는다. 범위는 단위 하나, 초기화 하나이고, 채널 수와 시간 예산이 달랐음을 밝힌다.&quot;,
+    &quot;정의는 세 묶음으로 줄인다. (1) 추정 대상 F, (2) 제외 규칙(3 keV, 반복, 0.5 s 절단)은 물리적 무효 주장 없이 규칙으로만 기술, (3) 가용성 규칙(D/S/K, D650)은 가정 시나리오. 비율 지표는 보충 자료로 옮긴다.&quot;,
+    &quot;전 결과를 &#x27;고정 적합 조건부, 탐색적&#x27;으로 표기한다.&quot;
+  ],
+  &quot;future_checks_only&quot;: [
+    &quot;D10/F를 포함한 조건별 gate의 사전 등록(탐색적)&quot;,
+    &quot;3 keV cut, 반복값 유지, 군집 gap 변경 시 F 주 비교의 민감도&quot;,
+    &quot;L5 지지 개수(3/4/5)별 기술 통계와 V2–V4의 표적 변형&quot;,
+    &quot;공통 행에서 F 대 L5 증분의 짝 비교&quot;,
+    &quot;stale 규칙에서 빠진 F 대조(기존 산출물 확인 후)&quot;,
+    &quot;피팅 오차·스펙트럼·독립 측정과의 대조(새 자료가 필요하며, 그 전에는 물리 해석 금지)&quot;
+  ],
+  &quot;author_message_ko&quot;: &quot;지적하신 두 가지는 타당합니다. L5는 코드상 현재 프레임을 뺀 10–50 ms 전방 창의 중앙값입니다. 입력 누출은 아니지만 F와는 다른 추정 대상이고, &#x27;잡음 제거된 현재 수준&#x27;이라는 근거가 없습니다. 그래서 본문은 D10/F와 네 설계 중심으로 재구성하고 L5는 보충 자료로 옮기되, 결과는 지우지 않습니다. B73에서 F 증분이 가장 컸으므로(V1 0.087) 핵심 주장은 F만으로도 유지됩니다. 다만 이는 V1·tree에 한정된 결과입니다. TCN은 D10/F에서 네 단위 모두 열세였고 incumbent 대비 TEST 64셀도 모두 음수였으므로 음성 결과로 싣습니다. gate는 삭제하지 않고 &#x27;배분 규칙으로 통과했으나 목적과 불일치&#x27;라고 기록합니다. Opus가 요구한 cut·반복·군집 민감도는 지금 추가하지 않고 향후 등록 항목으로 둡니다. 현재 원고에서는 이들을 물리적 판단이 아닌 제외 규칙으로만 기술하시면 됩니다.&quot;
+}</pre></details></html>

@@ -88,6 +88,23 @@ def main():
             matches[0].setdefault('pdf_exhibits',[]).append(exhibit['id'])
         runtime=next(n for n in nodes(by_id['results']) if n.get('title','').startswith('3.'))
         runtime['content_markdown']+='\n\n본선 GP·boosting 계산 시간의 측정 조건과 분위수는 [보충 표 S13](../ppcf_revision/supp_ppcf.pdf#page=11)에 제시하였다. TCN의 계산 비용은 별도 신경망 비교 절의 표 11에서 확인할 수 있다.'
+    appendix_edit=ROOT/'docs/paper/research_reader/definition_audit/06_fable_concise_L5_appendix.json'
+    appendices=[]
+    if appendix_edit.exists():
+        edit=read(appendix_edit)
+        matches=[n for s in sections for n in nodes(s) if '표적 F와 L5' in n.get('title','')]
+        assert len(matches)==1
+        matches[0]['title']='가. 추정 표적'
+        matches[0]['content_markdown']=edit['main_replacement_ko']
+        appendix=dict(edit['appendix'])
+        appendix['content_markdown']=appendix['content_markdown'].replace(
+            '그 행에 측정값이 있으면', '같은 파일의 연속 구간에서 기존 자료 제외 규칙을 통과한 보고값이 그 행에 있으면')
+        appendix['content_markdown']=appendix['content_markdown'].replace(
+            '창은 격자 행으로 센다.', '창은 명목 시간 격자의 행으로 센다.')
+        appendix['content_markdown']=appendix['content_markdown'].replace(
+            'L5는 채점용 레이블로만 쓰인다.', 'L5는 학습·평가의 표적으로 쓰이며 현재 입력으로 제공하지 않는다.')
+        appendix['content_markdown']+='\n\nL5는 본 연구에서 사용하는 표기다. 여기서는 이 연산을 후속 시간창 중앙값 표적(future-window median target)이라고 설명하며, 통용되는 고유 명칭으로 제시하지 않는다.'
+        appendices=[appendix]
     counts={sid:sum(len(n.get('content_markdown','')) for n in nodes(s)) for sid,s in by_id.items()}
     assert counts['introduction']>=5000,counts
     assert counts['background']>=5000,counts
@@ -117,7 +134,7 @@ def main():
     # Method definitions must not displace scientific theory exposition.
     theory='\n'.join(n.get('content_markdown','') for n in nodes(by_id['background']))
     assert not re.search(r'filtering에 해당|smoothing에 해당|F와 L5|정보 집합 I_t',theory)
-    manuscript={**current,'sections':sections+[old['references']],
+    manuscript={**current,'sections':sections+[old['references']],'appendices':appendices,
        'active_longform':'docs/paper/research_reader/longform/draft_longform.json',
        'status_note':'기존 졸업논문 목차를 보존한 장문 한국어 논문 초안이다. Fable 본문 작성 후 Opus 검토와 기존 영문 결과·문헌 근거 대조를 거쳐 반영했다. 결과의 수치·표·그림은 기존 검증 PDF를 함께 제시한다.'}
     save(REV/'manuscript_sections.json',manuscript)

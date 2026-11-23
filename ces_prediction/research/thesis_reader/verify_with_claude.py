@@ -37,6 +37,8 @@ def ledger():
     result={'cap_usd':CAP,'authorization':'Author requested an additional approximately USD5 Claude verification and proper figure placement',
        'estimated_or_reserved_usd':total,'invoice_verified':False,'prices_per_million':PRICES,
        'pricing_source':'https://claude.com/pricing?currency=USD','calls':calls}
+    if any(c['stage'].startswith(('04_','05_')) for c in calls):
+        result['followup_authorization']='Author then explicitly challenged custom definitions/L5 and supplied completed B105 results; skeptical definition audit uses unused part of same USD5 cap.'
     save(OUT/'api_usage.json',result)
     return result
 
@@ -50,7 +52,7 @@ def image(path):
     return {'type':'image','source':{'type':'base64','media_type':'image/png',
             'data':base64.b64encode(path.read_bytes()).decode()}}
 
-def call(stage,model,content,max_tokens):
+def call(stage,model,content,max_tokens,output_dir=None):
     payload={'model':model,'max_tokens':max_tokens,'output_config':{'effort':'low'},
              'messages':[{'role':'user','content':content}]}
     request=CACHE/(stage+'.request.json');response=CACHE/(stage+'.response.json')
@@ -59,7 +61,7 @@ def call(stage,model,content,max_tokens):
         result=read(response)
     else:
         assert not request.exists(),'Uncertain prior request: no replay'
-        assert len(list(CACHE.glob('*.reservation.json')))<3
+        assert len(list(CACHE.glob('*.reservation.json')))<7
         count=D.api('/messages/count_tokens',{'model':model,'messages':payload['messages']})
         ip,op=PRICES[model];reserve=count['input_tokens']*1.1*ip/1e6+max_tokens*op/1e6+.02
         assert ledger()['estimated_or_reserved_usd']+reserve<=CAP
@@ -68,10 +70,12 @@ def call(stage,model,content,max_tokens):
            'counted_input_tokens':count['input_tokens'],'reserved_usd':reserve})
         ledger();result=D.api('/messages',payload);save(response,result)
     ledger();text=D.txt(result).strip()
-    (OUT/(stage+(''if result['stop_reason']=='end_turn'else'_INCOMPLETE')+'.txt')).write_text(text+'\n',encoding='utf8')
+    destination=output_dir or OUT
+    destination.mkdir(parents=True,exist_ok=True)
+    (destination/(stage+(''if result['stop_reason']=='end_turn'else'_INCOMPLETE')+'.txt')).write_text(text+'\n',encoding='utf8')
     assert result['stop_reason']=='end_turn','Incomplete response preserved, not a completed audit'
     if text.startswith('```'):text=text.split('\n',1)[1].rsplit('```',1)[0]
-    value=json.loads(text);save(OUT/(stage+'.json'),value)
+    value=json.loads(text);save(destination/(stage+'.json'),value)
     print(stage,'COMPLETE',flush=True)
     return value
 

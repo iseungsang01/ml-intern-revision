@@ -1,0 +1,19 @@
+{
+  "source_files": [
+    "PAPER_DESIGN.md",
+    "docs/paper/b73_targets.json",
+    "docs/paper/b105_merit.json",
+    "ces_prediction/experiments/PREREGISTRATION_B73.md",
+    "ces_prediction/experiments/PREREGISTRATION_B105.md",
+    "ces_prediction/experiments/b73_targets/common.py",
+    "ces_prediction/dataset.py"
+  ],
+  "source_hashes": {
+    "PAPER_DESIGN.md": "110680999cadb02f08113970d60711a90634970f2384693d5f2b3cce972b4e3d",
+    "docs/paper/b73_targets.json": "f499cf25b250db498dd99258dde9b57ac302dd688e95337313f98f3060c2deb0",
+    "docs/paper/b105_merit.json": "b77c2bd64c00cb5038d81e87226d4dc093dcc551f8fedbee1f1f7ffb627ea43d"
+  },
+  "individual_observations_supplied": false,
+  "new_runs": 0,
+  "funding": "Unused part of existing USD5 verification cap; shared api_usage ledger in ../figure_verification/"
+}
