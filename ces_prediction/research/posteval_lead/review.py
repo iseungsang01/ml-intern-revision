@@ -57,7 +57,31 @@ def run():
     E.save(CACHE/'status.json',{'state':'complete','time':time.time(),'total_substantive_calls':output['total_substantive_calls'],'report':'docs/paper/posteval_lead_review_20261123.md'})
     print(json.dumps({'lead_correction_complete':True,'total_substantive_calls':output['total_substantive_calls']}))
 
+def finalize():
+    result,binding=E.gate();path=ROOT/'docs/paper/posteval_lead_review_20261123.json';out=E.read(path)
+    assert binding==out['original_audit_binding']
+    classified={};rows=[]
+    for scope,s in result['scopes'].items():
+        classified[scope]={}
+        for design,d in s['designs'].items():
+            positive=[k for k,c in d['cells'].items() if c['skill']['cluster'][0]>0]
+            negative=[k for k,c in d['cells'].items() if c['skill']['cluster'][1]<0]
+            classified[scope][design]={'positive_excludes_zero':positive,'negative_excludes_zero':negative}
+            rows.append('| '+scope+' | '+design+' | '+', '.join(positive or ['없음'])+' | '+', '.join(negative or ['없음'])+' |')
+    out['lead_review']={'original_gate_rechecked_after_api':True,'original_api_immediate_gate_check_already_completed':True,'exact_classification':classified,
+        'limits':['Claude proposals are exploratory, not experimentally confirmed explanations.','Broad natural-language condition/cluster summaries must defer to per-cell original values and exact classification.','No new study has been run; changing significance alone cannot establish an effect difference.']}
+    E.save(path,out)
+    md=ROOT/'docs/paper/posteval_lead_review_20261123.md';text=md.read_text(encoding='utf8')
+    note='\n'.join(['## 작업자 확인','',
+        'Opus 응답 후 원래 final gate·감사·게시 hash를 다시 확인했다. 초안이 제시한 즉시 조치인 gate 재확인은 이미 완료했다. 후속 후보는 아직 실행하지 않은 탐색적 제안이며 별도 사전등록과 독립 확인이 필요하다.',
+        'Claude 요약의 포괄적인 지연 조건 표현이나 고정 cluster 개수는 셀별 원본값을 우선한다. 아래 분류는 원본 구간에서 직접 생성했다. D50의 F와 L5처럼 표적별로 판정이 다를 수 있다. 구간에 0이 포함되는 것은 차이가 없다는 증거가 아니다.','',
+        '| Scope | Design | 양수·0 제외 셀 | 음수·0 제외 셀 |','|---|---|---|---|',*rows,'',''])
+    assert '## 작업자 확인' not in text
+    text=text.replace('## 보완된 연구 계획',note+'## 보완된 연구 계획 (Claude 제안)',1);md.write_text(text,encoding='utf8')
+    E.save(CACHE/'lead_checks.json',{'original_gate_passed':True,'binding':binding,'original_immediate_action_completed':True,'report_sha256':E.sha(md),'json_sha256':E.sha(path),'new_fits':0})
+    print(json.dumps({'lead_checks_passed':True,'new_fits':0}))
+
 if __name__=='__main__':
-    try:run()
+    try:finalize() if len(sys.argv)>1 and sys.argv[1]=='finalize' else run()
     except BaseException as e:
         E.save(CACHE/'status.json',{'state':'failed','time':time.time(),'error':repr(e)});raise

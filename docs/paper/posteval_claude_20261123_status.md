@@ -21,7 +21,11 @@
 현재 분석 결과가 없으므로 이를 이용한 의미적 판독이나 연구 후보 검증은 아직 수행하지 않았다. host의 pointer 검증이 새로운 가설의 타당성을 증명하지는 않는다. 원래 평가가 끝나면 정상 종료·최종 감사 gate를 먼저 만족해야 한다. 완료 후 문서는 연구 초안이며, 원고의 수치·물리 주장으로 자동 승격하지 않는다.
 
 현재 live 상태: `data/.claude_posteval_20261123/status.json`. 작업의 stdout/stderr와 모든 API attempt는 같은 ignored 폴더에 있다. 완료 예정 산출물: `docs/paper/posteval_claude_20261123.md`와 `.json`. 새 실험을 실행하거나 현재 평가 마감을 연장하지 않는다.
-# 2026-11-23 23:01 KST: substantive Claude evidence review started
+# 2026-11-23 23:31 KST: all stages and lead correction complete
+
+Original four-stage workflow completed23:03:47 with10 paid substantive calls, saved all requests/responses and generated original draft; local completion notification delivered. Lead review found missing skill formula/sign confirmation and availability-delay versus forecast-horizon ambiguity. Original draft remains unchanged. A separate bounded Opus tool review received compact frozen-source definitions and both scopes/all designs; completed23:29 in3 additional calls, total13 within16. Original audit/publication/normal-exit gate rechecked after the response. Exact per-cell interval classifications were generated as an independent reference for broad prose claims. The corrected plan is `posteval_lead_review_20261123.md/json`; it is exploratory and no automatic training occurred. Local lead check: `data/.claude_posteval_lead_20261123/lead_checks.json`.
+
+## Earlier23:01 running observation
 
 The original final audit, explicit publication and normal queue/supervisor exit completed; the unchanged original E.gate is true. After confirming no previous substantive requests, the worker was explicitly started against completed evidence. Real evidence_review call1/call2 requests/responses and call3 request were observed23:01. This is actual paid evidence analysis, no longer a waiting-only task. Original models and maximum16 rounds remain bound. Independent notifier103 delivered the stage notification and monitors errors/5min progress. The early publication waiter had stopped on stale failed queue metadata before completion, with zero substantive requests; it was not a paid-call replay.
 

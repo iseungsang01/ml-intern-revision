@@ -806,6 +806,14 @@ B.82를 넣은 원고(본문 20쪽, 보충 25쪽)의 PDF만 받은 새 채점자
 
 구간은 pointwise·보정 없는 fixed-fit 내부 검증이며 재학습/선택 불확실성을 제외한다. TRAIN/VAL 군집 중복과 작은 군집 수를 결과 문서에 공개했다. 다른 모형과의 동일 outer 행 비교·독립 campaign·보정된 forcing/계측 응답이 이 제한적 판단을 바꿀 측정이다. 원고의 기존 estimator를 대체하거나 새 architecture 탐색을 자동으로 추가하지 않았다.
 
+### 4.75 고정 예산 TCN의 가용 조건 비교 (B.94; `docs/paper/b94_methods.md`)
+
+동결된 predictor의 결과와 원래 독립 최종 감사를 통과했다. 근거는 `b94_methods.json`의 각 scope/design/cell별 point·cluster interval·excludes_zero이며, 전체 범위의 단일 초기화와 대표 unit의 다중 초기화는 합치지 않는다. 여기의 TX/TH는 진단 포함 TCN과 이력만 쓰는 TCN이며 논문의 GP/tree TX나 과거 LSTM 대비 skill이 아니다. 지연 기호는 예측 horizon이 아니라 CES 이력의 가용 규칙이다.
+
+빠른 진단의 추가 효과는 모든 설계·가용 조건에서 일관된 양수가 아니다. 현재값을 추정하는 직전 가용 조건에서는 손실 증가 방향도 확인되며, 이력이 묵은 조건의 양수 구간도 모든 설계로 확장되지 않는다. 많은 적합이 예산 상한에서 끝났으므로 수렴한 구조 비교나 TCN 자체의 열등성으로 해석하지 않는다. 이 해석을 뒤집을 측정은 TRAIN/VAL로 고정한 충분한 예산과 독립 미사용 캠페인에서의 같은 paired 비교다. CES 보고값 표적이므로 독립 물리 참값이나 새 물리 기작을 확립하지 않는다.
+
+`posteval_claude_20261123.md/json`은 원래 Claude 초안이다. skill 부호를 미확인으로 남긴 한계는 `posteval_lead_review_20261123.md/json`에서 동결 소스 정의와 원본 구간 기반 분류로 보완했다. 후속 후보는 TEST-informed 탐색이며 아직 실행하지 않았다. 원고 estimator와 논지의 자동 교체는 없다.
+
 ## 5. 코드와 산출물
 
 배선과 디렉터리의 역할은 `README.md`, 캐시를 다시 만드는 순서와 원고 빌드는 `HANDOVER.md` 4절과 7절, 배치 목록은 `ces_prediction/experiments/README.md`에 있다. 자주 쓰는 것만 적는다.

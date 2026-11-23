@@ -1,0 +1,277 @@
+{
+  "api_usage": [
+    {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 2347,
+      "output_tokens": 811,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    },
+    {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 29236,
+      "output_tokens": 121,
+      "output_tokens_details": {
+        "thinking_tokens": 61
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    },
+    {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 30356,
+      "output_tokens": 2908,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  ],
+  "automatic_training": false,
+  "claude_proposal": {
+    "automatic_training": false,
+    "claims_not_supported": [
+      "D10~D1000\uc744 \uc608\uce21 horizon\uc73c\ub85c \ud574\uc11d\ud558\ub294 \uac83",
+      "TX\uc640 TH\uc758 \ucc28\uc774\ub97c manuscript GP/tree \ub610\ub294 \uae30\uc874 LSTM\uacfc\uc758 \ube44\uad50\ub85c \ud574\uc11d\ud558\ub294 \uac83",
+      "\uace0\uc815 \uc608\uc0b0\uc5d0\uc11c \ub098\uc628 \uc74c\uc218 skill\uc744 TCN \uad6c\uc870\uc758 \uc5f4\ub4f1\uc131\uc73c\ub85c \ubcf4\ub294 \uac83",
+      "\uc124\uacc4 \uac04 cluster \uad50\uc9d1\ud569\uc774\ub098 \uc720\uc758\uc131 \ud45c\uc2dc\uac00 \ubc14\ub010 \uac83\uc744 \uadfc\uac70\ub85c \ud6a8\uacfc\uac00 \ub2e4\ub974\ub2e4\uace0 \uc8fc\uc7a5\ud558\ub294 \uac83",
+      "FULL15\uc640 FOUR-unit \uacb0\uacfc\ub97c \ud569\uce58\uac70\ub098 B98\uc744 \ub3c5\ub9bd \uac80\uc815\uc73c\ub85c \ubcf4\ub294 \uac83",
+      "\ubcf4\uace0\ub41c CES target\uc744 \ubb3c\ub9ac\uc801 \ucc38\uac12\uc73c\ub85c \ubcf4\uac70\ub098, \uce21\uc815\ub41c \uacb0\uacfc\ub97c \ubb3c\ub9ac \uae30\uc791\uc73c\ub85c \ud574\uc11d\ud558\ub294 \uac83"
+    ],
+    "immediate_next_step": "\ud559\uc2b5 \uc5c6\uc774 \uc6d0\ubcf8 final gate\uc640 hash\ub97c \ub2e4\uc2dc \ud655\uc778\ud558\uace0, \uc6d0\ubcf8 \uacc4\ud68d\uacfc \uc774 \uc218\uc815\ubcf8\uc744 \ubd84\ub9ac\ud574 \ubcf4\uc874\ud569\ub2c8\ub2e4.",
+    "ranked_candidates": [
+      {
+        "evidence_refs": [
+          "/b94/budget_summary",
+          "/b94/paired_by_design/FOUR_units_three_seeds/V3",
+          "/context/verified_definitions"
+        ],
+        "existing_work_overlap": "\uae30\uc874 TH/TX \uad6c\uc870, unit, seed\ub97c \uadf8\ub300\ub85c \uc4f0\uace0 \uc608\uc0b0 \ud55c \uc218\uc900\ub9cc \ubc14\uafc9\ub2c8\ub2e4.",
+        "falsifier": "\uc218\ub834 \ube44\uc728\uc774 \ub192\uc544\uc838\ub3c4 D10/D50\uc758 \uc810\ucd94\uc815 \ubd80\ud638\uc640 \uad6c\uac04\uc774 \uc720\uc9c0\ub418\uba74 \uae30\uac01\ud569\ub2c8\ub2e4.",
+        "hypothesis": "V2\u00b7V3\uc758 \uc9e7\uc740 \uc9c0\uc5f0 \uc74c\uc218 skill\uc740 TH/TX\uac00 \ub300\ubd80\ubd84 \uc608\uc0b0 \ud55c\ub3c4\uc5d0\uc11c \uba48\ucd98 \uac83\uacfc \uad00\ub828\ub420 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+        "id": "C1",
+        "independent_confirmation": "TEST\uc5d0 \uc4f0\uc9c0 \uc54a\uc740 \ucea0\ud398\uc778\uc5d0\uc11c \uac19\uc740 \uc0ac\uc804\ub4f1\ub85d \uaddc\uce59\uc73c\ub85c \ud655\uc778\ud569\ub2c8\ub2e4.",
+        "minimal_experiment": "FOUR-unit V3\uc5d0\uc11c \uc0ac\uc804\ub4f1\ub85d\ud55c \ud655\ub300 \uc608\uc0b0 \ud55c \uc218\uc900\uc73c\ub85c TH/TX\ub97c seed 3\uac1c\uc529 \ub2e4\uc2dc \uc801\ud569\ud569\ub2c8\ub2e4.",
+        "negative_sentence": "\ud655\ub300 \uc608\uc0b0\uc5d0\uc11c\ub3c4 V3\uc758 \uc9e7\uc740 \uc9c0\uc5f0 \uc74c\uc218 skill\uc774 \uc720\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+        "positive_sentence": "\ud655\ub300 \uc608\uc0b0\uc5d0\uc11c V3\uc758 \uc9e7\uc740 \uc9c0\uc5f0 \uc74c\uc218 skill\uc774 \uc904\uc5c8\uc73c\uba70, \uc774\ub294 \ud0d0\uc0c9\uc801 \uad00\ucc30\uc785\ub2c8\ub2e4.",
+        "priority": 1,
+        "stop_rule": "\uc124\uacc4 1\uac1c, \uc608\uc0b0 1\uc218\uc900, seed 3\uac1c\ub85c \ub05d\ub0b4\uace0 \ucd94\uac00 \ud0d0\uc0c9\uc740 \ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+        "test_informed_exploratory": true,
+        "timing_basis": "confirm \uc801\ud569\uc758 \uc911\uc559\uac12\uc774 \uc57d 1200\ucd08 \uc0c1\ud55c\uc5d0 \uac78\ub838\uace0, \ud655\ub300 \uc608\uc0b0\uc758 \uc18c\uc694 \uc2dc\uac04\uc740 \uce21\uc815\ub41c \uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
+        "title": "\uace0\uc815 \uc608\uc0b0 \ud55c\ub3c4\uc758 \uc601\ud5a5 \uc810\uac80(\uc0ac\uc804\ub4f1\ub85d \uc2dc\uc5d0\ub9cc)",
+        "train_val_only_development": "\uc608\uc0b0\uacfc \uc218\ub834 \uae30\uc900\uc740 TRAIN/VAL \ud559\uc2b5 \uace1\uc120\ub9cc\uc73c\ub85c \uc815\ud569\ub2c8\ub2e4."
+      },
+      {
+        "evidence_refs": [
+          "/context/verified_definitions",
+          "/b94/paired_by_design/FULL15_one_seed/V1"
+        ],
+        "existing_work_overlap": "\uc0c8 \uc801\ud569 \uc5c6\uc774 \uc800\uc7a5\ub41c \uc608\uce21\uacfc \uae30\uc874 \ud589\ub9cc \uc501\ub2c8\ub2e4.",
+        "falsifier": "mask \ubc16 \ud589\uc774 \ubb34\uc2dc\ud560 \ub9cc\ud07c \uc801\uac70\ub098 \ube44\uc2b7\ud558\uba74 support \uc124\uba85\uc744 \uae30\uac01\ud569\ub2c8\ub2e4.",
+        "hypothesis": "D10/F\uc640 F_full\uc740 \ud589 \uc9d1\ud569\uc774 \ub2ec\ub77c, FULL15 V1\uc5d0\uc11c \ubcf4\uc774\ub294 0 \ubc30\uc81c \uc5ec\ubd80 \ucc28\uc774\uc758 \uc77c\ubd80\ub294 support \ucc28\uc774\uc5d0\uc11c \uc654\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+        "id": "C2",
+        "independent_confirmation": "\ubbf8\uc0ac\uc6a9 \ucea0\ud398\uc778\uc5d0\uc11c \uac19\uc740 \uae30\uc220 \ud1b5\uacc4\ub97c \ubc18\ubcf5\ud569\ub2c8\ub2e4.",
+        "minimal_experiment": "\uc124\uacc4\ub9c8\ub2e4 \ubcc4\ub3c4\ub85c, F_full\uc5d0\uc11c \ub4f1\ub85d\ub41c common mask \ubc16 \ud589\uc758 \ubd84\ud3ec\ub97c \uae30\uc220 \ud1b5\uacc4\ub85c \uc9d1\uacc4\ud569\ub2c8\ub2e4.",
+        "negative_sentence": "F_full\uc758 \ucd94\uac00 \ud589\uc5d0\uc11c \ub69c\ub837\ud55c \ud3b8\uc911\uc740 \ubcf4\uc774\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
+        "positive_sentence": "F_full\uc758 \ucd94\uac00 \ud589\uc740 \ud2b9\uc815 \uc870\uac74\uc5d0 \ubab0\ub824 \uc788\uc5c8\uc73c\uba70, \uc774\ub294 \ud0d0\uc0c9\uc801 \uae30\uc220\uc785\ub2c8\ub2e4.",
+        "priority": 2,
+        "stop_rule": "\uc124\uacc4\ubcc4 \uae30\uc220 \ud1b5\uacc4 \ud55c \ubc88\uc73c\ub85c \ub05d\ub0b4\uace0 \uc0c8\ub85c\uc6b4 \ud569\uc0b0 readout\uc740 \ub9cc\ub4e4\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+        "test_informed_exploratory": true,
+        "timing_basis": "\uce21\uc815\ub41c \uc18c\uc694 \uc2dc\uac04\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
+        "title": "\uc124\uacc4\ubcc4 D10 F\uc640 F_full\uc758 support \ucc28\uc774 \uae30\uc220(\ud559\uc2b5 \uc5c6\uc74c)",
+        "train_val_only_development": "\uc9d1\uacc4 \uaddc\uce59\uc740 TRAIN/VAL\uc5d0\uc11c \uc815\ud574 \uc0ac\uc804\ub4f1\ub85d\ud558\uace0, \uc124\uacc4 \uac04 cluster \uad50\uc9d1\ud569\uc740 \ub9cc\ub4e4\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+      },
+      {
+        "evidence_refs": [
+          "/b98/units"
+        ],
+        "existing_work_overlap": "\uae30\uc874 B98 internal-VAL \uc608\uce21\ub9cc \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
+        "falsifier": "\uae30\uc900\uc744 \ub118\ub294 \uc124\uacc4\uac00 \uc5c6\uc73c\uba74 \uc774 \uc7ac\uc9d1\uacc4\ub294 \uc218\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+        "hypothesis": "B98 V3\u00b7V4a\ub294 \ube44\uc911\ucca9 cluster\uac00 \ub108\ubb34 \uc801\uc5b4 M-H \uad6c\uac04 \ud574\uc11d\uc774 \ubd88\uc548\uc815\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+        "id": "C3",
+        "independent_confirmation": "cluster\uac00 \ucda9\ubd84\ud55c \ubbf8\uc0ac\uc6a9 \ucea0\ud398\uc778\uc774 \uc788\uc744 \ub54c\ub9cc \ud655\uc778\ud569\ub2c8\ub2e4.",
+        "minimal_experiment": "\uc7ac\uc9d1\uacc4 \uc804\uc5d0 \uc124\uacc4\ubcc4 \ube44\uc911\ucca9 cluster \uc218\uac00 \uc0ac\uc804\ub4f1\ub85d\ud55c \ucd5c\uc18c \uae30\uc900\uc744 \ub118\ub294\uc9c0\ub9cc \ud655\uc778\ud569\ub2c8\ub2e4.",
+        "negative_sentence": "\ube44\uc911\ucca9 cluster\uac00 \ubd80\uc871\ud574 B98 \uc7ac\uc9d1\uacc4\ub294 \uc218\ud589\ud558\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
+        "positive_sentence": "\uc77c\ubd80 \uc124\uacc4\uc5d0\uc11c \uae30\uc900 \uc774\uc0c1\uc758 \ube44\uc911\ucca9 cluster\uac00 \ud655\uc778\ub418\uc5c8\uace0, \ud574\uc11d\uc740 internal-VAL\uc5d0 \ud55c\uc815\ub429\ub2c8\ub2e4.",
+        "priority": 3,
+        "stop_rule": "\ucd5c\uc18c \uae30\uc900\uc5d0 \ubabb \ubbf8\uce58\uba74 \ucd94\uc815 \uc5c6\uc774 \uba48\ucda5\ub2c8\ub2e4.",
+        "test_informed_exploratory": true,
+        "timing_basis": "\uce21\uc815\ub41c \uc18c\uc694 \uc2dc\uac04\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
+        "title": "B98 cluster \uc218\uc758 \uc2e4\ud604 \uac00\ub2a5\uc131\ub9cc \uc0ac\uc804 \uc810\uac80",
+        "train_val_only_development": "internal-VAL \ubc94\uc704\uc5d0\uc11c\ub9cc \ub2e4\ub8e8\uace0 B94 TEST\uc640\ub294 \ube44\uad50\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+      }
+    ],
+    "summary": "\uc6d0\ubcf8 \ucd5c\uc885 \uacc4\ud68d\uc740 \uadf8\ub300\ub85c \ub450\uace0 \ubcc4\ub3c4\uc758 \uc218\uc815\ubcf8\ub9cc \uc81c\ucd9c\ud569\ub2c8\ub2e4. \uac80\uc99d\ub41c \uc815\uc758\uc5d0 \ub530\ub974\uba74 \uc591\uc218 skill\uc740 \uac19\uc740 \ud589\uc5d0\uc11c TX(\ube60\ub978 \uc9c4\ub2e8 \ud3ec\ud568)\uc758 MSE\uac00 TH(\uc774\ub825\ub9cc \uc0ac\uc6a9)\ubcf4\ub2e4 \uc791\ub2e4\ub294 \ub73b\uc785\ub2c8\ub2e4. D10~D1000\uc740 \uc608\uce21 horizon\uc774 \uc544\ub2c8\ub77c CES \uc774\ub825\uc758 \uac00\uc6a9 \uc9c0\uc5f0\uc774\uace0, \uc6d0\ub798\uc758 \ubd80\ud638 \ud655\uc778 \ud6c4\ubcf4\ub294 \uc0ad\uc81c\ud569\ub2c8\ub2e4. FULL15 1-seed: V1\uc740 D50\u00b7D100\u00b7D300 \uc774\uc0c1, S, K10\uc5d0\uc11c 0\uc744 \ubc30\uc81c\ud558\ub294 \uc591\uc218\uc774\uace0 D10/L5\uc640 F_full\uc740 0\uc744 \ubc30\uc81c\ud558\ub294 \uc74c\uc218\uc785\ub2c8\ub2e4. V2\u00b7V3\uc740 \uc9e7\uc740 \uc9c0\uc5f0\uc5d0\uc11c 0\uc744 \ubc30\uc81c\ud558\ub294 \uc74c\uc218\uc774\uba70 \uae34 \uc9c0\uc5f0\uc5d0\uc11c\ub294 \ub300\uccb4\ub85c 0\uc744 \ud3ec\ud568\ud569\ub2c8\ub2e4. V4a(18 cluster)\ub294 D10\uc5d0\uc11c \uc74c\uc218\uc774\uace0 \ub098\uba38\uc9c0\ub294 \ub300\ubd80\ubd84 0\uc744 \ud3ec\ud568\ud569\ub2c8\ub2e4. FOUR-unit 3-seed: V1\uc740 D300\u00b7D650\u00b7D1000\u00b7S\uc5d0\uc11c 0\uc744 \ubc30\uc81c\ud558\ub294 \uc591\uc218\uc774\uace0, V2\ub294 S\ub9cc 0\uc744 \ubc30\uc81c\ud569\ub2c8\ub2e4. V3\uc740 D10\uacfc D50/L5\u00b7D100/L5\uc5d0\uc11c 0\uc744 \ubc30\uc81c\ud558\ub294 \uc74c\uc218\uc774\uace0, V4a\ub294 D10\uc5d0\uc11c\ub9cc 0\uc744 \ubc30\uc81c\ud558\ub294 \uc74c\uc218\uc785\ub2c8\ub2e4. \ub450 scope\ub294 \ud569\uce58\uc9c0 \uc54a\uc73c\uba70, 0\uc744 \ud3ec\ud568\ud558\ub294 \uad6c\uac04\uc744 \ucc28\uc774\uac00 \uc5c6\ub2e4\ub294 \uc99d\uac70\ub85c \uc4f0\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. confirm \uc801\ud569\uc740 TH 23\uac74 \uc911 20\uac74, TX 23\uac74 \uc911 18\uac74\uc774 \uc608\uc0b0 \ud55c\ub3c4\uc5d0\uc11c \ub05d\ub0ac\uc2b5\ub2c8\ub2e4. \ub530\ub77c\uc11c \uc74c\uc218 skill\uc740 \uace0\uc815 \uc608\uc0b0\uc5d0\uc11c\uc758 \uacb0\uacfc\uc77c \ubfd0 \uad6c\uc870\uac00 \uc5f4\ub4f1\ud558\ub2e4\ub294 \uc99d\uac70\uac00 \uc544\ub2d9\ub2c8\ub2e4. B98\uc740 internal-VAL\ub85c\ub9cc \ub2e4\ub8e8\uba70, V3\uc5d0\ub294 7\uac1c, V4a\uc5d0\ub294 5\uac1c cluster\ubfd0\uc774\ub77c \ub3c5\ub9bd \uac80\uc815\uc774 \uc544\ub2d9\ub2c8\ub2e4. \uc6d0\ubcf8 gate(post_audit\u00b7hash \ub3d9\uc77c\u00b7exit0)\ub294 \uc81c\ucd9c \uc804\uc5d0 \ud655\uc778\ud588\uace0, \uc81c\ucd9c \ud6c4 \uc7ac\ud655\uc778\uc740 \ub2e4\uc74c \uc870\uce58\ub85c \ub0a8\uae41\ub2c8\ub2e4."
+  },
+  "lead_review": {
+    "exact_classification": {
+      "FOUR_units_three_seeds": {
+        "V1": {
+          "negative_excludes_zero": [],
+          "positive_excludes_zero": [
+            "D1000/F",
+            "D1000/L5",
+            "D300/F",
+            "D300/L5",
+            "D650/F",
+            "D650/L5",
+            "S/F",
+            "S/L5"
+          ]
+        },
+        "V2": {
+          "negative_excludes_zero": [
+            "D10/L5"
+          ],
+          "positive_excludes_zero": [
+            "S/F",
+            "S/L5"
+          ]
+        },
+        "V3": {
+          "negative_excludes_zero": [
+            "D10/F",
+            "D10/F_full",
+            "D10/L5",
+            "D100/L5",
+            "D50/L5"
+          ],
+          "positive_excludes_zero": [
+            "S/F"
+          ]
+        },
+        "V4a": {
+          "negative_excludes_zero": [
+            "D10/F",
+            "D10/F_full",
+            "D10/L5"
+          ],
+          "positive_excludes_zero": []
+        }
+      },
+      "FULL15_one_seed": {
+        "V1": {
+          "negative_excludes_zero": [
+            "D10/F_full",
+            "D10/L5"
+          ],
+          "positive_excludes_zero": [
+            "D100/F",
+            "D100/L5",
+            "D1000/F",
+            "D1000/L5",
+            "D300/F",
+            "D300/L5",
+            "D50/F",
+            "D650/F",
+            "D650/L5",
+            "K10/F",
+            "K10/L5",
+            "S/F",
+            "S/L5"
+          ]
+        },
+        "V2": {
+          "negative_excludes_zero": [
+            "D10/F",
+            "D10/F_full",
+            "D10/L5",
+            "D50/F",
+            "D50/L5"
+          ],
+          "positive_excludes_zero": []
+        },
+        "V3": {
+          "negative_excludes_zero": [
+            "D10/F",
+            "D10/F_full",
+            "D10/L5",
+            "D100/F",
+            "D100/L5",
+            "D50/F",
+            "D50/L5",
+            "K10/F",
+            "K10/L5"
+          ],
+          "positive_excludes_zero": []
+        },
+        "V4a": {
+          "negative_excludes_zero": [
+            "D10/F",
+            "D10/F_full",
+            "D10/L5",
+            "D50/F"
+          ],
+          "positive_excludes_zero": []
+        }
+      }
+    },
+    "limits": [
+      "Claude proposals are exploratory, not experimentally confirmed explanations.",
+      "Broad natural-language condition/cluster summaries must defer to per-cell original values and exact classification.",
+      "No new study has been run; changing significance alone cannot establish an effect difference."
+    ],
+    "original_api_immediate_gate_check_already_completed": true,
+    "original_gate_rechecked_after_api": true
+  },
+  "original_audit_binding": {
+    "post_audit_sha256": "91d13da2b4a08a44c30d869c7caccf0879d0da25c83098fef247f849978353c8",
+    "post_cells": 136,
+    "readout_sha256": "61ed4b6a54ca01197fd779c88f3e138e302aab64afc056bc009ba7519d757930",
+    "selection_sha256": "ff94e786cb947b86417e6c0cabf057df6807bbfec771b5a26379630ec8891176"
+  },
+  "original_draft_preserved": true,
+  "source_fragments": {
+    "ces_prediction/experiments/b85_unified/data85.py": {
+      "excerpt": "        ii = np.arange(a, b)\n        obs = ii[np.isfinite(ti[a:b])]\n        if rule == 'K10':\n            obs = obs[(fr[obs] >= 0) & (fr[obs] % 10 == 0)]\n            pos = np.searchsorted(obs, ii, side='left') - 1\n        elif rule == 'S':\n            dt = np.r_[0., np.diff(tm[a:b])]\n            cutoff = np.maximum.accumulate(np.where((dt > .015) & (dt < .045), ii-1, -1))\n            pos = np.searchsorted(obs, cutoff, side='right') - 1\n        else:\n            lim = tm[a:b] - int(rule[1:])/1000. + .003\n            pos = np.searchsorted(tm[obs], lim, side='right') - 1\n            pos = np.minimum(pos, np.searchsorted(obs, ii, side='left') - 1)\n        valid = pos >= 0\n        if len(obs):\n            out[ii[valid]] = obs[pos[valid]]\n    if G is base:",
+      "sha256": "eb9af716bf7860a05eeb1015ee141e3eaff353d5ade493c6ccb91762f3141755"
+    },
+    "ces_prediction/experiments/b85_unified/readout85.py": {
+      "excerpt": "    \"\"\"Arrays (init,row); sample paired init first, then unit multiplicities.\"\"\"\n    num,den=np.asarray(numerators),np.asarray(denominators)\n    assert num.shape==den.shape and num.ndim==2 and num.shape[1]\n    def stat(a,b):\n        with np.errstate(divide='ignore',invalid='ignore'): v=a/b\n        return 1-v if kind=='skill' else np.sqrt(v) if kind=='RMSE' else v\n    pts=stat(num.sum(1),den.sum(1))\n    out={'point':float(pts.mean()),'per_init':pts.tolist()}\n    for form,labels in row_units.items():\n        _,inv=np.unique(labels,return_inverse=True);nu=inv.max()+1\n        totals=[np.column_stack([np.bincount(inv,num[i],nu),np.bincount(inv,den[i],nu)]) for i in range(len(num))]\n        rng=rng_for(name+'/'+form);picks=rng.integers(0,len(num),draws);vals=np.empty(draws)\n        for i in range(len(num)):\n            positions=np.flatnonzero(picks==i)",
+      "sha256": "b7f0f33706222c850a5d6a4f97c405a1e58bce29dd7024d878496db218f25a83"
+    },
+    "ces_prediction/experiments/b92_reduced/common92.py": {
+      "excerpt": "def pilot_jobs():return [('pilot',u,1701,c) for u in PILOT_UNITS for c in ('C','A','T')]\ndef pair(chosen):return ('A','C') if chosen=='A' else ('TX','TH')\ndef confirmation_jobs(chosen):",
+      "sha256": "53133944d7d351262ea41eb949bc13de193d055d23b65f4a9a71a6cc72320669"
+    },
+    "ces_prediction/experiments/b92_reduced/readout92.py": {
+      "excerpt": "    for c in codes:result['metrics'][c]=B.metrics(name+'/'+c,pred[c][:,idx,head],truth[idx],labels)\n    result['skill']=B.bootstrap(name+'/pair',(pred[codes[0]][:,idx,head]-truth[idx])**2,(pred[codes[1]][:,idx,head]-truth[idx])**2,labels)\n    result['supplementary_tree_notes']=notes;result['supplementary_tree_pairs']={}\n    base=support&mask&np.isfinite(truth)\n    for learner,array in baselines.items():\n        jj=np.flatnonzero(base&np.isfinite(array).all(0))\n        if not len(jj):continue\n        labels={'cluster':R['clus'][jj],'discharge':R['fidx'][jj]}\n        result['metrics'][learner]=B.metrics(name+'/'+learner,array[:,jj],truth[jj],labels)\n        pair=B.bootstrap(name+'/first over '+learner,(pred[codes[0]][:,jj,head]-truth[jj])**2,(array[:,jj]-truth[jj])**2,labels)\n        pair.update(rows=len(jj),shots=len(np.unique(labels['discharge'])),clusters=len(np.unique(labels['cluster'])),excluded_from_cell=len(idx)-len(jj));result['supplementary_tree_pairs'][learner]=pair",
+      "sha256": "5a5950235a56b2b27a743a0fd17425247e6e1bcffe6bb70e05caa321ca8492e9"
+    }
+  },
+  "status": "lead_context_corrected_exploratory_plan",
+  "total_substantive_calls": 13,
+  "verified_definitions": {
+    "K10": "Retain every10th nominal CES frame, always strict-past visibility; this rule never selected the model.",
+    "S": "CES anchor frozen according to the registered20-40ms gap rule; not generic random missingness.",
+    "controls": "Main paired skill is computed before supplemental trees. Supplementary TREE_TX is a different estimator/budget; supplementary comparison supports may differ.",
+    "formula": "For each initialization: 1 - sum((TX-y)^2)/sum((TH-y)^2) on identical rows; reported point is mean across initializations. Positive means fast-enabled TCN has smaller MSE than history-only TCN. Negative means larger MSE. This is not TCN versus old LSTM/two-stage estimator.",
+    "inference_limits": "All four designs and both scopes must be retained. Original four-stage reviewer uncertainty about this sign is resolved by source, not a new experiment. Changed significance alone is not evidence that effects differ.",
+    "models": "TX=TCN with BES/ECEI snapshots plus CES history; TH=same TCN architecture with slots0:15 zeroed (13 diagnostic slots plus2 already-zero MC slots). Neither is the manuscript GP/tree TX. No NBI increment is isolated here.",
+    "rules": "D10/D50/D100/D300/D650/D1000 are CES-history availability-delay rules in milliseconds, NOT forecast horizons. Source permits3ms grid tolerance but always strict past. Fast channels available through current timestamp.",
+    "support": "D10/F_full uses all eligible F rows in model prediction support. D10/F uses the registered common mask. They are different row sets. Do not assume common clusters across all four validation designs exist.",
+    "targets": "F=current-frame reported CES target. L5=future-five-frame report median with required observations, offline label only. Not independent physical temperature truth."
+  }
+}
