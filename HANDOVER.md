@@ -1,5 +1,7 @@
 # 인수인계 문서 (2026-11-22)
 
+**재부팅 후 평가 복구 준비(2026-11-23 20:13 KST):** 저자가18:24 일시중단 후 계속하라고 지시했다.20:06 OS 재부팅으로 기존 네 프로세스는 모두 소실되었다. 학습은 pilot12/12·confirmation46/46 완료 상태이고 예측350/368 파일이 보존되어 있다. 원래 scheduler는 TEST 이후 pilot gate를 다시 통과시키지 않으므로 그대로 재시작하지 않는다. B.100/B.94 addendum5와 `ces_prediction/experiments/b100_eval_resume/resume100.py`로 독립 fit 검증·로그가 있는 예측 묶음 보존·중단 묶음 재계산·원래 readout/post audit만 수행한다. 새 학습과 마감 연장은 없다. 복구 기록은 `data/.b100/`, live 상태는 `status93.py --cache data/.b94`. 기존 Claude worker는 새 supervisor/queue 생존 확인 후 재시작한다. 아래18:03 대기 및 이전 GPU 실행 문장은 당시 관측이다.
+
 **Claude 기본 연동·평가 후 자동 정리 설정(2026-11-23 18:03 KST):** 저자는 주요 설계/해석/후속 연구 판단을 최대한 Claude API와 연동하라고 지시했다. AGENTS.md·CLAUDE.md에 선호를 반영했다. 숨김 일회성 task `B93_Claude_PostEval_20261123`과 worker 생존을 확인했으며 현재 원래 평가 최종 감사를 기다린다. `data/.claude_posteval_20261123/status.json`을 먼저 읽는다. 원래 정상 exit0+post audit+hash gate 후 Fable 근거 → Opus 반대 → Fable 계획 → Opus 최종 수정, 최대16 paid rounds로 제한한다. 설정 설명은 `docs/paper/posteval_claude_20261123_status.md`; 완료 초안은 같은 이름에서 `_status`를 뺀 md/json. partial TEST 성능은 보내지 않으며 새 연구는 TEST-informed 탐색·별도 사전등록 대상으로 정리한다. 실패 시 유료 호출을 무작정 재실행하지 않는다. 현재 평가/학습 코드는 바꾸지 않았다.
 
 **수식 모형 구현·내부 판독 완료(B.98):** 강제1차 완화 M·이력 완화 H·정적 anchor 차분 L을 네 대표 unit의 TRAIN에만 적합하고 내부 VAL에서 모든 등록 규칙을 판독했다. 원자료·직접 재귀·미래/현재 CES 배제 검사를 통과했다. `docs/paper/b98_physics.md/json`, `b98_lead_checks.md` 참조. hold 대비 변화 상당 부분은 이력 완화이며 진단+NBI 강제항 추가 효과는 작거나 시간순 조건에서 불안정하다. M−H는 fast 단독 효과가 아니다. 군집 중복·작은 군집 수·다중 비교·재적합 불확실성 누락을 명시했다. outer TEST/L5/모형 채택은 하지 않았다. GPU 실제 재개는 아래 B.99를 따른다.

@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.100 (`PREREGISTRATION_B100.md`, B.94 addendum5): `b100_eval_resume/resume100.py` revalidates completed fits and logged prediction groups after the author pause/OS reboot; recomputes interrupted groups only, then original readout/post audit. No training. Local evidence: `data/.b100/`; state: `docs/paper/b94_status.md`.
+
 - `runner_common.py`: frozen split directories, the pinned training environment, `run_step`, `prepare_split_copy`.
 - `paired_model_compare.py`: the shot-clustered paired bootstrap between two arms; it refuses to compute until
   both arms are verified to score the same rows in the same order.

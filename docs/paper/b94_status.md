@@ -31,3 +31,7 @@ py ces_prediction/experiments/b93_gpu/status93.py --cache data/.b94
 `data/.b94/queue_status.json` reports active worker slots/PIDs and completed counts; `supervisor_status.json` reports durable process liveness. Consult both rather than interpreting an old stage string as ongoing computation. Logs are `durable.stdout.log`, `durable.stderr.log`, readiness/audit logs, and per-fit `process.log`. A production fit counts as complete only after its checkpoint/configuration hashes and ordinary child exit0 are validated. No automatic retry is enabled.
 
 The current claims and their limits are reviewed in [the robustness and related-work report](claim_robustness_20261123.md). No B.94 TEST performance or physical discovery has been established by starting this queue.
+# 2026-11-23 20:13 KST: reboot recovery preparation
+
+The author resumed work after the18:24 pause. OS boot time20:06:53 and absent old PIDs establish loss of the paused process memory. Pilot12 and confirmation46 fits are complete;350/368 prediction files survived. B.100/addendum5 registers independent fit revalidation and reuse of complete logged eight-rule groups; interrupted groups are preserved and recomputed. No training, selection or suite deadline change. New recovery metadata is in `data/.b100/`; original final readout/audit remains pending. Consult live supervisor/queue identities rather than old running timestamps.
+
