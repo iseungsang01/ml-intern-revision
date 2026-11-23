@@ -33,6 +33,7 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `formal/visibility/{Visibility,Main}.lean`, `lakefile.toml`, `lean-toolchain` | 이산 latest-visible 명세 → Lean 증명 및 같은 선택기의 local stdin 실행 | `experiments/b97_lean/run97.py`, 공리 감사와 실제 trace 연결 검사 |
 | `experiments/b97_lean/toolchain97.py`, `run97.py`, `lead_checks/verify97.py` | 고정 SHA 공식 Lean 배포본 + 등록 TRAIN/VAL trace → 컴파일·선택기 비교·독립 재계산 | `data/.b97/`, `docs/paper/b97_lean.json`, `formal/visibility/README.md` 실행 설명 |
 | `experiments/b97_lean/review97.py` | 비식별 Lean/bridge 소스만 Claude Fable에 전송 → 구현 반대 검토 | `data/.b97/claude_review.json`, `docs/paper/b97_lean_checks.md`에서 판정; 실제 자료 전송 없음 |
+| `experiments/b97_lean/lead_checks/verify97_paths.py` | B.97 부록1의 Windows/POSIX 경로 키 정규화 → 원래 독립 검증기를 변경 없이 실행 | `docs/paper/b97_lean.json`의 adapter hash와 첫 실패 보존 기록 |
 | `experiments/b96_four/common96.py`, `transition96.py` | 저자 선택4개 + 기존 정상4-worker 증거 + 생존 프로세스 생성 시각 → 손실 없는 배정 전환 | 기존 trainer 정상 종료·종료 증거를 보존한 뒤 새 durable task 실행 |
 | `experiments/b96_four/production96.py` → `bootstrap96.py` | 동결 B.94 scheduler/학습 + 과거95 provenance → 전역4개 배정·새96 provenance | 완료 fit 재사용, `.b94/dispatch_policy96.json` |
 | `docs/paper/b96_four.{md,json}` | B.95 실측 + B.96 정책·정상 종료 전환 증거 → 저자 선택4개와 학습 보존 기록 | 최신 운영 선택과 전역/로컬 worker 수 구별 |

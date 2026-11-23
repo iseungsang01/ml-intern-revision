@@ -1,0 +1,7 @@
+# B.97 addendum1 — verifier path-key normalization
+
+2026-11-23, after the producer's first registered run and before a successful independent verification. The producer compiled all six theorems and compared its registered80 TRAIN/VAL queries. The independent verifier stopped at input-hash dictionary equality, before its predicate/query checks: producer keys use Windows backslashes and the independently reconstructed keys use POSIX separators. Canonicalizing keys confirms all four input content hashes match. Preserve `data/.b97/result.json`, its query/native outputs, original sources and `independent_first_failure.json` unchanged.
+
+Add only a separately committed verifier adapter `lead_checks/verify97_paths.py`: call the original independent loader, convert its relative path keys to native `str(Path(key))`, and invoke the original verifier unchanged. Require the producer's source hashes, inputs, sample, native executable and compiled proofs to remain identical. Record the adapter hash and the original failure in the independent report. No new trace, changed threshold, expanded sampling, changed theorem, producer rerun or model fit is authorized or necessary. This is a metadata comparison repair, not a change to the scientific decision rule. Any further mismatch stops with preserved evidence.
+
+Both-outcome statements and the limits in B.97 remain unchanged. A successful adapter-assisted verification is disclosed as such; it does not erase the first failed provenance gate or certify all Python/CUDA execution.
