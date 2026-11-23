@@ -119,6 +119,8 @@ Re-running one of them may need inputs that the cleanup removed.
 
 B.96 (`b96_four/`, `PREREGISTRATION_B96.md`): author-selected four-worker production compromise, overriding the conservative operational10percent gate. Preserve current trainers through normal exits and all prior results; reuse frozen numeric code and record new global dispatch provenance. No new runtime search or numerical-method change.
 
+B.97 (`b97_lean/`, `PREREGISTRATION_B97.md`): registered discrete latest-visible selector proof and finite compiled Lean/Python bridge on fixed TRAIN/VAL traces. No training, TEST scoring, GPU resume or full-pipeline certification.
+
 B.95 (`b95_concurrency/`, `PREREGISTRATION_B95.md`): real full-epoch concurrency qualification for2/3/4 workers and conditionally6, reusing the frozen B.93 worker. No production source modification or TEST access; higher concurrency needs repeated normal-exit throughput evidence before a separately registered dispatch change.
 
 B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.
