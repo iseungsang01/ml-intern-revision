@@ -1,5 +1,9 @@
 # 인수인계 문서 (2026-11-22)
 
+**수식 모형 구현·내부 판독 완료(B.98):** 강제1차 완화 M·이력 완화 H·정적 anchor 차분 L을 네 대표 unit의 TRAIN에만 적합하고 내부 VAL에서 모든 등록 규칙을 판독했다. 원자료·직접 재귀·미래/현재 CES 배제 검사를 통과했다. `docs/paper/b98_physics.md/json`, `b98_lead_checks.md` 참조. hold 대비 변화 상당 부분은 이력 완화이며 진단+NBI 강제항 추가 효과는 작거나 시간순 조건에서 불안정하다. M−H는 fast 단독 효과가 아니다. 군집 중복·작은 군집 수·다중 비교·재적합 불확실성 누락을 명시했다. outer TEST/L5/모형 채택은 하지 않았다. GPU 실제 재개는 아래 B.99를 따른다.
+
+**GPU 실제 재개(B.99, 2026-11-23 15:41 KST):** 저자의 후속 재개 지시로 원래4-slot GPU 확인 학습이 실제 계산 중이다.23/46 완료를 재검증해 보존했고, 중단4개는 원본/hash를 보존한 뒤 부록4에 따라 새 trajectory로 시작했다.4개 실행·19개 대기 관측. 새 task `B93_GPU_B94_recovery99`; metadata 읽기/쓰기 오류만 격리한 감독기이며 frozen 수치/큐 코드는 그대로다. `docs/paper/b99_recovery.md/json`, `b94_status.md` 최상단 참조. 마감은 원래대로다. 아래14:27 ‘중단’ 문장은 이 후속 재개 전 기록이다.
+
 **물리 수식 접근 조사(2026-11-23):** 저자 요청으로 Claude API 다섯 검토와 원천 문헌·기호 검산을 수행했다. `docs/paper/physics_formulations_20261123.md/json` 참조. 현 자료의 최소 후보는 강제1차 완화식의 다섯 계수 모형이며 τ는 물리 수송시간으로 식별된 값이 아니다. 더 직접적인 물리 후보인 pedestal 변위 분리·CES 선폭 예산은 기하/보정/원시 스펙트럼이 추가로 필요하다. OU 잡음·노출 평균·L5 중앙값 해석 오류를 수정했다. 실제 적합·TEST 탐색·GPU 재개는 하지 않았다. 후속 실험은 기존 특징/대조와 중복을 먼저 확인하고 별도 사전등록한다.
 
 **Lean 후속 구현 완료(B.97):** 선택기 여섯 정리의 Lean 컴파일·공리 감사를 통과했고 등록 TRAIN/VAL 질의80개가 Python·Lean·별도 직접 탐색과 일치했다. 독립 검사의 경로 key 표기 오류는 부록1의 새 adapter로만 정규화했고 원래 결과·소스·실패를 보존했다. `docs/paper/b97_lean.md`, `b97_lean.json`, `b97_lean_checks.md` 참조. 전체 신경망/Python/CUDA 검증이 아니다. 아래 조사 당시 ‘Lean 증명 없음’은 이 후속 구현 이전 상태다. GPU 재개는 하지 않았다.
@@ -125,6 +129,8 @@ B.76 (MAST 행 표와 추정)  data/.b76  └ B.86 (반경 대역별)
 
 | 배치 | 물음 | 코드 | 결과 |
 |---|---|---|---|
+| B.98 | 저차 물리 동기 응답식의 유한 구현과 내부 VAL | `experiments/b98_physics/` | `docs/paper/b98_physics.md/json`, `b98_lead_checks.md`; 새 물리 식별 아님 |
+| B.99 | metadata 장애 후 원래 GPU 큐 재개 | `experiments/b99_recovery/` | `docs/paper/b99_recovery.md/json`; 정상 결과 보존·원래 마감 |
 | B.97 | 가시 source 선택 명세와 실제 trace 연결 | `formal/visibility/`, `experiments/b97_lean/` | `docs/paper/b97_lean.md`, 경로 key 정규화 후 독립 검사 완료 |
 | B.70 | 자료 정의 D1에서 신경망·2단계 estimator와 기준들 | `experiments/b70_d1/` | `docs/paper/b70_d1.md` |
 | B.71 | CES 갱신이 멈출 때(신경망과 filter의 재생) | `b71_scenarios/` | `b71_scenarios.md` |

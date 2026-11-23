@@ -121,9 +121,9 @@ B.96 (`b96_four/`, `PREREGISTRATION_B96.md`): author-selected four-worker produc
 
 B.97 (`b97_lean/`, `PREREGISTRATION_B97.md`): complete. Six Lean proofs and80 registered TRAIN/VAL queries passed. Addendum1 preserves the producer/original verifier and normalizes Windows/POSIX hash-dictionary keys through a new adapter; independent reconstruction and native replay passed. `docs/paper/b97_lean.md/json`, `b97_lean_checks.md`. No training, TEST scoring, GPU resume or full-pipeline certification.
 
-B.98 (`b98_physics/`, `PREREGISTRATION_B98.md`): registered numerical implementation pilot of forced first-order response and history/static controls. Fixed representative units, TRAIN/VAL only, F only, no outer TEST or GPU resume. Independent recurrence/causality and cluster readout required before publishing.
+B.98 (`b98_physics/`, `PREREGISTRATION_B98.md`): implementation/independent readout complete. Fixed four representative units, TRAIN/VAL only, F only. Raw CSV/cache/support, direct recurrence and information-isolation checks passed. All seven rules and paired shot-cluster intervals in `docs/paper/b98_physics.md/json`; cluster overlap and small temporal-VAL cluster counts disclosed. No outer TEST/L5, physical identification, model adoption or extra architecture search.
 
-B.99 (`b99_recovery/`, `PREREGISTRATION_B99.md`, B.94 addendum4): author-requested four-worker GPU continuation after metadata-monitor failure. Frozen numeric/controller code and original deadline retained; preserve four partial attempts, independently revalidate completed fits, qualify metadata monitor before one-shot launch.
+B.99 (`b99_recovery/`, `PREREGISTRATION_B99.md`, B.94 addendum4): resumed. Metadata real-lock checks and original/independent preservation gates passed; four trainers observed on GPU at15:41KST, confirmation23/46 preserved. Four archived partials restart only under explicit addendum; original numeric/controller sources and deadline retained. `docs/paper/b99_recovery.md/json`.
 
 B.95 (`b95_concurrency/`, `PREREGISTRATION_B95.md`): real full-epoch concurrency qualification for2/3/4 workers and conditionally6, reusing the frozen B.93 worker. No production source modification or TEST access; higher concurrency needs repeated normal-exit throughput evidence before a separately registered dispatch change.
 

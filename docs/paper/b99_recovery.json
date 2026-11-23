@@ -1,0 +1,100 @@
+{
+  "batch": "B99",
+  "observed_kst": "2026-11-23T15:42:42.660190+09:00",
+  "task": "B93_GPU_B94_recovery99",
+  "preserved_complete_counts": {
+    "confirm": 23,
+    "pilot": 12,
+    "smoke": 3,
+    "smoke_confirm": 2
+  },
+  "archived_partial_count": 4,
+  "fresh_restart_scope": [
+    "V3_q2__1701__TH",
+    "V3_q3__1701__TX",
+    "V3_q3__1701__TH",
+    "V3_q4__1701__TX"
+  ],
+  "archive_sha256": "02ae7dd68b2a0de73e7033062b6cfe2348c8733d8d1992edf9ddb52fbb61ae77",
+  "source_hashes99": {
+    "ces_prediction/experiments/PREREGISTRATION_B94_ADDENDUM4.md": "ef1875a58494320f2e43e39fc50b1868e0bcf901439ee2e4b79c6b47708e1bae",
+    "ces_prediction/experiments/PREREGISTRATION_B99.md": "1d0e9b377fe09ccac0bfaa7757e868f1167bb602494dda90289687a489d2ed98",
+    "ces_prediction/experiments/b99_recovery/lead_checks/verify99.py": "6ef9ff0888ba708d963b4d787a943aa3f1db95dd7ec152b40e256a4aba33f334",
+    "ces_prediction/experiments/b99_recovery/monitor99.py": "60ffd2540cf8665ddea06e964bc7da9a986c86268f85dd1d430087c463f082b8",
+    "ces_prediction/experiments/b99_recovery/probe99.py": "3848b527d8e56c59ed0a60a54773516455046e5eeca8b2dd3dfe88117f3619c2",
+    "ces_prediction/experiments/b99_recovery/recover99.py": "6dcaac0fb50e474e35ca0d1b9a2f2db1c8488b17dd77b62d6e4e0fdf197db37b"
+  },
+  "independent": {
+    "all_pass": true,
+    "archive_sha256": "02ae7dd68b2a0de73e7033062b6cfe2348c8733d8d1992edf9ddb52fbb61ae77",
+    "checks": {
+      "archive_V3_q2__1701__TH": true,
+      "archive_V3_q3__1701__TH": true,
+      "archive_V3_q3__1701__TX": true,
+      "archive_V3_q4__1701__TX": true,
+      "clock_unchanged": true,
+      "frozen_unchanged": true,
+      "metadata_probe_pass": true,
+      "new_sources_bound": true,
+      "old_processes_absent": true,
+      "verified_completes_unchanged": true
+    }
+  },
+  "metadata_probe": {
+    "all_pass": true,
+    "checks": {
+      "original_read_permission_failure_reproduced": true,
+      "bounded_read_degrades": true,
+      "child_alive_during_read_loss": true,
+      "read_recovers_after_release": true,
+      "child_alive_after_write_loss": true,
+      "held_target_preserved": true,
+      "write_loss_reported": true,
+      "write_recovers_after_release": true,
+      "harmless_child_normal_exit": true
+    },
+    "purpose": "Real OS metadata locks; no plasma observations or model training"
+  },
+  "deadline_kst": "2026-11-24T01:54:57.469789+09:00",
+  "queue": {
+    "state": "confirm",
+    "completed": 23,
+    "total": 46,
+    "active": [
+      {
+        "dispatch_index": 23,
+        "pid": 1152,
+        "run": "V3_q2__1701__TH",
+        "slot": 0
+      },
+      {
+        "dispatch_index": 24,
+        "pid": 26296,
+        "run": "V3_q3__1701__TX",
+        "slot": 1
+      },
+      {
+        "dispatch_index": 25,
+        "pid": 28372,
+        "run": "V3_q3__1701__TH",
+        "slot": 2
+      },
+      {
+        "dispatch_index": 26,
+        "pid": 22036,
+        "run": "V3_q4__1701__TX",
+        "slot": 3
+      }
+    ],
+    "queued": 19,
+    "failure": null
+  },
+  "supervisor_alive": true,
+  "queue_alive": true,
+  "gpu_utilization_percent": 73,
+  "gpu_memory_MiB": 2891,
+  "gpu_pid_match": true,
+  "numeric_sources_changed": false,
+  "deadline_extended": false,
+  "scientific_conclusion": null
+}

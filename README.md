@@ -35,6 +35,7 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 | `experiments/b98_physics/{data98,model98,run98}.py`, `lead_checks/{recurrence98,readout98}.py` | 기존 train-only 준비 자료·B.79 power → 제한된 수식 모형 적합·직접 재귀/비간섭 검사·shot-cluster 판독 | `data/.b98/`, `docs/paper/b98_physics.json`; F 내부 VAL 개발 증거 |
 | `experiments/b98_physics/review98.py` | 등록 및 비식별 구현 소스만 Claude Fable에 전송 → 적합 전 수식/검증 반대 검토 | `data/.b98/review/`, `docs/paper/b98_lead_checks.md`; 실제 배열 전송 없음 |
 | `experiments/b98_physics/lead_checks/input98.py` | 원래 grid·준비 artifact를 별도로 읽어 source/공통 행/채널 mapping 재구성 | `readout98.py`의 독립 raw-data 검사; 실제 수치모형 helper와 분리 |
+| `research/report_b98_20261123.py` | 독립 판독된 `docs/paper/b98_physics.json` → 네 대표 unit·모든 규칙의 수치 표 | `b98_physics.md`, `b98_lead_checks.md`; 내부 VAL·군집 중복·물리 식별 한계 명시 |
 | `experiments/PREREGISTRATION_B99.md`, `PREREGISTRATION_B94_ADDENDUM4.md` | 저자의 GPU 재개 지시 → 실패 보존·metadata 감독기 보완·원래4-slot 큐 재개 계약 | `experiments/b99_recovery/`, `docs/paper/b99_recovery.*`; 동결 수치 코드/마감 불변 |
 | `experiments/b99_recovery/{monitor99,probe99,recover99}.py`, `lead_checks/verify99.py` | 실제 Windows metadata lock 점검 + 완료 fit/동결 소스 검사 → 네 partial 보존·한정 재시작 | `data/.b99/`, `data/.b94/interrupted_permission99/`, 같은 결과 문서 |
 | `docs/paper/lean_feasibility_20261123.md` | Claude 검토 여섯 건 + 원천 문헌 + 현재 모델 코드 + 기호 검산 → 적용 우선순위와 반례 | `HANDOVER.md`, 현재 논문의 방법/검증 검토; 등록된 학습과 TEST 선택은 변경하지 않음 |

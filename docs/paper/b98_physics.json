@@ -1,0 +1,1443 @@
+{
+  "batch": "B98",
+  "scope": "Representative-unit internal VAL only; not outer TEST or physical identification",
+  "outer_test_evaluated": false,
+  "target": "F",
+  "units": {
+    "V1_r2_k0": {
+      "metrics": {
+        "D10": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 38446.55885840805,
+            "H": 38500.232254382245,
+            "L": 37749.684129781424,
+            "hold": 39118.22594578855
+          },
+          "mae_eV": {
+            "M": 94.72681024640882,
+            "H": 94.74281832434781,
+            "L": 92.49702086383519,
+            "hold": 95.12212820862767
+          },
+          "skill_M_over_hold": {
+            "point": 0.01717018272534454,
+            "lo": 0.011819302494178919,
+            "hi": 0.022399069602468905,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.0013941057710915583,
+            "lo": 0.0007378340463877614,
+            "hi": 0.0020867654684780385,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.018460412178041175,
+            "lo": -0.06677308866816281,
+            "hi": 0.023508711550812352,
+            "excludes_zero": false
+          }
+        },
+        "D50": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 54580.80815936847,
+            "H": 54847.2953155914,
+            "L": 53182.716627443035,
+            "hold": 57608.87263564654
+          },
+          "mae_eV": {
+            "M": 121.33413332086654,
+            "H": 121.42753976849431,
+            "L": 114.67313337892898,
+            "hold": 123.1962190000086
+          },
+          "skill_M_over_hold": {
+            "point": 0.05256246716420554,
+            "lo": 0.045925016781773124,
+            "hi": 0.060479698297973165,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.004858710984553816,
+            "lo": 0.003600982892962254,
+            "hi": 0.006104193180436503,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.026288456487083556,
+            "lo": -0.08902649330436103,
+            "hi": 0.025792542547251707,
+            "excludes_zero": false
+          }
+        },
+        "D100": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 64293.440364699774,
+            "H": 64834.33186060672,
+            "L": 63771.80209115185,
+            "hold": 70747.08166273442
+          },
+          "mae_eV": {
+            "M": 137.12472137374098,
+            "H": 137.28444990241715,
+            "L": 128.01695254178742,
+            "hold": 140.81676050826246
+          },
+          "skill_M_over_hold": {
+            "point": 0.09122130759824765,
+            "lo": 0.07896252104421939,
+            "hi": 0.10469389721659746,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.008342670933508711,
+            "lo": 0.005406808018326182,
+            "hi": 0.011216069201050135,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.008179763726957612,
+            "lo": -0.0883794382498614,
+            "hi": 0.06250675571044412,
+            "excludes_zero": false
+          }
+        },
+        "D300": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 79054.06935985295,
+            "H": 80429.88121710514,
+            "L": 87410.70477459526,
+            "hold": 99109.03100498518
+          },
+          "mae_eV": {
+            "M": 159.78764883551227,
+            "H": 159.77441309459948,
+            "L": 150.8106004777416,
+            "hold": 165.2775453876003
+          },
+          "skill_M_over_hold": {
+            "point": 0.2023525146171944,
+            "lo": 0.15955781177556372,
+            "hi": 0.2395805635161327,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.01710573031356899,
+            "lo": 0.00502836552012938,
+            "hi": 0.029526215749422526,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": 0.09560196816043809,
+            "lo": -0.010267368645661306,
+            "hi": 0.18062323413384088,
+            "excludes_zero": false
+          }
+        },
+        "D650": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 91247.22426360055,
+            "H": 92763.75867664779,
+            "L": 110832.75879241817,
+            "hold": 127769.54951462301
+          },
+          "mae_eV": {
+            "M": 193.52112333820176,
+            "H": 192.6759228976757,
+            "L": 179.2751558104317,
+            "hold": 197.35380940258474
+          },
+          "skill_M_over_hold": {
+            "point": 0.28584530030641253,
+            "lo": 0.20832222092601266,
+            "hi": 0.352533661095644,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.016348350203590933,
+            "lo": -0.019503463939112675,
+            "hi": 0.054897992053338396,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.17671250578089392,
+            "lo": 0.046981964849929295,
+            "hi": 0.28367115995129033,
+            "excludes_zero": true
+          }
+        },
+        "D1000": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 95823.30863618727,
+            "H": 96380.05877023074,
+            "L": 107922.337117982,
+            "hold": 133875.44483561208
+          },
+          "mae_eV": {
+            "M": 211.7003406125605,
+            "H": 209.64454618493366,
+            "L": 185.46176207580962,
+            "hold": 208.54085188904068
+          },
+          "skill_M_over_hold": {
+            "point": 0.28423536703201746,
+            "lo": 0.1411585004522251,
+            "hi": 0.38136937051782566,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.00577661127361162,
+            "lo": -0.05450809587231083,
+            "hi": 0.06590351526210156,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.11210865891986677,
+            "lo": -0.097742932690991,
+            "hi": 0.2816719195944579,
+            "excludes_zero": false
+          }
+        },
+        "S": {
+          "rows": 21680,
+          "mse_eV2": {
+            "M": 85019.66085442573,
+            "H": 87387.95750002468,
+            "L": 99651.25538245404,
+            "hold": 113569.13362123998
+          },
+          "mae_eV": {
+            "M": 184.72868553299162,
+            "H": 184.47998155667113,
+            "L": 164.24305359157816,
+            "hold": 177.2222553623586
+          },
+          "skill_M_over_hold": {
+            "point": 0.2513840852394673,
+            "lo": -0.037346383820336136,
+            "hi": 0.40649403608789897,
+            "excludes_zero": false
+          },
+          "skill_M_over_H": {
+            "point": 0.02710094975727384,
+            "lo": -0.039823171941668525,
+            "hi": 0.07412092856917281,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.14682800002742913,
+            "lo": -0.23116863775687888,
+            "hi": 0.36455218749002966,
+            "excludes_zero": false
+          }
+        }
+      },
+      "clusters": 28,
+      "shots": 59,
+      "train_val_cluster_overlap": 27,
+      "seconds": 32.539031744003296,
+      "tau": {
+        "M": 1.041122215602061,
+        "H": 1.14046473132365
+      },
+      "parameters": {
+        "M": {
+          "tau": 1.041122215602061,
+          "beta": [
+            443.7741648775848,
+            80.42040512860409,
+            -7.145564691920381,
+            58.912436868774
+          ],
+          "rank": 4,
+          "condition": 17.854245143139778,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 8
+          }
+        },
+        "H": {
+          "tau": 1.14046473132365,
+          "beta": [
+            651.7579277866033
+          ],
+          "rank": 1,
+          "condition": 1.0,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 7
+          }
+        },
+        "L": {
+          "tau": null,
+          "beta": [
+            232.37575854993784,
+            138.3671580946864,
+            73.80149650615694
+          ],
+          "rank": 3,
+          "condition": 1.7496734250614576,
+          "solver": null
+        }
+      },
+      "checks": {
+        "all_pass": true,
+        "direct_recurrence_max_abs_eV": {
+          "M": 1.3642420526593924e-12,
+          "H": 1.9326762412674725e-12
+        },
+        "real_segments": 2,
+        "guards": [
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          }
+        ]
+      },
+      "prediction_sha256": "55d063e6744f1626a9f398ae052cc7e6ebd09fa6c9545823089ea54b35a9b8dd",
+      "drops": {
+        "train": {
+          "invalid_nbi_segments": 24,
+          "empty_common_segments": 956,
+          "nonfinite_context_segments": 0
+        },
+        "val": {
+          "invalid_nbi_segments": 0,
+          "empty_common_segments": 176,
+          "nonfinite_context_segments": 0
+        }
+      },
+      "independent_raw_checks": {
+        "all_pass": true,
+        "queries": 151760,
+        "raw_support_reconstructed": true,
+        "raw_feature_layout_verified": true,
+        "direct_raw_max_abs_eV": 1.9326762412674725e-12,
+        "direct_segments": 2
+      }
+    },
+    "V2_s1_k0": {
+      "metrics": {
+        "D10": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 44546.01423071288,
+            "H": 44558.02791278803,
+            "L": 45773.61877125033,
+            "hold": 45151.281955619306
+          },
+          "mae_eV": {
+            "M": 99.61294228334556,
+            "H": 99.6322169878391,
+            "L": 98.6169196306488,
+            "hold": 99.97685291391544
+          },
+          "skill_M_over_hold": {
+            "point": 0.013405327571902936,
+            "lo": 0.010544844885955173,
+            "hi": 0.016292894436396154,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.0002696188013227019,
+            "lo": 3.426442432202248e-05,
+            "hi": 0.0004981030220398336,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": 0.026819040606605782,
+            "lo": -0.01610054268674868,
+            "hi": 0.06497409494277424,
+            "excludes_zero": false
+          }
+        },
+        "D50": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 57092.87394591677,
+            "H": 57173.01816903432,
+            "L": 58062.51709748633,
+            "hold": 59807.72704898168
+          },
+          "mae_eV": {
+            "M": 119.90735675293111,
+            "H": 120.07477917796407,
+            "L": 115.4130801599283,
+            "hold": 121.60120295429176
+          },
+          "skill_M_over_hold": {
+            "point": 0.045393015869696685,
+            "lo": 0.04002298191593138,
+            "hi": 0.04999884242907448,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.0014017840177792396,
+            "lo": 0.0006446636725237515,
+            "hi": 0.0022144957455753726,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": 0.016699984775746746,
+            "lo": -0.04228531477184373,
+            "hi": 0.0680085831548653,
+            "excludes_zero": false
+          }
+        },
+        "D100": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 64533.17429879093,
+            "H": 64695.08105211892,
+            "L": 67874.76690729833,
+            "hold": 69990.96286850543
+          },
+          "mae_eV": {
+            "M": 132.7376169743516,
+            "H": 133.2782898201376,
+            "L": 128.91373090174955,
+            "hold": 135.6126508451125
+          },
+          "skill_M_over_hold": {
+            "point": 0.07797847530642277,
+            "lo": 0.06557610519410144,
+            "hi": 0.08914628499799382,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.002502613037883905,
+            "lo": 0.0008404602158511327,
+            "hi": 0.004633668972975826,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": 0.04923173604516773,
+            "lo": -0.03541096894564907,
+            "hi": 0.12035469061872663,
+            "excludes_zero": false
+          }
+        },
+        "D300": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 85405.7085711656,
+            "H": 86070.20742189656,
+            "L": 93308.67514981669,
+            "hold": 101694.9032495129
+          },
+          "mae_eV": {
+            "M": 162.33829565594766,
+            "H": 163.74656846129074,
+            "L": 155.3626399797549,
+            "hold": 166.0873957155609
+          },
+          "skill_M_over_hold": {
+            "point": 0.16017709991208762,
+            "lo": 0.13128387761424243,
+            "hi": 0.19027073478846832,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.007720428132277357,
+            "lo": -0.002210486245048665,
+            "hi": 0.016099973334958245,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.0846970184279443,
+            "lo": -0.020679662865188637,
+            "hi": 0.1944486337423448,
+            "excludes_zero": false
+          }
+        },
+        "D650": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 97719.92514452255,
+            "H": 99728.95411562218,
+            "L": 116721.29589280435,
+            "hold": 124662.13408617876
+          },
+          "mae_eV": {
+            "M": 196.12584343745945,
+            "H": 198.68912650046593,
+            "L": 185.8946468024142,
+            "hold": 196.60988021812298
+          },
+          "skill_M_over_hold": {
+            "point": 0.21612183313845001,
+            "lo": 0.14292215909902492,
+            "hi": 0.28224062772701725,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.020144891610619275,
+            "lo": -0.011118733450781366,
+            "hi": 0.04845187213690372,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.1627926643800499,
+            "lo": -0.005354490794088129,
+            "hi": 0.3363053217580712,
+            "excludes_zero": false
+          }
+        },
+        "D1000": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 111315.26769246334,
+            "H": 114268.94384555661,
+            "L": 136455.71391422756,
+            "hold": 153665.75334780203
+          },
+          "mae_eV": {
+            "M": 220.0694544084279,
+            "H": 223.55385277921374,
+            "L": 208.12816468231279,
+            "hold": 221.53368945433309
+          },
+          "skill_M_over_hold": {
+            "point": 0.2756013277693956,
+            "lo": 0.14937950887676357,
+            "hi": 0.38965596803865626,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.02584845937742619,
+            "lo": -0.0224407113557642,
+            "hi": 0.07143406373102142,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.1842388676927581,
+            "lo": -0.08166509353351303,
+            "hi": 0.4293819997053131,
+            "excludes_zero": false
+          }
+        },
+        "S": {
+          "rows": 17965,
+          "mse_eV2": {
+            "M": 77904.94620600689,
+            "H": 77699.85889403016,
+            "L": 81754.71778878782,
+            "hold": 88890.99633783131
+          },
+          "mae_eV": {
+            "M": 180.289595233904,
+            "H": 182.02532578286394,
+            "L": 170.79706735010606,
+            "hold": 177.57515384591193
+          },
+          "skill_M_over_hold": {
+            "point": 0.12359013380918582,
+            "lo": 0.028836978740954613,
+            "hi": 0.18954078558307533,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": -0.0026394811380088257,
+            "lo": -0.033056182221788,
+            "hi": 0.0383948795936661,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.0470892896080537,
+            "lo": -0.15626672348584575,
+            "hi": 0.2512884388531521,
+            "excludes_zero": false
+          }
+        }
+      },
+      "clusters": 23,
+      "shots": 59,
+      "train_val_cluster_overlap": 23,
+      "seconds": 24.471331119537354,
+      "tau": {
+        "M": 1.1120539250519523,
+        "H": 1.1540097302856207
+      },
+      "parameters": {
+        "M": {
+          "tau": 1.1120539250519523,
+          "beta": [
+            509.251393862735,
+            52.0397890938725,
+            -15.117214523936548,
+            44.57319884034212
+          ],
+          "rank": 4,
+          "condition": 18.386496223428544,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 8
+          }
+        },
+        "H": {
+          "tau": 1.1540097302856207,
+          "beta": [
+            666.6944201875168
+          ],
+          "rank": 1,
+          "condition": 1.0,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 7
+          }
+        },
+        "L": {
+          "tau": null,
+          "beta": [
+            218.1777074985383,
+            148.0260053941874,
+            71.19706052586336
+          ],
+          "rank": 3,
+          "condition": 1.6740913549588354,
+          "solver": null
+        }
+      },
+      "checks": {
+        "all_pass": true,
+        "direct_recurrence_max_abs_eV": {
+          "M": 1.1368683772161603e-12,
+          "H": 4.092726157978177e-12
+        },
+        "real_segments": 2,
+        "guards": [
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          }
+        ]
+      },
+      "prediction_sha256": "e4aeec87031b2834bcd0f530657e8dfe3b88e0dde327659b131cb98ca1a77f55",
+      "drops": {
+        "train": {
+          "invalid_nbi_segments": 30,
+          "empty_common_segments": 962,
+          "nonfinite_context_segments": 0
+        },
+        "val": {
+          "invalid_nbi_segments": 6,
+          "empty_common_segments": 178,
+          "nonfinite_context_segments": 0
+        }
+      },
+      "independent_raw_checks": {
+        "all_pass": true,
+        "queries": 125755,
+        "raw_support_reconstructed": true,
+        "raw_feature_layout_verified": true,
+        "direct_raw_max_abs_eV": 4.092726157978177e-12,
+        "direct_segments": 2
+      }
+    },
+    "V3_q3": {
+      "metrics": {
+        "D10": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 51130.76328400403,
+            "H": 51212.5141117058,
+            "L": 54292.03931165985,
+            "hold": 51803.66569659446
+          },
+          "mae_eV": {
+            "M": 120.41986982350744,
+            "H": 120.54299212860201,
+            "L": 120.45730246598691,
+            "hold": 121.03147830270946
+          },
+          "skill_M_over_hold": {
+            "point": 0.012989474847812987,
+            "lo": 0.009537570679535978,
+            "hi": 0.013639009536670965,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.0015963056905086148,
+            "lo": 0.0004507901131206582,
+            "hi": 0.0023670435377647716,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": 0.05822724782004818,
+            "lo": -0.03382492115915969,
+            "hi": 0.10450858389475748,
+            "excludes_zero": false
+          }
+        },
+        "D50": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 65085.50617369303,
+            "H": 65499.175239868004,
+            "L": 67416.24110118646,
+            "hold": 68514.29027022437
+          },
+          "mae_eV": {
+            "M": 141.63872848084333,
+            "H": 141.54946454103495,
+            "L": 137.91597923945972,
+            "hold": 144.12093809694093
+          },
+          "skill_M_over_hold": {
+            "point": 0.050044802084470486,
+            "lo": 0.03718150637980755,
+            "hi": 0.053779665572721624,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.00631563778719435,
+            "lo": -0.0022639132643167414,
+            "hi": 0.011030388646598999,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.03457230615980478,
+            "lo": -0.10782086199723429,
+            "hi": 0.09067730252794348,
+            "excludes_zero": false
+          }
+        },
+        "D100": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 67038.72813283995,
+            "H": 67381.48618222734,
+            "L": 70729.38692659659,
+            "hold": 72684.53769665156
+          },
+          "mae_eV": {
+            "M": 151.20480783441351,
+            "H": 149.37275654302448,
+            "L": 147.2885115774122,
+            "hold": 154.31624815321106
+          },
+          "skill_M_over_hold": {
+            "point": 0.07767552415858181,
+            "lo": 0.0485421530322504,
+            "hi": 0.08901951869947156,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.005086828278919597,
+            "lo": -0.022933266010251696,
+            "hi": 0.018618629666794086,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.05217999128971418,
+            "lo": -0.1079829333647897,
+            "hi": 0.11709523155401491,
+            "excludes_zero": false
+          }
+        },
+        "D300": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 83749.02247438602,
+            "H": 80562.1301289465,
+            "L": 87244.37009152505,
+            "hold": 97031.64881719455
+          },
+          "mae_eV": {
+            "M": 184.73358747756325,
+            "H": 169.66908256979772,
+            "L": 166.5958374044732,
+            "hold": 180.05900676601115
+          },
+          "skill_M_over_hold": {
+            "point": 0.1368896283297495,
+            "lo": -0.03607122630694937,
+            "hi": 0.206753754021878,
+            "excludes_zero": false
+          },
+          "skill_M_over_H": {
+            "point": -0.03955819366169466,
+            "lo": -0.22511499836641824,
+            "hi": 0.025891589537663906,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.04006387590938176,
+            "lo": -0.20558336395205634,
+            "hi": 0.12430145243248203,
+            "excludes_zero": false
+          }
+        },
+        "D650": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 95545.99018490808,
+            "H": 79543.84810723198,
+            "L": 95409.12435312275,
+            "hold": 104476.12748529947
+          },
+          "mae_eV": {
+            "M": 224.50108673505954,
+            "H": 183.36735019016433,
+            "L": 182.99698706689185,
+            "hold": 194.8494968091307
+          },
+          "skill_M_over_hold": {
+            "point": 0.0854753857683701,
+            "lo": -0.5503922848865668,
+            "hi": 0.33863036773958577,
+            "excludes_zero": false
+          },
+          "skill_M_over_H": {
+            "point": -0.20117384887017065,
+            "lo": -0.8793557583708576,
+            "hi": 0.08551921821261688,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": -0.0014345151232995068,
+            "lo": -0.7148751459811808,
+            "hi": 0.17049794663724205,
+            "excludes_zero": false
+          }
+        },
+        "D1000": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 117548.58233719696,
+            "H": 84716.11030430546,
+            "L": 101768.48456329181,
+            "hold": 116842.18595878671
+          },
+          "mae_eV": {
+            "M": 261.77418975989775,
+            "H": 199.58071673271078,
+            "L": 194.47511583909295,
+            "hold": 208.36380628518555
+          },
+          "skill_M_over_hold": {
+            "point": -0.006045730594764986,
+            "lo": -1.1316731047489275,
+            "hi": 0.38608997758671104,
+            "excludes_zero": false
+          },
+          "skill_M_over_H": {
+            "point": -0.38755877618737733,
+            "lo": -1.461867807999611,
+            "hi": 0.0669129391805745,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": -0.15505878702646103,
+            "lo": -1.3741063838561587,
+            "hi": 0.20089125834858146,
+            "excludes_zero": false
+          }
+        },
+        "S": {
+          "rows": 21652,
+          "mse_eV2": {
+            "M": 102529.2366955715,
+            "H": 74383.10659238638,
+            "L": 72748.18909210792,
+            "hold": 94837.79615446214
+          },
+          "mae_eV": {
+            "M": 229.09147884028184,
+            "H": 177.9625023729276,
+            "L": 162.88168329057405,
+            "hold": 184.32212916677358
+          },
+          "skill_M_over_hold": {
+            "point": -0.08110100458874347,
+            "lo": -0.836010783613093,
+            "hi": 0.2482253672305963,
+            "excludes_zero": false
+          },
+          "skill_M_over_H": {
+            "point": -0.3783941192107465,
+            "lo": -1.120459447688133,
+            "hi": -0.05909148352012994,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.4093716692488003,
+            "lo": -1.4282520065774398,
+            "hi": -0.09818197105597415,
+            "excludes_zero": true
+          }
+        }
+      },
+      "clusters": 7,
+      "shots": 55,
+      "train_val_cluster_overlap": 0,
+      "seconds": 17.16326880455017,
+      "tau": {
+        "M": 1.1145411292032517,
+        "H": 1.3094256123803234
+      },
+      "parameters": {
+        "M": {
+          "tau": 1.1145411292032517,
+          "beta": [
+            422.5745090253206,
+            118.50670622255444,
+            -89.27365637943689,
+            72.38794589547122
+          ],
+          "rank": 4,
+          "condition": 19.588742880043537,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 8
+          }
+        },
+        "H": {
+          "tau": 1.3094256123803234,
+          "beta": [
+            666.9967642598245
+          ],
+          "rank": 1,
+          "condition": 1.0,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 8
+          }
+        },
+        "L": {
+          "tau": null,
+          "beta": [
+            136.95439435584743,
+            184.71317278862148,
+            47.12522012544234
+          ],
+          "rank": 3,
+          "condition": 1.9576383867847698,
+          "solver": null
+        }
+      },
+      "checks": {
+        "all_pass": true,
+        "direct_recurrence_max_abs_eV": {
+          "M": 9.094947017729282e-13,
+          "H": 1.4779288903810084e-12
+        },
+        "real_segments": 2,
+        "guards": [
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          }
+        ]
+      },
+      "prediction_sha256": "94bdfb29f8ca1a8f0383bbac07ec8f9a5cf851ea87d44cd6ca3fb5c3fc21756f",
+      "drops": {
+        "train": {
+          "invalid_nbi_segments": 39,
+          "empty_common_segments": 682,
+          "nonfinite_context_segments": 0
+        },
+        "val": {
+          "invalid_nbi_segments": 0,
+          "empty_common_segments": 121,
+          "nonfinite_context_segments": 0
+        }
+      },
+      "independent_raw_checks": {
+        "all_pass": true,
+        "queries": 151564,
+        "raw_support_reconstructed": true,
+        "raw_feature_layout_verified": true,
+        "direct_raw_max_abs_eV": 1.4779288903810084e-12,
+        "direct_segments": 2
+      }
+    },
+    "V4a": {
+      "metrics": {
+        "D10": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 87894.94142231834,
+            "H": 87961.3171489165,
+            "L": 84943.25208265093,
+            "hold": 88863.84474527682
+          },
+          "mae_eV": {
+            "M": 175.6846490168584,
+            "H": 175.7999143931993,
+            "L": 169.56638914902908,
+            "hold": 176.4648120766199
+          },
+          "skill_M_over_hold": {
+            "point": 0.010903234332655498,
+            "lo": 0.008672380197167984,
+            "hi": 0.01296255241478017,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.0007546013264646545,
+            "lo": 0.0005535261718141449,
+            "hi": 0.0010553284137033714,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.03474895612420603,
+            "lo": -0.14618763673384527,
+            "hi": 0.06375104177837743,
+            "excludes_zero": false
+          }
+        },
+        "D50": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 103746.73582916292,
+            "H": 104196.95681589814,
+            "L": 100105.5285527929,
+            "hold": 108738.32337642518
+          },
+          "mae_eV": {
+            "M": 190.22268199481968,
+            "H": 190.3148410778124,
+            "L": 182.82289168097196,
+            "hold": 193.79636631822987
+          },
+          "skill_M_over_hold": {
+            "point": 0.045904584439679263,
+            "lo": 0.04148030531024072,
+            "hi": 0.05091286771796977,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.004320865028051624,
+            "lo": 0.003183933116832738,
+            "hi": 0.005247565967490098,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.036373688137011806,
+            "lo": -0.15261263059159047,
+            "hi": 0.07071655110028086,
+            "excludes_zero": false
+          }
+        },
+        "D100": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 107745.7920137439,
+            "H": 108617.86482745662,
+            "L": 106796.06513846846,
+            "hold": 116908.7758446019
+          },
+          "mae_eV": {
+            "M": 200.39673105073027,
+            "H": 200.0590559621647,
+            "L": 194.89465984271396,
+            "hold": 206.2037301716332
+          },
+          "skill_M_over_hold": {
+            "point": 0.07837721133131748,
+            "lo": 0.07374632706030071,
+            "hi": 0.08169220930778853,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.008028815656596078,
+            "lo": 0.0050362490375881475,
+            "hi": 0.010744856202493103,
+            "excludes_zero": true
+          },
+          "skill_M_over_L": {
+            "point": -0.008892901382125507,
+            "lo": -0.1314678879790312,
+            "hi": 0.10824799852046074,
+            "excludes_zero": false
+          }
+        },
+        "D300": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 110539.12294828836,
+            "H": 112624.09469060136,
+            "L": 118798.20199582652,
+            "hold": 132734.58122292408
+          },
+          "mae_eV": {
+            "M": 218.39917339058408,
+            "H": 214.63825570307566,
+            "L": 210.01773443174156,
+            "hold": 225.88624951003393
+          },
+          "skill_M_over_hold": {
+            "point": 0.16721684786392665,
+            "lo": 0.14855968216296878,
+            "hi": 0.17516746811183115,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.018512661504989536,
+            "lo": -0.003227805465482847,
+            "hi": 0.04435128730825988,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.0695219195979776,
+            "lo": -0.025610535559432934,
+            "hi": 0.1479124471180573,
+            "excludes_zero": false
+          }
+        },
+        "D650": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 112286.50010448207,
+            "H": 114431.40368631529,
+            "L": 125955.15542112263,
+            "hold": 142860.82682702428
+          },
+          "mae_eV": {
+            "M": 242.08668027172791,
+            "H": 233.60508981427054,
+            "L": 225.70348876448358,
+            "hold": 242.81760610492435
+          },
+          "skill_M_over_hold": {
+            "point": 0.2140147680900768,
+            "lo": 0.16192179334470913,
+            "hi": 0.25330994975517496,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.018744011807396266,
+            "lo": -0.06477436258270264,
+            "hi": 0.10198813100767679,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.10852001469046924,
+            "lo": 0.004004350266285428,
+            "hi": 0.17845237411425752,
+            "excludes_zero": true
+          }
+        },
+        "D1000": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 121520.02687354546,
+            "H": 122931.84604002367,
+            "L": 129683.73541309738,
+            "hold": 154655.23310335277
+          },
+          "mae_eV": {
+            "M": 265.19219311260264,
+            "H": 253.79639611394143,
+            "L": 235.93670127643452,
+            "hold": 257.73897266574323
+          },
+          "skill_M_over_hold": {
+            "point": 0.21425208552538122,
+            "lo": 0.12121273959212808,
+            "hi": 0.27651112360964036,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": 0.011484568172990373,
+            "lo": -0.13380500589406963,
+            "hi": 0.15160675193222195,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": 0.06295090524302893,
+            "lo": -0.10579970342404432,
+            "hi": 0.12078260921268325,
+            "excludes_zero": false
+          }
+        },
+        "S": {
+          "rows": 20563,
+          "mse_eV2": {
+            "M": 113431.85997888571,
+            "H": 112445.75717963454,
+            "L": 102505.65506841576,
+            "hold": 127103.88477544008
+          },
+          "mae_eV": {
+            "M": 245.1724131905456,
+            "H": 232.74242764099185,
+            "L": 205.83340578986426,
+            "hold": 229.06874542421724
+          },
+          "skill_M_over_hold": {
+            "point": 0.10756575080855568,
+            "lo": 0.043674273704295774,
+            "hi": 0.17659614683867264,
+            "excludes_zero": true
+          },
+          "skill_M_over_H": {
+            "point": -0.008769586545411823,
+            "lo": -0.11589678609343745,
+            "hi": 0.102945317853673,
+            "excludes_zero": false
+          },
+          "skill_M_over_L": {
+            "point": -0.10659124028988876,
+            "lo": -0.1445253661915844,
+            "hi": -0.017888972527154268,
+            "excludes_zero": true
+          }
+        }
+      },
+      "clusters": 5,
+      "shots": 54,
+      "train_val_cluster_overlap": 1,
+      "seconds": 18.811957359313965,
+      "tau": {
+        "M": 1.190915368287422,
+        "H": 1.2844010691024383
+      },
+      "parameters": {
+        "M": {
+          "tau": 1.190915368287422,
+          "beta": [
+            452.98375726304835,
+            64.81021711711428,
+            -85.6223221477709,
+            62.90228727098353
+          ],
+          "rank": 4,
+          "condition": 20.19283018378941,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 8
+          }
+        },
+        "H": {
+          "tau": 1.2844010691024383,
+          "beta": [
+            666.6257596369899
+          ],
+          "rank": 1,
+          "condition": 1.0,
+          "solver": {
+            "success": true,
+            "message": "Solution found.",
+            "nfev": 7
+          }
+        },
+        "L": {
+          "tau": null,
+          "beta": [
+            156.30395140511712,
+            182.34134675863456,
+            49.12566024764925
+          ],
+          "rank": 3,
+          "condition": 1.9245274142352948,
+          "solver": null
+        }
+      },
+      "checks": {
+        "all_pass": true,
+        "direct_recurrence_max_abs_eV": {
+          "M": 1.3642420526593924e-12,
+          "H": 4.320099833421409e-12
+        },
+        "real_segments": 2,
+        "guards": [
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "M",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "H",
+            "prefix": true,
+            "current_and_future_forcing_excluded": true,
+            "current_and_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          },
+          {
+            "kind": "L",
+            "future_fast_and_current_future_CES_excluded": true,
+            "label_isolation": true
+          }
+        ]
+      },
+      "prediction_sha256": "5af123888e3bcce87b4d42ebcde2903b9b40bcc4287d971fc756d70cee5c2f96",
+      "drops": {
+        "train": {
+          "invalid_nbi_segments": 39,
+          "empty_common_segments": 740,
+          "nonfinite_context_segments": 0
+        },
+        "val": {
+          "invalid_nbi_segments": 0,
+          "empty_common_segments": 139,
+          "nonfinite_context_segments": 0
+        }
+      },
+      "independent_raw_checks": {
+        "all_pass": true,
+        "queries": 143941,
+        "raw_support_reconstructed": true,
+        "raw_feature_layout_verified": true,
+        "direct_raw_max_abs_eV": 4.320099833421409e-12,
+        "direct_segments": 2
+      }
+    }
+  },
+  "sources": {
+    "ces_prediction/experiments/b98_physics/data98.py": "140ef5b0b332fd2a45b5f5c0ed564ece60990d09fe3948174a17f754e9d504cd",
+    "ces_prediction/experiments/b98_physics/model98.py": "37a952f6a2c6ef5b7634f29c4bbdeafd6ee8ce9b62464fb96c4344ced0133812",
+    "ces_prediction/experiments/b98_physics/review98.py": "f695999593e245661270276d38a5a04419da9ff63f6ce55fcfad2aedb1f78e5a",
+    "ces_prediction/experiments/b98_physics/run98.py": "3978d0a1483d16b7de72dc55ada19d42953e8454e173a4ad571f1a8049a1e1d3",
+    "ces_prediction/experiments/b98_physics/lead_checks/input98.py": "709e199245bb9aafab0bf3dcad36bcdae60a30a146ad68f4156eb05c124efd3a",
+    "ces_prediction/experiments/b98_physics/lead_checks/readout98.py": "da056168537e4499a8169eed2e0aac6cdeb283548edf942572fa5e778e3017e0",
+    "ces_prediction/experiments/b98_physics/lead_checks/recurrence98.py": "98814e521a67dec5d06e7ba79dbdba2fa7f26d83a0832771ecbc1376155dd2d5",
+    "ces_prediction/experiments/PREREGISTRATION_B98.md": "73f0b21cf8e8bddf564c5337b945731539e63d79b2b2d6fe08e5e7252ce004bf"
+  },
+  "fit_seconds": 92.9951822757721,
+  "independent_readout_pass": true,
+  "bootstrap": {
+    "draws": 20000,
+    "seed": 20261198,
+    "empty_draws": 0,
+    "unit": "original shot cluster",
+    "uncertainty": "Pointwise, unadjusted fixed-fit internal validation; no fitting/selection uncertainty; TRAIN/VAL cluster overlap disclosed"
+  }
+}

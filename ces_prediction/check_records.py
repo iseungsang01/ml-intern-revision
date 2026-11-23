@@ -63,6 +63,8 @@ SOURCES = (
     "docs/paper/b87_lead_checks.md",
     "docs/paper/b97_lean.md",
     "docs/paper/b97_lean_checks.md",
+    "docs/paper/b98_physics.md",
+    "docs/paper/b98_lead_checks.md",
     "docs/paper/b80_ecei_gate.md",
     "docs/paper/b80_lead_checks.md",
     "docs/paper/b76_mast_availability.md",
