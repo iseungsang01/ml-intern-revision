@@ -17,7 +17,10 @@ def children(pid):
     script=f"Get-CimInstance Win32_Process -Filter 'ParentProcessId={pid}' | Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress"
     out=subprocess.check_output(['powershell','-NoProfile','-Command',script],text=True).strip()
     if not out:return []
-    z=json.loads(out);return z if isinstance(z,list) else [z]
+    z=json.loads(out);items=z if isinstance(z,list) else [z]
+    # Source/checkpoint verification may briefly own a git subprocess; only
+    # a numerical trainer prevents the safe training boundary.
+    return [p for p in items if 'bootstrap95.py' in (p.get('CommandLine') or '').lower() and ' train ' in (p.get('CommandLine') or '').lower()]
 
 def main():
     sources,_=C.policy();plan=json.loads((C.CACHE/'transition_plan.json').read_text());handles={};parent_resumed=False;retired=False
