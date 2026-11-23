@@ -1,0 +1,7 @@
+# B.94 addendum4 — explicit recovery after monitor PermissionError
+
+2026-11-23, before any new training after the14:25 failure. The author explicitly requests GPU continuation. Apply the operational recovery and gates in PREREGISTRATION_B99.md, which must be committed before execution. Preserve all normal-exit results and original science, four-worker policy, source pins, fit budgets and suite deadline.
+
+Preserve the four incomplete confirmations V3_q2__1701__TH, V3_q3__1701__TX, V3_q3__1701__TH and V3_q4__1701__TX in data/.b94/interrupted_permission99/ with a full hash manifest. Explicitly permit one fresh seed1701 attempt for each, not exact RNG/checkpoint continuation. No other completed fit is restarted; abandoned partial validation values cannot enter selection. There is no general automatic retry authorization for future failures.
+
+The new monitor isolates queue-phase read/write telemetry PermissionError from scientific process ownership, records degraded telemetry honestly and retains full tracebacks. It does not change numeric code or the existing production96 dispatcher; per-child hard timers and original suite deadline remain. Require metadata plumbing, independent frozen-source checks, completed-fit revalidation and absence of live old processes before the new one-shot task. Original scientific interpretations and both-outcome paper sentences are unchanged. Do not infer a new mathematical/physical result from this recovery.

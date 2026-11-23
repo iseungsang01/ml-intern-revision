@@ -123,6 +123,8 @@ B.97 (`b97_lean/`, `PREREGISTRATION_B97.md`): complete. Six Lean proofs and80 re
 
 B.98 (`b98_physics/`, `PREREGISTRATION_B98.md`): registered numerical implementation pilot of forced first-order response and history/static controls. Fixed representative units, TRAIN/VAL only, F only, no outer TEST or GPU resume. Independent recurrence/causality and cluster readout required before publishing.
 
+B.99 (`b99_recovery/`, `PREREGISTRATION_B99.md`, B.94 addendum4): author-requested four-worker GPU continuation after metadata-monitor failure. Frozen numeric/controller code and original deadline retained; preserve four partial attempts, independently revalidate completed fits, qualify metadata monitor before one-shot launch.
+
 B.95 (`b95_concurrency/`, `PREREGISTRATION_B95.md`): real full-epoch concurrency qualification for2/3/4 workers and conditionally6, reusing the frozen B.93 worker. No production source modification or TEST access; higher concurrency needs repeated normal-exit throughput evidence before a separately registered dispatch change.
 
 B.93 (`b93_gpu/`, `PREREGISTRATION_B93.md`): GPU-only actual full-epoch runtime qualification with three fresh children per native CUDA path and two concurrent children on the qualified path. Existing CPU_r2 training continues; no TEST readout, CPU speedup claim or scientific fit reuse. Durable supervision is documented in `docs/paper/b93_supervisor.md`.
