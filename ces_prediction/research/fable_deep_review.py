@@ -74,7 +74,8 @@ def call(name,content,max_tokens=24576,effort='high'):
     complete=result.get('stop_reason')=='end_turn'
     suffix='' if complete else '_INCOMPLETE'
     body=txt(result)
-    (OUT/(name+suffix+'.md')).write_text(('Incomplete output; not a completed review.\n\n' if not complete else '')+'\n'.join(v.rstrip() for v in body.splitlines())+'\n',encoding='utf8')
+    public_text=('Incomplete output; not a completed review.\n\n' if not complete else '')+'\n'.join(v.rstrip() for v in body.splitlines())
+    (OUT/(name+suffix+'.md')).write_text(public_text.rstrip()+'\n',encoding='utf8')
     with LOCK:x=ledger()
     print(name,result.get('stop_reason'),'list-price USD',round(x['estimated_spent_usd'],4),flush=True)
     if not complete:raise RuntimeError('Incomplete output preserved: '+name)
