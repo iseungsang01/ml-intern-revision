@@ -6,7 +6,7 @@ sys.path.insert(0,str(ROOT/'ces_prediction/experiments/b93_gpu'));sys.path.inser
 import durable93 as D
 from ui105 import unprotect
 from colab_b109_operator import poll,STATE
-def save(p,z):t=p.with_suffix('.tmp');t.write_text(json.dumps(z,indent=2),encoding='utf8');t.replace(p)
+def save(p,z):return D.save(p,z)
 def main():
     config=json.loads((ROOT/'data/.b106/watch_config.json').read_text());os.environ.update(unprotect(config['ui_protected']));os.environ['CUDA_VISIBLE_DEVICES']='-1'
     shared={'pid':os.getpid(),'state':'waiting','started':time.time()};stop=threading.Event()
