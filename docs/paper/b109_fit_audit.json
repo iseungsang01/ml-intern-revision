@@ -1,0 +1,84 @@
+{
+  "all_pass": true,
+  "new_cloud_paths": 9,
+  "retained_paths": 11,
+  "total_selected_paths": 20,
+  "fits": {
+    "V4a__inner1": {
+      "mode": "resume",
+      "start_epoch": 20,
+      "epochs": 29,
+      "new_epochs": 9,
+      "best_VAL_normalized_MSE": 0.35156693566349884,
+      "cloud_wall_seconds": 85.60662165400004
+    },
+    "V1_r2_k0__inner2": {
+      "mode": "resume",
+      "start_epoch": 12,
+      "epochs": 40,
+      "new_epochs": 28,
+      "best_VAL_normalized_MSE": 0.19398823228693743,
+      "cloud_wall_seconds": 315.1467486659999
+    },
+    "V2_s1_k0__inner2": {
+      "mode": "resume",
+      "start_epoch": 6,
+      "epochs": 20,
+      "new_epochs": 14,
+      "best_VAL_normalized_MSE": 0.22000130515825062,
+      "cloud_wall_seconds": 163.18579873199985
+    },
+    "V3_q3__inner2": {
+      "mode": "resume",
+      "start_epoch": 2,
+      "epochs": 26,
+      "new_epochs": 24,
+      "best_VAL_normalized_MSE": 0.2586006116560534,
+      "cloud_wall_seconds": 225.57884356
+    },
+    "V4a__inner2": {
+      "mode": "fresh",
+      "start_epoch": 0,
+      "epochs": 37,
+      "new_epochs": 37,
+      "best_VAL_normalized_MSE": 0.3836186989011565,
+      "cloud_wall_seconds": 360.5499438549999
+    },
+    "V1_r2_k0__inner3": {
+      "mode": "fresh",
+      "start_epoch": 0,
+      "epochs": 41,
+      "new_epochs": 41,
+      "best_VAL_normalized_MSE": 0.18850049785539216,
+      "cloud_wall_seconds": 417.5482649559999
+    },
+    "V2_s1_k0__inner3": {
+      "mode": "fresh",
+      "start_epoch": 0,
+      "epochs": 32,
+      "new_epochs": 32,
+      "best_VAL_normalized_MSE": 0.21627526212708942,
+      "cloud_wall_seconds": 335.97488813400014
+    },
+    "V3_q3__inner3": {
+      "mode": "fresh",
+      "start_epoch": 0,
+      "epochs": 15,
+      "new_epochs": 15,
+      "best_VAL_normalized_MSE": 0.23637465128071647,
+      "cloud_wall_seconds": 135.3734311940002
+    },
+    "V4a__inner3": {
+      "mode": "fresh",
+      "start_epoch": 0,
+      "epochs": 32,
+      "new_epochs": 32,
+      "best_VAL_normalized_MSE": 0.3922098625681318,
+      "cloud_wall_seconds": 164.17250657599993
+    }
+  },
+  "archive_sha256": "f6a4879fd095b2019e6270a321ce0576a04c23abb46a5227e0c00a0b1a1cd461",
+  "TEST_scored": false,
+  "post_corrections_fit": false,
+  "local_GPU_fits": 0
+}

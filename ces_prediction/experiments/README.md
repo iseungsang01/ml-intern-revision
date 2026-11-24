@@ -41,6 +41,11 @@ B.100 (`PREREGISTRATION_B100.md`, B.94 addendum5): `b100_eval_resume/resume100.p
 
 ## The current line (one data definition D1; B.70 onward)
 
+B110: registered D10/F VAL-only residual diagnostic after B109's twenty selected
+paths. b110_residuals/export110.py -> cloud run110.py -> independent audit110.py
+-> docs/paper/b110_residuals.json/md. No new fits/TEST; exploratory VAL reuse.
+Delivery: research/colab_b110_operator.py; local GPU stays paused.
+
 | dir | registration | question | status |
 |---|---|---|---|
 | `b70_d1/` | "B.70" (`PREREGISTRATION_B70.md`) | one data definition D1 for every number of the paper: re-score the stored r2-r4 networks on every eligible row (no 40,000 cap), the second stage, the six-model table, then the other cited readouts on D1; a good-and-bad mixture sensitivity of the outlier rule; CPU, no training | phase 1 done 2026-11-19 (`docs/paper/b70_d1.md`, checks `docs/paper/b70_checks.md`, addendum 1); phase 2 done 2026-11-20 (`docs/paper/b70_d1_phase2.md`, addendum 2): verdicts unchanged except B.66 R2 and B.65 I1, I3 |

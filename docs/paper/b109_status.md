@@ -1,5 +1,16 @@
 # B109: continue remaining LSTMs on T4
 
+**COMPLETE, retrieved and independently audited (2026-11-24).** This supersedes
+the running snapshot below. All nine cloud paths exited normally at patience6;
+eleven original completed paths are retained. All twenty selected checkpoints
+and their hashes are available locally. See b109_fit_audit.json/md and private
+data/colab_b109/selected_paths.json. The observer completed retrieval/audit
+and exited. No post-correction fit or TEST MSE has been produced.
+
+Next small diagnostic: registered B110 runs only D10/F VAL inference and
+residual decomposition on Colab; it does not replace the still-needed complete
+OOF/post-correction/eight-scenario TEST workflow. Local GPU remains paused.
+
 **RUNNING2026-11-24 14:08KST: actual optimizer updates/epochs verified.** Four
 resumed paths C00-C03 passed both prefix checks and full-VAL best-checkpoint
 restoration checks. Observed epochs20->25,12->16,6->10,2->7,with restored
