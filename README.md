@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B111 전송 응답 복구: `PREREGISTRATION_B111_ADDENDUM1.md` → `research/recover_colab_b111.py`가 원격 실제 prefix SHA·과학 실행 부재를 검사하고 같은 archive를 큰 청크로 이어 보낸다. 원래 전송 상태·요청 이력을 보존하며 frozen scientific code/입력/후단fit 조건은 바꾸지 않는다. large-source 셀을 먼저 짧게 정리한 뒤만 get_cells를 읽는다.
+
 B111 전체 비교: `experiments/PREREGISTRATION_B111.md` → `b111_full_compare/export111.py`가 공유 입력의 원본 bit 일치·20checkpoint·OOF 분리를 확인해 익명 포장한다. Colab `run111.py`가 held 추론→후단8적합→outer8시나리오→`stats111.py`의32셀 MSE/구간을 실행한다. `research/colab_b111_operator.py` 전달/회수, `watch_colab_b111.py` 감시/알림/완료회수→`audit111.py`의 원본features/휴대tree/전체구간 독립검산→`docs/paper/b111_comparison.json/md`. 상태 `b111_status.md`, private `data/colab_b111/`. 로컬GPU/fit/Claude 호출 없음. B106 과학 계약을 B109 selected 모델로 마무리한다.
 
 B110 잔차 분해: `experiments/PREREGISTRATION_B110.md` → `b110_residuals/export110.py`가 완료 LSTM의 D10/F VAL 입력과 저장 TCN/GP 계열 대조를 익명 포장하고, `run110.py`가 Colab에서 추론·편향/중심화 MSE·source-age/이력 변화 층별 재표집 구간을 계산한다. `research/colab_b110_operator.py`가 전달/회수, `b110_residuals/audit110.py`가 별도 산술로 행·점추정·구간을 검산해 `docs/paper/b110_residuals.json/md`를 만든다. 완료·독립검산통과, 다음 순서는 `docs/paper/b110_next_steps.md`와 `HANDOVER.md`. 새 적합/TEST/로컬 GPU/Claude API 없음. VAL 재사용 탐색 진단이며 최종 LSTM 후단 merit 비교는 별도다.
