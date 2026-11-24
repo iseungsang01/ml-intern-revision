@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Reader model names: `ces_prediction/research/thesis_reader/model_names.py` supplies separate GP/TCN display namespaces to `integrate_longform.py` and `build_reader.py`. The methods mapping table and each original exhibit's legend distinguish GP-Boost-CES/GP-Boost-Multi from TCN-CES/TCN-Multi while preserving frozen keys and original PDFs. `audit_model_names.py` checks unchanged numerical/citation content, retained scientific sources and UI → `docs/paper/research_reader/model_naming.json`. `PAPER_DESIGN.md` records the author-approved display-name convention.
+
 로컬 실험 일시 중단(2026-11-24): 저자 지시 → `ces_prediction/research/stop_local_b107_20261124.py`가 B107 프로세스 신원과 검증 checkpoint를 확인하고 상태를 보존한 뒤 학습/큐를 중단했다. 증거 ignored `data/.b107/author_stop.json`, 재개용 checkpoint·이력 `.b107/author_stop_20261124_1244/`; 상태 `docs/paper/b107_status.md`. 자동 재개하지 않으며 Colab 실행은 아직 시작하지 않았다.
 
 B.107 학습 연장: `experiments/PREREGISTRATION_B107.md` → `experiments/b107_patience/pipeline107.py`가 기존 B106 GPU child를 유지하며 대기열을 인수하고, 시간 제한 경로는 optimizer/scheduler/검증 이력을 복원해 patience6까지 잇는다. 미시작 경로도 같은 종료 기준을 적용하며, 모두 충족한 checkpoint만 기존 B106 추론·OOF 후단·동일행 MSE·독립 audit에 연결한다. 상태 `docs/paper/b107_status.md`, 결과 `b107_lstm.json/md`, ignored 근거 `data/.b107/`; 새 Claude/API 호출 없음. 원래 난수 상태 미저장으로 dropout bitwise 재현은 주장하지 않는다.

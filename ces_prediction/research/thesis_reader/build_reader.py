@@ -9,6 +9,7 @@ from pathlib import Path
 
 import fitz
 import markdown
+from model_names import replace_names,exhibit_legend
 try:
     import latex2mathml.converter
 except ImportError:
@@ -235,8 +236,11 @@ def render_pdf_exhibits(section):
                 image_url='data:image/png;base64,'+encoded
                 source_link='../ppcf_revision/main_ppcf.pdf#page='+str(item['page'])
                 footer='기존 생성 표 그대로 · PDF '+str(item['page'])+'쪽 · 표를 눌러 원본 확대'
-            label=('표 ' if item['kind']=='table' else '그림 ')+str(item['number'])+'. '+item['title_ko']
-            caption=item.get('caption_ko',item['note_ko'])
+            label=('표 ' if item['kind']=='table' else '그림 ')+str(item['number'])+'. '+replace_names(item['title_ko'],tcn=identifier in ('table9','table10','table11'))
+            caption=replace_names(item.get('caption_ko',item['note_ko']),tcn=identifier in ('table9','table10','table11'))
+            legend=exhibit_legend(item)
+            if legend:
+                footer+=' · '+legend
             result.append('<figure class="source-exhibit" id="exhibit-'+html.escape(identifier)+'"><figcaption><strong>'+html.escape(label)+'</strong><p>'+html.escape(caption)+'</p></figcaption><a href="'+source_link+'" target="_blank" rel="noopener" aria-label="'+html.escape(label,quote=True)+' 원본 확대"><img loading="lazy" width="'+str(width)+'" height="'+str(height)+'" src="'+image_url+'" alt="'+html.escape(label,quote=True)+'"></a><p class="exhibit-source">'+footer+'</p></figure>')
     return ''.join(result)
 

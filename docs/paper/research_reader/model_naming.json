@@ -1,0 +1,59 @@
+{
+  "scope": "Reader presentation names; scientific result keys and English source/PDF preserved.",
+  "GP_namespace": {
+    "T0": "GP-Boost-CES",
+    "TX": "GP-Boost-Multi",
+    "TE": "GP-Boost-ECEI",
+    "TB": "GP-Boost-BES",
+    "TN": "GP-Boost-CES+NBI",
+    "TXN": "GP-Boost-Multi+NBI"
+  },
+  "TCN_namespace": {
+    "TH": "TCN-CES",
+    "TX": "TCN-Multi"
+  },
+  "current_reader_sha256": "8f62bc576742ece59ab5dd598023239c237a8f1133f2afb939d23e5ba0bd6bcf",
+  "numeric_sequences_unchanged": [
+    "introduction",
+    "background",
+    "results",
+    "discussion",
+    "conclusion"
+  ],
+  "citation_sets_unchanged": true,
+  "ambiguous_names_only_in_explicit_legacy_mapping": true,
+  "unchanged_sources": [
+    "docs/paper/ppcf_revision/main_ppcf.pdf",
+    "docs/paper/ppcf/main_ppcf.tex",
+    "docs/paper/research_reader/longform/exhibits.json",
+    "docs/paper/b105_merit.json",
+    "ces_prediction/experiments/b73_targets/common.py"
+  ],
+  "ui_checks": {
+    "body_numeric_tokens_max": 4,
+    "body_paragraphs_checked": 217,
+    "model_names_distinguish_architecture_and_inputs": true,
+    "gp_equations_and_input_comparison_and_citation": true,
+    "bibliographic_note": true,
+    "original_vector_figures": 7,
+    "source_tables_and_figures": 18,
+    "embedded_results_pages": 8,
+    "desktop_sections": 7,
+    "source_records": 258,
+    "search_and_filters": true,
+    "compact_citation_labels": true,
+    "citation_dialog": true,
+    "escape_and_focus": true,
+    "empty_state": true,
+    "unknown_citation_state": true,
+    "section_navigation": true,
+    "appendix_link_opens_definition": true,
+    "mobile_390px_no_overflow": true,
+    "js_errors": [],
+    "automatic_http_requests": [],
+    "offline_passed": true
+  },
+  "new_scientific_fits": 0,
+  "new_evaluations": 0,
+  "api_calls": 0
+}

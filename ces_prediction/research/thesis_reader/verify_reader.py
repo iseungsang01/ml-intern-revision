@@ -45,6 +45,10 @@ def main():
         ids=page.locator('[id]').evaluate_all('(els)=>els.map(e=>e.id)')
         assert len(ids)==len(set(ids)),'Duplicate element IDs'
         assert page.locator('h1').inner_text()
+        assert 'GP-Boost-Multi' in page.locator('#materials-methods').inner_text()
+        assert 'TCN-Multi' in page.locator('#exhibit-table11 .exhibit-source').inner_text()
+        assert 'GP-Boost-Multi' in page.locator('#exhibit-figure3 .exhibit-source').inner_text()
+        results['model_names_distinguish_architecture_and_inputs']=True
         page.screenshot(path=str(QA/'reader_desktop.png'))
         page.get_by_role('button',name='문헌·인용 근거',exact=True).click()
         page.locator('#source-search').fill('NN-CES')

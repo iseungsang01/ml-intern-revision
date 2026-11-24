@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 from build_reader import ROOT, load_sources
+from model_names import apply_names
 
 OUT=ROOT/'docs/paper/research_reader/longform'
 REV=ROOT/'docs/paper/introduction_review'
@@ -114,6 +115,7 @@ def main():
         matches[0]['title']='8. 시간 의존성을 이용하는 추정 모형의 원리'
         position=by_id['background']['subsections'].index(matches[0])
         by_id['background']['subsections'].insert(position,gp)
+    apply_names(sections)
     counts={sid:sum(len(n.get('content_markdown','')) for n in nodes(s)) for sid,s in by_id.items()}
     assert counts['introduction']>=5000,counts
     assert counts['background']>=5000,counts
