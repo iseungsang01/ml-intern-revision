@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B111 한 셀 실행: `PREREGISTRATION_B111_ADDENDUM4.md` → `research/prepare_b111_manual.py`가 현재 scratchpad의 소유 셀과 private `COLAB_B111.ipynb`/`COLAB_B111_CELL.py`를 준비한다. Colab 기본 업로드로 정확한 기존zip만 전달·검증한 뒤 frozen controller를 실행한다. `research/wait_b111_manual.py`는 준비 셀의 정확한 source/attempt/SHA launch표지만 읽어 연결하고 기존 observer/audit를 호출한다. 대기 중 kernel실행·학습재시도 없음.
+
 B111 native 전달: `PREREGISTRATION_B111_ADDENDUM3.md`의 Colab 기본 Files 업로드 → `research/launch_uploaded_b111.py`가 실제T4·기존archive SHA·launch부재를 확인해 같은 frozen controller를 시작한다. 기존 MCP 셀 반복전송 실패 기록은 유지하고 입력/학습/통계 조건을 바꾸지 않는다.
 
 B111 전송 응답 복구: `PREREGISTRATION_B111_ADDENDUM1.md` → `research/recover_colab_b111.py`가 원격 실제 prefix SHA·과학 실행 부재를 검사하고 같은 archive를 큰 청크로 이어 보낸다. 원래 전송 상태·요청 이력을 보존하며 frozen scientific code/입력/후단fit 조건은 바꾸지 않는다. large-source 셀을 먼저 짧게 정리한 뒤만 get_cells를 읽는다.
