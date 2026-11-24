@@ -1,5 +1,5 @@
 """Official Colab MCP via official Python MCP SDK; no browser-cookie access."""
-import asyncio,json,os,sys,time,uuid
+import asyncio,contextlib,json,os,sys,time
 from datetime import timedelta
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];CACHE=ROOT/'data/.colab_connection'
@@ -42,4 +42,7 @@ async def main():
     except BaseException as error:
         state.update(status='stopped',error=repr(error));save(CACHE/'status.json',{**state,'updated':time.time()});raise
     finally:beat.cancel()
-if __name__=='__main__':asyncio.run(main())
+if __name__=='__main__':
+    CACHE.mkdir(parents=True,exist_ok=True)
+    with (CACHE/'bridge.stdout.log').open('a',encoding='utf8') as out,(CACHE/'bridge.stderr.log').open('a',encoding='utf8') as err:
+        with contextlib.redirect_stdout(out),contextlib.redirect_stderr(err):asyncio.run(main())

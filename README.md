@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Colab 직접 전달: `ces_prediction/research/colab_t4_operator.py`가 공식 MCP 브리지로 실제 T4 확인 → B108 private zip 분할 전달/해시 검증 → 원격 timing controller 실행 → aggregate 결과 회수를 수행한다. `PREREGISTRATION_B108_ADDENDUM1.md`가 수동 업로드를 대체하는 전달 범위를 고정한다. 로컬 GPU 학습 재개 없이 `check/start/poll`; 상태는 ignored `.colab_connection/b108_remote.json`·`b108_progress.json`.
+
 Colab T4 준비: `experiments/PREREGISTRATION_B108.md` → `experiments/b108_colab/export108.py`가 실자료 TRAIN/VAL·고정 가중치로 비공개 실행 묶음과 노트북을 만든다. `portable108.py` 원분기/목적함수 CPU 대조 후 `probe108.py`/`run108.py`로 1/4병렬 cuDNN/native 경로의 짧은 속도·정상 종료만 확인한다. 새 MSE/모델 선정이 아니다. `ces_prediction/research/colab_mcp_bridge.py`는 공식 Colab MCP를 분리된 도구 환경에서 호스팅해 직접 노트북 전달을 연결한다. 연결/사용법 `docs/paper/b108_colab.md`, private 결과 `data/colab_b108/`, 연결 상태 `data/.colab_connection/`. `.env`/계정 키/TEST 데이터 미포함, 로컬 GPU 학습 재개 없음.
 
 Reader model names: `ces_prediction/research/thesis_reader/model_names.py` supplies separate GP/TCN display namespaces to `integrate_longform.py` and `build_reader.py`. The methods mapping table and each original exhibit's legend distinguish GP-Boost-CES/GP-Boost-Multi from TCN-CES/TCN-Multi while preserving frozen keys and original PDFs. `audit_model_names.py` checks unchanged numerical/citation content, retained scientific sources and UI → `docs/paper/research_reader/model_naming.json`. `PAPER_DESIGN.md` records the author-approved display-name convention.

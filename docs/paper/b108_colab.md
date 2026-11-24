@@ -1,5 +1,13 @@
 # Colab T4 실행 방법
 
+공식 MCP 서버 설치/초기화 및 브라우저 연결은 성공했다. 첫 진단은 CPU 런타임
+(Python3.13.18,PyTorch2.14.1+cpu)이므로 T4 선택을 저자에게 요청했다.
+`research/colab_t4_operator.py check`로 실제 T4를 확인한 뒤 `start`가 같은
+9.26MiB archive를 분할 전달하고 해시 검증 후 원격 측정을 시작한다.
+`poll`은 상태와 집계 결과만 회수한다. source3805f7d의 CPU export 검사와
+pytest89 통과, archive에는 A-D NPZ/weights와 portable/probe/run/manifest만 있다.
+API 키/.env/TEST 전송 없음. 실제 T4/측정 결과는 별도 확인 전까지 미확인이다.
+
 공식 MCP 연결도 준비한다: `ces_prediction/research/colab_mcp_bridge.py`는
 분리된 `data/.colab_mcp_env`의 Google 공식 colab-mcp 고정 commit과 공식 MCP SDK로
 브라우저의 Colab 노트북에 연결한다. 직접 Google 계정 인증을 자동화하지 않는다.
