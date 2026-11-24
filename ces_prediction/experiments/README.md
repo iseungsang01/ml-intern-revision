@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.106 RUNNING2026-11-24 10:19KST: sources4f7bd65/addendumf3a233e preceded the effective preparation and all fits. Real input/original-branch/OOF checks, CUDA smoke and four longest-batch backward probes passed; four outer LSTMs dispatched10:18:37, sixteen OOF fits pending. Independent local watcher and durable heartbeat active; frozen queue continues to CPU corrections, all-scenario MSE and independent audit. No Claude/API calls or automatic architecture search. See b106_status.md; preparation note below is historical.
+
 B.106 preparation: `PREREGISTRATION_B106.md`, `b106_lstm/` train the original LSTM temperature branch and honest file-OOF post-corrections on four B105 outer units. F-only D10 training, frozen replay of eight rules; 4 full+16 OOF GPU fits, then D10-only/mixed post policies. MSE-first common-row GP/boosting/TCN comparison and independent audit. No Claude calls after author's unavailability instruction. State `docs/paper/b106_status.md`, local `data/.b106/`; no fit before source/registration commit.
 
 B.104 (`PREREGISTRATION_B104.md`): COMPLETE2026-11-24 01:11KST. `b104_budget/` ran six matched SHORT/LONG TCN trajectories with four global workers; source8dd55a6 preceded GPU work. All six fits exited normally,24 predictions and four endpoint cells passed independent audit; Fable/Opus post reviews completed. All FAST checkpoint pairs are identical; only HISTORY1701 changed. Published `docs/paper/b104_budget.json/md`, `b104_claude.md`; status `b104_status.md`, local final proof `data/.b104/lead_completion.json`. No next fit launched.
