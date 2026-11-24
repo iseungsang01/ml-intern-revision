@@ -8,6 +8,10 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Colab 본 학습 연장: `experiments/PREREGISTRATION_B109.md` → `experiments/b109_colab_train/export109.py`가 중단4/미시작5 경로의 동일 TRAIN/VAL·상태를 익명 private 묶음으로 만들고 `train109.py`가 T4/cuDNN에서 patience6까지 학습한다. 완료11은 유지한다. `research/colab_b109_operator.py`가 공식MCP로 전달·진행 읽기·checkpoint 회수를 수행한다. 상태 `docs/paper/b109_status.md`, private `data/colab_b109/`; 로컬GPU재개/TEST/후단새적합은 없다.
+
+Colab T4 측정 결과: `ces_prediction/research/audit_colab_b108.py`가 회수한 private `data/colab_b108/b108_colab_results.zip`의 모든 child 종료 기록과 시간 구간을 별도로 검산해 `docs/paper/b108_results.json/md`를 생성한다. 짧은 실제 배치 처리량 결과이며 본 학습/MSE·로컬 대비 정확한 배수는 아니다.
+
 Colab 직접 전달: `ces_prediction/research/colab_t4_operator.py`가 공식 MCP 브리지로 실제 T4 확인 → B108 private zip 분할 전달/해시 검증 → 원격 timing controller 실행 → aggregate 결과 회수를 수행한다. `PREREGISTRATION_B108_ADDENDUM1.md`가 수동 업로드를 대체하는 전달 범위를 고정한다. 로컬 GPU 학습 재개 없이 `check/start/poll`; 상태는 ignored `.colab_connection/b108_remote.json`·`b108_progress.json`.
 
 Colab T4 준비: `experiments/PREREGISTRATION_B108.md` → `experiments/b108_colab/export108.py`가 실자료 TRAIN/VAL·고정 가중치로 비공개 실행 묶음과 노트북을 만든다. `portable108.py` 원분기/목적함수 CPU 대조 후 `probe108.py`/`run108.py`로 1/4병렬 cuDNN/native 경로의 짧은 속도·정상 종료만 확인한다. 새 MSE/모델 선정이 아니다. `ces_prediction/research/colab_mcp_bridge.py`는 공식 Colab MCP를 분리된 도구 환경에서 호스팅해 직접 노트북 전달을 연결한다. 연결/사용법 `docs/paper/b108_colab.md`, private 결과 `data/colab_b108/`, 연결 상태 `data/.colab_connection/`. `.env`/계정 키/TEST 데이터 미포함, 로컬 GPU 학습 재개 없음.

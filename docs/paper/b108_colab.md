@@ -1,5 +1,21 @@
 # Colab T4 실행 방법
 
+**측정 완료·검산 통과:** `b108_results.json/md` 참조. 등록된12그룹/30프로세스가
+모두 exit0으로 종료했고, 원시 latency/시작·종료 구간과3회 중앙값을 별도 재계산했다.
+T4 내부 동일 worker 수의 cuDNN/native 처리량 비는 workers1=7.093,
+workers4=11.082다. 기술통계이며95% 구간/로컬 대비 정확한 속도 배수는 산출하지 않았다.
+1worker는A,4worker는A-D의 서로 다른 패딩 길이이므로 순수 병렬성 최적화 결론도 아니다.
+로컬 GPU 학습 중단 유지. 후속 B109가 미완료9개 경로의 T4 본 학습을 별도 등록한다.
+
+**T4 실행 시작 확인2026-11-24 13:30KST.** 저자의 연결 완료 응답 후 진단에서
+Tesla T4/Python3.13.16/PyTorch2.14.1+cu130/CUDA13.0/cuDNN92800을 확인했다.
+등록된 private zip9,709,228bytes를 공식 MCP로 분할 전달했고 SHA256
+`13d6b5587c7afe8b4468ae1e579407d6ca9300ad5cbdb84b793b1f252c4cc61a`
+일치 후 `/content/ces_b108_mcp/bundle`에 추출했다. 원격 controller PID789,
+첫 poll alive=true/groups_completed0. native/cuDNN ×1/4worker ×3회 검증 진행 중.
+본 학습/TEST평가가 아니며 측정 완료나 속도 우위는 아직 주장하지 않는다.
+로컬 학습은 중단 유지. 아래 CPU 진단/T4 선택 대기는 최초 연결 당시 기록이다.
+
 공식 MCP 서버 설치/초기화 및 브라우저 연결은 성공했다. 첫 진단은 CPU 런타임
 (Python3.13.18,PyTorch2.14.1+cpu)이므로 T4 선택을 저자에게 요청했다.
 `research/colab_t4_operator.py check`로 실제 T4를 확인한 뒤 `start`가 같은

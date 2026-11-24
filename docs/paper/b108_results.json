@@ -1,0 +1,90 @@
+{
+  "all_pass": true,
+  "normal_children": 30,
+  "groups": 12,
+  "archive_sha256": "352a13ef53807ebc8e3e9083b6e4bf8f9cf2a30fb06dd0ed73d492419e8c84e2",
+  "bundle_sha256": "13d6b5587c7afe8b4468ae1e579407d6ca9300ad5cbdb84b793b1f252c4cc61a",
+  "gpu": "Tesla T4",
+  "python": "3.13.16",
+  "torch": "2.14.1+cu130",
+  "cpu_count": 2,
+  "rows": [
+    {
+      "backend": "native",
+      "workers": 1,
+      "median_steps_per_second": 2.6103069379008312,
+      "three_repetitions": [
+        1.8972799210416729,
+        2.6112166578810445,
+        2.6103069379008312
+      ],
+      "max_child_reserved_MiB": 528.0
+    },
+    {
+      "backend": "cudnn",
+      "workers": 1,
+      "median_steps_per_second": 18.51454701104163,
+      "three_repetitions": [
+        15.027431870591032,
+        19.013404191374153,
+        18.51454701104163
+      ],
+      "max_child_reserved_MiB": 534.0
+    },
+    {
+      "backend": "native",
+      "workers": 4,
+      "median_steps_per_second": 1.9291679393624723,
+      "three_repetitions": [
+        1.788054279302533,
+        1.9994802930827473,
+        1.9291679393624723
+      ],
+      "max_child_reserved_MiB": 532.0
+    },
+    {
+      "backend": "cudnn",
+      "workers": 4,
+      "median_steps_per_second": 21.37897275389298,
+      "three_repetitions": [
+        21.37897275389298,
+        19.33496016270274,
+        23.174590463155816
+      ],
+      "max_child_reserved_MiB": 568.0
+    }
+  ],
+  "train_shapes": {
+    "A": [
+      16,
+      675,
+      35
+    ],
+    "B": [
+      16,
+      833,
+      35
+    ],
+    "C": [
+      16,
+      790,
+      35
+    ],
+    "D": [
+      16,
+      497,
+      35
+    ]
+  },
+  "cudnn_over_native_same_worker_count": {
+    "1": 7.092862047070504,
+    "4": 11.081965606870929
+  },
+  "sum_group_launch_to_exit_seconds": 202.98956178800012,
+  "limits": [
+    "Three fixed repetitions; medians are descriptive, no95% interval or inferential speed claim.",
+    "Single worker uses unitA; four workers use A-D with different padded lengths. This does not isolate pure concurrency scaling.",
+    "Repeated-batch qualification is not full-epoch throughput or model MSE. No exact local/T4 speedup was measured.",
+    "Independent audit checks normal-exit records,hash bindings and timing arithmetic; GPU-prefix/finite checks remain producer attestations."
+  ]
+}
