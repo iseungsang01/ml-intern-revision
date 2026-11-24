@@ -2,11 +2,11 @@
   "input": "docs\\paper\\introduction_review\\manuscript_sections.json",
   "parent_content_loaded": true,
   "sections": 7,
-  "source_records": 254,
+  "source_records": 258,
   "reading_states": {
     "full_pdf": 41,
     "full_text": 210,
-    "summary": 0,
+    "summary": 4,
     "held": 1,
     "duplicate": 2
   },

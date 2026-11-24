@@ -1,0 +1,7 @@
+{
+  "operation": "free token-count diagnostic after first preflight HTTPError",
+  "paid_message_sent": false,
+  "http_status": 400,
+  "error_type": "invalid_request_error",
+  "reason_category": "insufficient_credit"
+}

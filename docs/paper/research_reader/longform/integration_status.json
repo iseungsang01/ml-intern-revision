@@ -1,13 +1,13 @@
 {
   "section_characters": {
     "introduction": 13476,
-    "background": 12588,
+    "background": 20396,
     "materials-methods": 12468,
     "results": 6829,
     "discussion": 7817,
     "conclusion": 3462
   },
-  "total_prose_characters_excluding_references": 56640,
+  "total_prose_characters_excluding_references": 64448,
   "citation_keys": [
     "Abbate2021DatadrivenProfile",
     "Bishop1993AutomaticAnalysis",
@@ -15,6 +15,7 @@
     "Chrystal2026RealTime",
     "Donne2007ChapterDiagnostics",
     "Fonck1984DeterminationPlasma",
+    "Friedman2001GreedyFunction",
     "Haskey2018MainIon",
     "Imrek2026TemporalSuperresolution",
     "Isler1994OverviewCharge",
@@ -27,6 +28,8 @@
     "Lee2026NeuralNetworkbased",
     "Pastore2023ModelBased",
     "Pastore2026ApplicationsNovel",
+    "Rasmussen2006GPML",
+    "Roberts2013GPTimeSeries",
     "Shousha2023MachineLearningbased",
     "Snyder2011FirstPrinciples",
     "Svensson1999AnalysisJet",
@@ -34,9 +37,12 @@
     "Vanovac2018EffectsDensity",
     "Viezzer2011PassiveEdge",
     "Viezzer2018IonHeat",
+    "Williams1996GaussianRegression",
     "Yoshida2009RealTime",
     "Young2008PlasmaMeasurements",
-    "Yun2014Quasi3d"
+    "Yun2014Quasi3d",
+    "chilenski2015",
+    "michoski2024"
   ],
   "applied_corrections": [
     {
@@ -457,7 +463,7 @@
       "why": "Keep conclusion limited to the evaluated design for the median statistic."
     }
   ],
-  "generated_cited_reference_entries": 28,
+  "generated_cited_reference_entries": 34,
   "conditional_corrections_already_superseded": [],
   "review_decisions": {
     "excluded_indices": [

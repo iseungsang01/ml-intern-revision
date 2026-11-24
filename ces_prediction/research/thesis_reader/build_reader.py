@@ -83,6 +83,8 @@ def render_content(text):
             markup=latex2mathml.converter.convert(expression,display=display) if latex2mathml else '<code>'+html.escape(expression)+'</code>'
         except Exception:
             markup='<code>'+html.escape(expression)+'</code>'
+        if display=='block':
+            markup='<div class="display-math">'+markup+'</div>'
         token='MATHTOKEN'+str(len(maths))+'END'; maths.append(markup)
         return token
     text=re.sub(r'!\[([^\]]*)\]\([^)]+\)',r'[그림: \1 — 연결된 PDF 참조]',text)
@@ -167,6 +169,11 @@ def load_sources():
             'mode':mode,'mode_label':mode_label,'doi':doi,
             'path':'../../../'+row.get('path',''),'relevance':safe_text((review or {}).get('relevance','')),
             'review':review,'review_file':('../introduction_review/'+('paper_' if (REVIEWS/('paper_'+key+'.json')).exists() else 'background_')+key+'.json') if review else ''}
+        sources.append(source)
+    # Targeted theory additions retain their own scope, separate from corpus reviews.
+    extra=read_json(OUT/'gp_background/sources.json',{'sources':[]})
+    for source in extra['sources']:
+        assert source['key'] not in {s['key'] for s in sources}
         sources.append(source)
     aliases={s['key']:s['key'] for s in sources}
     # Exact DOI matching provides aliases for existing BibTeX keys only where the

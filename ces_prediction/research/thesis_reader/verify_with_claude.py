@@ -61,7 +61,7 @@ def call(stage,model,content,max_tokens,output_dir=None):
         result=read(response)
     else:
         assert not request.exists(),'Uncertain prior request: no replay'
-        assert len(list(CACHE.glob('*.reservation.json')))<7
+        assert len(list(CACHE.glob('*.reservation.json')))<8
         count=D.api('/messages/count_tokens',{'model':model,'messages':payload['messages']})
         ip,op=PRICES[model];reserve=count['input_tokens']*1.1*ip/1e6+max_tokens*op/1e6+.02
         assert ledger()['estimated_or_reserved_usd']+reserve<=CAP

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from build_reader import ROOT,quantitative_tokens
+from build_reader import ROOT,quantitative_tokens,load_sources
 
 OUT = ROOT / 'docs/paper/research_reader'
 QA = ROOT / 'data/.thesis_reader/qa'
@@ -41,7 +41,7 @@ def main():
         page.on('request',lambda request:network.append(request.url) if request.url.startswith(('http://','https://')) else None)
         page.goto((OUT/'index.html').resolve().as_uri(),wait_until='load')
         assert page.locator('.paper-view>.manuscript-section').count()==7
-        assert page.evaluate('window.readerTest.sourceCount')==254
+        assert page.evaluate('window.readerTest.sourceCount')==len(load_sources()[0])
         ids=page.locator('[id]').evaluate_all('(els)=>els.map(e=>e.id)')
         assert len(ids)==len(set(ids)),'Duplicate element IDs'
         assert page.locator('h1').inner_text()
@@ -66,6 +66,17 @@ def main():
         assert page.locator('#materials-methods').is_visible()
         assert 'Neural Network' in page.locator('#materials-methods').inner_text()
         page.screenshot(path=str(QA/'reader_methods.png'))
+        if page.locator('#gp-theory').count():
+            gp=page.locator('#gp-theory')
+            assert gp.locator('.display-math').count()==9
+            assert gp.locator('table').count()==1
+            gp.locator('.citation[data-source="Rasmussen2006GPML"]').first.click()
+            assert page.get_by_role('link',name='공개 원문 열기').get_attribute('href').startswith('https://gaussianprocess.org/')
+            assert '[?]' not in gp.inner_text()
+            page.keyboard.press('Escape')
+            page.locator('#gp-theory-sub-4').screenshot(path=str(QA/'reader_gp_kernel.png'))
+            page.locator('#gp-theory-sub-8').screenshot(path=str(QA/'reader_gp_multimodal.png'))
+            results['gp_equations_and_input_comparison_and_citation']=True
         citation=page.locator('.citation').first
         if citation.count():
             assert citation.inner_text().startswith('[')
@@ -117,7 +128,7 @@ def main():
         page.evaluate("window.readerTest.showSource('unmapped-citation-key')")
         assert page.locator('#source-dialog-title').inner_text()
         page.keyboard.press('Escape')
-        results.update({'desktop_sections':7,'source_records':254,'search_and_filters':True,
+        results.update({'desktop_sections':7,'source_records':len(load_sources()[0]),'search_and_filters':True,
                         'compact_citation_labels':True,
                         'citation_dialog':True,'escape_and_focus':True,'empty_state':True,
                         'unknown_citation_state':True,'section_navigation':True})

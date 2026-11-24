@@ -105,6 +105,15 @@ def main():
             'L5는 채점용 레이블로만 쓰인다.', 'L5는 학습·평가의 표적으로 쓰이며 현재 입력으로 제공하지 않는다.')
         appendix['content_markdown']+='\n\nL5는 본 연구에서 사용하는 표기다. 여기서는 이 연산을 후속 시간창 중앙값 표적(future-window median target)이라고 설명하며, 통용되는 고유 명칭으로 제시하지 않는다.'
         appendices=[appendix]
+    gp_path=ROOT/'docs/paper/research_reader/gp_background/section.json'
+    if gp_path.exists():
+        gp=read(gp_path)
+        matches=[n for n in by_id['background']['subsections'] if n['title'].startswith('7.')]
+        assert len(matches)==1
+        # Keep the earlier comparison of time-series models as the next section.
+        matches[0]['title']='8. 시간 의존성을 이용하는 추정 모형의 원리'
+        position=by_id['background']['subsections'].index(matches[0])
+        by_id['background']['subsections'].insert(position,gp)
     counts={sid:sum(len(n.get('content_markdown','')) for n in nodes(s)) for sid,s in by_id.items()}
     assert counts['introduction']>=5000,counts
     assert counts['background']>=5000,counts
@@ -127,7 +136,8 @@ def main():
         volume=str(citation.get('volume',''))
         pages=str(citation.get('pages',''))
         suffix=', '.join(x for x in [str(venue),volume,pages] if x)
-        link=' [DOI](https://doi.org/'+source_record['doi']+').' if source_record['doi'] else ''
+        link=' [DOI](https://doi.org/'+source_record['doi']+').' if source_record['doi'] else (
+            ' [원문]('+source_record['url']+').' if source_record.get('url') else '')
         references.append('[@'+key+'] '+authors+' ('+year+'). *'+title+'*. '+suffix+'.'+link)
     old['references']['content_markdown']='\n\n'.join(references)
     old['references']['status']='본문 인용 문헌 · 출처 감사의 서지정보에서 자동 생성'

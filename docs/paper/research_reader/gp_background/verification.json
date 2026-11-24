@@ -1,0 +1,59 @@
+{
+  "section_characters": 7808,
+  "subsections": 8,
+  "display_equations": 9,
+  "comparison_tables": 1,
+  "citations": [
+    "Friedman2001GreedyFunction",
+    "Rasmussen2006GPML",
+    "Roberts2013GPTimeSeries",
+    "Williams1996GaussianRegression",
+    "chilenski2015",
+    "michoski2024"
+  ],
+  "manuscript_source_records": 258,
+  "source_scope": "GPML chapters2/4/5, Williams original section2, Roberts sections3/4; existing local Chilenski and Michoski reading records. Friedman original fresh access failed; gradient formulation independently crosschecked against official scikit-learn mathematical documentation.",
+  "boosting_crosscheck": "https://scikit-learn.org/stable/modules/ensemble.html#mathematical-formulation",
+  "independent_checks": [
+    "Posterior mean/covariance and LML against primary equations; noise variance vs latent variance distinguished.",
+    "Matérn3/2 form and mean-square differentiability checked against GPML chapter4.",
+    "Existing code unit standardized amplitude, fixed length/noise grid, LML, Cholesky and mean-only return verified.",
+    "T0/TX input division crosschecked with current manuscript methods; no causal physics claim from residual association."
+  ],
+  "unchanged_scientific_sources": [
+    "docs/paper/ppcf/main_ppcf.tex",
+    "docs/paper/ppcf/supp_ppcf.tex",
+    "docs/paper/ppcf_revision/main_ppcf.pdf",
+    "ces_prediction/baselines_interpolation.py",
+    "ces_prediction/experiments/b73_targets/common.py",
+    "docs/paper/b105_merit.json"
+  ],
+  "ui_checks": {
+    "body_numeric_tokens_max": 4,
+    "body_paragraphs_checked": 214,
+    "gp_equations_and_input_comparison_and_citation": true,
+    "bibliographic_note": true,
+    "original_vector_figures": 7,
+    "source_tables_and_figures": 18,
+    "embedded_results_pages": 8,
+    "desktop_sections": 7,
+    "source_records": 258,
+    "search_and_filters": true,
+    "compact_citation_labels": true,
+    "citation_dialog": true,
+    "escape_and_focus": true,
+    "empty_state": true,
+    "unknown_citation_state": true,
+    "section_navigation": true,
+    "appendix_link_opens_definition": true,
+    "mobile_390px_no_overflow": true,
+    "js_errors": [],
+    "automatic_http_requests": [],
+    "offline_passed": true
+  },
+  "reader_sha256": "63bc78ac9dbfe28c7b985b0d1cf2d50099cb5a0c2df3d9de073403497dc684c0",
+  "claude_review_completed": false,
+  "new_fits": 0,
+  "new_evaluations": 0,
+  "gpu_runs": 0
+}

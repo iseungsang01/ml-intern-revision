@@ -1,0 +1,27 @@
+{
+  "completed_claude_review": false,
+  "paid_message_sent": false,
+  "attempts": [
+    {
+      "endpoint": "/messages/count_tokens",
+      "purpose": "full draft preflight",
+      "result": "HTTPError"
+    },
+    {
+      "endpoint": "/messages/count_tokens",
+      "purpose": "minimal diagnostic",
+      "http_status": 400,
+      "error_type": "invalid_request_error"
+    },
+    {
+      "endpoint": "/messages/count_tokens",
+      "purpose": "redacted reason classification",
+      "http_status": 400,
+      "reason": "insufficient_credit"
+    }
+  ],
+  "secrets_or_error_body_saved": false,
+  "new_paid_cost": 0,
+  "draft_and_source_metadata_prepared_for_review": true,
+  "no_automatic_paid_retry": true
+}
