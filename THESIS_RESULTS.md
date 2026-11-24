@@ -585,3 +585,38 @@ Registered statements: {"S1": {"holds": true, "quantity": "all-unit VAL resource
 All64 incumbent-relative TEST skill points are negative;28 cluster intervals exclude zero negatively. D10/F is negative excluding zero in every fixed unit. Conditional one-unit/one-init exploratory result: replacement merit was not established over the GP-residual incumbent; no architecture-wide inferiority or new physical conclusion. Legacy LSTM+correction comparison remains unavailable under this manifest contract. Full estimates/intervals in docs/paper/b105_merit.json/md, result in PROJECT_KNOWLEDGE.md section4.77.
 
 Official Fable post review completed(end_turn). Original prose is preserved in b105_claude.md with root correction: API overview32cells is not the complete64 incumbent comparisons. Operational merit was not measured; gate-redesign advice is not executed and does not change original criteria. Additional scientific fits remain unallocated; current GPU0.
+
+# B.109 completion and B.110 residual diagnostic (2026-11-24)
+
+B109's observer completed retrieval and independent checkpoint/optimizer/history
+audit: nine T4 paths stopped at the inherited patience rule, eleven completed
+paths retained, twenty selected checkpoints available. See b109_fit_audit.json/md.
+No final LSTM+post-correction MSE was produced by that training batch.
+
+Author requested problem decomposition and continuation. B110 registration and
+executable sources were committed/pushed as d370bd9 before CPU export or cloud
+inference. CPU original/portable prefix equality, TRAIN-statistics binding,
+manifest disjointness, checkpoint hashes and exact VAL row coverage passed.
+The first connection had expired; official MCP reconnected to a fresh T4.
+Initial diagnostic run response timed out after execution, recovered through
+read-only get_cells output; no scientific launch/fit was duplicated. Delivered
+private anonymous VAL bundle, verified archive SHA, inferred all four outer
+LSTMs on T4, and ran the frozen cloud-only bootstrap readout. Remote exit0;
+retrieved result archive hash verified. No new fits, TEST scoring, local GPU
+work or Claude calls. Existing89 tests passed and record source check passed.
+
+Independent audit110 recomputed common rows, bias/centered-MSE identity, paired
+points and all cluster/discharge intervals for140 model/group cells. Public
+docs/paper/b110_residuals.json/md preserve all models/groups,20000 resamples,
+pointwise95% intervals and zero exclusion. Entire VAL raw LSTM/TCN35 contrasts
+have positive skill excluding zero in all four designs; raw LSTM versus fair
+specialized GP+fast has negative skill excluding zero in all four designs.
+TCN35's loss increase versus that reference also occurs in low-change strata.
+No architecture-wide, fast-specific, causal physics, final post-correction or
+scenario merit conclusion. VAL checkpoints are selected; this is exploratory.
+
+The next required work is an executable separate Colab evaluation registration
+linking the twenty selected models to honest OOF corrections and all scenarios,
+before allocating new neural candidates. docs/paper/b110_next_steps.md records
+this order; local GPU remains paused. Current B110 artifacts are completed,
+not a live waiting queue.

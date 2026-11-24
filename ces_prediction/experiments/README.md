@@ -41,7 +41,7 @@ B.100 (`PREREGISTRATION_B100.md`, B.94 addendum5): `b100_eval_resume/resume100.p
 
 ## The current line (one data definition D1; B.70 onward)
 
-B110: registered D10/F VAL-only residual diagnostic after B109's twenty selected
+B110: complete/audited D10/F VAL-only residual diagnostic after B109's twenty selected
 paths. b110_residuals/export110.py -> cloud run110.py -> independent audit110.py
 -> docs/paper/b110_residuals.json/md. No new fits/TEST; exploratory VAL reuse.
 Delivery: research/colab_b110_operator.py; local GPU stays paused.
