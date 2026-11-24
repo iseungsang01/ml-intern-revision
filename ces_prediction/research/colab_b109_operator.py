@@ -1,9 +1,11 @@
 """Registered T4 training delivery and bounded aggregate/checkpoint retrieval."""
-import argparse,base64,hashlib,json,time
+import argparse,base64,hashlib,json,sys,time
 from pathlib import Path
 from colab_t4_operator import call,cells,new_cell,update_run,execute,gpu_check
 ROOT=Path(__file__).resolve().parents[2];CON=ROOT/'data/.colab_connection';OUT=ROOT/'data/colab_b109';STATE=CON/'b109_remote.json'
-def save(p,z):t=p.with_suffix('.tmp');t.write_text(json.dumps(z,indent=2),encoding='utf8');t.replace(p)
+sys.path.insert(0,str(ROOT/'ces_prediction/experiments/b93_gpu'))
+from atomic93 import save_json
+def save(p,z):return save_json(p,z)
 def start():
     assert not STATE.exists(),'Prior B109 attempt; inspect, no duplicate launch';gpu=gpu_check();archive=OUT/'ces_b109_bundle.zip';v=json.loads((OUT/'export_verification.json').read_text());raw=archive.read_bytes();assert hashlib.sha256(raw).hexdigest()==v['archive_sha256']
     root='/content/ces_b109';transfer=new_cell(f"from pathlib import Path\nimport torch\nassert torch.cuda.is_available() and 'T4' in torch.cuda.get_device_name(0)\nPath({root!r}).mkdir(exist_ok=False)\nprint('B109_READY')");assert 'B109_READY' in execute(transfer)
