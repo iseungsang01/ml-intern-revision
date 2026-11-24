@@ -1,5 +1,24 @@
 # B111: full LSTM post-correction/scenario comparison
 
+**AWAITING COLAB KERNEL RESPONSE,2026-11-24 16:31KST.** No B111 scientific
+inference or post fits have started. The original transfer's last acknowledged
+size is72351744bytes; run_code_cell then timed out, while notebook read/edit
+still works. A short inspection saw the prior chunk's output rather than a
+fresh kernel response. Addenda1/2 preserve both attempts, register exact-prefix
+1MiB recovery, and reject stale output fields. Sources000883c,4b1fda2 pushed
+before use. Neither failed inspection accepted a prefix or wrote new bytes.
+Current GPU/workspace state needs fresh acknowledgement; do not assume it
+was lost or reset it. The author has been asked to inspect the runtime and
+manually run the harmless B111_KERNEL_PROBE_ONLY cell. Observer task remains
+Ready,not started; do not run another operator start or fit locally.
+
+Numerical preflight also passed on512 real TRAIN rows of an already stored
+HGB model: sklearn prediction, producer numeric-tree traversal and independent
+tree traversal agree. No new fit or TEST score in that check. All89 tests pass.
+After kernel execution is restored: run the registered recovery with explicit
+--resume-transport; accept only valid T4/no-launch/prefix-SHA evidence, finish
+the exact archive, then start Colab_B111_watch only once poll_cell exists.
+
 **EXPORTED / UPLOADING,2026-11-24 16:22KST.** Complete executable code and
 registration070896a were pushed before export. Real CPU checks passed:
 23065 cached D10 segments and432 original-builder segments are bit-identical
