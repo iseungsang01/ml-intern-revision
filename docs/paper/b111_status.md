@@ -1,6 +1,16 @@
 # B111: full LSTM post-correction/scenario comparison
 
-Preparing the complete executable Colab workflow, before export or new fits.
+**EXPORTED / UPLOADING,2026-11-24 16:22KST.** Complete executable code and
+registration070896a were pushed before export. Real CPU checks passed:
+23065 cached D10 segments and432 original-builder segments are bit-identical
+to the shared representation; all20 original/portable model prefixes agree.
+Private archive149990972bytes,SHA256
+eeedc688f1e48222938072b741223f0c3703c880d27a6a8cdc7b159cfd0ab334.
+T4 is verified; scientific inference/post fitting has not started at this
+snapshot because the official MCP archive transfer is still in progress.
+The prepared hidden Colab_B111_watch task must start only after the operator
+has written poll_cell and launched the remote frozen controller.
+
 Uses twenty selected B109-audited LSTM checkpoints without retraining them.
 Sixteen held-file replays -> eight HGB15 OOF post fits -> four outer replays
 over eight scenarios ->32 common-row F MSE cells -> independent audit.
