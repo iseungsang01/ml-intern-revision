@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B.107 학습 연장: `experiments/PREREGISTRATION_B107.md` → `experiments/b107_patience/pipeline107.py`가 기존 B106 GPU child를 유지하며 대기열을 인수하고, 시간 제한 경로는 optimizer/scheduler/검증 이력을 복원해 patience6까지 잇는다. 미시작 경로도 같은 종료 기준을 적용하며, 모두 충족한 checkpoint만 기존 B106 추론·OOF 후단·동일행 MSE·독립 audit에 연결한다. 상태 `docs/paper/b107_status.md`, 결과 `b107_lstm.json/md`, ignored 근거 `data/.b107/`; 새 Claude/API 호출 없음. 원래 난수 상태 미저장으로 dropout bitwise 재현은 주장하지 않는다.
+
 B.106 LSTM 비교: `experiments/PREREGISTRATION_B106.md` → `experiments/b106_lstm/pipeline106.py`가 원래 SeqCESLSTMv2 온도 경로의 전체/OOF20학습과 15특징 후단 보정 두 정책을 학습한다. 같은 F 평가 행에서 GP+fast/이력-only 부스팅·GP·hold·저장 TCN의 MSE를 먼저 비교하고 독립 audit 뒤 `docs/paper/b106_lstm.json/md`를 게시한다. 상태 `b106_status.md`, 근거 ignored `data/.b106/`; Claude API 호출 없음. 후보 선정의 한계와 기여 방향은 `docs/paper/research_direction_after_tcn_20261124.md`.
 
 TCN MSE 원인 분석: `ces_prediction/research/b105_cause_review_20261124.py`는 기존 B105 집계·학습 곡선·코드만 공식 Fable 상세 분석과 Opus 독립 반론에 제공해 `docs/paper/b105_cause_review_20261124.md`를 만든다. 보고서 앞의 작업자 교정이 모델 원문보다 우선하며 G=GP/GRU namespace 혼동과 행/군집 가중을 바로잡았다. 새 적합·잔차 채점·TEST 선택은 없고 후속 진단은 미실행이다.

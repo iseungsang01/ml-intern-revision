@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.107 preparation: `PREREGISTRATION_B107.md`, `b107_patience/` amend B106's arbitrary one-hour stopping with validation patience across all twenty trajectories. Original GPU children stay intact; limited paths restore optimizer/scheduler/history, unstarted paths train fresh; four global GPU slots. Existing B106 calibration/inference/statistical auditor consume only patience-qualified selected paths. Sources/registration must be pushed before handoff/new fits. State `docs/paper/b107_status.md`; local `data/.b107/`. No Claude/API calls; original RNG limitation declared.
+
 B.106 RUNNING2026-11-24 10:19KST: sources4f7bd65/addendumf3a233e preceded the effective preparation and all fits. Real input/original-branch/OOF checks, CUDA smoke and four longest-batch backward probes passed; four outer LSTMs dispatched10:18:37, sixteen OOF fits pending. Independent local watcher and durable heartbeat active; frozen queue continues to CPU corrections, all-scenario MSE and independent audit. No Claude/API calls or automatic architecture search. See b106_status.md; preparation note below is historical.
 
 B.106 preparation: `PREREGISTRATION_B106.md`, `b106_lstm/` train the original LSTM temperature branch and honest file-OOF post-corrections on four B105 outer units. F-only D10 training, frozen replay of eight rules; 4 full+16 OOF GPU fits, then D10-only/mixed post policies. MSE-first common-row GP/boosting/TCN comparison and independent audit. No Claude calls after author's unavailability instruction. State `docs/paper/b106_status.md`, local `data/.b106/`; no fit before source/registration commit.
