@@ -11,6 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B.106 preparation: `PREREGISTRATION_B106.md`, `b106_lstm/` train the original LSTM temperature branch and honest file-OOF post-corrections on four B105 outer units. F-only D10 training, frozen replay of eight rules; 4 full+16 OOF GPU fits, then D10-only/mixed post policies. MSE-first common-row GP/boosting/TCN comparison and independent audit. No Claude calls after author's unavailability instruction. State `docs/paper/b106_status.md`, local `data/.b106/`; no fit before source/registration commit.
+
 B.104 (`PREREGISTRATION_B104.md`): COMPLETE2026-11-24 01:11KST. `b104_budget/` ran six matched SHORT/LONG TCN trajectories with four global workers; source8dd55a6 preceded GPU work. All six fits exited normally,24 predictions and four endpoint cells passed independent audit; Fable/Opus post reviews completed. All FAST checkpoint pairs are identical; only HISTORY1701 changed. Published `docs/paper/b104_budget.json/md`, `b104_claude.md`; status `b104_status.md`, local final proof `data/.b104/lead_completion.json`. No next fit launched.
 
 B.105 COMPLETE2026-11-24 04:30KST: `PREREGISTRATION_B105.md`, `b105_merit/`, source1aee77b before fits. Four35-channel TCN fits and64 internal-TRAIN CPU references exited0; all-unit VAL gate passed, conditional TEST completed. Independent audit512 pairs/20,000 draws and Fable post review completed. S1=True,S2=False,S3=False; no replacement merit established over incumbent. Published `docs/paper/b105_merit.json/md`, `b105_claude.md`; state `b105_status.md`, local `data/.b105/`. No additional fits queued. Legacy LSTM correction remains unavailable under verified manifests.

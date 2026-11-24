@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B.106 LSTM 비교: `experiments/PREREGISTRATION_B106.md` → `experiments/b106_lstm/pipeline106.py`가 원래 SeqCESLSTMv2 온도 경로의 전체/OOF20학습과 15특징 후단 보정 두 정책을 학습한다. 같은 F 평가 행에서 GP+fast/이력-only 부스팅·GP·hold·저장 TCN의 MSE를 먼저 비교하고 독립 audit 뒤 `docs/paper/b106_lstm.json/md`를 게시한다. 상태 `b106_status.md`, 근거 ignored `data/.b106/`; Claude API 호출 없음. 후보 선정의 한계와 기여 방향은 `docs/paper/research_direction_after_tcn_20261124.md`.
+
 TCN MSE 원인 분석: `ces_prediction/research/b105_cause_review_20261124.py`는 기존 B105 집계·학습 곡선·코드만 공식 Fable 상세 분석과 Opus 독립 반론에 제공해 `docs/paper/b105_cause_review_20261124.md`를 만든다. 보고서 앞의 작업자 교정이 모델 원문보다 우선하며 G=GP/GRU namespace 혼동과 행/군집 가중을 바로잡았다. 새 적합·잔차 채점·TEST 선택은 없고 후속 진단은 미실행이다.
 
 B.105 실행: `experiments/PREREGISTRATION_B105.md` → `experiments/b105_merit/pipeline105.py`가 새35채널 TCN·동일 내부 TRAIN 회귀기·공통 VAL 게이트·조건부 TEST·독립 audit를 실행한다. 모델/학습 adapter·CPU 회귀기·실자료 검사·예측·통계·독립 검산·로컬 감시가 같은 폴더에 있고, `research/review_b105.py`가 제한된 공식 Fable 검토를 연결한다. 상태 `docs/paper/b105_status.md`, 최종 `b105_merit.json/md`, `b105_claude.md`, ignored 근거 `data/.b105/`. 기존 동결 코드/결과는 보존한다.
