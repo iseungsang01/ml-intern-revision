@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+B111 proxy독립 전달: `PREREGISTRATION_B111_ADDENDUM5.md` → `research/prepare_b111_standalone.py`가 private 한셀GPU노트북을 생성한다. 원본zip업로드/검증→frozen workflow→정상종료뒤receipt추가·결과다운로드를수행한다. `research/watch_b111_download.py`는지정Downloads/b111_results.zip만receipt검증후private로복사→원래독립CPUaudit한다. 과학코드/학습조건변경이나로컬fit없음.
+
 B111 한 셀 실행: `PREREGISTRATION_B111_ADDENDUM4.md` → `research/prepare_b111_manual.py`가 현재 scratchpad의 소유 셀과 private `COLAB_B111.ipynb`/`COLAB_B111_CELL.py`를 준비한다. Colab 기본 업로드로 정확한 기존zip만 전달·검증한 뒤 frozen controller를 실행한다. `research/wait_b111_manual.py`는 준비 셀의 정확한 source/attempt/SHA launch표지만 읽어 연결하고 기존 observer/audit를 호출한다. 대기 중 kernel실행·학습재시도 없음.
 
 B111 native 전달: `PREREGISTRATION_B111_ADDENDUM3.md`의 Colab 기본 Files 업로드 → `research/launch_uploaded_b111.py`가 실제T4·기존archive SHA·launch부재를 확인해 같은 frozen controller를 시작한다. 기존 MCP 셀 반복전송 실패 기록은 유지하고 입력/학습/통계 조건을 바꾸지 않는다.
