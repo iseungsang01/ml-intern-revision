@@ -1,5 +1,28 @@
 # B107: LSTM continuation to validation patience
 
+**PAUSED BY AUTHOR2026-11-24; verified12:46KST.** The author explicitly requested
+stopping local experiments while considering Colab. Eleven selected paths had
+met validation patience; four active B107 paths were stopped nonzero under
+explicit author authorization and five pending paths were not dispatched.
+No final MSE/merit result was produced. GPU process list is empty,used0MiB,
+utilization0%; training/watch scheduled tasks are Ready,not Running.
+
+Preserved resumable evidence: ignored `data/.b107/author_stop_20261124_1244/`.
+For each interrupted path, `latest_preserved.pt` contains validated model,
+optimizer,scheduler and CPU/CUDA/Python/NumPy RNG; `validated_history.json`
+matches its epoch/update count. Saved validated epochs20,12,6,2 for
+V4a__inner1,V1_r2_k0__inner2,V2_s1_k0__inner2,V3_q3__inner2 respectively.
+Do not treat intentional nonzero exits as completed fits or retry them with
+the old fresh/outer-resume entry point. A future authorized continuation must
+explicitly restore these preserved B107 states and histories.
+
+Stop controller: `ces_prediction/research/stop_local_b107_20261124.py` reads
+owned process/config identities,preserves consistent atomic checkpoints and
+then stops only these local jobs. Stop evidence `data/.b107/author_stop.json`.
+No automatic resume; no Colab job has been started. B108 export/benchmark
+sources remain uncommitted,unrun drafts; official Colab MCP/CLI discovery is
+not an authenticated connection. The live history below predates this pause.
+
 Live2026-11-24 12:10KST: registered controller is running. Sources a68c784,
 4a77b6b and702acf6 were committed/pushed before successful handoff or new fits.
 All89 existing tests passed. Actual cache/optimizer-moment/scheduler restoration
