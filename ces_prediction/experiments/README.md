@@ -11,6 +11,12 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
+B111 full comparison: b111_full_compare/ exports shared exact inputs and uses
+B109's20 checkpoints for held OOF inference,eight Colab CPU HGB post fits,
+all32 F scenario cells and independent audit. PREREGISTRATION_B111.md;
+research/colab_b111_operator.py and watch_colab_b111.py own delivery/observation.
+No local scientific fits/GPU work. State docs/paper/b111_status.md.
+
 B.109 preparation: `PREREGISTRATION_B109.md`, `b109_colab_train/` export anonymous exact TRAIN/VAL active inputs and optimizer/RNG/history for four interrupted paths plus five fresh OOF paths. Eleven complete paths retained. Actual B108-qualified T4/cuDNN,four admitted workers,patience6; no local GPU work or TEST/correction fitting. `research/colab_b109_operator.py` controls official MCP delivery/poll/retrieval; state b109_status.md,private data/colab_b109. Commit/push before export/new fits.
 
 B.108 Colab T4 qualification: `PREREGISTRATION_B108.md`, `b108_colab/` export real TRAIN/VAL-only anonymous timing batches and fixed original Ti-branch weights, independently check portable CPU outputs/loss/gradients, and create a private notebook/archive. Remote 1/4-worker native/cuDNN,float32/dropout.1 timing probes require normal exits; no TEST/MSE/model selection or local GPU fits. `research/colab_mcp_bridge.py` connects the official Colab MCP through an isolated environment. Instructions `docs/paper/b108_colab.md`; ignored payload `data/colab_b108/` and connection `data/.colab_connection/`.
