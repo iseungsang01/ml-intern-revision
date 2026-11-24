@@ -11,7 +11,7 @@ CASES=tuple(u+'__outer' for u in UNITS)+tuple(u+'__inner'+str(k) for k in range(
 sha=PREV.sha;digest=PREV.digest;load=PREV.load
 def save(p,z):return save_json(Path(p),z)
 def sources():
-    paths=[*HERE.glob('*.py'),HERE.parent/'PREREGISTRATION_B106.md']
+    paths=[*HERE.glob('*.py'),HERE.parent/'PREREGISTRATION_B106.md',HERE.parent/'PREREGISTRATION_B106_ADDENDUM1.md']
     for p in paths:PREV.OLD.committed(p)
     return {p.relative_to(ROOT).as_posix():sha(p) for p in paths}
 def prov():return load(CACHE/'provenance.json')

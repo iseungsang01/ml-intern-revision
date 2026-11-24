@@ -5,6 +5,7 @@ import common106 as C
 import data88 as D
 from model106 import create_model
 from prepare92 import batches
+from runtime92 import configure
 
 def npz(p):
     with np.load(p,allow_pickle=False) as z:return {k:z[k] for k in z.files}
@@ -12,7 +13,7 @@ def main(split):
     C.guard();C.inputs_guard();assert C.load(C.CACHE/'fit_checks.json')['all_pass']
     if split=='test':assert C.load(C.CACHE/'correction_checks.json')['all_pass']
     G,R=C.M.load_sources();lookup=np.full(len(G['time']),-1,np.int64);lookup[R['gi']]=np.arange(len(R['gi']))
-    rt=C.runtime();torch.set_num_threads(rt['threads'])
+    rt=C.runtime();configure(rt)
     cases=[c for c in C.CASES if ('__inner' in c)==(split=='held')]
     for case in cases:
         rd=C.rd(case);manifest=C.load(rd/'manifest.json');stats=C.load(rd/'stats.json');model=create_model('LSTM_F',rt,C.SEED).to('cuda')
