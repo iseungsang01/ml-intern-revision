@@ -6,8 +6,8 @@ The selected T4 setting had to be applied with Save; the earlier CPU checks
 were real old-backend observations,not evidence that the author had failed
 to select T4. No new B111 OOF inference,post fit or TEST readout has launched.
 No upload through the new native route has started. All20 selected checkpoints
-and the exact private archive remain local. Colab_B111_watch is manual/Ready;
-do not start it,upload or launch until the author explicitly resumes.
+and the exact private archive remain local. Colab_B111_watch is disabled;
+do not enable/start it,upload or launch until the author explicitly resumes.
 Native upload/launch addendum3 and helper were committed as e1a4275 before
 use. The MCP bridge's registered task limit was extended to8h without a
 restart to avoid losing results during this work; it is a connector,not an
