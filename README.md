@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Colab 전송 복구: ces_prediction/research/recover_colab_b109.py는 본 학습 전 원격 작업폴더 소실을 기록하고 같은 archive의 검증된 byte-prefix부터 전달한다. PREREGISTRATION_B109_ADDENDUM2.md에 따른 전송 전용 복구이며 launch 중복 방지·전체 SHA 확인 후에만 기존 frozen trainer를 시작한다. 과학적 학습 재시도나 로컬 GPU 재개는 하지 않는다.
+
 Colab 학습 감시/회수: `ces_prediction/research/watch_colab_b109.py`는 원격 B109 상태만 읽고 알림·완료 archive 회수를 수행하며 학습을 새로 시작/재시도하지 않는다. `research/audit_colab_b109.py`는 회수한 checkpoint/optimizer/history/VAL 산술/정상 종료를 CPU에서 별도 검산해 `docs/paper/b109_fit_audit.json/md`와 private `data/colab_b109/selected_paths.json`(완료20경로)을 만든다. B109_ADDENDUM1이 이 운영 검증을 고정한다. TEST/후단 적합은 포함하지 않는다.
 
 Colab 본 학습 연장: `experiments/PREREGISTRATION_B109.md` → `experiments/b109_colab_train/export109.py`가 중단4/미시작5 경로의 동일 TRAIN/VAL·상태를 익명 private 묶음으로 만들고 `train109.py`가 T4/cuDNN에서 patience6까지 학습한다. 완료11은 유지한다. `research/colab_b109_operator.py`가 공식MCP로 전달·진행 읽기·checkpoint 회수를 수행한다. 상태 `docs/paper/b109_status.md`, private `data/colab_b109/`; 로컬GPU재개/TEST/후단새적합은 없다.
