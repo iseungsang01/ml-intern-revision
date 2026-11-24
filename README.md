@@ -8,6 +8,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 ## 1. 연구의 줄기
 
+Colab T4 준비: `experiments/PREREGISTRATION_B108.md` → `experiments/b108_colab/export108.py`가 실자료 TRAIN/VAL·고정 가중치로 비공개 실행 묶음과 노트북을 만든다. `portable108.py` 원분기/목적함수 CPU 대조 후 `probe108.py`/`run108.py`로 1/4병렬 cuDNN/native 경로의 짧은 속도·정상 종료만 확인한다. 새 MSE/모델 선정이 아니다. `ces_prediction/research/colab_mcp_bridge.py`는 공식 Colab MCP를 분리된 도구 환경에서 호스팅해 직접 노트북 전달을 연결한다. 연결/사용법 `docs/paper/b108_colab.md`, private 결과 `data/colab_b108/`, 연결 상태 `data/.colab_connection/`. `.env`/계정 키/TEST 데이터 미포함, 로컬 GPU 학습 재개 없음.
+
 Reader model names: `ces_prediction/research/thesis_reader/model_names.py` supplies separate GP/TCN display namespaces to `integrate_longform.py` and `build_reader.py`. The methods mapping table and each original exhibit's legend distinguish GP-Boost-CES/GP-Boost-Multi from TCN-CES/TCN-Multi while preserving frozen keys and original PDFs. `audit_model_names.py` checks unchanged numerical/citation content, retained scientific sources and UI → `docs/paper/research_reader/model_naming.json`. `PAPER_DESIGN.md` records the author-approved display-name convention.
 
 로컬 실험 일시 중단(2026-11-24): 저자 지시 → `ces_prediction/research/stop_local_b107_20261124.py`가 B107 프로세스 신원과 검증 checkpoint를 확인하고 상태를 보존한 뒤 학습/큐를 중단했다. 증거 ignored `data/.b107/author_stop.json`, 재개용 checkpoint·이력 `.b107/author_stop_20261124_1244/`; 상태 `docs/paper/b107_status.md`. 자동 재개하지 않으며 Colab 실행은 아직 시작하지 않았다.
