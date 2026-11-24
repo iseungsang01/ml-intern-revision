@@ -10,7 +10,7 @@ CASES=OLD.CASES;UNITS=OLD.UNITS;RULES=OLD.RULES;TRAIN_RULES=OLD.TRAIN_RULES;SEED
 EPOCH_CAP=400;CHILD_SECONDS=86400;SUITE_SECONDS=259200
 def save(p,z):return save_json(Path(p),z)
 def sources():
-    pp=[*HERE.glob('*.py'),HERE.parent/'PREREGISTRATION_B107.md',HERE.parent/'PREREGISTRATION_B107_ADDENDUM1.md',HERE.parent/'b99_recovery/monitor99.py']
+    pp=[*HERE.glob('*.py'),HERE.parent/'PREREGISTRATION_B107.md',HERE.parent/'PREREGISTRATION_B107_ADDENDUM1.md',HERE.parent/'PREREGISTRATION_B107_ADDENDUM2.md',HERE.parent/'b99_recovery/monitor99.py']
     for p in pp:OLD.PREV.OLD.committed(p)
     return {p.relative_to(ROOT).as_posix():sha(p) for p in pp}
 def prov():return load(CACHE/'provenance.json')

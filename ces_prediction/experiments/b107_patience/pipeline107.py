@@ -33,7 +33,7 @@ def handoff():
             if not (p/'child_start.json').exists() or (p/'process_exit.json').exists():continue
             m=C.load(p/'child_start.json');o=Observed(m['pid'],m['birth'])
             active.append({'observer':o,'path':p,'case':case,'origin':'B106','started':m['started'],'pid':m['pid'],'birth':m['birth'],'log':(p/'process.log').relative_to(C.ROOT).as_posix()})
-        script=f"@(Get-CimInstance Win32_Process -Filter 'ParentProcessId={owner.pid}' | Select-Object -ExpandProperty ProcessId) | ConvertTo-Json -Compress"
+        script=f"@(Get-CimInstance Win32_Process -Filter 'ParentProcessId={owner.pid}' | Where-Object {{$_.Name -ne 'conhost.exe'}} | Select-Object -ExpandProperty ProcessId) | ConvertTo-Json -Compress"
         r=D.powershell(script);assert r.returncode==0,r.stderr;children=json.loads(r.stdout) if r.stdout.strip() else []
         if isinstance(children,int):children=[children]
         assert set(children)<={e['pid'] for e in active},'Unaccounted child of original queue'
