@@ -25,7 +25,7 @@ def handoff():
     owner=Observed(q['pid'],q['birth'],0x100000|0x1000|0x800|1);assert owner.poll() is None
     nt=ctypes.WinDLL('ntdll');nt.NtSuspendProcess.argtypes=[ctypes.c_void_p];nt.NtSuspendProcess.restype=ctypes.c_long
     nt.NtResumeProcess.argtypes=[ctypes.c_void_p];nt.NtResumeProcess.restype=ctypes.c_long
-    owner.k.TerminateProcess.argtypes=[ctypes.c_void_p,ctypes.c_uint];suspended=False;killed=False;active=[]
+    suspended=False;handed=False;active=[]
     try:
         assert nt.NtSuspendProcess(owner.handle)==0;suspended=True
         for case in C.CASES:
@@ -41,22 +41,28 @@ def handoff():
                 'adopted':[{k:e[k] for k in ('case','origin','started','pid','birth','log')} for e in active],
                 'reason':'Author-authorized removal of one-hour scientific stopping cap; GPU children left running unchanged.'}
         C.save(C.CACHE/'handoff_intent.json',record)
-        assert owner.k.TerminateProcess(owner.handle,0xB107);killed=True
-        for _ in range(100):
-            if owner.poll() is not None:break
-            time.sleep(.05)
-        assert owner.poll() is not None
-        C.save(C.CACHE/'handoff.json',{**record,'original_queue_exit':owner.poll(),'gpu_children_terminated':0})
-        C.save(C.DATA/'.b106/handoff_to_b107.json',{'time':time.time(),'replacement':str(C.CACHE),'reason':record['reason'],'original_queue_exit':owner.poll(),'not_a_scientific_fit_failure':True})
+        C.save(C.CACHE/'handoff.json',{**record,'original_queue_state':'suspended until adopted children finish','gpu_children_terminated':0})
+        C.save(C.DATA/'.b106/handoff_to_b107.json',{'time':time.time(),'replacement':str(C.CACHE),'reason':record['reason'],'original_queue_state':'suspended; GPU children preserved','not_a_scientific_fit_failure':True})
         (C.PAPER/'b106_status.md').write_text('# B106 orchestration superseded by B107\n\nAuthor requested continuation to validation patience. Original GPU children are adopted without stopping; new control/evaluation is under b107_status.md and data/.b107. Original code/configs/checkpoints remain preserved. Original supervisor queue exit is an intentional orchestration handoff, not a fit failure. No final B106 merit result is published.\n',encoding='utf8')
         D.powershell("Stop-ScheduledTask -TaskName 'B106_LSTM_watch' -ErrorAction SilentlyContinue")
-        return active
+        handed=True;return active,owner
     except BaseException:
         for e in active:e['observer'].close()
         raise
     finally:
-        if suspended and not killed:nt.NtResumeProcess(owner.handle)
-        owner.close()
+        if not handed:
+            if suspended:nt.NtResumeProcess(owner.handle)
+            owner.close()
+
+def retire_original(owner):
+    owner.k.TerminateProcess.argtypes=[ctypes.c_void_p,ctypes.c_uint]
+    assert owner.poll() is None and owner.k.TerminateProcess(owner.handle,0xB107)
+    for _ in range(100):
+        if owner.poll() is not None:break
+        time.sleep(.05)
+    assert owner.poll() is not None
+    C.save(C.CACHE/'original_queue_retired.json',{'time':time.time(),'pid':owner.pid,'birth':owner.birth,'returncode':owner.poll(),'all_adopted_children_finished':True})
+    owner.close()
 
 def spawn(case,mode):
     p=C.new_rd(case);p.mkdir(parents=True,exist_ok=True);assert not (p/'child_start.json').exists()
@@ -66,7 +72,7 @@ def spawn(case,mode):
     e={'proc':proc,'stream':log,'path':p,'case':case,'mode':mode,'origin':'B107','started':time.time(),'pid':proc.pid,'birth':process_identity(proc.pid)['birth'],'log':(p/'process.log').relative_to(C.ROOT).as_posix()}
     C.save(p/'child_start.json',{k:e[k] for k in ('case','mode','origin','started','pid','birth','log')});return e
 
-def group(active):
+def group(active,owner):
     selected={};pending=[];failure=None
     def select_original(case):
         r=C.OLD.verify_run(case)
@@ -78,6 +84,7 @@ def group(active):
         if case in adopted:continue
         if (C.OLD.rd(case)/'process_exit.json').exists():select_original(case)
         else:assert not (C.OLD.rd(case)/'child_start.json').exists();pending.append((case,'fresh'))
+    if not any(e['origin']=='B106' for e in active):retire_original(owner);owner=None
     while active or pending:
         assert time.time()<C.load(C.CACHE/'suite_clock.json')['deadline'],'Emergency suite guard: incomplete'
         for e in list(active):
@@ -99,6 +106,7 @@ def group(active):
             finally:
                 if e['origin']=='B106':e['observer'].close()
                 active.remove(e)
+        if owner is not None and not any(e['origin']=='B106' for e in active):retire_original(owner);owner=None
         if failure:pending=[]
         pending.sort(key=lambda x:(0 if x[1]=='resume' and x[0].endswith('__outer') else 1,C.CASES.index(x[0])))
         while pending and len(active)<4 and not failure:
@@ -123,7 +131,7 @@ def step(action,gpu=False,timeout=7200):
 
 def run():
     status('readiness');step('readiness',timeout=1800)
-    status('handoff');active=handoff();group(active)
+    status('handoff');active,owner=handoff();group(active,owner)
     for action,gpu in [('fits',False),('held',True),('correction_fit',False),('test',True),('correction_test',False),('readout',False),('audit',False)]:
         status(action);step(action,gpu)
     a=C.load(C.CACHE/'audit.json');assert a['all_pass'] and a['report_sha256']==C.sha(C.CACHE/'readout.json')
