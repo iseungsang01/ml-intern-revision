@@ -630,3 +630,16 @@ Registered before execution; frozen scientific sources unchanged. Standalone Col
 ## B.112 complete: matched scalar direct/residual learning (2026-11-25)
 
 Pre-registered TEST-informed exploratory follow-up to B111; addenda preserve two failed exports and exact factored/native delivery on the existing B111 T4. All24MLP/eightHGB fits and32 scenario cells completed normally. Receipt-bound result independently audited: original input/split roles, TRAIN-only normalization, portable MLP and tree predictions, paired cluster/discharge arithmetic. Sources docs/paper/b112_comparison.json/md, timing/attempts b112_status.md. R1/R2/R3 not established. Every fresh-history residual/direct skill interval includes zero; matched HGB contrast has mixed direction across designs. No new estimator adoption or physical identification. A matched comparison on unused observations could reverse unfavorable conclusions. No local fits/GPU/pytest/Claude calls.
+
+
+## B.113 local GPU CatBoost (2026-11-26)
+
+Registration/source d11898f pushed before TRAIN-only smoke. RTX5060: smoke10trees/512TRAIN rows normal; independent tree replay exact. All24full GPU fits normal, all32TEST cells completed, independent audit all_pass and portable prediction max absolute difference0. No retries. Fixed1000trees,depth6,lr.03; no VAL selection. R1/R2/R3 all false.
+
+로컬 GPU에서 동일한 기존 스칼라 입력·학습 행·가용 조건 혼합을 사용해 CatBoost 직접 회귀와 GP 잔차 회귀를 적합했다. 모든 초기화와 검증 설계를 보고했고, 입력·분할·TRAIN 가중치·모델 해시와 독립 JSON 트리 예측 재현, 전체 오차·paired 군집 및 방전 구간 계산이 통과했다. 상세 점추정과 구간은 원천 JSON과 표를 따른다.
+
+최신 CES 조건에서 잔차형과 직접형 모두 기존 GP+fast 대비 MSE 감소율의 점추정이 모든 설계에서 음수였다. 잔차형의 무작위 파일·시간순·마지막 블록 설계에서는 군집 구간도 영을 제외하는 음수였고, 군집 분할에서는 영을 포함했다. 동일 지원 HGB 대비 일부 조건의 양의 구간은 있으나 모든 설계의 일관된 증가라는 등록 문장은 성립하지 않았다. 현행 estimator 교체 근거로 쓰지 않는다.
+
+이는 기존 TEST를 재사용한 고정 예산·설정의 탐색 비교다. 더 큰 탐색의 성능 상한, 알고리즘 계열의 불가능성, 독립 확증 또는 실시간 지연을 입증하지 않는다. 사용하지 않은 관측에서 예산·입력·표적을 맞춘 비교가 결론을 뒤집을 수 있다. GPU 학습을 완료했고 추가 적합은 대기열에 없다. Claude 설계 검토는 인증 오류로 완료되지 않았다.
+
+Source: docs/paper/b113_comparison.json/md; live/exit receipts data/.b113_workflow; all raw inputs/models/estimates ignored data/.b113. Tests89passed; bounded Claude request HTTP401, no completed advice. No further fits queued.
