@@ -11,10 +11,13 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
-B111 full comparison: b111_full_compare/ exports shared exact inputs and uses
+B111 full comparison COMPLETE / independent audit passed (2026-11-25).
+Outputs docs/paper/b111_comparison.json/md, recorded in PROJECT_KNOWLEDGE.md.
+b111_full_compare/ exports shared exact inputs and uses
 B109's20 checkpoints for held OOF inference,eight Colab CPU HGB post fits,
 all32 F scenario cells and independent audit. PREREGISTRATION_B111.md;
-research/colab_b111_operator.py and watch_colab_b111.py own delivery/observation.
+Actual delivery used research/prepare_b111_standalone.py and
+watch_b111_download.py (addendum5); the original MCP observer stayed disabled.
 No local scientific fits/GPU work. State docs/paper/b111_status.md.
 
 B.109 preparation: `PREREGISTRATION_B109.md`, `b109_colab_train/` export anonymous exact TRAIN/VAL active inputs and optimizer/RNG/history for four interrupted paths plus five fresh OOF paths. Eleven complete paths retained. Actual B108-qualified T4/cuDNN,four admitted workers,patience6; no local GPU work or TEST/correction fitting. `research/colab_b109_operator.py` controls official MCP delivery/poll/retrieval; state b109_status.md,private data/colab_b109. Commit/push before export/new fits.

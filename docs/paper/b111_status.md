@@ -1,5 +1,26 @@
 # B111: full LSTM post-correction/scenario comparison
 
+**COMPLETE AND INDEPENDENTLY AUDITED, 2026-11-25 11:01 KST.**
+The standalone Colab cell verified the exact archive and actual Tesla T4,
+launched at10:56:36 KST, and returned normally. Held inference completed
+at10:57:52, all eight post fits at10:58:42, and outer inference at10:59:02.
+The result download finished at11:00:43; independent local CPU audit passed
+at11:01:45. All144 prediction groups, OOF X/y reconstruction, eight portable
+tree models, and32 same-row MSE/interval cells passed. No local fits/GPU work
+or new Claude calls. The observer delivered its completion notification.
+
+Authoritative outputs: `b111_comparison.json` and `b111_comparison.md`.
+S1 (frozen post increment over GP+fast in every fresh-history design) and
+S2 (mixed post increment in every scenario/design) were not established;
+S3 (GP+fast increment over GP+history in every fresh-history design) held.
+Raw LSTM has positive skill intervals versus TCN35 in every fresh-history
+design; that conclusion does not extend to all availability scenarios.
+All four designs, both post policies and both resampling units remain in the
+full report. This is exploratory reused-TEST evidence, not an architecture-only
+comparison or new physics. A matched comparison on unused observations could
+reverse the unfavorable conclusions. Do not launch further fits or rerun B111
+to seek a preferred outcome. Historical states below are superseded.
+
 **RESUMED, 2026-11-25 10:49 KST.** The author explicitly resumed experiments.
 Computer use opened the registered standalone `COLAB_B111.ipynb` in Colab;
 the UI reports an allocated T4 and the cell reached `files.upload()` after

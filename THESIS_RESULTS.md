@@ -620,3 +620,8 @@ linking the twenty selected models to honest OOF corrections and all scenarios,
 before allocating new neural candidates. docs/paper/b110_next_steps.md records
 this order; local GPU remains paused. Current B110 artifacts are completed,
 not a live waiting queue.
+
+
+## B.111 complete: LSTM OOF post-correction and scenarios (2026-11-25)
+
+Registered before execution; frozen scientific sources unchanged. Standalone Colab T4 delivery under addendum5 succeeded. Existing20 LSTMs inferred held/outer files; eight CPU HGB post fits used TRAIN-file OOF only, with no VAL/TEST fitting. All32 F cells, physical MSE/RMSE and paired cluster/discharge intervals independently reconstructed. Result source: docs/paper/b111_comparison.json/md; details and timing: docs/paper/b111_status.md. Independent audit all_pass; no local fit/GPU or Claude calls. S1/S2 not established; S3 held. All four validation designs and both post policies reported without favorable selection. Exploratory reused-TEST fixed-fit evidence; a matched comparison on unused observations could reverse the unfavorable findings.
