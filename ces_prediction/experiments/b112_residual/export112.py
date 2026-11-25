@@ -84,7 +84,7 @@ def main():
         assert all(not sets_files[a] & sets_files[b]
                    for a, b in (('train', 'val'), ('train', 'test'), ('val', 'test')))
         if name.startswith('V2'):
-            groups = {k: set(R['clus'][np.isin(R['fidx'], v)].tolist())
+            groups = {k: set(R['clus'][np.isin(R['fidx'], sorted(v))].tolist())
                       for k, v in sets_files.items()}
             assert all(not groups[a] & groups[b]
                        for a, b in (('train', 'val'), ('train', 'test'), ('val', 'test')))
@@ -104,7 +104,7 @@ def main():
         # Verify the same TRAIN-only fast summaries used by the audited B111.
         assert np.array_equal(fast[back], npz(prior / 'bundle' / (tag + '_fast.npz'))['fast'],
                               equal_nan=True)
-        masks = {k: np.isin(R['fidx'], v) for k, v in sets_files.items()}
+        masks = {k: np.isin(R['fidx'], sorted(v)) for k, v in sets_files.items()}
         for rule in RULES:
             if rule == 'K10':
                 I = common78.load_inputs(rule)

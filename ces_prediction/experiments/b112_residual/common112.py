@@ -17,7 +17,7 @@ def write(p,z):
 def npz(p):
     with np.load(p,allow_pickle=False) as z:return {k:z[k] for k in z.files}
 def sources():
-    pp=[*sorted(HERE.glob('*.py')),HERE.parent/'PREREGISTRATION_B112.md']
+    pp=[*sorted(HERE.glob('*.py')),*sorted(HERE.parent.glob('PREREGISTRATION_B112*.md'))]
     return {p.relative_to(ROOT).as_posix():sha(p) for p in pp}
 def guard():
     for rel in sources():
