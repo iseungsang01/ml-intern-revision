@@ -1,0 +1,25 @@
+# B113: fixed-budget GPU CatBoost on the audited B112 scalar inputs
+
+2026-11-26. Author explicitly authorized local GPU use. Register/commit/push before any scientific fit, including smoke. This TEST-informed follow-up is exploratory, not independent confirmation. Original paper framing and all existing batches remain unchanged.
+
+## Question, allocation, expectation
+
+Does changing the learner on the identical scalar inputs yield lower reported-F causal nowcasting error? Preserve B112 four outer units V1_r2_k0,V2_s1_k0,V3_q3,V4a (bundle tags U0-U3), all original internal TRAIN/VAL/TEST roles, D1 treatment and original common row support. Reuse audited B112 numeric payload, not regenerated or synthetic data. TRAIN pools D10,D50,D100,D300,D650,D1000,S with row weights N/(7*N_rule). K10 is TEST-only. No rule identifier or added input; causal GP already fixed by original training protocol.
+
+Exactly24 full fits: direct F and residual F-GP, three seeds1701,1702,1703 per unit. CatBoostRegressor task_type GPU devices0, depth6, iterations1000, learning_rate0.03, loss_function RMSE, l2_leaf_reg3,border_count128,thread_count1,gpu_ram_part0.6,allow_writing_filesFalse. Other installed defaults recorded with software version and resolved parameters. No VAL use for fitting, early stopping or model selection. All24 full fits complete normally before TEST predictions. Fixed arithmetic prediction ensembles; every seed reported. GPU training is nondeterministic even at fixed seeds; initialization spread and fit-conditional bootstrap intervals are distinct.
+
+One prior GPU smoke uses only first512 real TRAIN rows of U0 direct,10iterations,seed1701; no TEST inference. A failed smoke blocks full fits. Smoke discarded from scientific comparison. No fit retries or hyperparameter expansion. One sequential worker, no overlapping owned fits, four-hour full-workflow emergency limit (incomplete if hit). Do not terminate other GPU processes. Recheck idle/free GPU before launch; preserve failure receipts and partials, never report them as completed.
+
+Explicit CES pins inherited from audited B112: CES_DROP_STUCK_TARGETS=1,CES_TI_SPIKE_CUT_EV=3000,CES_PER_SHOT_NORM=0,CES_SEQ_NORM_EXPANDING=0,CES_SEQ_ZERO_MC=1,CES_SEQ_ZERO_VT_HISTORY=1,CES_SEQ_ZERO_VT=1,CES_SEQ_DEVICE=cuda; targetF,mixture7 recorded for B113. Tree inputs remain physical float64 scalars as exported, CatBoost internally quantizes them. Difference from HGB is a fixed-budget learner/package configuration comparison, not an isolated tree-structure effect or a fully tuned performance ceiling.
+
+## Readout and judgement
+
+All32 unit/rule/F cells, none primary. Score exact same rows against saved audited HGB_direct,HGB_residual,GP_fast_boost,GP_fair_mixture,GP_only. Preserve other reference columns for provenance. Report physical MSE(eV^2),RMSE(eV), skill=1-MSE(candidate)/MSE(reference), paired shot-cluster and separately discharge20000-draw percentile95% intervals, seeded20261126 with stable cell/group CRC32. All seeds and both ensembles reported, no favorable selection. Cluster resampling preserves row-weighted point estimand. Intervals omit refitting and selection uncertainty; do not interpret overlapping seeds as independent datasets.
+
+R1: residual ensemble vs matched HGB_residual lower cluster skill endpoint >0 in every D10 design. R2: direct ensemble vs matched HGB_direct same rule. R3: residual ensemble vs GP_fast_boost lower endpoint >0 in every D10 design. All-scenario contrasts descriptive with pointwise intervals, no multiplicity-controlled universal superiority claim. R1/R2/R3 each reported regardless of outcome; no automatic estimator replacement. Runtime10ms suitability remains unmeasured in this batch and is required before adoption.
+
+If positive: 'With fixed scalar inputs and fit budgets, the candidate shows a positive fit-conditional increment over [named comparator] on the specified designs; confirmation on unused observations remains required.' If absent: 'A consistent increment under this fixed configuration is not established; a matched adequate-budget comparison on unused observations could overturn this result.' No physics/originality/architecture-impossibility inference.
+
+## Verification and wiring
+
+Validate every original bundle file against manifest and B112 completed audit; verify all indices/roles/TRAIN weights and no K10 fitting. Export every fitted model as native cbm and JSON. Independent audit reconstructs numerical oblivious-tree predictions from JSON (no CatBoost prediction calls), exact row support, ensemble averages, all MSE/skill/intervals. Numeric tolerance max1e-5 eV or relative1e-7 for prediction replay; errors fail loudly. Source hashes/versions/params/start/exit/time recorded. run113.py -> data/.b113 -> audit113.py -> docs/paper/b113_comparison.json/md; orchestrate113.py owns smoke, full run, audit and exit receipts. review113.py preserves one bounded official Claude advice attempt (HTTP401, no completed review); independent checks remain mandatory. README/experiment index/HANDOVER read status docs/paper/b113_status.md. Existing training sources frozen.

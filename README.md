@@ -1,5 +1,8 @@
 # KSTAR CES nowcasting — pedestal top
 
+B113 (2026-11-26): author-authorized local GPU CatBoost, same audited B112 scalar inputs; PREREGISTRATION_B113.md -> b113_catboost/orchestrate113.py (smoke -> run113.py -> audit113.py) -> docs/paper/b113_comparison.json/md. Preparation/status: docs/paper/b113_status.md; bounded Claude attempt: b113_claude.md via review113.py. Ignored live records data/.b113_workflow/status.json and data/.b113/progress.json. No original batch modified.
+
+
 KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다음 CES 값을 기다리지 않고 10 ms마다 추정하는(nowcasting) 연구의 코드, 기록, 원고다. 입력은 그 측정선의 CES 이력과 같은 위치의 빠른 진단(BES, ECEI)이다.
 
 > **For readers of the manuscript.** The registrations of the batches are `ces_prediction/experiments/PREREGISTRATION_B{NN}.md`, their results `docs/paper/b{NN}_*.md` and `.json`. Every number of the manuscript is generated from those result files by `docs/paper/ppcf/make_tables_v2.py`. The KSTAR shot files cannot be redistributed; the MAST data are public (FAIR-MAST) and are fetched by `ces_prediction/experiments/mast/fetch_*.py`.
