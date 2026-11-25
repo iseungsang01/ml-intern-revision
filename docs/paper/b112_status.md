@@ -1,5 +1,17 @@
 # B112: matched direct and GP-residual scalar learning
 
+**SCIENTIFIC RUN LAUNCHED, 2026-11-25 11:34:57 KST.**
+Native upload completed and exact archive/T4/launch-script guards passed.
+Observed B112_LAUNCHED PID12848, torch2.14.1+cu130/CUDA13.0/TeslaT4,
+attempt26c2ba0a64fa4da8ae18bb57faa2f0a7. At11:35:11 the controller had
+admitted all four units, PIDs12900/12901/12902/12903, no failure. Initial
+data loading preceded first epoch output; do not equate process admission
+with completed model fits. Same existing B111 notebook/runtime, B112 isolated
+under /content/ces_b112. Training sources are now frozen; do not edit them.
+The prepared cell follows real progress and downloads only after normal
+completion. Local watch112.py waits for that receipt-bound result and runs
+independent CPU audit. Earlier upload/failed-export entries are historical.
+
 **2026-11-25 11:23 KST: native upload / automatic launch waiting.**
 The author specified the already allocated B111 T4, so B112 is a separate
 cell in that same COLAB_B111.ipynb; B111 code/results remain intact. Original

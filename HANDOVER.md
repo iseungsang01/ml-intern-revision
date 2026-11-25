@@ -1,5 +1,8 @@
 # 인수인계 문서 (2026-11-22)
 
+**B112 ACTUALLY LAUNCHED (2026-11-25 11:34:57 KST):** Exact native archive/T4 guards passed in existing B111 notebook; controller PID12848, four active unit workers12900/12901/12902/12903, failure null. Model/data sources frozen while running. Private launch attempt26c2ba0a64fa4da8ae18bb57faa2f0a7, status docs/paper/b112_status.md. Local watch112.py PID25664 waits for result download and independent CPU audit; no local fits/GPU/pytest/Claude. B111 remains complete.
+
+
 **B112 authorized (2026-11-25):** Author requests focused new Colab experiments, skipping local test suites. PREREGISTRATION_B112.md fixes matched direct/residual scalar MLP (four original units,three seeds) and eight HGB controls. Same TX inputs and train/val/test support, seven-rule mixture, K10 evaluation only. Source/data integrity assertions remain; no local scientific fits/GPU or Claude API. Pipeline/status docs/paper/b112_status.md. B111 remains complete.
 
 
