@@ -86,8 +86,9 @@ def main():
         if name.startswith('V2'):
             groups = {k: set(R['clus'][np.isin(R['fidx'], sorted(v))].tolist())
                       for k, v in sets_files.items()}
-            assert all(not groups[a] & groups[b]
-                       for a, b in (('train', 'val'), ('train', 'test'), ('val', 'test')))
+            # Original internal VAL is a file split within development clusters.
+            # Preserve it; only the outer TEST cluster exclusion was specified.
+            assert not (groups['train'] | groups['val']) & groups['test']
         bind(ROOT / 'data/.b106/prepared' / (name + '__outer.pt'))
         bind(ROOT / 'data/.b106/prepared' / (name + '__outer.json'))
         entry = {'name': name,
@@ -104,6 +105,9 @@ def main():
         # Verify the same TRAIN-only fast summaries used by the audited B111.
         assert np.array_equal(fast[back], npz(prior / 'bundle' / (tag + '_fast.npz'))['fast'],
                               equal_nan=True)
+        fast_name = tag + '_fast.npz'
+        np.savez_compressed(bundle / fast_name,
+                            values=np.asfortranarray(fast[back], dtype=np.float64))
         masks = {k: np.isin(R['fidx'], sorted(v)) for k, v in sets_files.items()}
         for rule in RULES:
             if rule == 'K10':
@@ -117,6 +121,18 @@ def main():
             else:
                 XS, gp = ctx.matrices(rule, fast, mb, me)
                 score_sets = ctx.S
+            history_name = 'common_h_' + rule + '.npz'
+            history_values = np.asarray(XS.H10[back], dtype=np.float64)
+            if (bundle / history_name).exists():
+                assert np.array_equal(npz(bundle / history_name)['values'],
+                                      history_values, equal_nan=True)
+            else:
+                np.savez_compressed(bundle / history_name,
+                                    values=np.asfortranarray(history_values))
+            anchor_name = tag + '_' + rule + '_anchor.npz'
+            anchor_values = np.asarray(XS.A[back], dtype=np.float64)
+            np.savez_compressed(bundle / anchor_name,
+                                values=np.asfortranarray(anchor_values))
             scored = score_sets[('S_' if rule == 'S' else 'common_') + 'F']
             split_rows = {}
             parts = []
@@ -134,6 +150,10 @@ def main():
                 # without fitting, floating conversion or row filtering.
                 manual = np.column_stack((XS.H10[ii], XS.f8[ii], XS.A[ii]))
                 assert np.array_equal(x, manual)
+                factored = np.column_stack((history_values[codes[ii]],
+                                            fast[back][codes[ii]],
+                                            anchor_values[codes[ii]]))
+                assert np.array_equal(x, factored)
                 y = np.asarray(R['tg_F'][ii], dtype=np.float64)
                 g = np.asarray(gp[ii], dtype=np.float64)
                 assert np.isfinite(x).all() and np.isfinite(y).all() and np.isfinite(g).all()
@@ -155,10 +175,11 @@ def main():
                 total_rows += len(ii)
                 bit_checks += 1
             all_rows = {k: np.concatenate([p[k] for p in parts], axis=0)
-                        for k in parts[0]}
+                        for k in parts[0] if k != 'x'}
             assert len(np.unique(all_rows['idx'])) == len(all_rows['idx'])
-            # Column-major storage improves compression without changing any value.
-            all_rows['x'] = np.asfortranarray(all_rows['x'])
+            # Exact source arrays indexed by anonymous row codes avoid duplicating
+            # common history and unit fast summaries across every replay/split.
+            all_rows['_x_parts'] = np.array([history_name, fast_name, anchor_name])
             np.savez_compressed(bundle / (tag + '_' + rule + '.npz'), **all_rows)
             entry['split_hashes'][rule] = hashes
             private['units'][tag]['rows'][rule] = split_rows

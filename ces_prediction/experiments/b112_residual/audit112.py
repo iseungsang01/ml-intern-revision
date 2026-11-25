@@ -101,7 +101,9 @@ def audit_inputs(m,private):
             assert not files[a]&files[b]
         if u['name'].startswith('V2'):
             cc={s:set(R['clus'][np.isin(R['fidx'],list(v))]) for s,v in files.items()}
-            for a,b in (('train','val'),('train','test'),('val','test')):
+            # Preserve the inherited outer group split: internal VAL was
+            # partitioned by file and may share TRAIN groups. TEST stays out.
+            for a,b in (('train','test'),('val','test')):
                 assert not cc[a]&cc[b]
         fast,mb,me=ctx.unit_arrays({'fit':man['train']})
         for rule in RULES:

@@ -15,7 +15,15 @@ def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
 def write(p,z):
     p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(z,indent=2,allow_nan=False),encoding='utf8');tmp.replace(p)
 def npz(p):
-    with np.load(p,allow_pickle=False) as z:return {k:z[k] for k in z.files}
+    p=Path(p)
+    with np.load(p,allow_pickle=False) as z:out={k:z[k] for k in z.files}
+    if '_x_parts' in out:
+        parts=out.pop('_x_parts');columns=[]
+        for name in parts:
+            assert Path(str(name)).name==str(name)
+            columns.append(npz(p.parent/str(name))['values'][out['idx']])
+        out['x']=np.column_stack(columns)
+    return out
 def sources():
     pp=[*sorted(HERE.glob('*.py')),*sorted(HERE.parent.glob('PREREGISTRATION_B112*.md'))]
     return {p.relative_to(ROOT).as_posix():sha(p) for p in pp}
