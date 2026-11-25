@@ -1,5 +1,8 @@
 # 인수인계 문서 (2026-11-22)
 
+**B112 authorized (2026-11-25):** Author requests focused new Colab experiments, skipping local test suites. PREREGISTRATION_B112.md fixes matched direct/residual scalar MLP (four original units,three seeds) and eight HGB controls. Same TX inputs and train/val/test support, seven-rule mixture, K10 evaluation only. Source/data integrity assertions remain; no local scientific fits/GPU or Claude API. Pipeline/status docs/paper/b112_status.md. B111 remains complete.
+
+
 **B111 COMPLETE / independently audited (2026-11-25 11:01 KST):** Colab T4 held inference, eight post fits, outer scenario inference and all32 readouts completed normally. Receipt-bound result downloaded; independent CPU audit reconstructed all144 prediction groups, OOF features/targets, portable tree outputs and all point/interval arithmetic. Outputs docs/paper/b111_comparison.json/md; interpretation PROJECT_KNOWLEDGE.md section4.79. S1/S2 not established; S3 held. No further fits queued. No local scientific fit/GPU or Claude calls. Prior resume/pause/transport entries below are historical; do not rerun completed B111.
 
 
