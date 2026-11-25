@@ -10,6 +10,8 @@ KSTAR 2022 캠페인의 pedestal top 측정선에서 CES 이온 온도를, 다�
 
 B112 탐색 비교: `experiments/PREREGISTRATION_B112.md` → `b112_residual/export112.py`의 동일 TX 입력 → `prepare112.py`의 private Colab 노트북 → `run112.py`/`model112.py`의 직접 회귀·GP 잔차 MLP 및 동일 지원 HGB → `stats112.py` → `audit112.py` → `docs/paper/b112_comparison.json/md`. 상태는 `b112_status.md`; 로컬 적합·pytest 없이 Colab T4에서 실행한다.
 
+B112 실제 전달은 addendum3의 `research/prepare_b112_native.py`가 exact payload를 보존한 native Files 업로드 셀을 준비하고, 기존 B111 T4에서 실행한다. `b112_residual/watch112.py`가 지정된 결과 다운로드만 검증·회수해 독립 감사를 호출한다.
+
 B111은 Colab 계산과 독립 CPU 감사를 완료했다. `docs/paper/b111_comparison.json/md` → `PROJECT_KNOWLEDGE.md`의 LSTM 후단 비교 기록으로 읽는다. 실제 전달은 아래 addendum5의 standalone 경로이며, 이전 MCP 감시기는 중복 실행하지 않는다.
 
 B111 proxy독립 전달: `PREREGISTRATION_B111_ADDENDUM5.md` → `research/prepare_b111_standalone.py`가 private 한셀GPU노트북을 생성한다. 원본zip업로드/검증→frozen workflow→정상종료뒤receipt추가·결과다운로드를수행한다. `research/watch_b111_download.py`는지정Downloads/b111_results.zip만receipt검증후private로복사→원래독립CPUaudit한다. 과학코드/학습조건변경이나로컬fit없음.
