@@ -1,5 +1,22 @@
 # B111: full LSTM post-correction/scenario comparison
 
+**RESUMED, 2026-11-25 10:49 KST.** The author explicitly resumed experiments.
+Computer use opened the registered standalone `COLAB_B111.ipynb` in Colab;
+the UI reports an allocated T4 and the cell reached `files.upload()` after
+its actual CUDA/T4 assertion. The exact 149990972-byte archive is uploading
+through that widget. Scientific launch has NOT yet been observed. The
+notebook SHA-256 is e2ab2752ebd72c230237f70b9e748e070d3942cadbaa526e157d9180a8a86ab0;
+its cell source matches the standalone attempt hash
+3aee7ad28b3d6935c32075e411af3db1f55840ba4277f1ede2d98f5b44358211.
+The separate `COLAB_B111_CELL.py` is the earlier manual cell; execute the
+notebook, which includes result download and receipt generation.
+Sources/addenda4/5 were committed before use (8a99447,5d04a9d).
+`Colab_B111_download` is Running (PID22176, fresh heartbeat), waiting for
+the registered browser download before independent CPU audit. The old
+`Colab_B111_watch` stays disabled to avoid duplicate retrieval. Local
+scientific fits/GPU remain paused. No new Claude calls. Entries below
+are historical, including the superseded author pause.
+
 **AUTHOR PAUSED,2026-11-24.** The author requested temporary suspension after
 actual T4/CUDA was successfully rechecked (torch2.14.1+cu130,Python3.13.16).
 The selected T4 setting had to be applied with Save; the earlier CPU checks

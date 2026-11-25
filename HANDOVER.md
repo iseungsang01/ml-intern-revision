@@ -1,5 +1,8 @@
 # 인수인계 문서 (2026-11-22)
 
+**B111 resumed (2026-11-25 10:49 KST):** Author resumed experiments. Registered standalone notebook opened through computer use, actual CUDA/T4 assertion passed, exact archive uploading in Colab. Scientific launch not yet observed. Colab_B111_download is Running with a fresh heartbeat; it receives the registered result and performs CPU audit. Old Colab_B111_watch remains disabled; local scientific fits/GPU remain paused. Follow docs/paper/b111_status.md. Historical pause statements below are superseded.
+
+
 중단확실화: `Colab_B111_watch`를Disabled로전환했다. 아래동일날중단기록의Ready는disable전확인상태다. 저자의재개뒤에만Enable/Start한다.
 
 **저자 잠시중단(2026-11-24):** 실제T4/CUDA확인직후저자가일시중단지시. B111과학추론/후단fit/TEST판독0, 새native업로드0. Colab_B111_watch는manual Ready이며자동실행금지. source/reg070896a, transportAD1/2(000883c/4b1fda2), nativeuploadAD3/launch_uploaded_b111.py e1a4275가준비됨. 아래kernel응답대기는과거상태: computer-use에서root Raise→Win+Up으로창을보이게해T4선택상태의Save를적용했고배정뒤공식MCP execute진단에서TeslaT4/Python3.13.16/Torch2.14.1+cu130/CUDA13.0확인. 앞선CPU체크는이전backend실측이었으며저자의T4선택오류로단정하지않는다. 새재개때실제T4/연결/workspace/launch부재를다시확인하고nativeFilesUI로정확한localarchive전송→SHA검증후frozenrun111→watch일회시작. local `data/colab_b111/ces_b111_bundle.zip`149990972bytes/SHAeeedc688f1e48222938072b741223f0c3703c880d27a6a8cdc7b159cfd0ab334와B109selected20보존. MCP bridgeTask시간제한은restart없이PT8H로늘렸지만이는connector일뿐새학습자동큐아님. 저자의명시재개전전송/fit/추론시작금지. 원래localGPU중단유지.
