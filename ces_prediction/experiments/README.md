@@ -11,7 +11,8 @@ were removed with their registrations and results (git history, last commit befo
 
 ## Shared files
 
-B112 registered exploratory direct/residual learning: b112_residual/,
+B112 COMPLETE / independently audited (2026-11-25), results
+docs/paper/b112_comparison.json/md. Exploratory direct/residual learning: b112_residual/,
 PREREGISTRATION_B112.md. One scalar MLP architecture, four unchanged units,
 three seeds, same TX inputs/support, matched HGB controls. Colab T4 only;
 author omits local pytest. State docs/paper/b112_status.md, private

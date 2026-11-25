@@ -1,5 +1,24 @@
 # B112: matched direct and GP-residual scalar learning
 
+**COMPLETE / INDEPENDENT AUDIT PASSED, 2026-11-25 11:44:13 KST.**
+The existing B111 T4 completed all24 MLP and8 HGB fits; every unit returned
+normally by11:39:28. All32 scenario/design readouts completed. Native result
+download finished at11:42:26; local receipt verification and independent
+CPU audit passed at11:44:13. Source-bound original inputs/splits/TRAIN
+normalization, portable MLP/HGB algebra and all points/intervals passed.
+No local fit/GPU/pytest/Claude calls. No additional experiments queued.
+
+Final evidence: `b112_comparison.json` and `b112_comparison.md`.
+R1 (residual over direct in all fresh-history designs), R2 (residual MLP
+over matched HGB in all fresh-history designs), and R3 (same all scenarios)
+were not established. Every D10 residual/direct interval includes zero;
+matched residual-MLP/HGB D10 intervals are positive in V1,V2,V4 and negative
+in V3. Report every seed/design/scenario, not only favorable comparisons.
+The experiment does not support making GP-residual neural learning the new
+estimator. It remains a fixed-budget exploratory scalar comparison on reused
+TEST data; a matched unused-observation study could reverse this conclusion.
+Historical run/transport entries below are superseded; do not rerun B112.
+
 **SCIENTIFIC RUN LAUNCHED, 2026-11-25 11:34:57 KST.**
 Native upload completed and exact archive/T4/launch-script guards passed.
 Observed B112_LAUNCHED PID12848, torch2.14.1+cu130/CUDA13.0/TeslaT4,

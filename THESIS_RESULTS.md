@@ -625,3 +625,8 @@ not a live waiting queue.
 ## B.111 complete: LSTM OOF post-correction and scenarios (2026-11-25)
 
 Registered before execution; frozen scientific sources unchanged. Standalone Colab T4 delivery under addendum5 succeeded. Existing20 LSTMs inferred held/outer files; eight CPU HGB post fits used TRAIN-file OOF only, with no VAL/TEST fitting. All32 F cells, physical MSE/RMSE and paired cluster/discharge intervals independently reconstructed. Result source: docs/paper/b111_comparison.json/md; details and timing: docs/paper/b111_status.md. Independent audit all_pass; no local fit/GPU or Claude calls. S1/S2 not established; S3 held. All four validation designs and both post policies reported without favorable selection. Exploratory reused-TEST fixed-fit evidence; a matched comparison on unused observations could reverse the unfavorable findings.
+
+
+## B.112 complete: matched scalar direct/residual learning (2026-11-25)
+
+Pre-registered TEST-informed exploratory follow-up to B111; addenda preserve two failed exports and exact factored/native delivery on the existing B111 T4. All24MLP/eightHGB fits and32 scenario cells completed normally. Receipt-bound result independently audited: original input/split roles, TRAIN-only normalization, portable MLP and tree predictions, paired cluster/discharge arithmetic. Sources docs/paper/b112_comparison.json/md, timing/attempts b112_status.md. R1/R2/R3 not established. Every fresh-history residual/direct skill interval includes zero; matched HGB contrast has mixed direction across designs. No new estimator adoption or physical identification. A matched comparison on unused observations could reverse unfavorable conclusions. No local fits/GPU/pytest/Claude calls.
