@@ -661,3 +661,11 @@ B114 COMPLETE / independent audit passed at02:25KST2026-11-26. All144GPU fits an
 최신 CES(D10/F)에서 선택된 CatBoost와 신경망의 GP+fast 대비 MSE 감소율 점추정은 모든 설계에서 음수였다. 두 계열 모두 무작위 파일·군집 설계의 군집 구간은 영을 포함했고, 시간순·마지막 블록 설계는 영을 제외하는 음수였다. CatBoost는 일부 묵은 이력 조건에서 양의 군집 구간을 보였으므로 이를 전체 실패로 일반화하지 않는다. 조건과 기준을 명시한 전체 표를 함께 보고하며 현행 nowcast estimator를 교체할 일관된 근거는 확립되지 않았다.
 
 Original closeout exit1 and traceback retained under data/.b114/workflow; source/models/selection/predictions/independent audit unchanged. Manual recovery performs no fit, no new selection, no extra readout.
+
+
+## Requested scenario comparison summary
+
+
+B114 scenario summary: research/render_b114_scenarios.py reads the completed audited b114_comparison.json and frozen per-unit overall VAL choices -> docs/paper/b114_scenario_summary.md/png. All32GP+fast contrasts are copied from stored points/intervals; no new fit, prediction, bootstrap or TEST-based choice. Includes exact source SHA and absoluteMSE/RMSE table.
+
+Selection is the original own-VAL minimum across families per outer unit, not the best TEST cell and not a claim of an all-history global model ranking. Scientific sources/arrays/models and original audit unchanged.
