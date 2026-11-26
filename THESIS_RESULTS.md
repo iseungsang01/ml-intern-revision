@@ -669,3 +669,11 @@ Original closeout exit1 and traceback retained under data/.b114/workflow; source
 B114 scenario summary: research/render_b114_scenarios.py reads the completed audited b114_comparison.json and frozen per-unit overall VAL choices -> docs/paper/b114_scenario_summary.md/png. All32GP+fast contrasts are copied from stored points/intervals; no new fit, prediction, bootstrap or TEST-based choice. Includes exact source SHA and absoluteMSE/RMSE table.
 
 Selection is the original own-VAL minimum across families per outer unit, not the best TEST cell and not a claim of an all-history global model ranking. Scientific sources/arrays/models and original audit unchanged.
+
+
+## B115 diagnostic readout and GPU resource gate
+
+
+B115 resource wait: diagnostics completed with all32source checks; initial idle gate found6622MiB GPU memory occupied and no scientific fit started. PREREGISTRATION_B115_ADDENDUM1.md -> b115_budget/resume115.py waits until ORIGINALGPUdeadline; no fit retry, no other-process termination, no deadline reset. Figures docs/paper/b115_evidence.png and b115_trace.png; diagnostics b115_uncertainty.json/md. Live data/.b115/workflow/status.json and resource_probe.json.
+
+The S/V1 original skill point stays positive after deleting any single cluster; this descriptive sensitivity is not a confidence interval or independent confirmation. Original cluster/discharge intervals and all32diagnostic cells preserved. No new model fitted at this preflight.
