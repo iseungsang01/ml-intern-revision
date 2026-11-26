@@ -643,3 +643,21 @@ Registration/source d11898f pushed before TRAIN-only smoke. RTX5060: smoke10tree
 이는 기존 TEST를 재사용한 고정 예산·설정의 탐색 비교다. 더 큰 탐색의 성능 상한, 알고리즘 계열의 불가능성, 독립 확증 또는 실시간 지연을 입증하지 않는다. 사용하지 않은 관측에서 예산·입력·표적을 맞춘 비교가 결론을 뒤집을 수 있다. GPU 학습을 완료했고 추가 적합은 대기열에 없다. Claude 설계 검토는 인증 오류로 완료되지 않았다.
 
 Source: docs/paper/b113_comparison.json/md; live/exit receipts data/.b113_workflow; all raw inputs/models/estimates ignored data/.b113. Tests89passed; bounded Claude request HTTP401, no completed advice. No further fits queued.
+
+
+## B.114 overnight local GPU search
+
+B114 COMPLETE / independently audited. All144full fits and selected-family32scenario cells completed; per-outer-unit VAL selection and independent numerical replay verified. Registered statements: {"R1": false, "R2": false, "R3": false}. Results: docs/paper/b114_comparison.json/md. No extra fits queued; existing estimator unchanged.
+
+동일한 기존 스칼라 입력에서 CatBoost 설정 탐색과 잔차 신경망·구간별 선형 인코딩 신경망을 GPU로 적합했다. 각 외부 검증 설계의 내부 VAL만으로 계열별 설정과 직접·잔차형을 선택했으며 설계 간 VAL을 합치지 않았다. 전체 학습의 정상 종료 뒤 선택 모델의 TEST를 평가했고, 입력·행·학습 가중치·신경망 정규화·인코딩 분위수·학습 이력과 선택 재계산, 독립 트리·신경망 순전파 및 paired 구간 검산이 통과했다.
+
+등록 판정은 원천 JSON의 statements를 따른다: {"R1": false, "R2": false, "R3": false}. 상세 점추정·구간·영제외와 선택 설정은 원천 표를 함께 읽는다. 기준 모델별 결과를 섞어 해석하지 않는다. 기존 TEST 재사용과 설정 선택에 조건부인 탐색 비교이며 탐색·재적합 불확실성을 구간에 포함하지 않았다. 현행 estimator를 자동 교체하지 않는다. 사용하지 않은 관측에서 예산·입력·표적을 맞춘 비교가 결론을 뒤집을 수 있다. 추가 적합은 없다.
+
+
+### B114 manual editorial closeout (2026-11-26 morning)
+
+B114 COMPLETE / independent audit passed at02:25KST2026-11-26. All144GPU fits and both selected-family32cell evaluations normal. Automated closeout failed only at record-check subprocess; manual py recordcheck and89tests pass, original failed receipt preserved. No scientific retry or further GPU work. R1/R2/R3 false; D10 GP+fast increment not established; some stale-history CatBoost cells positive. Full results docs/paper/b114_comparison.json/md.
+
+최신 CES(D10/F)에서 선택된 CatBoost와 신경망의 GP+fast 대비 MSE 감소율 점추정은 모든 설계에서 음수였다. 두 계열 모두 무작위 파일·군집 설계의 군집 구간은 영을 포함했고, 시간순·마지막 블록 설계는 영을 제외하는 음수였다. CatBoost는 일부 묵은 이력 조건에서 양의 군집 구간을 보였으므로 이를 전체 실패로 일반화하지 않는다. 조건과 기준을 명시한 전체 표를 함께 보고하며 현행 nowcast estimator를 교체할 일관된 근거는 확립되지 않았다.
+
+Original closeout exit1 and traceback retained under data/.b114/workflow; source/models/selection/predictions/independent audit unchanged. Manual recovery performs no fit, no new selection, no extra readout.
