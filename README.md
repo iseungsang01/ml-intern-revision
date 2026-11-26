@@ -1,5 +1,7 @@
 # KSTAR CES nowcasting — pedestal top
 
+Other-shot example: research/render_other_shot.py -> docs/paper/b115_other_shot.png/md. Different S discharge chosen solely by support closest to150observations, excluding prior plottedshot. No new fits/scores/intervals.
+
 B115 resource wait: diagnostics completed with all32source checks; initial idle gate found6622MiB GPU memory occupied and no scientific fit started. PREREGISTRATION_B115_ADDENDUM1.md -> b115_budget/resume115.py waits until ORIGINALGPUdeadline; no fit retry, no other-process termination, no deadline reset. Figures docs/paper/b115_evidence.png and b115_trace.png; diagnostics b115_uncertainty.json/md. Live data/.b115/workflow/status.json and resource_probe.json.
 
 B115 COMPLETE / independently audited (2026-11-26): user-requested direct real-data figures, cluster uncertainty diagnostics and12extended-scheduleGPUfits. PREREGISTRATION_B115.md -> b115_budget/queue115.py -> diagnose115 (evidence/trace/uncertainty) -> train115 (smoke/fit/predict) -> audit115 -> close115 verifiedrecords/commit/push. Live docs/paper/b115_status.md and data/.b115/workflow/status.json. Humanplan b115_plan.md. OriginalB114models/sources/intervals preserved; no promise that CIs narrow.
