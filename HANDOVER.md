@@ -1,5 +1,7 @@
 # 인수인계 문서 (2026-11-22)
 
+B115 PREPARED (2026-11-26): user-requested direct real-data figures, cluster uncertainty diagnostics and12extended-scheduleGPUfits. PREREGISTRATION_B115.md -> b115_budget/queue115.py -> diagnose115 (evidence/trace/uncertainty) -> train115 (smoke/fit/predict) -> audit115 -> close115 verifiedrecords/commit/push. Live docs/paper/b115_status.md and data/.b115/workflow/status.json. Humanplan b115_plan.md. OriginalB114models/sources/intervals preserved; no promise that CIs narrow.
+
 B114 scenario summary: research/render_b114_scenarios.py reads the completed audited b114_comparison.json and frozen per-unit overall VAL choices -> docs/paper/b114_scenario_summary.md/png. All32GP+fast contrasts are copied from stored points/intervals; no new fit, prediction, bootstrap or TEST-based choice. Includes exact source SHA and absoluteMSE/RMSE table.
 
 **B114 COMPLETE / independent audit passed at02:25KST2026-11-26. All144GPU fits and both selected-family32cell evaluations normal. Automated closeout failed only at record-check subprocess; manual py recordcheck and89tests pass, original failed receipt preserved. No scientific retry or further GPU work. R1/R2/R3 false; D10 GP+fast increment not established; some stale-history CatBoost cells positive. Full results docs/paper/b114_comparison.json/md.**

@@ -1,5 +1,7 @@
 # KSTAR CES nowcasting — pedestal top
 
+B115 PREPARED (2026-11-26): user-requested direct real-data figures, cluster uncertainty diagnostics and12extended-scheduleGPUfits. PREREGISTRATION_B115.md -> b115_budget/queue115.py -> diagnose115 (evidence/trace/uncertainty) -> train115 (smoke/fit/predict) -> audit115 -> close115 verifiedrecords/commit/push. Live docs/paper/b115_status.md and data/.b115/workflow/status.json. Humanplan b115_plan.md. OriginalB114models/sources/intervals preserved; no promise that CIs narrow.
+
 B114 scenario summary: research/render_b114_scenarios.py reads the completed audited b114_comparison.json and frozen per-unit overall VAL choices -> docs/paper/b114_scenario_summary.md/png. All32GP+fast contrasts are copied from stored points/intervals; no new fit, prediction, bootstrap or TEST-based choice. Includes exact source SHA and absoluteMSE/RMSE table.
 
 B114 COMPLETE / independently audited (2026-11-26): author-authorized overnight localGPU suite, six candidates144fits. PREREGISTRATION_B114.md -> b114_overnight/queue114.py -> CatBoost96 + neural48 -> per-outer-unit VAL selection -> selected TEST predictions -> independent audit114 -> close114 records/commit/push. Human list docs/paper/b114_overnight_plan.md; live docs/paper/b114_status.md and ignored data/.b114/workflow/status.json. GPU boundary08:00KST,CPU audit09:00; no retries/extra fits. Source/data contract common114; producer models114/neural114/cat114; independent selection114. PriorB113complete untouched.
