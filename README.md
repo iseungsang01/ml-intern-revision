@@ -1,5 +1,7 @@
 # KSTAR CES nowcasting — pedestal top
 
+B116 RESUME PREPARED (2026-11-27): author explicitly requested continuation after pause. PREREGISTRATION_B116_ADDENDUM1.md -> b116_resume/review116.py (independent preserved-fit/preflight checks) -> b116_resume/resume116.py (source-bound adapter/exclusive resume1 queue) -> unchanged b116_temporal fit/VAL/select/TEST/readout/audit/close. Preserve completed fits; archive the author-interrupted partial without deletion and restart that one fit from its same seed, then finish the remaining queue. Separate old/resumed source maps and clocks are retained in final audit provenance. Original scheduled task stays disabled. See docs/paper/b116_plan.md and ignored data/.b116/workflow/resume1/; final numeric comparisons remain blocked on original independent audit.
+
 B116 PREPARED (2026-11-26): author-authorized temporal architecture study and input-defined failure analysis. PREREGISTRATION_B116.md -> b116_temporal/common116.py,data116.py,models116.py -> train116.py (smoke/fullsegment fits/VAL and TEST) -> select116.py (unit-own VAL choice/TRAIN cuts) -> readout116.py (ignored staged points/intervals/figures) -> audit116.py (independent equations/statistics; published docs/paper/b116_audit.json) -> close116.py (verified publication/records/commit/push). queue116.py owns order, exclusive clock and idle-GPU waiting. Mean identical-support MSE is the comparison; positive skill in every interval/cell is not required. Plan docs/paper/b116_plan.md; live docs/paper/b116_status.md and ignored data/.b116/workflow/status.json. No scientific fit has started at preparation.
 
 Other-shot example: research/render_other_shot.py -> docs/paper/b115_other_shot.png/md. Different S discharge chosen solely by support closest to150observations, excluding prior plottedshot. No new fits/scores/intervals.
@@ -97,6 +99,7 @@ B.101 집계 복구: `experiments/PREREGISTRATION_B101.md`·`PREREGISTRATION_B94
 
 | 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
 |---|---|---|
+| `b116_resume/{resume116,review116}.py` | `PREREGISTRATION_B116_ADDENDUM1.md` + original source/pause/completed-fit receipts → preserved-fit verification → remaining frozen fits → original audit/publisher | `data/.b116/workflow/resume1/`; `docs/paper/b116_plan.md`, final `b116_audit.json` resumption provenance |
 | `b116_temporal/{common116,data116,models116,train116,select116,readout116,audit116,close116,queue116}.py` | `PREREGISTRATION_B116.md` + frozen B105/B112 real inputs → sequence fits → unit-own VAL selection/TRAIN cuts → staged TEST comparison → independent audit → published artifacts | `docs/paper/b116_plan.md`, `b116_status.md`, audited `b116_comparison.json/md`, `b116_average.png`, `b116_failure.png`, `b116_audit.json`; ignored `data/.b116/` |
 | `research/claude_lean_scout_20261123.py` | 개인/원자료/성능을 제거한 방법 계약 + 공식 Claude 모델 → 세 독립 검토·반대 검토 | `docs/paper/claude_lean_reviews_20261123.md`, Lean/이론 적용 검토; 학습 코드와 TEST 선택에 영향 없음 |
 | `research/claude_lean_bridge_20261123.py` | 공개 TorchLean/형식 검증 자료 + 같은 비식별 방법 계약 → 실제 연산자·실행 의미 연결 검토 | `.claude_lean_20261123/torchlean_bridge.json`, 최종 Lean 적용 판단 |
