@@ -698,3 +698,10 @@ B116 COMPLETE / independently audited. Temporal architecture comparison and inpu
 B117 COMPLETE / independently audited. Single fixed LSTM TRAIN/VAL diagnostic; CONVERGENCE CRITERION MET. No TEST evaluation, new GP comparison or further fit queued.
 
 동일한 단일 LSTM을 처음부터 학습하여 기존 시간 제한 학습과 전체 학습 곡선, 검증 오차, 학습률 및 갱신 횟수를 비교했다. 등록한 수렴 기준 충족 여부와 안전 한도 종료를 구분했다. 학습 손실은 고정된 학습 표준편차로 물리 단위로 변환했다. 학습 구간은 규칙 혼합과 갱신 중 모수에 의존하고 검증은 고정 지지의 규칙별 평균이므로 두 손실의 차이는 기술적 진단이다. 검증 자료를 반복 사용한 단일 학습이며 독립 표본 일반화, 신뢰구간 또는 TEST 성능을 주장하지 않는다. 수치와 수렴 판정은 독립 감사된 `docs/paper/b117_training.md`와 JSON 및 학습 곡선에서 확인한다.
+
+
+## B118 fixed LSTM evaluation
+
+B118 COMPLETE / independently audited. Fixed B117 LSTM checkpoint evaluated without additional fitting; exploratory reused TEST comparison. No further fits queued.
+
+충분 학습 진단에서 이미 선택한 단일 LSTM 체크포인트를 고정한 뒤 평가 자료에 전방 계산만 수행했다. 같은 지지 행에서 기존 짧은 학습 모델 및 GP와 빠른 진단을 결합한 기준과 비교했다. 조건별 결과와 동일 가중 평균의 점추정, 구간 및 영 제외 여부는 독립 감사한 비교 기록을 따른다. 구간은 고정된 학습과 선택에 조건부이며 재학습 변동을 포함하지 않는다. 평가 자료를 재사용한 탐색 결과이고 단일 검증 설계와 초기화에 한정된다. 그림의 실패 구간 특성은 입력으로 고정한 구분에 따른 기술이며 새로운 구조나 선택에 사용하지 않았다. 다른 검증 설계와 독립 관측에 대한 충분 학습 비교가 해석을 바꿀 수 있다.
