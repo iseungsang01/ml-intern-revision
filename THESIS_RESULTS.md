@@ -684,3 +684,10 @@ The S/V1 original skill point stays positive after deleting any single cluster; 
 B115 COMPLETE / independently audited. Twelve extended-policyGPUfits and32scenario evaluations normal. Registered statements: {"R1": false, "R2": false}. Original groups/confidencelevel preserved; actual CI widths reported without forced narrowing. No further fits queued.
 
 기존에 선택된 신경망 구조·학습 형태·초기화를 고정하고, 조기 종료를 제거한 학습 연장과 단계별 학습률 감소를 시험했다. 원래 학습 구간의 재현, 학습 전용 정규화·가중치·인코딩과 새로운 최적 체크포인트, 독립 순전파·paired 구간 검산을 통과했다. 상세 점추정·구간·영제외 여부와 실제 구간 너비비는 원천 표를 따른다. 평가 군집을 늘리거나 바꾸지 않았으며, 재학습이 독립 평가 자료를 추가한 것으로 해석하지 않는다. 기존 TEST 재사용과 체크포인트 선택에 조건부인 탐색 결과다. 사용하지 않은 관측에서 예산·입력·표적을 맞춘 비교가 결론을 뒤집을 수 있다.
+
+
+## B116 temporal architecture comparison
+
+B116 COMPLETE / independently audited. Temporal architecture comparison and input-conditioned failure analysis published. No additional fits queued.
+
+동일한 실제 시계열 입력으로 순환 구조와 관측 도착 시 갱신 구조를 비교했다. 구조 선택에는 검증 구간만 사용했으며, 비교 기준은 모든 구간의 개별 우세가 아니라 검증 설계와 가용성 조건을 동일 가중한 평균 오차다. 현재 관측이 있는 목표만 평가하고 원래의 군집과 방전 식별자를 유지했다. 관측 나이와 빠른 진단 변화량 등 입력에서 정한 구간의 실패 특성도 보고했다. 점추정, 구간 및 영 제외 여부는 독립 검증을 마친 비교 기록에서 확인한다. 재사용한 평가 자료에 대한 탐색 결과이며 학습을 다시 수행할 때의 불확실성을 포함하지 않는다.
