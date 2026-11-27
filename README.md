@@ -101,6 +101,7 @@ B.101 집계 복구: `experiments/PREREGISTRATION_B101.md`·`PREREGISTRATION_B94
 
 | 실행 경로 | 읽는 것 → 만드는 것 | 사용처 |
 |---|---|---|
+| `research/watch_b117_stop.py` | B117 fit params or workflow stop/failure/pause → one cvmux notification to the author's inherited session | `data/.b117_focused/notification/`; user explicitly requested notification whenever training stops, independent of convergence/audit |
 | `b117_lstm_focus/{common117,train117,queue117,analyze117,audit117,close117}.py` | `PREREGISTRATION_B117.md` + frozen real B116 sequences/baseline history → one sufficiently optimized LSTM → TRAIN/VAL curves → independent audit → verified publication | `data/.b117_focused/`; `docs/paper/b117_plan.md`, `b117_status.md`, `b117_training.json/md`, `b117_learning_curves.png`, `b117_audit.json` |
 | `b116_resume/{resume116,review116}.py` | `PREREGISTRATION_B116_ADDENDUM1.md` + original source/pause/completed-fit receipts → preserved-fit verification → remaining frozen fits → original audit/publisher | `data/.b116/workflow/resume1/`; `docs/paper/b116_plan.md`, final `b116_audit.json` resumption provenance |
 | `b116_temporal/{common116,data116,models116,train116,select116,readout116,audit116,close116,queue116}.py` | `PREREGISTRATION_B116.md` + frozen B105/B112 real inputs → sequence fits → unit-own VAL selection/TRAIN cuts → staged TEST comparison → independent audit → published artifacts | `docs/paper/b116_plan.md`, `b116_status.md`, audited `b116_comparison.json/md`, `b116_average.png`, `b116_failure.png`, `b116_audit.json`; ignored `data/.b116/` |
