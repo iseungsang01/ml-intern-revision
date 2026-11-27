@@ -691,3 +691,10 @@ B115 COMPLETE / independently audited. Twelve extended-policyGPUfits and32scenar
 B116 COMPLETE / independently audited. Temporal architecture comparison and input-conditioned failure analysis published. No additional fits queued.
 
 동일한 실제 시계열 입력으로 순환 구조와 관측 도착 시 갱신 구조를 비교했다. 구조 선택에는 검증 구간만 사용했으며, 비교 기준은 모든 구간의 개별 우세가 아니라 검증 설계와 가용성 조건을 동일 가중한 평균 오차다. 현재 관측이 있는 목표만 평가하고 원래의 군집과 방전 식별자를 유지했다. 관측 나이와 빠른 진단 변화량 등 입력에서 정한 구간의 실패 특성도 보고했다. 점추정, 구간 및 영 제외 여부는 독립 검증을 마친 비교 기록에서 확인한다. 재사용한 평가 자료에 대한 탐색 결과이며 학습을 다시 수행할 때의 불확실성을 포함하지 않는다.
+
+
+## B117 single LSTM training diagnostic
+
+B117 COMPLETE / independently audited. Single fixed LSTM TRAIN/VAL diagnostic; CONVERGENCE CRITERION MET. No TEST evaluation, new GP comparison or further fit queued.
+
+동일한 단일 LSTM을 처음부터 학습하여 기존 시간 제한 학습과 전체 학습 곡선, 검증 오차, 학습률 및 갱신 횟수를 비교했다. 등록한 수렴 기준 충족 여부와 안전 한도 종료를 구분했다. 학습 손실은 고정된 학습 표준편차로 물리 단위로 변환했다. 학습 구간은 규칙 혼합과 갱신 중 모수에 의존하고 검증은 고정 지지의 규칙별 평균이므로 두 손실의 차이는 기술적 진단이다. 검증 자료를 반복 사용한 단일 학습이며 독립 표본 일반화, 신뢰구간 또는 TEST 성능을 주장하지 않는다. 수치와 수렴 판정은 독립 감사된 `docs/paper/b117_training.md`와 JSON 및 학습 곡선에서 확인한다.
