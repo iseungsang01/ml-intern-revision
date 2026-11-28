@@ -86,7 +86,7 @@ def main():
         json.dump({'pid': os.getpid(), 'started': time.time(),
                    'notify_on': 'optimization stops, not audit completion',
                    'session': os.environ.get('CVMUX_SESSION_ID')}, stream)
-    acknowledgment = notify('LSTM 학습 종료 알림을 설정했습니다. 수렴 여부와 무관하게 학습이 멈추면 알려드립니다.')
+    acknowledgment = 'Armed silently; notify only when optimization stops.'
     save('ready.json', {'ready': True, 'pid': os.getpid(), 'updated': time.time(),
                         'start_notification': acknowledgment})
     while True:
