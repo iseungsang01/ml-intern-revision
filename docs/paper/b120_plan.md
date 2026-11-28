@@ -7,3 +7,5 @@ One original B105 TCN35 unit/seed, same architecture/data/F+L5 objective, fresh 
 Resource/process checks preserve other jobs. In particular a paused B119 is left paused; an active B119 must finish/stop before this queue starts GPU work. Qualification is real-data forward/causal/stream/backward with zero optimizer steps. One production fit only. Full recovery state is saved at each complete validation boundary. CPU/NumPy checks precede published numerical reports and commit/push.
 
 Live: data/.b120/workflow/status.json, data/.b120/progress.json; human status docs/paper/b120_status.md. Final audited pilot: docs/paper/b120_training.json/md. No automatic evaluation or additional fits.
+
+Operational background adapter: PREREGISTRATION_B120_ADDENDUM1.md -> b120_background/run120.py installs hidden subprocess policy in queue and scientific children before imports; workflow/background1 preserves the original wait clock. Original zero-update queue receipts retained.

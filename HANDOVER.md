@@ -1,5 +1,7 @@
 # 인수인계 문서 (2026-11-22)
 
+B120 BACKGROUND ADAPTER (2026-11-28): PREREGISTRATION_B120_ADDENDUM1.md -> b120_background/run120.py -> unchanged TCN qualification/fit/audit. All subprocesses (including inherited Git and resource probes) hidden; original queue stopped in resource wait before any optimization. Original wait clock/scientific sources preserved; separate ignored workflow/background1 receipts. No retry or TEST.
+
 B120 PREPARED (2026-11-28): author-authorized one sufficiently learned TCN35 pilot. PREREGISTRATION_B120.md -> b120_tcn_focus/common120.py (frozen B105 provenance/real TRAIN+VAL) -> queue120.py (one-start process-aware GPU gate) -> train120.py --qualify (zero optimizer updates) -> train120.py (fresh same-seed original architecture/F+L5 objective, sufficient-learning stop/full RNG recovery) -> audit120.py (independent CPU/NumPy checks) -> docs/paper/b120_training.json/md and b120_status.md. No TEST or additional fit. Existing B119 untouched. Plan docs/paper/b120_plan.md; ignored state data/.b120/.
 
 **B119 RESUME1 PAUSED BY AUTHOR (2026-11-28T12:06:13KST). Latest recoverable validated checkpoint epoch: 21. Owned resume queue/child stopped; CES_B119_Resume1 disabled. All validated model/optimizer/scheduler/RNG/history/best states preserved. No automatic resume/retry; source and original/resumed clock receipts unchanged. Stop receipt data/.b119/workflow/resume1/author_stop_resume1.json.**
