@@ -1,11 +1,5 @@
-# B119 validated-state continuation
+# B119 stopped by author
 
-running
+Author requested stop. No active owned queue/training processes were present: the workflow had already stopped on final numerical-audit failure. Scheduled task disabled; no automatic resume/retry. Latest validated checkpoint, best weights, readout and failure provenance preserved. Numerical results remain unpublished and unaudited.
 
-{
-  "phase": "resume_fit",
-  "child_pid": 5152,
-  "deadline": 1795951578.444958
-}
-
-Live: data/.b119/workflow/resume2/status.json. Extended total active fit policy:24h/1000epochs; minimum100 and terminal20/40 plateau.
+Stop receipt: data/.b119/workflow/resume2/author_stop_resume2.json.
