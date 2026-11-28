@@ -1,3 +1,8 @@
 # B120 TCN status
 
-Prepared; no scientific execution before registration/source commit and push.
+running
+
+{
+  "phase": "fit",
+  "child_pid": 25192
+}
