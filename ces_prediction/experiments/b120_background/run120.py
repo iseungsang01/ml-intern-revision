@@ -13,7 +13,8 @@ OriginalPopen = subprocess.Popen
 class HiddenPopen(OriginalPopen):
     def __init__(self, args, *pos, **kwargs):
         kwargs['creationflags'] = kwargs.get('creationflags', 0) | getattr(subprocess, 'CREATE_NO_WINDOW', 0)
-        if isinstance(args, (list, tuple)):
+        if (isinstance(args, (list, tuple)) and args
+                and Path(str(args[0])).name.lower() in ('python.exe','pythonw.exe','py.exe')):
             args = list(args)
             # Install this same policy before each frozen scientific child's imports.
             for i, value in enumerate(args):
@@ -29,7 +30,8 @@ subprocess.Popen = HiddenPopen
 
 def guard():
     import hashlib
-    paths = [WRAPPER, HERE.parent/'PREREGISTRATION_B120_ADDENDUM1.md']
+    paths = [WRAPPER, HERE.parent/'PREREGISTRATION_B120_ADDENDUM1.md',
+             HERE.parent/'PREREGISTRATION_B120_ADDENDUM2.md']
     hashes = {}
     for p in paths:
         rel = p.relative_to(ROOT).as_posix()
@@ -56,13 +58,14 @@ def main():
     import common120 as C
     import queue120 as Q
     op = guard()
-    Q.W = C.OUT/'workflow/background1'
+    Q.W = C.OUT/'workflow/background2'
     Q.W.mkdir(parents=True, exist_ok=True)
     original = C.read(C.OUT/'workflow/started.json')
     assert not C.FIT.exists(), 'No automatic scientific retry'
+    scientific_sources = C.sources()
     with (Q.W/'started.json').open('x', encoding='utf8') as f:
         json.dump({'pid':os.getpid(), 'original_started':original['started'], 'started':time.time(),
-                   'operational_sources':op, 'scientific_sources':C.sources(),
+                   'operational_sources':op, 'scientific_sources':scientific_sources,
                    'prior_optimizer_steps':0, 'all_descendants_hidden':True}, f)
     C.prepared()
     end = original['started']+12*3600
@@ -105,9 +108,9 @@ if __name__ == '__main__':
             sys.path.insert(0, str(HERE.parent/'b120_tcn_focus'))
             import queue120 as Q
             import common120 as C
-            Q.W = C.OUT/'workflow/background1'
+            Q.W = C.OUT/'workflow/background2'
             Q.W.mkdir(parents=True, exist_ok=True)
             started = Q.W/'started.json'
-            if not started.exists() or C.read(started)['pid'] == os.getpid():
+            if not started.exists() or started.stat().st_size == 0 or C.read(started)['pid'] == os.getpid():
                 Q.status('failed', error=repr(error), traceback=traceback.format_exc(), no_retry=True)
         raise

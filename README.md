@@ -1,6 +1,6 @@
 # KSTAR CES nowcasting — pedestal top
 
-B120 BACKGROUND ADAPTER (2026-11-28): PREREGISTRATION_B120_ADDENDUM1.md -> b120_background/run120.py -> unchanged TCN qualification/fit/audit. All subprocesses (including inherited Git and resource probes) hidden; original queue stopped in resource wait before any optimization. Original wait clock/scientific sources preserved; separate ignored workflow/background1 receipts. No retry or TEST.
+B120 BACKGROUND ADAPTER (2026-11-28): PREREGISTRATION_B120_ADDENDUM1.md -> b120_background/run120.py -> unchanged TCN qualification/fit/audit. All subprocesses (including inherited Git and resource probes) hidden; original queue stopped in resource wait before any optimization. Original wait clock/scientific sources preserved; separate ignored workflow/background1 receipts; ADDENDUM2 corrects prefit command dispatch and uses workflow/background2. No retry or TEST.
 
 B120 PREPARED (2026-11-28): author-authorized one sufficiently learned TCN35 pilot. PREREGISTRATION_B120.md -> b120_tcn_focus/common120.py (frozen B105 provenance/real TRAIN+VAL) -> queue120.py (one-start process-aware GPU gate) -> train120.py --qualify (zero optimizer updates) -> train120.py (fresh same-seed original architecture/F+L5 objective, sufficient-learning stop/full RNG recovery) -> audit120.py (independent CPU/NumPy checks) -> docs/paper/b120_training.json/md and b120_status.md. No TEST or additional fit. Existing B119 untouched. Plan docs/paper/b120_plan.md; ignored state data/.b120/.
 

@@ -9,3 +9,5 @@ Resource/process checks preserve other jobs. In particular a paused B119 is left
 Live: data/.b120/workflow/status.json, data/.b120/progress.json; human status docs/paper/b120_status.md. Final audited pilot: docs/paper/b120_training.json/md. No automatic evaluation or additional fits.
 
 Operational background adapter: PREREGISTRATION_B120_ADDENDUM1.md -> b120_background/run120.py installs hidden subprocess policy in queue and scientific children before imports; workflow/background1 preserves the original wait clock. Original zero-update queue receipts retained.
+
+ADDENDUM2 corrects the hidden adapter to rewrite Python launches only, leaving Git source arguments untouched. Background1 failed before qualification/fit; its receipt remains. Active operation uses workflow/background2 and original wait deadline.
