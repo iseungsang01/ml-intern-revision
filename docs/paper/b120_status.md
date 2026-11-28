@@ -1,8 +1,8 @@
 # B120 TCN status
 
-running
+complete
 
 {
-  "phase": "fit",
-  "child_pid": 25192
+  "converged": true,
+  "TEST_accessed": false
 }
